@@ -13,7 +13,7 @@
     "SelfSpeakerBlockTileMixin",
     "SelfSlingshotMixin",
     "SelfWrenchMixin",
-    "SerfOpeneableContainerMixin",
+    "SerfOpenableContainerMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
     "SelfSafeMixin",
@@ -23,7 +23,9 @@
     "ChunkHolderMixin",
     "FriendlyByteBufMixin",
     "PlayerProjectileMixin",
-    "MobBucketItemAccessor"
+    "MobBucketItemAccessor",
+    "ExplorationMapFunctionMixin",
+    "TreasureMapForEmeraldsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

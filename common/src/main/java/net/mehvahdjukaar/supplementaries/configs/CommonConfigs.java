@@ -943,16 +943,22 @@ public class CommonConfigs {
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
                             "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)")
                     .define("random_adventurer_maps", true);
-            MAP_MARKERS = builder.comment("enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
+            MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
             if (PlatHelper.getPlatform().isForge()) {
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
                 REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
+                QUILL_TRADE_PRICE_MULT = builder.comment("These maps will roll a difference structure every time. Increase their price to balance them")
+                        .define("map_trade_price_multiplier", 2d, 1, 10);
+                QUILL_MAX_TRADES = builder.comment("These maps will roll a difference structure every time. Decrease their max trades to balance them")
+                        .define("map_trade_max_trades", 2, 1, 12);
             } else {
                 QUARK_QUILL = () -> false;
                 REPLACE_VANILLA_MAPS = () -> false;
+                QUILL_MAX_TRADES = () -> 1;
+                QUILL_TRADE_PRICE_MULT = () -> 1d;
             }
             builder.pop();
 
@@ -1012,6 +1018,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<Boolean> QUARK_QUILL;
+        public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
+        public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,18 +14,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Contract;
+
+import org.jetbrains.annotations.Nullable;
 
 public class QuarkCompat {
 
     @ExpectPlatform
     public static void init() {
-    }
-
-    @ExpectPlatform
-    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
-        throw new AssertionError();
     }
 
     @ExpectPlatform
@@ -71,6 +68,12 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
+    @ExpectPlatform
+    public static boolean isVerticalSlabEnabled() {
+        throw new AssertionError();
+    }
+
     @ExpectPlatform
     @Contract
     public static boolean shouldHideOverlay(ItemStack stack) {
@@ -111,7 +114,9 @@ public class QuarkCompat {
     }
 
     @ExpectPlatform
-    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> adventureMapDestinations) {
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination,
+                                                int radius, boolean skipKnown, int zoom,
+                                                MapDecoration.Type destinationType, @Nullable String name, int color) {
         throw new AssertionError();
     }
 }

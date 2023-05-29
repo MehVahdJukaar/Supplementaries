@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
@@ -19,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +50,7 @@ import vazkii.quark.content.tools.module.PathfinderMapsModule;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AdventurersQuillItem extends PathfindersQuillItem {
+public class CartographersQuillItem extends PathfindersQuillItem {
 
     public static final String TAG_STRUCTURE = "targetStructure";
     public static final String TAG_SKIP_KNOWN = "skinKnown";
@@ -61,12 +63,10 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     protected static final String TAG_POS_INDEX = "searchIndex";
     protected static final String TAG_WAITING = "waiting";
 
-    public AdventurersQuillItem() {
+    public CartographersQuillItem() {
         super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
                 new Properties().stacksTo(1));
-
         QuarkCompatImpl.removeStuffFromARLHack();
-
     }
 
     private static Thread mainThread;
@@ -75,27 +75,38 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
         var tag = stack.getTag();
         if (tag != null) {
-            String structure = tag.getString(TAG_STRUCTURE);
-            if (!structure.isEmpty()) {
-                var r = new ResourceLocation(structure);
-                if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
-                    comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
-                StringBuilder b = new StringBuilder();
-                b.append("filled_map.");
-                if (!r.getNamespace().equals("minecraft")) {
-                    b.append(r.getNamespace()).append(".");
-                }
-                b.append(r.getPath());
-                comps.add(Component.translatable(b.toString()).withStyle(ChatFormatting.GRAY));
-            }
+            if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
+                comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
         } else
-            comps.add(Component.translatable("message.supplementaries.adventurers_quill").withStyle(ChatFormatting.GRAY));
+            comps.add(Component.translatable("message.supplementaries.cartographers_quill").withStyle(ChatFormatting.GRAY));
     }
 
+    @Override
+    protected String getFailedMessage() {
+        return "message.supplementaries.quill_failed";
+    }
+
+    @Override
+    protected String getFinishedMessage() {
+        return "message.supplementaries.quill_finished";
+    }
 
     @Override
     public int getIterations() {
         return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (level instanceof ServerLevel serverLevel) {
+            CompoundTag tag = player.getItemInHand(hand).getOrCreateTag();
+            if (!tag.contains(TAG_STRUCTURE)) {
+                //re-generate for empty one
+                String str = selectRandomTarget(serverLevel, ModTags.ADVENTURE_MAP_DESTINATIONS);
+                if (str != null) tag.putString(TAG_STRUCTURE, str);
+            }
+        }
+        return super.use(level, player, hand);
     }
 
     @Nullable
@@ -103,12 +114,6 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
     public ResourceLocation getTarget(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         String str = tag.getString(TAG_STRUCTURE);
-        if (str.isEmpty()) {
-            //re-generate for empty one
-            str = "mansion";// computeTarget(level, ModTags.ADVENTURE_MAP_DESTINATIONS);
-            if (str == null) return null;
-            tag.putString(TAG_STRUCTURE, str);
-        }
         return new ResourceLocation(str);
     }
 
@@ -220,9 +225,9 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
 
     @Nullable
-    private MapDecoration.Type getDecoration(CompoundTag tag) {
+    private ResourceLocation getDecoration(CompoundTag tag) {
         if (tag.contains(TAG_DECORATION)) {
-            return MapDecoration.Type.byIcon((byte) tag.getInt(TAG_DECORATION));
+            return new ResourceLocation(tag.getString(TAG_DECORATION));
         }
         return null;
     }
@@ -250,11 +255,12 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
 
         ServerChunkCache source = level.getChunkSource();
         ChunkGenerator gen = source.getGenerator();
-        ChunkGeneratorStructureState chunkState = source.getGeneratorState();
 
         Map<StructurePlacement, Set<Holder<Structure>>> map = new Object2ObjectArrayMap<>();
 
-        for (StructurePlacement structurePlacement : chunkState.getPlacementsForStructure(holder)) {
+        ChunkGeneratorStructureState structureState = level.getChunkSource().getGeneratorState();
+
+        for (StructurePlacement structurePlacement : structureState.getPlacementsForStructure(holder)) {
             map.computeIfAbsent(structurePlacement, (ss) -> new ObjectArraySet<>()).add(holder);
         }
 
@@ -436,42 +442,59 @@ public class AdventurersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag, int searchRadius,
-                                         boolean skipKnown, int zoom, MapDecoration.Type deco,
+    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag, int searchRadius,
+                                         boolean skipKnown, int zoom, @Nullable MapDecoration.Type deco,
                                          @Nullable String name, int color) {
         ItemStack stack = forStructure(level, tag);
         var t = stack.getOrCreateTag();
         t.putInt(TAG_SEARCH_RADIUS, searchRadius);
         t.putBoolean(TAG_SKIP_KNOWN, skipKnown);
         t.putInt(TAG_ZOOM, zoom);
-        t.putByte(TAG_DECORATION, deco.getIcon());
+        if (deco != null) {
+            t.putString(TAG_DECORATION, deco.toString().toLowerCase(Locale.ROOT));
+        }
         if (name != null) {
             t.putString(TAG_NAME, name);
         }
         if (color != 0) {
-            t.putInt(TAG_ZOOM, color);
+            t.putInt(TAG_COLOR, color);
         }
         return stack;
     }
 
-    public static ItemStack forStructure(ServerLevel level, TagKey<Structure> tag) {
-        ItemStack stack = QuarkCompatImpl.ADVENTURER_QUILL.get().getDefaultInstance();
-        String target = computeTarget(level, tag);
-        if (target == null) return ItemStack.EMPTY;
-        stack.getOrCreateTag().putString(TAG_STRUCTURE, target);
+    public static int getItemColor(ItemStack stack, int layer) {
+        if (layer == 0) return -1;
+        CompoundTag compoundTag = stack.getTag();
+        if (compoundTag != null && compoundTag.contains(TAG_COLOR)) {
+            int i = compoundTag.getInt(TAG_COLOR);
+            return -16777216 | i & 16777215;
+        } else {
+            return 0;
+        }
+    }
+
+    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag) {
+        ItemStack stack = QuarkCompatImpl.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
+        if (tag != null) {
+            //adventurer ones are always random
+            String target = selectRandomTarget(level, tag);
+            if (target == null) return ItemStack.EMPTY;
+            stack.getOrCreateTag().putString(CartographersQuillItem.TAG_STRUCTURE, target);
+        }
         return stack;
     }
 
     @Nullable
-    private static String computeTarget(ServerLevel level, TagKey<Structure> tag) {
+    private static String selectRandomTarget(ServerLevel level, TagKey<Structure> tag) {
         Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess()
                 .registryOrThrow(Registries.STRUCTURE).getTag(tag);
         if (taggedStructures.isPresent()) {
 
             List<Holder<Structure>> reachable = new ArrayList<>();
-            var source = level.getChunkSource().getGeneratorState();
+            ServerChunkCache source = level.getChunkSource();
             for (var s : taggedStructures.get()) {
-                if (!source.getPlacementsForStructure(s).isEmpty()) {
+                var randomState = level.getChunkSource().getGeneratorState();
+                if (!randomState.getPlacementsForStructure(s).isEmpty()) {
                     reachable.add(s);
                 }
             }

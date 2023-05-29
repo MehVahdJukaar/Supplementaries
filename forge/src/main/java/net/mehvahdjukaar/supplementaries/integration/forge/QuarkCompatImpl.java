@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
@@ -10,12 +9,11 @@ import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.quark.AdventurersQuillItem;
+import net.mehvahdjukaar.supplementaries.integration.forge.quark.CartographersQuillItem;
 import net.mehvahdjukaar.supplementaries.integration.forge.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -29,7 +27,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -61,6 +62,7 @@ import vazkii.quark.content.automation.module.JukeboxAutomationModule;
 import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import vazkii.quark.content.building.block.StoolBlock;
 import vazkii.quark.content.building.block.WoodPostBlock;
+import vazkii.quark.content.building.module.VerticalSlabsModule;
 import vazkii.quark.content.client.module.UsesForCursesModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
@@ -71,10 +73,7 @@ import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
 import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
@@ -83,7 +82,7 @@ public class QuarkCompatImpl {
 
     public static final Supplier<Block> TATER_IN_A_JAR;
     public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
-    public static final Supplier<Item> ADVENTURER_QUILL;
+    public static final Supplier<Item> CARTOGRAPHERS_QUILL;
 
     static {
         TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
@@ -92,17 +91,11 @@ public class QuarkCompatImpl {
         TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
 
-        ADVENTURER_QUILL = RegUtils.regItem("adventurers_quill", AdventurersQuillItem::new);
+        CARTOGRAPHERS_QUILL = RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
     }
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(QuarkCompatImpl.class);
-    }
-
-    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
-        if (CommonConfigs.Tweaks.QUARK_QUILL.get()) {
-            event.addAfter(CreativeModeTabs.TOOLS_AND_UTILITIES, i -> i.is(Items.MAP), ADVENTURER_QUILL.get().asItem());
-        }
     }
 
     @SubscribeEvent
@@ -193,6 +186,10 @@ public class QuarkCompatImpl {
         return j;
     }
 
+    public static boolean isVerticalSlabEnabled() {
+        return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
+    }
+
     public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.hasVanishingCurse(stack);
     }
@@ -200,11 +197,6 @@ public class QuarkCompatImpl {
     public static int getBannerPatternLimit(int current) {
         return MoreBannerLayersModule.getLimit(current);
     }
-
-
-    //--------bamboo spikes-------
-
-    //called by mixin code
 
     public static void tickPiston(Level level, BlockPos pos, BlockState spikes, AABB pistonBB, boolean sameDir, BlockEntity movingTile) {
         List<Entity> list = level.getEntities(null, pistonBB);
@@ -275,7 +267,6 @@ public class QuarkCompatImpl {
         return InteractionResult.PASS;
     }
 
-
     public static boolean isMoreNoteBlockSoundsOn() {
         return ModuleLoader.INSTANCE.isModuleEnabled(MoreNoteBlockSoundsModule.class) && MoreNoteBlockSoundsModule.enableSkullSounds;
     }
@@ -312,9 +303,6 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel level, TagKey<Structure> tag) {
-        return AdventurersQuillItem.forStructure(level, tag);
-    }
 
     private static Field f2 = null;
 
@@ -329,5 +317,9 @@ public class QuarkCompatImpl {
             data.remove("suppsquared");
         } catch (Exception ignored) {
         }
+    }
+
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @org.jetbrains.annotations.Nullable String name, int color) {
+        return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown,zoom, destinationType, name, color);
     }
 }
