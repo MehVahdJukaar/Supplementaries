@@ -9,25 +9,25 @@
           "type": "minecraft:loot_table",
           "weight": 60,
           "quality": -5,
-          "name": "supplementaries:block/urn_loot/common"
+          "name": "supplementaries:blocks/urn_loot/common"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 32,
           "quality": -2,
-          "name": "supplementaries:block/urn_loot/uncommon"
+          "name": "supplementaries:blocks/urn_loot/uncommon"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 7,
           "quality": 2,
-          "name": "supplementaries:block/urn_loot/rare"
+          "name": "supplementaries:blocks/urn_loot/rare"
         },
         {
           "type": "minecraft:loot_table",
           "weight": 1,
           "quality": 5,
-          "name": "supplementaries:block/urn_loot/epic"
+          "name": "supplementaries:blocks/urn_loot/epic"
         }
       ]
     }

@@ -406,7 +406,7 @@ public class ModRegistry {
     ));
 
     //brass lantern
-    public static final Supplier<Block> BRASS_LANTERN = regBlock(BRASS_LANTERN_NAME, () -> new LightableLanternBlock(
+    public static final Supplier<Block> BRASS_LANTERN = regWithItem(BRASS_LANTERN_NAME, () -> new LightableLanternBlock(
             BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
             Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
                     Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),

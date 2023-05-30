@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -208,7 +207,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         //needed for when it drops from falling block since it has a block entity
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
-            List<ItemStack> l = super.getDrops(state, builder); //of it's not treasure
+            List<ItemStack> l = super.getDrops(state, builder); //if it's not treasure
             for (int i = 0; i < tile.getContainerSize(); ++i) {
                 l.add(tile.getItem(i));
             }
@@ -229,6 +228,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             List<ItemStack> selectedLoot;
             do {
                 selectedLoot = loottable.getRandomItems(lootContext);
+                if (selectedLoot.isEmpty()) break;
                 //remove disabled stuff. hacky
                 selectedLoot = selectedLoot.stream().filter(e -> !ModCreativeTabs.isHidden(e.getItem())).toList();
             } while (selectedLoot.isEmpty());
@@ -280,7 +280,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
                 var e = list.get(level.getRandom().nextInt(list.size()));
                 Entity entity = e.create(level);
                 if (entity != null) {
-                    if(entity instanceof Slime slime)slime.setSize(0, true);
+                    if (entity instanceof Slime slime) slime.setSize(0, true);
                     entity.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F);
                     level.addFreshEntity(entity);
                 }

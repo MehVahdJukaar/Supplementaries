@@ -1,3 +1,2 @@
-- added command to add map markers to map
-- added command to generate structure leading maps
-- fixed some issues related to map markers
+- fixed a crash when breaking urns
+- added tag for mobs that wont be angered when put in cages
