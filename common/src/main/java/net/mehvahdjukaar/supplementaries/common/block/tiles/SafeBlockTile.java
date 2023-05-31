@@ -261,7 +261,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         @Override
         protected Slot addSlot(Slot slot) {
             if (slot instanceof ShulkerBoxSlot) {
-                return super.addSlot(new DelegatingSlot(slot.container, slot.index, slot.x, slot.y));
+                return super.addSlot(new DelegatingSlot(slot.container, slot.getContainerSlot(), slot.x, slot.y));
             }
             return super.addSlot(slot);
         }
