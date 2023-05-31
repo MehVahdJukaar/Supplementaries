@@ -1,4 +1,14 @@
 {
+  "global_conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "pancake"
+    },
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -8,7 +18,7 @@
       "tag": "forge:milk"
     },
     {
-      "tag": "forge:grain"
+      "tag": "farmersdelight:dough"
     },
     {
       "tag": "forge:eggs"
@@ -17,18 +27,6 @@
   "result": {
     "item": "supplementaries:pancake",
     "count": 3
-  },
-  "conditions": [
-    {
-      "type": "supplementaries:flag",
-      "flag": "pancake"
-    },
-    {
-      "type": "forge:not",
-      "value": {
-        "modid": "farmersdelight",
-        "type": "forge:mod_loaded"
-      }
-    }
-  ]
+  }
+
 }
