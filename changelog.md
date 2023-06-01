@@ -1,1 +1,2 @@
-less warnings
+- fixed safe gui slots
+- spring launchers can now propel gravity blocks placed right above them
