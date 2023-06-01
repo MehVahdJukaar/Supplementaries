@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlo
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,9 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -78,7 +77,7 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (state.getValue(EXTENDED)) {
             return switch (state.getValue(FACING)) {
                 case DOWN -> PISTON_BASE_DOWN_AABB;
@@ -94,52 +93,63 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.checkForMove(state, worldIn, pos);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        this.checkForMove(state, level, pos);
     }
 
-    public void checkForMove(BlockState state, Level world, BlockPos pos) {
-        if (!world.isClientSide()) {
-            boolean flag = this.shouldBeExtended(world, pos, state.getValue(FACING));
-            BlockPos offset = pos.offset(state.getValue(FACING).getNormal());
-            if (flag && !state.getValue(EXTENDED)) {
-                boolean flag2 = false;
-                BlockState targetBlock = world.getBlockState(offset);
+    private void checkForMove(BlockState state, Level level, BlockPos pos) {
+        if (!level.isClientSide()) {
+            Direction direction = state.getValue(FACING);
+            boolean isPowered = this.shouldBeExtended(level, pos, direction);
+            BlockPos offset = pos.offset(direction.getNormal());
+            if (isPowered && !state.getValue(EXTENDED)) {
+                //falling block hacks
+                if (direction == Direction.UP) {
+                    BlockState sand = level.getBlockState(offset);
+                    if (sand.getBlock() instanceof FallingBlock fb) {
+                        level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
+                        fb.tick(sand, (ServerLevel) level, offset, level.random);
+                        level.setBlock(pos, state, Block.UPDATE_NONE);
+                    }
+                }
+
+                boolean hasBrokenBlock = false;
+                BlockState targetBlock = level.getBlockState(offset);
                 if (targetBlock.getPistonPushReaction() == PushReaction.DESTROY || targetBlock.isAir()) {
-                    BlockEntity blockEntity = targetBlock.hasBlockEntity() ? world.getBlockEntity(offset) : null;
-                    dropResources(targetBlock, world, offset, blockEntity);
-                    flag2 = true;
+                    BlockEntity blockEntity = targetBlock.hasBlockEntity() ? level.getBlockEntity(offset) : null;
+                    dropResources(targetBlock, level, offset, blockEntity);
+                    hasBrokenBlock = true;
                 }
                 /*
                  * else if (targetBlock.getBlock() instanceof FallingBlock &&
-                 * world.getBlockState(offset.add(state.get(FACING).getDirectionVec())).isAir(
-                 * world, offset)){ FallingBlockEntity fallingblockentity = new
-                 * FallingBlockEntity(world, (double)offset.getX() + 0.5D, (double)offset.getY() ,
-                 * (double)offset.getZ() + 0.5D, world.getBlockState(offset));
+                 * level.getBlockState(offset.add(state.get(FACING).getDirectionVec())).isAir(
+                 * level, offset)){ FallingBlockEntity fallingblockentity = new
+                 * FallingBlockEntity(level, (double)offset.getX() + 0.5D, (double)offset.getY() ,
+                 * (double)offset.getZ() + 0.5D, level.getBlockState(offset));
                  *
-                 * world.addEntity(fallingblockentity); flag2=true; }
+                 * level.addEntity(fallingblockentity); hasBrokenBlock=true; }
                  */
-                if (flag2) {
-                    world.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
-                            .setValue(SpringLauncherArmBlock.EXTENDING, true).setValue(FACING, state.getValue(FACING)));
-                    world.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
-                    world.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
-                            world.random.nextFloat() * 0.25F + 0.45F);
-                    world.gameEvent(null, GameEvent.PISTON_EXTEND, pos);
+                if (hasBrokenBlock) {
+                    level.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+                            .setValue(SpringLauncherArmBlock.EXTENDING, true).setValue(FACING, direction));
+                    level.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
+                    level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
+                            level.random.nextFloat() * 0.25F + 0.45F);
+                    level.gameEvent(null, GameEvent.PISTON_EXTEND, pos);
                 }
-            } else if (!flag && state.getValue(EXTENDED)) {
-                BlockState bs = world.getBlockState(offset);
-                if (bs.getBlock() instanceof SpringLauncherHeadBlock && state.getValue(FACING) == bs.getValue(FACING)) {
-                    // world.setBlockState(offset, Blocks.AIR.getDefaultState(), 3);
-                    world.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
-                            .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)));
-                    world.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
-                            world.random.nextFloat() * 0.15F + 0.45F);
-                    world.gameEvent(null, GameEvent.PISTON_CONTRACT, pos);
+            } else if (!isPowered && state.getValue(EXTENDED)) {
+                BlockState bs = level.getBlockState(offset);
+                if (bs.getBlock() instanceof SpringLauncherHeadBlock && direction == bs.getValue(FACING)) {
+                    // level.setBlockState(offset, Blocks.AIR.getDefaultState(), 3);
+                    level.setBlockAndUpdate(offset, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+                            .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, direction));
+                    level.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
+                            level.random.nextFloat() * 0.15F + 0.45F);
+                    level.gameEvent(null, GameEvent.PISTON_CONTRACT, pos);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
-                        && state.getValue(FACING) == bs.getValue(FACING)) {
-                    if (world.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {
-                        world.scheduleTick(pos, world.getBlockState(pos).getBlock(), 1);
+                        && direction == bs.getValue(FACING)) {
+                    if (level.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {
+                        level.scheduleTick(pos, level.getBlockState(pos).getBlock(), 1);
                     }
                 }
             }
@@ -147,18 +157,18 @@ public class SpringLauncherBlock extends Block {
     }
 
     // piston code
-    private boolean shouldBeExtended(Level worldIn, BlockPos pos, Direction facing) {
+    private boolean shouldBeExtended(Level level, BlockPos pos, Direction facing) {
         for (Direction direction : Direction.values()) {
-            if (direction != facing && worldIn.hasSignal(pos.relative(direction), direction)) {
+            if (direction != facing && level.hasSignal(pos.relative(direction), direction)) {
                 return true;
             }
         }
-        if (worldIn.hasSignal(pos, Direction.DOWN)) {
+        if (level.hasSignal(pos, Direction.DOWN)) {
             return true;
         } else {
             BlockPos blockpos = pos.above();
             for (Direction direction1 : Direction.values()) {
-                if (direction1 != Direction.DOWN && worldIn.hasSignal(blockpos.relative(direction1), direction1)) {
+                if (direction1 != Direction.DOWN && level.hasSignal(blockpos.relative(direction1), direction1)) {
                     return true;
                 }
             }
@@ -167,8 +177,8 @@ public class SpringLauncherBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.checkForMove(state, world, pos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+        super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
+        this.checkForMove(state, level, pos);
     }
 }

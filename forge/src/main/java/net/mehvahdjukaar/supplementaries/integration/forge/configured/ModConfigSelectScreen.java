@@ -3,11 +3,12 @@ package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -17,7 +18,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
 
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
-                "\u00A76Supplementaries Configured", ModTextures.CONFIG_BACKGROUND,
+                "§6Supplementaries Configured", ModTextures.CONFIG_BACKGROUND,
                 parent, ModConfigScreen::new, ClientConfigs.SPEC, CommonConfigs.SPEC);
     }
 
