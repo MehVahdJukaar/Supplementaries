@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.ModSlider;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
@@ -31,7 +32,11 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
 
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.locating.IModFile;
 import org.jetbrains.annotations.Nullable;
+
+import java.nio.file.Path;
 
 public class SuppPlatformStuffImpl {
 
@@ -101,6 +106,11 @@ public class SuppPlatformStuffImpl {
 
     public static float getDownfall(Biome biome) {
         return biome.getModifiedClimateSettings().downfall();
+    }
+
+    public static Path getTags() {
+        IModFile file = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile();
+      return  file.findResource("data/supplementaries/tags");
     }
 
 

@@ -17,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -58,12 +59,12 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<ModBlockProperties.BlockAttachment> ATTACHMENT = ModBlockProperties.BLOCK_ATTACHMENT;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_5_15;
 
     public WallLanternBlock(Properties properties) {
         super(properties.lightLevel(s -> s.getValue(LIT) ? s.getValue(LIGHT_LEVEL) : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(LIGHT_LEVEL, 0).setValue(WATERLOGGED, false).setValue(LIT, true));
+                .setValue(LIGHT_LEVEL, 15).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
     @Override
@@ -75,7 +76,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
                 if (opt.isPresent()) {
                     te.setHeldBlock(opt.get());
                     int light = SuppPlatformStuff.getLightEmission(opt.get(), pLevel, pPos);
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL, light));
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL, Mth.clamp( light,5,15)));
                     pLevel.sendBlockUpdated(pPos, pState, pState, Block.UPDATE_CLIENTS);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }

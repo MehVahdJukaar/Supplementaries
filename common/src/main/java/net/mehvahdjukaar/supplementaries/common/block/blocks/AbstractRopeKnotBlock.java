@@ -63,14 +63,12 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
 
 
     private final Map<BlockState, VoxelShape> shapeMap;
-    private final Map<BlockState, VoxelShape> collisionShapesMap;
 
 
     protected AbstractRopeKnotBlock(Properties properties) {
         super(properties);
         var s = this.makeShapes();
         shapeMap = s.getFirst();
-        collisionShapesMap = s.getSecond();
 
         this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.Y)
                 .setValue(WATERLOGGED, false).setValue(POST_TYPE, PostType.POST)

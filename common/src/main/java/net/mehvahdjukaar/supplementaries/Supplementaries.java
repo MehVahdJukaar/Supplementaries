@@ -87,6 +87,10 @@ public class Supplementaries {
             }
         }
     }
+
+    public static boolean test() {
+        return true;
+    }
     //yes this is where I write crap. deal with it XD
 
     //Tree chat gtp

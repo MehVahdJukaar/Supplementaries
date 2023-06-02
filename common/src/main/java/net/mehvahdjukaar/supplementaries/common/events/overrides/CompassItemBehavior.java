@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +18,7 @@ class CompassItemBehavior implements ItemUseOverride {
 
     @Override
     public boolean isEnabled() {
-        return ClientConfigs.Tweaks.COMPASS_CLICK.get();
+        return true;
     }
 
     @Override
@@ -27,7 +29,7 @@ class CompassItemBehavior implements ItemUseOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (world.isClientSide) {
+        if (world.isClientSide && ClientConfigs.Tweaks.COMPASS_CLICK.get()) {
             GlobeBlock.displayCurrentCoordinates(world, player, player.blockPosition());
         }
         return InteractionResult.sidedSuccess(world.isClientSide);

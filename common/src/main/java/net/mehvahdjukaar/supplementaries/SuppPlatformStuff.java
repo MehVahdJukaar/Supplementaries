@@ -79,4 +79,5 @@ public class SuppPlatformStuff {
     public static float getDownfall(Biome biome){
         throw new AssertionError();
     }
+
 }

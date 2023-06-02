@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Supplier;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
@@ -14,6 +16,7 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.*;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
@@ -435,6 +438,9 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 LangBuilder.addDynamicEntry(lang, "block.supplementaries.hanging_sign", type, block));
         ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
+
     }
+
+
 
 }
