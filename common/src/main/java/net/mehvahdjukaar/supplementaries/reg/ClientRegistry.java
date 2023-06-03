@@ -275,9 +275,9 @@ public class ClientRegistry {
         public float call(ItemStack itemStack, @org.jetbrains.annotations.Nullable ClientLevel clientLevel, @org.jetbrains.annotations.Nullable LivingEntity livingEntity, int i) {
             CompoundTag compoundTag = itemStack.getTagElement("display");
             if (compoundTag != null) {
-                var n = compoundTag.getString("Name");
+                var n = Component.Serializer.fromJson(compoundTag.getString("Name"));
                 if (n != null) {
-                    var v = GlobeBlockTile.GlobeType.getTextureID(Component.Serializer.fromJson(n).getString());
+                    var v = GlobeBlockTile.GlobeType.getTextureID(n.getString());
                     if (v != null) return Float.valueOf(v);
                 }
             }

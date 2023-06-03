@@ -4,11 +4,12 @@
   "artist": "Plantkillable",
   "supporters": {
     "toffanelly": {
-      "has_globe": "true"
+      "has_globe": true
     },
     "NotHypherionSA": {},
     "anon": {},
     "FishSupreme": {
+      "has_globe": true,
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
@@ -39,6 +40,7 @@
       "has_statue": true
     },
     "CakeTaco": {
+      "has_globe": true,
       "has_statue": true,
       "uuid": "cf722cd7-c93e-4de9-811b-77d146f146c8"
     },
