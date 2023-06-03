@@ -15,6 +15,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import umpaz.farmersrespite.common.block.KettleBlock;
 import umpaz.farmersrespite.common.block.TeaBushBlock;
+import vazkii.quark.addons.oddities.block.MatrixEnchantingTableBlock;
+import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -33,19 +35,5 @@ public class RemapHandler {
                 .forEach(MissingMappingsEvent.Mapping::ignore);
         event.getMappings(ForgeRegistries.ITEMS.getRegistryKey(), Supplementaries.MOD_ID)
                 .forEach(MissingMappingsEvent.Mapping::ignore);
-
-    }
-
-    public static void del(CommentedFileConfig cf, IConfigSpec con, F f){
-        ForgeConfigSpec spec =  ((ForgeConfigSpec)con);
-        LinkedList<String> parentPath = new LinkedList();
-
-      //  var l = spec.correct(spec.config, cf, parentPath, Collections.unmodifiableList(parentPath), (a, b, c, d) -> {
-      //  }, null, true);
-    }
-
-    @FunctionalInterface
-    public interface F{
-        Object aa(Object a,Object b, Object c);
     }
 }

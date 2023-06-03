@@ -86,6 +86,10 @@ public abstract class AbstractCandleSkullBlock extends AbstractCandleBlock imple
         this.particle = particle;
     }
 
+    public ParticleType<? extends ParticleOptions> getParticle() {
+        return particle.get();
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         super.createBlockStateDefinition(pBuilder);

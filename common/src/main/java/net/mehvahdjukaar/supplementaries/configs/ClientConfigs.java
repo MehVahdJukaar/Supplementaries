@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
@@ -26,6 +27,10 @@ public class ClientConfigs {
     static WeakReference<ConfigBuilder> builderReference;
 
     static {
+        if(PlatformHelper.getEnv().isServer()){
+            throw new AssertionError("Tried to load client configs on a server");
+        }
+
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("client"), ConfigType.CLIENT);
         builderReference = new WeakReference<>(builder);
 

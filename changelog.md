@@ -1,2 +1,3 @@
-- fixed safe gui slots
-- spring launchers can now propel gravity blocks placed right above them
+- fixed crash when using clocks or compasses
+- made urn code more resiliant
+- candle skulls can now influence quark matrix enchanter
