@@ -22,6 +22,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains("Compat")) {
+            if(mixinClassName.contains("Quark")){
+                targetClassName = "vazkii.quark.api.IEnchantmentInfluencer";
+            }
             try {
                 Class.forName(targetClassName);
                 return true;
