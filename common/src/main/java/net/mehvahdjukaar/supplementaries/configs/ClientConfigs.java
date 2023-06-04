@@ -27,7 +27,7 @@ public class ClientConfigs {
     static WeakReference<ConfigBuilder> builderReference;
 
     static {
-        if(PlatformHelper.getEnv().isServer()){
+        if(PlatformHelper.isDev() && PlatformHelper.getEnv().isServer()){
             throw new AssertionError("Tried to load client configs on a server");
         }
 

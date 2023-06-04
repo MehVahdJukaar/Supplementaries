@@ -1,3 +1,1 @@
-- fixed crash when using clocks or compasses
-- made urn code more resiliant
-- candle skulls can now influence quark matrix enchanter
+- fixed recent server crash

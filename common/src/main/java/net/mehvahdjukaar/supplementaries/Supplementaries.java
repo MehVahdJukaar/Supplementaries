@@ -65,7 +65,9 @@ public class Supplementaries {
         Credits.fetchFromServer();
 
         CommonConfigs.init();
-        ClientConfigs.init();
+        if (PlatformHelper.getEnv().isClient()) {
+            ClientConfigs.init();
+        }
 
         NetworkHandler.registerMessages();
 
@@ -93,6 +95,7 @@ public class Supplementaries {
         PlatformHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
 
         if (PlatformHelper.getEnv().isClient()) {
+
             ClientDynamicResourcesGenerator.INSTANCE.register();
 
             ClientPlatformHelper.addClientReloadListener(WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
