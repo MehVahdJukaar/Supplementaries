@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.WolfRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -109,6 +110,8 @@ public class SoapItem extends Item {
         else if(entity instanceof TamableAnimal ta && ta.isOwnedBy(player)){
             if(entity instanceof Wolf wolf){
                 wolf.setCollarColor(DyeColor.RED);
+                wolf.isWet = true;
+                //wolf.level.broadcastEntityEvent(wolf, (byte)8);
             }
             ta.setOrderedToSit(true);
             if(level.isClientSide){
@@ -122,7 +125,7 @@ public class SoapItem extends Item {
             level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
             if(level.isClientSide) {
                 ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
-                        UniformInt.of(3, 4), 0);
+                        UniformInt.of(2, 3), 0);
             }
 
             if (!player.getAbilities().instabuild) stack.shrink(1);

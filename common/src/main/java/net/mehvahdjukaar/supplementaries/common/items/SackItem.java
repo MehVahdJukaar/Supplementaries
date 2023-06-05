@@ -152,7 +152,7 @@ public class SackItem extends BlockItem {
             CompoundTag tag = slotItem.getTag();
             if (tag != null) {
                 var bet = tag.getCompound("BlockEntityTag");
-                if (bet != null) {
+                if (!bet.isEmpty()) {
                     var l = bet.getList("Items", 10);
                     if (!l.isEmpty()) return 1;
                 }

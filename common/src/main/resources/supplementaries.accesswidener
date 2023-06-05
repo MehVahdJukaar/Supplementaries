@@ -10,6 +10,9 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+#wet wolf
+accessible field net/minecraft/world/entity/animal/Wolf isWet Z
+
 #doors
 accessible method net/minecraft/world/level/block/DoorBlock playSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Z)V
 
