@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,8 +25,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemsUtilImpl {
@@ -96,7 +95,7 @@ public class ItemsUtilImpl {
     @Nullable
     public static Pair<IItemHandler, BlockEntity> getItemHandler(ItemStack containerStack, Player player) {
         CompoundTag tag = containerStack.getTag();
-        if (tag != null) {
+        if(tag != null) {
             CompoundTag cmp = tag.getCompound("BlockEntityTag");
             if (!cmp.contains("LootTable")) {
                 BlockEntity te = ItemsUtil.loadBlockEntityFromItem(cmp.copy(), containerStack.getItem());
@@ -145,9 +144,9 @@ public class ItemsUtilImpl {
             for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(idx);
                 KeyLockableTile.KeyStatus status = IKeyLockable.getKeyStatus(stack, key);
-                if(status == KeyLockableTile.KeyStatus.CORRECT_KEY){
+                if (status == KeyLockableTile.KeyStatus.CORRECT_KEY) {
                     return status;
-                }else if(status == KeyLockableTile.KeyStatus.INCORRECT_KEY){
+                } else if (status == KeyLockableTile.KeyStatus.INCORRECT_KEY) {
                     found = status;
                 }
             }

@@ -5,6 +5,7 @@
     "minecraft:sheep",
     "minecraft:pig",
     "minecraft:goat",
+    {"id":"goated:geep","required":false},
     {"id":"alexsmobs:crocodile","required":false},
     {"id":"alexsmobs:endergrade","required":false},
     {"id":"alexsmobs:gazelle","required":false},

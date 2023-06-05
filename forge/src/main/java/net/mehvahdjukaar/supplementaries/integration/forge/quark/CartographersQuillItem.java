@@ -84,12 +84,12 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     @Override
     protected String getFailedMessage() {
-        return "message.supplementaries.quill_failed";
+        return "message.supplementaries.quill_finished";
     }
 
     @Override
     protected String getFinishedMessage() {
-        return "message.supplementaries.quill_finished";
+        return "message.supplementaries.quill_failed";
     }
 
     @Override

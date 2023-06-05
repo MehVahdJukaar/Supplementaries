@@ -32,7 +32,7 @@ public class HangingSignBlockTile extends SwayingBlockTile implements IMapDispla
 
     public final WoodType woodType;
 
-    private boolean fakeItem = true;
+    private boolean fakeItem = false;
     private UUID owner = null;
 
     private TextHolder textHolder;
