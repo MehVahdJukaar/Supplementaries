@@ -65,9 +65,7 @@ public class Supplementaries {
         Credits.fetchFromServer();
 
         CommonConfigs.init();
-        if (PlatformHelper.getEnv().isClient()) {
             ClientConfigs.init();
-        }
 
         NetworkHandler.registerMessages();
 

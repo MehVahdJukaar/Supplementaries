@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.world.item.DyeColor;
 
@@ -20,6 +21,7 @@ import java.util.function.Supplier;
 public class ClientConfigs {
 
     public static void init() {
+
     }
 
     public static final ConfigSpec SPEC;

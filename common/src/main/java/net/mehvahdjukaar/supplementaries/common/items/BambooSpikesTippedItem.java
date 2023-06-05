@@ -87,7 +87,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
         //freaking bookshelf mod is calling this method before configs are loaded...
-        if(!ClientConfigs.SPEC.isLoaded() ||  (ClientConfigs.Blocks.TIPPED_BAMBOO_SPIKES_TAB.get() && CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())) {
+        if(CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
             if (this.allowedIn(group)) {
                 items.add(makeSpikeItem(Potions.POISON));
                 items.add(makeSpikeItem(Potions.LONG_POISON));
