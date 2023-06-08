@@ -23,7 +23,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -192,11 +194,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     success = true;
                     if (!world.isClientSide) {
                         //anger entity
-                        if (!player.isCreative() && entity instanceof NeutralMob ang && !entity.getType().is(ModTags.NON_ANGERABLE)) {
-                            ang.forgetCurrentTargetAndRefreshUniversalAnger();
-                            ang.setPersistentAngerTarget(player.getUUID());
-                            ang.setLastHurtByMob(player);
-                        }
+                        tryAngerEntity(player, entity);
                         entity.absMoveTo(v.x(), v.y(), v.z(), context.getRotation(), 0);
 
                         if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
@@ -261,8 +259,25 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         tooltip.add(Component.translatable("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
+
+    private static void tryAngerEntity(Player player, Entity entity) {
+        if (!player.isCreative() && !entity.getType().is(ModTags.NON_ANGERABLE)) {
+            //ang.forgetCurrentTargetAndRefreshUniversalAnger();
+            //ang.setPersistentAngerTarget(player.getUUID());
+            //ang.setLastHurtByMob(player);
+            entity.hurt(entity.level.damageSources().playerAttack(player), 0);
+        }
+        PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
+
+    }
+
     private void angerNearbyEntities(Entity entity, Player player) {
         //anger entities
+        entity.hurt(entity.level.damageSources().playerAttack(player), 0);
+
+        if(true)return;
+        PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
+
         if (entity instanceof NeutralMob && entity instanceof Mob) {
             getEntitiesInRange((Mob) entity).stream()
                     .filter((mob) -> mob != entity).map(
@@ -273,10 +288,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     });
         }
 
-        //piglin workaround. don't know why they are IAngerable
-        if (entity instanceof Piglin) {
-            entity.hurt(entity.level.damageSources().playerAttack(player), 0);
-        }
         if (entity instanceof Villager villager && player.level instanceof ServerLevel serverLevel) {
             Optional<NearestVisibleLivingEntities> optional = villager.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
             optional.ifPresent(entities -> entities.findAll(ReputationEventHandler.class::isInstance).forEach((e) ->

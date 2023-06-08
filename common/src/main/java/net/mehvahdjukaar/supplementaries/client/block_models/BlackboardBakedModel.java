@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -25,6 +26,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTables;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -90,7 +92,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
                 var blackboard = BlackboardManager.getInstance(key);
                 quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
-        }
+        }ItemRenderer
         return quads;
     }
 
@@ -103,7 +105,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();
-
+        ItemRenderer r;
+        r.renderGuiItem();
         for (int x = 0; x < pixels.length; x++) {
             int length = 0;
             int startY = 0;

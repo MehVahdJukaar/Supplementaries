@@ -164,4 +164,13 @@ public class SackItem extends BlockItem {
         return 0;
     }
 
+    @Override
+    public ItemStack getDefaultInstance() {
+        return super.getDefaultInstance();
+    }
+
+    @Override
+    public void onCraftedBy(ItemStack stack, Level level, Player player) {
+        super.onCraftedBy(stack, level, player);
+    }
 }
