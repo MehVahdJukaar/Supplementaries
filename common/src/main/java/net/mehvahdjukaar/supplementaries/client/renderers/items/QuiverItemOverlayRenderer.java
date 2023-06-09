@@ -7,29 +7,30 @@ import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
 
     @Override
-    public boolean render(PoseStack poseStack, Font font, ItemStack stack, int x, int y) {
+    public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
         boolean overlay = ClientConfigs.Items.QUIVER_OVERLAY.get();
         if (overlay) {
             LocalPlayer player = Minecraft.getInstance().player;
 
             if (player != null) {
                 ItemStack ammo = QuiverItem.getQuiverData(stack).getSelected();
-                renderAmmo(poseStack, x, y, ammo);
+                renderAmmo(graphics, x, y, ammo);
             }
             return true;
         }
         return false;
     }
 
-    public static void renderAmmo(PoseStack poseStack, int x, int y, ItemStack ammo) {
+    public static void renderAmmo(GuiGraphics graphics, int x, int y, ItemStack ammo) {
         if (!ammo.isEmpty()) {
-
+            PoseStack poseStack = graphics.pose();
             poseStack.pushPose();
             float xOff = 22;
             float yOff = 8;
@@ -41,7 +42,7 @@ public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
             //0.4 scale
             RenderSystem.applyModelViewMatrix();
 
-            Minecraft.getInstance().getItemRenderer().renderGuiItem(poseStack, ammo, x, y);
+            graphics.renderFakeItem(ammo, x, y);
 
             poseStack.popPose();
             RenderSystem.applyModelViewMatrix();

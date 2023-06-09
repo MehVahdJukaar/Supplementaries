@@ -37,9 +37,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.Collection;
@@ -54,8 +54,6 @@ import java.util.function.Supplier;
 public class RegUtils {
 
     public static void initDynamicRegistry() {
-        BlockSetAPI.addDynamicBlockRegistration(RegUtils::registerHangingSignBlocks, WoodType.class);
-        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerHangingSignItems, WoodType.class);
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
     }
 
@@ -115,8 +113,12 @@ public class RegUtils {
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
-        BlockBehaviour.Properties prop = BlockBehaviour.Properties.of(Material.DECORATION)
-                .noOcclusion().instabreak().sound(SoundType.LANTERN);
+        BlockBehaviour.Properties prop = BlockBehaviour.Properties.of()
+                .noCollission()
+                .pushReaction(PushReaction.DESTROY)
+                .noOcclusion()
+                .instabreak()
+                .sound(SoundType.LANTERN);
 
         Supplier<Block> block = RegHelper.registerBlockWithItem(baseName,
                 () -> new CandleHolderBlock(null, prop));
@@ -145,7 +147,9 @@ public class RegUtils {
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> block = regBlock(name, () -> new FlagBlock(color,
-                    BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
+                    BlockBehaviour.Properties.of()
+                            .ignitedByLava()
+                            .mapColor(color.getMapColor())
                             .strength(1.0F)
                             .noOcclusion()
                             .sound(SoundType.WOOD))
@@ -165,7 +169,10 @@ public class RegUtils {
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
-                            BlockBehaviour.Properties.of(Material.WOOD, color.getMaterialColor())
+                            BlockBehaviour.Properties.of()
+                                    .ignitedByLava()
+                                    .forceSolidOn()
+                                    .mapColor(color.getMapColor())
                                     .strength(1.0F)
                                     .noCollission()
                                     .sound(SoundType.WOOD)
@@ -180,7 +187,9 @@ public class RegUtils {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
         Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
-                BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.WOOD)
+                        .pushReaction(PushReaction.DESTROY)
                         .strength(1.0F)
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
@@ -190,7 +199,8 @@ public class RegUtils {
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> bb = regBlock(name, () -> presentFactory.apply(color,
-                    BlockBehaviour.Properties.of(Material.WOOL, color.getMaterialColor())
+                    BlockBehaviour.Properties.of()
+                            .mapColor(color.getMapColor())
                             .strength(1.0F)
                             .sound(ModSounds.PRESENT))
             );
@@ -200,34 +210,6 @@ public class RegUtils {
             regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())));
         }
         return map;
-    }
-
-    //hanging signs
-    private static void registerHangingSignBlocks(Registrator<Block> event, Collection<WoodType> woodTypes) {
-        for (WoodType wood : woodTypes) {
-            String name = wood.getVariantId(ModConstants.HANGING_SIGN_NAME);
-            HangingSignBlock block = new HangingSignBlock(
-                    BlockBehaviour.Properties.of(wood.material, wood.material.getColor())
-                            .strength(2f, 3f)
-                            .noOcclusion()
-                            .sound(SoundType.HANGING_SIGN)
-                            .noCollission(),
-                    wood
-            );
-            wood.addChild("supplementaries:hanging_sign", block);
-            event.register(Supplementaries.res(name), block);
-            ModRegistry.HANGING_SIGNS.put(wood, block);
-        }
-    }
-
-    public static void registerHangingSignItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
-        for (var entry : ModRegistry.HANGING_SIGNS.entrySet()) {
-            WoodType wood = entry.getKey();
-            //should be there already since this is fired after block reg
-            Block block = entry.getValue();
-            Item item = new WoodBasedBlockItem(block, new Item.Properties().stacksTo(16), wood, 200);
-            event.register(Utils.getID(block), item);
-        }
     }
 
     //sign posts
@@ -240,6 +222,4 @@ public class RegUtils {
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }
     }
-
-
 }

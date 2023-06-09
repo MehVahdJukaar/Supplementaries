@@ -30,8 +30,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -160,7 +160,7 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
-        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                 .strength(2f, 3f)
                 .sound(SoundType.WOOD)
                 .noOcclusion();
@@ -209,9 +209,9 @@ public class ModRegistry {
     //planter
     public static final Supplier<PlanterBlock> PLANTER = regWithItem(PLANTER_NAME, () ->
             CompatHandler.FARMERS_DELIGHT ? FarmersDelightCompat.makePlanterRich() :
-                    new PlanterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
+                    new PlanterBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA)
+                            .mapColor(MapColor.TERRACOTTA_RED)
                             .strength(2f, 6f)
-                            .requiresCorrectToolForDrops()
                     ));
 
     //pedestal
@@ -247,7 +247,8 @@ public class ModRegistry {
 
     //cage
     public static final Supplier<Block> CAGE = regBlock(CAGE_NAME, () -> new CageBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.METAL)
                     .strength(3f, 6f)
                     .sound(SoundType.METAL)
     ));
@@ -262,7 +263,7 @@ public class ModRegistry {
 
     //jar
     public static final Supplier<Block> JAR = regBlock(JAR_NAME, () -> new JarBlock(
-            BlockBehaviour.Properties.of(Material.GLASS, MaterialColor.NONE)
+            BlockBehaviour.Properties.copy(Blocks.GLASS)
                     .strength(0.5f, 1f)
                     .sound(ModSounds.JAR)
                     .noOcclusion()
@@ -279,7 +280,8 @@ public class ModRegistry {
 
     //sack
     public static final Supplier<Block> SACK = regBlock(SACK_NAME, () -> new SackBlock(
-            BlockBehaviour.Properties.of(Material.WOOL, MaterialColor.WOOD)
+            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
+                    .mapColor(MapColor.WOOD)
                     .strength(0.8f)
                     .sound(ModSounds.SACK)
     ));
@@ -292,7 +294,8 @@ public class ModRegistry {
 
     //blackboard
     public static final Supplier<Block> BLACKBOARD = regBlock(BLACKBOARD_NAME, () -> new BlackboardBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLACK)
                     .strength(2, 3)
     ));
     public static final Supplier<BlockEntityType<BlackboardBlockTile>> BLACKBOARD_TILE = regTile(
@@ -304,7 +307,8 @@ public class ModRegistry {
 
     //globe
     public static final Supplier<Block> GLOBE = regBlock(GLOBE_NAME, () -> new GlobeBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
@@ -325,8 +329,9 @@ public class ModRegistry {
     //sconce
     //normal
     public static final Supplier<Block> SCONCE = regBlock(SCONCE_NAME, () -> new SconceBlock(
-            BlockBehaviour.Properties.of(Material.DECORATION)
-                    .noOcclusion()
+            BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .pushReaction(PushReaction.DESTROY)
                     .instabreak()
                     .sound(SoundType.LANTERN),
             14, () -> ParticleTypes.FLAME));
@@ -397,7 +402,8 @@ public class ModRegistry {
 
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .strength(3.5f)
                     .requiresCorrectToolForDrops()
                     .lightLevel((state) -> state.getValue(LightableLanternBlock.LIT) ? 15 : 0)
@@ -419,17 +425,6 @@ public class ModRegistry {
                     .lightLevel((state) -> 15)
                     .noOcclusion())
     );
-
-    //silver lantern
-    public static final Supplier<Block> SILVER_LANTERN = regWithItem(SILVER_LANTERN_NAME, () -> new LightableLanternBlock(
-            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
-            Block.box(4.0D, 0.0D, 4.0D, 12.0D, 9.0D, 12.0D)));
-
-    //lead lantern
-    public static final Supplier<Block> LEAD_LANTERN = regWithItem(LEAD_LANTERN_NAME, () -> new LightableLanternBlock(
-            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
-            Shapes.or(Block.box(4.0D, 4.0D, 4.0D, 12.0D, 7.0D, 12.0D),
-                    Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D))));
 
     //rope
     public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
@@ -703,29 +698,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(GOLD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)
     ));
-
-    //silver door
-    public static final Supplier<Block> SILVER_DOOR = regWithItem(SILVER_DOOR_NAME, () -> new SilverDoorBlock(
-            BlockBehaviour.Properties.of(Material.METAL)
-                    .strength(4.0F, 5.0F)
-                    .sound(SoundType.METAL)
-                    .noOcclusion()));
-
-    //silver trapdoor
-    public static final Supplier<Block> SILVER_TRAPDOOR = regWithItem(SILVER_TRAPDOOR_NAME, () -> new SilverTrapdoorBlock(
-            BlockBehaviour.Properties.copy(SILVER_DOOR.get())
-                    .isValidSpawn((a, b, c, d) -> false)));
-
-    //lead door
-    public static final Supplier<Block> LEAD_DOOR = regWithItem(LEAD_DOOR_NAME, () -> new LeadDoorBlock(
-            BlockBehaviour.Properties.of(Material.METAL)
-                    .strength(5.0f, 6.0f)
-                    .sound(SoundType.METAL)
-                    .noOcclusion()));
-    //lead trapdoor
-    public static final Supplier<Block> LEAD_TRAPDOOR = regWithItem(LEAD_TRAPDOOR_NAME, () -> new LeadTrapdoorBlock(
-            BlockBehaviour.Properties.copy(LEAD_DOOR.get())
-                    .isValidSpawn((a, b, c, d) -> false)));
 
     //netherite doors
     public static final Supplier<Block> NETHERITE_DOOR = regBlock(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(

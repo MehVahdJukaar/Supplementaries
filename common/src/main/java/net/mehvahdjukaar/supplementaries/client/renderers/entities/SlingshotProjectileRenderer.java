@@ -48,7 +48,7 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
             poseStack.scale(scale, scale, scale);
 
             this.itemRenderer.renderStatic(entity.getItem(), ItemDisplayContext.NONE, light, OverlayTexture.NO_OVERLAY,
-                    poseStack, buffer, entity.level, 0);
+                    poseStack, buffer, entity.level(), 0);
             poseStack.popPose();
             super.render(entity, pEntityYaw, partialTicks, poseStack, buffer, light);
         }

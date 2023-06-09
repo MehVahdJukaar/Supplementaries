@@ -92,6 +92,7 @@ public class PearlMarker extends Entity {
         // super.tick();
 
         boolean dead = pearls.isEmpty();
+        Level level = level();
 
         if (!dead) {
             BlockPos pos = blockPosition();
@@ -115,7 +116,7 @@ public class PearlMarker extends Entity {
 
                 if (piston != null) {
                     Direction dir = piston.getMovementDirection();
-                    move(MoverType.PISTON, new Vec3((float) dir.getStepX() * 0.33, (float) dir.getStepY() * 0.33, (float) dir.getStepZ() * 0.33));
+                    move(MoverType.PISTON, new Vec3(dir.getStepX() * 0.33, dir.getStepY() * 0.33, dir.getStepZ() * 0.33));
 
                     didOffset = true;
                 }
@@ -152,12 +153,13 @@ public class PearlMarker extends Entity {
             var trace = event.getSecond();
             var pearl = event.getFirst();
             if (trace instanceof BlockHitResult hitResult) {
+                Level level = level();
                 BlockPos fromPos = this.blockPosition();
                 BlockState state = level.getBlockState(fromPos);
                 BlockEntity blockEntity = level.getBlockEntity(fromPos);
                 if (state.getBlock() instanceof DispenserBlock && blockEntity instanceof DispenserBlockEntity) {
                     BlockPos toPos = hitResult.getBlockPos().relative(hitResult.getDirection());
-                    if (level.getBlockState(toPos).getMaterial().isReplaceable()) {
+                    if (level.getBlockState(toPos).canBeReplaced()) {
                         CompoundTag nbt = blockEntity.saveWithoutMetadata();
                         blockEntity.setRemoved();
 
@@ -202,6 +204,7 @@ public class PearlMarker extends Entity {
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == 92) {
+            Level level = level();
             if (level.isClientSide) {
                 RandomSource random = level.random;
                 //smort
@@ -229,7 +232,7 @@ public class PearlMarker extends Entity {
     }
 
     public static void onProjectileImpact(Projectile projectile, HitResult hitResult) {
-        Level level = projectile.level;
+        Level level = projectile.level();
         if (!level.isClientSide && projectile instanceof ThrownEnderpearl pearl &&
                 projectile.getOwner() instanceof PearlMarker markerEntity && projectile.removeTag("dispensed")) {
 
@@ -246,9 +249,9 @@ public class PearlMarker extends Entity {
             PearlMarker marker;
             if (entity.isEmpty()) {
                 marker = new PearlMarker(level);
-                marker.setPos((double) pos.getX() + 0.5D,
-                        (double) pos.getY() + 0.5 - marker.getBbHeight() / 2f,
-                        (double) pos.getZ() + 0.5D);
+                marker.setPos(pos.getX() + 0.5D,
+                        pos.getY() + 0.5 - marker.getBbHeight() / 2f,
+                        pos.getZ() + 0.5D);
                 level.addFreshEntity(marker);
             } else marker = entity.get();
 

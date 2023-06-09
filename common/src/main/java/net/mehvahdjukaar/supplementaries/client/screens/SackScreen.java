@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -21,26 +22,17 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+    protected void renderBg(GuiGraphics matrixStack, float partialTicks, int x, int y) {
     }
 //TODO: merge
-    private void renderBack(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.SACK_GUI_TEXTURE);
+    private void renderBack(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        blit(matrixStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.SACK_GUI_TEXTURE,x, y, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 
-    private void renderSlots(PoseStack matrixStack) {
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.SLOT_TEXTURE);
-        //Minecraft.getInstance().getTextureManager().bind(Textures.SLOT_TEXTURE);
-
+    private void renderSlots(GuiGraphics graphics) {
         int k = -1 + (this.width - this.imageWidth) / 2;
         int l = -1 + (this.height - this.imageHeight) / 2;
 
@@ -61,19 +53,19 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                blit(matrixStack, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
+                graphics. blit(ModTextures.SLOT_TEXTURE, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
             }
             size -= dims[0];
         }
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        this.renderBack(matrixStack, partialTicks, mouseX, mouseY);
-        this.renderSlots(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(graphics);
+        this.renderBack(graphics, partialTicks, mouseX, mouseY);
+        this.renderSlots(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override

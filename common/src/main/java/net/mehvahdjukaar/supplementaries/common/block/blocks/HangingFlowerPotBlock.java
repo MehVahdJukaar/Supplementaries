@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -155,10 +156,9 @@ public class HangingFlowerPotBlock extends Block implements EntityBlock {
         return new ItemStack(Blocks.FLOWER_POT, 1);
     }
 
-
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof HangingFlowerPotBlockTile tile) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+    if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof HangingFlowerPotBlockTile tile) {
             if (tile.getHeldBlock().getBlock() instanceof FlowerPotBlock flowerPotBlock)
                 return Arrays.asList(new ItemStack(flowerPotBlock.getContent()), new ItemStack(Items.FLOWER_POT));
         }

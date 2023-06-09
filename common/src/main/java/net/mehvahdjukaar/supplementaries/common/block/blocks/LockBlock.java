@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 
 import org.jetbrains.annotations.Nullable;
@@ -64,13 +63,13 @@ public class LockBlock extends Block implements EntityBlock {
         this.playSound(player, worldIn, pos, true);
     }
 
-    protected void playSound(@Nullable Player player, Level worldIn, BlockPos pos, boolean isOpened) {
+    protected void playSound(@Nullable Player player, Level level, BlockPos pos, boolean isOpened) {
         if (isOpened) {
-            int i = this.material == Material.METAL ? 1037 : 1007;
-            worldIn.levelEvent(player, i, pos, 0);
+            int i =  1037 ;
+            level.levelEvent(player, i, pos, 0);
         } else {
-            int j = this.material == Material.METAL ? 1036 : 1013;
-            worldIn.levelEvent(player, j, pos, 0);
+            int j = 1036;
+            level.levelEvent(player, j, pos, 0);
         }
 
     }

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -126,8 +127,8 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
         if(this.primed){
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
@@ -135,15 +136,15 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
             RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
-            blit(poseStack, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
+            blit(graphics, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
         }
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int x, int y) {
-        super.renderLabels(poseStack, x, y);
-        //packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
+    protected void renderLabels(GuiGraphics graphics, int x, int y) {
+        super.renderLabels(graphics, x, y);
+        //packButton.renderToolTip(graphics, x - this.leftPos, y - this.topPos);
     }
 
     @Override

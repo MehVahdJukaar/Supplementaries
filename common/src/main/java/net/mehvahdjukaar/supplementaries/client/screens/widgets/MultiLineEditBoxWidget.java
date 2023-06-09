@@ -11,7 +11,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.font.TextFieldHelper;
@@ -259,26 +259,26 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int i, int j, float f) {
+    public void renderWidget(GuiGraphics graphics, int i, int j, float f) {
         DisplayCache displayCache = this.getDisplayCache();
 
         for (LineInfo lineInfo : displayCache.lines) {
-            this.font.draw(poseStack, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216);
+            this.font.draw(graphics, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216);
         }
 
         if (this.isFocused()) {
-            this.renderHighlight(poseStack, displayCache.selection);
-            this.renderCursor(poseStack, displayCache.cursor, displayCache.cursorAtEnd);
+            this.renderHighlight(graphics, displayCache.selection);
+            this.renderCursor(graphics, displayCache.cursor, displayCache.cursorAtEnd);
         }
     }
 
-    private void renderCursor(PoseStack poseStack, Pos2i pos2i, boolean isEndOfText) {
+    private void renderCursor(GuiGraphics graphics, Pos2i pos2i, boolean isEndOfText) {
         if (this.frameTick / 6 % 2 == 0) {
             pos2i = this.convertLocalToScreen(pos2i);
             if (!isEndOfText) {
-                GuiComponent.fill(poseStack, pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
+                GuiComponent.fill(graphics, pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
             } else {
-                this.font.draw(poseStack, "_", pos2i.x, pos2i.y, 0);
+                this.font.draw(graphics, "_", pos2i.x, pos2i.y, 0);
             }
         }
     }

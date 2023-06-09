@@ -2,11 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.StatueBlockTileRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -53,8 +52,8 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
         }
 
         //offline players
-        for(var entry : USERNAME_CACHE.entrySet()){
-            if(!onlinePlayers.contains(entry.getKey())){
+        for (var entry : USERNAME_CACHE.entrySet()) {
+            if (!onlinePlayers.contains(entry.getKey())) {
                 this.allPlayers.add(new SimplePlayerEntry(entry.getKey(), entry.getValue()));
             }
         }
@@ -63,8 +62,8 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.visible) {
             if (this.canConsumeInput() && this.suggestion != null) {
                 int x = this.getX();
@@ -73,14 +72,14 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
                     x += this.font.width(cache.lines[0].contents);
                 }
 
-                this.font.draw(poseStack, this.suggestion, x, this.getY(), -8355712);
+                graphics.drawString(font, this.suggestion, x, this.getY(), -8355712);
             }
 
             if (this.getText().isEmpty()) {
-                this.font.draw(poseStack, EMPTY_SEARCH, (float) this.getX(), (float) this.getY(), 0);
+                graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0);
             } else {
                 if (this.selectedPlayer != null) {
-                    this.selectedPlayer.render(poseStack, this.getX(), this.getY(), this.width, this.height, partialTicks);
+                    this.selectedPlayer.render(graphics, this.getX(), this.getY(), this.width, this.height, partialTicks);
                 }
             }
         }
@@ -196,7 +195,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             this.isOnline = false;
         }
 
-        public void setOnline(boolean online){
+        public void setOnline(boolean online) {
             this.isOnline = online;
         }
 
@@ -208,17 +207,17 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             return this.profile.getName();
         }
 
-        public void render(PoseStack poseStack, int x, int y, int width, int height, float pPartialTicks) {
+        public void render(GuiGraphics graphics, int x, int y, int width, int height, float pPartialTicks) {
 
             int i = x + width - SKIN_SIZE / 2;
 
             float c = this.isOnline ? 1 : 0.5f;
             RenderSystem.setShaderColor(1, c, c, 1);
-            RenderSystem.setShaderTexture(0, this.skinGetter.get());
+            ResourceLocation resourceLocation = this.skinGetter.get();
             //face and overlay
-            GuiComponent.blit(poseStack, i, y, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);
+            graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.enableBlend();
-            GuiComponent.blit(poseStack, i, y, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
+            graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.disableBlend();
         }
     }

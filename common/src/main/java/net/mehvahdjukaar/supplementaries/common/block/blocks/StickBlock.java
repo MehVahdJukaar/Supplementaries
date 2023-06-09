@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -220,7 +221,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder pBuilder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder pBuilder) {
         int i = 0;
         if (state.getValue(AXIS_X)) i++;
         if (state.getValue(AXIS_Y)) i++;

@@ -179,7 +179,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     public boolean canGrowUp(BlockGetter worldIn, BlockPos downPos) {
         BlockState state = worldIn.getBlockState(downPos.above());
-        return state.getBlock() instanceof FlaxBlock || state.getMaterial().isReplaceable();
+        return state.getBlock() instanceof FlaxBlock || state.canBeReplaced();
     }
 
     //for bonemeal

@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -11,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -164,37 +162,33 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     }
 
     @Override
-    public void dataChanged(AbstractContainerMenu container, int p_150525_, int p_150526_) {
+    public void dataChanged(AbstractContainerMenu container, int dataSlotIndex, int value) {
         this.slotChanged(container, 0, container.getSlot(0).getItem());
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        this.renderBackground(matrixStack);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
+        this.renderBackground(graphics);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.packed) {
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
 
-            blit(poseStack, k + slot.x, l + slot.y, 300, 12, 232, 16, 16, 256, 256);
+            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 300, 12, 232, 16, 16, 256, 256);
         }
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int x, int y) {
+    protected void renderLabels(GuiGraphics poseStack, int x, int y) {
         super.renderLabels(poseStack, x, y);
         //packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
     }
@@ -254,9 +248,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int i1, int i2, float v) {
-            RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        public void renderWidget(GuiGraphics graphics, int i1, int i2, float v) {
             int i = 198;
             int j = 0;
             if (!this.active) {
@@ -267,7 +259,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
                 j += this.width * 3;
             }
 
-            blit(poseStack, this.getX(), this.getY(), j, i, this.width, this.height);
+            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, this.getX(), this.getY(), j, i, this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {

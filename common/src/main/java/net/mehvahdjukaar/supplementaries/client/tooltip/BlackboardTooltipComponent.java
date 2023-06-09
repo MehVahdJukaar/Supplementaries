@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class BlackboardTooltipComponent implements ClientTooltipComponent {
@@ -29,13 +27,12 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer) {
-        poseStack.pushPose();
+    public void renderImage(Font pFont, int x, int y, GuiGraphics graphics) {
+        graphics.pose().pushPose();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, texture);
-        GuiComponent.blit(poseStack, x, y, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
+        graphics.blit(texture, x, y, 0, 0, 0, SIZE, SIZE, SIZE, SIZE);
 
-        poseStack.popPose();
+        graphics.pose().popPose();
     }
 }

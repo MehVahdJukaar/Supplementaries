@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -32,8 +33,8 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font pFont, int x, int y, PoseStack poseStack, ItemRenderer pItemRenderer) {
-        poseStack.pushPose();
+    public void renderImage(Font pFont, int x, int y, GuiGraphics graphics) {
+        graphics.pose().pushPose();
 
         var mat = BuiltInRegistries.BANNER_PATTERN.getTag(tooltip.pattern())
                 .flatMap(n -> n.stream().findAny()).flatMap(Holder::unwrapKey).map(Sheets::getBannerMaterial);
@@ -43,9 +44,9 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
             var contents = sprite.contents();
             int width = contents.width();
             int height = contents.height();
-            RenderUtil.blitSprite(poseStack, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
+            RenderUtil.blitSprite(graphics, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
         }
 
-        poseStack.popPose();
+        graphics.pose().popPose();
     }
 }

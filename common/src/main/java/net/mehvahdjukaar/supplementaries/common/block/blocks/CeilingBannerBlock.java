@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -43,10 +44,9 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ATTACHED, false));
     }
 
-    //I hate this but so it works on fabric...
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return BannerBlock.byColor(this.getColor()).getDrops(state, builder);
+    public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
+        return BannerBlock.byColor(this.getColor()).getDrops(blockState, builder);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CeilingBannerBlock extends AbstractBannerBlock {
         if (state.getValue(ATTACHED)) {
             return this.canAttach(state, above);
         }
-        return above.getMaterial().isSolid();
+        return above.isSolid();
     }
 
     private boolean canAttach(BlockState state, BlockState above) {

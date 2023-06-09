@@ -45,11 +45,11 @@ public class SlingshotRendererHelper {
 
         float blockRange = 40;
 
-        Level world = player.level;
+        Level level = player.level();
 
         Vec3 start = player.position().add(0, player.getEyeHeight(), 0);
         Vec3 range = player.getLookAngle().scale(blockRange);
-        BlockHitResult raytrace = world
+        BlockHitResult raytrace = level
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
             lookPos = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
@@ -60,11 +60,11 @@ public class SlingshotRendererHelper {
         if (lookPos != null) {
 
             Player player = mc.player;
-            Level world = player.level;
-            world.getProfiler().popPush("outline");
+            Level level = player.level();
+            level.getProfiler().popPush("outline");
             BlockPos pos = lookPos;
-            BlockState blockstate = world.getBlockState(pos);
-            if (!blockstate.isAir() && world.getWorldBorder().isWithinBounds(pos)) {
+            BlockState blockstate = level.getBlockState(pos);
+            if (!blockstate.isAir() && level.getWorldBorder().isWithinBounds(pos)) {
                 VertexConsumer builder = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.lines());
 
                 Vec3 vector3d = camera.getPosition();
@@ -79,7 +79,7 @@ public class SlingshotRendererHelper {
                 float b = FastColor.ARGB32.blue(color) / 255f;
                 float a = FastColor.ARGB32.alpha(color) / 255f;
 
-                renderVoxelShape(matrixStack, builder, blockstate.getShape(world, pos, CollisionContext.of(camera.getEntity())),
+                renderVoxelShape(matrixStack, builder, blockstate.getShape(level, pos, CollisionContext.of(camera.getEntity())),
                         pos.getX() - pX, pos.getY() - pY, pos.getZ() - pZ, r, g, b, a);
             }
         }

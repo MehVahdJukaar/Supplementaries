@@ -108,8 +108,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     public static int colorFromByte(byte b) {
         return switch (b) {
             case 0, 1 -> 0xffffff;
-            case 15 -> DyeColor.ORANGE.getMaterialColor().col;
-            default -> DyeColor.byId(b).getMaterialColor().col;
+            case 15 -> DyeColor.ORANGE.getMapColor().col;
+            default -> DyeColor.byId(b).getMapColor().col;
         };
     }
 

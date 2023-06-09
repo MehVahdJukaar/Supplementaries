@@ -108,7 +108,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public boolean handleExtractItem(Player player, InteractionHand hand) {
         if (this.getDisplayedItem().getItem() instanceof MobBucketItem) {
             if (player.getItemInHand(hand).getItem() != Items.BUCKET) return false;
-            player.level.playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+            player.level().playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
         } else if (!player.getItemInHand(hand).isEmpty()) return false;
         ItemStack extracted = this.extractItem();
         if (!extracted.isEmpty()) {
@@ -128,8 +128,9 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
         if (player != null) {
             ItemStack returnStack = ItemStack.EMPTY;
-            player.level.playSound(player, this.worldPosition, ModSounds.JAR_COOKIE.get(), SoundSource.BLOCKS,
-                    1, 0.9f + player.level.random.nextFloat() * 0.1f);
+            Level level = player.level();
+            level.playSound(player, this.worldPosition, ModSounds.JAR_COOKIE.get(), SoundSource.BLOCKS,
+                    1, 0.9f + level.random.nextFloat() * 0.1f);
             player.awardStat(Stats.ITEM_USED.get(item));
             // shrink stack and replace bottle /bucket with empty ones
             if (!player.isCreative()) {

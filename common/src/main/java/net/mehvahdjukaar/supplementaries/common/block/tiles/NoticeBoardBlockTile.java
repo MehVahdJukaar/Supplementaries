@@ -28,6 +28,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -266,7 +267,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state) {
         ItemStack itemStack = player.getItemInHand(handIn);
 
-        boolean server = !player.level.isClientSide;
+        Level level = player.level();
+        boolean server = !level.isClientSide;
 
         //TODO: add text holder
         //InteractionResult result = textHolder.interactWithPlayer(level, player, handIn, tile::setChanged);
@@ -277,9 +279,9 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             if (server) {
                 ItemStack it = this.removeItemNoUpdate(0);
                 BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
-                ItemEntity drop = new ItemEntity(player.level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
+                ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
                 drop.setDefaultPickUpDelay();
-                player.level.addFreshEntity(drop);
+                level.addFreshEntity(drop);
                 this.setChanged();
             }
         }

@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -113,21 +114,21 @@ public abstract class QuiverArrowSelectGui extends Gui {
         return false;
     }
 
-    private void renderSlot(PoseStack poseStack, int pX, int pY, ItemStack pStack, int seed) {
+    private void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed) {
         if (!pStack.isEmpty()) {
-            this.itemRenderer.renderAndDecorateItem(poseStack, pStack, pX, pY, seed);
+            graphics.renderItem(pStack, pX, pY, seed);
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            this.itemRenderer.renderGuiItemDecorations(poseStack, this.minecraft.font, pStack, pX, pY);
+            graphics.renderItemDecorations(this.minecraft.font, pStack, pX, pY);
         }
     }
 
-    public void renderQuiverContent(PoseStack poseStack, float partialTicks, int screenWidth, int screenHeight) {
+    public void renderQuiverContent(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
 
         if (minecraft.getCameraEntity() instanceof Player player) {
             ItemStack quiver = getCurrentlyUsedQuiver(player);
             if (quiver.getItem() == ModRegistry.QUIVER_ITEM.get()) {
                 ///gui.setupOverlayRenderState(true, false);
-
+                PoseStack poseStack = graphics.pose();
                 poseStack.pushPose();
 
                 var data = QuiverItem.getQuiverData(quiver);
@@ -138,14 +139,11 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.setShaderTexture(0, TEXTURE);
 
                 int centerX = screenWidth / 2;
 
                 poseStack.pushPose();
-                poseStack.translate(0,0,-90);
+                poseStack.translate(0, 0, -90);
 
                 int uWidth = slots * 20 + 2;
                 int px = uWidth / 2;
@@ -154,19 +152,17 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 px += ClientConfigs.Items.QUIVER_GUI_X.get();
                 py += ClientConfigs.Items.QUIVER_GUI_Y.get();
 
-                blit(poseStack, centerX - px, py, 0, 0, uWidth - 1, 22);
-                blit(poseStack, centerX + px - 1, py, 0, 0, 1, 22);
-                blit(poseStack, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
+                graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 22);
+                graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 22);
+                graphics.blit(TEXTURE, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
 
                 poseStack.popPose();
 
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
                 int i1 = 1;
 
                 for (int i = 0; i < slots; ++i) {
                     int kx = centerX - px + 3 + i * 20;
-                    this.renderSlot(poseStack, kx, py + 3, items.get(i), i1++);
+                    this.renderSlot(graphics, kx, py + 3, items.get(i), i1++);
                 }
                 RenderSystem.disableBlend();
 

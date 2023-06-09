@@ -55,7 +55,7 @@ public class CapturedMobCache {
         var e = MOB_CACHE.getIfPresent(crystalID);
         if (e instanceof EndCrystal c){
             c.time++;
-            if(e.level != Minecraft.getInstance().level){
+            if(e.level() != Minecraft.getInstance().level){
                 //invalid. make new one
                 crystalID = UUID.randomUUID();
             }

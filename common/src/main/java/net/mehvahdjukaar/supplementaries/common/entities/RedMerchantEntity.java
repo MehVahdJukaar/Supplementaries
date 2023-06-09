@@ -117,14 +117,15 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
                 player.awardStat(Stats.TALKED_TO_VILLAGER);
             }
 
+            Level level = this.level();
             if (!this.getOffers().isEmpty()) {
-                if (!this.level.isClientSide) {
+                if (!level.isClientSide) {
                     this.setTradingPlayer(player);
                     this.openTradingScreen(player, this.getDisplayName(), 1);
                 }
 
             }
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         } else {
             return super.mobInteract(player, hand);
         }
@@ -182,7 +183,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     protected void rewardTradeXp(MerchantOffer merchantOffer) {
         if (merchantOffer.shouldRewardExp()) {
             int i = 3 + this.random.nextInt(4);
-            this.level.addFreshEntity(new ExperienceOrb(this.level, this.getX(), this.getY() + 0.5D, this.getZ(), i));
+            this.level().addFreshEntity(new ExperienceOrb(this.level(), this.getX(), this.getY() + 0.5D, this.getZ(), i));
         }
     }
 
@@ -228,7 +229,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     @Override
     public void aiStep() {
         super.aiStep();
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (attackCooldown > 0) attackCooldown--;
             this.maybeDespawn();
         }
@@ -258,16 +259,17 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         double d2 = target.getZ() + vector3d.z - this.getZ();
         float f = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 
-        BombEntity bomb = new BombEntity(this.level, this, BombEntity.BombType.NORMAL);
+        Level level = this.level();
+        BombEntity bomb = new BombEntity(level, this, BombEntity.BombType.NORMAL);
         //bomb.xRot -= -90F;
         bomb.shoot(d0, d1 + (f * 0.24F), d2, 1.25F, 0.9F);
 
         if (!this.isSilent()) {
             //TODO: sound here
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
+            level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.WITCH_THROW, this.getSoundSource(), 1.0F, 0.8F + this.random.nextFloat() * 0.4F);
         }
 
-        this.level.addFreshEntity(bomb);
+        level.addFreshEntity(bomb);
 
     }
 

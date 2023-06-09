@@ -22,9 +22,6 @@ public abstract class EntityMixin {
     @Shadow
     public abstract void playSound(SoundEvent pSound, float pVolume, float pPitch);
 
-    @Shadow
-    public abstract Level getLevel();
-
     @Unique
     private BlockState cachedBlockState;
 //TODO: use sound instance and redo

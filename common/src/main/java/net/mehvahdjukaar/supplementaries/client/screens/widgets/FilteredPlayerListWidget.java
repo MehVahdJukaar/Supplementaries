@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -16,13 +14,13 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class FilteredPlayerListWidget extends GuiComponent implements NarratableEntry, GuiEventListener, Renderable {
+public class FilteredPlayerListWidget implements NarratableEntry, GuiEventListener, Renderable {
 
     private static final int ENTRY_PER_SCREEN = 3;
     private static final int ITEM_HEIGHT = 12;
@@ -62,7 +60,7 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
 
         Collection<UUID> collection = this.minecraft.player.connection.getOnlinePlayerIds();
 
-        for(UUID uuid : collection) {
+        for (UUID uuid : collection) {
             PlayerInfo playerinfo = this.minecraft.player.connection.getPlayerInfo(uuid);
             if (playerinfo != null) {
                 this.allPlayers.add(new SimplePlayerEntry(playerinfo, this.minecraft.font));
@@ -91,7 +89,7 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
         return this.filtered.stream().map(SimplePlayerEntry::getName).toList();
     }
 
-    private void updateFilteredEntries(){
+    private void updateFilteredEntries() {
         this.filtered.clear();
         this.filtered.addAll(this.allPlayers.stream().filter(s -> s.getName().toLowerCase(Locale.ROOT).startsWith(this.filter)).toList());
     }
@@ -102,7 +100,7 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
     }
 
     public void removePlayer(UUID id) {
-        for(SimplePlayerEntry simplePlayerEntry : this.allPlayers) {
+        for (SimplePlayerEntry simplePlayerEntry : this.allPlayers) {
             if (simplePlayerEntry.getId().equals(id)) {
                 this.allPlayers.remove(simplePlayerEntry);
                 this.updateFilteredEntries();
@@ -118,8 +116,8 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int key) {
         this.isDragging = this.canScroll() &&
-                mouseX >  (x + SCROLLER_X) && mouseX <  (x + SCROLLER_X + SCROLLER_W) &&
-                mouseY >  (y) && mouseY <=  (y + HEIGHT + 1);
+                mouseX > (x + SCROLLER_X) && mouseX < (x + SCROLLER_X + SCROLLER_W) &&
+                mouseY > (y) && mouseY <= (y + HEIGHT + 1);
 
         if (this.isMouseOver(mouseX, mouseY)) {
             SimplePlayerEntry e = this.getEntryAtPosition(mouseX, mouseY);
@@ -136,8 +134,8 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
         if (this.isDragging) {
 
             int j = this.filtered.size() - ENTRY_PER_SCREEN;
-            float f = ((float) dy -  y - 13.5F) / ((float) (y1 - y) - SCROLLER_H);
-            f = f *  j + 0.5F;
+            float f = ((float) dy - y - 13.5F) / ((float) (y1 - y) - SCROLLER_H);
+            f = f * j + 0.5F;
             this.scrollOff = Mth.clamp((int) f, 0, j);
             return true;
         }
@@ -148,7 +146,7 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
     public boolean mouseScrolled(double a, double b, double c) {
         if (this.canScroll()) {
             int j = this.filtered.size() - ENTRY_PER_SCREEN;
-            this.scrollOff = (int) ( this.scrollOff - c);
+            this.scrollOff = (int) (this.scrollOff - c);
             this.scrollOff = Mth.clamp(this.scrollOff, 0, j);
         }
 
@@ -172,38 +170,37 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseY >=  this.y && mouseY <=  this.y1 &&
-                mouseX >=  this.x && mouseX <=  this.x1;
+        return mouseY >= this.y && mouseY <= this.y1 &&
+                mouseX >= this.x && mouseX <= this.x1;
     }
 
     //call is mouse over before this
     @Nullable
     protected final SimplePlayerEntry getEntryAtPosition(double mouseX, double mouseY) {
         if (mouseX > x1) return null;
-        int rel = Mth.floor(mouseY -  this.y);
+        int rel = Mth.floor(mouseY - this.y);
         int ind = this.scrollOff + rel / ITEM_HEIGHT;
         return rel >= 0 && ind < this.filtered.size() ? this.filtered.get(ind) : null;
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         int size = this.filtered.size();
-        this.renderScroller(poseStack, size);
+        this.renderScroller(graphics, size);
         if (size != 0) {
             SimplePlayerEntry hovered = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 
             int currentY = y;
             for (int i = 0; this.scrollOff + i < size && i < ENTRY_PER_SCREEN; i++) {
                 var e = this.filtered.get(this.scrollOff + i);
-                e.render(poseStack, this.scrollOff + i, x, currentY, WIDTH, ITEM_HEIGHT, mouseX, mouseY,
+                e.render(graphics, this.scrollOff + i, x, currentY, WIDTH, ITEM_HEIGHT, mouseX, mouseY,
                         Objects.equals(hovered, e), partialTicks);
                 currentY += ITEM_HEIGHT;
             }
         }
     }
 
-    private void renderScroller(PoseStack poseStack, int size) {
-        RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
+    private void renderScroller(GuiGraphics graphics, int size) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int currentIndex = size + 1 - ENTRY_PER_SCREEN;
         if (currentIndex > 1) {
@@ -214,9 +211,9 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
                 scroll = HEIGHT - SCROLLER_H;
             }
 
-            GuiComponent.blit(poseStack, x + SCROLLER_X, y + scroll, 0, 0.0F, 232, SCROLLER_W, SCROLLER_H, 256, 256);
+            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, x + SCROLLER_X, y + scroll, 0, 0.0F, 232, SCROLLER_W, SCROLLER_H, 256, 256);
         } else {
-            GuiComponent.blit(poseStack, x + SCROLLER_X, y, 0, SCROLLER_W, 232, SCROLLER_W, SCROLLER_H, 256, 256);
+            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, x + SCROLLER_X, y, 0, SCROLLER_W, 232, SCROLLER_W, SCROLLER_H, 256, 256);
         }
 
     }
@@ -261,7 +258,7 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
             return playerName;
         }
 
-        public void render(PoseStack poseStack, int pIndex, int pLeft, int pTop, int pWidth, int pHeight,
+        public void render(GuiGraphics graphics, int pIndex, int pLeft, int pTop, int pWidth, int pHeight,
                            int pMouseX, int pMouseY, boolean hovered, float pPartialTicks) {
 
             int i = pLeft + 2;
@@ -269,19 +266,18 @@ public class FilteredPlayerListWidget extends GuiComponent implements Narratable
 
             int k = i + SKIN_SIZE + 2;
 
-            RenderSystem.setShaderTexture(0, ModTextures.PRESENT_GUI_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiComponent.blit(poseStack, pLeft, pTop, 0, 0, 220, pWidth, pHeight, 256, 256);
+            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, pLeft, pTop, 0, 0, 220, pWidth, pHeight, 256, 256);
 
 
-            RenderSystem.setShaderTexture(0, this.skinGetter.get());
+            ResourceLocation resourceLocation = this.skinGetter.get();
             //face and overlay
-            GuiComponent.blit(poseStack, i, j, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);
+            graphics.blit(resourceLocation, i, j, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.enableBlend();
-            GuiComponent.blit(poseStack, i, j, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
+            graphics.blit(resourceLocation, i, j, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.disableBlend();
 
-            this.font.draw(poseStack, this.playerName,  k,  j, hovered ? -1 : 0);
+            graphics.drawString(this.font, this.playerName, k, j, hovered ? -1 : 0);
 
         }
 

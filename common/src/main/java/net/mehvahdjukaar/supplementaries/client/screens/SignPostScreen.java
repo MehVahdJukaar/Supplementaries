@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
@@ -136,14 +137,15 @@ public class SignPostScreen extends Screen {
 
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        Lighting.setupForFlatItems();
-        this.renderBackground(poseStack);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        Lighting.setupForFlatItems(); //TODO why this here ??
+        this.renderBackground(graphics);
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
+        graphics. drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
+        PoseStack poseStack = graphics.pose();
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
         poseStack.pushPose();
         poseStack.translate(this.width / 2d, 0.0D, 50.0D);
@@ -194,12 +196,12 @@ public class SignPostScreen extends Screen {
             int selectionPos = this.textInputUtil.getSelectionPos();
 
             if (signUp.active()) {
-                TextUtil.renderGuiLine(properties, this.cachedLines[0], font, poseStack, bufferSource,
+                TextUtil.renderGuiLine(properties, this.cachedLines[0], font, graphics, bufferSource,
                         cursorPos, selectionPos, this.editLine == 0, blink, -10);
             }
             if (signDown.active()) {
                 poseStack.translate(-3 * o[1], 0, 0);
-                TextUtil.renderGuiLine(properties, this.cachedLines[1], font, poseStack, bufferSource,
+                TextUtil.renderGuiLine(properties, this.cachedLines[1], font, graphics, bufferSource,
                         cursorPos, selectionPos, this.editLine == 1, blink, 48 - 10);
             }
         }

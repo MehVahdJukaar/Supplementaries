@@ -112,7 +112,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
-        if (playerIn.level.getBlockEntity(this.pos) instanceof IDynamicContainer tile && !tile.canHoldItems()) {
+        if (playerIn.level().getBlockEntity(this.pos) instanceof IDynamicContainer tile && !tile.canHoldItems()) {
             this.clearContainer(playerIn, this.inventory);
         }
 

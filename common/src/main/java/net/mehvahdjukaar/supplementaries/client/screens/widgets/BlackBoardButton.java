@@ -6,8 +6,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -19,7 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FastColor;
 
 
-public class BlackBoardButton extends GuiComponent implements GuiEventListener, Renderable, NarratableEntry {
+public class BlackBoardButton implements GuiEventListener, Renderable, NarratableEntry {
     public final int u;
     public final int v;
     public final int x;
@@ -51,18 +52,14 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         renderButton(poseStack);
         //soboolean wasHovered = this.isHovered();
 
     }
 
-    public void renderButton(PoseStack matrixStack) {
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, ModTextures.BLACKBOARD_GUI_TEXTURE);
-
+    public void renderButton(GuiGraphics graphics) {
         int offset = this.color > 0 ? 16 : 0;
 
         int rgb = BlackboardBlock.colorFromByte(this.color);
@@ -71,18 +68,19 @@ public class BlackBoardButton extends GuiComponent implements GuiEventListener, 
         float r = FastColor.ABGR32.red(rgb) / 255f;
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
-        blit(matrixStack, this.x, this.y, (float) (this.u + offset) * SIZE, (float) this.v * SIZE, SIZE, SIZE, 32 * SIZE, 16 * SIZE);
+        graphics.blit( ModTextures.BLACKBOARD_GUI_TEXTURE,this.x, this.y,
+                (float) (this.u + offset) * SIZE, (float) this.v * SIZE,
+                SIZE, SIZE, 32 * SIZE, 16 * SIZE);
     }
 
-    public void renderTooltip(PoseStack poseStack) {
+    public void renderTooltip(GuiGraphics poseStack) {
         //maybe remove this
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        poseStack.translate(0,0,90);
+        poseStack.pose().translate(0,0,90);
         RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
-        blit(poseStack, this.x - 1, this.y - 1, 16f * SIZE, 0, SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
+        poseStack. blit(ModTextures.BLACKBOARD_GUI_TEXTURE, this.x - 1, this.y - 1,
+                16f * SIZE, 0,
+                SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
         //render again to cover stuff
         this.renderButton(poseStack);
     }

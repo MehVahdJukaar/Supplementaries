@@ -14,12 +14,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class FarmersDelightCompat {
     }
 
     public static PlanterBlock makePlanterRich(){
-        return new PlanterRichBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.TERRACOTTA_RED)
+        return new PlanterRichBlock(BlockBehaviour.Properties.copy(Blocks.RED_TERRACOTTA)
                         .strength(2f, 6f)
                         .requiresCorrectToolForDrops()
                         .randomTicks(), CompatObjects.RICH_SOIL);
@@ -78,8 +78,8 @@ public class FarmersDelightCompat {
         }
 
         @Override
-        public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-            return Collections.singletonList(new ItemStack(this));
+        public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
+            return super.getDrops(blockState, builder);
         }
 
         @Override

@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -143,7 +142,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         Entity owner = this.getOwner();
         boolean success = false;
         if (owner instanceof Player player && player.mayBuild()) {
-
+            Level level = level();
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return; //hack since we need client interaction aswell
@@ -162,17 +161,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             }
 
             if (!success) {
-                if (level.isClientSide && CompatHandler.FLAN) {
-                    //trading no ghost blocks for no sounds when this fuckery is on...
-                    success = true;
-                } else {
-                    //null player so sound always plays
-                    //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
-                    Player fakePlayer = FakePlayerManager.getDefault(this, player);
+                //null player so sound always plays
+                //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
+                Player fakePlayer = FakePlayerManager.getDefault(this, player);
 
-                    success = ItemsUtil.place(item,
-                            new BlockPlaceContext(this.level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
-                }
+                success = ItemsUtil.place(item,
+                        new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
             }
             if (success) {
                 this.remove(RemovalReason.DISCARDED);
@@ -188,12 +182,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Entity owner = this.getOwner();
             if (i > 0 && this.isAcceptableReturnOwner(owner)) {
                 Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D *  i, this.getZ());
-                if (this.level.isClientSide) {
+                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D * i, this.getZ());
+                if (this.level().isClientSide) {
                     this.yOld = this.getY();
                 }
 
-                double d0 = 0.05D *  i;
+                double d0 = 0.05D * i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
                 ++this.clientSideReturnTridentTickCount;
@@ -216,12 +210,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
             boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
 
-            if (!this.level.isClientSide) {
+            Level level = this.level();
+            if (!level.isClientSide) {
                 if (!success) {
                     this.spawnAtLocation(this.getItem(), 0.1f);
                 }
             } else {
-                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F, false);
+                level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F, false);
             }
             this.remove(RemovalReason.DISCARDED);
         }
@@ -275,7 +270,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     double pz = newPos.z + offset.z;
 
                     movement = movement.scale(0.25);
-                    this.level.addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
+                    this.level().addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
                 } else {
                     double interval = 4 / (d * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
@@ -283,7 +278,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                         double x = currentPos.x;
                         double y = currentPos.y;//+ this.getBbHeight() / 2d;
                         double z = currentPos.z;
-                        this.level.addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
+                        this.level().addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
                     }
                 }
             }
@@ -313,7 +308,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void readSpawnData(FriendlyByteBuf buffer) {
         int id = buffer.readInt();
         if (id != -1) {
-            this.setOwner(this.level.getEntity(id));
+            this.setOwner(this.level().getEntity(id));
         }
         this.xRotInc = buffer.readFloat();
         this.yRotInc = buffer.readFloat();

@@ -160,7 +160,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onAddLootTables(LootTableLoadEvent event) {
-        ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
+        ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().poo.addPool(b.build()));
     }
 
     //TODO: add these on fabric

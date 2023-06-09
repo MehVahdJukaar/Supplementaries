@@ -45,7 +45,7 @@ dependencies {
     modCompileOnly("curse.maven:jei-238222:4405345")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
-    modCompileOnly("dev.emi:emi:${project.emi_version}+${project.minecraft_version}:api")
+    modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
     //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")

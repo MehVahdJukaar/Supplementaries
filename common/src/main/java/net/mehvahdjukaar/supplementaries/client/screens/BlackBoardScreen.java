@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -104,13 +105,13 @@ public class BlackBoardScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
+        this.renderBackground(graphics);
+        drawCenteredString(graphics, this.font, this.title, this.width / 2, 40, 16777215);
 
 
-        poseStack.pushPose();
+        graphics.pushPose();
 
         int ut = -1;
         int vt = -1;
@@ -120,14 +121,14 @@ public class BlackBoardScreen extends Screen {
                     ut = xx;
                     vt = yy;
                 }
-                this.buttons[xx][yy].render(poseStack, mouseX, mouseY, partialTicks);
+                this.buttons[xx][yy].render(graphics, mouseX, mouseY, partialTicks);
             }
         }
-        if (ut != -1) this.buttons[ut][vt].renderTooltip(poseStack);
-        poseStack.popPose();
+        if (ut != -1) this.buttons[ut][vt].renderTooltip(graphics);
+        graphics.popPose();
 
         Lighting.setupFor3DItems();
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
     }
 }
 

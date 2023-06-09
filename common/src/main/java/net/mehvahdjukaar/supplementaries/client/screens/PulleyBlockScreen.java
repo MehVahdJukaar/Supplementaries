@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -20,17 +17,14 @@ public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContai
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.PULLEY_BLOCK_GUI_TEXTURE);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.PULLEY_BLOCK_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);

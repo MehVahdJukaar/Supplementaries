@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import java.lang.reflect.Constructor;
@@ -55,48 +55,48 @@ public class WeatheredMap {
     }
 
 
-    private static final MaterialColor ANTIQUE_LIGHT;
-    private static final MaterialColor ANTIQUE_DARK;
-    private static final Object2ObjectArrayMap<MaterialColor, MaterialColor> ANTIQUE_COLORS = new Object2ObjectArrayMap<>();
+    private static final MapColor ANTIQUE_LIGHT;
+    private static final MapColor ANTIQUE_DARK;
+    private static final Object2ObjectArrayMap<MapColor, MapColor> ANTIQUE_COLORS = new Object2ObjectArrayMap<>();
 
     static {
-        MaterialColor materialColor1;
-        MaterialColor materialColor;
+        MapColor mc1;
+        MapColor mc;
         try {
-            Class<MaterialColor> cl = MaterialColor.class;
+            Class<MapColor> cl = MapColor.class;
 
-            Constructor<MaterialColor> cons = cl.getDeclaredConstructor(int.class, int.class);
+            Constructor<MapColor> cons = cl.getDeclaredConstructor(int.class, int.class);
             cons.setAccessible(true);
 
-            materialColor = cons.newInstance(62, 0xd3a471);
-            materialColor1 = cons.newInstance(63, 0xa77e52);
+            mc = cons.newInstance(62, 0xd3a471);
+            mc1 = cons.newInstance(63, 0xa77e52);
         } catch (Exception e) {
-            materialColor = MaterialColor.TERRACOTTA_WHITE;
-            materialColor1 = MaterialColor.RAW_IRON;
+            mc = MapColor.TERRACOTTA_WHITE;
+            mc1 = MapColor.RAW_IRON;
             Supplementaries.LOGGER.warn("Failed to add custom map colors for antique map: " + e);
         }
-        ANTIQUE_DARK = materialColor1;
-        ANTIQUE_LIGHT = materialColor;
-        ANTIQUE_COLORS.put(MaterialColor.STONE, MaterialColor.DIRT);
-        ANTIQUE_COLORS.put(MaterialColor.DEEPSLATE, MaterialColor.DIRT);
-        ANTIQUE_COLORS.put(MaterialColor.PLANT, MaterialColor.COLOR_BROWN);
-        ANTIQUE_COLORS.put(MaterialColor.DIRT, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.WOOD, MaterialColor.WOOD);
-        ANTIQUE_COLORS.put(MaterialColor.COLOR_GRAY, MaterialColor.COLOR_BROWN);
-        ANTIQUE_COLORS.put(MaterialColor.TERRACOTTA_BLACK, MaterialColor.TERRACOTTA_BLACK);
-        ANTIQUE_COLORS.put(MaterialColor.COLOR_BLACK, MaterialColor.TERRACOTTA_BLACK);
-        ANTIQUE_COLORS.put(MaterialColor.SAND, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.QUARTZ, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.SNOW, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.METAL, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.WOOL, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MaterialColor.COLOR_BROWN, MaterialColor.TERRACOTTA_BROWN);
+        ANTIQUE_DARK = mc1;
+        ANTIQUE_LIGHT = mc;
+        ANTIQUE_COLORS.put(MapColor.STONE, MapColor.DIRT);
+        ANTIQUE_COLORS.put(MapColor.DEEPSLATE, MapColor.DIRT);
+        ANTIQUE_COLORS.put(MapColor.PLANT, MapColor.COLOR_BROWN);
+        ANTIQUE_COLORS.put(MapColor.DIRT, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.WOOD, MapColor.WOOD);
+        ANTIQUE_COLORS.put(MapColor.COLOR_GRAY, MapColor.COLOR_BROWN);
+        ANTIQUE_COLORS.put(MapColor.TERRACOTTA_BLACK, MapColor.TERRACOTTA_BLACK);
+        ANTIQUE_COLORS.put(MapColor.COLOR_BLACK, MapColor.TERRACOTTA_BLACK);
+        ANTIQUE_COLORS.put(MapColor.SAND, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.QUARTZ, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.SNOW, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.METAL, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.WOOL, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.COLOR_BROWN, MapColor.TERRACOTTA_BROWN);
     }
 
 
     public static boolean update(MapItemSavedData data, Entity entity, boolean antique) {
         if (!antique) return false;
-        Level level = entity.level;
+        Level level = entity.level();
 
         if (!(level.dimension() == data.dimension && entity instanceof Player)) return false;
 
@@ -127,7 +127,7 @@ public class WeatheredMap {
                         boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (centerY - 2) * (centerY - 2);
                         int worldX = (mapX / scale + pixelX - 64) * scale;
                         int worldZ = (mapZ / scale + pixelZ - 64) * scale;
-                        Multiset<MaterialColor> multiset = LinkedHashMultiset.create();
+                        Multiset<MapColor> multiset = LinkedHashMultiset.create();
                         LevelChunk levelchunk = level.getChunkAt(new BlockPos(worldX, 0, worldZ));
                         if (!levelchunk.isEmpty()) {
                             ChunkPos chunkpos = levelchunk.getPos();
@@ -176,7 +176,7 @@ public class WeatheredMap {
                                     for (int scaleOffsetZ = 0; scaleOffsetZ < scale; ++scaleOffsetZ) {
                                         int cY = levelchunk.getHeight(Heightmap.Types.WORLD_SURFACE, scaleOffsetX + chunkCoordX, scaleOffsetZ + chunkCoordZ) + 1;
                                         BlockState blockState;
-                                        MaterialColor newColor = null;
+                                        MapColor newColor = null;
 
                                         if (cY <= level.getMinBuildHeight() + 1) {
                                             newColor = Blocks.BEDROCK.defaultBlockState().getMapColor(level, mutable1);
@@ -184,17 +184,17 @@ public class WeatheredMap {
 
 
                                             //get first non empty map color below chunk y
-                                            MaterialColor temp;
+                                            MapColor temp;
                                             do {
                                                 --cY;
                                                 mutable1.set(chunkpos.getMinBlockX() + scaleOffsetX + chunkCoordX, cY, chunkpos.getMinBlockZ() + scaleOffsetZ + chunkCoordZ);
                                                 blockState = levelchunk.getBlockState(mutable1);
                                                 temp = blockState.getMapColor(level, mutable1);
-                                                if (temp != MaterialColor.NONE && temp != MaterialColor.WATER && blockState.getCollisionShape(level, mutable1).isEmpty()) {
-                                                    newColor = MaterialColor.GRASS;
-                                                    //temp = MaterialColor.NONE;
+                                                if (temp != MapColor.NONE && temp != MapColor.WATER && blockState.getCollisionShape(level, mutable1).isEmpty()) {
+                                                    newColor = MapColor.GRASS;
+                                                    //temp = MapColor.NONE;
                                                 }
-                                            } while (temp == MaterialColor.NONE && cY > level.getMinBuildHeight());
+                                            } while (temp == MapColor.NONE && cY > level.getMinBuildHeight());
 
                                             if (newColor == null) {
                                                 newColor = blockState.getMapColor(level, mutable1);
@@ -211,11 +211,11 @@ public class WeatheredMap {
                             int relativeShade = 1;
 
 
-                            MaterialColor materialcolor = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MaterialColor.NONE);
-                            if (materialcolor == MaterialColor.WATER) {
+                            MapColor MapColor = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MapColor.NONE);
+                            if (MapColor == MapColor.WATER) {
 
 
-                                materialcolor = MaterialColor.COLOR_ORANGE;
+                                MapColor = MapColor.COLOR_ORANGE;
                                 if (distanceFromLand > 7 && pixelZ % 2 == 0) {
                                     relativeShade = (pixelX + (int) (Mth.sin(pixelZ + 0.0F) * 7.0F)) / 8 % 5;
                                     if (relativeShade == 3) {
@@ -224,7 +224,7 @@ public class WeatheredMap {
                                         relativeShade = 0;
                                     }
                                 } else if (distanceFromLand > 7) {
-                                    materialcolor = ANTIQUE_LIGHT;
+                                    MapColor = ANTIQUE_LIGHT;
                                     relativeShade = 2;
                                 } else if (distanceFromLand > 5) {
                                     relativeShade = 1;
@@ -237,7 +237,7 @@ public class WeatheredMap {
 
                                 if (distanceFromLand > 0) {
                                     relativeShade = 3;
-                                    materialcolor = MaterialColor.COLOR_BROWN;
+                                    MapColor = MapColor.COLOR_BROWN;
                                     if (distanceFromLand > 3) {
                                         relativeShade = 1;
                                     }
@@ -252,16 +252,16 @@ public class WeatheredMap {
                                         relativeShade = 0;
                                     }
 
-                                    materialcolor = ANTIQUE_COLORS.getOrDefault(materialcolor, ANTIQUE_DARK);
+                                    MapColor = ANTIQUE_COLORS.getOrDefault(MapColor, ANTIQUE_DARK);
                                 }
                             }
-                            //if(materialcolor == MaterialColor.WATER)
+                            //if(MapColor == MapColor.WATER)
 
                             somethingY = maxY;
 
 
                             if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < centerY * centerY && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
-                                flag |= data.updateColor(pixelX, pixelZ, (byte) (materialcolor.id * 4 + relativeShade));
+                                flag |= data.updateColor(pixelX, pixelZ, (byte) (MapColor.id * 4 + relativeShade));
                             }
                         }
                     }

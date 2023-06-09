@@ -47,7 +47,6 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -167,7 +166,7 @@ public class ServerEvents {
     }
 
     @EventCalled
-    public static void injectLootTables(LootTables lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
+    public static void injectLootTables(Object lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
         LootTablesInjects.injectLootTables(name, builder);
     }
 

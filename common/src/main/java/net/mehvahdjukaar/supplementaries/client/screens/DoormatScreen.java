@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
@@ -120,18 +121,18 @@ public class DoormatScreen extends Screen {
     }
 
     @Override
-
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
-        this.renderBackground(poseStack);
+        this.renderBackground(graphics);
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(graphics, mouseX, mouseY, partialTicks);
 
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 40, 16777215);
+        drawCenteredString(graphics, this.font, this.title, this.width / 2, 40, 16777215);
 
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
 
+        PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
 
         poseStack.translate((this.width / 2d), 0.0D, 50.0D);
@@ -147,7 +148,7 @@ public class DoormatScreen extends Screen {
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
-        blockRenderer.renderSingleBlock(state, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+        blockRenderer.renderSingleBlock(state, graphics, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 
@@ -159,7 +160,7 @@ public class DoormatScreen extends Screen {
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
         TextUtil.renderGuiText(this.tileSign.textHolder.getGUIRenderTextProperties(),
-                this.cachedLines, this.font, poseStack, bufferSource,
+                this.cachedLines, this.font, graphics, bufferSource,
                 this.textInputUtil.getCursorPos(), this.textInputUtil.getSelectionPos(),
                 this.editLine, blink, DoormatBlockTileRenderer.LINE_SEPARATION);
 

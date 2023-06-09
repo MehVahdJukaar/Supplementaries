@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -13,7 +15,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
 
     @Override
-    public boolean render(PoseStack poseStack, Font font, ItemStack stack, int x, int y) {
+    public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
         boolean overlay = ClientConfigs.Items.SLINGSHOT_OVERLAY.get();
         boolean outline = ClientConfigs.Items.SLINGSHOT_OUTLINE.get();
         if (overlay || outline) {
@@ -24,7 +26,7 @@ public class SlingshotItemOverlayRenderer implements IItemDecoratorRenderer {
                 if (overlay) {
                     ItemStack ammo = SlingshotRendererHelper.getAmmoForPreview(stack, Minecraft.getInstance().level, player);
 
-                    QuiverItemOverlayRenderer.renderAmmo(poseStack, x, y, ammo);
+                    QuiverItemOverlayRenderer.renderAmmo(graphics, x, y, ammo);
                 }
                 if (outline) {
                     if (EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0) {
