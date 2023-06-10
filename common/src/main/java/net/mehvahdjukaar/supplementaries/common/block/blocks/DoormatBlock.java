@@ -126,7 +126,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
 
     //for player bed spawn
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;
     }
 

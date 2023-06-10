@@ -157,11 +157,6 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
-    @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
         return worldIn.getBlockEntity(pos) instanceof MenuProvider menuProvider ? menuProvider : null;
     }

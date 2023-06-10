@@ -130,11 +130,6 @@ public class GunpowderBlock extends LightUpBlock {
         return this.getConnectionState(context.getLevel(), this.crossState, context.getClickedPos());
     }
 
-    @Override
-    public boolean canBeReplaced(BlockState state, Fluid fluid) {
-        return this.material.isReplaceable() || !this.material.isSolid();
-    }
-
     //-----connection logic------
 
     private BlockState getConnectionState(BlockGetter world, BlockState state, BlockPos pos) {

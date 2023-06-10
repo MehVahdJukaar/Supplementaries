@@ -215,11 +215,6 @@ public class SackBlock extends FallingBlock implements EntityBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
-    @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if (state.getValue(OPEN))
             return SHAPE_OPEN;

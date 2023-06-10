@@ -54,11 +54,6 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
-    @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
                                   BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
@@ -161,16 +156,6 @@ public class CrankBlock extends WaterBlock {
             double d2 = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
             worldIn.addParticle(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    public boolean isPossibleToRespawnInThis() {
-        return true;
-    }
-
-    @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
-        return true;
     }
 
     @Override

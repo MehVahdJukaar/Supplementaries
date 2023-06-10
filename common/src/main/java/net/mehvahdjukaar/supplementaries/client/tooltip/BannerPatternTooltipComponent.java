@@ -44,7 +44,7 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
             var contents = sprite.contents();
             int width = contents.width();
             int height = contents.height();
-            RenderUtil.blitSprite(graphics, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
+            RenderUtil.blitSpriteSection(graphics, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
         }
 
         graphics.pose().popPose();

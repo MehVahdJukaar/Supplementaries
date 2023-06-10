@@ -35,11 +35,6 @@ public abstract class LightUpBlock extends Block implements ILightable {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, Fluid fluid) {
-        return this.material.isReplaceable();
-    }
-
-    @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         return interactWithPlayer(state, worldIn, pos, player, handIn);
     }

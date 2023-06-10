@@ -54,6 +54,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -291,11 +292,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         }
     }
 
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        return super.getDrops(state, builder);
-    }
-
     @PlatformOnly(PlatformOnly.FORGE)
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 10;
@@ -444,7 +440,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             //checks if block below this is hollow
             BlockPos downPos = pos.below();
             //try move block down
-            if (!(world.getBlockState(downPos).getMaterial().isReplaceable()
+            if (!(world.getBlockState(downPos).canBeReplaced()
                     && tryMove(pos, downPos, world))) return false;
             context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
         }

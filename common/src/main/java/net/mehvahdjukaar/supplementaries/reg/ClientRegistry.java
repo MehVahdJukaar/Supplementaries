@@ -177,8 +177,6 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SILVER_LANTERN.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.LEAD_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
@@ -199,10 +197,6 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SILVER_DOOR.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SILVER_TRAPDOOR.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.LEAD_DOOR.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.LEAD_TRAPDOOR.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));

@@ -206,10 +206,6 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
         return s;
     }
 
-    @Override
-    public boolean isPossibleToRespawnInThis() {
-        return true;
-    }
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -154,8 +155,8 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
         public void tryDropping(ServerLevel serverLevel, BlockPos pos, Entity entity) {
             if (serverLevel.random.nextFloat() < chance) {
-                LootTable lootTable = serverLevel.getServer().getLootTables().get(tableId);
-                LootContext.Builder builder = new LootContext.Builder(serverLevel)
+                LootTable lootTable = serverLevel.getServer().getLootData().getLootTable(tableId);
+                LootParams.Builder builder = new LootParams.Builder(serverLevel)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                         .withParameter(LootContextParams.BLOCK_STATE, serverLevel.getBlockState(pos))
                         .withOptionalParameter(LootContextParams.THIS_ENTITY, entity);

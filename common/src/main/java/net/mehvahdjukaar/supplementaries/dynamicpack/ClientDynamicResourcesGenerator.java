@@ -60,21 +60,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         return true;
     }
 
-    @Override
-    public void generateStaticAssetsOnStartup(ResourceManager manager) {
-
-        this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
-                """ 
-                        {
-                            "parent": "item/crossbow",
-                            "textures": {
-                                "layer0": "item/crossbow_arrow_base",
-                                "layer1": "item/crossbow_arrow_tip"
-                            }
-                        }
-                        """));
-    }
-
     public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
         String string = new String(resource.data, StandardCharsets.UTF_8);
 
@@ -97,6 +82,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         WallLanternTexturesManager.reloadTextures(manager);
         GlobeManager.refreshColorsAndTextures(manager);
         ColorHelper.refreshBubbleColors(manager);
+
+        this.dynamicPack.addItemModel(new ResourceLocation("crossbow_arrow"), JsonParser.parseString(
+                """ 
+                        {
+                            "parent": "item/crossbow",
+                            "textures": {
+                                "layer0": "item/crossbow_arrow_base",
+                                "layer1": "item/crossbow_arrow_tip"
+                            }
+                        }
+                        """));
 
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("crossbow"), e -> {

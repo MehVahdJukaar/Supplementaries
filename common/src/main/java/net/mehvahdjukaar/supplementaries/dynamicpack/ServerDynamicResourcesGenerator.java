@@ -48,20 +48,25 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
-        /*
-        try {
-           var r = Utils.hackyGetRegistryAccess();
-           // var j = PlacedFeature.DIRECT_CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE,r), ModWorldgenRegistry.PLACED_CAVE_URNS.get());
-          //  ServerDynamicResourcesHandler.INSTANCE.dynamicPack.addJson(Supplementaries.res("placed_urns"), j.get().orThrow(), ResType.GENERIC);
 
-            var jj = ConfiguredFeature.DIRECT_CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE,r),
-                    ModWorldgenRegistry.WILD_FLAX_PATCH.get());
-            ServerDynamicResourcesHandler.INSTANCE.dynamicPack.addJson(Supplementaries.res("flax"), jj.get().orThrow(), ResType.GENERIC);
-            int aa = 1;
-        }catch (Exception e){
-
-        }*/
-
+        //hanging signs
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
+            //loot table
+            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
+                dynamicPack.addSimpleBlockLootTable(sign);
+                builder.addEntry(sign);
+            });
+            //tag
+            dynamicPack.addTag(builder, Registries.BLOCK);
+            dynamicPack.addTag(builder, Registries.ITEM);
+        }
+        //sing posts
+        {
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
+            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
+            dynamicPack.addTag(builder, Registries.ITEM);
+        }
 
         //recipes
         if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
@@ -114,30 +119,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         }
 
     }
-
-    @Override
-    public void generateStaticAssetsOnStartup(ResourceManager manager) {
-
-        //hanging signs
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
-            //loot table
-            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
-                dynamicPack.addSimpleBlockLootTable(sign);
-                builder.addEntry(sign);
-            });
-            //tag
-            dynamicPack.addTag(builder, Registries.BLOCK);
-            dynamicPack.addTag(builder, Registries.ITEM);
-        }
-        //sing posts
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
-            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
-            dynamicPack.addTag(builder, Registries.ITEM);
-        }
-    }
-
 
     private void addHangingSignRecipes(ResourceManager manager) {
         IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,

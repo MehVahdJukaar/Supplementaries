@@ -78,7 +78,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState state) {
         return true;
     }
 

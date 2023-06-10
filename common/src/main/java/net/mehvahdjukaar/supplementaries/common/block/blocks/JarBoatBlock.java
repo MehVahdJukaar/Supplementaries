@@ -45,11 +45,6 @@ public class JarBoatBlock extends HorizontalDirectionalBlock implements EntityBl
         builder.add(FACING);
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {

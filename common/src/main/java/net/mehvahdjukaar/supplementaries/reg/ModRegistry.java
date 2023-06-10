@@ -267,6 +267,7 @@ public class ModRegistry {
     //jar
     public static final Supplier<Block> JAR = regBlock(JAR_NAME, () -> new JarBlock(
             BlockBehaviour.Properties.copy(Blocks.GLASS)
+                    .pushReaction(PushReaction.DESTROY)
                     .strength(0.5f, 1f)
                     .sound(ModSounds.JAR)
                     .noOcclusion()
@@ -285,6 +286,7 @@ public class ModRegistry {
     public static final Supplier<Block> SACK = regBlock(SACK_NAME, () -> new SackBlock(
             BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
                     .mapColor(MapColor.WOOD)
+                    .pushReaction(PushReaction.DESTROY)
                     .strength(0.8f)
                     .sound(ModSounds.SACK)
     ));
@@ -474,6 +476,7 @@ public class ModRegistry {
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
             BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
+                    .pushReaction(PushReaction.DESTROY)
                     .strength(1.5f, 2f)
                     .sound(SoundType.METAL)));
 
@@ -663,7 +666,9 @@ public class ModRegistry {
 
     //crank
     public static final Supplier<Block> CRANK = regWithItem(CRANK_NAME, () -> new CrankBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.NONE)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.NONE)
+                    .pushReaction(PushReaction.DESTROY)
                     .strength(0.6f, 0.6f)
                     .noCollission()
                     .noOcclusion()
@@ -797,7 +802,7 @@ public class ModRegistry {
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
-            BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT)
+            BlockBehaviour.Properties.copy(Blocks.WHEAT)
                     .noCollission()
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.NONE)
@@ -825,14 +830,14 @@ public class ModRegistry {
 
     //flax block
     public static final Supplier<Block> FLAX_BLOCK = regWithItem(FLAX_BLOCK_NAME, () -> new FlaxBaleBlock(
-            BlockBehaviour.Properties.of(Material.GRASS, MaterialColor.TERRACOTTA_LIGHT_GREEN)
-                    .strength(0.5F)
-                    .sound(SoundType.GRASS)
+            BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK)
+                    .mapColor(MapColor.TERRACOTTA_LIGHT_GREEN)
     ));
 
     //boat in a jar
     public static final Supplier<Block> JAR_BOAT = regWithItem(JAR_BOAT_NAME, () -> new JarBoatBlock(
-            BlockBehaviour.Properties.copy(Blocks.GLASS)));
+            BlockBehaviour.Properties.copy(Blocks.GLASS)
+                    .pushReaction(PushReaction.DESTROY)));
 
     public static final Supplier<BlockEntityType<JarBoatTile>> JAR_BOAT_TILE = regTile(
             JAR_BOAT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -840,7 +845,7 @@ public class ModRegistry {
 
     //block generator
     public static final Supplier<Block> STRUCTURE_TEMP = regBlock(STRUCTURE_TEMP_NAME, () -> new StructureTempBlock(
-            BlockBehaviour.Properties.of(Material.STONE).strength(0).noLootTable().noCollission().noOcclusion()));
+            BlockBehaviour.Properties.of().strength(0).noLootTable().noCollission().noOcclusion()));
 
     public static final Supplier<BlockEntityType<StructureTempBlockTile>> STRUCTURE_TEMP_TILE = regTile(
             STRUCTURE_TEMP_NAME, () -> PlatHelper.newBlockEntityType(
@@ -858,9 +863,15 @@ public class ModRegistry {
 
     //sticks
     public static final Supplier<Block> STICK_BLOCK = regPlaceableItem(STICK_NAME, () -> new StickBlock(
-            BlockBehaviour.Properties.of(new Material.Builder(MaterialColor.WOOD).nonSolid().build())
+            BlockBehaviour.Properties.of()
+                    .ignitedByLava()
+                    .pushReaction(PushReaction.DESTROY)
+                    .mapColor(MapColor.NONE)
                     .strength(0.25F, 0F)
                     .sound(SoundType.WOOD), 60), () -> Items.STICK, CommonConfigs.Tweaks.PLACEABLE_STICKS);
+
+    //TODO: move these outta here
+    /*
     public static final Supplier<Block> EDELWOOD_STICK_BLOCK = regPlaceableItem("edelwood_stick", () -> new StickBlock(
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.TERRACOTTA_BROWN)
                     .strength(0.25F, 0F)
@@ -875,11 +886,12 @@ public class ModRegistry {
             BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.CRIMSON_STEM)
                     .strength(0.25F, 0F)
                     .sound(SoundType.WOOD)), "nethers_delight:propelplant_cane", CommonConfigs.Tweaks.PLACEABLE_STICKS);
-
+    */
     //blaze rod
     //TODO: blaze sound
     public static final Supplier<Block> BLAZE_ROD_BLOCK = regPlaceableItem(BLAZE_ROD_NAME, () -> new BlazeRodBlock(
-                    BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
+                    BlockBehaviour.Properties.of()
+                            .mapColor(MapColor.COLOR_YELLOW)
                             .strength(0.25F, 0F)
                             .lightLevel(state -> 12)
                             .emissiveRendering((p, w, s) -> true)
@@ -889,8 +901,9 @@ public class ModRegistry {
 
     //daub
     public static final RegSupplier<Block> DAUB = regWithItem(DAUB_NAME, () -> new Block(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.SNOW)
+            BlockBehaviour.Properties.of()
                     .sound(SoundType.PACKED_MUD)
+                    .mapColor(DyeColor.WHITE)
                     .strength(1.5f, 3f)
     ));
 
@@ -911,7 +924,7 @@ public class ModRegistry {
 
     //timber frame
     public static final RegSupplier<FrameBlock> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
-        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
                 .sound(SoundType.SCAFFOLDING); //.dynamicShape()
@@ -959,7 +972,8 @@ public class ModRegistry {
 
     //stone lamp
     public static final Supplier<Block> STONE_LAMP = regWithItem(STONE_LAMP_NAME, () -> new Block(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
+            BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.COLOR_YELLOW)
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
                     .sound(SoundType.STONE)
@@ -967,7 +981,8 @@ public class ModRegistry {
 
     //blackstone lamp
     public static final Supplier<Block> BLACKSTONE_LAMP = regWithItem(BLACKSTONE_LAMP_NAME, () -> new RotatedPillarBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_YELLOW)
+            BlockBehaviour.Properties.copy(Blocks.BLACKSTONE)
+                    .mapColor(MapColor.COLOR_YELLOW)
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
                     .sound(SoundType.STONE)
@@ -985,7 +1000,7 @@ public class ModRegistry {
 
     //flower box
     public static final Supplier<Block> FLOWER_BOX = regWithItem(FLOWER_BOX_NAME, () -> {
-        var p = BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F);
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).strength(0.5F);
         return /*CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : */new FlowerBoxBlock(p);
     });
 
@@ -994,7 +1009,7 @@ public class ModRegistry {
 
     //statue
     public static final Supplier<Block> STATUE = regWithItem(STATUE_NAME, () -> new StatueBlock(
-            BlockBehaviour.Properties.of(Material.STONE)
+            BlockBehaviour.Properties.copy(Blocks.STONE)
                     .strength(2)
     ));
 
@@ -1010,12 +1025,15 @@ public class ModRegistry {
 
     //flint block
     public static final Supplier<Block> FLINT_BLOCK = regWithItem(FLINT_BLOCK_NAME, () -> new FlintBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(2F, 7.5F)
+            BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(2F, 7.5F)
     ));
 
     //sugar block
     public static final Supplier<Block> SUGAR_CUBE = regBlock(SUGAR_CUBE_NAME, () -> new SugarBlock(
-            BlockBehaviour.Properties.of(Material.DECORATION).color(MaterialColor.SNOW).strength(0.5f).sound(SoundType.SAND)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.SNOW)
+                    .strength(0.5f)
+                    .sound(SoundType.SAND)
     ));
     public static final Supplier<Item> SUGAR_CUBE_ITEM = regItem(SUGAR_CUBE_NAME, () -> new SugarCubeItem(
             SUGAR_CUBE.get(), new Item.Properties())
@@ -1028,7 +1046,11 @@ public class ModRegistry {
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regPlaceableItem(BOOK_PILE_NAME, () -> new BookPileBlock(
-                    BlockBehaviour.Properties.of(Material.DECORATION).strength(0.5F).sound(SoundType.WOOD)),
+                    BlockBehaviour.Properties.of()
+                            .noOcclusion()
+                            .mapColor(MapColor.NONE)
+                            .strength(0.5F)
+                            .sound(SoundType.WOOD)),
             () -> Items.ENCHANTED_BOOK, CommonConfigs.Tweaks.PLACEABLE_BOOKS);
 
     //placeable book
@@ -1042,7 +1064,8 @@ public class ModRegistry {
 
     //urn
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.WOOD)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.TERRACOTTA_BROWN)
                     .sound(SoundType.DECORATED_POT)
                     .strength(0.1f, 0)
     ));
@@ -1053,8 +1076,14 @@ public class ModRegistry {
 
     //ash
     public static final Supplier<Block> ASH_BLOCK = regWithItem(ASH_NAME, () -> new AshLayerBlock(
-            BlockBehaviour.Properties.of(Material.TOP_SNOW, MaterialColor.COLOR_GRAY)
-                    .sound(SoundType.SAND).randomTicks().strength(0.1F).requiresCorrectToolForDrops()
+            BlockBehaviour.Properties.of()
+                    .pushReaction(PushReaction.DESTROY)
+                    .replaceable()
+                    .mapColor(MapColor.COLOR_GRAY)
+                    .sound(SoundType.SAND)
+                    .randomTicks()
+                    .strength(0.1F)
+                    .requiresCorrectToolForDrops()
     ));
 
 

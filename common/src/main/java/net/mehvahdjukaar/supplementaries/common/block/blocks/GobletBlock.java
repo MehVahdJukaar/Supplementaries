@@ -70,11 +70,6 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
         return SHAPE;
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
