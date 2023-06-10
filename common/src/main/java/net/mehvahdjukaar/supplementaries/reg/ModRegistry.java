@@ -29,6 +29,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -554,6 +555,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)
                     .sound(SoundType.METAL)
+                    .pushReaction(PushReaction.BLOCK)
                     .requiresCorrectToolForDrops()
                     .isRedstoneConductor((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))
                     .isSuffocating((state, reader, pos) -> !state.getValue(SpringLauncherBlock.EXTENDED))

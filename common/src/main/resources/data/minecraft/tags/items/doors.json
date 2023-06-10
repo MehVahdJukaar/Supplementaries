@@ -2,8 +2,6 @@
   "replace": false,
   "values": [
     "supplementaries:gold_door",
-    "supplementaries:netherite_door",
-    "supplementaries:silver_door",
-    "supplementaries:lead_door"
+    "supplementaries:netherite_door"
   ]
 }

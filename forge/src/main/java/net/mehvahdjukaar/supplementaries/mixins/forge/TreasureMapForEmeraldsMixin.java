@@ -47,7 +47,7 @@ public abstract class TreasureMapForEmeraldsMixin {
 
     @Inject(method = "getOffer", at = @At("HEAD"), cancellable = true)
     public void turnToQuill(Entity trader, RandomSource random, CallbackInfoReturnable<MerchantOffer> cir) {
-        if (trader.level instanceof ServerLevel serverLevel) {
+        if (trader.level() instanceof ServerLevel serverLevel) {
             if (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get()) {
                 ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, this.destination,
                         100, true, 2, this.destinationType, null, 0);

@@ -40,7 +40,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.1",
+    "minecraft": ">=1.20",
     "moonlight": ">=${required_moonlight_version}"
   },
   "suggests": {

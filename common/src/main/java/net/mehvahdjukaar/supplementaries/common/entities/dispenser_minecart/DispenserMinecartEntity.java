@@ -220,7 +220,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         if (i < 0) {
             //replace with client side animation
             pLevel.levelEvent(1001, pPos, 0);
-            pLevel.gameEvent(this, GameEvent.DISPENSE_FAIL, pPos);
+            //TODO:use this game event more
+            pLevel.gameEvent(this, GameEvent.BLOCK_ACTIVATE, pPos);
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
             try {

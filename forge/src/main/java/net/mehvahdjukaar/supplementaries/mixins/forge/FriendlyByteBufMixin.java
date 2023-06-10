@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FriendlyByteBuf.class)
 public abstract class FriendlyByteBufMixin {
 
-    @Shadow
-    public abstract FriendlyByteBuf writeItemStack(ItemStack arg, boolean limitedTag);
+
+    @Shadow public abstract FriendlyByteBuf writeItemStack(ItemStack par1, boolean par2);
 
     @Inject(method = "writeItemStack", at = @At(value = "HEAD"), remap = false, cancellable = true)
     public void sendCapsFromCreative(ItemStack stack, boolean useShareTag, CallbackInfoReturnable<FriendlyByteBuf> cir) {

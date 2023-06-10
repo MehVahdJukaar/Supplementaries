@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Invento
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -49,7 +49,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(Font font, int tooltipX, int tooltipY, PoseStack pose, ItemRenderer itemRenderer) {
+    public void renderImage(Font font, int tooltipX, int tooltipY, GuiGraphics graphics) {
         if (locked) return;
         BlockEntity te = ItemsUtil.loadBlockEntityFromItem(this.tag, this.item);
         if (te != null) {
@@ -70,14 +70,13 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
                     currentX -= (right - window.getGuiScaledWidth());
                 }
 
+                PoseStack pose = graphics.pose();
                 pose.pushPose();
                 pose.translate(0.0D, 0.0D, 700.0D);
 
                 int color = -1;
 
                 ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(mc, pose, currentX, tooltipY, dimensions[0], dimensions[1], color);
-
-                ItemRenderer render = mc.getItemRenderer();
 
                 for (int i = 0; i < size; i++) {
                     ItemStack itemstack = capability.getStackInSlot(i);
@@ -86,13 +85,13 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
                     int yp = tooltipY + 6 + (i / dimensions[0]) * EDGE;
 
                     if (!itemstack.isEmpty()) {
-                        render.renderAndDecorateFakeItem(pose, itemstack, xp, yp);
-                        render.renderGuiItemDecorations(pose, mc.font, itemstack, xp, yp);
+                        graphics.renderFakeItem(itemstack, xp, yp);
+                        graphics.renderItemDecorations(mc.font, itemstack, xp, yp);
                     }
 
                     if (!ChestSearchingModule.namesMatch(itemstack)) {
                         RenderSystem.disableDepthTest();
-                        GuiComponent.fill(pose, xp, yp, xp + 16, yp + 16, 0xAA000000);
+                        graphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
                     }
                 }
 

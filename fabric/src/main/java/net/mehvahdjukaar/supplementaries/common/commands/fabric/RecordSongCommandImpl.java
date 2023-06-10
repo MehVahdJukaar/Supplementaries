@@ -10,7 +10,7 @@ public class RecordSongCommandImpl {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
         return Commands.literal("record").executes(c -> {
-            c.getSource().sendSuccess(Component.literal("Record command has not been implemented for fabric"), false);
+            c.getSource().sendSuccess(() -> Component.literal("Record command has not been implemented for fabric"), false);
             return 0;
         });
     }

@@ -27,8 +27,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.util.Lazy;
 
@@ -44,14 +45,16 @@ public class DecoBlocksCompatImpl {
 
     static {
         CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_chandelier"), () ->
-                new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
+                new RopeChandelierBlock(BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.WOOD)
                         .strength(0.3F)
                         .sound(SoundType.WOOD)
                         .noOcclusion()
                         .lightLevel((state) -> 15), CompatObjects.CHANDELIER, () -> ParticleTypes.FLAME));
 
         SOUL_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_soul_chandelier"), () ->
-                new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
+                new RopeChandelierBlock(BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.WOOD)
                         .strength(0.3F)
                         .sound(SoundType.WOOD)
                         .noOcclusion()
@@ -59,8 +62,9 @@ public class DecoBlocksCompatImpl {
 
         if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
             ENDER_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_ender_chandelier"), () ->
-                    new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
+                    new RopeChandelierBlock(BlockBehaviour.Properties.of()
                             .strength(0.3F)
+                            .mapColor(MapColor.WOOD)
                             .sound(SoundType.WOOD)
                             .noOcclusion()
                             .lightLevel((state) -> 15), CompatObjects.ENDER_CHANDELIER,
@@ -69,8 +73,9 @@ public class DecoBlocksCompatImpl {
 
         if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
             GLOW_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_glow_chandelier"), () ->
-                    new RopeChandelierBlock(BlockBehaviour.Properties.of(Material.DECORATION)
+                    new RopeChandelierBlock(BlockBehaviour.Properties.of()
                             .strength(0.3F)
+                            .mapColor(MapColor.WOOD)
                             .sound(SoundType.WOOD)
                             .noOcclusion()
                             .lightLevel((state) -> 15), CompatObjects.GLOW_CHANDELIER,
@@ -137,7 +142,7 @@ public class DecoBlocksCompatImpl {
         }
 
         @Override
-        public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
             return mimic.get().getDrops(defMimic.get(), builder);
         }
 

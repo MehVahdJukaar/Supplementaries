@@ -17,7 +17,7 @@ accessible field net/minecraft/world/entity/animal/Wolf isWet Z
 accessible method net/minecraft/world/level/block/DoorBlock playSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Z)V
 
 #hanging sign
-accessible method net/minecraft/client/renderer/blockentity/SignRenderer renderSignText (Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IF)V
+accessible method net/minecraft/client/renderer/blockentity/SignRenderer renderSignText (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/SignText;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IIIZ)V
 
 #parrot model on shoulder
 accessible method net/minecraft/client/model/ParrotModel prepare (Lnet/minecraft/client/model/ParrotModel$State;)V
@@ -66,7 +66,7 @@ accessible class net/minecraft/world/level/levelgen/structure/structures/Minesha
 accessible method net/minecraft/world/level/levelgen/structure/structures/MineshaftPieces generateAndAddPiece (Lnet/minecraft/world/level/levelgen/structure/StructurePiece;Lnet/minecraft/world/level/levelgen/structure/StructurePieceAccessor;Lnet/minecraft/util/RandomSource;IIILnet/minecraft/core/Direction;I)Lnet/minecraft/world/level/levelgen/structure/structures/MineshaftPieces$MineShaftPiece;
 
 #luck for urns
-accessible field net/minecraft/world/level/storage/loot/LootContext$Builder luck F
+accessible field net/minecraft/world/level/storage/loot/LootParams$Builder luck F
 
 #firework recipe for enderman head
 accessible field net/minecraft/world/item/crafting/FireworkStarRecipe SHAPE_BY_ITEM Ljava/util/Map;

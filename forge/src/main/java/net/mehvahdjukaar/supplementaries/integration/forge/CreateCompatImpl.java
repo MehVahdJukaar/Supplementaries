@@ -150,7 +150,7 @@ public class CreateCompatImpl {
         if (blocks.containsKey(context.localPos)) {
             context.state = newState;
             StructureTemplate.StructureBlockInfo info = blocks.get(context.localPos);
-            StructureTemplate.StructureBlockInfo newInfo = new StructureTemplate.StructureBlockInfo(info.pos, newState, info.nbt);
+            StructureTemplate.StructureBlockInfo newInfo = new StructureTemplate.StructureBlockInfo(info.pos(), newState, info.nbt());
             blocks.replace(context.localPos, newInfo);
         }
     }

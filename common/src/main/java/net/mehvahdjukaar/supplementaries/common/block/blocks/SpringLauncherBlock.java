@@ -42,8 +42,10 @@ public class SpringLauncherBlock extends Block {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(EXTENDED, false));
     }
 
-    @Override
+    //TODO: forgeeee
+   // @Override
     public PushReaction getPistonPushReaction(BlockState state) {
+
         return state.getValue(EXTENDED) ? PushReaction.BLOCK : PushReaction.NORMAL;
     }
 
@@ -136,7 +138,7 @@ public class SpringLauncherBlock extends Block {
                     level.setBlockAndUpdate(pos, state.setValue(EXTENDED, true));
                     level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.53F,
                             level.random.nextFloat() * 0.25F + 0.45F);
-                    level.gameEvent(null, GameEvent.PISTON_EXTEND, pos);
+                    level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
                 }
             } else if (!isPowered && state.getValue(EXTENDED)) {
                 BlockState bs = level.getBlockState(offset);
@@ -146,7 +148,7 @@ public class SpringLauncherBlock extends Block {
                             .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, direction));
                     level.playSound(null, pos, SoundEvents.PISTON_CONTRACT, SoundSource.BLOCKS, 0.53F,
                             level.random.nextFloat() * 0.15F + 0.45F);
-                    level.gameEvent(null, GameEvent.PISTON_CONTRACT, pos);
+                    level.gameEvent(null, GameEvent.BLOCK_DEACTIVATE, pos);
                 } else if (bs.getBlock() instanceof SpringLauncherArmBlock
                         && direction == bs.getValue(FACING)) {
                     if (level.getBlockEntity(offset) instanceof SpringLauncherArmBlockTile) {

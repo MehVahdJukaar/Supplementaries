@@ -211,11 +211,11 @@ public class WeatheredMap {
                             int relativeShade = 1;
 
 
-                            MapColor MapColor = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MapColor.NONE);
-                            if (MapColor == MapColor.WATER) {
+                            MapColor mc = Iterables.getFirst(Multisets.copyHighestCountFirst(multiset), MapColor.NONE);
+                            if (mc == MapColor.WATER) {
 
 
-                                MapColor = MapColor.COLOR_ORANGE;
+                                mc = MapColor.COLOR_ORANGE;
                                 if (distanceFromLand > 7 && pixelZ % 2 == 0) {
                                     relativeShade = (pixelX + (int) (Mth.sin(pixelZ + 0.0F) * 7.0F)) / 8 % 5;
                                     if (relativeShade == 3) {
@@ -224,7 +224,7 @@ public class WeatheredMap {
                                         relativeShade = 0;
                                     }
                                 } else if (distanceFromLand > 7) {
-                                    MapColor = ANTIQUE_LIGHT;
+                                    mc = ANTIQUE_LIGHT;
                                     relativeShade = 2;
                                 } else if (distanceFromLand > 5) {
                                     relativeShade = 1;
@@ -237,7 +237,7 @@ public class WeatheredMap {
 
                                 if (distanceFromLand > 0) {
                                     relativeShade = 3;
-                                    MapColor = MapColor.COLOR_BROWN;
+                                    mc = MapColor.COLOR_BROWN;
                                     if (distanceFromLand > 3) {
                                         relativeShade = 1;
                                     }
@@ -252,7 +252,7 @@ public class WeatheredMap {
                                         relativeShade = 0;
                                     }
 
-                                    MapColor = ANTIQUE_COLORS.getOrDefault(MapColor, ANTIQUE_DARK);
+                                    mc = ANTIQUE_COLORS.getOrDefault(mc, ANTIQUE_DARK);
                                 }
                             }
                             //if(MapColor == MapColor.WATER)
@@ -261,7 +261,7 @@ public class WeatheredMap {
 
 
                             if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < centerY * centerY && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
-                                flag |= data.updateColor(pixelX, pixelZ, (byte) (MapColor.id * 4 + relativeShade));
+                                flag |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
                             }
                         }
                     }

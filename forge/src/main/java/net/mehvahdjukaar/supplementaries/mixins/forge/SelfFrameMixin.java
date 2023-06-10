@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(FrameBlock.class)
 public abstract class SelfFrameMixin extends Block {
 
-    public SelfFrameMixin(Properties arg) {
+    protected SelfFrameMixin(Properties arg) {
         super(arg);
     }
 

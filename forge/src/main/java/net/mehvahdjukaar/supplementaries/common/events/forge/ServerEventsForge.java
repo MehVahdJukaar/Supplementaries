@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
@@ -160,8 +161,8 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onAddLootTables(LootTableLoadEvent event) {
-        ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().poo.addPool(b.build()));
-    }
+       // ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
+    }//TODO 1.20!!
 
     //TODO: add these on fabric
     //forge only

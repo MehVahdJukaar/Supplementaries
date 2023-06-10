@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -57,25 +58,26 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
 
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void renderBg(PoseStack matrixStack, float ticks, int mouseX, int mouseY, CallbackInfo ci){
+    public void renderBg(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci){
         if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {
             int i = this.leftPos;
             int j = this.topPos;
             MultiBufferSource.BufferSource renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
-            matrixStack.pushPose();
+            PoseStack pose = graphics.pose();
+            pose.pushPose();
 
-            matrixStack.translate(i + 139d, j + 52d, 0.0D);
-            matrixStack.scale(24.0F, -24.0F, 1.0F);
-            matrixStack.translate(0.5D, 0.5D, 0.5D);
-            matrixStack.mulPose(RotHlpr.Y90);
-            matrixStack.mulPose(RotHlpr.X90);
-            matrixStack.scale(1.125F, 1.125F, 1.125F);
-            matrixStack.translate(-1, -0.5, -1.1875);
+            pose.translate(i + 139d, j + 52d, 0.0D);
+            pose.scale(24.0F, -24.0F, 1.0F);
+            pose.translate(0.5D, 0.5D, 0.5D);
+            pose.mulPose(RotHlpr.Y90);
+            pose.mulPose(RotHlpr.X90);
+            pose.scale(1.125F, 1.125F, 1.125F);
+            pose.translate(-1, -0.5, -1.1875);
             Lighting.setupForFlatItems();
 
-            FlagBlockTileRenderer.renderPatterns(matrixStack, renderTypeBuffer,this.resultBannerPatterns,15728880);
+            FlagBlockTileRenderer.renderPatterns(pose, renderTypeBuffer,this.resultBannerPatterns,15728880);
 
-            matrixStack.popPose();
+            pose.popPose();
             renderTypeBuffer.endBatch();
 
             Lighting.setupFor3DItems();

@@ -80,13 +80,11 @@ public class HangingSignRendererExtension {
         }
         model.plank.visible = visible;
 
-
-        poseStack.pushPose();
         poseStack.scale(1, -1, -1);
 
         //this dumb method always pops but doesnt push
-        renderer.renderSignText(tile, poseStack, bufferSource, packedLight, 1.0F);
-
+        renderer.renderSignText(tile.getBlockPos(), tile.getFrontText(), poseStack, bufferSource, packedLight, tile.getTextLineHeight(), tile.getMaxTextLineWidth(), true);
+        renderer.renderSignText(tile.getBlockPos(), tile.getBackText(), poseStack, bufferSource, packedLight, tile.getTextLineHeight(), tile.getMaxTextLineWidth(), false);
 
         //Item item = Items.SKULL_BANNER_PATTERN;
         //renderBannerPattern(tile, poseStack, bufferSource, packedLight, item);
@@ -125,7 +123,7 @@ public class HangingSignRendererExtension {
 
         poseStack.popPose();
     }
-
+/*
     private static void renderBannerPattern(SignBlockEntity tile, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, Item item) {
         if (item instanceof BannerPatternItem bannerPatternItem) {
             poseStack.translate(0, 5/16f, 0);
@@ -138,6 +136,7 @@ public class HangingSignRendererExtension {
             if (renderMaterial != null) {
 
                 VertexConsumer builder = renderMaterial.buffer(bufferSource, RenderType::itemEntityTranslucentCull);
+
 
                 float[] color = tile.getColor().getTextureDiffuseColors();
                 float b = color[2];
@@ -159,7 +158,7 @@ public class HangingSignRendererExtension {
                 }
             }
         }
-    }
+    }*/
 
     private static float getSignAngle(BlockState state, boolean attachedToWall) {
         return attachedToWall ? -(state.getValue(WallSignBlock.FACING)).toYRot() : -((state.getValue(CeilingHangingSignBlock.ROTATION) * 360) / 16.0F);

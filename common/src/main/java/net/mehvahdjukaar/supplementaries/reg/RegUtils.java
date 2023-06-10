@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
+import net.mehvahdjukaar.moonlight.api.set.BlockType;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -55,6 +56,12 @@ public class RegUtils {
 
     public static void initDynamicRegistry() {
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
+        BlockSetAPI.addDynamicBlockRegistration(RegUtils::dummy, WoodType.class);
+    }
+
+    //TODO: 1.20 remove
+    private static void dummy(Registrator<Block> blockRegistrator, Collection<WoodType> ts) {
+        int aa = 1;
     }
 
     /**

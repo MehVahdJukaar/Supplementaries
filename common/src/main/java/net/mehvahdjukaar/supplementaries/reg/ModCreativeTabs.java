@@ -40,12 +40,12 @@ public class ModCreativeTabs {
     private static final List<ItemStack> NON_HIDDEN_ITEMS = new ArrayList<>();
 
     public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
-            RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
+            (RegSupplier<CreativeModeTab>) RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
 
     public static final RegSupplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
-            RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
+            (RegSupplier<CreativeModeTab>) RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
                     (c) -> SuppPlatformStuff.searchBar(c)
                             .title(Component.translatable("itemGroup.jars"))
                             .icon(() -> ModRegistry.JAR_ITEM.get().getDefaultInstance()));

@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
@@ -47,7 +48,7 @@ public class ClientEventsFabric {
 
     }
 
-    private static void onRenderHud(PoseStack poseStack, float partialTicks) {
-        QuiverArrowSelectGuiImpl.INSTANCE.render(poseStack, partialTicks);
+    private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
+        QuiverArrowSelectGuiImpl.INSTANCE.render(graphics, partialTicks);
     }
 }

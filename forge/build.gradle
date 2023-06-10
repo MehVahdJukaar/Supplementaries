@@ -131,7 +131,7 @@ dependencies {
     modCompileOnly("curse.maven:farmers-delight-398521:3999157")
 
     modCompileOnly("curse.maven:jei-238222:3928388")
-    modImplementation("curse.maven:configured-457570:4462894")
+    modCompileOnly("curse.maven:configured-457570:4462894")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:3904454")
     modCompileOnly("curse.maven:curios-309927:3924518")
@@ -141,7 +141,7 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:4551115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
-    modImplementation("curse.maven:haunted-harvest-541753:4557328")
+    modCompileOnly("curse.maven:haunted-harvest-541753:4557328")
     modCompileOnly("curse.maven:waystones-245755:3835119")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")

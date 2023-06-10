@@ -225,7 +225,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             builder.withLuck(oldLuck + 0.25f * f);
             var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
             ServerLevel serverlevel = lootContext.getLevel();
-            LootTable loottable = serverlevel.getServer().getLootTables().get(resourcelocation);
+            LootTable loottable = serverlevel.getServer().getLootData().getLootTable(resourcelocation);
             List<ItemStack> selectedLoot;
             do {
                 selectedLoot = loottable.getRandomItems(lootContext);

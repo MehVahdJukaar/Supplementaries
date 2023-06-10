@@ -25,10 +25,10 @@ import java.util.Map;
 public abstract class SkullBlockRendererMixin {
 
     @Inject(method = "createSkullRenderers",locals = LocalCapture.CAPTURE_FAILHARD,
-            at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;",
-                    ordinal = 5))
-    private static void addEnderman(EntityModelSet entityModelSet,
-                                    CallbackInfoReturnable<Map<SkullBlock.Type, SkullModelBase>> cir,
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/client/model/SkullModel;<init>(Lnet/minecraft/client/model/geom/ModelPart;)V",
+            ordinal = 4))
+    private static void addEnderman(EntityModelSet entityModelSet, CallbackInfoReturnable<Map<SkullBlock.Type, SkullModelBase>> cir,
                                     ImmutableMap.Builder<SkullBlock.Type, SkullModelBase> builder){
         builder.put(EndermanSkullBlock.TYPE, new SkullModel(entityModelSet.bakeLayer(ModelLayers.SKELETON_SKULL)));
     }

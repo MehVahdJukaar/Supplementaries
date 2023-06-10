@@ -169,7 +169,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
                 ItemStack selectedArrow = items.get(selected);
                 if (!selectedArrow.isEmpty()) {
-                    drawHighlight(poseStack, screenWidth, py, selectedArrow);
+                    drawHighlight(graphics, screenWidth, py, selectedArrow);
                 }
 
                 poseStack.popPose();
@@ -195,7 +195,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
         return player.getUseItem();
     }
 
-    protected abstract void drawHighlight(PoseStack poseStack, int screenWidth, int py, ItemStack selectedArrow);
+    protected abstract void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow);
 
 
 }

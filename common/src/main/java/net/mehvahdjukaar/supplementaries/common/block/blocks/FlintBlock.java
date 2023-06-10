@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -19,6 +21,9 @@ import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class FlintBlock extends Block implements IPistonMotionReact {
     public FlintBlock(Properties properties) {
@@ -71,12 +76,18 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, (randomSource.nextFloat() - randomSource.nextFloat()) * 0.2F + 1.0F);
     }
 
+    private static final Long2ObjectMap<Direction> BY_NORMAL =  Arrays.stream(Direction.values())
+            .collect(Collectors.toMap((direction) -> new BlockPos(direction.getNormal()).asLong(),
+                    (direction) -> direction, (direction, direction2) -> {
+        throw new IllegalArgumentException("Duplicate keys");
+    }, Long2ObjectOpenHashMap::new));
+
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block oldBlock, BlockPos targetPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, oldBlock, targetPos, isMoving);
         BlockState newState = level.getBlockState(targetPos);
         if (!newState.isAir() || !oldBlock.builtInRegistryHolder().is(ModTags.FLINT_METALS)) return;
-        Direction dir = Direction.fromNormal(pos.subtract(targetPos));
+        Direction dir = BY_NORMAL.get(pos.subtract(targetPos).asLong());
         for (Direction pistonDir : Direction.values()) {
             if (dir.getAxis() == pistonDir.getAxis()) continue;
 

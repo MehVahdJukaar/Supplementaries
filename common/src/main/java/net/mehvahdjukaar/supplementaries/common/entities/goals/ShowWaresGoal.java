@@ -86,7 +86,7 @@ public class ShowWaresGoal extends LookAtPlayerGoal {
     private void findItemsToDisplay() {
         boolean flag = false;
         ItemStack handStack = this.player.getMainHandItem();
-        if (this.playerItemStack == null || !ItemStack.isSame(this.playerItemStack, handStack)) {
+        if (this.playerItemStack == null || !ItemStack.isSameItem(this.playerItemStack, handStack)) {
             this.playerItemStack = handStack;
             flag = true;
             this.displayItems.clear();
@@ -115,9 +115,8 @@ public class ShowWaresGoal extends LookAtPlayerGoal {
     }
 
     private boolean playerItemStackMatchesCostOfOffer(MerchantOffer offer) {
-        return ItemStack.isSame(this.playerItemStack, offer.getCostA()) || ItemStack.isSame(this.playerItemStack, offer.getCostB());
+        return ItemStack.isSameItem(this.playerItemStack, offer.getCostA()) || ItemStack.isSameItem(this.playerItemStack, offer.getCostB());
     }
-
 
     private void displayCyclingItems() {
         if (this.displayItems.size() >= 2 && ++this.cycleCounter >= 40) {

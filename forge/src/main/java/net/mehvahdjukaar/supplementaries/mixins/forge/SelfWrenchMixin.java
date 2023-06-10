@@ -37,8 +37,8 @@ public abstract class SelfWrenchMixin extends Item {
 
             hangingEntity.setDirection(dir);
 
-            if (player.level.isClientSide) {
-                WrenchItem.playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level, player);
+            if (player.level().isClientSide) {
+                WrenchItem.playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level(), player);
             }
             stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
             return true;

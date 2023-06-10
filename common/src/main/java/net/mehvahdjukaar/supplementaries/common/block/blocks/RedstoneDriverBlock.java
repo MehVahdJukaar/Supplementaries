@@ -29,11 +29,12 @@ public class RedstoneDriverBlock extends DiodeBlock {
         return super.getInputSignal(world, pos, state);
     }
 
+    /*
     @Override
     protected int getAlternateSignal(LevelReader world, BlockPos pos, BlockState state) {
         Direction direction = state.getValue(FACING);
         Direction direction1 = direction.getClockWise();
         Direction direction2 = direction.getCounterClockWise();
         return Math.max(this.getAlternateSignalAt(world, pos.relative(direction1), direction1), this.getAlternateSignalAt(world, pos.relative(direction2), direction2));
-    }
+    }*/
 }
