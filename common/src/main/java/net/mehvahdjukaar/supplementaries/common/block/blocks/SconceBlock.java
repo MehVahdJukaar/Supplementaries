@@ -66,17 +66,12 @@ public class SconceBlock extends LightUpWaterBlock {
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(LIT)) {
-            double d0 = (double) pos.getX() + 0.5D;
-            double d1 = (double) pos.getY() + 0.75D;
-            double d2 = (double) pos.getZ() + 0.5D;
+            double d0 = pos.getX() + 0.5D;
+            double d1 = pos.getY() + 0.75D;
+            double d2 = pos.getZ() + 0.5D;
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(this.particleData.get(), d0, d1, d2, 0.0D, 0.0D, 0.0D);
         }
-    }
-
-    @Override
-    public boolean isPossibleToRespawnInThis() {
-        return true;
     }
 
 }

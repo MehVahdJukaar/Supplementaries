@@ -68,7 +68,7 @@ public class WrenchItem extends Item {
      */
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        pAttacker.level.playSound(null, pTarget, SoundEvents.ANVIL_PLACE, SoundSource.NEUTRAL, 0.5F, 1.8F);
+        pAttacker.level().playSound(null, pTarget, SoundEvents.ANVIL_PLACE, SoundSource.NEUTRAL, 0.5F, 1.8F);
 
         pStack.hurtAndBreak(1, pAttacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
@@ -143,11 +143,12 @@ public class WrenchItem extends Item {
             float inc = 22.5f * (shiftDown ? -1 : 1);
             entity.setYRot(entity.getYRot() + inc);
 
-            if (player.level.isClientSide)
-                playTurningEffects(entity.getOnPos().above(), shiftDown, Direction.UP, player.level, player);
+            Level level = player.level();
+            if (level.isClientSide)
+                playTurningEffects(entity.getOnPos().above(), shiftDown, Direction.UP, level, player);
 
             stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(pUsedHand));
-            return InteractionResult.sidedSuccess(player.level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

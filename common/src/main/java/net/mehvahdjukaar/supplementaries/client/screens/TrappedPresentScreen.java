@@ -117,13 +117,11 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     }
 
     @Override
-    protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        this.renderBackground(matrixStack);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
+        this.renderBackground(graphics);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        this.blit(matrixStack, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
@@ -132,11 +130,8 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
         if(this.primed){
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
             Slot slot = this.menu.getSlot(0);
-
-            blit(graphics, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
+            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
         }
         this.renderTooltip(graphics, mouseX, mouseY);
     }
@@ -177,9 +172,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            RenderSystem.setShaderTexture(0, ModTextures.TRAPPED_PRESENT_GUI_TEXTURE);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
             int i = 198;
             int j = 0;
             if (!this.active) {
@@ -189,8 +182,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
             } else if (this.isHovered) {
                 j += this.width * 3;
             }
-
-            blit(poseStack, this.getX(), this.getY(), j, i, this.width, this.height);
+            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, this.getX(), this.getY(), j, i, this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {

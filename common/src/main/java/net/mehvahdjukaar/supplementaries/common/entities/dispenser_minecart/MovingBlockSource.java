@@ -49,7 +49,7 @@ public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
 
     @Override
     public ServerLevel getLevel() {
-        return ((ServerLevel) entity.getLevel());
+        return ((ServerLevel) entity.level());
     }
 
     public Entity getMinecartEntity() {

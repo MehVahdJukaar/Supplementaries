@@ -152,7 +152,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             return InteractionResultHolder.fail(itemstack);
         } else {
             player.startUsingItem(hand);
-            player.level.playSound(player, player,
+            player.level().playSound(player, player,
                     getChargeSound(itemstack), SoundSource.PLAYERS, 1.0F,
                     1 * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F)));
             return InteractionResultHolder.consume(itemstack);

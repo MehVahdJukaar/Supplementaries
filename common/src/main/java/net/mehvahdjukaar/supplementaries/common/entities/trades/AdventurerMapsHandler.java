@@ -122,7 +122,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             int minPrice = 6;
             int price = random.nextInt(maxPrice - minPrice + 1) + minPrice;
 
-            if (entity.level instanceof ServerLevel serverLevel) {
+            if (entity.level() instanceof ServerLevel serverLevel) {
                 ItemStack itemstack = createMapOrQuill(serverLevel, entity.blockPosition(), null,
                         2, null, "filled_map.adventure", 0x78151a);
 

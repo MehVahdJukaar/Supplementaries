@@ -116,11 +116,11 @@ public class HangingSignBlock extends WaterBlock implements EntityBlock {
         } else {
             Direction.Axis axis = state.getValue(AXIS);
             if (axis == Direction.Axis.X) {
-                return worldIn.getBlockState(pos.relative(Direction.EAST)).getMaterial().isSolid() ||
-                        worldIn.getBlockState(pos.relative(Direction.WEST)).getMaterial().isSolid();
+                return worldIn.getBlockState(pos.relative(Direction.EAST)).isSolid() ||
+                        worldIn.getBlockState(pos.relative(Direction.WEST)).isSolid();
             } else {
-                return worldIn.getBlockState(pos.relative(Direction.NORTH)).getMaterial().isSolid() ||
-                        worldIn.getBlockState(pos.relative(Direction.SOUTH)).getMaterial().isSolid();
+                return worldIn.getBlockState(pos.relative(Direction.NORTH)).isSolid() ||
+                        worldIn.getBlockState(pos.relative(Direction.SOUTH)).isSolid();
             }
         }
     }

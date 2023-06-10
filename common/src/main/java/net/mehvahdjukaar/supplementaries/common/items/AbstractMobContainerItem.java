@@ -272,12 +272,13 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         mob.setLastHurtByMob(player);
                     });
         }
-
+        Level level = entity.level();
+//TODO rewrite
         //piglin workaround. don't know why they are IAngerable
         if (entity instanceof Piglin) {
-            entity.hurt(entity.level.damageSources().playerAttack(player), 0);
+            entity.hurt(level.damageSources().playerAttack(player), 0);
         }
-        if (entity instanceof Villager villager && player.level instanceof ServerLevel serverLevel) {
+        if (entity instanceof Villager villager && level instanceof ServerLevel serverLevel) {
             Optional<NearestVisibleLivingEntities> optional = villager.getBrain().getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
             optional.ifPresent(entities -> entities.findAll(ReputationEventHandler.class::isInstance).forEach((e) ->
                     serverLevel.onReputationEvent(ReputationEventType.VILLAGER_HURT, player, (ReputationEventHandler) e)));
@@ -287,7 +288,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     private static List<?> getEntitiesInRange(Mob e) {
         double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
         AABB aabb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
-        return e.level.getEntitiesOfClass(e.getClass(), aabb, EntitySelector.NO_SPECTATORS);
+        return e.level().getEntitiesOfClass(e.getClass(), aabb, EntitySelector.NO_SPECTATORS);
     }
 
     /**
@@ -309,7 +310,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
             ForgeHelper.reviveEntity(entity);
             //return for client
-            if (player.level.isClientSide) return InteractionResult.SUCCESS;
+            if (player.level().isClientSide) return InteractionResult.SUCCESS;
 
             this.playCatchSound(player);
             this.angerNearbyEntities(entity, player);
@@ -325,7 +326,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
             entity.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.CONSUME;
-        } else if (player.getLevel().isClientSide && entity instanceof LivingEntity) {
+        } else if (player.level().isClientSide && entity instanceof LivingEntity) {
             player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
         }
         this.playFailSound(player);

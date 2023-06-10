@@ -47,7 +47,7 @@ public class ServerBoundSetPresentPacket implements Message {
     public void handle(ChannelHandler.Context context) {
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
-        Level world = player.level;
+        Level world = player.level();
 
         BlockPos pos = this.pos;
         if (world.getBlockEntity(this.pos) instanceof PresentBlockTile present) {

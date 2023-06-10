@@ -114,7 +114,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     private void spawnBreakParticles() {
         for (int i = 0; i < 8; ++i) {
-            this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModRegistry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModRegistry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -131,18 +131,18 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 if (MiscUtils.FESTIVITY.isBirthday()) {
                     this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 } else {
-                    level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
+                    level().addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
                             this.type.getRadius(), 0, 0);
                 }
                 type.spawnExtraParticles(this);
 
                 this.discard();
             }
-            case 68 -> level.addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
+            case 68 -> level().addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
             case 67 -> {
-                RandomSource random = level.getRandom();
+                RandomSource random = level().getRandom();
                 for (int i = 0; i < 10; ++i) {
-                    level.addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
+                    level().addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
                 }
                 this.active = false;
             }
@@ -155,7 +155,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             Vec3 v = new Vec3(speed, 0, 0);
             v = v.yRot(d22 + random.nextFloat() * 0.3f);
             v = v.zRot((float) ((random.nextFloat()) * Math.PI));
-            this.level.addParticle(type, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
+            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
             //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
         }
     }
@@ -172,7 +172,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         //    this.playSound(ModSounds.GUNPOWDER_IGNITE.get(), 1.0f,
         //            1.8f + level.getRandom().nextFloat() * 0.2f);
         //}
-
+        Level level = level();
         if (this.changeTimer > 0) {
             this.changeTimer--;
             level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
@@ -188,7 +188,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
         if (this.active && !this.firstTick) {
-
             double x = currentPos.x;
             double y = currentPos.y;
             double z = currentPos.z;
@@ -198,7 +197,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             int s = 4;
             for (int i = 0; i < s; ++i) {
                 double j = i / (double) s;
-                this.level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+                this.level().addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
             }
         }
     }
@@ -207,7 +206,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     protected void onHitEntity(EntityHitResult hit) {
         super.onHitEntity(hit);
-        hit.getEntity().hurt(level.damageSources().thrown(this, this.getOwner()), 1);
+        hit.getEntity().hurt(level().damageSources().thrown(this, this.getOwner()), 1);
         if (hit.getEntity() instanceof LargeFireball) {
             this.superCharged = true;
             hit.getEntity().remove(RemovalReason.DISCARDED);
@@ -215,8 +214,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     public void turnOff() {
+        Level level = level();
         if (!level.isClientSide()) {
-            this.level.broadcastEntityEvent(this, (byte) 67);
+            level.broadcastEntityEvent(this, (byte) 67);
             level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
         }
         this.active = false;
@@ -224,7 +224,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public void playerTouch(Player entityIn) {
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             if (!this.active && entityIn.getInventory().add(this.getItem())) {
                 entityIn.take(this, 1);
                 this.remove(RemovalReason.DISCARDED);
@@ -249,13 +249,14 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide && !this.hasFuse) {
+        Level level = level();
+        if (!level.isClientSide && !this.hasFuse) {
             boolean isInstantlyActivated = this.type.isInstantlyActivated();
             if (!isInstantlyActivated && this.changeTimer == -1) {
                 this.changeTimer = 10;
                 //this.setDeltaMovement(Vector3d.ZERO);
-                this.level.broadcastEntityEvent(this, (byte) 68);
-                this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.5f, 1.3f);
+                level.broadcastEntityEvent(this, (byte) 68);
+                level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.5f, 1.3f);
             }
 
             //normal explosion
@@ -274,15 +275,16 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     //createMiniExplosion
     @Override
     public void reachedEndOfLife() {
-        this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundSource.NEUTRAL, 1.5F, 1.5f);
+        Level level = level();
+        level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.NETHERITE_BLOCK_BREAK, SoundSource.NEUTRAL, 1.5F, 1.5f);
 
-        if (!this.level.isClientSide) {
+        if (!level.isClientSide) {
             if (this.active) {
                 this.createExplosion();
                 //spawn particles
-                this.level.broadcastEntityEvent(this, (byte) 10);
+                level.broadcastEntityEvent(this, (byte) 10);
             } else {
-                this.level.broadcastEntityEvent(this, (byte) 3);
+                level.broadcastEntityEvent(this, (byte) 3);
             }
             this.discard();
         }
@@ -293,7 +295,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     private void createExplosion() {
 
         boolean breaks = this.getOwner() instanceof Player ||
-                PlatHelper.isMobGriefingOn(this.level, this.getOwner());
+                PlatHelper.isMobGriefingOn(level(), this.getOwner());
 
         if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, BlockPos.containing(position()))) {
             breaks = false;
@@ -302,10 +304,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         if (this.superCharged) {
             //second explosion when supercharged
             //TODO: check explosion mode
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks,  this.getOwner() instanceof Player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, this.getOwner() instanceof Player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
         }
 
-        BombExplosion explosion = new BombExplosion(this.level, this, null,
+        BombExplosion explosion = new BombExplosion(this.level(), this, null,
                 new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
                 this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
@@ -378,7 +380,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                             float dx = (float) (bomb.random.nextGaussian() * 2f);
                             float dy = (float) (bomb.random.nextGaussian() * 2f);
                             float dz = (float) (bomb.random.nextGaussian() * 2f);
-                            bomb.level.addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
+                            bomb.level().addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
                         }
                     } else {
                         bomb.spawnParticleInASphere(ParticleTypes.CRIT, 100, 5f);
@@ -394,7 +396,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 if (e == null) return;
                 for (Entity entity : level.getEntities(e, new AABB(pos.x - 30, pos.y - 4, pos.z - 30,
                         pos.x + 30, pos.y + 4, pos.z + 30))) {
-                    int random =  (level.random.nextInt() * 100);
+                    int random = (level.random.nextInt() * 100);
                     boolean shouldPoison = false;
                     if (entity.distanceToSqr(e) <= 4 * 4) {
                         shouldPoison = true;

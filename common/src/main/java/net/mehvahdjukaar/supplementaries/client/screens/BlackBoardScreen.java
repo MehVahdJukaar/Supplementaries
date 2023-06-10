@@ -108,10 +108,10 @@ public class BlackBoardScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Lighting.setupForFlatItems();
         this.renderBackground(graphics);
-        drawCenteredString(graphics, this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString( this.font, this.title, this.width / 2, 40, 16777215);
 
 
-        graphics.pushPose();
+        graphics.pose().pushPose();
 
         int ut = -1;
         int vt = -1;
@@ -125,7 +125,7 @@ public class BlackBoardScreen extends Screen {
             }
         }
         if (ut != -1) this.buttons[ut][vt].renderTooltip(graphics);
-        graphics.popPose();
+        graphics.pose().popPose();
 
         Lighting.setupFor3DItems();
         super.render(graphics, mouseX, mouseY, partialTicks);

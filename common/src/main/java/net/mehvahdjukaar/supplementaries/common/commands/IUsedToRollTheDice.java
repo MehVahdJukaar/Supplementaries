@@ -26,7 +26,7 @@ public class IUsedToRollTheDice implements Command<CommandSourceStack> {
         int dice = IntegerArgumentType.getInteger(context, "dice");
 
         int roll = r.nextInt(dice);
-        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.dice", dice, roll), false);
+        context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.dice", dice, roll), false);
 
         return roll;
     }

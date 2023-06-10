@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -100,8 +101,7 @@ public class BombExplosion extends Explosion {
                 this.level.getProfiler().push("explosion_blocks");
                 if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel serverLevel) {
                     BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                    LootContext.Builder builder = (new LootContext.Builder(serverLevel))
-                            .withRandom(this.level.random)
+                    LootParams.Builder builder = (new LootParams.Builder(serverLevel))
                             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos))
                             .withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                             .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity)

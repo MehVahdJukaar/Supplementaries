@@ -75,7 +75,7 @@ public class GlobeData extends SavedData {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        GlobeData data = GlobeData.get(player.level);
+        GlobeData data = GlobeData.get(player.level());
         if (data != null) {
             NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
         }

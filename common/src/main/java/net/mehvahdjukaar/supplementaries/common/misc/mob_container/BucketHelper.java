@@ -102,7 +102,7 @@ public class BucketHelper {
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {
-            return tryGettingFishBucketHackery(entity, entity.level);
+            return tryGettingFishBucketHackery(entity, entity.level());
         } else if (CompatHandler.QUARK) {
             ItemStack b = QuarkCompat.getSlimeBucket(entity);
             if (!b.isEmpty()) return b;

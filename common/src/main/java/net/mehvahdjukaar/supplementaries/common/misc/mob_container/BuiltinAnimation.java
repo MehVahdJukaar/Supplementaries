@@ -113,8 +113,8 @@ public abstract class BuiltinAnimation<T extends Entity> {
                 }
             } else {
                 mob.aiStep();
-                if (world.random.nextFloat() > (mob.isOnGround() ? 0.99 : 0.88)) {
-                    mob.setOnGround(!mob.isOnGround());
+                if (world.random.nextFloat() > (mob.onGround() ? 0.99 : 0.88)) {
+                    mob.setOnGround(!mob.onGround());
                 }
             }
         }

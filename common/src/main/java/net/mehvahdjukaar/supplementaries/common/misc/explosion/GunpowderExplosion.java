@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
@@ -80,7 +81,7 @@ public class GunpowderExplosion extends Explosion {
         BlockPos pos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
         BlockState s = level.getBlockState(pos);
-        if (s.getMaterial().isReplaceable() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
+        if (s.canBeReplaced() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
             if (this.hasFlammableNeighbours(pos) || ForgeHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
                     || newFire.getBlock() != Blocks.FIRE) {
                 this.level.setBlockAndUpdate(pos, newFire);
@@ -92,7 +93,7 @@ public class GunpowderExplosion extends Explosion {
     private boolean hasFlammableNeighbours(BlockPos pos) {
         for (Direction direction : Direction.values()) {
             BlockState state = this.level.getBlockState(pos.relative(direction));
-            if (state.getMaterial().isFlammable()
+            if (state.ignitedByLava()
                     || (state.getBlock() == ModRegistry.BELLOWS.get() && state.getValue(BellowsBlock.POWER) != 0 &&
                     state.getValue(BellowsBlock.FACING) == direction.getOpposite())) {
                 return true;
@@ -141,7 +142,7 @@ public class GunpowderExplosion extends Explosion {
             this.level.getProfiler().push("explosion_blocks");
             if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel serverLevel) {
                 BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                LootContext.Builder builder = (new LootContext.Builder(serverLevel)).withRandom(this.level.random)
+                LootParams.Builder builder = (new LootParams.Builder(serverLevel))
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                         .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, null);
 

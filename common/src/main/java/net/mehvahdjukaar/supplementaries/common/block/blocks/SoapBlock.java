@@ -21,11 +21,6 @@ public class SoapBlock extends Block {
     }
 
     @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.PUSH_ONLY;
-    }
-
-    @Override
     public boolean triggerEvent(BlockState pState, Level level, BlockPos pos, int pId, int pParam) {
         if (pId == 0) {
             RandomSource r = level.random;
@@ -66,9 +61,9 @@ public class SoapBlock extends Block {
 */
 
     @Override
-    public void stepOn(Level pLevel, BlockPos pPos, BlockState state, Entity entity) {
-        RandomSource rand = entity.level.random;
-        if ((!pLevel.isClientSide || entity instanceof LocalPlayer) && !entity.isSteppingCarefully()) {
+    public void stepOn(Level level, BlockPos pPos, BlockState state, Entity entity) {
+        RandomSource rand = level.random;
+        if ((!level.isClientSide || entity instanceof LocalPlayer) && !entity.isSteppingCarefully()) {
             if (rand.nextFloat() < 0.14) {
                 var m = entity.getDeltaMovement();
                 m.subtract(0, m.y, 0);
@@ -81,7 +76,7 @@ public class SoapBlock extends Block {
                     m = m.yRot((float) (angle*Math.PI/180f));
                     //PACKET HERE
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
-                    pLevel.blockEvent(pPos, state.getBlock(), 0, 0);
+                    level.blockEvent(pPos, state.getBlock(), 0, 0);
                 }
             }
         }

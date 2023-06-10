@@ -39,7 +39,7 @@ public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, 
 
         int i = Math.max(1, random.nextInt(Math.max(1, maxPrice - minPrice)) + minPrice);
 
-        ItemStack itemstack = AdventurerMapsHandler.createCustomMapForTrade(entity.level, entity.blockPosition(),
+        ItemStack itemstack = AdventurerMapsHandler.createCustomMapForTrade(entity.level(), entity.blockPosition(),
                 structure, mapName.isEmpty() ? null : mapName, mapColor, mapMarker.getPath().isEmpty() ? null : mapMarker);
         if (itemstack.isEmpty()) return null;
 

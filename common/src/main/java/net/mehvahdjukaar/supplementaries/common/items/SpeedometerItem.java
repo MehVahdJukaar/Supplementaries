@@ -38,10 +38,10 @@ public class SpeedometerItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
-        if (player.level.isClientSide) {
+        if (player.level().isClientSide) {
             calculateSpeed(player, entity);
         }
-        return InteractionResult.sidedSuccess(player.level.isClientSide);
+        return InteractionResult.sidedSuccess(player.level().isClientSide);
     }
 
     private void calculateSpeed(Player player, Entity entity) {
@@ -55,7 +55,7 @@ public class SpeedometerItem extends Item {
         Entity e = entity;
         if (mount != null) e = mount;
         Vec3 v = e.getDeltaMovement();
-        if (e.isOnGround()) v = v.subtract(0, v.y, 0);
+        if (e.onGround()) v = v.subtract(0, v.y, 0);
         return v.length() * 20;
     }
 

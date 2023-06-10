@@ -69,7 +69,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public void playCatchSound(Player player) {
-        player.level.playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1, 1);
+        player.level().playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1, 1);
     }
 
     @Override

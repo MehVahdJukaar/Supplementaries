@@ -77,7 +77,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
 
     @Override
     public boolean hasQuiver() {
-        if (this.level != null && this.level.isClientSide) {
+        if (this.level() != null && this.level().isClientSide) {
             return this.getEntityData().get(HAS_QUIVER);
         }
         return IQuiverEntity.super.hasQuiver();

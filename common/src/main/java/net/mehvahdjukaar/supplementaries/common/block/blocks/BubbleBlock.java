@@ -44,7 +44,7 @@ public class BubbleBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis() {
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;
     }
 

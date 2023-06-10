@@ -42,10 +42,10 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
 
             BlockPos pos = BlockPos.containing(this.getX(), this.getY() + 0.25, this.getZ());
             //break event
-            level.levelEvent(null, 2001, pos, Block.getId(state));
+            level().levelEvent(null, 2001, pos, Block.getId(state));
             if (state.getLightEmission() != 0) {
 
-                GunpowderBlock.createMiniExplosion(level, pos, true);
+                GunpowderBlock.createMiniExplosion(level(), pos, true);
             } else {
                 this.spawnAtLocation(state.getBlock());
             }

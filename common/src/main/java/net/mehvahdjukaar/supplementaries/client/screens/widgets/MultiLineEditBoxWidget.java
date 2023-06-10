@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.SharedConstants;
@@ -13,12 +12,9 @@ import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.MultiLineEditBox;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.BookEditScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -26,9 +22,9 @@ import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -74,7 +70,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
             this.active = false;
         } else {
             this.active = hasItem;
-            if (!hasItem){
+            if (!hasItem) {
                 this.setText("");
             }
         }
@@ -263,7 +259,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         DisplayCache displayCache = this.getDisplayCache();
 
         for (LineInfo lineInfo : displayCache.lines) {
-            this.font.draw(graphics, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216);
+            graphics.drawString(this.font, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216);
         }
 
         if (this.isFocused()) {
@@ -276,14 +272,14 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         if (this.frameTick / 6 % 2 == 0) {
             pos2i = this.convertLocalToScreen(pos2i);
             if (!isEndOfText) {
-                GuiComponent.fill(graphics, pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
+                graphics.fill(pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
             } else {
-                this.font.draw(graphics, "_", pos2i.x, pos2i.y, 0);
+                graphics.drawString(this.font, "_", pos2i.x, pos2i.y, 0);
             }
         }
     }
 
-    private void renderHighlight(PoseStack poseStack, Rect2i[] rect2is) {
+    private void renderHighlight(GuiGraphics graphics, Rect2i[] rect2is) {
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
         for (Rect2i rect2i : rect2is) {
@@ -291,7 +287,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
             int j = rect2i.getY();
             int k = i + rect2i.getWidth();
             int l = j + rect2i.getHeight();
-            fill(poseStack, i, j, k, l, -16776961);
+            graphics.fill(i, j, k, l, -16776961);
         }
 
         RenderSystem.disableColorLogicOp();
@@ -436,8 +432,8 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     private Rect2i createPartialLineSelection(String input, StringSplitter splitter, int i, int j, int k, int l) {
         String string = input.substring(l, i);
         String string2 = input.substring(l, j);
-        Pos2i pos2i = new Pos2i((int)splitter.stringWidth(string), k);
-        int var10002 = (int)splitter.stringWidth(string2);
+        Pos2i pos2i = new Pos2i((int) splitter.stringWidth(string), k);
+        int var10002 = (int) splitter.stringWidth(string2);
         Objects.requireNonNull(this.font);
         Pos2i pos2i2 = new Pos2i(var10002, k + 9);
         return this.createSelection(pos2i, pos2i2);

@@ -24,7 +24,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
     }
 
     public FallingUrnEntity(Level level, BlockPos pos, BlockState blockState) {
-        super(ModEntities.FALLING_URN.get(),level, pos, blockState, false);
+        super(ModEntities.FALLING_URN.get(), level, pos, blockState, false);
         this.setHurtsEntities(1f, 20);
     }
 
@@ -50,13 +50,13 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
     @Override
     public boolean causeFallDamage(float height, float amount, DamageSource source) {
         boolean r = super.causeFallDamage(height, amount, source);
-        if (this.getDeltaMovement().lengthSqr() > 0.5*0.5) {
+        if (this.getDeltaMovement().lengthSqr() > 0.5 * 0.5) {
             this.shatter();
             this.setCancelDrop(true);
             this.discard();
         } else {
             if (!this.isSilent()) {
-                level.levelEvent(1045, this.blockPosition(), 0);
+                level().levelEvent(1045, this.blockPosition(), 0);
             }
         }
         return r;
@@ -71,6 +71,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
             tile = new UrnBlockTile(pos, state);
             tile.load(tag);
         }
+        Level level = level();
         Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);
 
         level.levelEvent(null, 2001, pos, Block.getId(state));

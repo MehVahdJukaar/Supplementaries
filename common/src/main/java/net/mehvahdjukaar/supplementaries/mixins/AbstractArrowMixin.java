@@ -31,7 +31,7 @@ public abstract class AbstractArrowMixin extends Entity {
 
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     public void onPlayerTouch(Player player, CallbackInfo ci){
-        if(!this.level.isClientSide) {
+        if(!this.level().isClientSide) {
             if ((this.inGround || this.isNoPhysics()) && this.pickup == AbstractArrow.Pickup.ALLOWED && this.shakeTime <= 0 &&
                     ServerEvents.onArrowPickup((AbstractArrow) (Object) this, player, this::getPickupItem)) {
                 ci.cancel();

@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -52,7 +53,7 @@ public class DoubleSkullBlock extends SkullBlock implements IRotatable {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState pState, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState pState, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof DoubleSkullBlockTile tile) {
             List<ItemStack> loot = new ArrayList<>();
             BlockEntity skullTile = tile.getSkullTile();

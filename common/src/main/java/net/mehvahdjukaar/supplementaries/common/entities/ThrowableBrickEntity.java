@@ -67,7 +67,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
             ParticleOptions particle = this.makeParticle();
 
             for (int i = 0; i < 8; ++i) {
-                this.level.addParticle(particle, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+                this.level().addParticle(particle, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -76,7 +76,8 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     @Override
     protected void onHitBlock(BlockHitResult rayTraceResult) {
         super.onHitBlock(rayTraceResult);
-        if (!this.level.isClientSide) {
+        Level level = level();
+        if (!level.isClientSide) {
             Entity entity = this.getOwner();
             BlockPos pos = rayTraceResult.getBlockPos();
 
@@ -84,7 +85,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
                 if (CompatHandler.FLAN && !FlanCompat.canBreak(player, pos)) return;
                 if (!player.mayBuild()) return;
             }
-            if (!(entity instanceof Mob) || this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatHelper.isMobGriefingOn(this.level, this)) {
+            if (!(entity instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatHelper.isMobGriefingOn(level, this)) {
 
                 if (level.getBlockState(pos).getBlock() instanceof JarBlock) {
                     level.destroyBlock(pos, true);
@@ -97,11 +98,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
     private void breakGlass(BlockPos pos, int chance) {
         int c = chance - 1 - this.random.nextInt(4);
-        BlockState state = level.getBlockState(pos);
+        BlockState state = level().getBlockState(pos);
         if (state.getBlock().getExplosionResistance() > 3) return;
         if (c < 0 || !state.is(ModTags.BRICK_BREAKABLE_GLASS)) return;
 
-        level.destroyBlock(pos, true);
+        level().destroyBlock(pos, true);
         breakGlass(pos.above(), c);
         breakGlass(pos.below(), c);
         breakGlass(pos.east(), c);
@@ -117,17 +118,17 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super.onHitEntity(entityHitResult);
         Entity entity = entityHitResult.getEntity();
         int i = 1;
-        entity.hurt(this.level.damageSources().thrown(this, this.getOwner()), i);
+        entity.hurt(this.level().damageSources().thrown(this, this.getOwner()), i);
     }
 
 
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             Vec3 v = result.getLocation();
-            this.level.playSound(null, v.x, v.y, v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundSource.NEUTRAL, 0.75F, 1);
-            this.level.broadcastEntityEvent(this, (byte) 3);
+            this.level().playSound(null, v.x, v.y, v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundSource.NEUTRAL, 0.75F, 1);
+            this.level().broadcastEntityEvent(this, (byte) 3);
             this.remove(RemovalReason.DISCARDED);
         }
 

@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
@@ -129,8 +130,8 @@ public class HangingSignScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-
+    public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
+/*
         Lighting.setupForFlatItems();
         this.renderBackground(poseStack);
 
@@ -220,7 +221,7 @@ poseStack.popPose();
 
         poseStack.popPose();
         Lighting.setupFor3DItems();
-
+*/
     }
 }
 

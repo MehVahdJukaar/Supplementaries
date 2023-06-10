@@ -155,7 +155,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity e) {
         super.stepOn(world, pos, state, e);
         if (!CommonConfigs.Redstone.TURN_TABLE_ROTATE_ENTITIES.get()) return;
-        if (!e.isOnGround()) return;
+        if (!e.onGround()) return;
         if (state.getValue(POWER) != 0 && state.getValue(FACING) == Direction.UP) {
             float period = getPeriod(state) + 1;
             float angleIncrement = 90f / period;

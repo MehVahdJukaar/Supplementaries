@@ -241,7 +241,7 @@ public class BlockUtil {
                 BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING));
                 if (level.getBlockState(headPos).hasProperty(PistonHeadBlock.SHORT)) {
                     BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING));
-                    if (level.getBlockState(newHeadPos).getMaterial().isReplaceable()) {
+                    if (level.getBlockState(newHeadPos).canBeReplaced()) {
 
                         level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
                         level.setBlock(pos, newBase, 2);
@@ -258,7 +258,7 @@ public class BlockUtil {
                 BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING).getOpposite());
                 if (level.getBlockState(headPos).hasProperty(PistonBaseBlock.EXTENDED)) {
                     BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING).getOpposite());
-                    if (level.getBlockState(newHeadPos).getMaterial().isReplaceable()) {
+                    if (level.getBlockState(newHeadPos).canBeReplaced()) {
 
                         level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
                         level.setBlock(pos, newBase, 2);
@@ -273,7 +273,7 @@ public class BlockUtil {
             BlockState newBed = ForgeHelper.rotateBlock(state, level, pos, rot);
             BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
             BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
-            if (level.getBlockState(targetPos).getMaterial().isReplaceable()) {
+            if (level.getBlockState(targetPos).canBeReplaced()) {
                 level.setBlock(targetPos, ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot), 2);
                 level.setBlock(pos, newBed, 2);
                 level.removeBlock(oldPos, false);
@@ -286,7 +286,7 @@ public class BlockUtil {
                 BlockState newChest = ForgeHelper.rotateBlock(state, level, pos, rot);
                 BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
                 BlockPos targetPos = pos.relative(ChestBlock.getConnectedDirection(newChest));
-                if (level.getBlockState(targetPos).getMaterial().isReplaceable()) {
+                if (level.getBlockState(targetPos).canBeReplaced()) {
                     BlockState connectedNewState = ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot);
                     level.setBlock(targetPos, connectedNewState, 2);
                     level.setBlock(pos, newChest, 2);

@@ -43,7 +43,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
         if (this.nextStartTick > 0) {
             --this.nextStartTick;
             return false;
-        } else if (this.blockPos != BlockPos.ZERO && !ForgeHelper.canEntityDestroy(this.animal.level, this.blockPos, this.animal)) {
+        } else if (this.blockPos != BlockPos.ZERO && !ForgeHelper.canEntityDestroy(this.animal.level(), this.blockPos, this.animal)) {
             return false;
         } else if (this.tryFindBlock()) {
             //cooldown between attempts if blocks are around
@@ -60,11 +60,11 @@ public class EatFodderGoal extends MoveToBlockGoal {
     @Override
     public boolean canContinueToUse() {
         //try is low so they don't get stuck
-        return this.tryTicks >= -100 && this.tryTicks <= 200 && this.isValidTarget(this.mob.level, this.blockPos);
+        return this.tryTicks >= -100 && this.tryTicks <= 200 && this.isValidTarget(this.mob.level(), this.blockPos);
     }
 
     private boolean tryFindBlock() {
-        return this.blockPos != BlockPos.ZERO && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
+        return this.blockPos != BlockPos.ZERO && this.isValidTarget(this.mob.level(), this.blockPos) || this.findNearestBlock();
     }
 
 
@@ -96,9 +96,9 @@ public class EatFodderGoal extends MoveToBlockGoal {
     @Override
     public void tick() {
         super.tick();
-        Level world = this.animal.level;
+        Level level = this.animal.level();
         //BlockPos blockpos = this.removerMob.blockPosition();
-        //BlockPos blockpos1 = this.getPosWithBlock(blockpos, world);
+        //BlockPos blockpos1 = this.getPosWithBlock(blockpos, level);
 
         RandomSource random = this.animal.getRandom();
         if (this.isReachedTarget()) {
@@ -111,37 +111,37 @@ public class EatFodderGoal extends MoveToBlockGoal {
             this.mob.getLookControl().setLookAt(vector3d.x(), vector3d.y(), vector3d.z());
             if (this.ticksSinceReachedGoal > 0) {
 
-                if (!world.isClientSide && ticksSinceReachedGoal % 2 == 0) {
+                if (!level.isClientSide && ticksSinceReachedGoal % 2 == 0) {
 
-                    ((ServerLevel) world).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FODDER_STATE),
+                    ((ServerLevel) level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FODDER_STATE),
                             targetPos.getX() + 0.5D, targetPos.getY() + 0.7D, targetPos.getZ() + 0.5D, 3,
                             (random.nextFloat() - 0.5D) * 0.08D, (random.nextFloat() - 0.5D) * 0.08D, ( random.nextFloat() - 0.5D) * 0.08D, 0.15F);
                 }
             }
             if (this.ticksSinceReachedGoal == 1 && this.animal instanceof Sheep) {
-                world.broadcastEntityEvent(this.mob, (byte) 10);
+                level.broadcastEntityEvent(this.mob, (byte) 10);
             }
 
             //breaking animation
             int k = (int) ((float) this.ticksSinceReachedGoal / (float) this.blockBreakingTime * 10.0F);
             if (k != this.lastBreakProgress) {
-                this.mob.level.destroyBlockProgress(this.mob.getId(), this.blockPos, k);
+                level.destroyBlockProgress(this.mob.getId(), this.blockPos, k);
                 this.lastBreakProgress = k;
             }
 
             //break block
             if (this.ticksSinceReachedGoal > this.blockBreakingTime) {
-                BlockState state = world.getBlockState(targetPos);
+                BlockState state = level.getBlockState(targetPos);
                 if (state.is(ModRegistry.FODDER.get())) {
                     int layers = state.getValue(FodderBlock.LAYERS);
                     if (layers > 1) {
-                        world.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));
-                        world.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 1), 2);
+                        level.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));
+                        level.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 1), 2);
                     } else {
-                        world.destroyBlock(targetPos, false);
+                        level.destroyBlock(targetPos, false);
                     }
-                    if (!world.isClientSide) {
-                        ((ServerLevel) world).sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                    if (!level.isClientSide) {
+                        ((ServerLevel) level).sendParticles(ParticleTypes.HAPPY_VILLAGER,
                                 this.animal.getX(), this.animal.getY(), this.animal.getZ(), 5,
                                 this.animal.getBbWidth() / 2f, this.animal.getBbHeight() / 2f, this.animal.getBbWidth() / 2f, 0);
                     }

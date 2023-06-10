@@ -152,11 +152,6 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         return new ItemStack(ModRegistry.SPRING_LAUNCHER.get());
     }
 
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
-    }
-
     // piston code
     /**
      * Called before the Block is set to air in the world. Called regardless of if

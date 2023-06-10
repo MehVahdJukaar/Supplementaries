@@ -40,7 +40,7 @@ public class ServerBoundRequestMapDataPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         // server world
-        Level world = Objects.requireNonNull(context.getSender()).level;
+        Level world = Objects.requireNonNull(context.getSender()).level();
 
         if (world instanceof ServerLevel) {
             Player player = world.getPlayerByUUID(this.id);

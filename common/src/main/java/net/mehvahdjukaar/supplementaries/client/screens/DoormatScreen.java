@@ -127,7 +127,7 @@ public class DoormatScreen extends Screen {
 
         super.render(graphics, mouseX, mouseY, partialTicks);
 
-        drawCenteredString(graphics, this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
@@ -148,7 +148,7 @@ public class DoormatScreen extends Screen {
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         BlockState state = this.tileSign.getBlockState().getBlock().defaultBlockState().setValue(DoormatBlock.FACING, Direction.EAST);
-        blockRenderer.renderSingleBlock(state, graphics, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+        blockRenderer.renderSingleBlock(state, graphics.pose(), bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 

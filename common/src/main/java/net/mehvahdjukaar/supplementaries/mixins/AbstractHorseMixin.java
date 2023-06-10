@@ -12,6 +12,7 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,9 +69,10 @@ public abstract class AbstractHorseMixin extends Animal {
                 eat = true;
             }
 
+            Level level = this.level();
             if (this.isBaby()) {
-                this.level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
-                if (!this.level.isClientSide) {
+                level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
+                if (!level.isClientSide) {
                     this.ageUp(ageIncrement);
                 }
                 eat = true;
@@ -79,7 +81,7 @@ public abstract class AbstractHorseMixin extends Animal {
 
             if ((eat || !this.isTamed()) && this.getTemper() < this.getMaxTemper()) {
                 eat = true;
-                if (!this.level.isClientSide) {
+                if (!level.isClientSide) {
                     this.modifyTemper(newTemper);
                 }
             }

@@ -75,11 +75,11 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         if (result instanceof BlockHitResult hitResult) {
             BlockPos pos = hitResult.getBlockPos();
             BlockState first = level.getBlockState(pos);
-            if (!first.getMaterial().isReplaceable()) {
+            if (!first.canBeReplaced()) {
                 pos = pos.relative(hitResult.getDirection());
             }
             first = level.getBlockState(pos);
-            if (first.getMaterial().isReplaceable()) {
+            if (first.canBeReplaced()) {
                 BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
 
                 if(CompatHandler.FLAN && !FlanCompat.canPlace(player, pos)){
@@ -192,7 +192,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     //@Override
     @SuppressWarnings("UnsafePlatformOnlyCall")
     public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {
-        Level level = entity.level;
+        Level level = entity.level();
         int damage = this.getDamage(stack) + 1;
         if (damage > this.getMaxDamage(stack)) {
             entity.stopUsingItem();
@@ -205,7 +205,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         int soundLength = 4;
         if (count % soundLength == 0) {
             Player p = entity instanceof Player pl ? pl : null;
-            entity.level.playSound(p, entity, ModSounds.BUBBLE_BLOW.get(), entity.getSoundSource(),
+            level.playSound(p, entity, ModSounds.BUBBLE_BLOW.get(), entity.getSoundSource(),
                     1.0F, MthUtils.nextWeighted(level.random, 0.20f) + 0.95f);
         }
         if (level.isClientSide) {

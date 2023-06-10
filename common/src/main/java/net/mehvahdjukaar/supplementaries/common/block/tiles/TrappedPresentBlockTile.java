@@ -73,14 +73,14 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
-        long time = player.level.getGameTime();
+        long time = player.level().getGameTime();
         if (this.isUnused() &&
                 Mth.abs((float) time - lastActivated) > 10) {
             if (this.canOpen(player)) {
                 PlatHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
             } else {
-                detonate(player.getLevel(), pos);
+                detonate((ServerLevel) player.level(), pos);
                 this.lastActivated = time;
             }
             return InteractionResult.CONSUME;

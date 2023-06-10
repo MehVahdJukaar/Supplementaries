@@ -66,7 +66,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
             if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
                 this.feedRottenFlesh(player, hand, stack);
                 cir.cancel();
-                cir.setReturnValue(InteractionResult.sidedSuccess(player.level.isClientSide));
+                cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
             }
         }
     }
@@ -88,7 +88,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
 
         if (this.fleshCount >= CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
             this.conversionTime = 200;
-            this.level.broadcastEntityEvent(this, (byte) 16);
+            this.level().broadcastEntityEvent(this, (byte) 16);
         }
 
         if (!player.isCreative()) {
@@ -139,7 +139,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
 
         if (!this.isSilent()) {
-            this.level.levelEvent(null, 1027, this.blockPosition(), 0);
+            this.level().levelEvent(null, 1027, this.blockPosition(), 0);
         }
     }
 
@@ -147,7 +147,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     public void handleEntityEvent(byte id) {
         if (id == 16) {
             if (!this.isSilent()) {
-                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
+                this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
 
         } else {
@@ -159,7 +159,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide && this.isAlive() && !this.isNoAi()) {
+        if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
             if (this.isConverting()) {
                 --this.conversionTime;
 

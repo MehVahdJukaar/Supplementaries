@@ -27,7 +27,7 @@ public interface IKeyLockable {
 
     default void onPasswordCleared(Player player, BlockPos pos) {
         player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
-        player.level.playSound(null, pos,
+        player.level().playSound(null, pos,
                 SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
     }
 

@@ -30,7 +30,7 @@ public class ChangeGlobeSeedCommand implements Command<CommandSourceStack> {
         GlobeData.set(level, newData);
 
         newData.sendToClient(level);
-        context.getSource().sendSuccess(Component.translatable("message.supplementaries.command.globe_changed"), false);
+        context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.globe_changed"), false);
         return 0;
     }
 }

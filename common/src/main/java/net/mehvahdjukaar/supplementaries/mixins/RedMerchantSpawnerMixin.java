@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -96,11 +96,10 @@ public abstract class RedMerchantSpawnerMixin {
 
     private float calculateNormalizeDifficulty(ServerLevel world, BlockPos pos) {
         float dragon = 1;
-        CompoundTag tag = world.getServer().getWorldData().endDragonFightData();
+        EndDragonFight.Data dragonData = world.getServer().getWorldData().endDragonFightData();
 
-        if (tag.contains("DragonKilled", 99)) {
-
-            if (tag.getBoolean("DragonKilled")) dragon = 1.25f;
+        if (dragonData.dragonKilled()) {
+            dragon = 1.25f;
         }
 
         long i = 0L;

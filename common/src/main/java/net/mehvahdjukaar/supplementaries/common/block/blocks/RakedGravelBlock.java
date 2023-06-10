@@ -165,9 +165,9 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState p_196260_1_, LevelReader p_196260_2_, BlockPos p_196260_3_) {
-        BlockState blockstate = p_196260_2_.getBlockState(p_196260_3_.above());
-        return !blockstate.getMaterial().isSolid() || blockstate.getBlock() instanceof FenceGateBlock;
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        BlockState blockstate = level.getBlockState(pos.above());
+        return !blockstate.isSolid() || blockstate.getBlock() instanceof FenceGateBlock;
     }
 
 }

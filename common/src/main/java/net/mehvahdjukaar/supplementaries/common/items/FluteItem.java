@@ -115,7 +115,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
                 Entity entity = serverLevel.getEntity(com.getUUID("UUID"));
                 int maxDist = CommonConfigs.Tools.FLUTE_DISTANCE.get() * CommonConfigs.Tools.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
-                    if (pet.level == player.level && pet.distanceToSqr(player) < maxDist) {
+                    if (pet.level() == player.level() && pet.distanceToSqr(player) < maxDist) {
                         if (pet.randomTeleport(x, y, z, false)) {
                             pet.stopSleeping();
                         }

@@ -99,7 +99,7 @@ public class SoapItem extends Item {
 
     //needed because some entities dont fire the normal method so we use event instead
     public static boolean interactWithEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
-        Level level = player.level;
+        Level level = player.level();
         boolean success = false;
         if (entity instanceof Sheep s) {
             if (s.getColor() != DyeColor.WHITE) {

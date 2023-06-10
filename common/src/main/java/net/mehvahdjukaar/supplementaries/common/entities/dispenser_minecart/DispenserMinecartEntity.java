@@ -94,7 +94,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         InteractionResult ret = InteractionResult.PASS;
         if (ret.consumesAction()) return ret;
         pPlayer.openMenu(this);
-        if (!pPlayer.level.isClientSide) {
+        if (!pPlayer.level().isClientSide) {
             this.gameEvent(GameEvent.CONTAINER_OPEN, pPlayer);
             PiglinAi.angerNearbyPiglins(pPlayer, true);
             return InteractionResult.CONSUME;
@@ -185,7 +185,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     public void activateMinecart(int pX, int pY, int pZ, boolean pReceivingPower) {
         this.onActivator = true;
         if (!this.powered && pReceivingPower) {
-            if (this.level instanceof ServerLevel serverLevel) {
+            if (this.level() instanceof ServerLevel serverLevel) {
                 this.dispenseFrom(serverLevel, this.blockPosition());
             }
         }
@@ -198,8 +198,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     @Override
     public void tick() {
         super.tick();
-        this.dispenser.setLevel(this.getLevel());
-        if (!this.level.isClientSide && this.isAlive() && this.powered) {
+        this.dispenser.setLevel(this.level());
+        if (!this.level().isClientSide && this.isAlive() && this.powered) {
             if (!this.onActivator) this.powered = false;
             this.onActivator = false;
         }
@@ -208,7 +208,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     @Override
     public void teleportTo(double pX, double pY, double pZ) {
         super.teleportTo(pX, pY, pZ);
-        level.broadcastEntityEvent(this, (byte) 46);
+        level().broadcastEntityEvent(this, (byte) 46);
     }
 
     protected void dispenseFrom(ServerLevel pLevel, BlockPos pPos) {

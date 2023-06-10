@@ -36,7 +36,7 @@ public class ServerBoundSetTrappedPresentPacket implements Message {
     public void handle(ChannelHandler.Context context) {
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
-        Level world = player.level;
+        Level world = player.level();
 
         if (world.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
             //TODO: sound here

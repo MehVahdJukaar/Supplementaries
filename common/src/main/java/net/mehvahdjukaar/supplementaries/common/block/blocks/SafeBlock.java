@@ -51,6 +51,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -161,7 +162,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     UUID id = compoundTag.getUUID("Owner");
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
                         String name = compoundTag.getString("OwnerName");
-                        tooltip.add((Component.translatable("container.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
+                        tooltip.add((Component.translatable("message.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
                         return;
                     }
                 }
@@ -232,7 +233,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
 
     //TODO: use loot table instead
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SafeBlockTile tile) {
             ItemStack itemstack = this.getSafeItem(tile);
             return Collections.singletonList(itemstack);
@@ -261,11 +262,6 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     tile.setOwner(placer.getUUID());
             }
         }
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
     }
 
     @Override

@@ -53,7 +53,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     public void startConverting() {
         if (!this.isConverting()) {
             this.conversionTime = CONV_TIME;
-            this.level.broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
+            this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, CONV_TIME, 2));
         }
     }
@@ -113,7 +113,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
         }
 
         if (!this.isSilent()) {
-            this.level.levelEvent(null, 1027, this.blockPosition(), 0);
+            this.level().levelEvent(null, 1027, this.blockPosition(), 0);
         }
     }
 
@@ -122,7 +122,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
         if (pId == EntityEvent.ZOMBIE_CONVERTING) {
             this.conversionTime = CONV_TIME;
             if (!this.isSilent()) {
-                this.level.playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
+                this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
         }
         else super.handleEntityEvent(pId);
@@ -131,7 +131,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide && this.isAlive() && !this.isNoAi()) {
+        if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
             if (this.isConverting()) {
                 --this.conversionTime;
 
@@ -149,13 +149,15 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
             if (!pPlayer.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
-            this.eat(this.level, itemstack);
-            if (!this.level.isClientSide) {
+            Level level = this.level();
+
+            this.eat(level, itemstack);
+            if (!level.isClientSide) {
                 this.startConverting();
             }
 
             cir.cancel();
-            cir.setReturnValue(InteractionResult.sidedSuccess(pPlayer.level.isClientSide));
+            cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
         }
     }
 }

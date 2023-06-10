@@ -38,10 +38,10 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
             return false;
         } else if (evoker.tickCount < this.nextAttackTickCount) {
             return false;
-        } else if (!PlatHelper.isMobGriefingOn(evoker.level, evoker)) {
+        } else if (!PlatHelper.isMobGriefingOn(evoker.level(), evoker)) {
             return false;
         } else {
-            List<WanderingTrader> list = evoker.level.getNearbyEntities(WanderingTrader.class, this.selector, evoker, evoker.getBoundingBox().inflate(16.0, 4.0, 16.0));
+            List<WanderingTrader> list = evoker.level().getNearbyEntities(WanderingTrader.class, this.selector, evoker, evoker.getBoundingBox().inflate(16.0, 4.0, 16.0));
             if (list.isEmpty()) {
                 return false;
             } else {
@@ -68,7 +68,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
                 (timer) -> {
                 })) {
             if (!entity.isRemoved()) {
-                var mob = ModEntities.RED_MERCHANT.get().create(entity.level);
+                var mob = ModEntities.RED_MERCHANT.get().create(entity.level());
                 if (mob != null) {
                     var tag = new CompoundTag();
                     entity.saveWithoutId(tag);
@@ -77,7 +77,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
 
                     entity.discard();
                     mob.removeEffect(MobEffects.INVISIBILITY);
-                    entity.level.addFreshEntity(mob);
+                    entity.level().addFreshEntity(mob);
                 }
             }
         }

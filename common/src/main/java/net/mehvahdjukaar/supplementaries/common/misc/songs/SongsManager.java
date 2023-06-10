@@ -119,7 +119,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                     }
                 }
             }
-            if (res == null) res = selectRandomSong(entity.level.random);
+            if (res == null) res = selectRandomSong(entity.level().random);
 
             song = setCurrentlyPlaying(id, res);
 

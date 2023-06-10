@@ -224,7 +224,7 @@ public class PendulumAnimation extends SwingAnimation {
         //we cant set that as its client only
         //entity.setDeltaMovement(eVel.add(normalVec.scale(entityVZf)).add(new Vec3(0,1,0).scale(entityVYf)));
 
-        entity.getLevel().playLocalSound(pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f, false);
+        entity.level().playLocalSound(pos, state.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.75f, 1.5f, false);
 
         return true;
     }

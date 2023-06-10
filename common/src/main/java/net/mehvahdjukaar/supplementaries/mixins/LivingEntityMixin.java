@@ -60,7 +60,7 @@ public abstract class LivingEntityMixin extends Entity {
                     if (y < 0 && ((Object) this) instanceof Player) y = 0;
                     if (ropeTicks > 0) ropeTicks--;
                 } else {
-                    if (this.level.isClientSide) {
+                    if (this.level().isClientSide) {
                         //cant use oldY since it has already been set
                         if (this.getY() < lastY && y < -0.05) {
                             if (RopeBlock.playEntitySlideSound(((LivingEntity) (Object) this), ropeTicks) && ropeTicks != 0) {

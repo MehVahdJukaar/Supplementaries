@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -137,13 +138,6 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
-    }
-
-
     public static BlockState getConnectedState(BlockState state, BlockState facingState, LevelAccessor world, BlockPos pos, Direction dir) {
         ModBlockProperties.BlockAttachment attachment = ModBlockProperties.BlockAttachment.get(facingState, pos, world, dir);
         if (attachment == null) {
@@ -213,7 +207,7 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof WallLanternBlockTile tile) {
             return tile.getHeldBlock().getDrops(builder);
         }

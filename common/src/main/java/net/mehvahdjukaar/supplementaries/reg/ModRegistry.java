@@ -30,6 +30,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
@@ -235,6 +236,7 @@ public class ModRegistry {
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
             BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+                    .pushReaction(PushReaction.BLOCK)
     ));
     public static final Supplier<BlockEntityType<SafeBlockTile>> SAFE_TILE = regTile(
             SAFE_NAME, () -> PlatHelper.newBlockEntityType(
@@ -249,6 +251,7 @@ public class ModRegistry {
     public static final Supplier<Block> CAGE = regBlock(CAGE_NAME, () -> new CageBlock(
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.METAL)
+                    .pushReaction(PushReaction.DESTROY)
                     .strength(3f, 6f)
                     .sound(SoundType.METAL)
     ));
@@ -420,7 +423,10 @@ public class ModRegistry {
 
     //crimson lantern
     public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_RED)
+            BlockBehaviour.Properties.of()
+                    .sound(SoundType.WOOL)
+                    .mapColor(DyeColor.RED)
+                    .ignitedByLava()
                     .strength(1.5f)
                     .lightLevel((state) -> 15)
                     .noOcclusion())
@@ -428,7 +434,7 @@ public class ModRegistry {
 
     //rope
     public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
-            BlockBehaviour.Properties.of(Material.WOOL)
+            BlockBehaviour.Properties.copy(Blocks.BROWN_WOOL)
                     .sound(ModSounds.ROPE)
                     .strength(0.25f)
                     .speedFactor(0.7f)
@@ -446,7 +452,9 @@ public class ModRegistry {
 
     //spikes
     public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.SAND)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.SAND)
+                    .ignitedByLava()
                     .sound(SoundType.SCAFFOLDING)
                     .isRedstoneConductor((a, b, c) -> false)
                     .strength(2)
@@ -465,7 +473,7 @@ public class ModRegistry {
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
                     .strength(1.5f, 2f)
                     .sound(SoundType.METAL)));
 
@@ -475,7 +483,7 @@ public class ModRegistry {
 
     //hourglass
     public static final Supplier<Block> HOURGLASS = regWithItem(HOURGLASS_NAME, () -> new HourGlassBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD)
+            BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
@@ -487,7 +495,7 @@ public class ModRegistry {
 
     //item shelf
     public static final Supplier<Block> ITEM_SHELF = regWithItem(ITEM_SHELF_NAME, () -> new ItemShelfBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD)
+            BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .sound(SoundType.WOOD)
                     .strength(0.75f, 0.1f)
                     .noOcclusion()
@@ -500,9 +508,9 @@ public class ModRegistry {
 
     //doormat
     public static final Supplier<Block> DOORMAT = regWithItem(DOORMAT_NAME, () -> new DoormatBlock(
-            BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, MaterialColor.COLOR_YELLOW)
+            BlockBehaviour.Properties.copy(Blocks.BROWN_CARPET)
+                    .mapColor(MapColor.WOOD)
                     .strength(0.1F)
-                    .sound(SoundType.WOOL)
                     .noOcclusion()
     ), 134);
 
@@ -540,7 +548,7 @@ public class ModRegistry {
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()
@@ -550,15 +558,16 @@ public class ModRegistry {
     ));
 
     public static final Supplier<Block> SPRING_LAUNCHER_HEAD = regBlock(PISTON_LAUNCHER_HEAD_NAME, () -> new SpringLauncherHeadBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)
+                    .pushReaction(PushReaction.BLOCK)
                     .sound(SoundType.METAL)
                     .requiresCorrectToolForDrops()
                     .noLootTable()
                     .jumpFactor(1.18f)
     ));
     public static final Supplier<Block> SPRING_LAUNCHER_ARM = regBlock(PISTON_LAUNCHER_ARM_NAME, () -> new SpringLauncherArmBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .strength(50f, 50f)
                     .sound(SoundType.METAL)
                     .noOcclusion()
@@ -570,7 +579,7 @@ public class ModRegistry {
 
     //speaker Block
     public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () -> {
-        var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+        var p = BlockBehaviour.Properties.copy(Blocks.NOTE_BLOCK)
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
         return CompatHandler.COMPUTERCRAFT ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
@@ -582,9 +591,8 @@ public class ModRegistry {
 
     //turn table
     public static final Supplier<Block> TURN_TABLE = regWithItem(TURN_TABLE_NAME, () -> new TurnTableBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
+            BlockBehaviour.Properties.copy(Blocks.STONE)
                     .strength(0.75f, 2f)
-                    .sound(SoundType.STONE)
     ));
 
     public static final Supplier<BlockEntityType<TurnTableBlockTile>> TURN_TABLE_TILE = regTile(
@@ -593,8 +601,7 @@ public class ModRegistry {
 
     //illuminator
     public static final Supplier<Block> REDSTONE_ILLUMINATOR = regWithItem(REDSTONE_ILLUMINATOR_NAME, () -> new RedstoneIlluminatorBlock(
-            BlockBehaviour.Properties.of(Material.BUILDABLE_GLASS, MaterialColor.QUARTZ)
-                    .sound(SoundType.GLASS)
+            BlockBehaviour.Properties.copy(Blocks.SEA_LANTERN)
                     .isValidSpawn((s, w, p, g) -> true)
                     .strength(0.3f, 0.3f)
     ));
@@ -611,7 +618,7 @@ public class ModRegistry {
 
     //lock block
     public static final Supplier<Block> LOCK_BLOCK = regWithItem(LOCK_BLOCK_NAME, () -> new LockBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F)
                     .sound(SoundType.METAL)
@@ -619,7 +626,8 @@ public class ModRegistry {
 
     //bellows
     public static final Supplier<Block> BELLOWS = regWithItem(BELLOWS_NAME, () -> new BellowsBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+            BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+                    .mapColor(MapColor.COLOR_BROWN)
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
                     .noOcclusion()
@@ -631,9 +639,8 @@ public class ModRegistry {
 
     //clock
     public static final Supplier<Block> CLOCK_BLOCK = regWithItem(CLOCK_BLOCK_NAME, () -> new ClockBlock(
-            BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
+            BlockBehaviour.Properties.copy(Blocks.DARK_OAK_PLANKS)
                     .strength(3f, 6f)
-                    .sound(SoundType.WOOD)
                     .lightLevel((state) -> 1)
     ));
 
@@ -643,7 +650,7 @@ public class ModRegistry {
 
     //crystal display
     public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.DEEPSLATE)
+            BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
                     .sound(SoundType.POLISHED_DEEPSLATE)
                     .strength(0.5f, 0.5f)
     ));
@@ -664,10 +671,9 @@ public class ModRegistry {
 
     //wind vane
     public static final Supplier<Block> WIND_VANE = regWithItem(WIND_VANE_NAME, () -> new WindVaneBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
                     .strength(5f, 6f)
                     .requiresCorrectToolForDrops()
-                    .sound(SoundType.METAL)
                     .noOcclusion()
     ));
 
@@ -677,9 +683,8 @@ public class ModRegistry {
 
     //faucet
     public static final Supplier<Block> FAUCET = regWithItem(FAUCET_NAME, () -> new FaucetBlock(
-            BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL)
+            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
                     .strength(3f, 4.8f)
-                    .sound(SoundType.METAL)
                     .noOcclusion()
     ));
 
@@ -734,6 +739,7 @@ public class ModRegistry {
     //wall lantern
     public static final Supplier<WallLanternBlock> WALL_LANTERN = regBlock(WALL_LANTERN_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.LANTERN)
+                .pushReaction(PushReaction.DESTROY)
                 .lightLevel((state) -> 15).noLootTable();
 
         return /*CompatHandler.create ? SchematicCannonStuff.makeWallLantern(p):*/  new WallLanternBlock(p);
@@ -765,7 +771,8 @@ public class ModRegistry {
 
     //checker block
     public static final Supplier<Block> CHECKER_BLOCK = regWithItem(CHECKER_BLOCK_NAME, () -> new Block(
-            BlockBehaviour.Properties.of(Material.STONE)
+            BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.QUARTZ)
                     .requiresCorrectToolForDrops()
                     .strength(1.5F, 6.0F)
     ));
@@ -777,7 +784,8 @@ public class ModRegistry {
 
     //pancakes
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
-            BlockBehaviour.Properties.of(Material.CAKE, MaterialColor.TERRACOTTA_ORANGE)
+            BlockBehaviour.Properties.copy(Blocks.CAKE)
+                    .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .strength(0.5F)
                     .sound(SoundType.WOOL))
     );
@@ -1057,8 +1065,11 @@ public class ModRegistry {
     public static final Supplier<Item> SOAP = regItem(SOAP_NAME, () -> new SoapItem(new Item.Properties()));
 
     public static final Supplier<Block> SOAP_BLOCK = regWithItem(SOAP_BLOCK_NAME, () -> new SoapBlock(
-            BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_PINK)
+            BlockBehaviour.Properties.of()
                     .friction(0.94f)
+                    .instrument(NoteBlockInstrument.DIDGERIDOO)
+                    .mapColor(DyeColor.PINK)
+                    .pushReaction(PushReaction.PUSH_ONLY)
                     .strength(1.25F, 4.0F)
                     .sound(SoundType.CORAL_BLOCK)
     ));
@@ -1099,9 +1110,12 @@ public class ModRegistry {
 
     //bubble
     public static final Supplier<BubbleBlock> BUBBLE_BLOCK = regBlock(BUBBLE_BLOCK_NAME, () ->
-            new BubbleBlock(BlockBehaviour.Properties.of(Material.DECORATION, MaterialColor.COLOR_PINK)
+            new BubbleBlock(BlockBehaviour.Properties.of()
                     .sound(ModSounds.BUBBLE_BLOCK)
+                    .mapColor(MapColor.COLOR_PINK)
                     .noOcclusion()
+                    .pushReaction(PushReaction.DESTROY)
+                    .forceSolidOff()
                     .isSuffocating((a, b, c) -> false)
                     .isViewBlocking((a, b, c) -> false)
                     .isRedstoneConductor((a, b, c) -> false)

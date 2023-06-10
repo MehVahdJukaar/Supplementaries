@@ -90,7 +90,7 @@ public class SwayingAnimation extends SwingAnimation {
                 if (this.animationCounter > 10) {
                     //TODO: fix this doesnt work because this only works client side
                     Player player = entity instanceof Player p ? p : null;
-                    entity.getLevel().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
+                    entity.level().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
                 }
                 this.animationCounter = 0;
             }

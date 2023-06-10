@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -19,6 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -37,12 +39,12 @@ public class ModCreativeTabs {
     private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
     private static final List<ItemStack> NON_HIDDEN_ITEMS = new ArrayList<>();
 
-    public static final Supplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
+    public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
 
-    public static final Supplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
+    public static final RegSupplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
                     (c) -> SuppPlatformStuff.searchBar(c)
                             .title(Component.translatable("itemGroup.jars"))
@@ -79,11 +81,11 @@ public class ModCreativeTabs {
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
         if (JAR_TAB != null && hasRunSetup) {
             if (CommonConfigs.Functional.JAR_ENABLED.get()) {
-                e.addAfter(JAR_TAB.get(), null, getJars());
+                e.addAfter(JAR_TAB.getHolder().unwrapKey().get(), null, getJars());
             }
         }
         if (MOD_TAB != null && hasRunSetup) {
-            e.add(MOD_TAB.get(), NON_HIDDEN_ITEMS.toArray(ItemStack[]::new));
+            e.add(MOD_TAB.getHolder().unwrapKey().get(), NON_HIDDEN_ITEMS.toArray(ItemStack[]::new));
             return;
         }
 
@@ -504,47 +506,55 @@ public class ModCreativeTabs {
         CompatHandler.addItemsToTabs(e);
     }
 
-    private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target,
+                              ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         after(event, i -> i.is(target), tab, key, items);
     }
 
-    private static void after(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void after(RegHelper.ItemToTabEvent event, Item target,
+                              ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         after(event, i -> i.is(target), tab, key, items);
     }
 
-    private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred,
+                              ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
             event.addAfter(tab, targetPred, entries);
         }
     }
 
-    private static void before(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void before(RegHelper.ItemToTabEvent event, Item target,
+                               ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         before(event, i -> i.is(target), tab, key, items);
     }
 
-    private static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred,
+                               ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
             event.addBefore(tab, targetPred, entries);
         }
     }
 
-    private static void add(RegHelper.ItemToTabEvent event, CreativeModeTab tab, String key, Supplier<?>... items) {
+    private static void add(RegHelper.ItemToTabEvent event,
+                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
             ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
             event.add(tab, entries);
         }
     }
 
-    private static void afterML(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, String modLoaded,
+    private static void afterML(RegHelper.ItemToTabEvent event, Item target,
+                                ResourceKey<CreativeModeTab> tab, String key, String modLoaded,
                                 Supplier<?>... items) {
         if (PlatHelper.isModLoaded(modLoaded)) {
             after(event, target, tab, key, items);
         }
     }
 
-    private static void afterTL(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key,
+    private static void afterTL(RegHelper.ItemToTabEvent event, Item target,
+                                ResourceKey<CreativeModeTab> tab, String key,
                                 List<String> tags,
                                 Supplier<?>... items) {
         if (isTagOn(tags.toArray(String[]::new))) {
@@ -552,16 +562,19 @@ public class ModCreativeTabs {
         }
     }
 
-    private static void beforeML(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key, String modLoaded,
+    private static void beforeML(RegHelper.ItemToTabEvent event, Item target,
+                                 ResourceKey<CreativeModeTab> tab,
+                                 String key, String modLoaded,
                                 Supplier<?>... items) {
         if (PlatHelper.isModLoaded(modLoaded)) {
             before(event, target, tab, key, items);
         }
     }
 
-    private static void beforeTL(RegHelper.ItemToTabEvent event, Item target, CreativeModeTab tab, String key,
-                                List<String> tags,
-                                Supplier<?>... items) {
+    private static void beforeTL(RegHelper.ItemToTabEvent event, Item target,
+                                 ResourceKey<CreativeModeTab> tab, String key,
+                                 List<String> tags,
+                                 Supplier<?>... items) {
         if (isTagOn(tags.toArray(String[]::new))) {
             after(event, target, tab, key, items);
         }
