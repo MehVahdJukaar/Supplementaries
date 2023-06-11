@@ -149,17 +149,6 @@ public class ModRegistry {
 
     //blocks
 
-    //variants:
-
-    //dynamic. Handled by wood set handler
-    public static final Map<WoodType, HangingSignBlock> HANGING_SIGNS = new Object2ObjectLinkedOpenHashMap<>();
-
-    //keeping "hanging_sign_oak" for compatibility even if it should be just hanging_sign
-
-    public static final Supplier<BlockEntityType<HangingSignBlockTile>> HANGING_SIGN_TILE = regTile(
-            HANGING_SIGN_NAME + "_oak", () -> PlatHelper.newBlockEntityType(
-                    HangingSignBlockTile::new, HANGING_SIGNS.values().toArray(Block[]::new)));
-
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
         var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
@@ -1068,7 +1057,7 @@ public class ModRegistry {
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.TERRACOTTA_BROWN)
-                    .sound(SoundType.DECORATED_POT)
+                    .sound(SoundType.DECORATED_POT_CRACKED)
                     .strength(0.1f, 0)
     ));
 
@@ -1161,10 +1150,12 @@ public class ModRegistry {
 
     //enderman skull
     public static final Supplier<EndermanSkullBlock> ENDERMAN_SKULL_BLOCK = regBlock(ENDERMAN_HEAD_NAME, () ->
-            new EndermanSkullBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL))
+            new EndermanSkullBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL)
+                    .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<EndermanSkullWallBlock> ENDERMAN_SKULL_BLOCK_WALL = regBlock("enderman_wall_head", () ->
-            new EndermanSkullWallBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL))
+            new EndermanSkullWallBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL)
+                    .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> ENDERMAN_SKULL_ITEM = regItem(ENDERMAN_HEAD_NAME, () ->
             new EndermanHeadItem(ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get(),

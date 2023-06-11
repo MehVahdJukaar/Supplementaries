@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -82,8 +81,10 @@ public class TextUtils {
     public static void renderTextHolderLines(TextHolder textHolder, int ySeparation, Font font, PoseStack poseStack, MultiBufferSource buffer,
                                              TextUtil.RenderTextProperties properties) {
         for (int i = 0; i < textHolder.size(); i++) {
-            TextUtil.renderLine(textHolder.getAndPrepareTextForRenderer(font, i), font,  ySeparation * i, poseStack, buffer, properties);
+            TextUtil.renderLine(textHolder.getRenderMessages(i, font), font,  ySeparation * i, poseStack, buffer, properties);
         }
+
+
     }
 
 

@@ -1,13 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,17 +19,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.WATCHED;
 
-public class EndermanSkullBlockTile extends BlockEntity {
+public class EndermanSkullBlockTile extends SkullBlockEntity {
 
     private float prevMouthAnim;
     private float mouthAnim;
@@ -34,7 +40,12 @@ public class EndermanSkullBlockTile extends BlockEntity {
     private int watchTime;
 
     public EndermanSkullBlockTile(BlockPos blockPos, BlockState blockState) {
-        super(ModRegistry.ENDERMAN_SKULL_TILE.get(), blockPos, blockState);
+        super( blockPos, blockState);
+    }
+
+    @Override
+    public BlockEntityType<?> getType() {
+        return ModRegistry.ENDERMAN_SKULL_TILE.get();
     }
 
     public float getMouthAnimation(float partialTicks) {
@@ -110,5 +121,10 @@ public class EndermanSkullBlockTile extends BlockEntity {
     public void load(CompoundTag tag) {
         super.load(tag);
         this.watchTime = tag.getInt("WatchTime");
+    }
+
+    @Nullable
+    public ResourceLocation getNoteBlockSound() {
+        return ModSounds.IMITATE_ENDERMAN.getId();
     }
 }

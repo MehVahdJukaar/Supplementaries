@@ -158,7 +158,28 @@ public class HangingSignRendererExtension {
                 }
             }
         }
-    }*/
+    }
+
+
+
+    public static void renderItem(){
+                        BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
+                    for (int v = 0; v < 2; v++) {
+                        poseStack.pushPose();
+                        poseStack.scale(0.75f, 0.75f, 0.75f);
+                        poseStack.translate(0, 0, -0.1);
+                        //poseStack.mulPose(Const.Y180);
+                        itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, bufferIn, combinedLightIn,
+                                combinedOverlayIn, model);
+                        poseStack.popPose();
+
+                        poseStack.mulPose(RotHlpr.Y180);
+                        poseStack.scale(0.9995f, 0.9995f, 0.9995f);
+                    }
+                    }
+
+
+    */
 
     private static float getSignAngle(BlockState state, boolean attachedToWall) {
         return attachedToWall ? -(state.getValue(WallSignBlock.FACING)).toYRot() : -((state.getValue(CeilingHangingSignBlock.ROTATION) * 360) / 16.0F);

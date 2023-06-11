@@ -1,4 +1,14 @@
 {
+  "block.note_block.imitate.enderman": {
+    "sounds": [
+      {
+        "name": "entity.enderman.teleport",
+        "pitch": 1,
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.entity.enderman.teleport"
+  },
   "block.clock.tick_1": {
     "subtitle": "subtitle.supplementaries.clock_tick",
     "sounds": [

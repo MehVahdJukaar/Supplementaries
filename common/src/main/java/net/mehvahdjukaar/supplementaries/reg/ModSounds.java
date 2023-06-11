@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
@@ -63,6 +64,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_3 = regSound("item.slingshot.charge_3");
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
+    public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
+
     public static final ModSoundType JAR = new ModSoundType(1.0F, 1.0F,
             JAR_BREAK,
             ()->  SoundEvents.GLASS_STEP,
@@ -99,7 +102,7 @@ public class ModSounds {
             ()->SoundEvents.WOOL_FALL);
 
 
-    public static Supplier<SoundEvent> regSound(String name) {
+    public static RegSupplier<SoundEvent> regSound(String name) {
         return RegHelper.register(Supplementaries.res(name), () -> SoundEvent.createVariableRangeEvent(Supplementaries.res(name)), Registries.SOUND_EVENT);
     }
 

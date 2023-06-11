@@ -53,10 +53,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
             //loot table
-            ModRegistry.HANGING_SIGNS.forEach((wood, sign) -> {
-                dynamicPack.addSimpleBlockLootTable(sign);
-                builder.addEntry(sign);
-            });
             //tag
             dynamicPack.addTag(builder, Registries.BLOCK);
             dynamicPack.addTag(builder, Registries.ITEM);
@@ -71,9 +67,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         //recipes
         if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
             addSignPostRecipes(manager);
-        }
-        if (CommonConfigs.Building.HANGING_SIGN_ENABLED.get()) {
-            addHangingSignRecipes(manager);
         }
 
         //way signs tag
@@ -118,21 +111,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             dynamicPack.addTag(builder, Registries.BIOME);
         }
 
-    }
-
-    private void addHangingSignRecipes(ResourceManager manager) {
-        IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
-                ResType.RECIPES.getPath(Supplementaries.res("hanging_sign_oak")));
-
-        ModRegistry.HANGING_SIGNS.forEach((w, b) -> {
-            if (w != WoodTypeRegistry.OAK_TYPE) {
-                //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                FinishedRecipe newR = template.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                if (newR == null) return;
-                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                this.dynamicPack.addRecipe(newR);
-            }
-        });
     }
 
     private void addSignPostRecipes(ResourceManager manager) {

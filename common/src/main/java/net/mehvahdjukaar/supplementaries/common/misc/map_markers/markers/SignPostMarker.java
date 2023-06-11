@@ -26,9 +26,9 @@ public class SignPostMarker extends NamedMapBlockMarker<CustomMapDecoration> {
     public static SignPostMarker getFromWorld(BlockGetter world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             Component t = Component.literal("");
-            if (tile.getSignUp().active()) t = tile.getTextHolder().getLine(0);
+            if (tile.getSignUp().active()) t = tile.getTextHolder(0).getMessage(0, false);
             if (tile.getSignDown().active() && t.getString().isEmpty())
-                t = tile.getTextHolder().getLine(1);
+                t = tile.getTextHolder(1).getMessage(0, false);
             if (t.getString().isEmpty()) t = null;
             return new SignPostMarker(pos, t);
         } else {

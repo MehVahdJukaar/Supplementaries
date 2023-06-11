@@ -46,7 +46,6 @@ public class CreateCompatImpl {
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
 
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
             AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
@@ -92,7 +91,6 @@ public class CreateCompatImpl {
     public static void setupClient() {
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
         PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());

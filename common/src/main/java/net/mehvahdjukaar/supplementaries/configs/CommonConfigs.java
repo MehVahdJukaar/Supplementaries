@@ -370,7 +370,6 @@ public class CommonConfigs {
             SILVER_TRAPDOOR_ENABLED = feature(builder, ModConstants.SILVER_TRAPDOOR_NAME);
             LEAD_DOOR_ENABLED = feature(builder, ModConstants.LEAD_DOOR_NAME);
             LEAD_TRAPDOOR_ENABLED = feature(builder, ModConstants.LEAD_TRAPDOOR_NAME);
-            HANGING_SIGN_ENABLED = feature(builder, ModConstants.HANGING_SIGN_NAME);
             CRIMSON_LANTERN_ENABLED = feature(builder, ModConstants.CRIMSON_LANTERN_NAME);
             COPPER_LANTERN_ENABLED = feature(builder, ModConstants.COPPER_LANTERN_NAME);
             CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
@@ -440,8 +439,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ASH_ENABLED;
 
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
-
-        public static final Supplier<Boolean> HANGING_SIGN_ENABLED;
 
         public static final Supplier<Boolean> SCONCE_ENABLED;
 

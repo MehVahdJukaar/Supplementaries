@@ -324,9 +324,9 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
 
                 if (CommonConfigs.Building.WAY_SIGN_DISTANCE_TEXT.get()) {
-                    tile.getTextHolder().setLine(0, getSignText(dist1));
+                    tile.getTextHolder(0).setMessage(0, getSignText(dist1));
                     if (twoSigns)
-                        tile.getTextHolder().setLine(1, getSignText(dist2));
+                        tile.getTextHolder(1).setMessage(0, getSignText(dist2));
                 }
 
                 float yaw = Mth.wrapDegrees(90 + 360 * MthUtils.averageAngles((180 - up.yaw()) / 360f, (180 - down.yaw()) / 360f));

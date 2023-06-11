@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
@@ -7,18 +9,20 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,30 +33,47 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
+import net.minecraft.world.level.block.entity.SignText;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
+//TODO: base of SignText
 public class TextHolder implements IAntiqueTextProvider {
 
+    private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
+
+    private static Codec<Component[]> compCodec(int size) {
+        return CODEC_CACHE.computeIfAbsent(size, s -> ExtraCodecs.FLAT_COMPONENT.listOf()
+                .comapFlatMap((list) -> Util.fixedSize(list, s)
+                                .map(l -> l.toArray(Component[]::new)),
+                        components -> Arrays.stream(components).toList()));
+    }
+
     private final int lines;
-    //text
-    private final Component[] textLines;
-    //text that gets rendered
-    private final FormattedCharSequence[] renderText;
     private final int maxWidth;
+    //text
+    private final Component[] messages;
+    private final Component[] filteredMessages;
+    //text that gets rendered
+    private final FormattedCharSequence[] renderMessages;
     private DyeColor color = DyeColor.BLACK;
+    private boolean renderMessagedFiltered;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
 
     public TextHolder(int size, int maxWidth) {
         this.lines = size;
         this.maxWidth = maxWidth;
-        this.renderText = new FormattedCharSequence[size];
-        this.textLines = new Component[size];
-        Arrays.fill(this.textLines, CommonComponents.EMPTY);
+        this.renderMessages = new FormattedCharSequence[size];
+        this.messages = new Component[size];
+        this.filteredMessages = new Component[size];
+        Arrays.fill(this.messages, CommonComponents.EMPTY);
+        Arrays.fill(this.filteredMessages, CommonComponents.EMPTY);
     }
 
     public int getMaxLineCharacters() {
@@ -67,62 +88,83 @@ public class TextHolder implements IAntiqueTextProvider {
     public void load(CompoundTag compound) {
         if (compound.contains("TextHolder")) {
             CompoundTag com = compound.getCompound("TextHolder");
-            this.color = DyeColor.byName(com.getString("Color"), DyeColor.BLACK);
-            this.hasGlowingText = com.getBoolean("GlowingText");
-            this.hasAntiqueInk = com.getBoolean("AntiqueInk");
-            for (int i = 0; i < this.lines; ++i) {
-                String s = com.getString("Text" + (i + 1));
-                Component mutableComponent = s.isEmpty() ? CommonComponents.EMPTY : Component.Serializer.fromJson(s);
-                this.textLines[i] = mutableComponent;
-                this.renderText[i] = null;
+            this.color = DyeColor.byName(com.getString("color"), DyeColor.BLACK);
+            this.hasGlowingText = com.getBoolean("has_glowing_text");
+            this.hasAntiqueInk = com.getBoolean("has_antique_ink");
+            var v = compCodec(lines).decode(NbtOps.INSTANCE, com.get("message")).getOrThrow(false, s -> {
+                    })
+                    .getFirst();
+            System.arraycopy(v, 0, messages, 0, v.length);
+            var filtered = com.get("filtered_message");
+            if (filtered != null) {
+                v = compCodec(lines).decode(NbtOps.INSTANCE, filtered).getOrThrow(false, s -> {
+                        })
+                        .getFirst();
+                System.arraycopy(v, 0, filteredMessages, 0, v.length);
+            } else {
+                System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
+
             }
         }
     }
 
     public CompoundTag save(CompoundTag compound) {
         CompoundTag com = new CompoundTag();
-        com.putString("Color", this.color.getName());
-        com.putBoolean("GlowingText", this.hasGlowingText);
-        com.putBoolean("AntiqueInk", this.hasAntiqueInk);
-        for (int i = 0; i < this.lines; ++i) {
-            String s = Component.Serializer.toJson(this.textLines[i]);
-            com.putString("Text" + (i + 1), s);
+        com.putString("color", this.color.getName());
+        com.putBoolean("has_glowing_text", this.hasGlowingText);
+        com.putBoolean("has_antique_ink", this.hasAntiqueInk);
+        com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow(false, s -> {
+        }));
+        if (hasFilteredMessage()) {
+            com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow(false, s -> {
+            }));
         }
         compound.put("TextHolder", com);
         return compound;
+    }
+
+    private boolean hasFilteredMessage() {
+        for (int i = 0; i < filteredMessages.length; ++i) {
+            Component component = this.filteredMessages[i];
+            if (!component.equals(this.messages[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int size() {
         return lines;
     }
 
-    public Component getLine(int line) {
-        return this.textLines[line];
+    public Component getMessage(int line, boolean filtered) {
+        return this.getMessages(filtered)[line];
     }
 
-    public void setLine(int line, Component text) {
-        MutableComponent t = text.copy();
+    public Component[] getMessages(boolean filtered) {
+        return filtered ? this.filteredMessages : this.messages;
+    }
+
+    public void setMessage(int i, Component component) {
+        this.setMessage(i, component, component);
+    }
+
+    public void setMessage(int i, Component message, Component filtered) {
         if (this.hasAntiqueInk) {
-            t.setStyle(text.getStyle().withFont(ModTextures.ANTIQUABLE_FONT));
+            MutableComponent t = message.copy();
+            message = t.setStyle(message.getStyle().withFont(ModTextures.ANTIQUABLE_FONT));
+            t = filtered.copy();
+            filtered = t.setStyle(filtered.getStyle().withFont(ModTextures.ANTIQUABLE_FONT));
         }
-        this.textLines[line] = t;
-        this.renderText[line] = null;
-    }
-
-    @Deprecated
-    public void setLine(int line, Component text, Style style) {
-        setLine(line, text);
-    }
-
-    public Component[] getTextLines() {
-        return textLines;
+        messages[i] = message;
+        filteredMessages[i] = filtered;
     }
 
     public DyeColor getColor() {
         return color;
     }
 
-    public boolean setTextColor(DyeColor newColor) {
+    public boolean setColor(DyeColor newColor) {
         if (newColor != this.color) {
             this.color = newColor;
             return true;
@@ -134,9 +176,22 @@ public class TextHolder implements IAntiqueTextProvider {
         return hasGlowingText;
     }
 
-    public void setGlowingText(boolean glowing) {
+    public void setHasGlowingText(boolean glowing) {
         this.hasGlowingText = glowing;
     }
+
+
+    public boolean hasAnyClickCommands(Player player) {
+        for (Component component : this.getMessages(player.isTextFilteringEnabled())) {
+            Style style = component.getStyle();
+            ClickEvent clickEvent = style.getClickEvent();
+            if (clickEvent != null && clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     //TODO: make server sided & send block updated
     //should only be called server side
@@ -166,7 +221,7 @@ public class TextHolder implements IAntiqueTextProvider {
         } else {
             DyeColor dyeColor = ForgeHelper.getColor(stack);
             if (dyeColor != null) {
-                if (this.setTextColor(dyeColor)) {
+                if (this.setColor(dyeColor)) {
                     level.playSound(null, pos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     success = true;
                 }
@@ -194,24 +249,27 @@ public class TextHolder implements IAntiqueTextProvider {
     @Override
     public void setAntiqueInk(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
-        for (int i = 0; i < this.textLines.length; i++) {
-            this.setLine(i, this.textLines[i]);
+        for (int i = 0; i < this.messages.length; i++) {
+            this.setMessage(i, this.messages[i], this.filteredMessages[i]);
         }
     }
 
     //TODO: finish notice boards dye thing
     public void clearEffects() {
-        this.setTextColor(DyeColor.BLACK);
+        this.setColor(DyeColor.BLACK);
         this.setAntiqueInk(false);
-        this.setGlowingText(false);
+        this.setHasGlowingText(false);
     }
 
-    public boolean isEmpty() {
-        return Arrays.stream(this.textLines).allMatch(s -> s.getString().isEmpty());
+    public boolean isEmpty(@Nullable Player player) {
+        boolean b = player == null || player.isTextFilteringEnabled();
+        return Arrays.stream(this.getMessages(b)).anyMatch((component) ->
+                !component.getString().isEmpty());
     }
 
     public void clear() {
-        Arrays.fill(this.textLines, CommonComponents.EMPTY);
+        Arrays.fill(this.filteredMessages, CommonComponents.EMPTY);
+        Arrays.fill(this.messages, CommonComponents.EMPTY);
         this.clearEffects();
     }
 
@@ -219,12 +277,13 @@ public class TextHolder implements IAntiqueTextProvider {
 
     @Environment(EnvType.CLIENT)
     @Nullable
-    public FormattedCharSequence getAndPrepareTextForRenderer(Font font, int line) {
-        if ((this.renderText[line] == null) && this.textLines[line] != CommonComponents.EMPTY) {
-            List<FormattedCharSequence> list = font.split(this.textLines[line], this.getMaxLineVisualWidth());
-            this.renderText[line] = list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
+    public FormattedCharSequence getRenderMessages(int line, Font font) {
+        boolean filtered = Minecraft.getInstance().isTextFilteringEnabled();
+        if ((this.renderMessages[line] == null) || this.renderMessagedFiltered != filtered) {
+            List<FormattedCharSequence> list = font.split(this.getMessage(line, filtered), this.getMaxLineVisualWidth());
+            this.renderMessages[line] = list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
         }
-        return this.renderText[line];
+        return this.renderMessages[line];
     }
 
     @Environment(EnvType.CLIENT)

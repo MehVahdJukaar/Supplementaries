@@ -9,12 +9,17 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface ITextHolderProvider extends IScreenProvider, IWashable {
 
-    TextHolder getTextHolder();
+    TextHolder getTextHolder(int ind);
+
+    default TextHolder getTextHolder(){
+        return getTextHolder(0);
+    }
+
 
     @Override
     default boolean tryWash(Level level, BlockPos pos, BlockState state) {
         var text = getTextHolder();
-        if(!text.isEmpty()){
+        if(!text.isEmpty(null)){
             text.clear();
             this.setChanged();
             return true;

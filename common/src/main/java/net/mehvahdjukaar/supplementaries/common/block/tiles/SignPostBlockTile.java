@@ -17,6 +17,8 @@ import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +35,7 @@ import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -47,9 +50,10 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     public static final ModelDataKey<Boolean> FRAMED = ModBlockProperties.FRAMED;
 
-    private final TextHolder textHolder;
     private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
+
+    private boolean waxed = false;
     private UUID owner = null;
     private boolean isSlim = false;
 
@@ -58,7 +62,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
-        this.textHolder = new TextHolder(2, 90);
     }
 
     //TODO: add fence mimic block
@@ -71,8 +74,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public TextHolder getTextHolder() {
-        return this.textHolder;
+    public TextHolder getTextHolder(int i) {
+        return getSign(i == 0).text;
     }
 
     //@Override
@@ -105,10 +108,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public void load(CompoundTag compound) {
         super.load(compound);
         this.framed = compound.getBoolean("Framed");
-        this.textHolder.load(compound);
         this.signUp.load(compound.getCompound("SignUp"));
         this.signDown.load(compound.getCompound("SignDown"));
-
         this.loadOwner(compound);
         this.isSlim = this.mimic.getBlock() instanceof StickBlock;
     }
@@ -117,7 +118,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
         compound.putBoolean("Framed", this.framed);
-        this.textHolder.save(compound);
         compound.put("SignUp", this.signUp.save());
         compound.put("SignDown", this.signDown.save());
         this.saveOwner(compound);
@@ -180,7 +180,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return framed;
     }
 
-    public static final class Sign {
+    public static final class Sign extends SignText {
+        public final TextHolder text;
         private boolean active;
         private boolean left;
         private float yaw;
@@ -191,6 +192,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.left = left;
             this.yaw = yaw;
             this.woodType = woodType;
+            this.text = new TextHolder(1, 90);
         }
 
         public void load(CompoundTag compound) {

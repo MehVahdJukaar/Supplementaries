@@ -62,7 +62,6 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("shulker helmet", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("hanging sign", ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN.get());

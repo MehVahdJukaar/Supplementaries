@@ -45,7 +45,6 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
 
                 state = state.cycle(OPEN);
                 level.setBlock(pos, state, 10);
-                //TODO: replace with proper sound event
                 boolean open = state.getValue(OPEN);
                 this.playSound(player, level, pos, state.getValue(OPEN));
                 level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);

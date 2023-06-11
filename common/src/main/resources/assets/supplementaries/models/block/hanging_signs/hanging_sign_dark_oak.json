@@ -1,6 +1,0 @@
-{
-	"parent": "supplementaries:block/hanging_signs/hanging_sign_template",
-	"textures": {
-		"1": "supplementaries:block/hanging_signs/hanging_sign_dark_oak"
-	}
-}

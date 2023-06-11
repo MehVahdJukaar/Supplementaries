@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
@@ -138,7 +137,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
             matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-            TextUtil.renderLine(tile.getTextHolder().getAndPrepareTextForRenderer(font, line), font,
+            TextUtil.renderLine(tile.getTextHolder().getRenderMessages(line, font), font,
                     -4, matrixStackIn, bufferIn, textProperties);
 
         }

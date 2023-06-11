@@ -31,7 +31,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
     public ServerBoundSetTextHolderPacket(BlockPos pos, TextHolder textHolder) {
         this.pos = pos;
         this.size = textHolder.size();
-        this.signText = textHolder.getTextLines();
+        this.signText = textHolder.getMessages(true);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
         if (tile instanceof ITextHolderProvider te) {
             if (te.getTextHolder().size() == this.size) {
                 for (int i = 0; i < this.size; ++i) {
-                    te.getTextHolder().setLine(i, this.signText[i]);
+                    te.getTextHolder().setMessage(i, this.signText[i]);
                 }
             }
             //updates client

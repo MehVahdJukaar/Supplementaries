@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -60,14 +59,14 @@ public class ModCreativeTabs {
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
         var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, reverse, itemStacks) -> {
-            if(reverse){
+            if (reverse) {
                 var v = new ArrayList<>(itemStacks);
                 Collections.reverse(v);
                 NON_HIDDEN_ITEMS.addAll(v);
-            }else NON_HIDDEN_ITEMS.addAll(itemStacks);
+            } else NON_HIDDEN_ITEMS.addAll(itemStacks);
         });
         registerItemsToTabs(dummy);
-        for(var v : NON_HIDDEN_ITEMS){
+        for (var v : NON_HIDDEN_ITEMS) {
             all.remove(v.getItem());
         }
         HIDDEN_ITEMS.addAll(all);
@@ -200,14 +199,13 @@ public class ModCreativeTabs {
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);
 
-
-        after(e, ItemTags.SIGNS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.HANGING_SIGN_NAME,
-                ModRegistry.HANGING_SIGNS.values().stream().map(i -> (Supplier<Item>) i::asItem).toArray(Supplier[]::new));
-
-        after(e, ItemTags.SIGNS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.SIGN_POST_NAME,
-                ModRegistry.SIGN_POST_ITEMS.values().stream().map(i -> (Supplier<Item>) () -> i).toArray(Supplier[]::new));
+        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+            for (var v : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
+                var w = v.getKey();
+                e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.HANGING_SIGNS) &&
+                        w.getItemOfThis("hanging_sign") == i.getItem(), v.getValue());
+            }
+        }
 
         before(e, Items.CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.DOORMAT_NAME,
@@ -356,7 +354,7 @@ public class ModCreativeTabs {
 
         after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
                 ModConstants.BOMB_NAME,
-                ModRegistry.BOMB_ITEM,ModRegistry.BOMB_BLUE_ITEM);
+                ModRegistry.BOMB_ITEM, ModRegistry.BOMB_BLUE_ITEM);
 
         before(e, Items.BOW, CreativeModeTabs.COMBAT,
                 ModConstants.QUIVER_NAME,
@@ -565,7 +563,7 @@ public class ModCreativeTabs {
     private static void beforeML(RegHelper.ItemToTabEvent event, Item target,
                                  ResourceKey<CreativeModeTab> tab,
                                  String key, String modLoaded,
-                                Supplier<?>... items) {
+                                 Supplier<?>... items) {
         if (PlatHelper.isModLoaded(modLoaded)) {
             before(event, target, tab, key, items);
         }
@@ -627,7 +625,7 @@ public class ModCreativeTabs {
         }
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (SoftFluid s : SoftFluidRegistry.getValues()) {
-                if (!PlatHelper.isModLoaded(s.getFromMod()))continue;
+                if (!PlatHelper.isModLoaded(s.getFromMod())) continue;
                 if (s == BuiltInSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();

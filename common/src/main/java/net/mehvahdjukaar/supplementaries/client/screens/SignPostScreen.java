@@ -47,7 +47,9 @@ public class SignPostScreen extends Screen {
     private SignPostScreen(SignPostBlockTile teSign) {
         super(Component.translatable("sign.edit"));
         this.tile = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES).mapToObj(teSign.getTextHolder()::getLine).map(Component::getString).toArray(String[]::new);
+        this.cachedLines = IntStream.range(0, MAXLINES)
+                .mapToObj(l->teSign.getTextHolder().getMessage(l, Minecraft.getInstance().isTextFilteringEnabled()))
+                .map(Component::getString).toArray(String[]::new);
 
         editLine = !this.tile.getSignUp().active() ? 1 : 0;
     }
@@ -129,7 +131,7 @@ public class SignPostScreen extends Screen {
 
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
             this.cachedLines[this.editLine] = s;
-            this.tile.getTextHolder().setLine(this.editLine, Component.literal(s));
+            this.tile.getTextHolder().setMessage(this.editLine, Component.literal(s));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (s) -> this.minecraft.font.width(s) <= 90);
 
         this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);

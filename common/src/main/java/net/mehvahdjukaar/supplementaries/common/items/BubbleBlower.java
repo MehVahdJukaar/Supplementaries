@@ -183,16 +183,9 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         return !stack.hasTag() ? 0 : stack.getTag().getInt("Damage");
     }
 
-    @Override
-    @PlatformOnly(PlatformOnly.FABRIC)
-    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        this.onUsingTick(stack, livingEntity, remainingUseDuration);
-    }
-
-    //@Override
     @SuppressWarnings("UnsafePlatformOnlyCall")
-    public void onUsingTick(ItemStack stack, LivingEntity entity, int count) {
-        Level level = entity.level();
+    @Override
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
         int damage = this.getDamage(stack) + 1;
         if (damage > this.getMaxDamage(stack)) {
             entity.stopUsingItem();
@@ -203,7 +196,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
         }
 
         int soundLength = 4;
-        if (count % soundLength == 0) {
+        if (remainingUseDuration % soundLength == 0) {
             Player p = entity instanceof Player pl ? pl : null;
             level.playSound(p, entity, ModSounds.BUBBLE_BLOW.get(), entity.getSoundSource(),
                     1.0F, MthUtils.nextWeighted(level.random, 0.20f) + 0.95f);

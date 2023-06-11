@@ -7,8 +7,6 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
@@ -31,7 +29,6 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComp
 import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.PaintingTooltipComponent;
 import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
@@ -44,7 +41,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -60,7 +56,6 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -69,9 +64,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 public class ClientRegistry {
 
@@ -104,7 +96,6 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
-    public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
 
     public static KeyMapping QUIVER_KEYBIND = null;
 
@@ -148,8 +139,6 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen.GUI_FACTORY);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
-
-        ModRegistry.HANGING_SIGNS.values().forEach(s -> ClientHelper.registerRenderType(s, RenderType.cutout()));
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
@@ -358,7 +347,6 @@ public class ClientRegistry {
         event.register(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
         event.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
         event.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
-        event.register(ModRegistry.HANGING_SIGN_TILE.get(), HangingSignBlockTileRenderer::new);
         event.register(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
         event.register(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
         event.register(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
@@ -380,14 +368,8 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
-        if (HANGING_SIGNS_BLOCK_MODELS.isEmpty()) {
-            ModRegistry.HANGING_SIGNS.forEach((wood, block) -> HANGING_SIGNS_BLOCK_MODELS
-                    .put(wood, Supplementaries.res("block/hanging_signs/" + Utils.getID(block).getPath())));
-        }
-
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WallLanternTexturesManager.SPECIAL_TEXTURES.values().forEach(event::register);
-        HANGING_SIGNS_BLOCK_MODELS.values().forEach(event::register);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
@@ -409,7 +391,6 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
-        event.register(Supplementaries.res("hanging_sign"), new HangingSignLoader());
         event.register(Supplementaries.res("blackboard"), new BlackboardBlockLoader());
         event.register(Supplementaries.res("mimic_block"), new SignPostBlockLoader());
     }

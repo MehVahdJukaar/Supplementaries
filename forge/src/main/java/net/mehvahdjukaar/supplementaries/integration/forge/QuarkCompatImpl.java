@@ -116,34 +116,8 @@ public class QuarkCompatImpl {
         if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
             signs.add(ModRegistry.SIGN_POST.get());
         }
-        if (CommonConfigs.Building.HANGING_SIGN_ENABLED.get()) {
-            signs.addAll(ModRegistry.HANGING_SIGNS.values());
-        }
         if (!signs.isEmpty()) {
             event.register(event.createGlowAndBeholdMod(signs));
-        }
-    }
-
-    @SubscribeEvent
-    public static void noteBlockEvent(final NoteBlockEvent.Play event) {
-        if (isMoreNoteBlockSoundsOn()) {
-            LevelAccessor world = event.getLevel();
-            BlockPos pos = event.getPos();
-            if (world.getBlockState(pos).getBlock() == Blocks.NOTE_BLOCK) {
-                for (Direction dir : Direction.Plane.HORIZONTAL) {
-                    BlockState state = world.getBlockState(pos.relative(dir));
-                    Block block = state.getBlock();
-                    if (block instanceof WallSkullBlock && state.getValue(WallSkullBlock.FACING) == dir) {
-                        if (block == ModRegistry.ENDERMAN_SKULL_BLOCK_WALL.get()) {
-                            SoundEvent sound = SoundEvents.ENDERMAN_TELEPORT;
-                            event.setCanceled(true);
-                            float pitch = (float) Math.pow(2.0, (event.getVanillaNoteId() - 12) / 12.0);
-                            world.playSound(null, pos.above(), sound, SoundSource.BLOCKS, 1.0F, pitch);
-                            return;
-                        }
-                    }
-                }
-            }
         }
     }
 

@@ -20,12 +20,14 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     public final TextHolder textHolder;
 
     public DoormatBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.DOORMAT_TILE.get(),pos, state);
+        super(ModRegistry.DOORMAT_TILE.get(), pos, state);
         this.textHolder = new TextHolder(MAX_LINES, 75);
     }
 
     @Override
-    public TextHolder getTextHolder(){return this.textHolder;}
+    public TextHolder getTextHolder(int i) {
+        return this.textHolder;
+    }
 
     @Override
     public void load(CompoundTag compound) {
@@ -44,7 +46,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         return Component.translatable("block.supplementaries.doormat");
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return this.getBlockState().getValue(DoormatBlock.FACING);
     }
 

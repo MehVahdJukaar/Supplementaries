@@ -38,7 +38,7 @@ public class DoormatScreen extends Screen {
         super(Component.translatable("gui.supplementaries.doormat.edit"));
         this.tileSign = teSign;
         this.cachedLines = IntStream.range(0, DoormatBlockTile.MAX_LINES)
-                .mapToObj(teSign.textHolder::getLine)
+                .mapToObj(t->teSign.textHolder.getMessage(t, Minecraft.getInstance().isTextFilteringEnabled()))
                 .map(Component::getString).toArray(String[]::new);
     }
 
@@ -115,7 +115,7 @@ public class DoormatScreen extends Screen {
         //this.tileSign.setEditable(false);
         this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (h) -> {
             this.cachedLines[this.editLine] = h;
-            this.tileSign.textHolder.setLine(this.editLine, Component.literal(h));
+            this.tileSign.textHolder.setMessage(this.editLine, Component.literal(h));
         }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft),
                 (s) -> this.minecraft.font.width(s) <= tileSign.textHolder.getMaxLineVisualWidth());
     }
