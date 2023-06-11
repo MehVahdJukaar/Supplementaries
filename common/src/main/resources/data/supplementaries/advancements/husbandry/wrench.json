@@ -19,11 +19,16 @@
     "wrench": {
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
-        "item": {
-          "items": [
-            "supplementaries:wrench"
-          ]
-        }
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "supplementaries:wrench"
+              ]
+            }
+          }
+        ]
       }
     }
   },

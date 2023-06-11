@@ -112,13 +112,6 @@ public class QuarkCompatImpl {
         if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
             event.register(event.createASeedyPlaceMod(Set.of(ModRegistry.FLAX.get())));
         }
-        Set<Block> signs = new HashSet<>();
-        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
-            signs.add(ModRegistry.SIGN_POST.get());
-        }
-        if (!signs.isEmpty()) {
-            event.register(event.createGlowAndBeholdMod(signs));
-        }
     }
 
     //this should have been implemented in the post block updateShape method
