@@ -4,16 +4,11 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.PeripheralLookup;
 import dan200.computercraft.shared.media.items.PrintoutItem;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,22 +37,6 @@ public class CCCompatImpl {
 
     public static boolean isPrintedBook(Item item) {
         return item instanceof PrintoutItem;
-    }
-
-    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties properties) {
-        //try loading this now, freaking classloader
-        class SpeakerCC extends SpeakerBlock implements IPeripheralProvider {
-
-            public SpeakerCC(Properties properties) {
-                super(properties);
-            }
-
-            @Override
-            public IPeripheral getPeripheral(Level world, BlockPos pos, Direction side) {
-
-            }
-        }
-        return new SpeakerCC(properties);
     }
 
     @SuppressWarnings({"ClassCanBeRecord"})

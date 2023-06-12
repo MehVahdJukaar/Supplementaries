@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
@@ -16,12 +15,10 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -101,17 +98,17 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         int i = (this.menu).getTraderLevel();
         if (i > 0 && i <= 5 && (this.menu).showProgressBar()) {
-            Component component = this.title.copy().append(LEVEL_SEPARATOR).append( Component.translatable("merchant.level." + i));
+            Component component = this.title.copy().append(LEVEL_SEPARATOR).append(Component.translatable("merchant.level." + i));
             int j = this.font.width(component);
             int k = 49 + this.imageWidth / 2 - j / 2;
             graphics.drawString(font, component, k, 6, 4210752);
         } else {
-          //  this.font.draw(graphics, this.title, (49 + this.imageWidth / 2f - this.font.width(this.title) / 2f), 6.0F, 4210752);
+            //  this.font.draw(graphics, this.title, (49 + this.imageWidth / 2f - this.font.width(this.title) / 2f), 6.0F, 4210752);
         }
 
-        graphics.drawString(font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752);
+        graphics.drawString(font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
         int l = this.font.width(TRADES_LABEL);
-        graphics.drawString(font, TRADES_LABEL,  (int)(5 - l / 2f + 48), 6, 4210752);
+        graphics.drawString(font, TRADES_LABEL, (int) (5 - l / 2f + 48), 6, 4210752, false);
 
 
         //extra stuff here
@@ -119,15 +116,15 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
         MutableComponent tradeOffer = TRADE_OFFER
                 .withStyle(ChatFormatting.WHITE)
                 .withStyle(ChatFormatting.BOLD);
-        graphics.drawString(font, tradeOffer, (int)(49 + this.imageWidth / 2f - this.font.width(tradeOffer) / 2f), 10, 4210752);
+        graphics.drawString(font, tradeOffer, (int) (49 + this.imageWidth / 2f - this.font.width(tradeOffer) / 2f), 10, 4210752);
 
         Component iReceive = I_RECEIVE
                 .withStyle(ChatFormatting.WHITE);
-        graphics.drawString(font, iReceive,  (int)(49 - 29 + this.imageWidth / 2f - this.font.width(iReceive) / 2f), 24, 4210752);
+        graphics.drawString(font, iReceive, (int) (49 - 29 + this.imageWidth / 2f - this.font.width(iReceive) / 2f), 24, 4210752);
 
         Component uReceive = YOU_RECEIVE
                 .withStyle(ChatFormatting.WHITE);
-        graphics.drawString(font, uReceive,  (int)(49 + 42 + this.imageWidth / 2f - this.font.width(uReceive) / 2f), 24, 4210752);
+        graphics.drawString(font, uReceive, (int) (49 + 42 + this.imageWidth / 2f - this.font.width(uReceive) / 2f), 24, 4210752);
 
     }
 
@@ -171,21 +168,20 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        MerchantOffers merchantOffers = (this.menu).getOffers();
+        MerchantOffers merchantOffers = this.menu.getOffers();
         if (!merchantOffers.isEmpty()) {
-            int i = (this.width - this.imageWidth) / 2;
-            int j = (this.height - this.imageHeight) / 2;
-            int k = j + 16 + 1;
-            int l = i + 5 + 5;
-            RenderSystem.setShaderTexture(0, TEXTURE);
-            this.renderScroller(guiGraphics, i, j, merchantOffers);
-            int m = 0;
+            int k = (this.width - this.imageWidth) / 2;
+            int l = (this.height - this.imageHeight) / 2;
+            int m = l + 16 + 1;
+            int n = k + 5 + 5;
+            this.renderScroller(guiGraphics, k, l, merchantOffers);
+            int o = 0;
             Iterator<MerchantOffer> var11 = merchantOffers.iterator();
 
             MerchantOffer merchantOffer;
             while (var11.hasNext()) {
                 merchantOffer = var11.next();
-                if (!this.canScroll(merchantOffers.size()) || (m >= this.scrollOff && m < 7 + this.scrollOff)) {
+                if (!this.canScroll(merchantOffers.size()) || (o >= this.scrollOff && o < 7 + this.scrollOff)) {
                     ItemStack itemStack = merchantOffer.getBaseCostA();
                     ItemStack itemStack2 = merchantOffer.getCostA();
                     ItemStack itemStack3 = merchantOffer.getCostB();
@@ -193,7 +189,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
                     guiGraphics.pose().pushPose();
                     guiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
                     int p = m + 2;
-                    this.renderAndDecorateCostA(guiGraphics, itemStack2, itemStack, l, p);
+                    this.renderAndDecorateCostA(guiGraphics, itemStack2, itemStack, n, p);
                     if (!itemStack3.isEmpty()) {
                         guiGraphics.renderFakeItem(itemStack3, k + 5 + 35, p);
                         guiGraphics.renderItemDecorations(this.font, itemStack3, k + 5 + 35, p);
@@ -203,18 +199,18 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
                     guiGraphics.renderFakeItem(itemStack4, k + 5 + 68, p);
                     guiGraphics.renderItemDecorations(this.font, itemStack4, k + 5 + 68, p);
                     guiGraphics.pose().popPose();
-                    k += 20;
+                    m += 20;
                 }
-                ++m;
+                ++o;
             }
 
-            int o = this.shopItem;
-            merchantOffer = merchantOffers.get(o);
+            int q = this.shopItem;
+            merchantOffer = merchantOffers.get(q);
             if ((this.menu).showProgressBar()) {
-                this.renderProgressBar(guiGraphics, i, j, merchantOffer);
+                this.renderProgressBar(guiGraphics, k, l, merchantOffer);
             }
 
-            if (merchantOffer.isOutOfStock() && this.isHovering(186, 35, 22, 21, mouseX, mouseY) && (this.menu).canRestock()) {
+            if (merchantOffer.isOutOfStock() && this.isHovering(186, 35, 22, 21, mouseX, mouseY) && this.menu.canRestock()) {
                 guiGraphics.renderTooltip(this.font, DEPRECATED_TOOLTIP, mouseX, mouseY);
             }
 
@@ -223,7 +219,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
                     tradeOfferButton.renderToolTip(guiGraphics, mouseX, mouseY);
                 }
 
-                tradeOfferButton.visible = tradeOfferButton.index < (this.menu).getOffers().size();
+                tradeOfferButton.visible = tradeOfferButton.index < this.menu.getOffers().size();
             }
 
             RenderSystem.enableDepthTest();
@@ -328,7 +324,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
                     }
                 } else if (mouseX > this.getX() + 65) {
                     itemStack = ((RedMerchantScreen.this.menu).getOffers().get(this.index + RedMerchantScreen.this.scrollOff)).getResult();
-                   graphics.renderTooltip(RedMerchantScreen.this.font, itemStack, mouseX, mouseY);
+                    graphics.renderTooltip(RedMerchantScreen.this.font, itemStack, mouseX, mouseY);
                 }
             }
 

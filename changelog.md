@@ -1,6 +1,1 @@
-- completely removed hanging signs
-- fixed bubble blower not working
-- fixed axe tag not working
-- fixed shipwreck map marker not working
-- added enderman mob head sound
-- fixed wrench advancement not working
+- updated Computer Craft compat

@@ -16,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
@@ -29,7 +28,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -572,12 +570,10 @@ public class ModRegistry {
                     SpringLauncherArmBlockTile::new, SPRING_LAUNCHER_ARM.get()));
 
     //speaker Block
-    public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.NOTE_BLOCK)
-                .strength(1f, 2f)
-                .sound(SoundType.WOOD);
-        return CompatHandler.COMPUTERCRAFT ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
-    }, 300);
+    public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () ->
+            new SpeakerBlock(BlockBehaviour.Properties.copy(Blocks.NOTE_BLOCK)
+            .strength(1f, 2f)
+            .sound(SoundType.WOOD)), 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
             SPEAKER_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(

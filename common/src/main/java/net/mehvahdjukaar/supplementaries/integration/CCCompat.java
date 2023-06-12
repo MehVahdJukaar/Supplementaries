@@ -18,11 +18,6 @@ public class CCCompat {
     }
 
     @ExpectPlatform
-    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties p) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     public static int getPages(ItemStack itemstack) {
         throw new AssertionError();
     }
