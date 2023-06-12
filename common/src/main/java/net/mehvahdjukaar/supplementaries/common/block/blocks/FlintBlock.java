@@ -72,10 +72,10 @@ public class FlintBlock extends Block implements IPistonMotionReact {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block oldBlock, BlockPos targetPos, boolean isMoving) {
-        super.neighborChanged(state, level, pos, oldBlock, targetPos, isMoving);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block oldNeghbor, BlockPos targetPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, oldNeghbor, targetPos, isMoving);
         BlockState newState = level.getBlockState(targetPos);
-        if (!newState.isAir() || !oldBlock.builtInRegistryHolder().is(ModTags.FLINT_METALS)) return;
+        if (!newState.isAir() || !oldNeghbor.builtInRegistryHolder().is(ModTags.FLINT_METALS)) return;
         Direction dir = Direction.fromNormal(pos.subtract(targetPos));
         for (Direction pistonDir : Direction.values()) {
             if (dir.getAxis() == pistonDir.getAxis()) continue;
@@ -84,7 +84,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
             BlockEntity be = level.getBlockEntity(tilePos);
             if (be instanceof PistonMovingBlockEntity piston) {
                 if (piston.getDirection() == pistonDir.getOpposite()
-                        && piston.getMovedState().is(oldBlock)) {
+                        && piston.getMovedState().is(oldNeghbor)) {
                     //correct check
                     if (canBlockCreateSpark(piston.getMovedState(), level, tilePos, dir)) {
                         ignitePosition(level, targetPos, true);
@@ -92,7 +92,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
                 }
             } else if (be != null && CompatHandler.QUARK) {
                 BlockState magnetState = QuarkCompat.getMagnetStateForFlintBlock(be, pistonDir);
-                if (magnetState != null && magnetState.is(oldBlock) &&
+                if (magnetState != null && magnetState.is(oldNeghbor) &&
                         canBlockCreateSpark(magnetState, level, tilePos, dir)) {
                     ignitePosition(level, targetPos, true);
                 }
