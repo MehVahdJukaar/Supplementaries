@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
@@ -30,9 +31,12 @@ import java.util.Map;
 @Mixin(HangingSignRenderer.class)
 public abstract class HangingSignRendererMixin extends SignRenderer {
 
-    @Shadow @Final private Map<WoodType, HangingSignRenderer.HangingSignModel> hangingSignModels;
+    @Shadow
+    @Final
+    private Map<WoodType, HangingSignRenderer.HangingSignModel> hangingSignModels;
 
-    @Shadow abstract Material getSignMaterial(WoodType woodType);
+    @Shadow
+    abstract Material getSignMaterial(WoodType woodType);
 
     @Unique
     private List<ModelPart> barModel;
@@ -46,15 +50,15 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
 
     @Inject(method = "render(Lnet/minecraft/world/level/block/entity/SignBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
             at = @At("HEAD"), cancellable = true)
-    public void renderEnhancedSign( SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
-                                    int packedLight, int packedOverlay, CallbackInfo ci) {
-        if(ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && ((IExtendedHangingSign)tile).getExtension().canSwing()) {
+    public void renderEnhancedSign(SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
+                                   int packedLight, int packedOverlay, CallbackInfo ci) {
+        if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && ((IExtendedHangingSign) tile).getExtension().canSwing()) {
             BlockState blockState = tile.getBlockState();
             WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
             HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
             HangingSignRendererExtension.render(tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
-                    blockState, model, barModel,chains,
+                    blockState, model, barModel, chains,
 
                     this.getSignMaterial(woodType),
                     ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
@@ -66,12 +70,14 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void initEnhancedSign(BlockEntityRendererProvider.Context context, CallbackInfo ci) {
-        ModelPart model = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
-        this.barModel = List.of(model.getChild("extension_6"),
-                model.getChild("extension_5"),
-                model.getChild("extension_4"),
-                model.getChild("extension_3"));
-        this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
+        if (PlatHelper.isModLoadingValid()) {
+            ModelPart model = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
+            this.barModel = List.of(model.getChild("extension_6"),
+                    model.getChild("extension_5"),
+                    model.getChild("extension_4"),
+                    model.getChild("extension_3"));
+            this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
+        }
     }
 
 }

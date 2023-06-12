@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -33,14 +32,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.SignText;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
 
 //TODO: base of SignText
 public class TextHolder implements IAntiqueTextProvider {
@@ -138,6 +134,9 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     public Component getMessage(int line, boolean filtered) {
+        if (line >= lines) {
+            throw new IndexOutOfBoundsException("Tried to access lie " + line + " of Text Holder of size " + lines);
+        }
         return this.getMessages(filtered)[line];
     }
 
@@ -278,6 +277,9 @@ public class TextHolder implements IAntiqueTextProvider {
     @Environment(EnvType.CLIENT)
     @Nullable
     public FormattedCharSequence getRenderMessages(int line, Font font) {
+        if (line >= lines) {
+            throw new IndexOutOfBoundsException("Tried to access lie " + line + " of Text Holder of size " + lines);
+        }
         boolean filtered = Minecraft.getInstance().isTextFilteringEnabled();
         if ((this.renderMessages[line] == null) || this.renderMessagedFiltered != filtered) {
             List<FormattedCharSequence> list = font.split(this.getMessage(line, filtered), this.getMaxLineVisualWidth());

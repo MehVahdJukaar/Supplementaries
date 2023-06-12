@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 
-import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.ForgeComputerCraftAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.shared.Capabilities;
-import dan200.computercraft.shared.media.items.ItemPrintout;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
+import dan200.computercraft.shared.media.items.PrintoutItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -24,24 +23,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CCCompatImpl {
 
     public static void setup() {
-        ComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
+        ForgeComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
     }
 
     public static int getPages(ItemStack itemstack) {
-        return ItemPrintout.getPageCount(itemstack);
+        return PrintoutItem.getPageCount(itemstack);
     }
 
     public static String[] getText(ItemStack itemstack) {
-        return ItemPrintout.getText(itemstack);
+        return PrintoutItem.getText(itemstack);
     }
 
     public static boolean isPrintedBook(Item item) {
-        return item instanceof ItemPrintout;
+        return item instanceof PrintoutItem;
     }
 
     //TODO: maybe this isn't needed since tile alredy provides it

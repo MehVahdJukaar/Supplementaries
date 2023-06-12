@@ -137,7 +137,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
             matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-            TextUtil.renderLine(tile.getTextHolder().getRenderMessages(line, font), font,
+            TextUtil.renderLine(tile.getTextHolder(line).getRenderMessages(0, font), font,
                     -4, matrixStackIn, bufferIn, textProperties);
 
         }
