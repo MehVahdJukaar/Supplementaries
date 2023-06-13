@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +29,7 @@ public class PancakeItem extends BlockItem {
             if (blockEntity instanceof JukeboxBlockEntity jukeboxBlock && !blockEntity.getBlockState().getValue(JukeboxBlock.HAS_RECORD)) {
                 ItemStack itemstack = context.getItemInHand();
                 if (!level.isClientSide) {
-
+                    ModRegistry.PANCAKE_DISC
                     level.gameEvent(GameEvent.BLOCK_CHANGE, blockpos, GameEvent.Context.of(player, blockEntity.getBlockState()));
                     jukeboxBlock.setFirstItem(itemstack.split(1));
 

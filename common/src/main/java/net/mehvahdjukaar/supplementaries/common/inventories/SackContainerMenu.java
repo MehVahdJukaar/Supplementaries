@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -22,19 +23,17 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory);
+        this(id, playerInventory, ModRegistry.SACK_TILE.get().getBlockEntity(
+                playerInventory.player.level(), packetBuffer.readBlockPos()
+        ));
     }
 
-    public SackContainerMenu(int id, Inventory playerInventory) {
-        this(id, playerInventory, new SimpleContainer(27));
-    }
-
-    public SackContainerMenu(int id, Inventory playerInventory, Container inventory) {
+    public SackContainerMenu(int id, Inventory playerInventory, SackBlockTile container) {
         super(ModMenuTypes.SACK.get(), id);
-        //tile inventory
-        this.inventory = inventory;
-        checkContainerSize(inventory, SackBlockTile.getUnlockedSlots());
-        inventory.startOpen(playerInventory.player);
+        //tile container
+        this.inventory = container;
+        checkContainerSize(container, SackBlockTile.getUnlockedSlots());
+        container.startOpen(playerInventory.player);
 
         int size = CommonConfigs.Functional.SACK_SLOTS.get();
 
@@ -54,7 +53,7 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                this.addSlot(new DelegatingSlot(inventory, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
+                this.addSlot(new DelegatingSlot(container, j + (h * dimXPrev), xp + j * 18, yp + 18 * h));
             }
             size -= dims[0];
         }

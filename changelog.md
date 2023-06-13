@@ -1,1 +1,3 @@
-- updated Computer Craft compat
+- sack slot fix
+- overencoumbered fix
+- blackboard fix

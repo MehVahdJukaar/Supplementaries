@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,8 +31,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 
 public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwnerProtected, IKeyLockable {
@@ -258,12 +259,17 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             this.container = container;
         }
 
+        public SafeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+            this(id, playerInventory, ModRegistry.SAFE_TILE.get().getBlockEntity(
+                    playerInventory.player.level(), packetBuffer.readBlockPos()
+            ));
+        }
+
         @Override
         protected Slot addSlot(Slot slot) {
             if (slot instanceof ShulkerBoxSlot) {
-                return super.addSlot(new DelegatingSlot(slot.container, slot.getContainerSlot(), slot.x, slot.y));
-            }
-            else {
+                return super.addSlot(new DelegatingSlot(container, slot.getContainerSlot(), slot.x, slot.y));
+            } else {
                 return super.addSlot(slot);
             }
         }

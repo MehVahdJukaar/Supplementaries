@@ -56,16 +56,15 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         renderButton(poseStack);
         //soboolean wasHovered = this.isHovered();
-
     }
 
     public void renderButton(GuiGraphics graphics) {
         int offset = this.color > 0 ? 16 : 0;
 
         int rgb = BlackboardBlock.colorFromByte(this.color);
-        float b = FastColor.ABGR32.blue(rgb) / 255f;
-        float g = FastColor.ABGR32.green(rgb) / 255f;
-        float r = FastColor.ABGR32.red(rgb) / 255f;
+        float b = FastColor.ARGB32.blue(rgb) / 255f;
+        float g = FastColor.ARGB32.green(rgb) / 255f;
+        float r = FastColor.ARGB32.red(rgb) / 255f;
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
         graphics.blit( ModTextures.BLACKBOARD_GUI_TEXTURE,this.x, this.y,
