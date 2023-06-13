@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.SackScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -11,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,10 +26,7 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
                 "§6Supplementaries Configured", ModTextures.CONFIG_BACKGROUND,
                 parent, ModConfigScreen::new, ClientConfigs.SPEC, CommonConfigs.SPEC);
-        BlockState s;
-        s.update
     }
-
 
     @Override
     protected void init() {

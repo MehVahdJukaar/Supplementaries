@@ -29,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.Nullable;
@@ -261,7 +262,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         @Override
         protected Slot addSlot(Slot slot) {
             if (slot instanceof ShulkerBoxSlot) {
-                return super.addSlot(new DelegatingSlot(slot.container, slot.getContainerSlot(), slot.x, slot.y));
+                return super.addSlot(new DelegatingSlot((BaseContainerBlockEntity) slot.container, slot.getContainerSlot(), slot.x, slot.y));
             }
             return super.addSlot(slot);
         }

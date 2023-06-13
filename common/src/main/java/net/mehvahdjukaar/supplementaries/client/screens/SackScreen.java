@@ -97,5 +97,6 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
+
 }
 

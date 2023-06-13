@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,7 +73,7 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
 
     @Override
     public void startOpen(Player player) {
-        if (!this.remove && !player.isSpectator()) {
+        if (!this.remove && !player.isSpectator() && level!=null) {
             this.openersCounter.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
 
@@ -80,7 +81,7 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
 
     @Override
     public void stopOpen(Player player) {
-        if (!this.remove && !player.isSpectator()) {
+        if (!this.remove && !player.isSpectator() && this.level != null) {
             this.openersCounter.decrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }

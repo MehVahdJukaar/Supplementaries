@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,6 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 
 public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider{
@@ -26,10 +30,10 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
     }
 
     public SackContainerMenu(int id, Inventory playerInventory) {
-        this(id, playerInventory, new SimpleContainer(27));
+        this(id, playerInventory, ModRegistry.SACK_TILE.get().create(BlockPos.ZERO, ModRegistry.SACK.get().defaultBlockState()));
     }
 
-    public SackContainerMenu(int id, Inventory playerInventory, Container inventory) {
+    public SackContainerMenu(int id, Inventory playerInventory, BaseContainerBlockEntity inventory) {
         super(ModMenuTypes.SACK.get(), id);
         //tile inventory
         this.inventory = inventory;
@@ -77,32 +81,84 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
      * inventory and the other inventory(s).
      */
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+    public ItemStack quickMoveStack(Player player, int index) {
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
-            itemstack = item.copy();
+            itemStack = item.copy();
             int activeSlots = CommonConfigs.Functional.SACK_SLOTS.get();
-            if (index < activeSlots) {
-                if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(item, 0, activeSlots, false)) {
+
+            if (index < activeSlots ? !this.moveItemStackTo(item, activeSlots, this.slots.size(), true) :
+                    !this.moveItemStackTo(item, 0,activeSlots, false)) {
                 return ItemStack.EMPTY;
             }
-
             if (item.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
         }
-
-        return itemstack;
+        return itemStack;
     }
 
-
+    protected boolean moveItemStackTo(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+        ItemStack itemStack;
+        Slot slot;
+        boolean bl = false;
+        int i = startIndex;
+        if (reverseDirection) {
+            i = endIndex - 1;
+        }
+        if (stack.isStackable()) {
+            while (!stack.isEmpty() && (reverseDirection ? i >= startIndex : i < endIndex)) {
+                slot = this.slots.get(i);
+                itemStack = slot.getItem();
+                if (!itemStack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemStack)) {
+                    int j = itemStack.getCount() + stack.getCount();
+                    if (j <= stack.getMaxStackSize()) {
+                        stack.setCount(0);
+                        itemStack.setCount(j);
+                        slot.setChanged();
+                        bl = true;
+                    } else if (itemStack.getCount() < stack.getMaxStackSize()) {
+                        stack.shrink(stack.getMaxStackSize() - itemStack.getCount());
+                        itemStack.setCount(stack.getMaxStackSize());
+                        slot.setChanged();
+                        bl = true;
+                    }
+                }
+                if (reverseDirection) {
+                    --i;
+                    continue;
+                }
+                ++i;
+            }
+        }
+        if (!stack.isEmpty()) {
+            i = reverseDirection ? endIndex - 1 : startIndex;
+            while (reverseDirection ? i >= startIndex : i < endIndex) {
+                slot = this.slots.get(i);
+                itemStack = slot.getItem();
+                if (itemStack.isEmpty() && slot.mayPlace(stack)) {
+                    if (stack.getCount() > slot.getMaxStackSize()) {
+                        slot.set(stack.split(slot.getMaxStackSize()));
+                    } else {
+                        slot.set(stack.split(stack.getCount()));
+                    }
+                    slot.setChanged();
+                    bl = true;
+                    break;
+                }
+                if (reverseDirection) {
+                    --i;
+                    continue;
+                }
+                ++i;
+            }
+        }
+        return bl;
+    }
     /**
      * Called when the container is closed.
      */
