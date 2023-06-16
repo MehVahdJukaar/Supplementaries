@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -25,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@OptionalMixin(value = "com.github.alexthe668.domesticationinnovation.DomesticationMod", classLoaded = false)
 @Mixin(ZombieHorse.class)
 public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomDataHolder {
 

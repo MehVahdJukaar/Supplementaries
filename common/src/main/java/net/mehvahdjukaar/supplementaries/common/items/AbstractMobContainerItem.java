@@ -305,7 +305,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             if (this.isAquarium) {
                 bucket = BucketHelper.getBucketFromEntity(entity);
             }
-            BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             //fix here
 
             ForgeHelper.reviveEntity(entity);

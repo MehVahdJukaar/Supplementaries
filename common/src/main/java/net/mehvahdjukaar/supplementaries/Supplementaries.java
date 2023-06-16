@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
@@ -67,6 +67,7 @@ public class Supplementaries {
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
         ModCreativeTabs.init();
+        LootTablesInjects.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
@@ -79,7 +80,6 @@ public class Supplementaries {
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
 
-            ClientHelper.addClientReloadListener(() -> WallLanternTexturesManager.RELOAD_INSTANCE, res("wall_lanterns"));
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"));
             } catch (Exception e) {
@@ -98,6 +98,10 @@ public class Supplementaries {
     //lectern colors in gui
 
     //dummy goes down and hay particles
+
+    //fix sign dye color. noticeboatd sign and sign stuff
+    //better sounds for item dislays
+    //item lore clear
 
     //rope slide animation and sound instance
     //finish bedbugs

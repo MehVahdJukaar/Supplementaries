@@ -572,8 +572,8 @@ public class ModRegistry {
     //speaker Block
     public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () ->
             new SpeakerBlock(BlockBehaviour.Properties.copy(Blocks.NOTE_BLOCK)
-            .strength(1f, 2f)
-            .sound(SoundType.WOOD)), 300);
+                    .strength(1f, 2f)
+                    .sound(SoundType.WOOD)), 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
             SPEAKER_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -774,18 +774,16 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
     ));
 
-    //pancakes
-    public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
-            BlockBehaviour.Properties.copy(Blocks.CAKE)
-                    .mapColor(MapColor.TERRACOTTA_ORANGE)
-                    .strength(0.5F)
-                    .sound(SoundType.WOOL))
-    );
     public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(
-            PANCAKE.get(), new Item.Properties()));
-
-    public static final Supplier<Item> PANCAKE_DISC = regItem("pancake_disc",
-            () -> PlatHelper.newMusicDisc(15, ModSounds.PANCAKE_MUSIC, new Item.Properties(), 345));
+            15, ModSounds.PANCAKE_MUSIC.get(), new Item.Properties(), 3 * 60 + 48));
+    //pancakes
+    public static final Supplier<Block> PANCAKE = regPlaceableItem(PANCAKE_NAME, () -> new PancakeBlock(
+                    BlockBehaviour.Properties.copy(Blocks.CAKE)
+                            .mapColor(MapColor.TERRACOTTA_ORANGE)
+                            .strength(0.5F)
+                            .sound(SoundType.WOOL)),
+            PANCAKE_ITEM, () -> true
+    );
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
@@ -1037,7 +1035,7 @@ public class ModRegistry {
                             .noOcclusion()
                             .mapColor(MapColor.NONE)
                             .strength(0.5F)
-                            .sound(SoundType.WOOD)),
+                            .sound(ModSounds.BOOKS)),
             () -> Items.ENCHANTED_BOOK, CommonConfigs.Tweaks.PLACEABLE_BOOKS);
 
     //placeable book

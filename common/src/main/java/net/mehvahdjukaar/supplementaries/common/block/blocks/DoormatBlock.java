@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,8 +73,8 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
                         }
                     }
                     tile.setChanged();
-                    level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1.0F,
-                            1.2f);
+                    level.playSound(null, pos, tile.getAddItemSound(), SoundSource.BLOCKS, 1.0F,
+                            0.8f);
                     return InteractionResult.CONSUME;
                 }
                 //color

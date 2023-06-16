@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
+import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@OptionalMixin("vectorwing.farmersdelight.common.block.TomatoVineBlock")
 @Mixin(targets = "vectorwing.farmersdelight.common.block.TomatoVineBlock")
 public abstract class CompatFarmersDelightMixin extends Block {
 

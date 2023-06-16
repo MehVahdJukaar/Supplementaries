@@ -33,16 +33,18 @@ public class BucketHelper {
     //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
     private static final BiMap<Item, EntityType<?>> BUCKET_TO_MOB_MAP = HashBiMap.create();
 
+
     //only use this to access the map
     @Nullable
     public static EntityType<?> getEntityTypeFromBucket(Item bucket) {
+        BUCKET_TO_MOB_MAP.clear();
         EntityType<?> type = BUCKET_TO_MOB_MAP.get(bucket);
         if (type != null) {
             return type;
         } else if (bucket instanceof MobBucketItem bucketItem) {
             EntityType<?> en = SuppPlatformStuff.getFishType(bucketItem);
             if (en != null) {
-                BUCKET_TO_MOB_MAP.putIfAbsent(bucket, en);
+                associateMobToBucketIfAbsent(en, bucket);
                 return en;
             }
         }
@@ -62,7 +64,7 @@ public class BucketHelper {
                 var opt = BuiltInRegistries.ENTITY_TYPE.getOptional(res);
                 if (opt.isPresent()) {
                     EntityType<?> en = opt.get();
-                    BUCKET_TO_MOB_MAP.putIfAbsent(bucket, en);
+                    associateMobToBucketIfAbsent(en, bucket);
                     return en;
                 }
             }
@@ -70,44 +72,26 @@ public class BucketHelper {
         return null;
     }
 
-    //TODO: rethink all this and remove this one
-    public static void tryAddingFromEntityId(String id) {
-        //EntityType<?> en = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
-        //  if (en != null && !BUCKET_TO_MOB_MAP.containsValue(en)) {
-        //     BUCKET_TO_MOB_MAP.putIfAbsent()
-        //  }
-    }
-
-    public static Collection<Item> getValidBuckets() {
-        return BUCKET_TO_MOB_MAP.keySet();
-    }
-
-    //if it needs to have water
-    public static boolean isFishBucket(Item item) {
-        return getEntityTypeFromBucket(item) != null;
-    }
-
-    public static void associateMobToBucketIfAbsent(EntityType<?> entity, Item item) {
-        if (!BUCKET_TO_MOB_MAP.containsKey(item)) {
-            if (!BUCKET_TO_MOB_MAP.inverse().containsKey(entity)) {
-                BUCKET_TO_MOB_MAP.putIfAbsent(item, entity);
-            }
-        }
-    }
-
     @NotNull
     public static ItemStack getBucketFromEntity(Entity entity) {
+        ItemStack bucket = ItemStack.EMPTY;
         if (entity instanceof Bucketable bucketable) {
-            return Preconditions.checkNotNull(bucketable.getBucketItemStack(), "Bucketable modded entity " + Utils.getID(entity.getType()) + " returned a null bucket!");
+            bucket = Preconditions.checkNotNull(bucketable.getBucketItemStack(), "Bucketable modded entity " + Utils.getID(entity.getType()) + " returned a null bucket!");
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {
-            return tryGettingFishBucketHackery(entity, entity.level());
+            bucket = tryGettingFishBucketHackery(entity, entity.level());
         } else if (CompatHandler.QUARK) {
             ItemStack b = QuarkCompat.getSlimeBucket(entity);
-            if (!b.isEmpty()) return b;
+            if (!b.isEmpty()) {
+                bucket = b;
+            }
         }
-        return ItemStack.EMPTY;
+        //associate for backward map. we don't query this map here because we had not only an entity type but entity itself so we have more precise methods to use
+        if(!bucket.isEmpty()){
+            associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
+        }
+        return bucket;
     }
 
     /**
@@ -135,7 +119,27 @@ public class BucketHelper {
                 }
             }
         }
+
         return bucket;
+    }
+
+
+
+    public static Collection<Item> getValidBuckets() {
+        return BUCKET_TO_MOB_MAP.keySet();
+    }
+
+    //if it needs to have water
+    public static boolean isFishBucket(Item item) {
+        return getEntityTypeFromBucket(item) != null;
+    }
+
+    private static void associateMobToBucketIfAbsent(EntityType<?> entity, Item item) {
+        if (!BUCKET_TO_MOB_MAP.containsKey(item)) {
+            if (!BUCKET_TO_MOB_MAP.inverse().containsKey(entity)) {
+                BUCKET_TO_MOB_MAP.putIfAbsent(item, entity);
+            }
+        }
     }
 
     public static boolean isModdedFish(Entity entity) {

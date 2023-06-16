@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -13,8 +12,11 @@ import java.util.function.Supplier;
 
 public class ModSounds {
 
-    public static void init(){};
-    
+    public static void init() {
+    }
+
+    ;
+
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final Supplier<SoundEvent> TOM = regSound("block.turntable.cat");
     public static final Supplier<SoundEvent> CLOCK_TICK_1 = regSound("block.clock.tick_1");
@@ -68,38 +70,45 @@ public class ModSounds {
 
     public static final ModSoundType JAR = new ModSoundType(1.0F, 1.0F,
             JAR_BREAK,
-            ()->  SoundEvents.GLASS_STEP,
+            () -> SoundEvents.GLASS_STEP,
             JAR_PLACE,
-            ()->  SoundEvents.GLASS_HIT,
-            ()->   SoundEvents.GLASS_FALL);
+            () -> SoundEvents.GLASS_HIT,
+            () -> SoundEvents.GLASS_FALL);
 
     public static final ModSoundType BUBBLE_BLOCK = new ModSoundType(1.0F, 1.0F,
             BUBBLE_POP,
-            ()-> SoundEvents.HONEY_BLOCK_STEP,
+            () -> SoundEvents.HONEY_BLOCK_STEP,
             BUBBLE_PLACE,
-            ()->  SoundEvents.HONEY_BLOCK_HIT,
-            ()->  SoundEvents.HONEY_BLOCK_FALL);
+            () -> SoundEvents.HONEY_BLOCK_HIT,
+            () -> SoundEvents.HONEY_BLOCK_FALL);
+
+    public static final ModSoundType BOOKS = new ModSoundType(1.0F, 1.0F,
+            () -> SoundEvents.CHISELED_BOOKSHELF_PICKUP,
+            () -> SoundEvents.BOOK_PUT,
+            () -> SoundEvents.CHISELED_BOOKSHELF_INSERT,
+            () -> SoundEvents.BOOK_PUT,
+            () -> SoundEvents.BOOK_PUT);
 
     public static final ModSoundType PRESENT = new ModSoundType(1.0F, 1.0F,
             PRESENT_BREAK,
-            ()-> SoundEvents.WOOL_STEP,
+            () -> SoundEvents.WOOL_STEP,
             PRESENT_PLACE,
-            ()->SoundEvents.WOOL_HIT,
-            ()-> SoundEvents.WOOL_FALL);
+            () -> SoundEvents.WOOL_HIT,
+            () -> SoundEvents.WOOL_FALL);
 
     public static final ModSoundType SACK = new ModSoundType(1.0F, 1.0F,
             SACK_BREAK,
-            ()->SoundEvents.WOOL_STEP,
+            () -> SoundEvents.WOOL_STEP,
             SACK_PLACE,
-            ()->SoundEvents.WOOL_HIT,
-            ()->SoundEvents.WOOL_FALL);
+            () -> SoundEvents.WOOL_HIT,
+            () -> SoundEvents.WOOL_FALL);
 
     public static final ModSoundType ROPE = new ModSoundType(1.0F, 1.0F,
             ROPE_BREAK,
             ROPE_STEP,
             ROPE_PLACE,
             ROPE_STEP,
-            ()->SoundEvents.WOOL_FALL);
+            () -> SoundEvents.WOOL_FALL);
 
 
     public static RegSupplier<SoundEvent> regSound(String name) {

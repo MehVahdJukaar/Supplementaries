@@ -99,7 +99,9 @@ public class TextHolder implements IAntiqueTextProvider {
                 System.arraycopy(v, 0, filteredMessages, 0, v.length);
             } else {
                 System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
-
+            }
+            for(int j= 0; j< renderMessages.length; j++){
+                this.renderMessages[j] = null;
             }
         }
     }
@@ -157,6 +159,7 @@ public class TextHolder implements IAntiqueTextProvider {
         }
         messages[i] = message;
         filteredMessages[i] = filtered;
+        this.renderMessages[i] = null;
     }
 
     public DyeColor getColor() {
@@ -179,7 +182,7 @@ public class TextHolder implements IAntiqueTextProvider {
         this.hasGlowingText = glowing;
     }
 
-
+    //TODO: finish this
     public boolean hasAnyClickCommands(Player player) {
         for (Component component : this.getMessages(player.isTextFilteringEnabled())) {
             Style style = component.getStyle();

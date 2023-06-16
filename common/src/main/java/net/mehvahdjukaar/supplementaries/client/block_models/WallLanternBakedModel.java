@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
@@ -50,7 +51,7 @@ public class WallLanternBakedModel implements CustomBakedModel {
             var supportQuads = support.getQuads(state, side, rand);
             if (!supportQuads.isEmpty()) {
                 if (mimic != null) {
-                    var sprite = WallLanternTexturesManager.getTextureForLantern(mimic.getBlock());
+                    var sprite = ClientSpecialModelsManager.getTextureForLantern(mimic.getBlock());
                     if (sprite != null) {
                         supportQuads = VertexUtil.swapSprite(supportQuads, sprite);
                     }
@@ -73,7 +74,8 @@ public class WallLanternBakedModel implements CustomBakedModel {
                     } else if (mimic.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
                         mimic = mimic.setValue(BlockStateProperties.HORIZONTAL_FACING, dir);
                     }
-                    BakedModel model = blockModelShaper.getBlockModel(mimic);
+
+                    BakedModel model = ClientSpecialModelsManager.getWallLanternModel(blockModelShaper, mimic);
 
                     List<BakedQuad> mimicQuads = model.getQuads(mimic, side, rand);
 

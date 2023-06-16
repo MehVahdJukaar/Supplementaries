@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         itemRenderer = minecraft.getItemRenderer();
     }
 
-    public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f); //Width, Height, y0
 
     public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
         poseStack.pushPose();
@@ -49,11 +49,12 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
         VertexConsumer builder = bufferIn.getBuffer(RenderType.solid());
-        poseStack.translate(0.5, LIQUID_DIMENSIONS.z(), 0.5);
+        Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+        poseStack.translate(0.5, dimensions.z(), 0.5);
 
         VertexUtils.addCube(builder, poseStack,
-               LIQUID_DIMENSIONS.x(),
-                percentageFill * LIQUID_DIMENSIONS.y(),
+                dimensions.x(),
+                percentageFill * dimensions.y(),
                 sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
 
         poseStack.popPose();
@@ -100,7 +101,9 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 Quaternionf rotation = Axis.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
-                matrixStackIn.translate(0, -0.2, -0.335 * (LIQUID_DIMENSIONS.x() / 0.5f));
+                Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+
+                matrixStackIn.translate(0, -0.2, -0.335 * (dimensions.x() / 0.5f));
                 int fishType = data.getFishTexture();
 
                 //overlay
@@ -115,10 +118,12 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 if (fluid.get() == BuiltInSoftFluids.WATER.get()) {
                     //sand
                     matrixStackIn.pushPose();
-                    matrixStackIn.translate(0.5, 0.0015 + LIQUID_DIMENSIONS.z(), 0.5);
+                    Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+
+                    matrixStackIn.translate(0.5, 0.0015 + dimensions.z(), 0.5);
                     VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                     TextureAtlasSprite sandSprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.SAND_TEXTURE);
-                    VertexUtils.addCube(builder, matrixStackIn, 0.99f * LIQUID_DIMENSIONS.x(), LIQUID_DIMENSIONS.y() / 12,
+                    VertexUtils.addCube(builder, matrixStackIn, 0.99f * dimensions.x(), dimensions.y() / 12,
                             sandSprite, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
                     matrixStackIn.popPose();
                 }

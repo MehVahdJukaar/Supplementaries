@@ -10,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,5 +55,10 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
         DoormatScreen.open(this);
+    }
+
+    @Override
+    public SoundEvent getAddItemSound() {
+        return SoundEvents.BRUSH_GENERIC;
     }
 }

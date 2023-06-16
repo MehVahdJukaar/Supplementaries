@@ -2,17 +2,18 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ShimmerCompat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 
 
@@ -23,29 +24,31 @@ public class EnhancedLanternBlockTileRenderer<T extends WallLanternBlockTile> im
         blockRenderer = context.getBlockRenderDispatcher();
     }
 
-    public void renderLantern(T tile, BlockState state, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn,
+    public void renderLantern(T tile, BlockState lanternState, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn,
                               int combinedLightIn, int combinedOverlayIn, boolean ceiling) {
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
         // rotate towards direction
-        matrixStackIn.translate(0.5, 0.875, 0.5);
-        matrixStackIn.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING).getOpposite()));
-        matrixStackIn.mulPose(RotHlpr.XN90);
+        poseStack.translate(0.5, 0.875, 0.5);
+        poseStack.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING).getOpposite()));
+        poseStack.mulPose(RotHlpr.XN90);
 
         float angle = tile.animation.getAngle(partialTicks);
 
         // animation
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(angle));
-        matrixStackIn.translate(-0.5, -0.75 - tile.getAttachmentOffset(), -0.375);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(angle));
+        poseStack.translate(-0.5, -0.75 - tile.getAttachmentOffset(), -0.375);
 
+        BakedModel model = ClientSpecialModelsManager.getWallLanternModel(
+                blockRenderer.getBlockModelShaper(), lanternState);
         // render block
         if (CompatHandler.SHIMMER) {
-            ShimmerCompat.renderWithBloom(matrixStackIn, (p, b) ->
-                    RenderUtil.renderBlock(0, p, b, state, tile.getLevel(), tile.getBlockPos(), blockRenderer));
+            ShimmerCompat.renderWithBloom(poseStack, (p, b) ->
+                    RenderUtil.renderBlock(model, 0, p, b, lanternState, tile.getLevel(), tile.getBlockPos(), blockRenderer));
         } else {
-            RenderUtil.renderBlock(0, matrixStackIn, bufferIn, state, tile.getLevel(), tile.getBlockPos(), blockRenderer);
+            RenderUtil.renderBlock(model, 0, poseStack, bufferIn, lanternState, tile.getLevel(), tile.getBlockPos(), blockRenderer);
         }
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 
 

@@ -165,12 +165,6 @@ public class ServerEvents {
         }
     }
 
-    @EventCalled
-    public static void injectLootTables(Object lootManager, ResourceLocation name, Consumer<LootPool.Builder> builder) {
-        LootTablesInjects.injectLootTables(name, builder);
-    }
-
-
     //TODO: fabric
     @EventCalled
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {

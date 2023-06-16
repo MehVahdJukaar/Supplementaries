@@ -1,8 +1,13 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
+import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import org.spongepowered.asm.service.MixinService;
 
 import java.util.List;
 import java.util.Set;
@@ -21,15 +26,27 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains("Compat")) {
-            if(mixinClassName.contains("Quark")){
-                targetClassName = "vazkii.quark.api.IEnchantmentInfluencer";
-            }
-            try {
-                Class.forName(targetClassName);
-                return true;
-            } catch (ClassNotFoundException e) {
-                return false;
+
+        ClassNode node = null;
+        try {
+            node = MixinService.getService().getBytecodeProvider().getClassNode(mixinClassName);
+        } catch (Exception e) {
+            return false;
+        }
+        if (node != null && node.invisibleAnnotations != null) {
+            for (AnnotationNode annotationNode : node.invisibleAnnotations) {
+                if (annotationNode.desc.equals("L" + OptionalMixin.class.getName().replace('.', '/') + ";")) {
+                    // Access the annotation's values and attributes
+                    List<Object> values = annotationNode.values;
+                    boolean needsClass = values.size()<4 || (Boolean) values.get(3);
+                    try {
+                        Class.forName(values.get(1).toString());
+                        if (!needsClass) return false;
+                    } catch (Exception e) {
+                        //not present
+                        if (needsClass) return false;
+                    }
+                }
             }
         }
         return true;
@@ -37,7 +54,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-
     }
 
     @Override

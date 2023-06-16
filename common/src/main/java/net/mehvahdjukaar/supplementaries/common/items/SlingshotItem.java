@@ -79,7 +79,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
                             boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
                             InteractionHand hand = player.getUsedItemHand();
                             power *= (CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1;
-                            shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1, angle * (j - (count - 1) / 2f));
+                            shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1,
+                                    angle * (j - (count - 1) / 2f));
                         }
                     }
                     player.awardStat(Stats.ITEM_USED.get(this));
@@ -88,12 +89,13 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         }
     }
 
-    private static void shootProjectile(Level level, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack, float soundPitch, float power, float accuracy, float yaw) {
+    private static void shootProjectile(Level level, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack,
+                                        float soundPitch, float power, float accuracy, float yaw) {
 
         SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
-        Quaternionf quaternionf = new Quaternionf().setAngleAxis(yaw, vector3d1.x(), vector3d1.y(), vector3d1.z());
+        Quaternionf quaternionf = new Quaternionf().setAngleAxis(yaw * 0.017453292F, vector3d1.x(), vector3d1.y(), vector3d1.z());
 
         Vector3f vector3f = entity.getViewVector(1.0F).toVector3f();
         vector3f.rotate(quaternionf);

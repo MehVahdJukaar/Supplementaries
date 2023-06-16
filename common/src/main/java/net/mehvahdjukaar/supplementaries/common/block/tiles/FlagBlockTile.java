@@ -129,9 +129,4 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         return this.baseColor;
     }
 
-    @Nullable
-    @Override
-    public Item changeItemColor(@org.jetbrains.annotations.Nullable DyeColor color) {
-        return ((IColored) this.getBlockState().getBlock()).changeItemColor(color);
-    }
 }

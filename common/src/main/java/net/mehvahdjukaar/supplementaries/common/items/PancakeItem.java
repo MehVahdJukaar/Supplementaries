@@ -1,43 +1,29 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.RecordItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.JukeboxBlock;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.gameevent.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
-public class PancakeItem extends BlockItem {
-    public PancakeItem(Block block, Properties properties) {
-        super(block, properties);
+import java.util.List;
+
+public class PancakeItem extends RecordItem {
+
+    public PancakeItem(int i, SoundEvent soundEvent, Properties properties, int seconds) {
+        super(i, soundEvent, properties, seconds);
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Player player = context.getPlayer();
-        if (!player.isSecondaryUseActive()) {
-            Level level = context.getLevel();
-            BlockPos blockpos = context.getClickedPos();
-            var blockEntity = level.getBlockEntity(blockpos);
-            if (blockEntity instanceof JukeboxBlockEntity jukeboxBlock && !blockEntity.getBlockState().getValue(JukeboxBlock.HAS_RECORD)) {
-                ItemStack itemstack = context.getItemInHand();
-                if (!level.isClientSide) {
-                    ModRegistry.PANCAKE_DISC
-                    level.gameEvent(GameEvent.BLOCK_CHANGE, blockpos, GameEvent.Context.of(player, blockEntity.getBlockState()));
-                    jukeboxBlock.setFirstItem(itemstack.split(1));
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+    }
 
-                    player.awardStat(Stats.PLAY_RECORD);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
-        }
-        return super.useOn(context);
+    @Override
+    public String getDescriptionId() {
+        return ModRegistry.PANCAKE.get().getDescriptionId();
     }
 }

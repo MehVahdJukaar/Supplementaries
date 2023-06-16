@@ -41,8 +41,7 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
         matrixStackIn.translate(-0.5, 0, -0.5);
 
 
-
-        RenderUtil.renderBlockModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
+        RenderUtil.renderModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
         matrixStackIn.popPose();
 
     }

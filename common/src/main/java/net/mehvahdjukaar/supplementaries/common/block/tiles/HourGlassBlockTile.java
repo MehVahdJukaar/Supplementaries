@@ -10,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -136,4 +138,9 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         return power;
     }
 
+    //TODO: better sound event
+    @Override
+    public SoundEvent getAddItemSound() {
+        return SoundEvents.SAND_PLACE;
+    }
 }

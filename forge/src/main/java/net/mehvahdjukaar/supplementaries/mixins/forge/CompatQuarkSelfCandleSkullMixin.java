@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
+import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractCandleSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CandleSkullBlockTile;
@@ -21,6 +22,7 @@ import vazkii.quark.api.IEnchantmentInfluencer;
 
 import java.util.List;
 
+@OptionalMixin("vazkii.quark.api.IEnchantmentInfluencer")
 @Mixin(AbstractCandleSkullBlock.class)
 public abstract class CompatQuarkSelfCandleSkullMixin implements IEnchantmentInfluencer {
 

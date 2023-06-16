@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
@@ -9,10 +10,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
@@ -49,6 +47,7 @@ public class PresentDyeRecipe extends CustomRecipe {
             }
         }
 
+
         return i == 1 && j == 1;
     }
 
@@ -63,14 +62,14 @@ public class PresentDyeRecipe extends CustomRecipe {
                 if (item instanceof PresentItem) {
                     itemstack = stack;
                 } else {
-                    DyeColor tmp = ForgeHelper.getColor(stack);
-                    if (tmp != null) dyecolor = tmp;
+                        DyeColor tmp = ForgeHelper.getColor(stack);
+                        if (tmp != null) dyecolor = tmp;
                 }
             }
         }
 
         //improve this is crap
-        ItemStack result = new ItemStack(((PresentItem) itemstack.getItem()).changeItemColor(dyecolor).asItem());
+        ItemStack result = BlocksColorAPI.changeColor(itemstack.getItem(), dyecolor).getDefaultInstance();
 
         if (itemstack.hasTag()) {
             result.setTag(itemstack.getTag().copy());
