@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FlaxBlock;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
@@ -36,8 +37,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -303,8 +304,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
             if (this.isAquarium) {
                 bucket = BucketHelper.getBucketFromEntity(entity);
+                if (!bucket.isEmpty())
+                    BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             }
-            BucketHelper.associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
             //fix here
 
             ForgeHelper.reviveEntity(entity);

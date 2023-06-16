@@ -69,7 +69,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
         hsl = ColorHelper.prettyfyColor(hsl.withHue(h));
         float s = hsl.saturation();
         //0.7,0.6
-        s = tint == 0 ? ((s * 0.81f)) : s * 0.74f;
+        s = tint == 0 ? (s * 0.81f) : s * 0.74f;
         return hsl.withSaturation(s).asRGB().toInt();
     }
 }
