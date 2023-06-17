@@ -4,4 +4,4 @@
 - Playing a noteblock with a zombie head ontop will scare villagers (thanks to Warrior2000 for idea)
 - added stuff to 4 new vanilla tags added in 1.20
 - faucets can dissolve sugar cubes, solidify concrete and create mud
-- disabled copper and crimson lanterns by default. they are going to the shadow realm as i dont like them (supp squared)
+- removed copper and crimson lanterns. they are going to the shadow realm as i dont like them (supp squared)

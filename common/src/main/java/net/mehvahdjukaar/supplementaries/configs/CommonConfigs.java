@@ -365,8 +365,6 @@ public class CommonConfigs {
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
             NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
             NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
-            CRIMSON_LANTERN_ENABLED = feature(builder, ModConstants.CRIMSON_LANTERN_NAME,ModConstants.CRIMSON_LANTERN_NAME,false);
-            COPPER_LANTERN_ENABLED = feature(builder, ModConstants.COPPER_LANTERN_NAME,ModConstants.COPPER_LANTERN_NAME, false);
             CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
             RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
             FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
@@ -449,8 +447,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
 
-        public static final Supplier<Boolean> COPPER_LANTERN_ENABLED;
-
         public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
 
         public static final Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
@@ -458,8 +454,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> NETHERITE_DOOR_ENABLED;
 
         public static final Supplier<Boolean> PANCAKES_ENABLED;
-
-        public static final Supplier<Boolean> CRIMSON_LANTERN_ENABLED;
 
         public static final Supplier<Boolean> TILE_ENABLED;
 

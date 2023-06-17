@@ -164,9 +164,6 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.HOURGLASS.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BLACKBOARD.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.COPPER_LANTERN.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.BRASS_LANTERN.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.CRIMSON_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GOLD_DOOR.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GOLD_TRAPDOOR.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BAMBOO_SPIKES.get(), RenderType.cutout());

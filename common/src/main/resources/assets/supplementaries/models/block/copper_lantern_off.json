@@ -1,7 +1,0 @@
-{
-  "parent": "supplementaries:block/copper_lantern",
-  "textures": {
-    "particle": "supplementaries:block/copper_lantern_off",
-    "0": "supplementaries:block/copper_lantern_off"
-  }
-}

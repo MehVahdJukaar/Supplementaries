@@ -393,35 +393,6 @@ public class ModRegistry {
     public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(Supplementaries.res(CANDLE_HOLDER_NAME));
 
 
-    //copper lantern
-    public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
-            BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.TERRACOTTA_ORANGE)
-                    .strength(3.5f)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel((state) -> state.getValue(LightableLanternBlock.LIT) ? 15 : 0)
-                    //TODO: add custom sound mixed
-                    .sound(SoundType.COPPER)
-    ));
-
-    //brass lantern
-    public static final Supplier<Block> BRASS_LANTERN = regWithItem(BRASS_LANTERN_NAME, () -> new LightableLanternBlock(
-            BlockBehaviour.Properties.copy(COPPER_LANTERN.get()),
-            Shapes.or(Block.box(5.0D, 0.0D, 5.0D, 11.0D, 8.0D, 11.0D),
-                    Block.box(6.0D, 8.0D, 6.0D, 10.0D, 9.0D, 10.0D),
-                    Block.box(4.0D, 7.0D, 4.0D, 12.0D, 8.0D, 12.0D))));
-
-    //crimson lantern
-    public static final Supplier<Block> CRIMSON_LANTERN = regWithItem(CRIMSON_LANTERN_NAME, () -> new CrimsonLanternBlock(
-            BlockBehaviour.Properties.of()
-                    .sound(SoundType.WOOL)
-                    .mapColor(DyeColor.RED)
-                    .ignitedByLava()
-                    .strength(1.5f)
-                    .lightLevel((state) -> 15)
-                    .noOcclusion())
-    );
-
     //rope
     public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
             BlockBehaviour.Properties.copy(Blocks.BROWN_WOOL)

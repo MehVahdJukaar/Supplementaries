@@ -65,15 +65,16 @@ public class FrameBlockTile extends MimicBlockTile {
                 if (s != null) {
                     state = s.withPropertiesOf(this.getBlockState());
                     this.level.setBlock(this.worldPosition, state, 3);
+                    return state;
                 }
             }
-        } else {
-            this.setHeldBlock(state);
-            //called here to update immediately to prevent glitching with different model shaped
-            if (level != null && this.level.isClientSide) {
-                this.requestModelReload();
-            }
         }
+        this.setHeldBlock(state);
+        //called here to update immediately to prevent glitching with different model shaped
+        if (level != null && this.level.isClientSide) {
+            this.requestModelReload();
+        }
+
         return state;
     }
 

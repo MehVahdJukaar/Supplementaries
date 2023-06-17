@@ -47,11 +47,6 @@ public final class ModConstants {
     public static final String SCONCE_NAME_GLOW = "sconce_glow";
     public static final String SCONCE_NAME_GREEN = "sconce_green";
     public static final String SCONCE_NAME_NETHER_BRASS = "sconce_nether_brass";
-    public static final String COPPER_LANTERN_NAME = "copper_lantern";
-    public static final String BRASS_LANTERN_NAME = "brass_lantern";
-    public static final String LEAD_LANTERN_NAME = "lead_lantern";
-    public static final String SILVER_LANTERN_NAME = "silver_lantern";
-    public static final String CRIMSON_LANTERN_NAME = "crimson_lantern";
     public static final String ROPE_NAME = "rope";
     public static final String ROPE_KNOT_NAME = "rope_knot";
     public static final String BAMBOO_SPIKES_NAME = "bamboo_spikes";
@@ -81,10 +76,6 @@ public final class ModConstants {
     public static final String FAUCET_NAME = "faucet";
     public static final String GOLD_DOOR_NAME = "gold_door";
     public static final String GOLD_TRAPDOOR_NAME = "gold_trapdoor";
-    public static final String SILVER_DOOR_NAME = "silver_door";
-    public static final String SILVER_TRAPDOOR_NAME = "silver_trapdoor";
-    public static final String LEAD_DOOR_NAME = "lead_door";
-    public static final String LEAD_TRAPDOOR_NAME = "lead_trapdoor";
     public static final String NETHERITE_DOOR_NAME = "netherite_door";
     public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor";
     public static final String IRON_GATE_NAME = "iron_gate";

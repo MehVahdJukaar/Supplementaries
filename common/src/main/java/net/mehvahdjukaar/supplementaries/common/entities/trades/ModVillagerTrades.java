@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -19,10 +20,12 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ModVillagerTrades {
@@ -45,9 +48,9 @@ public class ModVillagerTrades {
             trades.add(itemForEmeraldTrade(ModRegistry.ROPE.get(), 4, 1, 10));
         }
         trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
-        if (CommonConfigs.Building.COPPER_LANTERN_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.COPPER_LANTERN.get(), 1, 1, 12));
-        }
+        var lantern = CompatObjects.COPPER_LANTERN.get() == null ? Blocks.LANTERN : CompatObjects.COPPER_LANTERN.get();
+        trades.add(itemForEmeraldTrade(lantern, 1, 1, 12));
+
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
             if (CompatHandler.OREGANIZED) {

@@ -30,6 +30,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -91,15 +92,6 @@ public class ModCreativeTabs {
         before(e, Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SCONCE_NAME,
                 ModRegistry.SCONCE, ModRegistry.SCONCE_SOUL, ModRegistry.SCONCE_LEVER);
-        //TODO: modded ones
-
-        before(e, Items.CHAIN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.COPPER_LANTERN_NAME,
-                ModRegistry.COPPER_LANTERN);
-
-        before(e, Items.CHAIN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.CRIMSON_LANTERN_NAME,
-                ModRegistry.CRIMSON_LANTERN);
 
         before(e, Items.CHAIN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.ROPE_NAME,
@@ -203,7 +195,7 @@ public class ModCreativeTabs {
             for (var v : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
                 var w = v.getKey();
                 e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.HANGING_SIGNS) &&
-                        w.getItemOfThis("hanging_sign") == i.getItem(), v.getValue());
+                        w.getBlockOfThis("hanging_sign").asItem() == i.getItem(), v.getValue());
             }
         }
 
@@ -502,7 +494,12 @@ public class ModCreativeTabs {
                 ModRegistry.IRON_GATE);
 
         CompatHandler.addItemsToTabs(e);
+
+        SYNCED_ADD_TO_TABS.forEach(o->o.accept(e));
     }
+
+    //for supp2. ugly i know but fabric has no load order
+    public static final List<Consumer<RegHelper.ItemToTabEvent>> SYNCED_ADD_TO_TABS = new ArrayList<>();
 
     private static void after(RegHelper.ItemToTabEvent event, TagKey<Item> target,
                               ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
