@@ -3,9 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -13,34 +12,27 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 
-public class NoticeBoardContainerMenu extends AbstractContainerMenu implements IContainerProvider{
-    public final Container inventory;
+public class NoticeBoardContainerMenu extends AbstractContainerMenu implements IContainerProvider {
+    public final NoticeBoardBlockTile container;
 
-    @Override
-    public Container getContainer() {
-        return inventory;
-    }
 
     public NoticeBoardContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id,playerInventory);
+        this(id, playerInventory, ModRegistry.NOTICE_BOARD_TILE.get().getBlockEntity(playerInventory.player.level(),
+                packetBuffer.readBlockPos()));
     }
 
-    public NoticeBoardContainerMenu(int id, Inventory playerInventory) {
-        this(id, playerInventory, new SimpleContainer(1));
-    }
-
-    public NoticeBoardContainerMenu(int id, Inventory playerInventory, Container inventory) {
+    public NoticeBoardContainerMenu(int id, Inventory playerInventory, NoticeBoardBlockTile container) {
 
         super(ModMenuTypes.NOTICE_BOARD.get(), id);
         //tile inventory
-        this.inventory = inventory;
-        checkContainerSize(inventory, 1);
-        inventory.startOpen(playerInventory.player);
+        this.container = container;
+        checkContainerSize(container, 1);
+        container.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(inventory, 0, 79, 39) {
+        this.addSlot(new Slot(container, 0, 35, 33) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return(CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
+                return (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
             }
         });
 
@@ -52,12 +44,16 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
-
+    @Override
+    public NoticeBoardBlockTile getContainer() {
+        return container;
+    }
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return this.inventory.stillValid(playerIn);
+        return this.container.stillValid(playerIn);
     }
+
     /**
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
@@ -68,11 +64,11 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (index < this.inventory.getContainerSize()) {
-                if (!this.moveItemStackTo(itemstack1, this.inventory.getContainerSize(), this.slots.size(), true)) {
+            if (index < this.container.getContainerSize()) {
+                if (!this.moveItemStackTo(itemstack1, this.container.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.inventory.getContainerSize(), false)) {
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -92,7 +88,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
     @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
-        this.inventory.stopOpen(playerIn);
+        this.container.stopOpen(playerIn);
     }
 
 }

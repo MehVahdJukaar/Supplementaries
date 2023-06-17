@@ -57,7 +57,7 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile && tile.isAccessibleBy(player)) {
-            return tile.interact(player, handIn, pos, state);
+            return tile.interact(player, handIn, pos, state,hit);
         }
         return InteractionResult.PASS;
     }

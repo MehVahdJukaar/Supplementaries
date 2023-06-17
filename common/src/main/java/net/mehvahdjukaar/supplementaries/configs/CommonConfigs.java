@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
@@ -366,12 +365,8 @@ public class CommonConfigs {
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
             NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
             NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
-            SILVER_DOOR_ENABLED = feature(builder, ModConstants.SILVER_DOOR_NAME);
-            SILVER_TRAPDOOR_ENABLED = feature(builder, ModConstants.SILVER_TRAPDOOR_NAME);
-            LEAD_DOOR_ENABLED = feature(builder, ModConstants.LEAD_DOOR_NAME);
-            LEAD_TRAPDOOR_ENABLED = feature(builder, ModConstants.LEAD_TRAPDOOR_NAME);
-            CRIMSON_LANTERN_ENABLED = feature(builder, ModConstants.CRIMSON_LANTERN_NAME);
-            COPPER_LANTERN_ENABLED = feature(builder, ModConstants.COPPER_LANTERN_NAME);
+            CRIMSON_LANTERN_ENABLED = feature(builder, ModConstants.CRIMSON_LANTERN_NAME,ModConstants.CRIMSON_LANTERN_NAME,false);
+            COPPER_LANTERN_ENABLED = feature(builder, ModConstants.COPPER_LANTERN_NAME,ModConstants.COPPER_LANTERN_NAME, false);
             CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
             RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
             FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
@@ -481,14 +476,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FLOWER_BOX_ENABLED;
 
         public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
-
-        public static final Supplier<Boolean> SILVER_TRAPDOOR_ENABLED;
-
-        public static final Supplier<Boolean> SILVER_DOOR_ENABLED;
-
-        public static final Supplier<Boolean> LEAD_TRAPDOOR_ENABLED;
-
-        public static final Supplier<Boolean> LEAD_DOOR_ENABLED;
 
         public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
 
@@ -988,6 +975,10 @@ public class CommonConfigs {
                     .define("zombie_horse_inverse_conversion", true);
             builder.pop();
 
+            builder.push("noteblocks_scare");
+            SCARE_VILLAGERS = builder.comment("Noteblocks with a zombie head will scare off villagers")
+                    .define("enabled", true);
+            builder.pop();
 
             builder.pop();
         }
@@ -1035,6 +1026,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SKULL_CANDLES;
         public static final Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
         public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
+        public static final Supplier<Boolean> SCARE_VILLAGERS;
 
     }
 

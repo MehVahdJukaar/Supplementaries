@@ -48,12 +48,6 @@ public class PresentItem extends BlockItem implements IColored {
         return ((AbstractPresentBlock) this.getBlock()).getColor();
     }
 
-    @Nullable
-    @Override
-    public Item changeItemColor(@Nullable DyeColor color) {
-        return ((AbstractPresentBlock) this.getBlock()).changeItemColor(color);
-    }
-
     @Override
     public boolean supportsBlankColor() {
         return true;

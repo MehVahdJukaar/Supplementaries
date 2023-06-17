@@ -112,12 +112,4 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
         }
     }
 
-    @Nullable
-    @Override
-    public Item changeItemColor(@Nullable DyeColor color) {
-        var c = ModRegistry.TRAPPED_PRESENTS.get(color);
-        if (c != null) return c.get().asItem();
-        return null;
-    }
-
 }

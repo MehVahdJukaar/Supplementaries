@@ -4,11 +4,14 @@ import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainer
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
 public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContainerMenu> {
+
+    private final CyclingSlotBackground slotBG = new CyclingSlotBackground(0);
 
     public PulleyBlockScreen(PulleyBlockContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
@@ -21,6 +24,7 @@ public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContai
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         graphics.blit(ModTextures.PULLEY_BLOCK_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        this.slotBG.render(this.menu, graphics, partialTicks, this.leftPos, this.topPos);
     }
 
     @Override
@@ -48,5 +52,11 @@ public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContai
     public void init() {
         super.init();
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        this.slotBG.tick(ModTextures.PULLEY_SLOT_ICONS);
     }
 }

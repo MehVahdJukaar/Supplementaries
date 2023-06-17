@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,11 +12,12 @@ import net.minecraft.world.entity.player.Inventory;
 public class TrappedPresentContainerMenu extends PresentContainerMenu {
 
     public TrappedPresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        super(id, playerInventory, null, packetBuffer.readBlockPos());
+        this(id, playerInventory, (AbstractPresentBlockTile) playerInventory.player.level()
+                .getBlockEntity(packetBuffer.readBlockPos()));
     }
 
-    public TrappedPresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
-        super(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), id, playerInventory, inventory, pos);
+    public TrappedPresentContainerMenu(int id, Inventory playerInventory, AbstractPresentBlockTile inventory) {
+        super(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), id, playerInventory, inventory);
     }
 
     @Override
@@ -25,4 +28,5 @@ public class TrappedPresentContainerMenu extends PresentContainerMenu {
     protected int getSlotY() {
         return 36;
     }
+
 }

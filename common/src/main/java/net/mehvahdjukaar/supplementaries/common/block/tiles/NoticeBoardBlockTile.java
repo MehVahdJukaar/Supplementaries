@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -16,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -106,7 +109,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.text = null;
         updateText();
 
-        this.isNormalItem = isPageItem(itemstack.getItem());
+        this.isNormalItem = !isPageItem(itemstack.getItem());
     }
 
     public boolean isNormalItem() {
@@ -264,8 +267,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
 
-    public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state) {
-        ItemStack itemStack = player.getItemInHand(handIn);
+    public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
 
         Level level = player.level();
         boolean server = !level.isClientSide;
@@ -285,10 +287,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.setChanged();
             }
         }
-        //try place
-        else if (!super.interact(player, handIn).consumesAction()) {
+        //try place or open
+        else if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
+                !super.interact(player, handIn).consumesAction()) {
             if (server) {
-                player.openMenu(this);
+                PlatHelper.openCustomMenu((ServerPlayer) player, this, pos);
             }
         }
         return InteractionResult.sidedSuccess(!server);

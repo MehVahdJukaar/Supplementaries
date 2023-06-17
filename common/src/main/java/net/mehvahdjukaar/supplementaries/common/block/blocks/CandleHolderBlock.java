@@ -282,14 +282,6 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return color;
     }
 
-    @Nullable
-    @Override
-    public Item changeItemColor(@Nullable DyeColor color) {
-        var c = ModRegistry.CANDLE_HOLDERS.get(color);
-        if (c != null) return c.get().asItem();
-        return null;
-    }
-
     @Override
     public boolean supportsBlankColor() {
         return true;

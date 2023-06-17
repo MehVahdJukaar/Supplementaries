@@ -69,14 +69,6 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
         return this.color;
     }
 
-    @Nullable
-    @Override
-    public Item changeItemColor(@Nullable DyeColor color) {
-        var c =  ModRegistry.FLAGS.get(color);
-        if(c != null)return c.get().asItem();
-        return null;
-    }
-
     @Override
     public boolean isPossibleToRespawnInThis(BlockState state) {
         return true;

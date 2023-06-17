@@ -1,13 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
-import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
-import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,40 +12,33 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
-
 
 public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
-    protected final Container inventory;
-    protected final BlockPos pos;
+    protected final AbstractPresentBlockTile inventory;
 
     @Override
-    public Container getContainer() {
+    public AbstractPresentBlockTile getContainer() {
         return inventory;
     }
 
     //client container factory
     public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, null, packetBuffer.readBlockPos());
-    }
-    public PresentContainerMenu(int id, Inventory playerInventory, Container inventory, BlockPos pos) {
-        this(ModMenuTypes.PRESENT_BLOCK.get(),id, playerInventory, inventory,pos);
+        this(ModMenuTypes.PRESENT_BLOCK.get(), id, playerInventory,
+                (AbstractPresentBlockTile) playerInventory.player.level().getBlockEntity(packetBuffer.readBlockPos()));
     }
 
-    public <T extends PresentContainerMenu>PresentContainerMenu(MenuType<T> type, int id, Inventory playerInventory, Container inventory, BlockPos pos) {
+    public <T extends PresentContainerMenu> PresentContainerMenu(int id, Inventory playerInventory,
+                                                                 AbstractPresentBlockTile inventory) {
+        this(ModMenuTypes.PRESENT_BLOCK.get(), id, playerInventory, inventory);
+    }
+
+    public <T extends PresentContainerMenu> PresentContainerMenu(MenuType<T> type, int id, Inventory playerInventory,
+                                                                 AbstractPresentBlockTile inventory) {
         super(type, id);
 
-        this.pos = pos;
-
         //tile inventory
-        this.inventory = Objects.requireNonNullElseGet(inventory, () -> new SimpleContainer(1) {
-            @Override
-            public void setChanged() {
-                super.setChanged();
-                PresentContainerMenu.this.slotsChanged(this);
-            }
-        });
+        this.inventory = inventory;
 
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
@@ -71,12 +61,8 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return 20;
     }
 
-    protected int getSlotX(){
+    protected int getSlotX() {
         return 17;
-    }
-
-    public BlockPos getPos() {
-        return pos;
     }
 
     @Override
@@ -113,10 +99,9 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
-        if (playerIn.level().getBlockEntity(this.pos) instanceof IDynamicContainer tile && !tile.canHoldItems()) {
+        if (!inventory.canHoldItems()) {
             this.clearContainer(playerIn, this.inventory);
         }
-
     }
 
 }

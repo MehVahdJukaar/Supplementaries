@@ -89,6 +89,21 @@ public class ModTextures {
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
     public static final ResourceLocation BUBBLE_BLOCK_COLORS_TEXTURE = Supplementaries.res("block/bubble_block_colors");
 
+
+    public static final List<ResourceLocation> BANNER_SLOT_ICONS =
+            List.of(Supplementaries.res("item/gui_slots/empty_slot_banner"),
+                    Supplementaries.res("item/gui_slots/empty_slot_flag"));
+
+    public static final List<ResourceLocation> PULLEY_SLOT_ICONS =
+            List.of(Supplementaries.res("item/gui_slots/empty_slot_rope"),
+                    Supplementaries.res("item/gui_slots/empty_slot_chain"));
+
+    public static final List<ResourceLocation> NOTICE_BOARD_SLOT_ICONS =
+            List.of(Supplementaries.res("item/gui_slots/empty_slot_map"),
+                    Supplementaries.res("item/gui_slots/empty_slot_banner_pattern"),
+                    Supplementaries.res("item/gui_slots/empty_slot_book"));
+
+
     public static final Supplier<Map<Block, ResourceLocation>> SKULL_CANDLES_TEXTURES = Suppliers.memoize(() -> {
         Map<Block, ResourceLocation> map = new LinkedHashMap<>();
         //first key and default one too
@@ -98,10 +113,10 @@ public class ModTextures {
             map.put(candle, Supplementaries.res("textures/block/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
-        if(CompatObjects.SOUL_CANDLE.get() != null) {
+        if (CompatObjects.SOUL_CANDLE.get() != null) {
             map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/soul.png"));
         }
-        if(CompatObjects.SPECTACLE_CANDLE.get() != null) {
+        if (CompatObjects.SPECTACLE_CANDLE.get() != null) {
             map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/spectacle.png"));
         }
         return map;
@@ -115,12 +130,12 @@ public class ModTextures {
         return map;
     });
 
-    public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(()->{
+    public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {
         var map = new IdentityHashMap<BannerPattern, ResourceLocation>();
-            for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
-                map.put(pattern, Supplementaries.res("entity/banner/flags/" +
-                        BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
-            }
+        for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
+            map.put(pattern, Supplementaries.res("entity/banner/flags/" +
+                    BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
+        }
         return map;
     });
 

@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SwayingBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WallLanternBlockTile;
@@ -17,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,9 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -76,9 +72,6 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
                 var opt = LightableLanternBlock.toggleLight(lantern, pLevel, pPos, pPlayer, pHand);
                 if (opt.isPresent()) {
                     te.setHeldBlock(opt.get());
-                    int light = SuppPlatformStuff.getLightEmission(opt.get(), pLevel, pPos);
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIGHT_LEVEL, Mth.clamp( light,5,15)));
-                    pLevel.sendBlockUpdated(pPos, pState, pState, Block.UPDATE_CLIENTS);
                     return InteractionResult.sidedSuccess(pLevel.isClientSide);
                 }
             }

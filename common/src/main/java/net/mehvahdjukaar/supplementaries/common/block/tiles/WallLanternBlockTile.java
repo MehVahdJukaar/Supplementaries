@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class WallLanternBlockTile  extends SwayingBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
+public class WallLanternBlockTile extends SwayingBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC_KEY;
 
@@ -31,16 +31,7 @@ public class WallLanternBlockTile  extends SwayingBlockTile implements IBlockHol
 
     //for charm compat
     protected boolean isRedstoneLantern = false;
-
     private UUID owner = null;
-
-    static {
-    //    maxSwingAngle = 45f;
-    //    minSwingAngle = 1.9f;
-    //    maxPeriod = 28f;
-    //    angleDamping = 80f;
-     //   periodDamping = 70f;
-    }
 
     public WallLanternBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.WALL_LANTERN_TILE.get(), pos, state);
@@ -108,9 +99,12 @@ public class WallLanternBlockTile  extends SwayingBlockTile implements IBlockHol
             if (!shape.isEmpty() && !res.getNamespace().equals("twigs")) {
                 this.attachmentOffset = (shape.bounds().maxY - (9 / 16d));
             }
-            if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light)
-                this.getLevel().setBlock(this.worldPosition, this.getBlockState().setValue(WallLanternBlock.LIT, lit)
-                        .setValue(WallLanternBlock.LIGHT_LEVEL, light), 4 | 16);
+            if (this.getBlockState().getValue(WallLanternBlock.LIGHT_LEVEL) != light) {
+                if (light == 0) lit = false;
+                BlockState newState = this.getBlockState().setValue(WallLanternBlock.LIT, lit)
+                        .setValue(WallLanternBlock.LIGHT_LEVEL, Math.max(light, 5));
+                this.getLevel().setBlock(this.worldPosition, newState, 4 | 16);
+            }
         }
         return true;
     }

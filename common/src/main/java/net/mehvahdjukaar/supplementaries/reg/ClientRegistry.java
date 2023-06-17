@@ -135,8 +135,8 @@ public class ClientRegistry {
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyBlockScreen::new);
         MenuScreens.register(ModMenuTypes.SACK.get(), SackScreen::new);
-        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen.GUI_FACTORY);
-        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen.GUI_FACTORY);
+        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
+        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 

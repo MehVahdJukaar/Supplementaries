@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -39,15 +41,6 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     private static final int SUGGESTION_BOX_W = 99;
     private static final int SUGGESTION_BOX_H = 12;
 
-    public static final MenuScreens.ScreenConstructor<PresentContainerMenu, PresentScreen> GUI_FACTORY =
-            (container, inventory, title) -> {
-                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
-                if (te instanceof PresentBlockTile presentBlockTile) {
-                    return new PresentScreen(container, inventory, title, presentBlockTile);
-                }
-                return null;
-            };
-
     private final PresentBlockTile tile;
 
     private PackButton packButton;
@@ -58,12 +51,12 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     //hasn't received items yet
     private boolean needsInitialization = true;
 
-    public PresentScreen(PresentContainerMenu container, Inventory inventory, Component text, PresentBlockTile tile) {
+    public PresentScreen(PresentContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
 
-        this.tile = tile;
+        this.tile = (PresentBlockTile) container.getContainer();
     }
 
     @Override

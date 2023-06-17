@@ -163,21 +163,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
         boolean hasWater = updateTileFluid(state, pos, world);
         if (hasWater != state.getValue(HAS_WATER)) world.setBlockAndUpdate(pos, state.setValue(HAS_WATER, hasWater));
-
-
-        //handles concrete
-        if (state.getValue(ENABLED) ^ toggle ^ isPowered && state.getValue(HAS_WATER)) {
-            trySolidifyConcrete(pos.below(), world);
-        }
-    }
-
-    public void trySolidifyConcrete(BlockPos pos, Level world) {
-        Block b = world.getBlockState(pos).getBlock();
-         if(b instanceof SugarBlock){
-            world.removeBlock(pos, false);
-        }else if (b instanceof ConcretePowderBlock concretePowderBlock) {
-            world.setBlock(pos, concretePowderBlock.concrete, 2 | 16);
-        }
     }
 
     public boolean isOpen(BlockState state) {

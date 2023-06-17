@@ -142,7 +142,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PresentContainerMenu(id, player, this, this.worldPosition);
+        return new PresentContainerMenu(id, player, this);
     }
 
     @Nullable

@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 
 public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider{
-    public final Container inventory;
+    public final SackBlockTile inventory;
 
     @Override
     public Container getContainer() {

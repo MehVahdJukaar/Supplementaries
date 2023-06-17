@@ -1,24 +1,18 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,18 +20,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresentContainerMenu> implements ContainerListener {
-
-    public static final MenuScreens.ScreenConstructor<TrappedPresentContainerMenu, TrappedPresentScreen> GUI_FACTORY =
-            (container, inventory, title) -> {
-                BlockEntity te = Minecraft.getInstance().level.getBlockEntity(container.getPos());
-                if (te instanceof TrappedPresentBlockTile presentBlockTile) {
-                    return new TrappedPresentScreen(container, inventory, title, presentBlockTile);
-                }
-                return null;
-            };
 
     private final TrappedPresentBlockTile tile;
 
@@ -47,12 +31,12 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     private boolean needsInitialization = true;
 
 
-    public TrappedPresentScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text, TrappedPresentBlockTile tile) {
+    public TrappedPresentScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
 
-        this.tile = tile;
+        this.tile = (TrappedPresentBlockTile) container.getContainer();
     }
 
     @Override
@@ -61,7 +45,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.packButton = this.addRenderableWidget(new PackButton(i + 60+33, j + 33));
+        this.packButton = this.addRenderableWidget(new PackButton(i + 60 + 33, j + 33));
 
         this.primed = tile.isPrimed();
 
@@ -127,11 +111,11 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        if(this.primed){
+        if (this.primed) {
             int k = (this.width - this.imageWidth) / 2;
             int l = (this.height - this.imageHeight) / 2;
             Slot slot = this.menu.getSlot(0);
-            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y,  400,12, 232, 16, 16, 256, 256);
+            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 400, 12, 232, 16, 16, 256, 256);
         }
         this.renderTooltip(graphics, mouseX, mouseY);
     }

@@ -29,7 +29,7 @@ public abstract class BellRendererMixin {
             };
             if (model != null) {
                 int light = LevelRenderer.getLightColor(tile.getLevel(), tile.getBlockPos().below());
-                RenderUtil.renderBlockModel(model, matrixStackIn, bufferIn, Minecraft.getInstance().getBlockRenderer(),
+                RenderUtil.renderModel(model, matrixStackIn, bufferIn, Minecraft.getInstance().getBlockRenderer(),
                         light, combinedOverlayIn, true);
             }
         }

@@ -443,6 +443,7 @@ public class ModRegistry {
     //spikes
     public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
             BlockBehaviour.Properties.of()
+                    .pushReaction(PushReaction.NORMAL)
                     .mapColor(MapColor.SAND)
                     .ignitedByLava()
                     .sound(SoundType.SCAFFOLDING)

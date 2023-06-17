@@ -75,6 +75,8 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         FaucetBlockTile.registerInteraction(new WaterBlockInteraction());
         FaucetBlockTile.registerInteraction(new SpongeInteraction());
         FaucetBlockTile.registerInteraction(new XPDroppingInteraction());
+        FaucetBlockTile.registerInteraction(new ConcreteInteraction());
+        FaucetBlockTile.registerInteraction(new MudInteraction());
         if (CompatHandler.BUZZIER_BEES) FaucetBlockTile.registerInteraction(new HoneyPotInteraction());
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());

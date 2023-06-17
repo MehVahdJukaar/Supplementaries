@@ -21,9 +21,12 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 
 public class Supplementaries {
@@ -88,13 +91,11 @@ public class Supplementaries {
         }
     }
 
-    public static boolean test() {
-        return true;
-    }
     //yes this is where I write crap. deal with it XD
 
     //tree index out of bound
     //caibrated stuff
+    //cargographer gui antique ink
     //Tree chat gtp
     //tree splash text
     //lectern colors in gui

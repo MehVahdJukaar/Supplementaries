@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.block.IDynamicContainer;
+import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IDynamicContainer {
+public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
 
     protected AbstractPresentBlockTile(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state, 1);
@@ -42,7 +42,7 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new TrappedPresentContainerMenu(id, player, this, this.worldPosition);
+        return new TrappedPresentContainerMenu(id, player, this);
     }
 
     @Override

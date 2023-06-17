@@ -38,6 +38,7 @@ public class SupplementariesForge {
         bus.register(this);
 
         ServerEventsForge.init();
+        VillagerScareStuff.init();
 
         PlatHelper.getPhysicalSide().ifClient(() -> {
             ClientRegistry.init();
@@ -55,6 +56,7 @@ public class SupplementariesForge {
     public void setup(FMLCommonSetupEvent event) {
         event.enqueueWork(ModSetup::setup);
         ModSetup.asyncSetup();
+        VillagerScareStuff.setup();
     }
 
     @SubscribeEvent
