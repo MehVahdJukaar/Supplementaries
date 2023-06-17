@@ -259,7 +259,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         DisplayCache displayCache = this.getDisplayCache();
 
         for (LineInfo lineInfo : displayCache.lines) {
-            graphics.drawString(this.font, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216);
+            graphics.drawString(this.font, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216, false);
         }
 
         if (this.isFocused()) {
@@ -274,7 +274,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
             if (!isEndOfText) {
                 graphics.fill(pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
             } else {
-                graphics.drawString(this.font, "_", pos2i.x, pos2i.y, 0);
+                graphics.drawString(this.font, "_", pos2i.x, pos2i.y, 0, false);
             }
         }
     }

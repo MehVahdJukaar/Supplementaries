@@ -18,14 +18,6 @@ public class PresentBlock extends AbstractPresentBlock {
 
     @Nullable
     @Override
-    public Item changeItemColor(@Nullable DyeColor color) {
-        var c = ModRegistry.PRESENTS.get(color);
-        if (c != null) return c.get().asItem();
-        return null;
-    }
-
-    @Nullable
-    @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new PresentBlockTile(pPos, pState);
     }

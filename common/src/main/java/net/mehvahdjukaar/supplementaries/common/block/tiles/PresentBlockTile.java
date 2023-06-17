@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -103,6 +104,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     @Override
     public InteractionResult interact(ServerPlayer player, BlockPos pos) {
         if (this.isUnused()) {
+
             if (this.canOpen(player)) {
                 PlatHelper.openCustomMenu(player, this, pos);
                 PiglinAi.angerNearbyPiglins(player, true);

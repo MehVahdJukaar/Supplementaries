@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -115,7 +116,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
 
         if (!state.getValue(POWERED) && gold || !CommonConfigs.Building.CONSISTENT_GATE.get()) {
             Direction dir = player.getDirection();
@@ -123,20 +124,21 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
 
             if (CommonConfigs.Building.DOUBLE_IRON_GATE.get()) {
                 BlockPos up = pos.above();
-                BlockState stateUp = world.getBlockState(up);
+                BlockState stateUp = level.getBlockState(up);
                 if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
-                    openGate(stateUp, world, up, dir);
+                    openGate(stateUp, level, up, dir);
                 BlockPos down = pos.below();
-                BlockState stateDown = world.getBlockState(down);
+                BlockState stateDown = level.getBlockState(down);
                 if (stateDown.is(this) && stateDown.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
-                    openGate(stateDown, world, down, dir);
+                    openGate(stateDown, level, down, dir);
             }
 
-            openGate(state, world, pos, dir);
+            openGate(state, level, pos, dir);
             boolean open = state.getValue(OPEN);
-            world.levelEvent(player, open ? 1036 : 1037, pos, 0);
-            world.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            level.playSound(player, pos, open ? BlockSetType.IRON.trapdoorOpen() : BlockSetType.IRON.trapdoorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
+
+            level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return InteractionResult.PASS;
@@ -156,12 +158,11 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
 
-
     public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState returnValue) {
         boolean altered = false;
-        for(Direction d : Direction.Plane.HORIZONTAL){
+        for (Direction d : Direction.Plane.HORIZONTAL) {
             BooleanProperty prop = CrossCollisionBlock.PROPERTY_BY_DIRECTION.get(d);
-            if(!returnValue.getValue(prop)) {
+            if (!returnValue.getValue(prop)) {
                 BlockState blockState = level.getBlockState(clickedPos.relative(d));
                 if (blockState.getBlock() instanceof FenceGateBlock &&
                         blockState.getValue(FenceGateBlock.FACING).getAxis() != d.getAxis()) {

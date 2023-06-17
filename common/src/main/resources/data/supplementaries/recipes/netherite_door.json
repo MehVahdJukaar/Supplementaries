@@ -1,11 +1,13 @@
 {
-  "type": "minecraft:smithing",
-  "base": {
-    "item": "supplementaries:gold_door"
-  },
-  "addition": {
-    "item": "minecraft:netherite_scrap"
-  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:gold_door"
+    },
+    {
+      "item": "minecraft:netherite_scrap"
+    }
+  ],
   "result": {
     "item": "supplementaries:netherite_door"
   },

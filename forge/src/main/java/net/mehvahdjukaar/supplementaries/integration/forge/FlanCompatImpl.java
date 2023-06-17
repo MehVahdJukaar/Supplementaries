@@ -58,7 +58,11 @@ public final class FlanCompatImpl {
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level());
             IPermissionContainer claim = storage.getForPermissionCheck(victim.blockPosition());
-            return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTANIMAL, victim.blockPosition());
+            if(victim instanceof ServerPlayer){
+                return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTPLAYER, victim.blockPosition());
+            }else{
+                return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTANIMAL, victim.blockPosition());
+            }
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed call attack entity event: [Player: {}, Victim: {}]", player, victim, e);
             return true;

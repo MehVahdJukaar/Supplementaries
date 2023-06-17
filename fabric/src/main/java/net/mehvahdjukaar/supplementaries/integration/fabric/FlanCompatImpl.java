@@ -5,14 +5,10 @@ import io.github.flemmli97.flan.api.permission.PermissionRegistry;
 import io.github.flemmli97.flan.claim.ClaimStorage;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
 
 public final class FlanCompatImpl {
@@ -58,7 +54,11 @@ public final class FlanCompatImpl {
         try {
             ClaimStorage storage = ClaimStorage.get((ServerLevel) player.level());
             IPermissionContainer claim = storage.getForPermissionCheck(victim.blockPosition());
-            return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTANIMAL, victim.blockPosition());
+            if (victim instanceof ServerPlayer) {
+                return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTPLAYER, victim.blockPosition());
+            } else {
+                return claim.canInteract((ServerPlayer) player, PermissionRegistry.HURTANIMAL, victim.blockPosition());
+            }
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed call attack entity event: [Player: {}, Victim: {}]", player, victim, e);
             return true;

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -9,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -146,7 +148,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         } else {
             if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
 
-                player.openMenu(tile);
+                PlatHelper.openCustomMenu((ServerPlayer) player, tile, pos);
                 PiglinAi.angerNearbyPiglins(player, true);
 
                 return InteractionResult.CONSUME;

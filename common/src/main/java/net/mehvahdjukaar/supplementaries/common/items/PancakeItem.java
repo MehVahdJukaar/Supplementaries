@@ -3,10 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,5 +26,14 @@ public class PancakeItem extends RecordItem {
     @Override
     public String getDescriptionId() {
         return ModRegistry.PANCAKE.get().getDescriptionId();
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        var r = super.useOn(context);
+        if (!r.consumesAction()) {
+            return ModRegistry.BLOCK_PLACER.get().mimicUseOn(context, ModRegistry.PANCAKE.get(), null);
+        }
+        return r;
     }
 }

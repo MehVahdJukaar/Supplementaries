@@ -48,7 +48,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-        VertexConsumer builder = bufferIn.getBuffer(RenderType.solid());
+        VertexConsumer builder = bufferIn.getBuffer(RenderType.translucent());
         Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
 

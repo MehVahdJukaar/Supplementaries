@@ -1,14 +1,6 @@
-- sack slot fix
-- overencoumbered fix
-- blackboard dye color fix
-- Book and quill crash fix
-- you can now add custom wall lanterns models in models/blocks/custom_wall_lanterns
-- fixed a bug that allowed buckets to be duplicated by jars and animals inserted in them
-- added back forge loot injects
-- new sounds for item shelves, doormat and hourglass item placement
-- zombie horse conversion will be off when domestic innovation is on
-- flute can be used on camels
-- fixed pancakes not going into jukeboxes. Removed technical pancake disc
-- fixed sign posts related bugs
-- fixed multishot slingshot firing from behind
-- placed books have new sounds
+- fixed sacks and safes not opening
+- fixed iron gate sounds
+- added new safe and netherite door/trapdoor recipes
+- fixed jar liquids not being translucent
+- fixed pancakes not being placeable
+- fixed text in present menu

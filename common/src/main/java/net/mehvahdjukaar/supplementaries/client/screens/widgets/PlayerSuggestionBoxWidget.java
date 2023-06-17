@@ -72,11 +72,11 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
                     x += this.font.width(cache.lines[0].contents);
                 }
 
-                graphics.drawString(font, this.suggestion, x, this.getY(), -8355712);
+                graphics.drawString(font, this.suggestion, x, this.getY(), -8355712, false);
             }
 
             if (this.getText().isEmpty()) {
-                graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0);
+                graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0, false);
             } else {
                 if (this.selectedPlayer != null) {
                     this.selectedPlayer.render(graphics, this.getX(), this.getY(), this.width, this.height, partialTicks);
