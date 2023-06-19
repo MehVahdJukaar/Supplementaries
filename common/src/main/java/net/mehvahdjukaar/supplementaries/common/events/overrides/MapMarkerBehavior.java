@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.integration.MapAtlasCompat;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
-import net.mehvahdjukaar.moonlight.core.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;

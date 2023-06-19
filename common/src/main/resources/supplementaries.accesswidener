@@ -10,6 +10,10 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+#sign renderer
+accessible method net/minecraft/client/renderer/blockentity/SignRenderer translateSignText (Lcom/mojang/blaze3d/vertex/PoseStack;ZLnet/minecraft/world/phys/Vec3;)V
+accessible method net/minecraft/client/renderer/blockentity/SignRenderer getTextOffset ()Lnet/minecraft/world/phys/Vec3;
+
 #wet wolf
 accessible field net/minecraft/world/entity/animal/Wolf isWet Z
 

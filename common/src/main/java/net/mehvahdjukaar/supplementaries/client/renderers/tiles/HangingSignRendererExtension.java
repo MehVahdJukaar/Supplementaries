@@ -3,34 +3,31 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.world.item.BannerPatternItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -46,13 +43,14 @@ public class HangingSignRendererExtension {
         boolean wallSign = !(state.getBlock() instanceof CeilingHangingSignBlock);
         boolean attached = !wallSign && state.hasProperty(BlockStateProperties.ATTACHED) && state.getValue(BlockStateProperties.ATTACHED);
         poseStack.translate(0.5, 0.875, 0.5);
-        if (attached) {
-            float f = -RotationSegment.convertToDegrees(state.getValue(CeilingHangingSignBlock.ROTATION));
-            poseStack.mulPose(Axis.YP.rotationDegrees(f));
-        } else {
-            poseStack.mulPose(Axis.YP.rotationDegrees(getSignAngle(state, wallSign)));
-        }
 
+        Quaternionf yaw;
+        if (attached) {
+            yaw = Axis.YP.rotationDegrees(-RotationSegment.convertToDegrees(state.getValue(CeilingHangingSignBlock.ROTATION)));
+        } else {
+            yaw = Axis.YP.rotationDegrees(getSignAngle(state, wallSign));
+        }
+        poseStack.mulPose(yaw);
 
         model.evaluateVisibleParts(state);
         VertexConsumer vertexConsumer = material.buffer(bufferSource, model::renderType);
@@ -62,7 +60,6 @@ public class HangingSignRendererExtension {
         //TODO: ceiling banner rot
 
         boolean visible = model.plank.visible;
-
         boolean visibleC = model.normalChains.visible;
 
         poseStack.pushPose();
@@ -70,8 +67,18 @@ public class HangingSignRendererExtension {
         model.plank.visible = false;
 
         if (wallSign) model.normalChains.visible = false;
-        poseStack.mulPose(Axis.XP.rotationDegrees(sign.animation.getAngle(partialTicks)));
+        Quaternionf pitch = Axis.XP.rotationDegrees(sign.animation.getAngle(partialTicks));
+        poseStack.mulPose(pitch);
+
+        Vector3f norm = Direction.SOUTH.step().rotate(pitch).rotate(yaw);
+
+
+
+        //model
+        poseStack.pushPose();
+
         poseStack.translate(0, 0.25, 0);
+
 
         model.root.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         if (wallSign) {
@@ -80,20 +87,44 @@ public class HangingSignRendererExtension {
         }
         model.plank.visible = visible;
 
+        poseStack.popPose();
+
+
         poseStack.scale(1, -1, -1);
 
-        //this dumb method always pops but doesnt push
-        renderer.renderSignText(tile.getBlockPos(), tile.getFrontText(), poseStack, bufferSource, packedLight, tile.getTextLineHeight(), tile.getMaxTextLineWidth(), true);
-        renderer.renderSignText(tile.getBlockPos(), tile.getBackText(), poseStack, bufferSource, packedLight, tile.getTextLineHeight(), tile.getMaxTextLineWidth(), false);
+        Minecraft mc = Minecraft.getInstance();
+        var camera = mc.gameRenderer.getMainCamera();
+        var font = mc.font;
+        boolean filtered = mc.isTextFilteringEnabled();
+
+        LOD lod = new LOD(camera, tile.getBlockPos());
+
+        var off = renderer.getTextOffset();
+
+
+        poseStack.pushPose();
+        renderer.translateSignText(poseStack, true, off);
+        TextUtils.renderSignText(tile.getFrontText(), font, poseStack, bufferSource, packedLight,
+                norm, lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth());
+        poseStack.popPose();
+
+        poseStack.pushPose();
+        renderer.translateSignText(poseStack, false, off);
+        TextUtils.renderSignText(tile.getFrontText(), font, poseStack, bufferSource, packedLight,
+                norm.mul(-1), lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth());
+        poseStack.popPose();
+
 
         //Item item = Items.SKULL_BANNER_PATTERN;
         //renderBannerPattern(tile, poseStack, bufferSource, packedLight, item);
 
         poseStack.popPose();
 
+        poseStack.translate(0, 0.25, 0);
+
+
         //Straight stuff
 
-        poseStack.translate(0, 0.25, 0);
 
         if (visible) {
             model.plank.render(poseStack, vertexConsumer, packedLight, packedOverlay);

@@ -1,7 +1,7 @@
-- new notice board gui
-- new pulley gui
-- added flag icon to loom gui slot
-- Playing a noteblock with a zombie head ontop will scare villagers (thanks to Warrior2000 for idea)
-- added stuff to 4 new vanilla tags added in 1.20
-- faucets can dissolve sugar cubes, solidify concrete and create mud
-- removed copper and crimson lanterns. they are going to the shadow realm as i dont like them (supp squared)
+- fixed an issue with creative tabs not accounting for mods that didnt add a hanging sign for their wood (bad)
+- big notice board cleanup. They now use 3 blockstates instead of tile data making them more responsive
+- Notice boards can accept glow ink and antique ink like any other sign
+- All mod signs  + hanging signs now display text with proper shading, fixing a vanilla issue. This means that text color on signs wont always be the same and will vary just like blocks vary their shade depending on orientation
+- Ill patch normal signs later
+- added a config to disable notice board gui as it kind of doesnt need it
+- fixed blackboard colors in inventory

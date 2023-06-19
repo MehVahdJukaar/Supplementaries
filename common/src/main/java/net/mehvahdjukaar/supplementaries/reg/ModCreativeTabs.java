@@ -40,12 +40,12 @@ public class ModCreativeTabs {
     private static final List<ItemStack> NON_HIDDEN_ITEMS = new ArrayList<>();
 
     public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
-            (RegSupplier<CreativeModeTab>) RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
+            RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
 
     public static final RegSupplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
-            (RegSupplier<CreativeModeTab>) RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
+            RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
                     (c) -> SuppPlatformStuff.searchBar(c)
                             .title(Component.translatable("itemGroup.jars"))
                             .icon(() -> ModRegistry.JAR_ITEM.get().getDefaultInstance()));
@@ -194,8 +194,13 @@ public class ModCreativeTabs {
         if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
             for (var v : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
                 var w = v.getKey();
-                e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.HANGING_SIGNS) &&
-                        w.getBlockOfThis("hanging_sign").asItem() == i.getItem(), v.getValue());
+                e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> {
+                    if (i.is(ItemTags.HANGING_SIGNS)) {
+                        var b = w.getBlockOfThis("hanging_sign");
+                        return b != null && i.is(b.asItem());
+                    }
+                    return false;
+                }, v.getValue());
             }
         }
 
@@ -495,7 +500,7 @@ public class ModCreativeTabs {
 
         CompatHandler.addItemsToTabs(e);
 
-        SYNCED_ADD_TO_TABS.forEach(o->o.accept(e));
+        SYNCED_ADD_TO_TABS.forEach(o -> o.accept(e));
     }
 
     //for supp2. ugly i know but fabric has no load order

@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class RotationTrailParticle extends SimpleAnimatedParticle {
@@ -32,7 +33,7 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         super(clientWorld, x, y, z, sprite, -5.0E-4F);
         this.origin = center;
         this.axis = rotationAxis;
-        this.angularVelocity = (float) (ccw * SPEED * Math.PI / 180f);
+        this.angularVelocity = ccw * SPEED * Mth.DEG_TO_RAD;
         this.radius = radius;
         this.currentAngle = (float) angle;
         this.xd = 0;
@@ -122,7 +123,7 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
             Direction dir = Direction.from3DDataValue((int) direction);
 
 
-            float radAngle = (float) (initialAngle * Math.PI / 180);
+            float radAngle = (float) (initialAngle * Mth.DEG_TO_RAD);
 
             Vec3 axis = MthUtils.V3itoV3(dir.getNormal());
 

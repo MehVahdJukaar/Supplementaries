@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRende
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

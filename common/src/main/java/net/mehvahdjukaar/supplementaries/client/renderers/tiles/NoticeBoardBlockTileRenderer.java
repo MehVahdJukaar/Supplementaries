@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
@@ -17,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -26,6 +29,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +41,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.Locale;
@@ -60,10 +66,6 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
     public int getFrontLight(Level world, BlockPos pos, Direction dir) {
         return LevelRenderer.getLightColor(world, pos.relative(dir));
-    }
-
-    public static boolean getAxis(Direction dir) {
-        return dir == Direction.NORTH || dir == Direction.SOUTH;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             renderNoticeBoardContent(mapRenderer, font, itemRenderer, tile, poseStack, buffer, frontLight, overlay,
                     stack, dir,
-                    () ->new LOD(cameraPos, pos).isNearMed());
+                    () -> new LOD(cameraPos, pos).isNearMed());
 
 
             poseStack.popPose();
@@ -107,7 +109,10 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
     public static void renderNoticeBoardContent(MapRenderer mapRenderer, Font font, ItemRenderer itemRenderer,
                                                 NoticeBoardBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
                                                 int frontLight, int overlay, ItemStack stack, Direction dir,
-                                          BooleanSupplier isNear) {
+                                                BooleanSupplier isNear) {
+
+        if (tile.isGlowing()) frontLight = LightTexture.FULL_BRIGHT;
+
         //render map
         if (stack.getItem() instanceof ComplexItem) {
             MapItemSavedData mapData = MapItem.getSavedData(stack, tile.getLevel());
@@ -138,15 +143,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             poseStack.pushPose();
             poseStack.translate(0, 0.5, 0.008);
 
-            float d0;
-            if (getAxis(dir)) {
-                d0 = 0.8f * 0.7f;
-            } else {
-                d0 = 0.6f * 0.7f;
-            }
-
-
             if (MiscUtils.FESTIVITY.isAprilsFool()) {
+                float d0 = ColorUtil.getShading(dir.step());
                 TextUtils.renderBeeMovie(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;
@@ -154,44 +152,60 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
             if (bookName.equals("credits")) {
+                float d0 = ColorUtil.getShading(dir.step());
                 TextUtils.renderCredits(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;
             }
-            int i = tile.getTextColor().getTextColor();
-            int r = (int) ((double) FastColor.ABGR32.red(i) * d0);
-            int g = (int) ((double) FastColor.ABGR32.green(i) * d0);
-            int b = (int) ((double) FastColor.ABGR32.blue(i) * d0);
-            int i1 = FastColor.ABGR32.color(0, b, g, r);
+            var textProperties = tile.computeRenderProperties(frontLight, dir.step(), isNear);
 
             if (tile.needsVisualUpdate()) {
                 float paperWidth = 1 - (2 * PAPER_X_MARGIN);
                 float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
+                var text = TextUtil.parseText(page);
+                if(text instanceof MutableComponent mc){
+                    text = mc.setStyle(textProperties.style());
+                }else{
+                    text = Component.literal(page).setStyle(textProperties.style());
+                }
                 var p = TextUtil.fitLinesToBox(font,
-                        TextUtil.parseText(page), paperWidth, paperHeight);
+                        text, paperWidth, paperHeight);
                 tile.setFontScale(p.getSecond());
                 tile.setCachedPageLines(p.getFirst());
             }
-            List<FormattedCharSequence> tempPageLines = tile.getCachedPageLines();
+            List<FormattedCharSequence> rendererLines = tile.getRendererLines();
 
             float scale = tile.getFontScale();
             poseStack.scale(scale, -scale, scale);
-            int numberOfLines = tempPageLines.size();
+            int numberOfLines = rendererLines.size();
             boolean centered = ClientConfigs.Blocks.NOTICE_BOARD_CENTERED_TEXT.get();
 
-            for (int lin = 0; lin < numberOfLines; ++lin) {
-                FormattedCharSequence str = tempPageLines.get(lin);
+            //maybe use texture renderer for this so we can use shading (not just block shade)
 
+            boolean missingno = bookName.equals("missingno");
+            for (int lin = 0; lin < numberOfLines; ++lin) {
+                FormattedCharSequence str = rendererLines.get(lin);
                 //border offsets. always add 0.5 to center properly
                 float dx = centered ? (-font.width(str) / 2f) + 0.5f : -(0.5f - PAPER_X_MARGIN) / scale;
-
                 float dy = (((1f / scale) - (8 * numberOfLines)) / 2f) + 0.5f;
-                if (!bookName.equals("missingno")) {
-                    font.drawInBatch(str, dx, dy + 8 * lin, i1, false, poseStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, frontLight);
+                Matrix4f pose = poseStack.last().pose();
+                if (missingno) {
+                    font.drawInBatch("§ka", dx, dy + 8 * lin, textProperties.textColor(), false, pose,
+                            buffer, Font.DisplayMode.NORMAL, 0, frontLight);
                 } else {
-                    font.drawInBatch("§ka", dx, dy + 8 * lin, i1, false, poseStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, frontLight);
+                    if (textProperties.glowing()) {
+                        font.drawInBatch8xOutline(str, dx, dy + 8 * lin, textProperties.textColor(), textProperties.darkenedColor(),
+                                pose, buffer, textProperties.light());
+                    } else {
+                        font.drawInBatch(str, dx, dy + 8 * lin, textProperties.darkenedColor(), false,
+                                pose, buffer, Font.DisplayMode.NORMAL, 0, textProperties.light());
+                    }
                 }
             }
+            //cant use because aligned to left & missingno thing
+            //TextUtil.renderAllLines(rendererLines.toArray(FormattedCharSequence[]::new),8, font,
+            //        poseStack, buffer, textProperties);
+
             poseStack.popPose();
             return;
         }
@@ -203,14 +217,14 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             VertexConsumer builder = pattern.buffer(buffer, RenderType::entityNoOutline);
 
-            int i = tile.getTextColor().getTextColor();
+            int i = tile.getDyeColor().getTextColor();
             float b = (FastColor.ARGB32.blue(i)) / 255f;
             float g = (FastColor.ARGB32.green(i)) / 255f;
             float r = (FastColor.ARGB32.red(i)) / 255f;
-            //if(tile.textHolder.hasGlowingText())combinedLightIn= LightTexture.FULL_BRIGHT;
             int lu = frontLight & '\uffff';
             int lv = frontLight >> 16 & '\uffff';
-            VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, 0.008f, 0.4375F, 0.4375F, 0.008f,
+            poseStack.mulPose(RotHlpr.Y180);
+            VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, -0.008f, 0.4375F, 0.4375F, -0.008f,
                     0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, pattern.sprite());
 
         } else if (!tile.isNormalItem()) {
@@ -218,9 +232,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             poseStack.translate(0, 0, 0.015625 + 0.00005);
             poseStack.scale(-0.5f, 0.5f, -0.5f);
-            itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, buffer, frontLight,
-                    overlay, model);
-            //itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, newl, OverlayTexture.NO_OVERLAY, poseStack, buffer);
+            itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, buffer, frontLight, overlay, model);
         }
 
     }

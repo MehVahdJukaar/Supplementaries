@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -18,12 +17,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ComplexItem;
-import net.minecraft.world.item.MapItem;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-
-import java.util.function.BooleanSupplier;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 
 public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContainerMenu> {
@@ -51,10 +47,10 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
             PoseStack poseStack = graphics.pose();
             poseStack.pushPose();
-            poseStack.translate(this.leftPos + 112, this.topPos+ 41, 1.0F);
-            poseStack.scale(64,-64,-1);
-            if(stack.getItem() instanceof ComplexItem){
-                poseStack.scale(15/16f,15/16f,1);
+            poseStack.translate(this.leftPos + 112, this.topPos + 41, 1.0F);
+            poseStack.scale(64, -64, -1);
+            if (stack.getItem() instanceof ComplexItem) {
+                poseStack.scale(15 / 16f, 15 / 16f, 1);
             }
 
             MapRenderer mr = this.minecraft.gameRenderer.getMapRenderer();
@@ -62,9 +58,8 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
             NoticeBoardBlockTileRenderer.renderNoticeBoardContent(mr, font, minecraft.getItemRenderer(),
                     tile, graphics.pose(), buffer,
-                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, stack, Direction.NORTH, () -> true
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, stack, Direction.UP, () -> true
             );
-
             poseStack.popPose();
         }
     }

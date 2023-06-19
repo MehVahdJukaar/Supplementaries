@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -27,7 +25,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
 
-        ClassNode node = null;
+        ClassNode node;
         try {
             node = MixinService.getService().getBytecodeProvider().getClassNode(mixinClassName);
         } catch (Exception e) {
@@ -38,12 +36,13 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 if (annotationNode.desc.equals("L" + OptionalMixin.class.getName().replace('.', '/') + ";")) {
                     // Access the annotation's values and attributes
                     List<Object> values = annotationNode.values;
-                    boolean needsClass = values.size()<4 || (Boolean) values.get(3);
+                    boolean needsClass = values.size() < 4 || (Boolean) values.get(3);
                     try {
-                        Class.forName(values.get(1).toString());
+                        String name = values.get(1).toString();
+                        MixinService.getService().getBytecodeProvider().getClassNode(name);
                         if (!needsClass) return false;
                     } catch (Exception e) {
-                        //not present
+                        // not present
                         if (needsClass) return false;
                     }
                 }

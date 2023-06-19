@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -132,7 +133,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
             this.tryRotate(world, pos);
     }
 
-    private static Vec3 rotateY(Vec3 vec, double deg) {
+    private static Vec3 rotateY(Vec3 vec, float deg) {
         if (deg == 0)
             return vec;
         if (vec == Vec3.ZERO)
@@ -140,7 +141,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
         double x = vec.x;
         double y = vec.y;
         double z = vec.z;
-        float angle = (float) ((deg / 180f) * Math.PI);
+        float angle = deg * Mth.DEG_TO_RAD;
         double s = Math.sin(angle);
         double c = Math.cos(angle);
         return new Vec3(x * c + z * s, y, z * c - x * s);

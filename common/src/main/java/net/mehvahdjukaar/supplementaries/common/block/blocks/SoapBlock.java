@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 
 public class SoapBlock extends Block {
     public SoapBlock(Properties properties) {
@@ -49,7 +49,7 @@ public class SoapBlock extends Block {
                     float max = 95;
                     float angle = 20 + rand.nextFloat() * (max - min);
                     angle *= rand.nextBoolean() ? -1 : 1;
-                    m = m.yRot((float) (angle * Math.PI / 180f));
+                    m = m.yRot((float) (angle * Mth.DEG_TO_RAD));
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
                     level.blockEvent(pos, state.getBlock(), 0, 0);
                 }
@@ -71,9 +71,9 @@ public class SoapBlock extends Block {
                     m = m.normalize().scale(0.10 + rand.nextFloat() * 0.13F);
                     float min = 22;
                     float max = 95;
-                    float angle = 20 + rand.nextFloat()*(max-min);
-                    angle *= rand.nextBoolean() ? -1 :1;
-                    m = m.yRot((float) (angle*Math.PI/180f));
+                    float angle = 20 + rand.nextFloat() * (max - min);
+                    angle *= rand.nextBoolean() ? -1 : 1;
+                    m = m.yRot(angle * Mth.DEG_TO_RAD);
                     //PACKET HERE
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
                     level.blockEvent(pPos, state.getBlock(), 0, 0);

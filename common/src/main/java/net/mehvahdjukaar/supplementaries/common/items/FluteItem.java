@@ -162,9 +162,8 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
         Vec3 by = new Vec3(0, 1, 0);
         Vec3 bz = new Vec3(0, 0, 1);
 
-        float toRad = (float) (Math.PI / 180f);
-        float xRot = -entity.getXRot() * toRad;
-        float yRot = -Mth.wrapDegrees(entity.yHeadRot) * toRad;
+        float xRot = -entity.getXRot() * Mth.DEG_TO_RAD;
+        float yRot = -Mth.wrapDegrees(entity.yHeadRot) * Mth.DEG_TO_RAD;
         //apply rotation matrix
         bx = bx.xRot(xRot).yRot(yRot);
         by = by.xRot(xRot).yRot(yRot);

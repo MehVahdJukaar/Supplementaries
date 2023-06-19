@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 
 public class SkullCandleOverlayModel extends SkullModelBase {
     private final ModelPart root;
@@ -28,9 +29,9 @@ public class SkullCandleOverlayModel extends SkullModelBase {
     }
 
     @Override
-    public void setupAnim(float p_170950_, float p_103812_, float p_103813_) {
-        this.head.yRot = p_103812_ * ((float)Math.PI / 180F);
-        this.head.xRot = p_103813_ * ((float)Math.PI / 180F);
+    public void setupAnim(float f, float g, float h) {
+        this.head.yRot = g * (Mth.DEG_TO_RAD);
+        this.head.xRot = h * (Mth.DEG_TO_RAD);
     }
 
     @Override

@@ -104,7 +104,7 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
             float angle = r * 22.5f;
             if (angle % 90 == 0) return Direction.fromYRot(angle).getOpposite() == face;
             location = location.subtract(Vec3.atCenterOf(pos));
-            var relative = location.yRot((float) (angle * Math.PI / 180d));
+            var relative = location.yRot(angle * Mth.DEG_TO_RAD);
             if (relative.x < -0.25 || relative.x > 0.25) return false;
             if (relative.z > 0) return false;
         }

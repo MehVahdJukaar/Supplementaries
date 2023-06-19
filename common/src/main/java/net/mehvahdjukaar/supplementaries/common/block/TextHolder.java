@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.*;
@@ -33,12 +34,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-//TODO: base of SignText
 public class TextHolder implements IAntiqueTextProvider {
 
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
@@ -87,21 +88,23 @@ public class TextHolder implements IAntiqueTextProvider {
             this.color = DyeColor.byName(com.getString("color"), DyeColor.BLACK);
             this.hasGlowingText = com.getBoolean("has_glowing_text");
             this.hasAntiqueInk = com.getBoolean("has_antique_ink");
-            var v = compCodec(lines).decode(NbtOps.INSTANCE, com.get("message")).getOrThrow(false, s -> {
-                    })
-                    .getFirst();
-            System.arraycopy(v, 0, messages, 0, v.length);
-            var filtered = com.get("filtered_message");
-            if (filtered != null) {
-                v = compCodec(lines).decode(NbtOps.INSTANCE, filtered).getOrThrow(false, s -> {
+            if (lines != 0) {
+                var v = compCodec(lines).decode(NbtOps.INSTANCE, com.get("message")).getOrThrow(false, s -> {
                         })
                         .getFirst();
-                System.arraycopy(v, 0, filteredMessages, 0, v.length);
-            } else {
-                System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
-            }
-            for(int j= 0; j< renderMessages.length; j++){
-                this.renderMessages[j] = null;
+                System.arraycopy(v, 0, messages, 0, v.length);
+                var filtered = com.get("filtered_message");
+                if (filtered != null) {
+                    v = compCodec(lines).decode(NbtOps.INSTANCE, filtered).getOrThrow(false, s -> {
+                            })
+                            .getFirst();
+                    System.arraycopy(v, 0, filteredMessages, 0, v.length);
+                } else {
+                    System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
+                }
+                for (int j = 0; j < renderMessages.length; j++) {
+                    this.renderMessages[j] = null;
+                }
             }
         }
     }
@@ -111,11 +114,13 @@ public class TextHolder implements IAntiqueTextProvider {
         com.putString("color", this.color.getName());
         com.putBoolean("has_glowing_text", this.hasGlowingText);
         com.putBoolean("has_antique_ink", this.hasAntiqueInk);
-        com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow(false, s -> {
-        }));
-        if (hasFilteredMessage()) {
-            com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow(false, s -> {
+        if (lines != 0) {
+            com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow(false, s -> {
             }));
+            if (hasFilteredMessage()) {
+                com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow(false, s -> {
+                }));
+            }
         }
         compound.put("TextHolder", com);
         return compound;
@@ -292,14 +297,15 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     @Environment(EnvType.CLIENT)
-    public TextUtil.RenderTextProperties getRenderTextProperties(int combinedLight, BooleanSupplier shouldShowGlow) {
-        return new TextUtil.RenderTextProperties(this.getColor(), this.hasGlowingText(), combinedLight,
-                this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY, shouldShowGlow);
+    public TextUtil.RenderProperties computeRenderProperties(int combinedLight, Vector3f normal, BooleanSupplier shouldShowGlow) {
+        return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(), combinedLight,
+                this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
+                normal, shouldShowGlow);
     }
 
     @Environment(EnvType.CLIENT)
-    public TextUtil.RenderTextProperties getGUIRenderTextProperties() {
-        return getRenderTextProperties(LightTexture.FULL_BRIGHT, () -> true);
+    public TextUtil.RenderProperties getGUIRenderTextProperties() {
+        return computeRenderProperties(LightTexture.FULL_BRIGHT, Direction.UP.step(), () -> true);
     }
 
 

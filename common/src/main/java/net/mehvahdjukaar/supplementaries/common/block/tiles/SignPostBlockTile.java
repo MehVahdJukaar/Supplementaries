@@ -88,7 +88,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     public void pointToward(BlockPos targetPos, boolean up) {
         float yaw = (float) (Math.atan2(targetPos.getX() - (double) worldPosition.getX(),
-                targetPos.getZ() - (double) worldPosition.getZ()) * 180d / Math.PI);
+                targetPos.getZ() - (double) worldPosition.getZ()) * Mth.RAD_TO_DEG);
         if (up) {
             this.signUp.setYaw(yaw);
         } else {

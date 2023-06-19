@@ -153,15 +153,16 @@ public class BlackboardManager {
         private static int getTintedColor(TextureAtlasSprite sprite, int x, int y, int offset, int tint) {
             if (sprite == null || sprite.contents().getFrameCount() == 0) return -1;
             int tintR = FastColor.ABGR32.red(tint);
-            int tintG = FastColor.ABGR32.green(tintR);
+            int tintG = FastColor.ABGR32.green(tint);
             int tintB = FastColor.ABGR32.blue(tint);
 
             int pixel = ClientHelper.getPixelRGBA(sprite, 0, Math.min(sprite.contents().width() - 1, x + offset), Math.min(sprite.contents().height() - 1, y));
 
-            int totalB = FastColor.ABGR32.blue(pixel);
-            int totalG = FastColor.ABGR32.green(pixel);
-            int totalR = FastColor.ABGR32.red(pixel);
-            return FastColor.ABGR32.color(255, totalB * tintB / 255, totalG * tintG / 255, totalR * tintR / 255);
+            int totalB = FastColor.ARGB32.blue(pixel);
+            int totalG = FastColor.ARGB32.green(pixel);
+            int totalR = FastColor.ARGB32.red(pixel);
+            //image has them inverted
+            return FastColor.ARGB32.color(255, totalR * tintR / 255,totalG * tintG / 255, totalB * tintB / 255);
         }
 
         @NotNull

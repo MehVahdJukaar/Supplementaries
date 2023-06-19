@@ -33,7 +33,7 @@ public class FeatherParticle extends TextureSheetParticle {
 
     public void setRotOffset(int spriteIndex) {
         int[] offsets = new int[]{-45, 0, 16};
-        this.rotOffset = (float) (offsets[spriteIndex] * Math.PI / 180f);
+        this.rotOffset = offsets[spriteIndex] * Mth.DEG_TO_RAD;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class FeatherParticle extends TextureSheetParticle {
             quaternion = info.rotation();
         } else {
             quaternion = new Quaternionf(info.rotation());
-            float p = (float) (180 / Math.PI);
+            float p = Mth.RAD_TO_DEG;
             float f3 = Mth.rotLerp(partialTicks, (this.rotOffset + this.oRoll) * p,
                     (this.rotOffset + this.roll) * p);
             quaternion.mul(Axis.ZP.rotation(f3 / p));

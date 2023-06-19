@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
 
         matrixStack.translate(0, 3 / 16f, 0);
 
-        float angle = (float) ((-11.25f) * Math.PI / 180f);
+        float angle = (-11.25f) * Mth.DEG_TO_RAD;
         switch (books) {
             default -> {
             }

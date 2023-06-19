@@ -115,7 +115,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
 
     public static Vector2i getHitSubPixel(BlockHitResult hit) {
         Vec3 pos = hit.getLocation();
-        Vec3 v = pos.yRot((float) ((hit.getDirection().toYRot()) * Math.PI / 180f));
+        Vec3 v = pos.yRot((hit.getDirection().toYRot()) * Mth.DEG_TO_RAD);
         double fx = ((v.x % 1) * 16);
         if (fx < 0) fx += 16;
         int x = Mth.clamp((int) fx, -15, 15);

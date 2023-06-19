@@ -24,7 +24,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
@@ -79,13 +81,15 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
-            var textProperties = tile.getTextHolder()
-                    .getRenderTextProperties(combinedLightIn, lod::isVeryNear);
-
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
 
             if (up) {
+                var v = new Vector3f();
+                v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
+                var textProperties = tile.getTextHolder()
+                        .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+
                 poseStack.pushPose();
                 renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
                         lod, signUp, relAngle, textProperties, 0);
@@ -93,6 +97,11 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             }
 
             if (down) {
+                var v = new Vector3f();
+                v.rotateY(signUp.yaw()* Mth.DEG_TO_RAD);
+                var textProperties = tile.getTextHolder()
+                        .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+
                 poseStack.pushPose();
                 poseStack.translate(0, -0.5, 0);
                 renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
@@ -108,7 +117,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                             PoseStack matrixStackIn, MultiBufferSource bufferIn,
                             int combinedLightIn, int combinedOverlayIn, LOD lod,
                             SignPostBlockTile.Sign sign, float relAngle,
-                            TextUtil.RenderTextProperties textProperties, int line) {
+                            TextUtil.RenderProperties textProperties, int line) {
 
         boolean left = sign.left();
         int o = left ? 1 : -1;

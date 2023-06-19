@@ -39,7 +39,7 @@ public class PendulumAnimation extends SwingAnimation {
 
     @Override
     public float getAngle(float partialTicks) {
-        return (float) Math.toDegrees(Mth.lerp(partialTicks, prevAngle, angle));
+        return Mth.RAD_TO_DEG * (Mth.lerp(partialTicks, prevAngle, angle));
     }
 
     @Override
@@ -310,8 +310,8 @@ public class PendulumAnimation extends SwingAnimation {
 
     public static class Config {
         public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.floatRange(0, 360).fieldOf("min_angle").forGetter(c -> (float) Math.toDegrees(c.minAngle)),
-                Codec.floatRange(0, 360).fieldOf("max_angle").forGetter(c -> (float) Math.toDegrees(c.maxAngle)),
+                Codec.floatRange(0, 360).fieldOf("min_angle").forGetter(c -> Mth.RAD_TO_DEG * (c.minAngle)),
+                Codec.floatRange(0, 360).fieldOf("max_angle").forGetter(c -> Mth.RAD_TO_DEG * (c.maxAngle)),
                 Codec.FLOAT.fieldOf("damping").forGetter(c -> c.damping),
                 Codec.FLOAT.fieldOf("frequency").forGetter(c -> c.frequency),
                 Codec.BOOL.fieldOf("collision_considers_entity_hitbox").forGetter(c -> c.considerEntityHitbox),
@@ -335,8 +335,8 @@ public class PendulumAnimation extends SwingAnimation {
 
 
         public Config(float minAngle, float maxAngle, float damping, float frequency, boolean hitbox, float mass, float force) {
-            this.minAngle = (float) Math.toRadians(minAngle);
-            this.maxAngle = (float) Math.toRadians(maxAngle);
+            this.minAngle = minAngle * Mth.DEG_TO_RAD;
+            this.maxAngle = maxAngle * Mth.DEG_TO_RAD;
             this.damping = damping;
             this.frequency = frequency;
             // g/L. L = length = 1 k=g

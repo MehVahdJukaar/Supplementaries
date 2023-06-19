@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
@@ -33,13 +34,20 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay {
+
+    //just used for color
+    private final TextHolder textHolder;
+    private int pageNumber = 0;
+
     //client stuff
     private String text = null;
     private float fontScale = 1;
@@ -48,15 +56,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     private boolean needsVisualRefresh = true;
     private Material cachedPattern = null;
 
-    private boolean powered = false;
-    private int pageNumber = 0;
-
-    private DyeColor textColor = DyeColor.BLACK;
-    // private int packedFrontLight =0;
-    private boolean textVisible = true; //for culling
-
-    //TODO: FINISH THIS!
-    private final TextHolder textHolder;
     private boolean isNormalItem = false;
 
     public NoticeBoardBlockTile(BlockPos pos, BlockState state) {
@@ -158,18 +157,16 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public void load(CompoundTag compound) {
-        this.textColor = DyeColor.byName(compound.getString("Color"), DyeColor.BLACK);
-        this.textVisible = compound.getBoolean("TextVisible");
-        this.pageNumber = compound.getInt("PageNumber");
         super.load(compound);
+        this.pageNumber = compound.getInt("PageNumber");
+        this.textHolder.load(compound);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putString("Color", this.textColor.getName());
-        tag.putBoolean("TextVisible", this.textVisible);
         tag.putInt("PageNumber", this.pageNumber);
+        this.textHolder.save(tag);
     }
 
     @Override
@@ -197,26 +194,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return true;
     }
 
-    //TODO: remove some of these
-    public DyeColor getTextColor() {
-        return this.textColor;
-    }
-
-    public boolean setTextColor(DyeColor newColor) {
-        if (newColor != this.getTextColor()) {
-            this.textColor = newColor;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public boolean shouldSkipTileRenderer() {
-        return !textVisible || !getBlockState().getValue(NoticeBoardBlock.HAS_BOOK);
-    }
-
-    public void setTextVisible(boolean textVisible) {
-        this.textVisible = textVisible;
+        return getBlockState().getValue(NoticeBoardBlock.CULLED) || !getBlockState().getValue(NoticeBoardBlock.HAS_BOOK);
     }
 
     public Material getCachedPattern() {
@@ -225,6 +204,23 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     public String getText() {
         return text;
+    }
+
+    public DyeColor getDyeColor(){
+        return textHolder.getColor();
+    }
+
+    public boolean isGlowing(){
+        return textHolder.hasGlowingText();
+    }
+
+    public boolean hasAntiqueInk(){
+        return textHolder.hasAntiqueInk();
+    }
+
+
+    public TextUtil.RenderProperties computeRenderProperties(int frontLight, Vector3f normal, BooleanSupplier isNear) {
+        return textHolder.computeRenderProperties(frontLight, normal, isNear);
     }
 
     public float getFontScale() {
@@ -239,7 +235,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.cachedPageLines = l;
     }
 
-    public List<FormattedCharSequence> getCachedPageLines() {
+    public List<FormattedCharSequence> getRendererLines() {
         return this.cachedPageLines;
     }
 
@@ -255,28 +251,21 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }
 
-    //server side only
-    public void updatePower(boolean powered) {
-        if (powered != this.powered && powered) {
-            this.pageNumber++;
-            this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
-                    this.level.random.nextFloat() * 0.10F + 1.45F);
-            this.setChanged();
-        }
-        this.powered = powered;
+    public void turnPage() {
+        this.pageNumber++;
+        this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
+                this.level.random.nextFloat() * 0.10F + 1.45F);
+        this.setChanged();
     }
-
 
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
 
         Level level = player.level();
+
+        InteractionResult result = textHolder.playerInteract(level, pos, player, handIn, this);
+        if(result != InteractionResult.PASS) return result;
+
         boolean server = !level.isClientSide;
-
-        //TODO: add text holder
-        //InteractionResult result = textHolder.interactWithPlayer(level, player, handIn, tile::setChanged);
-        //if(result != InteractionResult.PASS) return result;
-
-
         if (player.isShiftKeyDown() && !this.isEmpty()) {
             if (server) {
                 ItemStack it = this.removeItemNoUpdate(0);
@@ -290,10 +279,14 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         //try place or open
         else if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
                 !super.interact(player, handIn).consumesAction()) {
+            if(!CommonConfigs.Building.NOTICE_BOARD_GUI.get()){
+                return InteractionResult.PASS;
+            }
             if (server) {
                 PlatHelper.openCustomMenu((ServerPlayer) player, this, pos);
             }
         }
         return InteractionResult.sidedSuccess(!server);
     }
+
 }

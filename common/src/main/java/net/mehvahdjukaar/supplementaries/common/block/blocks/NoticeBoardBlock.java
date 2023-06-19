@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
@@ -27,15 +28,19 @@ import org.jetbrains.annotations.Nullable;
 public class NoticeBoardBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HAS_BOOK = BlockStateProperties.HAS_BOOK;
+    public static final BooleanProperty CULLED = ModBlockProperties.CULLED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public NoticeBoardBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HAS_BOOK, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                        .setValue(CULLED, false).setValue(POWERED,false)
+                .setValue(FACING, Direction.NORTH).setValue(HAS_BOOK, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HAS_BOOK);
+        builder.add(FACING, HAS_BOOK, CULLED, POWERED);
     }
 
     @Override
@@ -50,7 +55,15 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        Direction dir = context.getHorizontalDirection().getOpposite();
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockPos facingPos = pos.relative(dir);
+        BlockState facingState = level.getBlockState(facingPos);
+        boolean culled = facingState.isSolidRender(level, pos) &&
+                facingState.isFaceSturdy(level, facingPos, dir.getOpposite());
+        boolean powered = level.getBestNeighborSignal(pos) > 0;
+        return this.defaultBlockState().setValue(FACING, dir).setValue(CULLED, culled).setValue(POWERED, powered);
     }
 
     @Override
@@ -86,26 +99,25 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == stateIn.getValue(FACING)) {
-            if (worldIn.getBlockEntity(currentPos) instanceof NoticeBoardBlockTile tile) {
-                //((NoticeBoardBlockTile)te).textVisible = this.skipRendering(stateIn,facingState,facing);
-                boolean culled = facingState.isSolidRender(worldIn, currentPos) &&
-                        facingState.isFaceSturdy(worldIn, facingPos, facing.getOpposite());
-                tile.setTextVisible(!culled);
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+        if (facing == state.getValue(FACING)) {
+            if (level.getBlockEntity(currentPos) instanceof NoticeBoardBlockTile) {
+                boolean culled = facingState.isSolidRender(level, currentPos) &&
+                        facingState.isFaceSturdy(level, facingPos, facing.getOpposite());
+                state = state.setValue(CULLED, culled);
             }
         }
-        return stateIn;
+        return state;
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-                Containers.dropContents(world, pos, tile);
-                world.updateNeighbourForOutputSignal(pos, this);
+            if (level.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
+                Containers.dropContents(level, pos, tile);
+                level.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onRemove(state, world, pos, newState, isMoving);
+            super.onRemove(state, level, pos, newState, isMoving);
         }
     }
 
@@ -126,10 +138,13 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(state, world, pos, pBlock, pFromPos, pIsMoving);
         boolean powered = world.getBestNeighborSignal(pos) > 0;
-        if (world.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-            tile.updatePower(powered);
+        if(powered != state.getValue(POWERED)){
+            world.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
+            //reacts to rising edge
+            if(powered && world.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile){
+                tile.turnPage();
+            }
         }
     }
-
 
 }

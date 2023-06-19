@@ -30,7 +30,7 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(tile.getYaw(partialTicks)));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
 
-        RenderUtil.renderBlockModel(ClientRegistry.WIND_VANE_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,
+        RenderUtil.renderModel(ClientRegistry.WIND_VANE_BLOCK_MODEL, matrixStackIn, bufferIn, blockRenderer,
                 combinedLightIn, combinedOverlayIn, true);
 
         matrixStackIn.popPose();

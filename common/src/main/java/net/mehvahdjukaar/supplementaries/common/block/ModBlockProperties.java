@@ -66,6 +66,7 @@ public class ModBlockProperties {
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");
     public static final BooleanProperty GLOWING = BooleanProperty.create("glowing");
     public static final BooleanProperty WATCHED = BooleanProperty.create("watched");
+    public static final BooleanProperty CULLED = BooleanProperty.create("culled");
 
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
     public static final IntegerProperty OPENING_PROGRESS = IntegerProperty.create("opening_progress", 0, 2);

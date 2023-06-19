@@ -345,4 +345,74 @@ public class BlockUtil {
 
     }
 
+//TODO:
+/*
+    // can be called on both sides
+    // returns the direction onto which the block was actually rotated
+    public static int getRotationComparatorSignal(Direction dir, BlockPos targetPos, Level world, BlockState state) {
+
+        //interface stuff
+        if (state.getBlock() instanceof IRotatable rotatable) {
+            return rotatable.getComparatorRotation(state, world, targetPos, dir);
+        }
+
+        Block block = state.getBlock();
+
+        if (state.hasProperty(ModBlockProperties.FLIPPED)) {
+            return state.getValue(ModBlockProperties.FLIPPED) ? 1: 0;
+        }
+        //horizontal facing blocks -easy
+        if (dir.getAxis() == Direction.Axis.Y) {
+
+            if (block == Blocks.CAKE) {
+                //always faces west
+                return 2;
+            }
+        } else if (state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            return Optional.of(rotateFaceBlockHorizontal(dir, ccw, state));
+        }
+        // 6 dir blocks blocks
+        if (state.hasProperty(BlockStateProperties.FACING)) {
+            return Optional.of(rotateBlockStateOnAxis(state, dir, ccw));
+        }
+        // axis blocks
+        if (state.hasProperty(BlockStateProperties.AXIS)) {
+            Direction.Axis targetAxis = state.getValue(BlockStateProperties.AXIS);
+            Direction.Axis myAxis = dir.getAxis();
+            if (myAxis == Direction.Axis.X) {
+                return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.Z : Direction.Axis.Y));
+            } else if (myAxis == Direction.Axis.Z) {
+                return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
+            }
+        }
+        if (block instanceof StairBlock) {
+            Direction facing = state.getValue(StairBlock.FACING);
+            if (facing.getAxis() == dir.getAxis()) return Optional.empty();
+
+            boolean flipped = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ^ ccw;
+            Half half = state.getValue(StairBlock.HALF);
+            boolean top = half == Half.TOP;
+            boolean positive = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE;
+
+            if ((top ^ positive) ^ flipped) {
+                half = top ? Half.BOTTOM : Half.TOP;
+            } else {
+                facing = facing.getOpposite();
+            }
+
+            return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
+        }
+        if (state.hasProperty(SlabBlock.TYPE)) {
+            SlabType type = state.getValue(SlabBlock.TYPE);
+            if (type == SlabType.DOUBLE) return Optional.empty();
+            return Optional.of(state.setValue(SlabBlock.TYPE, type == SlabType.BOTTOM ? SlabType.TOP : SlabType.BOTTOM));
+        }
+        if (state.hasProperty(TrapDoorBlock.HALF)) {
+            return Optional.of(state.cycle(TrapDoorBlock.HALF));
+        }
+
+
+
+    }*/
+
 }

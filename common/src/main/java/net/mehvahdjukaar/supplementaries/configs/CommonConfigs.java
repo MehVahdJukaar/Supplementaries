@@ -294,6 +294,8 @@ public class CommonConfigs {
             NOTICE_BOARD_ENABLED = feature(builder);
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("Allows notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
+            NOTICE_BOARD_GUI = builder.comment("Enables a GUI for the block. Not needed as the block just holds one item which you can place by clicking on it")
+                            .define("gui", true);
             builder.pop();
 
             builder.push("pedestal");
@@ -399,6 +401,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> NOTICE_BOARD_ENABLED;
         public static final Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
+        public static final Supplier<Boolean> NOTICE_BOARD_GUI;
 
         public static final Supplier<Boolean> FLAG_ENABLED;
         public static final Supplier<Boolean> FLAG_POLE;
