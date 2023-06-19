@@ -749,12 +749,11 @@ public class ModRegistry {
     public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(
             15, ModSounds.PANCAKE_MUSIC.get(), new Item.Properties(), 3 * 60 + 48));
     //pancakes
-    public static final Supplier<Block> PANCAKE = regPlaceableItem(PANCAKE_NAME, () -> new PancakeBlock(
+    public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
                     BlockBehaviour.Properties.copy(Blocks.CAKE)
                             .mapColor(MapColor.TERRACOTTA_ORANGE)
                             .strength(0.5F)
-                            .sound(SoundType.WOOL)),
-            PANCAKE_ITEM, () -> true
+                            .sound(SoundType.WOOL))
     );
 
     //flax

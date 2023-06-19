@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.fabricmc.api.EnvType;
@@ -18,8 +19,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ExtraCodecs;
@@ -39,6 +43,8 @@ import org.joml.Vector3f;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+
+import static net.minecraft.world.level.block.entity.SignBlockEntity.createCommandSourceStack;
 
 public class TextHolder implements IAntiqueTextProvider {
 
@@ -82,22 +88,18 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     //removing command source crap
-    public void load(CompoundTag compound) {
+    public void load(CompoundTag compound, Level level, BlockPos pos) {
         if (compound.contains("TextHolder")) {
             CompoundTag com = compound.getCompound("TextHolder");
             this.color = DyeColor.byName(com.getString("color"), DyeColor.BLACK);
             this.hasGlowingText = com.getBoolean("has_glowing_text");
             this.hasAntiqueInk = com.getBoolean("has_antique_ink");
             if (lines != 0) {
-                var v = compCodec(lines).decode(NbtOps.INSTANCE, com.get("message")).getOrThrow(false, s -> {
-                        })
-                        .getFirst();
+                var v = decodeMessage(com.get("message"), level, pos);
                 System.arraycopy(v, 0, messages, 0, v.length);
                 var filtered = com.get("filtered_message");
                 if (filtered != null) {
-                    v = compCodec(lines).decode(NbtOps.INSTANCE, filtered).getOrThrow(false, s -> {
-                            })
-                            .getFirst();
+                    v = decodeMessage(filtered, level, pos);
                     System.arraycopy(v, 0, filteredMessages, 0, v.length);
                 } else {
                     System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
@@ -108,6 +110,22 @@ public class TextHolder implements IAntiqueTextProvider {
             }
         }
     }
+
+    private Component[] decodeMessage(Tag com, Level level, BlockPos pos) {
+        return Arrays.stream(compCodec(lines).decode(NbtOps.INSTANCE, com).getOrThrow(false, s -> {
+                })
+                .getFirst()).map(c -> {
+            if (level instanceof ServerLevel sl) {
+                try {
+                    return ComponentUtils.updateForEntity(createCommandSourceStack(null, sl, pos),
+                            c, null, 0);
+                } catch (CommandSyntaxException ignored) {
+                }
+            }
+            return c;
+        }).toArray(Component[]::new);
+    }
+
 
     public CompoundTag save(CompoundTag compound) {
         CompoundTag com = new CompoundTag();
@@ -309,4 +327,16 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
 
+    //takes text filtering into account
+    public void acceptClientMessages(Player player, List<FilteredText> list) {
+        for (int i = 0; i < list.size(); ++i) {
+            FilteredText filteredText = list.get(i);
+            Style style = this.getMessage(i, player.isTextFilteringEnabled()).getStyle();
+            if (player.isTextFilteringEnabled()) {
+                this.setMessage(i, Component.literal(filteredText.filteredOrEmpty()).setStyle(style));
+            } else {
+                this.setMessage(i, Component.literal(filteredText.raw()).setStyle(style), Component.literal(filteredText.filteredOrEmpty()).setStyle(style));
+            }
+        }
+    }
 }

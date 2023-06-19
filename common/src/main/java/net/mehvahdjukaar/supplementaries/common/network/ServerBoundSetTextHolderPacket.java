@@ -3,64 +3,72 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
-import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Stream;
 
 //TODO: move to lib
 public class ServerBoundSetTextHolderPacket implements Message {
     private final BlockPos pos;
-    public final Component[] signText;
+    private final int index;
+    public final String[] lines;
     public final int size;
 
     public ServerBoundSetTextHolderPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.size = buf.readInt();
-        this.signText = new Component[this.size];
+        this.index = buf.readVarInt();
+        this.size = buf.readVarInt();
+        this.lines = new String[this.size];
         for (int i = 0; i < this.size; ++i) {
-            this.signText[i] = buf.readComponent();
+            this.lines[i] = buf.readUtf();
         }
     }
 
-    public ServerBoundSetTextHolderPacket(BlockPos pos, TextHolder textHolder) {
+    public ServerBoundSetTextHolderPacket(BlockPos pos, int index, String[] lines) {
         this.pos = pos;
-        this.size = textHolder.size();
-        this.signText = textHolder.getMessages(true);
+        this.size = lines.length;
+        this.lines = lines;
+        this.index = index;
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeInt(this.size);
+        buf.writeVarInt(this.index);
+        buf.writeVarInt(this.size);
         for (int i = 0; i < this.size; ++i) {
-            buf.writeComponent(this.signText[i]);
+            buf.writeUtf(this.lines[i]);
         }
     }
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        // server world
-        Level world = Objects.requireNonNull(context.getSender()).level();
-
-        BlockPos pos = this.pos;
-        BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof ITextHolderProvider te) {
-            if (te.getTextHolder().size() == this.size) {
-                for (int i = 0; i < this.size; ++i) {
-                    te.getTextHolder().setMessage(i, this.signText[i]);
-                }
-            }
-            //updates client
-            BlockState state = world.getBlockState(pos);
-            world.sendBlockUpdated(pos, state, state, 3);
-            tile.setChanged();
-        }
-
+        // text filtering yay
+        List<String> list = Stream.of(lines).map(ChatFormatting::stripFormatting).toList();
+        ServerPlayer sender = (ServerPlayer) context.getSender();
+        sender.connection.filterTextPacket(list).thenAcceptAsync((l) -> {
+            this.updateSignText(sender, l);
+        }, sender.server);
     }
+
+
+    private void updateSignText(ServerPlayer player, List<FilteredText> filteredText) {
+        player.resetLastActionTime();
+        Level level = player.level();
+
+        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof ITextHolderProvider te) {
+            if (te.tryAcceptingClientText(this.index, player, filteredText)) {
+                BlockEntity be = (BlockEntity) te;
+                level.sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
+            }
+        }
+    }
+
 }

@@ -72,7 +72,6 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
     public void render(NoticeBoardBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer,
                        int combinedLightIn, int overlay) {
 
-        //TODO: rewrite
         if (!tile.shouldSkipTileRenderer()) {
             Level level = tile.getLevel();
             if (level == null) return;
@@ -87,7 +86,6 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             BlockPos pos = tile.getBlockPos();
             if (LOD.isOutOfFocus(cameraPos, pos, yaw)) return;
 
-            //TODO: fix book with nothing in it
             int frontLight = this.getFrontLight(level, pos, dir);
 
             poseStack.pushPose();
@@ -98,7 +96,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             renderNoticeBoardContent(mapRenderer, font, itemRenderer, tile, poseStack, buffer, frontLight, overlay,
                     stack, dir,
-                    () -> new LOD(cameraPos, pos).isNearMed());
+                    new LOD(cameraPos, pos));
 
 
             poseStack.popPose();
@@ -109,7 +107,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
     public static void renderNoticeBoardContent(MapRenderer mapRenderer, Font font, ItemRenderer itemRenderer,
                                                 NoticeBoardBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
                                                 int frontLight, int overlay, ItemStack stack, Direction dir,
-                                                BooleanSupplier isNear) {
+                                                LOD lod) {
 
         if (tile.isGlowing()) frontLight = LightTexture.FULL_BRIGHT;
 
@@ -136,7 +134,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         String page = tile.getText();
         if (!(page == null || page.equals(""))) {
 
-            if (!isNear.getAsBoolean()) {
+            if (!lod.isNearMed()) {
                 return;
             }
 
@@ -157,7 +155,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 poseStack.popPose();
                 return;
             }
-            var textProperties = tile.computeRenderProperties(frontLight, dir.step(), isNear);
+            var textProperties = tile.computeRenderProperties(frontLight, dir.step(), lod::isVeryNear);
 
             if (tile.needsVisualUpdate()) {
                 float paperWidth = 1 - (2 * PAPER_X_MARGIN);
@@ -214,13 +212,12 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
         Material pattern = tile.getCachedPattern();
         if (pattern != null) {
-
-            VertexConsumer builder = pattern.buffer(buffer, RenderType::entityNoOutline);
-
-            int i = tile.getDyeColor().getTextColor();
-            float b = (FastColor.ARGB32.blue(i)) / 255f;
-            float g = (FastColor.ARGB32.green(i)) / 255f;
-            float r = (FastColor.ARGB32.red(i)) / 255f;
+            VertexConsumer builder = pattern.buffer(buffer, RenderType::entityTranslucent);
+            int i =  tile.getDyeColor().getTextColor();
+            float scale = 0.8f;//so its more similar to text. idk why its needed
+            float b =scale* (FastColor.ARGB32.blue(i)) / 255f;
+            float g = scale*(FastColor.ARGB32.green(i)) / 255f;
+            float r = scale*(FastColor.ARGB32.red(i)) / 255f;
             int lu = frontLight & '\uffff';
             int lv = frontLight >> 16 & '\uffff';
             poseStack.mulPose(RotHlpr.Y180);

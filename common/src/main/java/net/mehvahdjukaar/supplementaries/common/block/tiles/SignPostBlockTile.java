@@ -52,7 +52,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
-
+//TODO:waxed
     private boolean waxed = false;
     private UUID owner = null;
     private boolean isSlim = false;
@@ -200,6 +200,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.left = compound.getBoolean("Left");
             this.yaw = compound.getFloat("Yaw");
             this.woodType = WoodTypeRegistry.fromNBT(compound.getString("WoodType"));
+            this.text.load(compound);
         }
 
         public CompoundTag save() {
@@ -208,6 +209,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             compound.putBoolean("Left", this.left);
             compound.putBoolean("Active", this.active);
             compound.putString("WoodType", this.woodType.toString());
+            this.text.save(compound);
             return compound;
         }
 

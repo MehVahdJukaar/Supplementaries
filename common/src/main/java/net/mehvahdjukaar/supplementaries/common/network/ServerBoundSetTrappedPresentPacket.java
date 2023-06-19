@@ -34,19 +34,19 @@ public class ServerBoundSetTrappedPresentPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        // server world
+        // server level
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
-        Level world = player.level();
+        Level level = player.level();
 
-        if (world.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
+        if (level.hasChunkAt(pos) && level.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
             //TODO: sound here
 
             present.updateState(this.packed);
 
-            BlockState state = world.getBlockState(pos);
+            BlockState state = level.getBlockState(pos);
             present.setChanged();
             //also sends new block to clients. maybe not needed since blockstate changes
-            world.sendBlockUpdated(pos, state, state, 3);
+            level.sendBlockUpdated(pos, state, state, 3);
 
             //if I'm packing also closes the gui
             if (this.packed) {

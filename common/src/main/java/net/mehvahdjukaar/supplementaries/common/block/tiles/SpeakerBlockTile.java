@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -16,18 +17,21 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected {
     private UUID owner = null;
 
-    private String message = "";
+    private Component message = Component.empty();
+    private Component filteredMessage = Component.empty();
     private Mode mode = Mode.CHAT;
     //distance in blocks
     private double volume = CommonConfigs.Redstone.SPEAKER_RANGE.get();
@@ -65,16 +69,21 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         return mode;
     }
 
-    public String getMessage() {
-        return message;
+    public Component getMessage(boolean filtered) {
+        return filtered ? filteredMessage : message;
     }
 
     public void setMode(Mode mode) {
         this.mode = mode;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Component message) {
+        this.setMessage(message, message);
+    }
+
+    public void setMessage(Component message, Component filteredMessage) {
         this.message = message;
+        this.filteredMessage = filteredMessage;
     }
 
     public void setVolume(double volume) {
@@ -88,7 +97,10 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
         }
 
-        this.message = compound.getString("Message");
+        this.message = Component.Serializer.fromJson(compound.getString("Message"));
+        if(compound.contains("FilteredMessage")){
+            this.filteredMessage = Component.Serializer.fromJson(compound.getString("FilteredMessage"));
+        }else filteredMessage = message;
         var m = Mode.values()[compound.getInt("Mode")];
         if (m == Mode.NARRATOR && !CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) m = Mode.CHAT;
         this.mode = m;
@@ -102,12 +114,15 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         if (this.customName != null) {
             compound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
-        compound.putString("Message", this.message);
+        compound.putString("Message", Component.Serializer.toJson(this.message));
+        if(this.message != this.filteredMessage){
+            compound.putString("FilteredMessage", Component.Serializer.toJson( this.filteredMessage));
+        }
         compound.putInt("Mode", this.mode.ordinal());
         compound.putDouble("Volume", this.volume);
         this.saveOwner(compound);
     }
-
+//TODO: Check for owner on server
     public void sendMessage() {
         BlockState state = this.getBlockState();
 
@@ -154,6 +169,30 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
+
+    public void tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
+        if (player.getUUID().equals(this.getPlayerWhoMayEdit())) {
+            this.acceptClientMessages(player, filteredText);
+            this.setAllowedPlayerEditor(null);
+            level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+            this.setChanged();
+        } else {
+            Supplementaries.LOGGER.warn("Player {} just tried to change non-editable speaker block",
+                    player.getName().getString());
+        }
+    }
+
+    //TODO: presents too
+    //takes text filtering into account
+    private void acceptClientMessages(Player player, FilteredText filteredText) {
+        Style style = this.getMessage(player.isTextFilteringEnabled()).getStyle();
+        if (player.isTextFilteringEnabled()) {
+            this.setMessage(Component.literal(filteredText.filteredOrEmpty()).setStyle(style));
+        } else {
+            this.setMessage(Component.literal(filteredText.raw()).setStyle(style), Component.literal(filteredText.filteredOrEmpty()).setStyle(style));
+        }
+    }
+
 
     public enum Mode {
         CHAT,

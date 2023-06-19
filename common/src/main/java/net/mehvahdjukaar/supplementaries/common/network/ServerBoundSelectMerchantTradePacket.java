@@ -26,9 +26,6 @@ public class ServerBoundSelectMerchantTradePacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        // server world
-        //ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER
-
         AbstractContainerMenu container = context.getSender().containerMenu;
 
         int i = this.item;

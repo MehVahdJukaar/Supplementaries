@@ -116,7 +116,7 @@ public class SignPostScreen extends Screen {
     @Override
     public void removed() {
         // send new text to the server
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(), this.tile.getTextHolder()));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(), cachedLines));
     }
 
     private void close() {
@@ -140,7 +140,7 @@ public class SignPostScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        Lighting.setupForFlatItems(); //TODO why this here ??
+        Lighting.setupForFlatItems();
         this.renderBackground(graphics);
 
         super.render(graphics, mouseX, mouseY, partialTicks);

@@ -39,12 +39,12 @@ public class ServerBoundSetBlackboardPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
 
-        // server world
-        Level world = Objects.requireNonNull(context.getSender()).level();
+        // server level
+        Level level = Objects.requireNonNull(context.getSender()).level();
 
         BlockPos pos = this.pos;
-        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
-            world.playSound(null, this.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
+        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
+            level.playSound(null, this.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
             board.setPixels(this.pixels);
             //updates client
             //set changed also sends a block update

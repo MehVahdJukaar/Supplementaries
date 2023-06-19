@@ -39,19 +39,20 @@ public class ServerBoundRequestMapDataPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        // server world
-        Level world = Objects.requireNonNull(context.getSender()).level();
+        // server level
+        Level level = Objects.requireNonNull(context.getSender()).level();
 
-        if (world instanceof ServerLevel) {
-            Player player = world.getPlayerByUUID(this.id);
-            if (player instanceof ServerPlayer serverPlayer && world.getBlockEntity(this.pos) instanceof IMapDisplay tile) {
+        if (level instanceof ServerLevel) {
+            Player player = level.getPlayerByUUID(this.id);
+            if (player instanceof ServerPlayer serverPlayer && level.hasChunkAt(pos) &&
+                    level.getBlockEntity(this.pos) instanceof IMapDisplay tile) {
                 ItemStack stack = tile.getMapStack();
                 if (stack.getItem() instanceof MapItem map) {
-                    MapItemSavedData data = MapItem.getSavedData(stack, world);
+                    MapItemSavedData data = MapItem.getSavedData(stack, level);
                     if (data != null) {
                         data.tickCarriedBy(player, stack);
-                        map.update(world, player, data);
-                        Packet<?> updatePacket = map.getUpdatePacket(stack, world, player);
+                        map.update(level, player, data);
+                        Packet<?> updatePacket = map.getUpdatePacket(stack, level, player);
                         if (updatePacket != null) {
                             serverPlayer.connection.send(updatePacket);
                         }
