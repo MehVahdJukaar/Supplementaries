@@ -1,1 +1,2 @@
-- fixed yet anothe recent server issue. pls no more bugs now i dont want to touch this version ever again
+- improved turn table logic. this makes them work better speicifcally with quark magnets
+- improved tipped spikes player loot option, preventing mobs to target the spike fake player or it gaining advancements

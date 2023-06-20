@@ -19,6 +19,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -83,7 +86,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
-            return new ModDamageSources.SpikePlayer("spike", FakePlayerManager.getDefault(level)).setProjectile();
+            ServerPlayer player = (ServerPlayer) FakePlayerManager.getDefault(level);
+            player.getAdvancements().stopListening(); //very cheaty. prevents advancements to trigger
+            player.setPos(0,0,0);
+            return new ModDamageSources.SpikePlayer("spike",
+                    player).setProjectile();
         }
         return ModDamageSources.SPIKE_DAMAGE;
     }
