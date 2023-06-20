@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -50,19 +51,10 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
 
-        if (!level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
             ItemStack itemstack = player.getItemInHand(handIn);
-            Item item = itemstack.getItem();
-
-            //put post on map
-            if (item instanceof MapItem) {
-                if (MapItem.getSavedData(itemstack, level) instanceof ExpandedMapData data) {
-                    data.toggleCustomDecoration(level, pos);
-                }
-                return InteractionResult.CONSUME;
-            }
             if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
-                return tile.handleInteraction(state, level, pos, player, handIn, hit, itemstack, item, tile);
+                return tile.handleInteraction(state, serverLevel, pos, player, handIn, hit, itemstack);
             }
             return InteractionResult.PASS;
         } else {
@@ -75,8 +67,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     @PlatformOnly(PlatformOnly.FORGE)
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
-            boolean up = tile.getClickedSign(target.getLocation());
-            var sign = tile.getSign(up);
+            var sign = tile.getClickedSign(target.getLocation());
             if (sign.active()) {
                 return sign.getItem();
             } else return new ItemStack(tile.getHeldBlock().getBlock());

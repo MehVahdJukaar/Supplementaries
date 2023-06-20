@@ -8,10 +8,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
 
+//all client stuff
 public abstract class SwingAnimation {
 
    private final Function<BlockState, Vec3i> axisGetter;
-   //all client stuff
    protected float angle = 0;
    protected float prevAngle = 0;
 

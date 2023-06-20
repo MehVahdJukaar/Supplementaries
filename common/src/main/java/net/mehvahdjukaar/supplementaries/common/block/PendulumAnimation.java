@@ -2,7 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.fluids.FoodProvider;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -11,6 +14,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -32,8 +36,11 @@ public class PendulumAnimation extends SwingAnimation {
         super(axisGetter);
         this.config = config;
         Config c = config.get();
-        this.angle = (RAND.nextFloat() - 0.5f) * c.minAngle * 2;
-        this.angularVel = capVelocity(c.k, 1000, angle, c.minAngleEnergy);
+        //better check for null. idk why but causes issues on server thread in dedicated client
+        if (c != null) {
+            this.angle = (RAND.nextFloat() - 0.5f) * c.minAngle * 2;
+            this.angularVel = capVelocity(c.k, 1000, angle, c.minAngleEnergy);
+        }
     }
 
 

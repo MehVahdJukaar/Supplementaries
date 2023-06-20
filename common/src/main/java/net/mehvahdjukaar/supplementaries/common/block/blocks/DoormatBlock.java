@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -36,7 +34,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class DoormatBlock extends WaterBlock implements EntityBlock{
+public class DoormatBlock extends WaterBlock implements EntityBlock {
 
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
     protected static final VoxelShape SHAPE_WEST = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 1.0D, 16.0D);
@@ -50,7 +48,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if(!level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
             if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
 
                 ItemStack itemstack = player.getItemInHand(handIn);
@@ -78,17 +76,17 @@ public class DoormatBlock extends WaterBlock implements EntityBlock{
                     return InteractionResult.CONSUME;
                 }
                 //color
-                InteractionResult result = tile.textHolder.playerInteract(level, pos, player, handIn, tile);
+
+                InteractionResult result = tile.textHolder.playerInteract(serverLevel, pos, player, handIn, tile);
                 if (result != InteractionResult.PASS) {
                     return result;
                 }
-                // open gui (edit sign with empty hand)
-                tile.sendOpenGuiPacket(level, pos, player);
-                return InteractionResult.CONSUME;
+                if (tile.tryOpeningEditGui(player, pos)) {
+                    return InteractionResult.CONSUME;
+                }
             }
             return InteractionResult.PASS;
-        }
-        else{
+        } else {
             return InteractionResult.SUCCESS;
         }
     }

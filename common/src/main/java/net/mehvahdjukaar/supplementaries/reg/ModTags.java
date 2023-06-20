@@ -35,7 +35,8 @@ public class ModTags {
     public static final TagKey<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
-    public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable");
+    public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable_recursive");
+    public static final TagKey<Block> BRICK_BREAKABLE_POTS = blockTag("brick_breakable");
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
     public static final TagKey<Block> WALL_LANTERNS_BLACKLIST = blockTag("wall_lanterns_blacklist");
     public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");

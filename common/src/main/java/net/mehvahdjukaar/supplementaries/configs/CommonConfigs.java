@@ -161,12 +161,16 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("pulley_block");
-
             PULLEY_ENABLED = feature(builder);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
                     .define("mineshaft_elevator", 0.02, 0, 1);
             builder.pop();
 
+            builder.push("dispenser_minecart");
+            DISPENSER_MINECART_ENABLED = feature(builder);
+            DISPENSER_MINECART_FRONT = builder.comment("Dispenser minecarts will have their dispenser facing forward instead of up")
+                    .define("face_forward", false);
+            builder.pop();
 
             WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
@@ -177,7 +181,6 @@ public class CommonConfigs {
             GOLD_DOOR_ENABLED = feature(builder, ModConstants.GOLD_DOOR_NAME);
             GOLD_TRAPDOOR_ENABLED = feature(builder, ModConstants.GOLD_TRAPDOOR_NAME);
             LOCK_BLOCK_ENABLED = feature(builder, ModConstants.LOCK_BLOCK_NAME);
-            DISPENSER_MINECART_ENABLED = feature(builder, ModConstants.DISPENSER_MINECART_NAME);
             CRYSTAL_DISPLAY_ENABLED = feature(builder, ModConstants.CRYSTAL_DISPLAY_NAME);
             RELAYER_ENABLED = feature(builder, ModConstants.RELAYER_NAME);
 
@@ -226,6 +229,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
 
         public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
+        public static final Supplier<Boolean> DISPENSER_MINECART_FRONT;
 
         public static final Supplier<Boolean> RELAYER_ENABLED;
 
@@ -882,7 +886,7 @@ public class CommonConfigs {
                     .define("mod_blacklist", modBlacklist);
             FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
                             "Additionally if they fall from high enough they will break creating a fire where they land")
-                    .define("fallin_lanterns", LightableLanternBlock.FallMode.ON);
+                    .define("falling_lanterns", LightableLanternBlock.FallMode.ON);
             builder.pop();
             //bells
             builder.push("bells_tweaks");

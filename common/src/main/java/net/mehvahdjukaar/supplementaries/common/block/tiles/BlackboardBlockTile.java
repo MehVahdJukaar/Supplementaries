@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
+import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
@@ -24,13 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
-        IScreenProvider, IExtraModelDataProvider {
+        IOnePlayerGui, IWaxable, IExtraModelDataProvider {
 
     public static final ModelDataKey<Key> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
     private UUID owner = null;
     private boolean waxed = false;
     private byte[][] pixels = new byte[16][16];
+    @Nullable
+    private UUID playerWhoMayEdit = null;
 
     //client side
     private Key textureKey = null;
@@ -265,11 +269,23 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
 
+    @Override
     public void setWaxed(boolean b) {
         this.waxed = b;
     }
 
+    @Override
     public boolean isWaxed() {
         return this.waxed;
+    }
+
+    @Override
+    public UUID getPlayerWhoMayEdit() {
+        return playerWhoMayEdit;
+    }
+
+    @Override
+    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
     }
 }

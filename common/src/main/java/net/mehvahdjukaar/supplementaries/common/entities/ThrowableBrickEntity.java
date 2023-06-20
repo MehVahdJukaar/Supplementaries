@@ -87,7 +87,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
             }
             if (!(entity instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatHelper.isMobGriefingOn(level, this)) {
 
-                if (level.getBlockState(pos).getBlock() instanceof JarBlock) {
+                if (level.getBlockState(pos).is(ModTags.BRICK_BREAKABLE_POTS)) {
                     level.destroyBlock(pos, true);
                 } else {
                     breakGlass(pos, 6);

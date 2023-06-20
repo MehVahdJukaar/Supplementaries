@@ -99,7 +99,9 @@ public class BlockUtil {
                 if (rotated != state) {
                     if (world instanceof ServerLevel) {
                         world.setBlock(targetPos, rotated, 11);
-                        //level.updateNeighborsAtExceptFromFacing(pos, newState.getBlock(), mydir.getOpposite());
+                        //also needs to call neighbor changed
+                        //copied from rail. calls neighbor updated. we need both this and updatefromneighbor
+                        world.neighborChanged(rotated, targetPos, rotated.getBlock(), targetPos, false);
                     }
                     return Optional.of(dir);
                 }

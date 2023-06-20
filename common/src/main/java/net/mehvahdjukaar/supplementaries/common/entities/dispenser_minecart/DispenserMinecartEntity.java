@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
 
     private static final BlockState BLOCK_STATE = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.UP);
+    private static final BlockState BLOCK_STATE_FRONT = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.NORTH);
 
     private final MovingDispenserBlockEntity dispenser;
 
@@ -54,7 +56,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     public DispenserMinecartEntity(EntityType<DispenserMinecartEntity> entityType, Level level) {
         super(entityType, level);
-        this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, BLOCK_STATE, this);
+        BlockState state = CommonConfigs.Redstone.DISPENSER_MINECART_FRONT.get() ? BLOCK_STATE_FRONT : BLOCK_STATE;
+        this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, state, this);
     }
 
     @Override

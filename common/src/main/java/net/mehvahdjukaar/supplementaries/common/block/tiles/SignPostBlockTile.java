@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
@@ -17,14 +18,13 @@ import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -34,8 +34,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -48,17 +48,18 @@ import java.util.UUID;
 
 public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
 
-    public static final ModelDataKey<Boolean> FRAMED = ModBlockProperties.FRAMED;
+    public static final ModelDataKey<Boolean> FRAMED_KEY = ModBlockProperties.FRAMED;
 
     private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
-//TODO:waxed
-    private boolean waxed = false;
+    private boolean isWaxed = false;
     private UUID owner = null;
     private boolean isSlim = false;
 
     //is holding a framed fence (for framed blocks mod compat)
     private boolean framed = false;
+    @Nullable
+    private UUID playerWhoMayEdit;
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
@@ -68,7 +69,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(FRAMED, this.framed)
+                .with(FRAMED_KEY, this.framed)
                 .with(MIMIC_KEY, this.getHeldBlock())
                 .build();
     }
@@ -86,16 +87,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 pos.getX() + 1.25, pos.getY() + 1d, pos.getZ() + 1.25);
     }
 
-    public void pointToward(BlockPos targetPos, boolean up) {
-        float yaw = (float) (Math.atan2(targetPos.getX() - (double) worldPosition.getX(),
-                targetPos.getZ() - (double) worldPosition.getZ()) * Mth.RAD_TO_DEG);
-        if (up) {
-            this.signUp.setYaw(yaw);
-        } else {
-            this.signDown.setYaw(yaw);
-        }
-    }
-
     public float getPointingYaw(boolean up) {
         if (up) {
             return this.signUp.getPointing();
@@ -108,10 +99,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public void load(CompoundTag compound) {
         super.load(compound);
         this.framed = compound.getBoolean("Framed");
-        this.signUp.load(compound.getCompound("SignUp"));
-        this.signDown.load(compound.getCompound("SignDown"));
+        this.signUp.load(compound.getCompound("SignUp"), this.level, this.worldPosition);
+        this.signDown.load(compound.getCompound("SignDown"), this.level, this.worldPosition);
         this.loadOwner(compound);
         this.isSlim = this.mimic.getBlock() instanceof StickBlock;
+        if (compound.contains("Waxed")) {
+            this.isWaxed = compound.getBoolean("Waxed");
+        }
     }
 
     @Override
@@ -121,6 +115,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         compound.put("SignUp", this.signUp.save());
         compound.put("SignDown", this.signDown.save());
         this.saveOwner(compound);
+        if (isWaxed) compound.putBoolean("Waxed", isWaxed);
     }
 
     @Nullable
@@ -180,7 +175,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return framed;
     }
 
-    public static final class Sign extends SignText {
+    public static final class Sign {
         public final TextHolder text;
         private boolean active;
         private boolean left;
@@ -195,12 +190,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.text = new TextHolder(1, 90);
         }
 
-        public void load(CompoundTag compound) {
+        public void load(CompoundTag compound, Level level, BlockPos pos) {
             this.active = compound.getBoolean("Active");
             this.left = compound.getBoolean("Left");
             this.yaw = compound.getFloat("Yaw");
             this.woodType = WoodTypeRegistry.fromNBT(compound.getString("WoodType"));
-            this.text.load(compound);
+            this.text.load(compound, level, pos);
         }
 
         public CompoundTag save() {
@@ -211,6 +206,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             compound.putString("WoodType", this.woodType.toString());
             this.text.save(compound);
             return compound;
+        }
+
+        public void pointToward(BlockPos myPos, BlockPos targetPos) {
+            float yaw = (float) (Math.atan2(targetPos.getX() - (double) myPos.getX(),
+                    targetPos.getZ() - (double) myPos.getZ()) * Mth.RAD_TO_DEG);
+            this.setYaw(yaw);
         }
 
         private float getPointing() {
@@ -278,20 +279,35 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return false;
     }
 
-    public InteractionResult handleInteraction(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit, ItemStack itemstack, Item item, SignPostBlockTile tile) {
+    public InteractionResult handleInteraction(BlockState state, ServerLevel level, BlockPos pos, Player player,
+                                               InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
+        Item item = itemstack.getItem();
+
+        //put post on map
+        if (item instanceof MapItem) {
+            //this needed? TODO: CHECK
+            if (MapItem.getSavedData(itemstack, level) instanceof ExpandedMapData data) {
+                //   data.toggleCustomDecoration(level, pos);
+            }
+            //return InteractionResult.CONSUME;
+        }
+
         boolean emptyHand = itemstack.isEmpty();
         boolean isSneaking = player.isShiftKeyDown() && emptyHand;
 
         if (hit.getDirection().getAxis() != Direction.Axis.Y) {
 
-            InteractionResult result = tile.getTextHolder().playerInteract(level, pos, player, handIn, tile);
+            Sign sign = getClickedSign(hit.getLocation());
+
+            InteractionResult result = sign.text.playerInteract(level, pos, player, handIn, this);
             if (result != InteractionResult.PASS) return result;
 
             //sneak right click rotates the sign on z axis
-            if (isSneaking) {
-                tile.getSign(getClickedSign(hit.getLocation())).toggleDirection();
 
-                tile.setChanged();
+            if (isSneaking) {
+                sign.toggleDirection();
+
+                this.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
                 return InteractionResult.CONSUME;
@@ -303,36 +319,35 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                         this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
 
                 if (pointingPos != null) {
-                    boolean up = getClickedSign(hit.getLocation());
-                    var s = getSign(up);
-                    if (s.active) {
-                        tile.pointToward(pointingPos, up);
+                    if (sign.active) {
+                        sign.pointToward(pos,pointingPos);
                     }
-                    tile.setChanged();
+                    this.setChanged();
                     level.sendBlockUpdated(pos, state, state, 3);
                     return InteractionResult.CONSUME;
                 }
                 return InteractionResult.FAIL;
-            } else if (CompatHandler.FRAMEDBLOCKS && tile.framed) {
-                boolean success = FramedBlocksCompat.interactWithFramedSignPost(tile, player, handIn, itemstack, level, pos);
+            } else if (CompatHandler.FRAMEDBLOCKS && this.framed) {
+                boolean success = FramedBlocksCompat.interactWithFramedSignPost(this, player, handIn, itemstack, level, pos);
                 if (success) return InteractionResult.CONSUME;
             } else if (item instanceof SignPostItem) {
                 //let sign item handle this one
                 return InteractionResult.PASS;
             }
         }
-        // open gui (edit sign with empty hand)
-        tile.sendOpenGuiPacket(level, pos, player);
+        if (this.tryOpeningEditGui(player, pos)){
+            return InteractionResult.CONSUME;
+        }
 
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
-    public boolean getClickedSign(Vec3 hit) {
+    public Sign getClickedSign(Vec3 hit) {
         double y = hit.y;
         //negative y yay!
         if (y < 0) y = y + (1 - (int) y);
         else y = y - (int) y;
-        return y > 0.5d;
+        return getSign(y > 0.5d);
     }
 
     @Nullable
@@ -358,5 +373,24 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn()) : null;
     }
 
+    @Override
+    public void setWaxed(boolean waxed) {
+        isWaxed = waxed;
+    }
+
+    @Override
+    public boolean isWaxed() {
+        return isWaxed;
+    }
+
+    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
+    }
+
+    @Override
+    public UUID getPlayerWhoMayEdit() {
+        validatePlayerWhoMayEdit(level, worldPosition);
+        return playerWhoMayEdit;
+    }
 }
 

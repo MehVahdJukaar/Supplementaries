@@ -21,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
@@ -37,11 +38,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BooleanSupplier;
 
 import static net.minecraft.world.level.block.entity.SignBlockEntity.createCommandSourceStack;
@@ -205,25 +209,16 @@ public class TextHolder implements IAntiqueTextProvider {
         this.hasGlowingText = glowing;
     }
 
-    //TODO: finish this
-    public boolean hasAnyClickCommands(Player player) {
-        for (Component component : this.getMessages(player.isTextFilteringEnabled())) {
-            Style style = component.getStyle();
-            ClickEvent clickEvent = style.getClickEvent();
-            if (clickEvent != null && clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    //TODO: make server sided & send block updated
-    //should only be called server side
-    public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
+    public InteractionResult playerInteract(ServerLevel level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
         boolean success = false;
+        boolean commandSuccess = this.executeClickCommandsIfPresent(player, level, pos);
+        if (tile instanceof IWaxable waxable && waxable.isWaxed()) {
+            level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
+            return InteractionResult.PASS;
+        }
+
         if (item == Items.INK_SAC) {
             if (this.hasGlowingText || this.hasAntiqueInk) {
                 level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -263,7 +258,28 @@ public class TextHolder implements IAntiqueTextProvider {
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
+        if (commandSuccess) return InteractionResult.sidedSuccess(level.isClientSide);
+
         return InteractionResult.PASS;
+    }
+
+    public boolean hasEditableText(boolean filtering) {
+        return Arrays.stream(this.getMessages(filtering))
+                .allMatch((component) -> component.equals(CommonComponents.EMPTY) || component.getContents() instanceof LiteralContents);
+    }
+
+    public boolean executeClickCommandsIfPresent(Player player, Level level, BlockPos pos) {
+        boolean success = false;
+        Component[] messages = this.getMessages(player.isTextFilteringEnabled());
+        for (Component component : messages) {
+            Style style = component.getStyle();
+            ClickEvent clickEvent = style.getClickEvent();
+            if (clickEvent != null && clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
+                player.getServer().getCommands().performPrefixedCommand(createCommandSourceStack(player, level, pos), clickEvent.getValue());
+                success = true;
+            }
+        }
+        return success;
     }
 
     @Override

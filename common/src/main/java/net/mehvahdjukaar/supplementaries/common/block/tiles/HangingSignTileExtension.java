@@ -10,6 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.food.FoodConstants;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -34,6 +36,7 @@ public class HangingSignTileExtension {
 
     public HangingSignTileExtension(BlockState state) {
         super();
+        //cheaty. will create on dedicated client on both server and client this as configs are loaded there
         if (PlatHelper.getPhysicalSide().isClient()) {
             animation = new PendulumAnimation(ClientConfigs.Blocks.HANGING_SIGN_CONFIG, this::getRotationAxis);
         } else {

@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,16 +27,14 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -141,6 +140,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
+        //make server sided
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player) && !te.isWaxed()) {
             ItemStack stack = player.getItemInHand(handIn);
             Item i = stack.getItem();
@@ -153,6 +153,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                 }
                 //TODO use better particles shape
                 level.levelEvent(player, 3003, pos, 0);
+                level.gameEvent(GameEvent.BLOCK_CHANGE, signBlockEntity.getBlockPos(), GameEvent.Context.of(player, signBlockEntity.getBlockState()));
+                player.awardStat(Stats.ITEM_USED.get(item));
+
                 te.setWaxed(true);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -202,6 +205,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             }
             if (!level.isClientSide && mode.canOpenGui()) {
                 te.sendOpenGuiPacket(level, pos, player);
+                //TODO: player who may edit
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
