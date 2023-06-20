@@ -110,7 +110,7 @@ public class HangingSignRendererExtension {
 
         poseStack.pushPose();
         renderer.translateSignText(poseStack, false, off);
-        TextUtils.renderSignText(tile.getFrontText(), font, poseStack, bufferSource, packedLight,
+        TextUtils.renderSignText(tile.getBackText(), font, poseStack, bufferSource, packedLight,
                 norm.mul(-1), lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth());
         poseStack.popPose();
 

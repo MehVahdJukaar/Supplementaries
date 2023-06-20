@@ -309,17 +309,17 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                 up.setLeft(left);
                 up.setWoodType(c.signWood);
 
-                tile.pointToward(village1, true);
+                up.pointToward(tile.getBlockPos(), village1);
 
                 down.setActive(twoSigns);
                 down.setLeft(left);
-                up.setWoodType(c.signWood);
+                down.setWoodType(c.signWood);
 
-                tile.pointToward(village2, false);
+                down.pointToward(tile.getBlockPos(), village2);
 
                 if (Math.abs(up.yaw() - down.yaw()) > 90) {
                     down.toggleDirection();
-                    tile.pointToward(village2, false);
+                    down.pointToward(tile.getBlockPos(), village2);
                 }
 
 

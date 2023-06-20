@@ -153,8 +153,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                 }
                 //TODO use better particles shape
                 level.levelEvent(player, 3003, pos, 0);
-                level.gameEvent(GameEvent.BLOCK_CHANGE, signBlockEntity.getBlockPos(), GameEvent.Context.of(player, signBlockEntity.getBlockState()));
-                player.awardStat(Stats.ITEM_USED.get(item));
+                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player,state));
+                player.awardStat(Stats.ITEM_USED.get(i));
 
                 te.setWaxed(true);
                 return InteractionResult.sidedSuccess(level.isClientSide);

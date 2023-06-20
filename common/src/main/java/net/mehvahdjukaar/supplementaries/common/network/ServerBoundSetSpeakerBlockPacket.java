@@ -2,12 +2,16 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.List;
 
 public class ServerBoundSetSpeakerBlockPacket implements Message {
     private final BlockPos pos;
@@ -43,17 +47,24 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
         ServerPlayer sender = (ServerPlayer) context.getSender();
         Level level = sender.level();
         BlockPos pos = this.pos;
-        if (level.hasChunkAt(pos) &&  level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
+        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
             speaker.setVolume(this.volume);
             speaker.setMode(this.mode);
-
-            String unformatted = ChatFormatting.stripFormatting(str);
-            sender.connection.filterTextPacket( unformatted).thenAcceptAsync((l) -> {
-                speaker.tryAcceptingClientText(sender, l);
+            sender.connection.filterTextPacket(this.str).thenAcceptAsync((l) -> {
+                this.updateSpeakerText(sender, l);
             }, sender.server);
-            //update done in accept client message as it will happen later
-
         }
+    }
 
+    private void updateSpeakerText(ServerPlayer player, FilteredText filteredText) {
+        player.resetLastActionTime();
+        Level level = player.level();
+
+        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile be) {
+            if (be.tryAcceptingClientText(player, filteredText)) {
+                level.sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
+                be.setChanged();
+            }
+        }
     }
 }

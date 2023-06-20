@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -99,8 +100,8 @@ public class DoormatScreen extends Screen {
     @Override
     public void removed() {
         // send new text to the server
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tileSign.getBlockPos(), this.tileSign.getTextHolder()));
-        //this.tileSign.setEditable(true);
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
+                this.tileSign.getBlockPos(),0, this.cachedLines));
     }
 
     private void close() {

@@ -21,7 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class PresentBlockTile extends AbstractPresentBlockTile implements IOnePlayerGui {
+public class PresentBlockTile extends AbstractPresentBlockTile {
 
     //"" means not packed. this is used for packed but can be opened by everybody
     public static final String PUBLIC_KEY = "@e";

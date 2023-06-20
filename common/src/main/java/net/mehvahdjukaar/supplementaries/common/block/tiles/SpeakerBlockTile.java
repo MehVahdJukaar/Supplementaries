@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
@@ -22,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,6 +40,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     //distance in blocks
     private double volume = CommonConfigs.Redstone.SPEAKER_RANGE.get();
     private Component customName;
+    @Nullable
+    private UUID playerWhoMayEdit = null;
 
     public Object ccHack = null;
 
@@ -172,19 +176,18 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         return this.saveWithoutMetadata();
     }
 
-    public void tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
+    public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
         if (player.getUUID().equals(this.getPlayerWhoMayEdit())) {
             this.acceptClientMessages(player, filteredText);
-            this.setAllowedPlayerEditor(null);
-            level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
-            this.setChanged();
+            this.setPlayerWhoMayEdit(null);
+            return true;
         } else {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable speaker block",
                     player.getName().getString());
         }
+        return false;
     }
 
-    //TODO: presents too
     //takes text filtering into account
     private void acceptClientMessages(Player player, FilteredText filteredText) {
         Style style = this.getMessage(player.isTextFilteringEnabled()).getStyle();
@@ -195,6 +198,20 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         }
     }
 
+    @Override
+    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
+    }
+
+    @Override
+    public UUID getPlayerWhoMayEdit() {
+        return playerWhoMayEdit;
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player) {
+        SpeakerBlockScreen.open(this);
+    }
 
     public enum Mode {
         CHAT,

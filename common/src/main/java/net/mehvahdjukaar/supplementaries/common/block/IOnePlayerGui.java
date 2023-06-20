@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -32,12 +35,15 @@ public interface IOnePlayerGui extends IScreenProvider {
         return uuid != null && !uuid.equals(player.getUUID());
     }
 
-    default boolean tryOpeningEditGui(Player player, BlockPos pos){
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos){
         if (Utils.mayBuild(player, pos) && !this.isOtherPlayerEditing(player)) {
             // open gui (edit sign with empty hand)
             this.setPlayerWhoMayEdit(player.getUUID());
 
-            this.sendOpenGuiPacket(player.level(), pos, player);
+            if(this instanceof MenuProvider mp){
+                PlatHelper.openCustomMenu(player, mp, pos);
+            }
+            else this.sendOpenGuiPacket(player.level(), pos, player);
             return true;
         }
         return false;

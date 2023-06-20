@@ -4,9 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +20,8 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.FancyTrunkPlacer;
+
+import java.util.stream.IntStream;
 
 public class SpeakerBlockScreen extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
@@ -40,7 +44,7 @@ public class SpeakerBlockScreen extends Screen {
         super(EDIT);
         this.tileSpeaker = te;
         this.mode = tileSpeaker.getMode();
-        this.message = tileSpeaker.getMessage();
+        this.message =tileSpeaker.getMessage(Minecraft.getInstance().isTextFilteringEnabled()).getString();
         this.initialVolume = tileSpeaker.getVolume();
     }
 
@@ -107,12 +111,8 @@ public class SpeakerBlockScreen extends Screen {
 
     @Override
     public void removed() {
-        this.tileSpeaker.setMode(this.mode);
-        this.tileSpeaker.setMessage(this.editBox.getValue());
-        this.tileSpeaker.setVolume(((ISlider)this.volumeSlider).getValue());
-        //refreshTextures server tile
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
-                this.tileSpeaker.getMessage(), this.tileSpeaker.getMode(), this.tileSpeaker.getVolume()));
+                this.message, this.tileSpeaker.getMode(), this.tileSpeaker.getVolume()));
     }
 
     private void onDone() {

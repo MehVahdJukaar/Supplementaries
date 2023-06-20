@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
@@ -81,7 +82,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                 if (result != InteractionResult.PASS) {
                     return result;
                 }
-                if (tile.tryOpeningEditGui(player, pos)) {
+                if (tile.tryOpeningEditGui((ServerPlayer) player, pos)) {
                     return InteractionResult.CONSUME;
                 }
             }

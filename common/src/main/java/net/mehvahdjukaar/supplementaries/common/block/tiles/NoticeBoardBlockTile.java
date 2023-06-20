@@ -4,7 +4,10 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
+import net.mehvahdjukaar.supplementaries.client.screens.NoticeBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
+import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
@@ -18,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,13 +44,18 @@ import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BooleanSupplier;
 
-public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay {
+public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay, ITextHolderProvider {
 
     //just used for color
     private final TextHolder textHolder;
+    private boolean isWaxed = false;
     private int pageNumber = 0;
+
+    @Nullable
+    private UUID playerWhoMayEdit;
 
     //client stuff
     private String text = null;
@@ -159,7 +168,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public void load(CompoundTag compound) {
         super.load(compound);
         this.pageNumber = compound.getInt("PageNumber");
-        this.textHolder.load(compound);
+        this.textHolder.load(compound, level, worldPosition);
     }
 
     @Override
@@ -206,15 +215,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return text;
     }
 
-    public DyeColor getDyeColor(){
+    public DyeColor getDyeColor() {
         return textHolder.getColor();
     }
 
-    public boolean isGlowing(){
+    public boolean isGlowing() {
         return textHolder.hasGlowingText();
     }
 
-    public boolean hasAntiqueInk(){
+    public boolean hasAntiqueInk() {
         return textHolder.hasAntiqueInk();
     }
 
@@ -259,15 +268,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
-
         Level level = player.level();
 
-        InteractionResult result = textHolder.playerInteract(level, pos, player, handIn, this);
-        if(result != InteractionResult.PASS) return result;
-
-        boolean server = !level.isClientSide;
-        if (player.isShiftKeyDown() && !this.isEmpty()) {
-            if (server) {
+        if (level instanceof ServerLevel sl && textHolder.playerInteract(sl, pos, player, handIn, this).consumesAction()) {
+            return InteractionResult.CONSUME;
+        } else if (player.isShiftKeyDown() && !this.isEmpty()) {
+            if (!level.isClientSide) {
                 ItemStack it = this.removeItemNoUpdate(0);
                 BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
                 ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
@@ -279,14 +285,45 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         //try place or open
         else if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
                 !super.interact(player, handIn).consumesAction()) {
-            if(!CommonConfigs.Building.NOTICE_BOARD_GUI.get()){
+            if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
                 return InteractionResult.PASS;
             }
-            if (server) {
-                PlatHelper.openCustomMenu((ServerPlayer) player, this, pos);
+            if (!level.isClientSide) {
+                this.tryOpeningEditGui((ServerPlayer) player, pos);
             }
         }
-        return InteractionResult.sidedSuccess(!server);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    @Override
+    public void setPlayerWhoMayEdit(@Nullable UUID uuid) {
+        validatePlayerWhoMayEdit(level, worldPosition);
+        this.playerWhoMayEdit = uuid;
+    }
+
+    @Override
+    public UUID getPlayerWhoMayEdit() {
+        validatePlayerWhoMayEdit(level, worldPosition);
+        return playerWhoMayEdit;
+    }
+
+    @Override
+    public TextHolder getTextHolder(int ind) {
+        return textHolder;
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player) {
+        //unused we are have a container instead
+    }
+
+    @Override
+    public boolean isWaxed() {
+        return isWaxed;
+    }
+
+    @Override
+    public void setWaxed(boolean b) {
+        this.isWaxed = b;
+    }
 }

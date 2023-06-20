@@ -71,13 +71,13 @@ public class CCCompatImpl {
 
         @LuaFunction
         public void setMessage(String message) {
-            tile.setMessage(message);
+            tile.setMessage(Component.literal(message));
             tile.setChanged();
         }
 
         @LuaFunction
         public String getMessage() {
-            return tile.getMessage();
+            return tile.getMessage(false).getString();
         }
 
         @LuaFunction

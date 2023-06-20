@@ -116,7 +116,7 @@ public class SignPostScreen extends Screen {
     @Override
     public void removed() {
         // send new text to the server
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(), cachedLines));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(),0, cachedLines));
     }
 
     private void close() {

@@ -119,7 +119,6 @@ public class SpeakerBlock extends Block implements EntityBlock {
             // client
             if (level.isClientSide) {
                 //send message here
-                SpeakerBlockScreen.open(tile);
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;

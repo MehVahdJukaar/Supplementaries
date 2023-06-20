@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge.create;
 import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
 import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import net.mehvahdjukaar.moonlight.core.mixins.forge.ConditionHackMixin;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +17,7 @@ public class SpeakerBlockDisplayTarget extends DisplayTarget {
         BlockEntity te = context.getTargetTE();
         if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
             reserve(line, te, context);
-            tile.setMessage(text.get(0).getString());
+            tile.setMessage(text.get(0));
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
         }
     }

@@ -14,8 +14,8 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.Rotation;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -51,18 +50,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     public boolean dependsOnLoadedPacks() {
         return true;
     }
-
-    public void addHangingSignLoaderModel(StaticResource resource, String woodTextPath, String logTexture) {
-        String string = new String(resource.data, StandardCharsets.UTF_8);
-
-        string = string.replace("wood_type", woodTextPath);
-        string = string.replace("log_texture", logTexture);
-
-        //adds modified under my namespace
-        ResourceLocation newRes = Supplementaries.res("hanging_signs/" + woodTextPath + "_loader");
-        dynamicPack.addBytes(newRes, string.getBytes(), ResType.BLOCK_MODELS);
-    }
-
 
     //-------------resource pack dependant textures-------------
 
@@ -232,7 +219,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         }
 
 
-        var transformer = ImageTransformer.builder(32, 64, 16, 16)
+        ImageTransformer transformer = ImageTransformer.builder(32, 64, 16, 16)
                 .copyRect(26, 0, 2, 4, 4, 0)
                 .copyRect(26, 8, 6, 8, 4, 4)
                 .copyRect(28, 24, 4, 8, 0, 4)
@@ -252,7 +239,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 flipped.close();
                 this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/" + w.getVariantId("extension")), newIm);
             } catch (Exception e) {
-                int aa = 1;
+                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", w, e);
             }
         }
 

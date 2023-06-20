@@ -66,7 +66,7 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
 
 
     @Override
-    default boolean tryOpeningEditGui(Player player, BlockPos pos) {
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos) {
         boolean filtering = player.isTextFilteringEnabled();
         for(int i = 0; i <this.textHoldersCount(); i++){
             if(!this.getTextHolder(i).hasEditableText(filtering)){
