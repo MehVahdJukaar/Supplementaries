@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

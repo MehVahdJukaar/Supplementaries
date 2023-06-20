@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.base.Suppliers;
+import com.mojang.authlib.GameProfile;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
@@ -19,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -38,6 +40,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -49,7 +52,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
@@ -62,6 +64,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, IWashable, IPistonMotionReact {
@@ -82,9 +85,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
     }
 
+    private static final GameProfile SPIKE_PLAYER = new GameProfile(UUID.randomUUID(), "Spike Fake Player");
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
-            return ModDamageSources.spikePlayer(FakePlayerManager.getDefault(level));
+            ServerPlayer fakePlayer = (ServerPlayer) FakePlayerManager.get(SPIKE_PLAYER, level);
+            fakePlayer.getAdvancements().stopListening();
+            fakePlayer.setGameMode(GameType.SPECTATOR);
+            return ModDamageSources.spikePlayer(fakePlayer);
         }
         return ModDamageSources.spike();
     }
