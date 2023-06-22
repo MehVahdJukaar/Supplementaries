@@ -1,15 +1,12 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
@@ -20,6 +17,7 @@ import java.util.function.Supplier;
 
 
 public class ClientConfigs {
+
 
     public static void init() {
     }
@@ -54,8 +52,15 @@ public class ClientConfigs {
     }
 
     private static void onChange() {
-        TextUtil.TEXT_COLOR_MULTIPLIER = (float) (double) Tweaks.BRIGHTEN_SIGN_TEXT_COLOR.get();
+        signColorMult = (float) (double) Tweaks.BRIGHTEN_SIGN_TEXT_COLOR.get();
     }
+
+    private static float signColorMult = 1;
+
+    public static float getSignColorMult(){
+        return signColorMult;
+    }
+
 
     public static class Items {
 
@@ -174,7 +179,7 @@ public class ClientConfigs {
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
             BRIGHTEN_SIGN_TEXT_COLOR = builder.comment("A scalar multiplier that will be applied to sign text making it brighter, supposedly more legible")
-                    .define("sign_text_color_multiplier", 1f, 0, 5);
+                    .define("sign_text_color_multiplier", 1.2f, 0, 5);
             builder.pop();
         }
     }

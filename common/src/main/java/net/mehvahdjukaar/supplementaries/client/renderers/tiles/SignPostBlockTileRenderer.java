@@ -101,7 +101,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 var v = new Vector3f();
                 v.rotateY(signUp.yaw()* Mth.DEG_TO_RAD);
                 var textProperties = tile.getTextHolder(1)
-                        .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+                        .computeRenderProperties(combinedLightIn,
+                                v, lod::isVeryNear);
 
                 poseStack.pushPose();
                 poseStack.translate(0, -0.5, 0);

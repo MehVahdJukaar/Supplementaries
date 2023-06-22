@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;

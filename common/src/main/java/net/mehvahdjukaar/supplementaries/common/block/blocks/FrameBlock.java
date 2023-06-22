@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.minecraft.core.BlockPos;
@@ -9,6 +10,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -174,5 +177,11 @@ public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
             return level.getMaxLightLevel();
         }
         else return super.getLightBlock(state, level, pos);
+    }
+
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        return new ItemStack(this);
     }
 }

@@ -74,7 +74,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
                 return sign.getItem();
             } else return new ItemStack(tile.getHeldBlock().getBlock());
         }
-        return super.getCloneItemStack(world, pos, state);
+        return new ItemStack(this);
     }
 
     @Override

@@ -42,6 +42,7 @@ public class ModTags {
     public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
     public static final TagKey<Block> LIGHTS_GUNPOWDER = blockTag("lights_gunpowder");
+    public static final TagKey<Block> PREVENTS_OFFSET_ABOVE = blockTag("prevents_offset_above");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

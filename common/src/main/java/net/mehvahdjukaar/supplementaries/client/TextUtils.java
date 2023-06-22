@@ -91,10 +91,13 @@ public class TextUtils {
 
     }
 
-    public static void renderSignText(SignText signText, Font font, PoseStack poseStack, MultiBufferSource buffer,
-                                      int light, Vector3f normal, LOD lod, boolean filtered, int lineHeight, int lineWidth){
+    public static void renderSignText(SignText signText, Font font, PoseStack poseStack,
+                                      MultiBufferSource buffer,
+                                      int light, Vector3f normal, LOD lod, boolean filtered,
+                                      int lineHeight, int lineWidth,
+                                      float colorMult){
         TextUtil.RenderProperties properties = TextUtil.renderProperties(signText.getColor(),
-                signText.hasGlowingText(), light, Style.EMPTY, normal, lod::isVeryNear);
+                signText.hasGlowingText(), colorMult, light, Style.EMPTY, normal, lod::isVeryNear);
 
         FormattedCharSequence[] formattedCharSequences = signText.getRenderMessages(filtered, (component) -> {
             List<FormattedCharSequence> list = font.split(component, lineWidth);

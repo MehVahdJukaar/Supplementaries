@@ -83,7 +83,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof ITextHolderProvider te) {
             if (te.tryAcceptingClientText(pos, player, filteredText)) {
                 BlockEntity be = (BlockEntity) te;
-                te.setChanged();
+                be.setChanged();
                 level.sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
             }
         }

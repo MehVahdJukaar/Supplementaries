@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -225,7 +226,9 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 .copyRect(26, 8, 6, 8, 4, 4)
                 .copyRect(28, 24, 4, 8, 0, 4)
                 .copyRect(26, 20, 2, 4, 6, 0)
-                .copyRect(26, 28, 2, 8, 10, 4)
+                //cheaty as it has to be flipped. todo: find a way to rotate it instead as this work wotk with packs
+                .copyRect(26, 28, 1, 8, 11, 4)
+                .copyRect(27, 28, 1, 8, 10, 4)
                 .build();
 
         for (WoodType w : WoodTypeRegistry.getTypes()) {
@@ -243,9 +246,23 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", w, e);
             }
         }
+        if(CompatHandler.FARMERS_DELIGHT) {
+            //hanging sign extension textures
+            try (TextureImage vanillaTexture = TextureImage.open(manager,
+                    new ResourceLocation("farmersdelight:entity/signs/hanging/canvas"))) {
+                TextureImage flipped = vanillaTexture.createRotated(Rotation.CLOCKWISE_90);
+                TextureImage newIm = flipped.createResized(0.5f, 0.25f);
+                newIm.clear();
 
-
+                transformer.apply(flipped, newIm);
+                flipped.close();
+                this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/farmersdelight/extension_canvas"), newIm);
+            } catch (Exception e) {
+                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", "canvas sign", e);
+            }
+        }
     }
+
 
     /**
      * helper method.

@@ -27,6 +27,9 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<SackContainerMenu>> SACK = RegHelper.registerMenuType(
             Supplementaries.res(SACK_NAME), SackContainerMenu::new);
 
+    public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
+            Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);
+
     public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK = RegHelper.registerMenuType(
             Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
 

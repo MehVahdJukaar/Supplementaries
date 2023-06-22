@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.Util;
@@ -38,15 +39,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.entity.SignText;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BooleanSupplier;
 
 import static net.minecraft.world.level.block.entity.SignBlockEntity.createCommandSourceStack;
@@ -329,7 +326,9 @@ public class TextHolder implements IAntiqueTextProvider {
 
     @Environment(EnvType.CLIENT)
     public TextUtil.RenderProperties computeRenderProperties(int combinedLight, Vector3f normal, BooleanSupplier shouldShowGlow) {
-        return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(), combinedLight,
+        return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(),
+                ClientConfigs.getSignColorMult(),
+                combinedLight,
                 this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
                 normal, shouldShowGlow);
     }

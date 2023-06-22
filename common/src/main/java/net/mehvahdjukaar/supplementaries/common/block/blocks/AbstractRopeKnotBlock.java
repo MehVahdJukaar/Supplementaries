@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -276,15 +277,6 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         boolean flag = fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
-    }
-
-    @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            BlockState mimic = tile.getHeldBlock();
-            return mimic.getBlock().getCloneItemStack(level, pos, state);
-        }
-        return super.getCloneItemStack(level, pos, state);
     }
 
     @Nullable

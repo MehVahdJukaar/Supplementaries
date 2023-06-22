@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @OptionalMixin("vectorwing.farmersdelight.common.block.TomatoVineBlock")
 @Mixin(targets = "vectorwing.farmersdelight.common.block.TomatoVineBlock")
-public abstract class CompatFarmersDelightMixin extends Block {
+public abstract class CompatFarmersDelightTomatoMixin extends Block {
 
-    protected CompatFarmersDelightMixin(Properties arg) {
+    protected CompatFarmersDelightTomatoMixin(Properties arg) {
         super(arg);
     }
 

@@ -65,7 +65,7 @@ public class ModMaterials {
         return map;
     });
 
-
+    public static final Material CANVAS_SIGH_MATERIAL = new Material(SIGN_SHEET, Supplementaries.res("entity/signs/hanging/farmersdelight/extension_canvas"));
     public static final Supplier<Map<net.minecraft.world.level.block.state.properties.WoodType, Material>> HANGING_SIGN_EXTENSIONS =
             Suppliers.memoize(() -> net.minecraft.world.level.block.state.properties.WoodType.values().collect(Collectors.toMap(
                     Function.identity(),

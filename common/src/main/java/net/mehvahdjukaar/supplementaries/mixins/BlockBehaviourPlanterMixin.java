@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -38,7 +39,7 @@ public abstract class BlockBehaviourPlanterMixin {
             if (this.getBlock() instanceof DoublePlantBlock && ((BlockBehaviour.BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;
             }
-            if (level.getBlockState(pos.below(b)).getBlock() instanceof PlanterBlock){
+            if (level.getBlockState(pos.below(b)).is(ModTags.PREVENTS_OFFSET_ABOVE)){
                 cir.setReturnValue(Vec3.ZERO);
             }
         }

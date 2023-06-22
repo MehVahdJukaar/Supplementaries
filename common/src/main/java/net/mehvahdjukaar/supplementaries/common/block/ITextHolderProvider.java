@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
@@ -35,16 +36,24 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
             this.setWaxed(false);
             return true;
         }
-        var text = getTextHolder();
-        if (!text.isEmpty(null)) {
-            text.clear();
-            this.setChanged();
+        boolean success = false;
+        for(int i = 0; i<this.textHoldersCount(); i++){
+            var text = getTextHolder(i);
+
+            if (!text.isEmpty(null)) {
+                text.clear();
+                success = true;
+            }
+        }
+        if(success){
+            if(this instanceof BlockEntity be){
+                be.setChanged();
+                level.sendBlockUpdated(pos, state,state, 3);
+            }
             return true;
         }
         return false;
     }
-
-    void setChanged();
 
     default boolean tryAcceptingClientText(BlockPos pos, ServerPlayer player, List<List<FilteredText>> filteredText) {
         this.validatePlayerWhoMayEdit(player.level(), pos);
@@ -82,8 +91,8 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
             result = this.tryWaxing(level, pos, player, hand);
         }
         if (result != InteractionResult.PASS) {
-            if (!level.isClientSide) {
-                this.setChanged();
+            if (!level.isClientSide && this instanceof BlockEntity te) {
+                te.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
             }
             level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));

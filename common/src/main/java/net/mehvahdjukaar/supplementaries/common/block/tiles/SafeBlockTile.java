@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.DelegatingSlot;
 import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.SafeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -162,7 +164,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     //default lockable tile method. just used for compat
     @Override
     public boolean canOpen(Player player) {
-        if (super.canOpen(player)) return false;
+        if (!super.canOpen(player)) return false;
         return canPlayerOpen(player, false);
     }
 
@@ -252,36 +254,6 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new SafeContainerMenu(id, player, this);
-    }
-
-    private static class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvider {
-
-        private final SafeBlockTile container;
-
-        public SafeContainerMenu(int id, Inventory inventory, SafeBlockTile container) {
-            super(id, inventory, container);
-            this.container = container;
-        }
-
-        public SafeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-            this(id, playerInventory, ModRegistry.SAFE_TILE.get().getBlockEntity(
-                    playerInventory.player.level(), packetBuffer.readBlockPos()
-            ));
-        }
-
-        @Override
-        protected Slot addSlot(Slot slot) {
-            if (slot instanceof ShulkerBoxSlot) {
-                return super.addSlot(new DelegatingSlot(container, slot.getContainerSlot(), slot.x, slot.y));
-            } else {
-                return super.addSlot(slot);
-            }
-        }
-
-        @Override
-        public Container getContainer() {
-            return container;
-        }
     }
 
 

@@ -33,10 +33,12 @@ import java.util.List;
 
 public class HangingSignRendererExtension {
 
+
     public static void render(SignBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource,
                               int packedLight, int packedOverlay, BlockState state,
                               HangingSignRenderer.HangingSignModel model, List<ModelPart> barModel, ModelPart chains,
-                              Material material, Material extensionMaterial, SignRenderer renderer) {
+                              Material material, Material extensionMaterial, SignRenderer renderer,
+                              float colorMult) { //color mult for FD
 
         poseStack.pushPose();
 
@@ -105,13 +107,15 @@ public class HangingSignRendererExtension {
         poseStack.pushPose();
         renderer.translateSignText(poseStack, true, off);
         TextUtils.renderSignText(tile.getFrontText(), font, poseStack, bufferSource, packedLight,
-                norm, lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth());
+                norm, lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth(),
+                colorMult);
         poseStack.popPose();
 
         poseStack.pushPose();
         renderer.translateSignText(poseStack, false, off);
         TextUtils.renderSignText(tile.getBackText(), font, poseStack, bufferSource, packedLight,
-                norm.mul(-1), lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth());
+                norm.mul(-1), lod, filtered, tile.getTextLineHeight(), tile.getMaxTextLineWidth(),
+                colorMult);
         poseStack.popPose();
 
 
@@ -130,7 +134,7 @@ public class HangingSignRendererExtension {
             model.plank.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         }
 
-        ModBlockProperties.PostType right = sign.getRightAttachment();
+        ModBlockProperties.PostType right =  sign.getRightAttachment();
         ModBlockProperties.PostType left = sign.getLeftAttachment();
 
         VertexConsumer vc2 = null;

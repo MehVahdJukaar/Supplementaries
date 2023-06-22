@@ -1,70 +1,70 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.WoodType;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
-@Mixin(HangingSignRenderer.class)
-public abstract class HangingSignRendererMixin extends SignRenderer {
 
-    @Shadow
-    @Final
-    private Map<WoodType, HangingSignRenderer.HangingSignModel> hangingSignModels;
-
-    @Shadow
-    abstract Material getSignMaterial(WoodType woodType);
+@OptionalMixin("vectorwing.farmersdelight.client.renderer.HangingCanvasSignRenderer")
+@Mixin(targets = "vectorwing.farmersdelight.client.renderer.HangingCanvasSignRenderer")
+public abstract class CompatFarmersDelightCanvasMixin extends SignRenderer {
 
     @Unique
     private List<ModelPart> barModel;
     @Unique
     private ModelPart chains;
 
-    protected HangingSignRendererMixin(BlockEntityRendererProvider.Context context) {
-        super(context);
+    protected CompatFarmersDelightCanvasMixin(BlockEntityRendererProvider.Context arg) {
+        super(arg);
     }
+
+    @Shadow
+    public abstract Material getCanvasSignMaterial(@Nullable DyeColor dyeColor);
 
 
     @Inject(method = "render(Lnet/minecraft/world/level/block/entity/SignBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V",
-            at = @At("HEAD"), cancellable = true)
-    public void renderEnhancedSign(SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
-                                   int packedLight, int packedOverlay, CallbackInfo ci) {
+            at = @At(value = "INVOKE", target = "Lvectorwing/farmersdelight/client/renderer/HangingCanvasSignRenderer;renderSignWithText(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/SignBlock;Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/client/model/Model;)V"),
+            locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
+    protected void renderSignWithText(SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
+                                      int packedLight, int packedOverlay, CallbackInfo ci,
+                                      BlockState state, SignBlock sign, HangingSignRenderer.HangingSignModel model,
+                                      DyeColor dye) {
+
         if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && ((IExtendedHangingSign) tile).getExtension().canSwing()) {
             BlockState blockState = tile.getBlockState();
-            WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
-            HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
-            HangingSignRendererExtension.render(tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
+            HangingSignRendererExtension.render(tile, partialTick,
+                    poseStack, bufferSource, packedLight, packedOverlay,
                     blockState, model, barModel, chains,
 
-                    this.getSignMaterial(woodType),
-                    ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
-                    this, ClientConfigs.getSignColorMult());
-
+                    this.getCanvasSignMaterial(dye),
+                    ModMaterials.CANVAS_SIGH_MATERIAL,
+                    this, 0.6f/0.4f*ClientConfigs.getSignColorMult());
             ci.cancel();
         }
     }
@@ -80,5 +80,4 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
             this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
         }
     }
-
 }

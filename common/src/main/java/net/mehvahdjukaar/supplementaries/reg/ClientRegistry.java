@@ -41,6 +41,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -60,6 +61,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +135,7 @@ public class ClientRegistry {
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyBlockScreen::new);
         MenuScreens.register(ModMenuTypes.SACK.get(), SackScreen::new);
+        MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);

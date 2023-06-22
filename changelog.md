@@ -1,12 +1,6 @@
-- Vanilla signs now use too use shaded color
-- Added Sherds tooltip images previews
-- added an option to change tooltip images size
-- added an option to allow faucets to dump items into (any) entity inventory
-- Blackboard, Presents, Speaker Block, Notice boards, Signs and Doormats will only allow one player to edit at a time. 
-- They will also abite do text filtering (if anybody is using that,took way more than it should have..)
-- Also pls text the above feature in multiplayer
-- Blackboard, Notice Boards, Signs and Doormats can be waxed
-- Signs like blocks can execute commands like vanilla signs
-- Fixed pancake disk not working
-- fixed glowing text not working properly at distance
-- refactored and improved a bunch of logic related to the above blocks. Pls report any bugs
+- Improved signs shading color
+- Added a config to increase sign color brightness
+- Added compat with FD signs
+- Fixed hanging signs from some mods not swinging correctly
+- Fixed safes not being safe anymore
+- Added tag for blocks that prevent offset on plants above them like planter
