@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SoapWashableHelper {
@@ -26,6 +28,7 @@ public class SoapWashableHelper {
     public static boolean tryWash(Level level, BlockPos pos, BlockState state) {
 
         if (tryWashWithInterface(level, pos, state) ||
+                tryCleaningSign(level, pos, state) ||
                 tryChangingColor(level, pos, state) ||
                 tryUnoxidise(level, pos, state)) {
             if (level instanceof ServerLevel serverLevel) {
@@ -35,6 +38,20 @@ public class SoapWashableHelper {
             return true;
         }
 
+        return false;
+    }
+
+    private static boolean tryCleaningSign(Level level, BlockPos pos, BlockState state) {
+        if(state.getBlock() instanceof SignBlock){
+            if(level.getBlockEntity( pos) instanceof SignBlockEntity te && te.isWaxed()){
+                te.setWaxed(false);
+                if(!level.isClientSide){
+                    te.setChanged();
+                    level.sendBlockUpdated(pos, state, state, 3);
+                }
+                return true;
+            }
+        }
         return false;
     }
 

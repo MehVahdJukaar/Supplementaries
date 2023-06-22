@@ -73,11 +73,11 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, BlockEntityType.HANGING_SIGN, pLevel.isClientSide ? (level, blockPos, blockState, blockEntity) -> {
-            if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get()) {
-                ((IExtendedHangingSign) blockEntity).getExtension().clientTick(level, blockPos, blockState);
+        return !pLevel.isClientSide ? null : (level, blockPos, blockState, blockEntity) -> {
+            if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && blockEntity instanceof IExtendedHangingSign te) {
+                te.getExtension().clientTick(level, blockPos, blockState);
             }
-        } : null);
+        };
     }
 
 
