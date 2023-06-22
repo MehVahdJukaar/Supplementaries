@@ -2,11 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -23,11 +21,16 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -40,9 +43,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.joml.Vector2i;
-
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashable {
 
@@ -140,47 +142,40 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        //make server sided
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player) && !te.isWaxed()) {
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
             ItemStack stack = player.getItemInHand(handIn);
-            Item i = stack.getItem();
-            if (i instanceof HoneycombItem) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
-                //TODO use better particles shape
-                level.levelEvent(player, 3003, pos, 0);
-                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player,state));
-                player.awardStat(Stats.ITEM_USED.get(i));
+            InteractionResult result = te.tryWaxing(level, pos, player, handIn);
 
-                te.setWaxed(true);
-                return InteractionResult.sidedSuccess(level.isClientSide);
+            if (result.consumesAction()) {
+                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
+                te.setChanged(); //this also sends block update in tile
             }
+            if (result != InteractionResult.PASS) return result;
 
-            if (i == Items.GLOW_INK_SAC && !state.getValue(GLOWING)) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
+            boolean glowChanged = false;
+            if (stack.is(Items.GLOW_INK_SAC) && !state.getValue(GLOWING)) {
                 level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlockAndUpdate(pos, state.setValue(GLOWING, true));
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
 
-            if (i == Items.INK_SAC && state.getValue(GLOWING)) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
+                glowChanged = true;
+
+            } else if (stack.is(Items.INK_SAC) && state.getValue(GLOWING)) {
+                level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
+
+                glowChanged = true;
+            }
+            if (glowChanged) {
+                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
+
                 if (!player.isCreative()) {
                     stack.shrink(1);
                 }
-                level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
+                //server
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
 
@@ -188,28 +183,31 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
 
             if (hit.getDirection() == state.getValue(FACING) && mode.canManualDraw()) {
 
-                if (i instanceof SoapItem) return InteractionResult.PASS;
-                Vector2i pair = getHitSubPixel(hit);
-                int x = pair.x();
-                int y = pair.y();
-
                 DyeColor color = getStackChalkColor(stack);
                 if (color != null) {
-                    byte newColor = colorToByte(color);
-                    if (te.getPixel(x, y) != newColor) {
-                        te.setPixel(x, y, newColor);
-                        te.setChanged();
+                    //exit early for client
+                    if (!level.isClientSide) {
+                        Vector2i pair = getHitSubPixel(hit);
+                        int x = pair.x();
+                        int y = pair.y();
+
+                        byte newColor = colorToByte(color);
+                        if (te.getPixel(x, y) != newColor) {
+                            te.setPixel(x, y, newColor);
+                            te.setChanged(); //this also updates clients
+                        }
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
-            if (!level.isClientSide && mode.canOpenGui()) {
-                te.sendOpenGuiPacket(level, pos, player);
-                //TODO: player who may edit
+            if (mode.canOpenGui()) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    te.tryOpeningEditGui(serverPlayer, pos);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
 
     public enum UseMode {

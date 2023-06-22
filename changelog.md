@@ -1,7 +1,12 @@
-- fixed an issue with creative tabs not accounting for mods that didnt add a hanging sign for their wood (bad)
-- big notice board cleanup. They now use 3 blockstates instead of tile data making them more responsive
-- Notice boards can accept glow ink and antique ink like any other sign
-- All mod signs  + hanging signs now display text with proper shading, fixing a vanilla issue. This means that text color on signs wont always be the same and will vary just like blocks vary their shade depending on orientation
-- Ill patch normal signs later
-- added a config to disable notice board gui as it kind of doesnt need it
-- fixed blackboard colors in inventory
+- Vanilla signs now use too use shaded color
+- Added Sherds tooltip images previews
+- added an option to change tooltip images size
+- added an option to allow faucets to dump items into (any) entity inventory
+- Blackboard, Presents, Speaker Block, Notice boards, Signs and Doormats will only allow one player to edit at a time. 
+- They will also abite do text filtering (if anybody is using that,took way more than it should have..)
+- Also pls text the above feature in multiplayer
+- Blackboard, Notice Boards, Signs and Doormats can be waxed
+- Signs like blocks can execute commands like vanilla signs
+- Fixed pancake disk not working
+- fixed glowing text not working properly at distance
+- refactored and improved a bunch of logic related to the above blocks. Pls report any bugs

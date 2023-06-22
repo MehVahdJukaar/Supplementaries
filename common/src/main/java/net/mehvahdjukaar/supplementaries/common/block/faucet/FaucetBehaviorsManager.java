@@ -38,7 +38,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         super(GSON, "faucet_interactions");
     }
 
-    private static final Codec<Either<DataItemInteraction, DataSourceInteraction>> CODEC = Codec.either(DataItemInteraction.CODEC, DataSourceInteraction.CODEC);
+    private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC = Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
@@ -77,6 +77,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         FaucetBlockTile.registerInteraction(new XPDroppingInteraction());
         FaucetBlockTile.registerInteraction(new ConcreteInteraction());
         FaucetBlockTile.registerInteraction(new MudInteraction());
+        FaucetBlockTile.registerInteraction(new ContainerItemInteraction());
         if (CompatHandler.BUZZIER_BEES) FaucetBlockTile.registerInteraction(new HoneyPotInteraction());
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());

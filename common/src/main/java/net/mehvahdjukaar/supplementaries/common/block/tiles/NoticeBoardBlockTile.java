@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
-import net.mehvahdjukaar.supplementaries.client.screens.NoticeBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -21,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -270,20 +266,20 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
         Level level = player.level();
 
-        if (level instanceof ServerLevel sl && textHolder.playerInteract(sl, pos, player, handIn, this).consumesAction()) {
-            return InteractionResult.CONSUME;
-        } else if (player.isShiftKeyDown() && !this.isEmpty()) {
-            if (!level.isClientSide) {
-                ItemStack it = this.removeItemNoUpdate(0);
-                BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
-                ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
-                drop.setDefaultPickUpDelay();
-                level.addFreshEntity(drop);
-                this.setChanged();
-            }
+        var r = this.interactWithTextHolder(0, level, pos, state, player, handIn);
+        if (r != InteractionResult.PASS) return r;
+        if (player.isShiftKeyDown() && !this.isEmpty()) {
+            ItemStack it = this.removeItemNoUpdate(0);
+            BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
+            ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
+            drop.setDefaultPickUpDelay();
+            level.addFreshEntity(drop);
+            this.setChanged();
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
+
         //try place or open
-        else if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
+        if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
                 !super.interact(player, handIn).consumesAction()) {
             if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
                 return InteractionResult.PASS;
@@ -297,13 +293,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public void setPlayerWhoMayEdit(@Nullable UUID uuid) {
-        validatePlayerWhoMayEdit(level, worldPosition);
         this.playerWhoMayEdit = uuid;
     }
 
     @Override
     public UUID getPlayerWhoMayEdit() {
-        validatePlayerWhoMayEdit(level, worldPosition);
         return playerWhoMayEdit;
     }
 
@@ -315,6 +309,11 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
         //unused we are have a container instead
+    }
+
+    @Override
+    public boolean shouldUseContainerMenu() {
+        return true;
     }
 
     @Override

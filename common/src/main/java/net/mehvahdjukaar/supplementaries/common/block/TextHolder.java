@@ -27,6 +27,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
@@ -209,15 +210,12 @@ public class TextHolder implements IAntiqueTextProvider {
         this.hasGlowingText = glowing;
     }
 
-    public InteractionResult playerInteract(ServerLevel level, BlockPos pos, Player player, InteractionHand hand, BlockEntity tile) {
+    public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
         boolean success = false;
         boolean commandSuccess = this.executeClickCommandsIfPresent(player, level, pos);
-        if (tile instanceof IWaxable waxable && waxable.isWaxed()) {
-            level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
-            return InteractionResult.PASS;
-        }
+
 
         if (item == Items.INK_SAC) {
             if (this.hasGlowingText || this.hasAntiqueInk) {
@@ -253,8 +251,7 @@ public class TextHolder implements IAntiqueTextProvider {
             }
             if (player instanceof ServerPlayer serverPlayer) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                tile.setChanged();
-                level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
+                player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

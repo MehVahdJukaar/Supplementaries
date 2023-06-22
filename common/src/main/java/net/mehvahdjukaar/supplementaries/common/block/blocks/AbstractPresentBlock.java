@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -24,9 +23,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -72,15 +69,9 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else if (player.isSpectator()) {
-            return InteractionResult.CONSUME;
-        } else {
-            if (worldIn.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-                return tile.interact((ServerPlayer) player, pos);
-            }
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
+            return tile.interact(level, pos, state, player);
         }
         return InteractionResult.PASS;
     }

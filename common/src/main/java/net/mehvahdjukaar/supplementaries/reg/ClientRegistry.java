@@ -25,15 +25,13 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverla
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
-import net.mehvahdjukaar.supplementaries.client.tooltip.BannerPatternTooltipComponent;
-import net.mehvahdjukaar.supplementaries.client.tooltip.BlackboardTooltipComponent;
-import net.mehvahdjukaar.supplementaries.client.tooltip.PaintingTooltipComponent;
-import net.mehvahdjukaar.supplementaries.client.tooltip.QuiverTooltipComponent;
+import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -404,6 +402,7 @@ public class ClientRegistry {
         event.register(QuiverTooltip.class, QuiverTooltipComponent::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);
+        event.register(SherdTooltip.class, SherdTooltipComponent::new);
         if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }
 

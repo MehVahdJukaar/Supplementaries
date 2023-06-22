@@ -7,16 +7,11 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.font.TextFieldHelper;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,34 +19,16 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.stream.IntStream;
-
-public class SignPostScreen extends Screen {
-    private TextFieldHelper textInputUtil;
-    /**
-     * The index of the line that is being edited.
-     */
-    private int editLine;
-    //for ticking cursor
-    private int updateCounter;
-    private final SignPostBlockTile tile;
-    private static final int MAXLINES = 2;
-    private final String[] cachedLines;
+public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
     private ModelPart signModel;
 
-    private SignPostScreen(SignPostBlockTile teSign) {
-        super(Component.translatable("sign.edit"));
-        this.tile = teSign;
-        this.cachedLines = IntStream.range(0, MAXLINES)
-                .mapToObj(l -> teSign.getTextHolder(l).getMessage(0, Minecraft.getInstance().isTextFilteringEnabled()))
-                .map(Component::getString).toArray(String[]::new);
-
-        editLine = !this.tile.getSignUp().active() ? 1 : 0;
+    private SignPostScreen(SignPostBlockTile tile) {
+        super(tile, Component.translatable("sign.edit"));
+        this.lineIndex = !this.tile.getSignUp().active() ? 1 : 0;
     }
 
     public static void open(SignPostBlockTile teSign) {
@@ -59,81 +36,15 @@ public class SignPostScreen extends Screen {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        this.textInputUtil.charTyped(codePoint);
-        return true;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (hasBothSignsActive()) {
-            this.scrollText((int) delta);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean hasBothSignsActive() {
+    protected boolean canScroll() {
         return this.tile.getSignUp().active() && this.tile.getSignDown().active();
+
     }
 
-    public void scrollText(int amount) {
-        this.editLine = Math.floorMod(this.editLine - amount, MAXLINES);
-        this.textInputUtil.setCursorToEnd();
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-
-        if (hasBothSignsActive()) {
-            // up arrow
-            if (keyCode == 265) {
-                this.scrollText(1);
-                return true;
-            }
-            // down arrow, enter
-            else if (keyCode == 264 || keyCode == 257 || keyCode == 335) {
-                this.scrollText(-1);
-                return true;
-            }
-        }
-        return this.textInputUtil.keyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public void tick() {
-        ++this.updateCounter;
-        if (!this.tile.getType().isValid(this.tile.getBlockState())) {
-            this.close();
-        }
-    }
-
-    @Override
-    public void onClose() {
-        this.close();
-    }
-
-    @Override
-    public void removed() {
-        // send new text to the server
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(this.tile.getBlockPos(),0, cachedLines));
-    }
-
-    private void close() {
-        this.tile.setChanged();
-        this.minecraft.setScreen(null);
-    }
 
     @Override
     protected void init() {
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> this.close())
-                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
-
-        this.textInputUtil = new TextFieldHelper(() -> this.cachedLines[this.editLine], (s) -> {
-            this.cachedLines[this.editLine] = s;
-            this.tile.getTextHolder(this.editLine).setMessage(0, Component.literal(s));
-        }, TextFieldHelper.createClipboardGetter(this.minecraft), TextFieldHelper.createClipboardSetter(this.minecraft), (s) -> this.minecraft.font.width(s) <= 90);
-
+        super.init();
         this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);
     }
 
@@ -192,19 +103,20 @@ public class SignPostScreen extends Screen {
         if (signUp.active() || signDown.active()) {
             poseStack.translate(-3 * 0.010416667F * o[0], 0.21875, 0.1875 + 0.005);
             poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
-            var properties = tile.getTextHolder().getGUIRenderTextProperties();
 
             int cursorPos = this.textInputUtil.getCursorPos();
             int selectionPos = this.textInputUtil.getSelectionPos();
 
             if (signUp.active()) {
-                TextUtil.renderGuiLine(properties, this.cachedLines[0], font, graphics, bufferSource,
-                        cursorPos, selectionPos, this.editLine == 0, blink, -10);
+                var properties = tile.getTextHolder(0).getGUIRenderTextProperties();
+                TextUtil.renderGuiLine(properties, this.messages[0][0], font, graphics, bufferSource,
+                        cursorPos, selectionPos, this.textHolderIndex == 0, blink, -10);
             }
             if (signDown.active()) {
                 poseStack.translate(-3 * o[1], 0, 0);
-                TextUtil.renderGuiLine(properties, this.cachedLines[1], font, graphics, bufferSource,
-                        cursorPos, selectionPos, this.editLine == 1, blink, 48 - 10);
+                var properties = tile.getTextHolder(1).getGUIRenderTextProperties();
+                TextUtil.renderGuiLine(properties, this.messages[1][0], font, graphics, bufferSource,
+                        cursorPos, selectionPos, this.textHolderIndex == 1, blink, 48 - 10);
             }
         }
 

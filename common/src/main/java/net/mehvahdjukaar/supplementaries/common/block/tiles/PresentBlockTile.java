@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -18,6 +16,7 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +29,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     private String sender = "";
     private String description = "";
 
+    //TODO: filtering here
     public PresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PRESENT_TILE.get(), pos, state);
     }
@@ -97,22 +97,27 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public boolean canOpen(Player player) {
+        if (super.canOpen(player)) return false;
+        if (!this.isUnused()) return false;
         return this.recipient.isEmpty() || this.recipient.equalsIgnoreCase(PUBLIC_KEY) ||
                 this.recipient.equalsIgnoreCase(player.getName().getString()) ||
                 this.sender.equalsIgnoreCase(player.getName().getString());
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, BlockPos pos) {
+    public InteractionResult interact(Level level,BlockPos pos, BlockState state,  Player player) {
         if (this.isUnused()) {
 
             if (this.canOpen(player)) {
-                PlatHelper.openCustomMenu(player, this, pos);
-                PiglinAi.angerNearbyPiglins(player, true);
-            } else {
-                player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    //we open directly as its a container and can open contains this logic
+                    PlatHelper.openCustomMenu(serverPlayer, this, pos);
+                    PiglinAi.angerNearbyPiglins(player, true);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            return InteractionResult.CONSUME;
+            player.displayClientMessage(Component.translatable("message.supplementaries.present.info", this.recipient), true);
+            return InteractionResult.FAIL;
         }
         return InteractionResult.PASS;
     }

@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -15,9 +17,16 @@ import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.DecoratedPotBlock;
+import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +35,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
 
 public class ClientEventsForge {
 
@@ -73,6 +84,7 @@ public class ClientEventsForge {
             ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
         }
     }
+
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Post event) {
@@ -141,4 +153,14 @@ public class ClientEventsForge {
         }
     }
 
+
+
+    @SubscribeEvent
+    public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
+        ItemStack stack = event.getItemStack();
+        var pattern = DecoratedPotPatterns.getResourceKey(stack.getItem());
+        if(pattern != null){
+            event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
+        }
+    }
 }

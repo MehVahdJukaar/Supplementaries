@@ -22,12 +22,15 @@ public interface IOnePlayerGui extends IScreenProvider {
     //call before access
     default void validatePlayerWhoMayEdit(Level level, BlockPos pos) {
         UUID uuid = this.getPlayerWhoMayEdit();
-        if (uuid != null) {
-            Player player = level.getPlayerByUUID(uuid);
-            if(player == null || player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0){
-                this.setPlayerWhoMayEdit(null);
-            }
+        if (uuid != null && playerIsTooFarAwayToEdit(level, pos, uuid)) {
+            this.setPlayerWhoMayEdit(null);
         }
+    }
+
+
+    default boolean playerIsTooFarAwayToEdit(Level level, BlockPos pos, UUID uUID) {
+        Player player = level.getPlayerByUUID(uUID);
+        return player == null || player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0;
     }
 
     default boolean isOtherPlayerEditing(Player player) {
@@ -35,17 +38,20 @@ public interface IOnePlayerGui extends IScreenProvider {
         return uuid != null && !uuid.equals(player.getUUID());
     }
 
-    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos){
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos) {
         if (Utils.mayBuild(player, pos) && !this.isOtherPlayerEditing(player)) {
             // open gui (edit sign with empty hand)
             this.setPlayerWhoMayEdit(player.getUUID());
 
-            if(this instanceof MenuProvider mp){
+            if (shouldUseContainerMenu() && this instanceof MenuProvider mp) {
                 PlatHelper.openCustomMenu(player, mp, pos);
-            }
-            else this.sendOpenGuiPacket(player.level(), pos, player);
+            } else this.sendOpenGuiPacket(player.level(), pos, player);
             return true;
         }
+        return false;
+    }
+
+    default boolean shouldUseContainerMenu() {
         return false;
     }
 }

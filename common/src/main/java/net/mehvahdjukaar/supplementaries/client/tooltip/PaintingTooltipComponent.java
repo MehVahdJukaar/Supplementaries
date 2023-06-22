@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,8 +12,7 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 
 public class PaintingTooltipComponent implements ClientTooltipComponent {
 
-    private static final int MAX_SIZE = 80;
-
+    private final int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
     private final PaintingVariant pattern;
     private final int height;
     private final int width;
@@ -22,11 +22,11 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
         float h = pattern.getHeight();
         float w = pattern.getWidth();
         if (h > w) {
-            this.height = MAX_SIZE;
-            this.width = (int) ((MAX_SIZE / h) * w);
+            this.height = size;
+            this.width = (int) ((size / h) * w);
         } else {
-            this.width = MAX_SIZE;
-            this.height = (int) ((MAX_SIZE / w) * h);
+            this.width = size;
+            this.height = (int) ((size / w) * h);
         }
     }
 

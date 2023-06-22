@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +14,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +41,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     public void load(CompoundTag compound) {
         super.load(compound);
         this.textHolder.load(compound, this.level, this.getBlockPos());
-        if(compound.contains("Waxed")){
+        if (compound.contains("Waxed")) {
             this.isWaxed = compound.getBoolean("Waxed");
         }
     }
@@ -52,7 +50,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         this.textHolder.save(tag);
-        if(isWaxed) tag.putBoolean("Waxed", isWaxed);
+        if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
 
     @Override
@@ -84,13 +82,13 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         return isWaxed;
     }
 
+    @Override
     public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override
     public UUID getPlayerWhoMayEdit() {
-        validatePlayerWhoMayEdit(level, worldPosition);
         return playerWhoMayEdit;
     }
 }

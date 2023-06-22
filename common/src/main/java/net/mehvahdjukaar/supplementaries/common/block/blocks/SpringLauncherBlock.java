@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -8,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class SpringLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
@@ -42,11 +46,11 @@ public class SpringLauncherBlock extends Block {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(EXTENDED, false));
     }
 
-    //TODO: forgeeee
-   // @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
         return state.getValue(EXTENDED) ? PushReaction.BLOCK : PushReaction.NORMAL;
+
     }
 
     @Override

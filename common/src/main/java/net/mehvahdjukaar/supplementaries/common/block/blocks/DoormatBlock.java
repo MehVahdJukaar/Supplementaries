@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -27,6 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -47,17 +47,17 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
                                  BlockHitResult hit) {
-        if (level instanceof ServerLevel serverLevel) {
-            if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
 
-                ItemStack itemstack = player.getItemInHand(handIn);
+            ItemStack itemstack = player.getItemInHand(hand);
 
-                boolean sideHit = hit.getDirection() != Direction.UP;
-                boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
-                boolean canInsert = tile.isEmpty() && sideHit;
-                if (canExtract ^ canInsert) {
+            boolean sideHit = hit.getDirection() != Direction.UP;
+            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
+            boolean canInsert = tile.isEmpty() && sideHit;
+            if (canExtract ^ canInsert) {
+                if (!level.isClientSide) {
                     if (canExtract) {
                         ItemStack dropStack = tile.removeItemNoUpdate(0);
                         ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.125, pos.getZ() + 0.5, dropStack);
@@ -72,24 +72,14 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                         }
                     }
                     tile.setChanged();
-                    level.playSound(null, pos, tile.getAddItemSound(), SoundSource.BLOCKS, 1.0F,
-                            0.8f);
-                    return InteractionResult.CONSUME;
+                    level.playSound(null, pos, tile.getAddItemSound(), SoundSource.BLOCKS, 1.0F, 0.8f);
                 }
-                //color
-
-                InteractionResult result = tile.textHolder.playerInteract(serverLevel, pos, player, handIn, tile);
-                if (result != InteractionResult.PASS) {
-                    return result;
-                }
-                if (tile.tryOpeningEditGui((ServerPlayer) player, pos)) {
-                    return InteractionResult.CONSUME;
-                }
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
-            return InteractionResult.PASS;
-        } else {
-            return InteractionResult.SUCCESS;
+            //color wax and gui
+            return tile.interactWithTextHolder(0, level, pos, state, player, hand);
         }
+        return InteractionResult.PASS;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
 import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
-import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -12,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,18 +21,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer, IOnePlayerGui {
-
-    @Nullable
-    private UUID playerWhoMayEdit = null;
+public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
 
     protected AbstractPresentBlockTile(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state, 1);
     }
 
-    public abstract InteractionResult interact(ServerPlayer player, BlockPos pos);
+    public abstract InteractionResult interact(Level level, BlockPos pos, BlockState state, Player player);
 
     @Override
     protected void updateBlockState(BlockState state, boolean b) {
@@ -96,20 +88,5 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
     }
 
 
-    @Override
-    public UUID getPlayerWhoMayEdit() {
-        validatePlayerWhoMayEdit(level, worldPosition);
-        return playerWhoMayEdit;
-    }
-
-    @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
-        validatePlayerWhoMayEdit(level, worldPosition);
-        this.playerWhoMayEdit = playerWhoMayEdit;
-    }
-
-    @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
-    }
 }
 

@@ -9,22 +9,26 @@ import net.minecraft.network.chat.Component;
 
 public class ClientBoundPlaySpeakerMessagePacket implements Message {
 
-    public final Component str;
+    public final Component message;
+    public final Component filtered;
     public final SpeakerBlockTile.Mode mode;
 
     public ClientBoundPlaySpeakerMessagePacket(FriendlyByteBuf buf) {
-        this.str = buf.readComponent();
+        this.message = buf.readComponent();
+        this.filtered = buf.readComponent();
         this.mode = SpeakerBlockTile.Mode.values()[buf.readByte()];
     }
 
-    public ClientBoundPlaySpeakerMessagePacket(Component str, SpeakerBlockTile.Mode mode) {
-        this.str = str;
+    public ClientBoundPlaySpeakerMessagePacket(Component message, Component filtered, SpeakerBlockTile.Mode mode) {
+        this.message = message;
+        this.filtered = filtered;
         this.mode = mode;
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
-        buf.writeComponent(this.str);
+        buf.writeComponent(this.message);
+        buf.writeComponent(this.filtered);
         buf.writeByte(this.mode.ordinal());
     }
 

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.*;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +17,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +31,9 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class FaucetBlockTile extends BlockEntity {
 
@@ -114,15 +119,6 @@ public class FaucetBlockTile extends BlockEntity {
             else if (res == InteractionResult.CONSUME) break;
             else if (res == InteractionResult.FAIL) return 0;
         }
-        if (!this.isConnectedBelow()) {
-            for (var bi : ITEM_INTERACTIONS) {
-                ItemStack removed = bi.tryExtractItem(level, behind, backState);
-                if (!removed.isEmpty()) {
-                    drop(level, pos, removed);
-                    return COOLDOWN;
-                }
-            }
-        }
 
         //soft fluid holders
         BlockEntity tileBack = level.getBlockEntity(behind);
@@ -139,23 +135,34 @@ public class FaucetBlockTile extends BlockEntity {
             if (!doTransfer) {
                 return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
             }
-            //pull other items from containers
-            return this.spillItemsFromInventory(level, pos, dir, tileBack);
-        } else {
-            FluidState fluidState = level.getFluidState(behind);
+        }
+        if (!this.isConnectedBelow()) {
+            for (var bi : ITEM_INTERACTIONS) {
+                ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
+                if (!removed.isEmpty()) {
+                    if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed, dir)) {
 
-            for (var bi : FLUID_INTERACTIONS) {
-                var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                        fluidState, fillAction);
-                if (res == InteractionResult.PASS) continue;
-                if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
-                else if (res == InteractionResult.CONSUME) break;
-                else if (res == InteractionResult.FAIL) return 0;
-            }
-            if (!doTransfer) {
-                return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
+                    } else if (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get()) {
+                        drop(removed);
+                    }
+                    return COOLDOWN;
+                }
             }
         }
+
+        FluidState fluidState = level.getFluidState(behind);
+        for (var bi : FLUID_INTERACTIONS) {
+            var res = bi.tryDrain(level, this.tempFluidHolder, behind,
+                    fluidState, fillAction);
+            if (res == InteractionResult.PASS) continue;
+            if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
+            else if (res == InteractionResult.CONSUME) break;
+            else if (res == InteractionResult.FAIL) return 0;
+        }
+        if (!doTransfer) {
+            return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
+        }
+
         return 0;
     }
 
@@ -205,24 +212,27 @@ public class FaucetBlockTile extends BlockEntity {
 
     //------items------
 
-    public int spillItemsFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
-        //TODO: maybe add here insertion in containers below
-        if (!this.isConnectedBelow()) {
-            ItemStack removed = ItemsUtil.removeFirstStackFromInventory(level, pos, dir, tile);
-            if (removed != ItemStack.EMPTY) {
-                drop(level, pos, removed);
-                return COOLDOWN;
-            }
-        }
-        return 0;
-    }
-
-    private static void drop(Level level, BlockPos pos, ItemStack extracted) {
+    private void drop(ItemStack extracted) {
+        BlockPos pos = worldPosition;
         ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
         drop.setDeltaMovement(new Vec3(0, 0, 0));
         level.addFreshEntity(drop);
         float f = (level.random.nextFloat() - 0.5f) / 4f;
         level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
+    }
+
+    public static final Predicate<Entity> NON_PLAYER = e -> e.isAlive() && !(e instanceof Player);
+
+    private boolean fillEntityBelow(ItemStack stack, Direction direction) {
+        List<Entity> list = level.getEntities((Entity) null,
+                new AABB(worldPosition).move(0, -0.75, 0),
+                NON_PLAYER);
+        Collections.shuffle(list);
+        for (var o : list) {
+            stack = ItemsUtil.tryAddingItem(stack, level, direction, o);
+            if (stack.isEmpty()) return true;
+        }
+        return false;
     }
 
     @Override

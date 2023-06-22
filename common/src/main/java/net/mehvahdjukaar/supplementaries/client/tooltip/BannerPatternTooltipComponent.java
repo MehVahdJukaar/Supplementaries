@@ -1,21 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public class BannerPatternTooltipComponent implements ClientTooltipComponent {
 
-    private static final int SIZE = 80;
+    private final int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
     private final BannerPatternTooltip tooltip;
 
     public BannerPatternTooltipComponent(BannerPatternTooltip tooltip) {
@@ -24,12 +22,12 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
 
     @Override
     public int getHeight() {
-        return SIZE + 2;
+        return size + 2;
     }
 
     @Override
     public int getWidth(Font pFont) {
-        return SIZE;
+        return size;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
             var contents = sprite.contents();
             int width = contents.width();
             int height = contents.height();
-            RenderUtil.blitSpriteSection(graphics, x, y, SIZE, SIZE, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
+            RenderUtil.blitSpriteSection(graphics, x, y, size, size, (16f) / width, (16f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
         }
 
         graphics.pose().popPose();

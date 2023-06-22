@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +37,12 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
             (map) -> map.defaultReturnValue(((source, stack) -> Optional.empty())));
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
 
     public TrappedPresentBlock(DyeColor color, Properties properties) {
         super(color, properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
+                .setValue(ON_COOLDOWN,false));
     }
 
     public static void registerBehavior(ItemLike pItem, IPresentItemBehavior pBehavior) {
@@ -53,7 +56,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING);
+        builder.add(FACING, ON_COOLDOWN);
     }
 
     @Nullable
@@ -64,10 +67,9 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
 
     @Override
     public boolean triggerEvent(BlockState pState, Level pLevel, BlockPos pPos, int pId, int pParam) {
-        if (pId == 0) {
+        if (pId == 0 && pState.getValue(ON_COOLDOWN)) {
             if (pLevel.isClientSide) {
                 RandomSource random = pLevel.random;
-
 
                 double cx = pPos.getX() + 0.5D;
                 double cy = pPos.getY() + 0.5 + 0.4;
@@ -83,7 +85,6 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
                 }
 
                 ParticleUtil.spawnBreakParticles(PresentBlock.SHAPE_LID, pPos, pState, pLevel);
-
                 // ((ClientLevel)pLevel).playLocalSound(pPos, SoundEvents.DISPENSER_LAUNCH, SoundSource.BLOCKS, 1.0F, 0.7f,false);
             }
             return true;
@@ -91,6 +92,13 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
         return super.triggerEvent(pState, pLevel, pPos, pId, pParam);
     }
 
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        super.tick(state, level, pos, random);
+        if(state.getValue(ON_COOLDOWN)){
+            level.setBlockAndUpdate(pos, state.setValue(ON_COOLDOWN, false));
+        }
+    }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {

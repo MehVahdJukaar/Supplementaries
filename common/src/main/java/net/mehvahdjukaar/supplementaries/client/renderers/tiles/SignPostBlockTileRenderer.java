@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Camera;
@@ -87,7 +88,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             if (up) {
                 var v = new Vector3f();
                 v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
-                var textProperties = tile.getTextHolder()
+                var textProperties = tile.getTextHolder(0)
                         .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
 
                 poseStack.pushPose();
@@ -99,7 +100,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             if (down) {
                 var v = new Vector3f();
                 v.rotateY(signUp.yaw()* Mth.DEG_TO_RAD);
-                var textProperties = tile.getTextHolder()
+                var textProperties = tile.getTextHolder(1)
                         .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
 
                 poseStack.pushPose();

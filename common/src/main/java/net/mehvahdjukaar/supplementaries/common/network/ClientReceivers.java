@@ -42,7 +42,7 @@ public class ClientReceivers {
 
     public static void handlePlaySpeakerMessagePacket(ClientBoundPlaySpeakerMessagePacket message) {
         var mode = message.mode;
-        Component str = message.str;
+        Component str = Minecraft.getInstance().isTextFilteringEnabled() ? message.filtered : message.message;
         if (mode == SpeakerBlockTile.Mode.NARRATOR && !ClientConfigs.Blocks.SPEAKER_BLOCK_MUTE.get()) {
             Minecraft.getInstance().getNarrator().narrator.say(str.getString(), true);
         } else if (mode == SpeakerBlockTile.Mode.TITLE) {
@@ -80,6 +80,11 @@ public class ClientReceivers {
                     ParticleUtil.spawnParticleOnBlockShape(l, BlockPos.containing(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
                             UniformInt.of(2, 4), 0.01f);
+                }
+                case WAX_ON -> {
+                    ParticleUtil.spawnParticleOnBlockShape(l, BlockPos.containing(message.pos),
+                            ParticleTypes.WAX_ON,
+                            UniformInt.of(3, 5), 0.01f);
                 }
                 case BUBBLE_CLEAN_ENTITY -> {
                     if (message.extraData != null) {

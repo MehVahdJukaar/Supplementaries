@@ -12,60 +12,78 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 //TODO: move to lib
 public class ServerBoundSetTextHolderPacket implements Message {
     private final BlockPos pos;
-    private final int index;
-    public final String[] lines;
-    public final int size;
+    public final String[][] textHolderLines;
 
     public ServerBoundSetTextHolderPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.index = buf.readVarInt();
-        this.size = buf.readVarInt();
-        this.lines = new String[this.size];
-        for (int i = 0; i < this.size; ++i) {
-            this.lines[i] = buf.readUtf();
+        this.textHolderLines = new String[buf.readVarInt()][];
+        for (int i = 0; i < textHolderLines.length; ++i) {
+            String[] lines = new String[buf.readVarInt()];
+            for (int j = 0; j < lines.length; ++j) {
+                lines[j] = buf.readUtf();
+            }
+            this.textHolderLines[i] = lines;
         }
     }
 
-    public ServerBoundSetTextHolderPacket(BlockPos pos, int index, String[] lines) {
+    public ServerBoundSetTextHolderPacket(BlockPos pos, String[][] holderLines) {
         this.pos = pos;
-        this.size = lines.length;
-        this.lines = lines;
-        this.index = index;
+        this.textHolderLines = holderLines;
+    }
+
+    public ServerBoundSetTextHolderPacket(BlockPos pos, String[] lines) {
+        this(pos, new String[][]{lines});
+    }
+
+    public ServerBoundSetTextHolderPacket(BlockPos pos, String line) {
+        this(pos, new String[]{line});
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeVarInt(this.index);
-        buf.writeVarInt(this.size);
-        for (int i = 0; i < this.size; ++i) {
-            buf.writeUtf(this.lines[i]);
+        buf.writeVarInt(this.textHolderLines.length);
+        for (String[] l : this.textHolderLines) {
+            buf.writeVarInt(l.length);
+            for (var v : l) buf.writeUtf(v);
         }
     }
 
     @Override
     public void handle(ChannelHandler.Context context) {
         // text filtering yay
-        List<String> list = Stream.of(lines).map(ChatFormatting::stripFormatting).toList();
         ServerPlayer sender = (ServerPlayer) context.getSender();
-        sender.connection.filterTextPacket(list).thenAcceptAsync((l) -> {
+
+        CompletableFuture.supplyAsync(() ->
+                Stream.of(textHolderLines)
+                        .map(line -> Stream.of(line)
+                                .map(ChatFormatting::stripFormatting)
+                                .toList()
+                        )
+                        .map(innerList ->
+                                sender.connection.filterTextPacket(innerList))
+                        .map(CompletableFuture::join)
+                        .toList()
+        ).thenAcceptAsync((l) -> {
             this.updateSignText(sender, l);
         }, sender.server);
     }
 
 
-    private void updateSignText(ServerPlayer player, List<FilteredText> filteredText) {
+    private void updateSignText(ServerPlayer player, List<List<FilteredText>> filteredText) {
         player.resetLastActionTime();
         Level level = player.level();
 
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof ITextHolderProvider te) {
-            if (te.tryAcceptingClientText(this.index, player, filteredText)) {
+            if (te.tryAcceptingClientText(pos, player, filteredText)) {
                 BlockEntity be = (BlockEntity) te;
+                te.setChanged();
                 level.sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
             }
         }

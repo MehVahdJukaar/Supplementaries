@@ -191,7 +191,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                     font.drawInBatch("§ka", dx, dy + 8 * lin, textProperties.textColor(), false, pose,
                             buffer, Font.DisplayMode.NORMAL, 0, frontLight);
                 } else {
-                    if (textProperties.glowing()) {
+                    if (textProperties.outline()) {
                         font.drawInBatch8xOutline(str, dx, dy + 8 * lin, textProperties.textColor(), textProperties.darkenedColor(),
                                 pose, buffer, textProperties.light());
                     } else {

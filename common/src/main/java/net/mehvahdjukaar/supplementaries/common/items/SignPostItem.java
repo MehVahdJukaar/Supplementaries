@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedItem;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -55,7 +56,6 @@ public class SignPostItem extends WoodBasedItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-
         Player player = context.getPlayer();
         if (player == null) return InteractionResult.PASS;
         BlockPos blockpos = context.getClickedPos();
@@ -87,7 +87,6 @@ public class SignPostItem extends WoodBasedItem {
 
             if (world.getBlockEntity(blockpos) instanceof SignPostBlockTile tile) {
 
-                BlockUtil.addOptionalOwnership(player, tile);
 
                 int r = Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
 
@@ -95,13 +94,18 @@ public class SignPostItem extends WoodBasedItem {
 
                 boolean up = y > 0.5d;
 
+
                 flag = tile.initializeSignAfterConversion(this.getBlockType(), r, up,
                         attachType == AttachType.STICK, framed);
 
-                if (attachType != SignPostItem.AttachType.SIGN_POST) {
-                    tile.setHeldBlock(targetBlock.defaultBlockState());
+                if(flag) {
+                    if (attachType != SignPostItem.AttachType.SIGN_POST) {
+                        tile.setHeldBlock(targetBlock.defaultBlockState());
+                        tile.setChanged();
+                    } else {
+                        BlockUtil.addOptionalOwnership(player, tile);
+                    }
                 }
-                tile.setChanged();
 
             }
             if (flag) {

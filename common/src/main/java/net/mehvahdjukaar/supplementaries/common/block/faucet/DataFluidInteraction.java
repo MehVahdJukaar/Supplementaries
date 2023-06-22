@@ -16,16 +16,16 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import java.util.Optional;
 
 //Data defined fluid interaction
-public record DataSourceInteraction(RuleTest target, ResourceLocation softFluid, int amount,
-                                    Optional<BlockState> output) implements IFaucetBlockSource {
+public record DataFluidInteraction(RuleTest target, ResourceLocation softFluid, int amount,
+                                   Optional<BlockState> output) implements IFaucetBlockSource {
 
-    public static final Codec<DataSourceInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RuleTest.CODEC.fieldOf("target").forGetter(DataSourceInteraction::target),
-            ResourceLocation.CODEC.fieldOf("fluid").forGetter(DataSourceInteraction::softFluid),
+    public static final Codec<DataFluidInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            RuleTest.CODEC.fieldOf("target").forGetter(DataFluidInteraction::target),
+            ResourceLocation.CODEC.fieldOf("fluid").forGetter(DataFluidInteraction::softFluid),
             // SoftFluid.HOLDER_CODEC.fieldOf("fluid").forGetter(DataSourceInteraction::softFluid),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("amount", 1).forGetter(DataSourceInteraction::amount),
-            BlockState.CODEC.optionalFieldOf("replace_with").forGetter(DataSourceInteraction::output)
-    ).apply(instance, DataSourceInteraction::new));
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("amount", 1).forGetter(DataFluidInteraction::amount),
+            BlockState.CODEC.optionalFieldOf("replace_with").forGetter(DataFluidInteraction::output)
+    ).apply(instance, DataFluidInteraction::new));
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state,

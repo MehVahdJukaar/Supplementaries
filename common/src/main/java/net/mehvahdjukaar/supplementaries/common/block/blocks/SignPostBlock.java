@@ -4,6 +4,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;

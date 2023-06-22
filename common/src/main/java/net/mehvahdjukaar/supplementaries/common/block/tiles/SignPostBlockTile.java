@@ -6,18 +6,18 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +25,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -35,7 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -78,6 +76,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public TextHolder getTextHolder(int i) {
         return getSign(i == 0).text;
+    }
+
+    @Override
+    public int textHoldersCount() {
+        return 2;
     }
 
     //@Override
@@ -140,16 +143,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
         return false;
     }
-
-
-    //TODO: add antique ink cap also
-    /*
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        //if(cap == CapabilityHandler.ANTIQUE_TEXT_CAP) return LazyOptional.of(()->this.textHolder);
-        return super.getCapability(cap, side);
-    }*/
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
@@ -284,26 +277,14 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                                                InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
         Item item = itemstack.getItem();
 
-        //put post on map
-        if (item instanceof MapItem) {
-            //this needed? TODO: CHECK
-            if (MapItem.getSavedData(itemstack, level) instanceof ExpandedMapData data) {
-                //   data.toggleCustomDecoration(level, pos);
-            }
-            //return InteractionResult.CONSUME;
-        }
-
         boolean emptyHand = itemstack.isEmpty();
         boolean isSneaking = player.isShiftKeyDown() && emptyHand;
 
+        boolean ind = getClickedSignIndex(hit.getLocation());
+
         if (hit.getDirection().getAxis() != Direction.Axis.Y) {
 
-            Sign sign = getClickedSign(hit.getLocation());
-
-            InteractionResult result = sign.text.playerInteract(level, pos, player, handIn, this);
-            if (result != InteractionResult.PASS) return result;
-
-            //sneak right click rotates the sign on z axis
+            Sign sign = getSign(ind);
 
             if (isSneaking) {
                 sign.toggleDirection();
@@ -321,7 +302,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
                 if (pointingPos != null) {
                     if (sign.active) {
-                        sign.pointToward(pos,pointingPos);
+                        sign.pointToward(pos, pointingPos);
                     }
                     this.setChanged();
                     level.sendBlockUpdated(pos, state, state, 3);
@@ -331,24 +312,21 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             } else if (CompatHandler.FRAMEDBLOCKS && this.framed) {
                 boolean success = FramedBlocksCompat.interactWithFramedSignPost(this, player, handIn, itemstack, level, pos);
                 if (success) return InteractionResult.CONSUME;
-            } else if (item instanceof SignPostItem) {
-                //let sign item handle this one
-                return InteractionResult.PASS;
             }
         }
-        if (this.tryOpeningEditGui((ServerPlayer) player, pos)){
-            return InteractionResult.CONSUME;
-        }
-
-        return InteractionResult.PASS;
+        return this.interactWithTextHolder(ind ? 0 : 1, level, pos, state, player, handIn);
     }
 
-    public Sign getClickedSign(Vec3 hit) {
+    public boolean getClickedSignIndex(Vec3 hit) {
         double y = hit.y;
         //negative y yay!
         if (y < 0) y = y + (1 - (int) y);
         else y = y - (int) y;
-        return getSign(y > 0.5d);
+        return (y > 0.5d);
+    }
+
+    public Sign getClickedSign(Vec3 hit) {
+        return getSign(getClickedSignIndex(hit));
     }
 
     @Nullable
@@ -384,13 +362,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return isWaxed;
     }
 
+    @Override
     public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override
     public UUID getPlayerWhoMayEdit() {
-        validatePlayerWhoMayEdit(level, worldPosition);
         return playerWhoMayEdit;
     }
 }

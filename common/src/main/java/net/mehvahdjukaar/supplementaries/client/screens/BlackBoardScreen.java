@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -20,13 +19,13 @@ public class BlackBoardScreen extends Screen {
     private static final MutableComponent CLEAR = Component.translatable("gui.supplementaries.blackboard.clear");
     private static final MutableComponent EDIT = Component.translatable("gui.supplementaries.blackboard.edit");
 
-    private final BlackboardBlockTile tileBoard;
+    private final BlackboardBlockTile tile;
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
     private BlackBoardScreen(BlackboardBlockTile teBoard) {
         super(EDIT);
-        this.tileBoard = teBoard;
+        this.tile = teBoard;
     }
 
     public static void open(BlackboardBlockTile sign) {
@@ -35,9 +34,14 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void tick() {
-        if (!this.tileBoard.getType().isValid(this.tileBoard.getBlockState())) {
+        if (!isValid()) {
             this.close();
         }
+    }
+
+    private boolean isValid() {
+        return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
+                !this.tile.playerIsTooFarAwayToEdit(tile.getLevel(), tile.getBlockPos(), this.minecraft.player.getUUID());
     }
 
     @Override
@@ -54,18 +58,17 @@ public class BlackBoardScreen extends Screen {
                 pixels[xx][yy] = (this.buttons[xx][yy].getColor());
             }
         }
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tileBoard.getBlockPos(), pixels));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
     }
 
     private void close() {
-
-        this.tileBoard.setChanged();
+        this.tile.setChanged();
         this.minecraft.setScreen(null);
     }
 
     //dynamic refreshTextures for client
     public void setPixel(int x, int y, boolean on) {
-        this.tileBoard.setPixel(x,y,(byte) (on ? 1 : 0));
+        this.tile.setPixel(x,y,(byte) (on ? 1 : 0));
     }
 
     //calls drag for other buttons
@@ -93,7 +96,7 @@ public class BlackBoardScreen extends Screen {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addRenderableWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].setColor(this.tileBoard.getPixel(xx,yy));
+                this.buttons[xx][yy].setColor(this.tile.getPixel(xx,yy));
             }
         }
 

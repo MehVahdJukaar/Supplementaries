@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -79,7 +80,8 @@ public class ClientBoundParticlePacket implements Message {
         BUBBLE_CLEAN,
         BUBBLE_CLEAN_ENTITY,
         DISPENSER_MINECART,
-        FLINT_BLOCK_IGNITE
+        FLINT_BLOCK_IGNITE,
+        WAX_ON
     }
 
 }

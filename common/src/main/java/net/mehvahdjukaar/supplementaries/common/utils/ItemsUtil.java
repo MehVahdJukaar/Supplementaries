@@ -125,8 +125,14 @@ public class ItemsUtil {
     }
 
 
+    //TODO: move to lib
     @ExpectPlatform
-    public static ItemStack removeFirstStackFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+    public static ItemStack tryExtractingItem(Level level, @Nullable Direction dir, Object container) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction direction, Object container){
         throw new AssertionError();
     }
 

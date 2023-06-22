@@ -17,6 +17,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HopperBlock;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -172,11 +174,19 @@ public class CommonConfigs {
                     .define("face_forward", false);
             builder.pop();
 
+            builder.push("faucet");
+            FAUCET_ENABLED = feature(builder);
+            FAUCET_DROP_ITEMS = builder.comment("Turn off to prevent faucets from dropping items")
+                    .define("drop_items", true);
+            FAUCET_FILL_ENTITIES = builder.comment("Allows faucets to fill entities inventories")
+                    .define("drop_items", false);
+            builder.pop();
+
+
             WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
             ILLUMINATOR_ENABLED = feature(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME);
             CRANK_ENABLED = feature(builder, ModConstants.CRANK_NAME);
-            FAUCET_ENABLED = feature(builder, ModConstants.FAUCET_NAME);
             COG_BLOCK_ENABLED = feature(builder, ModConstants.COG_BLOCK_NAME);
             GOLD_DOOR_ENABLED = feature(builder, ModConstants.GOLD_DOOR_NAME);
             GOLD_TRAPDOOR_ENABLED = feature(builder, ModConstants.GOLD_TRAPDOOR_NAME);
@@ -219,6 +229,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CRANK_ENABLED;
 
         public static final Supplier<Boolean> FAUCET_ENABLED;
+        public static final Supplier<Boolean> FAUCET_FILL_ENTITIES;
+        public static final Supplier<Boolean> FAUCET_DROP_ITEMS;
 
         public static final Supplier<Boolean> COG_BLOCK_ENABLED;
 

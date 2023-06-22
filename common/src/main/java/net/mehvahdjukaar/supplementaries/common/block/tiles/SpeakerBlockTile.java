@@ -128,7 +128,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         compound.putDouble("Volume", this.volume);
         this.saveOwner(compound);
     }
-//TODO: Check for owner on server
     public void sendMessage() {
         BlockState state = this.getBlockState();
 
@@ -145,11 +144,11 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             if (name.isEmpty()) {
                 s = "Speaker Block: ";
             } else if (!name.equals("\"\"") && !name.equals("\"")) s += name + ": ";
-            Component component = Component.literal(s + this.message)
-                    .withStyle(style);
+            Component component = Component.literal(s + this.message).withStyle(style);
+            Component filtered = Component.literal(s + this.filteredMessage).withStyle(style);
 
             NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
-                    this.volume, new ClientBoundPlaySpeakerMessagePacket(component, this.mode));
+                    this.volume, new ClientBoundPlaySpeakerMessagePacket(component,filtered, this.mode));
 
         }
     }
@@ -177,6 +176,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
+        this.validatePlayerWhoMayEdit(level, worldPosition);
         if (player.getUUID().equals(this.getPlayerWhoMayEdit())) {
             this.acceptClientMessages(player, filteredText);
             this.setPlayerWhoMayEdit(null);

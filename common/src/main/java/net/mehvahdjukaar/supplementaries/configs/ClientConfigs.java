@@ -1,13 +1,15 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 
@@ -27,10 +29,10 @@ public class ClientConfigs {
     static WeakReference<ConfigBuilder> builderReference;
 
     static {
-        if(!PlatHelper.getPhysicalSide().isClient()){
+        if (!PlatHelper.getPhysicalSide().isClient()) {
             String message = "Tried to load client configs on a dedicated server";
             Supplementaries.LOGGER.error(message);
-            if(PlatHelper.isDev()){
+            if (PlatHelper.isDev()) {
                 throw new AssertionError(message);
             }
         }
@@ -43,9 +45,16 @@ public class ClientConfigs {
         General.init();
         Tweaks.init();
         Items.init();
+
+        builder.onChange(ClientConfigs::onChange);
         SPEC = builder.buildAndRegister();
 
+
         SPEC.loadFromFile();
+    }
+
+    private static void onChange() {
+        TextUtil.TEXT_COLOR_MULTIPLIER = (float) (double) Tweaks.BRIGHTEN_SIGN_TEXT_COLOR.get();
     }
 
     public static class Items {
@@ -127,8 +136,11 @@ public class ClientConfigs {
         public static final Supplier<List<BookPileBlockTile.BookColor>> BOOK_COLORS;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
+        public static final Supplier<Boolean> SHERDS_TOOLTIPS;
+        public static final Supplier<Integer> TOOLTIP_IMAGE_SIZE;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Double> BRIGHTEN_SIGN_TEXT_COLOR;
 
 
         static {
@@ -153,11 +165,16 @@ public class ClientConfigs {
                     .define("banner_pattern_tooltip", true);
             PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")
                     .define("paintings_tooltip", true);
+            SHERDS_TOOLTIPS = builder.comment("Enables sherds tooltip image preview")
+                    .define("sherds_tooltip", true);
+            TOOLTIP_IMAGE_SIZE = builder.comment("Size of the tooltip image used for Sherds, Blackboards, Banner patterns and Paintings")
+                    .define("tooltip_image_size", 80, 1, 255);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
-                            .define("send_chat_on_death", true);
-
+                    .define("send_chat_on_death", true);
+            BRIGHTEN_SIGN_TEXT_COLOR = builder.comment("A scalar multiplier that will be applied to sign text making it brighter, supposedly more legible")
+                    .define("sign_text_color_multiplier", 1f, 0, 5);
             builder.pop();
         }
     }

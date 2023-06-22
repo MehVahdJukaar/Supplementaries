@@ -161,8 +161,9 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     //TODO: use vanilla system??
     //default lockable tile method. just used for compat
     @Override
-    public boolean canOpen(Player pPlayer) {
-        return canPlayerOpen(pPlayer, false);
+    public boolean canOpen(Player player) {
+        if (super.canOpen(player)) return false;
+        return canPlayerOpen(player, false);
     }
 
     @Override

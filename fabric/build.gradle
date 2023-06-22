@@ -37,13 +37,13 @@ dependencies {
     }
 
     //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
-    //modRuntimeOnly("curse.maven:architectury-419699:4521264")
+    modRuntimeOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
     modCompileOnly("curse.maven:farmers-delight-fabric-482834:4111426")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modImplementation("curse.maven:biome-makeover-412182:4572458")
+    //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")

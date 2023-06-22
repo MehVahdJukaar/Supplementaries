@@ -62,7 +62,7 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
             NoticeBoardBlockTileRenderer.renderNoticeBoardContent(mr, font, minecraft.getItemRenderer(),
                     tile, graphics.pose(), buffer,
-                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, stack, Direction.UP, new LOD(Vec3.ZERO, BlockPos.ZERO)
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, stack, Direction.UP, LOD.MAX
             );
             poseStack.popPose();
         }

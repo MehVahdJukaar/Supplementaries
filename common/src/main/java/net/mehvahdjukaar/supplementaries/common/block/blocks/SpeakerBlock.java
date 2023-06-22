@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -106,22 +107,24 @@ public class SpeakerBlock extends Block implements EntityBlock {
                 ItemStack stack = player.getItemInHand(hand);
                 if (stack.is(ModRegistry.ANTIQUE_INK.get())) {
                     level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.setBlockAndUpdate(pos, state.setValue(ANTIQUE, true));
+                    level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
+
                     if (!player.isCreative()) {
                         stack.shrink(1);
                     }
                     if (player instanceof ServerPlayer serverPlayer) {
                         CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                        level.setBlockAndUpdate(pos, state.setValue(ANTIQUE, true));
+                        player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     }
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
             // client
-            if (level.isClientSide) {
-                //send message here
-                return InteractionResult.SUCCESS;
+            if (player instanceof ServerPlayer serverPlayer) {
+                tile.tryOpeningEditGui(serverPlayer, pos);
             }
-            return InteractionResult.CONSUME;
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

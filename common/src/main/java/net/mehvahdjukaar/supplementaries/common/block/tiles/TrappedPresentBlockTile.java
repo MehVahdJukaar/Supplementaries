@@ -21,11 +21,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
-
-    private long lastActivated = 0;
 
     public TrappedPresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.TRAPPED_PRESENT_TILE.get(), pos, state);
@@ -68,22 +67,32 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public boolean canOpen(Player player) {
+        if(super.canOpen(player))return false;
+        if(!this.isUnused())return false;
         return !this.isPrimed();
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, BlockPos pos) {
-        long time = player.level().getGameTime();
-        if (this.isUnused() &&
-                Mth.abs((float) time - lastActivated) > 10) {
+    public InteractionResult interact(Level  level, BlockPos pos, BlockState state, Player player) {
+        if(state.getValue(TrappedPresentBlock.ON_COOLDOWN)){
+            return InteractionResult.FAIL;
+        }
+        if (this.isUnused()) {
             if (this.canOpen(player)) {
-                PlatHelper.openCustomMenu(player, this, pos);
-                PiglinAi.angerNearbyPiglins(player, true);
+                if(player instanceof ServerPlayer serverPlayer) {
+                    PlatHelper.openCustomMenu(serverPlayer, this, pos);
+                    PiglinAi.angerNearbyPiglins(player, true);
+                }
             } else {
-                detonate((ServerLevel) player.level(), pos);
-                this.lastActivated = time;
+                //boom!
+                level.setBlockAndUpdate(pos, state.setValue(TrappedPresentBlock.ON_COOLDOWN, true));
+                level.scheduleTick(pos, state.getBlock(), 10);
+                if(level instanceof ServerLevel sl) {
+                    detonate(sl, pos);
+                }
             }
-            return InteractionResult.CONSUME;
+            return InteractionResult.sidedSuccess(level.isClientSide);
+
         }
         return InteractionResult.PASS;
     }

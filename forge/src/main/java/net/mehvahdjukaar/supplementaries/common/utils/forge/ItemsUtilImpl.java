@@ -10,21 +10,26 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -151,22 +156,39 @@ public class ItemsUtilImpl {
         return found;
     }
 
-    public static ItemStack removeFirstStackFromInventory(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
-        IItemHandler itemHandler = CapabilityHandler.get(tile, ForgeCapabilities.ITEM_HANDLER, dir);
-        if (itemHandler != null) {
-            for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-                ItemStack itemstack = itemHandler.getStackInSlot(slot);
-                if (!itemstack.isEmpty()) {
-                    ItemStack extracted = itemHandler.extractItem(slot, 1, false);
-                    //empty stack means it can't extract from inventory
-                    if (!extracted.isEmpty()) {
-                        tile.setChanged();
-                        return extracted.copy();
+    public static ItemStack tryExtractingItem(Level level, Direction dir, Object tile) {
+        if (tile instanceof ICapabilityProvider cp) {
+            IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
+            if (itemHandler != null) {
+                for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+                    ItemStack itemstack = itemHandler.getStackInSlot(slot);
+                    if (!itemstack.isEmpty()) {
+                        ItemStack extracted = itemHandler.extractItem(slot, 1, false);
+                        //empty stack means it can't extract from inventory
+                        if (!extracted.isEmpty()) {
+                            if (cp instanceof Container c) c.setChanged();
+                            return extracted.copy();
+                        }
                     }
                 }
             }
         }
         return ItemStack.EMPTY;
     }
+
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction dir, Object container) {
+        if (container instanceof ICapabilityProvider cp) {
+            IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
+            if(container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im){
+                //thanks...
+                itemHandler = new RangedWrapper(im,1, itemHandler.getSlots());
+            }
+            if (itemHandler != null) {
+                return ItemHandlerHelper.insertItem(itemHandler, stack, false);
+            }
+        }
+        return stack;
+    }
+
 
 }

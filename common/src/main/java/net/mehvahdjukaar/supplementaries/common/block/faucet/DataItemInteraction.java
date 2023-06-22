@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 
@@ -20,7 +22,7 @@ public record DataItemInteraction(RuleTest target, ItemStack stack,
     ).apply(instance, DataItemInteraction::new));
 
     @Override
-    public ItemStack tryExtractItem(Level level, BlockPos pos, BlockState state) {
+    public ItemStack tryExtractItem(Level level, BlockPos pos, BlockState state, Direction direction, BlockEntity tile) {
         if (target.test(state, level.random)) {
             output.ifPresent(s -> level.setBlock(pos, s, 3));
             return stack.copy();

@@ -22,6 +22,7 @@
     "ParrotMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",
+    "SignRendererMixin",
     "UndeadHorseRenderMixin",
     "WrittenBookAccessMixin"
   ],
