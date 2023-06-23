@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -137,7 +138,7 @@ public class RopeArrowEntity extends AbstractArrow {
 
 
                 //try adding rope down
-                if (hitBlock == ropeBlock && RopeBlock.addRope(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
+                if (hitBlock == ropeBlock && RopeHelper.addRopeDown(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
                     this.prevPlacedPos = hitPos;
                     this.removeCharge();
                     return;
@@ -145,7 +146,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 hitPos = hitPos.relative(rayTraceResult.getDirection());
                 hitBlock = level.getBlockState(hitPos).getBlock();
                 //rope to the side
-                if (hitBlock == ropeBlock && RopeBlock.addRope(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
+                if (hitBlock == ropeBlock && RopeHelper.addRopeDown(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
                     this.prevPlacedPos = hitPos;
                     this.removeCharge();
                     return;
@@ -184,7 +185,7 @@ public class RopeArrowEntity extends AbstractArrow {
         //Block hitBlock = this.level.getBlockState(hitPos).getBlock();
         //try adding rope down
         //hitBlock == ropeBlock &&
-        if (RopeBlock.addRope(hitPos.below(), level(), player, InteractionHand.MAIN_HAND, ropeBlock)) {
+        if (RopeHelper.addRopeDown(hitPos.below(), level(), player, InteractionHand.MAIN_HAND, ropeBlock)) {
             this.prevPlacedPos = hitPos.below();
             this.removeCharge();
         } else {

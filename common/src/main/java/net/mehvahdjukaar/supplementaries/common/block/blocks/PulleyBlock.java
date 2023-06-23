@@ -81,7 +81,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
             Rotation rot = originalRot;
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
                 if (axis.getAxisDirection() == Direction.AxisDirection.NEGATIVE) rot = rot.getRotated(Rotation.CLOCKWISE_180);
-                pulley.handleRotation(rot, pos);
+                pulley.rotateDirectly(rot);
             }
             //try turning connected
             BlockPos connectedPos = pos.relative(axis);
@@ -109,7 +109,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider ? (MenuProvider) tileEntity : null;
+        return tileEntity instanceof MenuProvider mp ? mp : null;
     }
 
     @Nullable

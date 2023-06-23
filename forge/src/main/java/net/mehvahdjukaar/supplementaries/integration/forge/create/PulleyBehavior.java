@@ -36,7 +36,7 @@ public class PulleyBehavior implements MovementBehaviour {
         DUMMY.setLevel(context.world);
 
         Rotation rot = context.relativeMotion.length() > 0 ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
-        DUMMY.handleRotation(rot, pos);
+        DUMMY.rotateDirectly(rot);
         context.tileData = DUMMY.saveWithFullMetadata();
     }
 

@@ -25,6 +25,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -89,10 +90,9 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
                 state = state.setValue(POWERED, flag);
                 if (!gold || !CommonConfigs.Building.CONSISTENT_GATE.get()) {
                     if (state.getValue(OPEN) != flag) {
-                        world.levelEvent(null, flag ? 1036 : 1037, pos, 0);
-                        world.gameEvent(null, flag ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                        state = state.setValue(OPEN, flag);
+                        soundAndEvent(state, world, pos, null);
                     }
-                    state = state.setValue(OPEN, flag);
                 }
             }
             boolean connect = canConnect(world, pos, state.getValue(FACING));
@@ -134,15 +134,19 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             }
 
             openGate(state, level, pos, dir);
-            boolean open = state.getValue(OPEN);
-            level.playSound(player, pos, open ? BlockSetType.IRON.trapdoorOpen() : BlockSetType.IRON.trapdoorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
+             soundAndEvent(state, level, pos, player);
 
-            level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return InteractionResult.PASS;
 
+    }
+
+    private static void soundAndEvent(BlockState state, Level level, BlockPos pos, @Nullable Player player) {
+        boolean open = state.getValue(OPEN);
+        level.playSound(player, pos, open ? BlockSetType.IRON.trapdoorOpen() : BlockSetType.IRON.trapdoorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
+        level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
     }
 
     private void openGate(BlockState state, Level world, BlockPos pos, Direction dir) {

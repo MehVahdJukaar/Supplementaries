@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -53,18 +54,15 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -357,7 +355,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                     state = state.setValue(DOWN, true);
                     world.setBlock(pos, state, 0);
                 }
-                if (addRope(pos.below(), world, player, handIn, this)) {
+                if (RopeHelper. addRopeDown(pos.below(), world, player, handIn, this)) {
                     SoundType soundtype = state.getSoundType();
                     world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
@@ -377,7 +375,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             }
             if (!player.isShiftKeyDown() && handIn == InteractionHand.MAIN_HAND) {
                 if (world.getBlockState(pos.below()).getBlock() == this) {
-                    if (removeRope(pos.below(), world, this)) {
+                    if (RopeHelper.removeRopeDown(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
                             ItemsUtil.addStackToExisting(player, new ItemStack(this), true);
@@ -403,137 +401,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return InteractionResult.PASS;
     }
 
-    public static boolean removeRope(BlockPos pos, Level world, Block ropeBlock) {
-        BlockState state = world.getBlockState(pos);
-        if (ropeBlock == state.getBlock()) {
-            return removeRope(pos.below(), world, ropeBlock);
-        } else {
-            //if (dist == 0) return false;
-            BlockPos up = pos.above();
-            if ((world.getBlockState(up).getBlock() != ropeBlock)) return false;
-            FluidState fromFluid = world.getFluidState(up);
-            boolean water = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource());
-            world.setBlockAndUpdate(up, water ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
-            tryMove(pos, up, world);
-            return true;
-        }
-    }
 
-
-    public static boolean addRope(BlockPos pos, Level world, @Nullable Player player, InteractionHand hand, Block
-            ropeBlock) {
-        BlockState state = world.getBlockState(pos);
-        if (ropeBlock == state.getBlock()) {
-            return addRope(pos.below(), world, player, hand, ropeBlock);
-        } else {
-            return tryPlaceAndMove(player, hand, world, pos, ropeBlock);
-        }
-    }
-
-    public static boolean tryPlaceAndMove(@Nullable Player player, InteractionHand hand, Level world, BlockPos
-            pos, Block ropeBlock) {
-        ItemStack stack = new ItemStack(ropeBlock);
-
-        //TODO: maybe pass fake player here
-        BlockPlaceContext context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
-        if (!context.canPlace()) {
-            //checks if block below this is hollow
-            BlockPos downPos = pos.below();
-            //try move block down
-            if (!(world.getBlockState(downPos).canBeReplaced()
-                    && tryMove(pos, downPos, world))) return false;
-            context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
-        }
-
-        BlockState state = ItemsUtil.getPlacementState(context, ropeBlock);
-        if (state == null) return false;
-        if (state == world.getBlockState(context.getClickedPos())) return false;
-        if (world.setBlock(context.getClickedPos(), state, 11)) {
-            if (player != null) {
-                BlockState placedState = world.getBlockState(context.getClickedPos());
-                Block block = placedState.getBlock();
-                if (block == state.getBlock()) {
-                    block.setPlacedBy(world, context.getClickedPos(), placedState, player, stack);
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, context.getClickedPos(), stack);
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean isBlockMovable(BlockState state, Level level, BlockPos pos) {
-        //hardcoded stuff from vanilla
-        return (!state.isAir() && !state.is(Blocks.OBSIDIAN) && !state.is(Blocks.SPAWNER) &&
-                !state.is(Blocks.CRYING_OBSIDIAN) && !state.is(Blocks.RESPAWN_ANCHOR))
-                && state.getDestroySpeed(level, pos) != -1;
-    }
-
-    //TODO: fix order of operations to allow pulling down lanterns
-    @SuppressWarnings("ConstantConditions")
-    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
-        if (toPos.getY() < world.getMinBuildHeight() || toPos.getY() > world.getMaxBuildHeight()) return false;
-        BlockState state = world.getBlockState(fromPos);
-
-        PushReaction push = state.getPistonPushReaction();
-
-        if (isBlockMovable(state, world, fromPos) &&
-                (
-                        ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY))
-                                && state.canSurvive(world, toPos)) || (state.is(ModTags.ROPE_HANG_TAG))
-                )
-        ) {
-
-            BlockEntity tile = world.getBlockEntity(fromPos);
-            if (tile != null) {
-                //moves everything if quark is not enabled. bad :/ install quark guys
-                if (CompatHandler.QUARK && !QuarkCompat.canMoveBlockEntity(state)) {
-                    return false;
-                } else {
-                    tile.setRemoved();
-                }
-            }
-
-            //gets refreshTextures state for new position
-
-            Fluid fluidState = world.getFluidState(toPos).getType();
-            boolean waterFluid = fluidState == Fluids.WATER;
-            boolean canHoldWater = false;
-            if (state.hasProperty(WATERLOGGED)) {
-                canHoldWater = state.is(ModTags.WATER_HOLDER);
-                if (!canHoldWater) state = state.setValue(WATERLOGGED, waterFluid);
-            } else if (state.getBlock() instanceof AbstractCauldronBlock) {
-                if (waterFluid && state.is(Blocks.CAULDRON) || state.is(Blocks.WATER_CAULDRON)) {
-                    state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
-                }
-                if (fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)) {
-                    state = Blocks.LAVA_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
-                }
-            }
-
-
-            FluidState fromFluid = world.getFluidState(fromPos);
-            boolean leaveWater = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource()) && !canHoldWater;
-            world.setBlockAndUpdate(fromPos, leaveWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
-
-            //refreshTextures existing block block to new position
-            BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
-            world.setBlockAndUpdate(toPos, newState);
-            if (tile != null) {
-                CompoundTag tag = tile.saveWithoutMetadata();
-                BlockEntity te = world.getBlockEntity(toPos);
-                if (te != null) {
-                    te.load(tag);
-                }
-            }
-            //world.notifyNeighborsOfStateChange(toPos, state.getBlock());
-            world.neighborChanged(toPos, state.getBlock(), toPos);
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {

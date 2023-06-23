@@ -96,24 +96,21 @@ public class Supplementaries {
     //Pitcher pod stuff merge with flax. also planter and seeds
 
 //3d jukebox thingie
-    //tree index out of bound
+    //mystical tree index out of bound
     //caibrated stuff
     //cargographer gui antique ink
     //Tree chat gtp
     //tree splash text
     //lectern colors in gui
     //pulley from sides
-    //pot tooltip
     //dummy goes down and hay particles
 
-    //fix sign dye color. noticeboatd sign and sign stuff
     //better sounds for item dislays
     //item lore clear
 
     //rope slide animation and sound instance
     //finish bedbugs
     //blaze head ghast
-    //spring launcher sand auto launch
 
     //bellows push hanging signs and globe
     //create sprout support
@@ -130,7 +127,6 @@ public class Supplementaries {
     //mod to wax anything to prevent interaction
     //sugar block fall in water
     //soap in water makes soap particles
-    //yeet java models in favor or json ones
     //chains pull down candle holders and lanterns
 
 
@@ -139,7 +135,6 @@ public class Supplementaries {
 
     //ash makes mobs jump
     //squishy piston launcher. also rework them and fix on servers
-    //TODO: readd nethers delight stuff & maybe IW planter
     //camera mod with screenshots
 
     //clicking on cage with lead will put the leashed animal inside
@@ -148,7 +143,6 @@ public class Supplementaries {
     //jei villagers addon
     //corona mod
     //trollium interaction mod
-    //animated lantern textures
     //ash jei plugin
     //bubble sound for bellows
     //bundle sound for sacks
