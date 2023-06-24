@@ -96,10 +96,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     public boolean pullRopeUp() {
-        return pullRope(Direction.DOWN, Integer.MAX_VALUE);
+        return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    public boolean pullRope(Direction moveDir, int maxDist) {
+    public boolean pullRope(Direction moveDir, int maxDist, boolean addItem) {
         ItemStack stack = this.getDisplayedItem();
         boolean addNewItem = false;
         if (stack.isEmpty()) {
@@ -115,17 +115,17 @@ public class PulleyBlockTile extends ItemDisplayTile {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             if (addNewItem) this.setDisplayedItem(stack);
-            else stack.grow(1);
+            else if(addItem)stack.grow(1);
             this.setChanged();
         }
         return success;
     }
 
     public boolean releaseRopeDown() {
-        return releaseRope(Direction.DOWN, Integer.MAX_VALUE);
+        return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    public boolean releaseRope(Direction dir, int maxDist) {
+    public boolean releaseRope(Direction dir, int maxDist, boolean removeItem) {
 
         ItemStack stack = this.getDisplayedItem();
         if (stack.getCount() < 1 || !(stack.getItem() instanceof BlockItem bi)) return false;
@@ -136,8 +136,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            stack.shrink(1);
-            this.setChanged();
+            if(removeItem) {
+                stack.shrink(1);
+                this.setChanged();
+            }
         }
         return success;
     }
@@ -160,11 +162,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         Direction.Axis axis = state.getValue(PulleyBlock.AXIS);
         if (axis == moveDir.getAxis()) return false;
 
-        boolean isFull = !retracting && stack.getCount() >= stack.getMaxStackSize(); //fill after
-        if (!retracting && !isFull) {
-            stack.grow(1);
-        }
-
         level.setBlockAndUpdate(worldPosition, state.cycle(PulleyBlock.FLIPPED));
 
         Direction[] order = moveDir.getAxis().isHorizontal() ? new Direction[]{Direction.DOWN} :
@@ -174,8 +171,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         int maxSideDist = 6;
         for (var d : order) {
             if (RopeHelper.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
-                if (moveConnected(ropeBlock, retracting, stack, maxSideDist, d)) {
-                    if(isFull)stack.grow(1);
+                if (moveConnected( retracting, maxSideDist, d)) {
                     return true;
                 }
                 //returns if we found a rope but failed
@@ -183,29 +179,25 @@ public class PulleyBlockTile extends ItemDisplayTile {
             } else remaining.add(d);
         }
         for (var d : remaining) {
-            if (moveConnected(ropeBlock, retracting, stack, maxSideDist, d)) {
-                if(isFull)stack.grow(1);
+            if (moveConnected( retracting, maxSideDist, d)) {
                 return true;
             }
         }
-        if(retracting){
-            this.setDisplayedItem(stack.copyWithCount(stack.getCount()-1));
+        if (retracting) {
+            stack.shrink(1);
+            this.setChanged();
             return true;
         }
-
-
         return false;
     }
 
-    private boolean moveConnected(Block ropeBlock, boolean retracting, ItemStack stack, int maxSideDist, Direction d) {
+    private boolean moveConnected(boolean retracting, int maxSideDist, Direction d) {
         int dist = d == Direction.DOWN ? Integer.MAX_VALUE : maxSideDist;
-        if (retracting ? pullRope(d, dist) : releaseRope(d, dist)) {
-            if (stack.isEmpty()) {
-                this.setDisplayedItem(new ItemStack(ropeBlock));
-            } else stack.grow(1);
-            return true;
+        if (retracting) {
+            return pullRope(d, dist, false);
+        } else {
+            return releaseRope(d, dist, false);
         }
-        return false;
     }
 
 }
