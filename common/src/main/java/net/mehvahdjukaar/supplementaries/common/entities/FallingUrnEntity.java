@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
             this.discard();
         } else {
             if (!this.isSilent()) {
-                level().levelEvent(1045, this.blockPosition(), 0);
+                level().levelEvent(LevelEvent.SOUND_POINTED_DRIPSTONE_LAND, this.blockPosition(), 0);
             }
         }
         return r;
@@ -74,7 +75,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
         Level level = level();
         Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);
 
-        level.levelEvent(null, 2001, pos, Block.getId(state));
+        level.levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
         //todo: this needs to be called on client
         UrnBlock.spawnExtraBrokenParticles(state, pos, level);
     }

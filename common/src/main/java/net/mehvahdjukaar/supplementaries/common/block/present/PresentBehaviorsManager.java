@@ -25,6 +25,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -123,7 +124,7 @@ public class PresentBehaviorsManager {
         @Override
         public void playAnimation(BlockSource pSource) {
             IPresentItemBehavior.super.playAnimation(pSource);
-            pSource.getLevel().levelEvent(1004, pSource.getPos(), 0);
+            pSource.getLevel().levelEvent(LevelEvent.SOUND_FIREWORK_SHOOT, pSource.getPos(), 0);
         }
 
     };

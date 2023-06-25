@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBoatTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
@@ -95,6 +96,8 @@ public class Supplementaries {
 
     //Pitcher pod stuff merge with flax. also planter and seeds
 
+    //smarter farmers use simple harvest from quark
+
 //3d jukebox thingie
     //mystical tree index out of bound
     //caibrated stuff
@@ -102,7 +105,6 @@ public class Supplementaries {
     //Tree chat gtp
     //tree splash text
     //lectern colors in gui
-    //pulley from sides
     //dummy goes down and hay particles
 
     //better sounds for item dislays

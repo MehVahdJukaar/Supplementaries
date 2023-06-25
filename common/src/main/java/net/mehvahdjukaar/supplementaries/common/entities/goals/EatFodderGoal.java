@@ -16,6 +16,7 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -135,7 +136,7 @@ public class EatFodderGoal extends MoveToBlockGoal {
                 if (state.is(ModRegistry.FODDER.get())) {
                     int layers = state.getValue(FodderBlock.LAYERS);
                     if (layers > 1) {
-                        level.levelEvent(2001, targetPos, Block.getId(FODDER_STATE));
+                        level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, targetPos, Block.getId(FODDER_STATE));
                         level.setBlock(targetPos, FODDER_STATE.setValue(FodderBlock.LAYERS, layers - 1), 2);
                     } else {
                         level.destroyBlock(targetPos, false);

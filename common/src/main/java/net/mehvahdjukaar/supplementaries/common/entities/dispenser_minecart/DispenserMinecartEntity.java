@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -222,7 +223,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
         if (i < 0) {
             //replace with client side animation
-            pLevel.levelEvent(1001, pPos, 0);
+            pLevel.levelEvent(LevelEvent.SOUND_DISPENSER_FAIL, pPos, 0);
             //TODO:use this game event more
             pLevel.gameEvent(this, GameEvent.BLOCK_ACTIVATE, pPos);
         } else {

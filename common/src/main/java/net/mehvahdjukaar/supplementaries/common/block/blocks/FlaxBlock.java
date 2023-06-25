@@ -18,6 +18,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -129,7 +130,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             BlockState blockstate = world.getBlockState(blockpos);
             if (blockstate.getBlock() == state.getBlock() && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
                 world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                world.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+                world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockpos, Block.getId(blockstate));
             }
         }
     }

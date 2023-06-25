@@ -10,6 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FallingLanternEntity extends ImprovedFallingBlockEntity {
@@ -42,7 +43,7 @@ public class FallingLanternEntity extends ImprovedFallingBlockEntity {
 
             BlockPos pos = BlockPos.containing(this.getX(), this.getY() + 0.25, this.getZ());
             //break event
-            level().levelEvent(null, 2001, pos, Block.getId(state));
+            level().levelEvent(null, LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
             if (state.getLightEmission() != 0) {
 
                 GunpowderBlock.createMiniExplosion(level(), pos, true);

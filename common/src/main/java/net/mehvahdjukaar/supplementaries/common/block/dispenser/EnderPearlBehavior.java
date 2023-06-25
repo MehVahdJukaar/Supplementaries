@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.LevelEvent;
 
 class EnderPearlBehavior extends AdditionalDispenserBehavior {
 
@@ -39,7 +40,7 @@ class EnderPearlBehavior extends AdditionalDispenserBehavior {
 
     @Override
     protected void playSound(BlockSource source, boolean success) {
-        source.getLevel().levelEvent(1002, source.getPos(), 0);
+        source.getLevel().levelEvent(LevelEvent.SOUND_DISPENSER_PROJECTILE_LAUNCH, source.getPos(), 0);
     }
 
     protected float getUncertainty() {

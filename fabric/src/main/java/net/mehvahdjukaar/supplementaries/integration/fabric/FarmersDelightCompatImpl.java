@@ -36,6 +36,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -186,7 +187,7 @@ public class FarmersDelightCompatImpl {
         public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
             if (!state.canSurvive(level, pos)) {
                 //we can't just break block or other ropes will react when instead we want to replace with another rope
-                level.levelEvent(2001, pos, Block.getId(state));
+                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
                 Block.dropResources(state, level, pos, null, null, ItemStack.EMPTY);
 
                 level.setBlockAndUpdate(pos, getInnerBlock().withPropertiesOf(state));

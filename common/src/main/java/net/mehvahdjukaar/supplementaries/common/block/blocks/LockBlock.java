@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,8 +26,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class LockBlock extends Block implements EntityBlock {
@@ -47,7 +49,6 @@ public class LockBlock extends Block implements EntityBlock {
         if (worldIn.getBlockEntity(pos) instanceof KeyLockableTile tile) {
             if (tile.handleAction(player, handIn, "lock_block")) {
                 this.activate(state, worldIn, pos, player);
-                worldIn.levelEvent(player, 1037, pos, 0);
             }
         }
 
@@ -64,14 +65,8 @@ public class LockBlock extends Block implements EntityBlock {
     }
 
     protected void playSound(@Nullable Player player, Level level, BlockPos pos, boolean isOpened) {
-        if (isOpened) {
-            int i =  1037 ;
-            level.levelEvent(player, i, pos, 0);
-        } else {
-            int j = 1036;
-            level.levelEvent(player, j, pos, 0);
-        }
-
+            level.playSound(player, pos,isOpened ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
+                    SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
