@@ -99,7 +99,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                         matrixStackIn.mulPose(RotHlpr.ZN45);
                     }
                     case CRYSTAL -> {
-                        entityRenderer.render(CapturedMobCache.PEDESTAL_CRYSTAL.get(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
+                        entityRenderer.render(CapturedMobCache.getCrystal(), 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, combinedLightIn);
                         matrixStackIn.popPose();
                         return;
                     }

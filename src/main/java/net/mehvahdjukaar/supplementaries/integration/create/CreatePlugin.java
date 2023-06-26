@@ -4,20 +4,20 @@ package net.mehvahdjukaar.supplementaries.integration.create;
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
+import com.simibubi.create.content.trains.display.FlapDisplaySection;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -86,44 +86,44 @@ public class CreatePlugin {
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.PULLEY_BLOCK.get(), new PulleyBehavior());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
 
             var textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.HANGING_SIGN_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
 
             //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("speaker_block_display_target"),
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
 
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("blackboard_display_target"),
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
 
 
             //sources
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
 
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_source"),
                     new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("clock_source"),
                     new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
 
@@ -134,12 +134,12 @@ public class CreatePlugin {
                     new ItemDisplayDisplaySource());
 
             AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.STATUE_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
 
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
 
@@ -174,7 +174,7 @@ public class CreatePlugin {
         }
 
         @Override
-        public boolean renderAsNormalTileEntity() {
+        public boolean renderAsNormalBlockEntity() {
             return true;
         }
 
@@ -237,7 +237,8 @@ public class CreatePlugin {
         private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
         private void doTileStuff(MovementContext context, @Nonnull Level world, LivingEntity le) {
-            CompoundTag com = context.tileData;
+            CompoundTag com = context.blockEntityData;
+
             if (com == null) return;
             long lastTicked = com.getLong("LastTicked");
             if (!this.isOnCooldown(world, lastTicked)) {
@@ -248,7 +249,7 @@ public class CreatePlugin {
                 com = DUMMY.saveWithFullMetadata();
                 lastTicked = world.getGameTime();
                 com.putLong("LastTicked", lastTicked);
-                context.tileData = com;
+                context.blockEntityData = com;
             }
         }
 
@@ -272,7 +273,7 @@ public class CreatePlugin {
             Direction dir = state.getValue(HourGlassBlock.FACING);
             Rotation rotation = isClockWise(rot, dir);
 
-            CompoundTag com = context.tileData;
+            CompoundTag com = context.blockEntityData;
 
             HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
             float progress = com.getFloat("Progress");
@@ -300,7 +301,7 @@ public class CreatePlugin {
         @Override
         public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
 
-            CompoundTag com = context.tileData;
+            CompoundTag com = context.blockEntityData;
             HourGlassBlockTile.HourGlassSandType sandType = HourGlassBlockTile.HourGlassSandType.values()[com.getInt("SandType")];
             float progress = com.getFloat("Progress");
             float prevProgress = com.getFloat("PrevProgress");
@@ -347,12 +348,12 @@ public class CreatePlugin {
             }
             if (dir == null) return;
 
-            DUMMY.load(context.tileData);
+            DUMMY.load(context.blockEntityData);
             DUMMY.setLevel(context.world);
 
             Rotation rot = context.relativeMotion.length() > 0 ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90;
             DUMMY.handleRotation(rot, pos);
-            context.tileData = DUMMY.saveWithFullMetadata();
+            context.blockEntityData = DUMMY.saveWithFullMetadata();
         }
 
     }
@@ -361,7 +362,7 @@ public class CreatePlugin {
 
         @Override
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof NoticeBoardBlockTile lectern) {
                 ItemStack book = lectern.getDisplayedItem();
                 if (!book.isEmpty()) {
@@ -428,7 +429,7 @@ public class CreatePlugin {
     private static class TextHolderDisplayTarget extends DisplayTarget {
 
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof ITextHolderProvider th) {
                 var textHolder = th.getTextHolder();
                 boolean changed = false;
@@ -452,7 +453,7 @@ public class CreatePlugin {
 
         @Override
         public DisplayTargetStats provideStats(DisplayLinkContext context) {
-            var textHolder = ((ITextHolderProvider) context.getTargetTE()).getTextHolder();
+            var textHolder = ((ITextHolderProvider) context.getTargetBlockEntity()).getTextHolder();
             return new DisplayTargetStats(textHolder.size(), (int) (90 / 6f), this);
         }
     }
@@ -460,7 +461,7 @@ public class CreatePlugin {
     private static class SpeakerBlockDisplayTarget extends DisplayTarget {
 
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
                 reserve(line, te, context);
                 tile.setMessage(text.get(0).getString());
@@ -482,7 +483,7 @@ public class CreatePlugin {
         } else {
             for (int i = 0; i < 32; ++i) {
                 var pos = context.getSourcePos();
-                TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
+                TransportedItemStackHandlerBehaviour behaviour = BlockEntityBehaviour.get(
                         context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
                 );
                 if (behaviour == null) {
@@ -505,9 +506,9 @@ public class CreatePlugin {
     private static class BlackboardDisplayTarget extends DisplayTarget {
 
         public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-            BlockEntity te = context.getTargetTE();
+            BlockEntity te = context.getTargetBlockEntity();
             if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
-                var source = context.getSourceTE();
+                var source = context.getSourceBlockEntity();
                 if (!parseText(text.get(0).getString(), tile)) {
                     ItemStack copyStack = getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                     if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
@@ -561,7 +562,7 @@ public class CreatePlugin {
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             Level level = context.level();
             if (level instanceof ServerLevel sLevel) {
-                if (context.getSourceTE() instanceof ClockBlockTile tile) {
+                if (context.getSourceBlockEntity() instanceof ClockBlockTile tile) {
                     boolean c12 = context.sourceConfig().getInt("Cycle") == 0;
                     boolean isNatural = sLevel.dimensionType().natural();
                     int dayTime = (int) (sLevel.getDayTime() % 24000L);
@@ -624,7 +625,7 @@ public class CreatePlugin {
         public static final MutableComponent EMPTY = Components.literal("--,--");
 
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-            if (context.getSourceTE() instanceof GlobeBlockTile tile) {
+            if (context.getSourceBlockEntity() instanceof GlobeBlockTile tile) {
                 BlockPos pos = context.getSourcePos();
                 return new TextComponent("X: " + pos.getX() + ", Z: " + pos.getZ());
             } else {
@@ -654,7 +655,7 @@ public class CreatePlugin {
 
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-            if (context.getSourceTE() instanceof NoticeBoardBlockTile tile) {
+            if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
                 tile.updateText();
                 return new TextComponent(tile.getText());
             } else {
@@ -688,7 +689,7 @@ public class CreatePlugin {
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             MutableComponent combined = EMPTY_LINE.copy();
 
-            if (context.getSourceTE() instanceof ItemDisplayTile te && !te.isEmpty()) {
+            if (context.getSourceBlockEntity() instanceof ItemDisplayTile te && !te.isEmpty()) {
                 combined = combined.append(te.getDisplayedItem().getHoverName());
             }
             //else if(context.level().getBlockState(context.getSourcePos()) instanceof WorldlyContainerHolder wc){
@@ -723,7 +724,7 @@ public class CreatePlugin {
         @Override
         protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
             if (context.sourceConfig().getInt("Mode") == 2) {
-                if (context.getSourceTE() instanceof ISoftFluidHolder tp) {
+                if (context.getSourceBlockEntity() instanceof ISoftFluidHolder tp) {
                     return Components.literal(tp.getSoftFluidHolder().getCount() + " mBtl");
                 }
             }
@@ -732,7 +733,7 @@ public class CreatePlugin {
 
         @Override
         protected Float getProgress(DisplayLinkContext context) {
-            BlockEntity te = context.getSourceTE();
+            BlockEntity te = context.getSourceBlockEntity();
             if (te instanceof ISoftFluidHolder tp) {
                 return tp.getSoftFluidHolder().getHeight(1);
             }

@@ -17,6 +17,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -26,6 +27,7 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.extensions.IForgeEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -158,5 +160,11 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onLevelUnload(WorldEvent.Unload unload){
+        if(unload.getWorld().isClientSide()){
+            CapturedMobCache.unloadLevel();
+        }
+    }
 
 }
