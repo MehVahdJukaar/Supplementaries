@@ -53,7 +53,7 @@ minecraft {
 
             workingDirectory project.file('run')
 
-            // Recommendedo logging data for a userdev environment
+            //  logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
