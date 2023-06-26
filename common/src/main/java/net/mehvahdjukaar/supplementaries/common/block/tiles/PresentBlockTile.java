@@ -97,7 +97,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public boolean canOpen(Player player) {
-        if (super.canOpen(player)) return false;
+        if (!super.canOpen(player)) return false;
         if (!this.isUnused()) return false;
         return this.recipient.isEmpty() || this.recipient.equalsIgnoreCase(PUBLIC_KEY) ||
                 this.recipient.equalsIgnoreCase(player.getName().getString()) ||
@@ -105,7 +105,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public InteractionResult interact(Level level,BlockPos pos, BlockState state,  Player player) {
+    public InteractionResult interact(Level level, BlockPos pos, BlockState state, Player player) {
         if (this.isUnused()) {
 
             if (this.canOpen(player)) {

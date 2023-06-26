@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager.Type;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager.Model;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -22,16 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-
-import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
+import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_SEPIA_TEXTURE;
+import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_TEXTURE;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private final boolean sepia;
 
     private boolean sheared = false;
-    private int face = 0;
 
     //cient
     private Component customName;
@@ -44,11 +41,12 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
     }
 
-    public int getFace() {
-        return face;
+    public int getFaceRot() {
+        return (3-getBlockState().getValue(GlobeBlock.ROTATION)) * 90;
     }
 
     public float getRotation(float partialTicks) {
+        int face = getFaceRot();
         return Mth.lerp(partialTicks, prevYaw + face, yaw + face);
     }
 
@@ -99,7 +97,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         if (compound.contains("CustomName", 8)) {
             this.setCustomName(Component.Serializer.fromJson(compound.getString("CustomName")));
         }
-        this.face = compound.getInt("Face");
         this.yaw = compound.getFloat("Yaw");
         this.sheared = compound.getBoolean("Sheared");
         super.load(compound);
@@ -112,7 +109,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         if (this.customName != null) {
             tag.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
-        tag.putInt("Face", this.face);
         tag.putFloat("Yaw", this.yaw);
         tag.putBoolean("Sheared", this.sheared);
     }
@@ -120,9 +116,10 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     public void spin() {
         int spin = 360;
         int inc = 90;
-        this.face = (this.face - inc) % 360;
+        int face = ((this.getFaceRot() - inc) + 360) % 360;
         this.yaw = (this.yaw + spin + inc);
         this.prevYaw = (this.prevYaw + spin + inc);
+        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(GlobeBlock.ROTATION, 3-face / 90));
         this.setChanged();
     }
 
@@ -172,7 +169,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public int getSignalPower() {
         if (this.yaw != 0) return 15;
-        else return this.face / -90 + 1;
+        else return this.getFaceRot() / 90 + 1;
     }
 
 }

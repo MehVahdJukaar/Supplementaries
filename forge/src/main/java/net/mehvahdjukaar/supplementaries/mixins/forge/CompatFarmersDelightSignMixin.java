@@ -51,12 +51,12 @@ public abstract class CompatFarmersDelightSignMixin {
         }
     }
 
-    @Inject(method = "translateSign", at = @At("HEAD"), remap = false)
+    @Inject(method = "translateSign", at = @At("HEAD"))
     private void captureYaw(PoseStack poseStack, float yaw, BlockState blockState, CallbackInfo ci) {
         canvasSignYaw = yaw;
     }
 
-    @Inject(method = "renderSignText", at = @At("HEAD"), remap = false)
+    @Inject(method = "renderSignText", at = @At("HEAD"))
     private void captureFace(BlockPos blockPos, SignText signText, PoseStack poseStack, MultiBufferSource multiBufferSource,
                              int i, int j, int k, boolean face, CallbackInfo ci) {
         canvasFront = face;

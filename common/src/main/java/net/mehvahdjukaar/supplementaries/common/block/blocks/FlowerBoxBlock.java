@@ -87,16 +87,18 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
 
             Direction dir = state.getValue(FACING);
             Vec3 v = hit.getLocation();
-            v = v.add(Math.round(Math.abs(v.x) + 1), 0, Math.round(Math.abs(v.z) + 1));
+            v = v.subtract(pos.getX() - 1d, 0, pos.getZ() - 1d);
 
             if (dir.getAxis() == Direction.Axis.X) {
-
-                ind = (int) ((v.z % 1d) / (1 / 3d));
+                double normalizedZ = Math.abs((v.z) % 1d);
+                if (v.z >= 2) ind = 2;
+                else ind = (int) (normalizedZ / (1 / 3d));
                 if (dir.getStepX() < 0) ind = 2 - ind;
             } else {
-                ind = (int) ((v.x % 1d) / (1 / 3d));
+                double normalizedX = Math.abs((v.x) % 1d);
+                if (v.x >= 2) ind = 2;
+                else ind = (int) (normalizedX / (1 / 3d));
                 if (dir.getStepZ() > 0) ind = 2 - ind;
-
             }
             return tile.interact(player, handIn, ind);
         }

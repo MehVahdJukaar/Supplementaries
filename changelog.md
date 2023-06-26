@@ -1,8 +1,1 @@
-- Pulley blocks can now pull chains and ropes through other connected pulleys. If a pulley is feeding into another thins will allow for side connection up to 6 blocks when being fed by above or infinite as usual from below
-- Improved signs shading color
-- Added a config to increase sign color brightness
-- Added compat with FD signs
-- Fixed hanging signs from some mods not swinging correctly
-- Fixed safes not being safe anymore
-- Added tag for blocks that prevent offset on plants above them like planter
-- fixed iron gate sounds
+fixed faucet crash

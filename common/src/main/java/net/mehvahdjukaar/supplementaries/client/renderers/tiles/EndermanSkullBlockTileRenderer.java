@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -13,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.renderSkull;
 
@@ -20,14 +22,19 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
     public static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/enderman/enderman.png");
     public static final ResourceLocation EYES = new ResourceLocation("textures/entity/enderman/enderman_eyes.png");
 
-    public static EndermanSkullModel model;
+    @Nullable
+    public static EndermanSkullModel model = null;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        model = new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
+        model = !CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() ? null :
+                new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
     }
 
     @Override
     public void render(EndermanSkullBlockTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+
+        var m = model;
+        if (m == null) return;
         float f = blockEntity.getMouthAnimation(partialTick);
 
         BlockState blockState = blockEntity.getBlockState();
@@ -41,10 +48,10 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
             v.mul(0.001f);
             poseStack.translate(v.x(), v.y(), v.z());
         }
-        renderSkull(direction, g, f, poseStack, bufferSource, packedLight, model, renderType);
+        renderSkull(direction, g, f, poseStack, bufferSource, packedLight, m, renderType);
 
         renderType = RenderType.eyes(EYES);
-        renderSkull(direction, g, f, poseStack, bufferSource, 15728640, model, renderType);
+        renderSkull(direction, g, f, poseStack, bufferSource, 15728640, m, renderType);
 
         poseStack.popPose();
     }

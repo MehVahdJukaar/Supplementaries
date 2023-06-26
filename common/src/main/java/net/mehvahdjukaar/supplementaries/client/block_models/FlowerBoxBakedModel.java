@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.teamabode.cave_enhancements.core.registry.misc.BlockProperties;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -65,7 +69,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 matrixStack.translate(0.5, 0.5, 0.5);
 
                 float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
-                matrixStack.mulPose(Axis.YP.rotationDegrees(yaw));
+                Quaternionf quaternion = Axis.YP.rotationDegrees(yaw);
+                matrixStack.mulPose(quaternion);
                 matrixStack.translate(-0.3125, -3 / 16f, 0);
 
                 if (state.getValue(FlowerBoxBlock.FLOOR)) {
@@ -80,15 +85,21 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 for (int i = 0; i < 3; i++) {
                     BlockState flower = flowers[i];
                     if (flower != null && !flower.isAir()) {
+                        matrixStack.pushPose();
+                        matrixStack.translate(0.5*i, 0, 0);
+
+                        if(flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)){
+                            matrixStack.mulPose(quaternion.conjugate(new Quaternionf()));
+                            matrixStack.translate(0.25, 0, 0.25);
+                        }
                         this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
                         if (flower.hasProperty(DoublePlantBlock.HALF)) {
                             matrixStack.translate(0, 1, 0);
                             this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
-                            matrixStack.translate(0, -1, 0);
                         }
+                        matrixStack.popPose();
                     }
 
-                    matrixStack.translate(0.5, 0, 0);
                 }
             }
 

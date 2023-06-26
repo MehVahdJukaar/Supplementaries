@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.HoneyBottleItem;
@@ -25,8 +24,8 @@ import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -36,42 +35,45 @@ public class ModBlockProperties {
 
     //BlockState properties
     public static final BooleanProperty EXTENDING = BooleanProperty.create("extending");
-    public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
     public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
-    public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
-    public static final IntegerProperty LIGHT_LEVEL_5_15 = IntegerProperty.create("light_level", 5, 15);
-    public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
-    public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
-    public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
-    public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping", Topping.class);
-    public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding", Winding.class);
     public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
     public static final BooleanProperty AXIS_Y = BooleanProperty.create("axis_y");
     public static final BooleanProperty AXIS_X = BooleanProperty.create("axis_x");
     public static final BooleanProperty AXIS_Z = BooleanProperty.create("axis_z");
     public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
     public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
-    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape", RakeDirection.class);
-    public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
-    public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
-    public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type", PostType.class);
-    public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
-    public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
-    public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
     public static final BooleanProperty PACKED = BooleanProperty.create("packed");
     public static final BooleanProperty GLOWING = BooleanProperty.create("glowing");
     public static final BooleanProperty WATCHED = BooleanProperty.create("watched");
     public static final BooleanProperty CULLED = BooleanProperty.create("culled");
+    public static final BooleanProperty HAS_BLOCK = BooleanProperty.create("has_block");
+    public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
 
+    public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
+    public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
+    public static final IntegerProperty LIGHT_LEVEL_5_15 = IntegerProperty.create("light_level", 5, 15);
+    public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
     public static final IntegerProperty OPENING_PROGRESS = IntegerProperty.create("opening_progress", 0, 2);
+    public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
+    public static final IntegerProperty ROTATION_4 = IntegerProperty.create("rotation", 0, 4);
+    public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
+    public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
+    public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
+
+    public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping", Topping.class);
+    public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding", Winding.class);
+    public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type", PostType.class);
+    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape", RakeDirection.class);
     public static final EnumProperty<SignAttachment> SIGN_ATTACHMENT = EnumProperty.create("sign_attachment", SignAttachment.class);
     public static final EnumProperty<BlockAttachment> BLOCK_ATTACHMENT = EnumProperty.create("attachment", BlockAttachment.class);
+    public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
+    public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 
     //model properties
     public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC_KEY;
@@ -81,8 +83,6 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
-
-    public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 
 
     public enum PostType implements StringRepresentable {
@@ -98,14 +98,14 @@ public class ModBlockProperties {
         PostType(String name, int width) {
             this.name = name;
             this.width = width;
-            this.offset = (8-width/2)/16f;
+            this.offset = (8 - width / 2) / 16f;
         }
 
         public int getWidth() {
             return width;
         }
 
-        public float getOffset(){
+        public float getOffset() {
             return offset;
         }
 

@@ -59,14 +59,21 @@ public class ModCreativeTabs {
     public static void setup() {
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
+        Map<ResourceKey<CreativeModeTab>,List<ItemStack>> map = new HashMap<>();
+        CreativeModeTabs.tabs().forEach(t->map.putIfAbsent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(t).get(), new ArrayList<>()));
         var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, reverse, itemStacks) -> {
+            var l = map.computeIfAbsent(creativeModeTab,t->new ArrayList<>());
             if (reverse) {
                 var v = new ArrayList<>(itemStacks);
                 Collections.reverse(v);
-                NON_HIDDEN_ITEMS.addAll(v);
-            } else NON_HIDDEN_ITEMS.addAll(itemStacks);
+                l.addAll(v);
+            } else l.addAll(itemStacks);
         });
         registerItemsToTabs(dummy);
+        for(var e : map.values()){
+            NON_HIDDEN_ITEMS.addAll(e);
+        }
+
         for (var v : NON_HIDDEN_ITEMS) {
             all.remove(v.getItem());
         }

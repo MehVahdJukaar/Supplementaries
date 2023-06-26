@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -51,12 +53,14 @@ import org.jetbrains.annotations.NotNull;
 public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);
 
-    public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final IntegerProperty ROTATION = ModBlockProperties.ROTATION_4;
 
     public GlobeBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(TRIGGERED, false).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false)
+                .setValue(POWERED, false).setValue(ROTATION, 0).setValue(FACING, Direction.NORTH));
     }
 
     public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
@@ -78,15 +82,15 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
         }
     }
 
-    public void updatePower(BlockState state, Level world, BlockPos pos) {
-        boolean powered = world.getBestNeighborSignal(pos) > 0;
-        if (powered != state.getValue(TRIGGERED)) {
-            world.setBlock(pos, state.setValue(TRIGGERED, powered), 4);
+    public void updatePower(BlockState state, Level leve, BlockPos pos) {
+        boolean powered = leve.getBestNeighborSignal(pos) > 0;
+        if (powered != state.getValue(POWERED)) {
+            leve.setBlock(pos, state.setValue(POWERED, powered), 4);
             //server
             //calls event on server and client through packet
             if (powered) {
-                world.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
-                world.blockEvent(pos, state.getBlock(), 1, 0);
+                leve.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
+                leve.blockEvent(pos, state.getBlock(), 1, 0);
             }
         }
     }
@@ -129,8 +133,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
-        if (MiscUtils.FESTIVITY.isEarthDay() && worldIn.isClientSide) {
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
+        if (MiscUtils.FESTIVITY.isEarthDay() && level.isClientSide) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
@@ -139,7 +143,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 double d0 = (x + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
                 double d1 = (y + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
                 double d2 = (z + 0.5 + (rand.nextFloat() - 0.5) * (0.625D));
-                worldIn.addParticle(ParticleTypes.FLAME, d0, d1, d2, 0, 0, 0);
+                level.addParticle(ParticleTypes.FLAME, d0, d1, d2, 0, 0, 0);
             }
         }
     }
@@ -175,7 +179,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED, FACING, TRIGGERED);
+        builder.add(WATERLOGGED, FACING, POWERED, ROTATION);
     }
 
     @Override

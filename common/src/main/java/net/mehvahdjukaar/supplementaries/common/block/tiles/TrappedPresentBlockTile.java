@@ -67,7 +67,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public boolean canOpen(Player player) {
-        if(super.canOpen(player))return false;
+        if(!super.canOpen(player))return false;
         if(!this.isUnused())return false;
         return !this.isPrimed();
     }
