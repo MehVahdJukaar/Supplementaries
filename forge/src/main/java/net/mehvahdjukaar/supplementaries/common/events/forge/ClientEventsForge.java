@@ -23,6 +23,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.DecoratedPotBlock;
@@ -158,8 +159,9 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
-        var pattern = DecoratedPotPatterns.getResourceKey(stack.getItem());
-        if(pattern != null){
+        Item i = stack.getItem();
+        var pattern = DecoratedPotPatterns.getResourceKey(i);
+        if(pattern != null && i != Items.BRICK){
             event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
         }
     }

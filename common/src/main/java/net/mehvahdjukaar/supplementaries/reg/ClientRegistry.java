@@ -386,6 +386,7 @@ public class ClientRegistry {
     private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
         event.register(Supplementaries.res("frame_block"), new NestedModelLoader("overlay", FrameBlockBakedModel::new));
         event.register(Supplementaries.res("wall_lantern"), new NestedModelLoader("support", WallLanternBakedModel::new));
+        event.register(Supplementaries.res("double_cake"), new NestedModelLoader("cake", DoubleCakeBlockModel::new));
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));

@@ -289,7 +289,6 @@ public class TextHolder implements IAntiqueTextProvider {
         }
     }
 
-    //TODO: finish notice boards dye thing
     public void clearEffects() {
         this.setColor(DyeColor.BLACK);
         this.setAntiqueInk(false);
@@ -298,7 +297,7 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public boolean isEmpty(@Nullable Player player) {
         boolean b = player == null || player.isTextFilteringEnabled();
-        return Arrays.stream(this.getMessages(b)).anyMatch((component) ->
+        return !Arrays.stream(this.getMessages(b)).anyMatch((component) ->
                 !component.getString().isEmpty());
     }
 
