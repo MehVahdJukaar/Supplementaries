@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -35,6 +36,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.phys.shapes.Shapes;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -723,10 +726,8 @@ public class ModRegistry {
             HANGING_FLOWER_POT_NAME, () -> PlatHelper.newBlockEntityType(
                     HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()));
 
-    //double cake
-    public static final Supplier<Block> DOUBLE_CAKE = regBlock(DOUBLE_CAKE_NAME, () -> new DoubleCakeBlock(
-            BlockBehaviour.Properties.copy(Blocks.CAKE)
-    ));
+    public static final Map<CakeRegistry.CakeType, DoubleCakeBlock> DOUBLE_CAKES = new LinkedHashMap<>();
+
     //directional cake
     public static final Supplier<Block> DIRECTIONAL_CAKE = regBlock(DIRECTIONAL_CAKE_NAME, () -> new DirectionalCakeBlock(
             BlockBehaviour.Properties.copy(Blocks.CAKE)

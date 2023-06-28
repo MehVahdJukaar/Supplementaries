@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -54,7 +55,7 @@ class DoubleCakeBehavior implements ItemUseOnBlockOverride {
 
         if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == net.minecraft.world.level.block.Blocks.CAKE.defaultBlockState()) {
 
-            return InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.DOUBLE_CAKE.get(),
+            return InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA),
                     player, stack, pos, world, state, null, DoubleCakeBlock.FACING);
         }
         return InteractionResult.PASS;

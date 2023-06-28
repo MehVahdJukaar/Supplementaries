@@ -54,7 +54,7 @@ public class SudsParticle extends BubbleBlockParticle {
             int popTime = 30;
             this.setSprite(this.sprites.get((int) (popTime * (3f - j) / (popParticleLen - 1f)), popTime));
             if (gravity != 0) {
-                level.playLocalSound(x, y, z, ModSounds.BUBBLE_POP.get(), SoundSource.BLOCKS, 0.04f,
+                level.playLocalSound(x, y, z, ModSounds.BUBBLE_POP.get(), SoundSource.BLOCKS, 0.15f,
                         2f - this.quadSize * 0.2f, false);
                 this.gravity = 0;
                 this.yd = 0;

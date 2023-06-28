@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
 
 import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,7 @@ public class DoubleCakePlacement implements AdditionalPlacement {
         Level level = pContext.getLevel();
         BlockState state = level.getBlockState(pos);
         if (isValidCake(state)) {
-            return ModRegistry.DOUBLE_CAKE.get().withPropertiesOf(state).setValue(DoubleCakeBlock.FACING,pContext.getHorizontalDirection());
+            return ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA).withPropertiesOf(state).setValue(DoubleCakeBlock.FACING,pContext.getHorizontalDirection());
         }
         return null;
     }

@@ -38,8 +38,8 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
     }
 
-    protected boolean canRenderName(PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
-        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName() && !type.isGlobe()) {
+    protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
+        if (Minecraft.renderNames() && item.hasCustomHoverName() && !type.isGlobe()) {
             double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
             return d0 < 16 * 16;
         }
@@ -76,7 +76,9 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             matrixStackIn.translate(0.5, 1.125, 0.5);
 
             var displayType = tile.getDisplayType();
-            if (this.canRenderName(tile, displayType)) {
+            ItemStack stack = tile.getDisplayedItem();
+
+            if (this.canRenderName(stack, tile, displayType)) {
                 renderName(tile.getItem(0).getHoverName(), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
             }
             matrixStackIn.scale(0.5f, 0.5f, 0.5f);
@@ -87,7 +89,6 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             }
 
             ItemDisplayContext transform = ItemDisplayContext.FIXED;
-            ItemStack stack = tile.getDisplayedItem();
 
             if (ClientConfigs.Blocks.PEDESTAL_SPECIAL.get()) {
                 switch (displayType) {

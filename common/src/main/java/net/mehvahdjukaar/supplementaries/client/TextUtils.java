@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -29,6 +30,7 @@ public class TextUtils {
     static {
         String text = Credits.INSTANCE.createCreditsText();
         float lx = 1 - (2 * 0.125f);
+
         CREDITS.addAll(Minecraft.getInstance().font.split(TextUtil.parseText(text), Mth.floor(lx * SCALING_FACTOR)));
         String b = """
                 THE BEE MOVIE§r

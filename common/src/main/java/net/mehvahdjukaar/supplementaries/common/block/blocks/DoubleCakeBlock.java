@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -10,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -79,8 +81,11 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             Shapes.or(box(2, 8, 13, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
 
-    public DoubleCakeBlock(Properties properties) {
-        super(properties);
+    public final Block parent;
+
+    public DoubleCakeBlock(Block parent) {
+        super(Utils.copyPropertySafe(parent));
+        this.parent = parent;
     }
 
     @Override
@@ -106,17 +111,18 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             } else {
                 world.setBlock(pos, Blocks.CAKE.defaultBlockState(), 3);
             }
+            DirectionalCakeBlock
         }
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
         if (MiscUtils.FESTIVITY.isStValentine()) {
             if (rand.nextFloat() > 0.8) {
                 double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));
                 double d1 = (pos.getY() + 0.5 + (rand.nextFloat() - 0.5));
                 double d2 = (pos.getZ() + 0.5 + (rand.nextFloat() - 0.5));
-                worldIn.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
+                level.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
             }
         }
     }

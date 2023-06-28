@@ -24,7 +24,7 @@ license = "ARR"
 [[dependencies.supplementaries]]
     modId = "forge"
     mandatory = true
-    versionRange = "[41.1.47,)"
+    versionRange = "[47.0.19,)"
     ordering = "NONE"
     side = "BOTH"
 

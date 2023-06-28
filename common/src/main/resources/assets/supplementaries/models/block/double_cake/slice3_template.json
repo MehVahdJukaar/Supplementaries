@@ -1,13 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "supplementaries:block/double_cake_side",
-		"4": "supplementaries:block/double_cake_top",
-		"5": "supplementaries:block/double_cake_inner",
-		"bottom": "supplementaries:block/cake_bottom",
-		"top": "supplementaries:block/cake_top",
-		"particle": "supplementaries:block/cake_side",
-		"side": "supplementaries:block/cake_side"
+		"5": "-inner",
+		"bottom": "-bottom",
+		"top": "-top",
+		"particle": "-side",
+		"side": "-side"
 	},
 	"elements": [
 		{
@@ -27,11 +25,11 @@
 			"to": [14, 15, 14],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 16, 8]},
 			"faces": {
-				"north": {"uv": [2, 9, 9, 16], "texture": "#3"},
-				"east": {"uv": [2, 9, 14, 16], "texture": "#3"},
-				"south": {"uv": [7, 9, 14, 16], "texture": "#3"},
-				"west": {"uv": [2, 9, 14, 16], "texture": "#5"},
-				"up": {"uv": [7, 2, 14, 14], "texture": "#4"}
+				"north": {"uv": [2, 8, 9, 15], "texture": "#missing"},
+				"east": {"uv": [2, 8, 14, 15], "texture": "#missing"},
+				"south": {"uv": [7, 8, 14, 15], "texture": "#missing"},
+				"west": {"uv": [2, 8, 14, 15], "texture": "#5"},
+				"up": {"uv": [7, 2, 14, 14], "texture": "#missing"}
 			}
 		}
 	]

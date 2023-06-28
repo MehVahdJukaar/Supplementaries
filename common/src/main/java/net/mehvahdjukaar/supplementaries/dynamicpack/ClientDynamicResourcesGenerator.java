@@ -17,7 +17,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
@@ -246,7 +247,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", w, e);
             }
         }
-        if(CompatHandler.FARMERS_DELIGHT) {
+        if (CompatHandler.FARMERS_DELIGHT) {
             //hanging sign extension textures
             try (TextureImage vanillaTexture = TextureImage.open(manager,
                     new ResourceLocation("farmersdelight:entity/signs/hanging/canvas"))) {
@@ -259,6 +260,44 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/farmersdelight/extension_canvas"), newIm);
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", "canvas sign", e);
+            }
+        }
+
+        {
+            StaticResource[] cakeModels = Stream.of("full","slice1","slice2", "slice3", "slice4", "slice5", "slice6")
+                    .map(s-> StaticResource.getOrLog(manager,
+                            ResType.BLOCK_MODELS.getPath(Supplementaries.res("double_cake/vanilla_"+s)))).toArray(StaticResource[]::new);
+
+            StaticResource doubleCakeModelState = StaticResource.getOrLog(manager,
+                    ResType.BLOCKSTATES.getPath(Supplementaries.res("double_cake")));
+            for (var t : CakeRegistry.INSTANCE.getValues()) {
+                if (!t.isVanilla()) {
+                    try {
+                        ResourceLocation dcId = Utils.getID(t.getBlockOfThis("double_cake"));
+                        ResourceLocation top = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("top"));
+                        ResourceLocation side = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("side"));
+                        ResourceLocation bottom = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("bottom"));
+                        ResourceLocation inner = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("inner"));
+
+                        for(var m  : cakeModels) {
+                            addSimilarJsonResource(manager, m, s -> s
+                                            .replace("supplementaries:block/double_cake", "")
+                                            .replace("supplementaries:block/cake", "")
+                                            .replace("\"/", "\"supplementaries:block/double_cake/")
+                                            .replace("_top", top.toString())
+                                            .replace("_side", side.toString())
+                                            .replace("_inner", inner.toString())
+                                            .replace("_bottom", bottom.toString()),
+                                    s -> s.replace("vanilla", dcId.getPath()));
+                        }
+                        addSimilarJsonResource(manager, doubleCakeModelState,
+                                s -> s.replace("vanilla", dcId.getPath()),
+                                s -> s.replace("double_cake", dcId.getPath()));
+                    } catch (Exception e) {
+                        Supplementaries.LOGGER.error("Failed to generate model for double cake {},", t, e);
+                    }
+
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
+import einstein.jmc.JustMoreCakes;
+import einstein.jmc.JustMoreCakesForge;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.PicklePlayer;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;

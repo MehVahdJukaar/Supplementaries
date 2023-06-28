@@ -1,135 +1,135 @@
 {
   "variants": {
     "facing=west,bites=0": {
-      "model":  "supplementaries:block/double_cake",
+      "model":  "supplementaries:block/double_cake/vanilla_full",
       "uvlock": true
     },
     "facing=west,bites=1": {
-      "model":  "supplementaries:block/double_cake_slice1",
+      "model":  "supplementaries:block/double_cake/vanilla_slice1",
       "uvlock": true
     },
     "facing=west,bites=2": {
-      "model":  "supplementaries:block/double_cake_slice2",
+      "model":  "supplementaries:block/double_cake/vanilla_slice2",
       "uvlock": true
     },
     "facing=west,bites=3": {
-      "model":  "supplementaries:block/double_cake_slice3",
+      "model":  "supplementaries:block/double_cake/vanilla_slice3",
       "uvlock": true
     },
     "facing=west,bites=4": {
-      "model":  "supplementaries:block/double_cake_slice4",
+      "model":  "supplementaries:block/double_cake/vanilla_slice4",
       "uvlock": true
     },
     "facing=west,bites=5": {
-      "model":  "supplementaries:block/double_cake_slice5",
+      "model":  "supplementaries:block/double_cake/vanilla_slice5",
       "uvlock": true
     },
     "facing=west,bites=6": {
-      "model":  "supplementaries:block/double_cake_slice6",
+      "model":  "supplementaries:block/double_cake/vanilla_slice6",
       "uvlock": true
     },
     "facing=north,bites=0": {
-      "model":  "supplementaries:block/double_cake",
+      "model":  "supplementaries:block/double_cake/vanilla_full",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=1": {
-      "model":  "supplementaries:block/double_cake_slice1",
+      "model":  "supplementaries:block/double_cake/vanilla_slice1",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=2": {
-      "model":  "supplementaries:block/double_cake_slice2",
+      "model":  "supplementaries:block/double_cake/vanilla_slice2",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=3": {
-      "model":  "supplementaries:block/double_cake_slice3",
+      "model":  "supplementaries:block/double_cake/vanilla_slice3",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=4": {
-      "model":  "supplementaries:block/double_cake_slice4",
+      "model":  "supplementaries:block/double_cake/vanilla_slice4",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=5": {
-      "model":  "supplementaries:block/double_cake_slice5",
+      "model":  "supplementaries:block/double_cake/vanilla_slice5",
       "uvlock": true,
       "y": 90
     },
     "facing=north,bites=6": {
-      "model":  "supplementaries:block/double_cake_slice6",
+      "model":  "supplementaries:block/double_cake/vanilla_slice6",
       "uvlock": true,
       "y": 90
     },
     "facing=east,bites=0": {
-      "model":  "supplementaries:block/double_cake",
+      "model":  "supplementaries:block/double_cake/vanilla_full",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=1": {
-      "model":  "supplementaries:block/double_cake_slice1",
+      "model":  "supplementaries:block/double_cake/vanilla_slice1",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=2": {
-      "model":  "supplementaries:block/double_cake_slice2",
+      "model":  "supplementaries:block/double_cake/vanilla_slice2",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=3": {
-      "model":  "supplementaries:block/double_cake_slice3",
+      "model":  "supplementaries:block/double_cake/vanilla_slice3",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=4": {
-      "model":  "supplementaries:block/double_cake_slice4",
+      "model":  "supplementaries:block/double_cake/vanilla_slice4",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=5": {
-      "model":  "supplementaries:block/double_cake_slice5",
+      "model":  "supplementaries:block/double_cake/vanilla_slice5",
       "uvlock": true,
       "y": 180
     },
     "facing=east,bites=6": {
-      "model":  "supplementaries:block/double_cake_slice6",
+      "model":  "supplementaries:block/double_cake/vanilla_slice6",
       "uvlock": true,
       "y": 180
     },
     "facing=south,bites=0": {
-      "model":  "supplementaries:block/double_cake",
+      "model":  "supplementaries:block/double_cake/vanilla_full",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=1": {
-      "model":  "supplementaries:block/double_cake_slice1",
+      "model":  "supplementaries:block/double_cake/vanilla_slice1",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=2": {
-      "model":  "supplementaries:block/double_cake_slice2",
+      "model":  "supplementaries:block/double_cake/vanilla_slice2",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=3": {
-      "model":  "supplementaries:block/double_cake_slice3",
+      "model":  "supplementaries:block/double_cake/vanilla_slice3",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=4": {
-      "model":  "supplementaries:block/double_cake_slice4",
+      "model":  "supplementaries:block/double_cake/vanilla_slice4",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=5": {
-      "model":  "supplementaries:block/double_cake_slice5",
+      "model":  "supplementaries:block/double_cake/vanilla_slice5",
       "uvlock": true,
       "y": 270
     },
     "facing=south,bites=6": {
-      "model":  "supplementaries:block/double_cake_slice6",
+      "model":  "supplementaries:block/double_cake/vanilla_slice6",
       "uvlock": true,
       "y": 270
     }

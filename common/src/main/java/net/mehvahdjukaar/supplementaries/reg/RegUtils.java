@@ -8,14 +8,18 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry.CakeType;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
@@ -43,6 +47,8 @@ import java.util.function.Supplier;
 public class RegUtils {
 
     public static void initDynamicRegistry() {
+        BlockSetAPI.registerBlockSetDefinition(CakeRegistry.INSTANCE);
+        BlockSetAPI.addDynamicBlockRegistration(RegUtils::registerDoubleCakes, CakeType.class);
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
         BlockSetAPI.addDynamicBlockRegistration(RegUtils::dummy, WoodType.class);
     }
@@ -208,7 +214,7 @@ public class RegUtils {
     }
 
     //sign posts
-    public static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
+    private static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(ModConstants.SIGN_POST_NAME);
             SignPostItem item = new SignPostItem(new Item.Properties().stacksTo(16), wood);
@@ -217,4 +223,19 @@ public class RegUtils {
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }
     }
+
+
+    private static void registerDoubleCakes(Registrator<Block> event, Collection<CakeType> cakeTypes) {
+        for (CakeType type : cakeTypes) {
+            ResourceLocation r = type.getId();
+            String path = r.getPath();
+
+            ResourceLocation id = Supplementaries.res(type.getVariantId("double"));
+            DoubleCakeBlock block = new DoubleCakeBlock(type.cake);
+            type.addChild("double_cake", block);
+            event.register(id, block);
+            ModRegistry.DOUBLE_CAKES.put(type, block);
+        }
+    }
+
 }

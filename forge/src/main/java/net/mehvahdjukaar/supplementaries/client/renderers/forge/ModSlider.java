@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.forge;
 
+import einstein.jmc.blocks.CakeOvenBlock;
+import einstein.jmc.util.CakeBuilder;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.widget.ForgeSlider;

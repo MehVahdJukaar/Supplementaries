@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ItemsUtilImpl {
 
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
-        if (slot.mayPickup(player)) {
+        if (slot.mayPickup(player) && containerStack.getCount() == 1) {
 
             var handlerAndTe = getItemHandler(containerStack, player);
             if (handlerAndTe != null) {
@@ -61,7 +61,7 @@ public class ItemsUtilImpl {
     }
 
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
-        if (slot.mayPickup(player)) {
+        if (slot.mayPickup(player) && containerStack.getCount() == 1) {
 
             var handlerAndTe = getItemHandler(containerStack, player);
             if (handlerAndTe != null) {

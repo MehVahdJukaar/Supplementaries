@@ -1,0 +1,74 @@
+package net.mehvahdjukaar.supplementaries.common.misc;
+
+import net.mehvahdjukaar.moonlight.api.set.BlockType;
+import net.mehvahdjukaar.moonlight.api.set.BlockTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.util.DummyBlockGetter;
+import net.mehvahdjukaar.moonlight.core.client.DummyCamera;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DirectionalCakeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CakeBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.Shapes;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+
+public class CakeRegistry extends BlockTypeRegistry<CakeRegistry.CakeType> {
+
+    public static final CakeRegistry INSTANCE = new CakeRegistry();
+
+    public static final CakeType VANILLA = new CakeType(new ResourceLocation("cake"), Blocks.CAKE);
+
+    private CakeRegistry() {
+        super(CakeType.class, "cake");
+    }
+
+    @Override
+    public CakeType getDefaultType() {
+        return VANILLA;
+    }
+
+    @Override
+    public Optional<CakeType> detectTypeFromBlock(Block block, ResourceLocation blockId) {
+        if(block instanceof CakeBlock || (blockId.getPath().contains("cake") && block.defaultBlockState().hasProperty(CakeBlock.BITES))){
+         if(!(block instanceof DirectionalCakeBlock)) {
+             BlockState def = block.defaultBlockState();
+             if(def.getShape(DummyBlockGetter.INSTANCE, BlockPos.ZERO).bounds().equals(Blocks.CAKE.defaultBlockState()
+                     .getShape(DummyBlockGetter.INSTANCE, BlockPos.ZERO).bounds())) {
+                 return Optional.of(new CakeType(blockId, block));
+             }
+         }
+        }
+        return Optional.empty();
+    }
+
+    public static class CakeType extends BlockType{
+        public final Block cake;
+
+        public CakeType(ResourceLocation name, Block cake) {
+            super(name);
+            this.cake = cake;
+        }
+
+        @Override
+        public String getTranslationKey() {
+            return "cake";
+        }
+
+        @Override
+        public ItemLike mainChild() {
+            return cake;
+        }
+    }
+
+}

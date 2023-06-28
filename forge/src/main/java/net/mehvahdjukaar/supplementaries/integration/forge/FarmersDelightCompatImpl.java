@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -78,7 +79,7 @@ public class FarmersDelightCompatImpl {
             if (bites < 6) {
                 level.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);
             } else {
-                if (state.is(ModRegistry.DOUBLE_CAKE.get()))
+                if (state.is(ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA)))
                     level.setBlock(pos, Blocks.CAKE.defaultBlockState(), 3);
                 else
                     level.removeBlock(pos, false);

@@ -180,13 +180,13 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
         if (MiscUtils.FESTIVITY.isStValentine()) {
             if (rand.nextFloat() > 0.8) {
                 double d0 = (pos.getX() + 0.5 + (rand.nextFloat() - 0.5));
                 double d1 = (pos.getY() + 0.25 + (rand.nextFloat() - 0.25));
                 double d2 = (pos.getZ() + 0.5 + (rand.nextFloat() - 0.5));
-                worldIn.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
+                level.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
             }
         }
     }
