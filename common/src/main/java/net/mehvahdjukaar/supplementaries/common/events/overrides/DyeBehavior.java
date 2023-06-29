@@ -45,7 +45,7 @@ class DyeBehavior implements ItemUseOnBlockOverride {
             BlockPos pos = hit.getBlockPos();
             BlockState state = level.getBlockState(pos);
             Block newBlock = BlocksColorAPI.changeColor(state.getBlock(), ForgeHelper.getColor(stack));
-            if (!state.is(newBlock)) {
+            if (newBlock != null && !state.is(newBlock)) {
                 BlockState newState = newBlock.withPropertiesOf(state);
                 level.setBlockAndUpdate(pos, newState);
                 if (player instanceof ServerPlayer serverPlayer) {

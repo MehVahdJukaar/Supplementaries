@@ -28,7 +28,7 @@
     {"id":"betterendforge:end_slime","required":false},
     {"id":"betterendforge:dragonfly","required":false},
     {"id":"betterendforge:silk_moth","required":false},
-    {"id":"savageandravage:creepie","required":false},
+    {"id":"savage_and_ravage:creepie","required":false},
     {"id":"betteranimalsplus:butterfly","required":false},
     {"id":"whisperwoods:moth","required":false},
     {"id":"infernalexp:glowsilk_moth","required":false},

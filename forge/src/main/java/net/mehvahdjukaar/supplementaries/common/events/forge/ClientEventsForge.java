@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -7,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -91,6 +93,10 @@ public class ClientEventsForge {
     public static void clientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientEvents.onClientTick(Minecraft.getInstance());
+            if(QuiverArrowSelectGui.isUsingKey()){
+                QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(),
+                        ClientRegistry.QUIVER_KEYBIND.getKey().getValue()));
+            }
         }
     }
 
@@ -128,7 +134,8 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         if (Minecraft.getInstance().screen == null &&
-                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue() &&
+                !Minecraft.getInstance().isPaused()) {
             int a = event.getAction();
             if (a < 2) {
                 QuiverArrowSelectGui.setUsingKeybind(a == 1);

@@ -1,2 +1,2 @@
-- improved turn table logic. this makes them work better speicifcally with quark magnets
-- improved tipped spikes player loot option, preventing mobs to target the spike fake player or it gaining advancements
+- fixed quiver gui not closing when pausing the game
+- fixed a crash with dye block behavior
