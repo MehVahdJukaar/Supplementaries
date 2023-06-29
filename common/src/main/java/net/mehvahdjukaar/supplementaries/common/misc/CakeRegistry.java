@@ -68,7 +68,6 @@ public class CakeRegistry extends BlockTypeRegistry<CakeRegistry.CakeType> {
 
         @Override
         protected void initializeChildrenItems() {
-            super.initializeChildrenItems();
         }
     }
 

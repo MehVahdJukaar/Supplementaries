@@ -235,10 +235,6 @@ public class QuarkCompatImpl {
         return InteractionResult.PASS;
     }
 
-    public static boolean isMoreNoteBlockSoundsOn() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(MoreNoteBlockSoundsModule.class) && MoreNoteBlockSoundsModule.enableSkullSounds;
-    }
-
     public static BlockState getMagnetStateForFlintBlock(BlockEntity be, Direction dir) {
         if (be instanceof MagnetizedBlockBlockEntity magnet && dir == magnet.getFacing()) {
             return magnet.getMagnetState();

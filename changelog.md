@@ -1,1 +1,6 @@
-fixed faucet crash
+- Stackable cakes work with ANY modded cakes
+- Fixed crash with sign post screen when only lower sign as available
+- Fixed washing of signs withs soap
+- Fixed quiver gui not closing under certain circumstances
+- Suds particles now play a sound. Pop animation is also improved
+- Globe spin can be detected by observers
