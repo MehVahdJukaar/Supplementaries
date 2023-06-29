@@ -8,6 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 interface ItemUseOnBlockOverride extends ItemUseOverride {
 
+
+    /**
+     * Used for permission checks on flan compat
+     */
+    default boolean altersWorld() {
+        return false;
+    }
+
     default boolean shouldBlockMapToItem(Item item) {
         return appliesToItem(item);
     }

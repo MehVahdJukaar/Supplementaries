@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.misc.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -39,21 +38,19 @@ class SoapBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
-            BlockPos pos = hit.getBlockPos();
-            if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    if (!player.getAbilities().instabuild) stack.shrink(1);
+        BlockPos pos = hit.getBlockPos();
+        if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                if (!player.getAbilities().instabuild) stack.shrink(1);
 
-                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
-                    level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
             }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

@@ -13,12 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 interface ItemUseOverride {
 
-    /**
-     * Used for permission checks on flan compat
-     */
-    default boolean altersWorld() {
-        return false;
-    }
 
     boolean isEnabled();
 

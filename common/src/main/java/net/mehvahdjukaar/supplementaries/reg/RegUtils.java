@@ -227,11 +227,9 @@ public class RegUtils {
 
     private static void registerDoubleCakes(Registrator<Block> event, Collection<CakeType> cakeTypes) {
         for (CakeType type : cakeTypes) {
-            ResourceLocation r = type.getId();
-            String path = r.getPath();
 
             ResourceLocation id = Supplementaries.res(type.getVariantId("double"));
-            DoubleCakeBlock block = new DoubleCakeBlock(type.cake);
+            DoubleCakeBlock block = new DoubleCakeBlock(type);
             type.addChild("double_cake", block);
             event.register(id, block);
             ModRegistry.DOUBLE_CAKES.put(type, block);

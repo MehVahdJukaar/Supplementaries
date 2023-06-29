@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SimplePlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
@@ -154,6 +156,9 @@ public class InteractEventOverrideHandler {
             if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
                 return InteractionResult.PASS;
             }
+            if(override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())){
+                return InteractionResult.PASS;
+            }
             return override.tryPerformingAction(level, player, hand, stack, hit);
         }
         return InteractionResult.PASS;
@@ -168,6 +173,10 @@ public class InteractEventOverrideHandler {
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
         if (override != null && override.isEnabled()) {
             if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+                return InteractionResult.PASS;
+            }
+            //TODO: merge
+            if(override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())){
                 return InteractionResult.PASS;
             }
             InteractionResult result = override.tryPerformingAction(level, player, hand, stack, hit);
@@ -197,10 +206,9 @@ public class InteractEventOverrideHandler {
     public static InteractionResultHolder<ItemStack> onItemUse(
             Player player, Level level, InteractionHand hand, ItemStack stack) {
         Item item = stack.getItem();
-
+        
         ItemUseOverride override = ITEM_USE.get(item);
         if (override != null && override.isEnabled()) {
-
             var ret = override.tryPerformingAction(level, player, hand, stack, null);
             return switch (ret) {
                 case CONSUME -> InteractionResultHolder.consume(stack);

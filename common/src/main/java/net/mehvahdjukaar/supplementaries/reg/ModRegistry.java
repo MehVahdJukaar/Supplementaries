@@ -730,8 +730,7 @@ public class ModRegistry {
 
     //directional cake
     public static final Supplier<Block> DIRECTIONAL_CAKE = regBlock(DIRECTIONAL_CAKE_NAME, () -> new DirectionalCakeBlock(
-            BlockBehaviour.Properties.copy(Blocks.CAKE)
-                    .dropsLike(Blocks.CAKE)
+            CakeRegistry.VANILLA
     ));
 
     //checker block

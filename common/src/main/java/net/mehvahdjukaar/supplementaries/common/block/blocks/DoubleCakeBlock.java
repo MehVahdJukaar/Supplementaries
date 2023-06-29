@@ -1,19 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -81,11 +87,8 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
             Shapes.or(box(2, 8, 13, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
 
-    public final Block parent;
-
-    public DoubleCakeBlock(Block parent) {
-        super(Utils.copyPropertySafe(parent));
-        this.parent = parent;
+    public DoubleCakeBlock(CakeRegistry.CakeType type) {
+        super(type);
     }
 
     @Override
@@ -99,19 +102,18 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
     }
 
     @Override
-    public void removeSlice(BlockState state, BlockPos pos, LevelAccessor world, Direction dir) {
+    public void removeSlice(BlockState state, BlockPos pos, LevelAccessor level, Direction dir) {
         int i = state.getValue(BITES);
         if (i < 6) {
             if (i == 0 && CommonConfigs.Tweaks.DIRECTIONAL_CAKE.get()) state = state.setValue(FACING, dir);
-            world.setBlock(pos, state.setValue(BITES, i + 1), 3);
+            level.setBlock(pos, state.setValue(BITES, i + 1), 3);
         } else {
-            if (state.getValue(WATERLOGGED) && CommonConfigs.Tweaks.DIRECTIONAL_CAKE.get()) {
-                world.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
+            if (this.type == CakeRegistry.VANILLA && state.getValue(WATERLOGGED) && CommonConfigs.Tweaks.DIRECTIONAL_CAKE.get()) {
+                level.setBlock(pos, ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
                         .setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)), 3);
             } else {
-                world.setBlock(pos, Blocks.CAKE.defaultBlockState(), 3);
+                level.setBlock(pos, type.cake.defaultBlockState(), 3);
             }
-            DirectionalCakeBlock
         }
     }
 
@@ -125,5 +127,24 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
                 level.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
             }
         }
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        //hack
+        if(!player.getItemInHand(handIn).is(ItemTags.CANDLES)) {
+            BlockState newState = type.cake.withPropertiesOf(state);
+            level.setBlock(pos, newState, Block.UPDATE_INVISIBLE);
+            var res = newState.use(level, player, handIn, hit);
+            level.setBlockAndUpdate(pos, state);
+            if(res.consumesAction()){
+                if (!level.isClientSide()) {
+                    this.removeSlice(state, pos, level, getHitDir(player, hit));
+                }
+                return res;
+            }
+        }
+
+        return super.use(state, level, pos, player, handIn, hit);
     }
 }

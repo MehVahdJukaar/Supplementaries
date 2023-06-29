@@ -2,8 +2,8 @@
 	"parent": "supplementaries:block/double_cake/full_template",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "supplementaries:block/double_cake_side",
-		"4": "supplementaries:block/double_cake_top",
+		"side_up": "supplementaries:block/double_cake_side",
+		"top_up": "supplementaries:block/double_cake_top",
 		"bottom": "supplementaries:block/cake_bottom",
 		"top": "supplementaries:block/cake_top",
 		"particle": "supplementaries:block/cake_side",

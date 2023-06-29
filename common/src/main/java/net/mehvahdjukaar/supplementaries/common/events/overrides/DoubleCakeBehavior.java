@@ -1,28 +1,35 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DirectionalCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 class DoubleCakeBehavior implements ItemUseOnBlockOverride {
+
+    private static final Supplier<Set<Block>> CAKES = Suppliers.memoize(() -> CakeRegistry.INSTANCE.getValues().stream()
+            .map(v -> v.cake).collect(Collectors.toUnmodifiableSet()));
+    private static final Supplier<Set<Item>> CAKES_ITEMS = Suppliers.memoize(() -> CakeRegistry.INSTANCE.getValues().stream()
+            .map(v -> v.cake.asItem()).collect(Collectors.toUnmodifiableSet()));
 
     @Override
     public boolean altersWorld() {
@@ -42,40 +49,36 @@ class DoubleCakeBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return CommonConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get();
     }
 
     @Override
     public boolean appliesToItem(Item item) {
-        return item == Items.CAKE;
-    }
-
-    private InteractionResult placeDoubleCake(Player player, ItemStack stack, BlockPos pos, Level world, BlockState state) {
-        boolean isDirectional = state.getBlock() == ModRegistry.DIRECTIONAL_CAKE.get();
-
-        if ((isDirectional && state.getValue(DirectionalCakeBlock.BITES) == 0) || state == net.minecraft.world.level.block.Blocks.CAKE.defaultBlockState()) {
-
-            return InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA),
-                    player, stack, pos, world, state, null, DoubleCakeBlock.FACING);
-        }
-        return InteractionResult.PASS;
+        return CAKES_ITEMS.get().contains(item);
     }
 
     @Override
-    public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
+    public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
-            BlockPos pos = hit.getBlockPos();
-            BlockState state = world.getBlockState(pos);
-            Block b = state.getBlock();
-            if (b == net.minecraft.world.level.block.Blocks.CAKE || b == ModRegistry.DIRECTIONAL_CAKE.get()) {
-                InteractionResult result = InteractionResult.FAIL;
-
-                if (CommonConfigs.Tweaks.DOUBLE_CAKE_PLACEMENT.get()) {
-                    result = placeDoubleCake(player, stack, pos, world, state);
-                }
-                return result;
+        BlockPos pos = hit.getBlockPos();
+        BlockState state = level.getBlockState(pos);
+        Block block = state.getBlock();
+        if (((CAKES.get().contains(block) || block instanceof DirectionalCakeBlock) &&
+                state.getValue(DirectionalCakeBlock.BITES) == 0)) {
+            CakeRegistry.CakeType t;
+            if (block instanceof DirectionalCakeBlock dc) {
+                t = dc.type;
+            } else {
+                t = CakeRegistry.INSTANCE.getBlockTypeOf(block);
             }
+            if ((t == null) || !(stack.getItem() instanceof BlockItem bi) ||
+                    CakeRegistry.INSTANCE.getBlockTypeOf(bi.getBlock()) != t) {
+                return InteractionResult.PASS;
+            }
+
+            Block doubleCake = t.getBlockOfThis("double_cake");
+            return InteractEventOverrideHandler.replaceSimilarBlock(doubleCake,
+                    player, stack, pos, level, state, null, DoubleCakeBlock.FACING);
         }
         return InteractionResult.PASS;
     }

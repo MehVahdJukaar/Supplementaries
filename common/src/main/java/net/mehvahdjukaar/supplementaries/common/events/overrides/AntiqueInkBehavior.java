@@ -35,7 +35,6 @@ class AntiqueInkBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
             boolean newState = !stack.is(Items.INK_SAC);
             BlockPos pos = hit.getBlockPos();
             BlockEntity tile = world.getBlockEntity(pos);
@@ -44,7 +43,6 @@ class AntiqueInkBehavior implements ItemUseOnBlockOverride {
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }
-        }
         return InteractionResult.PASS;
     }
 }

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.DyeBehavior;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -29,7 +30,7 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
     private SignPostScreen(SignPostBlockTile tile) {
         super(tile, Component.translatable("sign.edit"));
-        this.lineIndex = !this.tile.getSignUp().active() ? 1 : 0;
+        this.textHolderIndex = !this.tile.getSignUp().active() ? 1 : 0;
     }
 
     public static void open(SignPostBlockTile teSign) {

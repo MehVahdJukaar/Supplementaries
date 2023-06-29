@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
@@ -98,7 +99,14 @@ public class ClientEventsForge {
     public static void clientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientEvents.onClientTick(Minecraft.getInstance());
+            if(QuiverArrowSelectGui.isUsingKey()) {
+                //handles release edge cases
+                QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
+                        Minecraft.getInstance().getWindow().getWindow(),
+                        ClientRegistry.QUIVER_KEYBIND.getKey().getValue()
+                ));
 
+            }
         }
     }
 
@@ -138,8 +146,10 @@ public class ClientEventsForge {
         if (Minecraft.getInstance().screen == null &&
                 event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
             int a = event.getAction();
-            if (a < 2) {
-                QuiverArrowSelectGui.setUsingKeybind(a == 1);
+            if (a == InputConstants.REPEAT || a ==InputConstants.PRESS) {
+                QuiverArrowSelectGui.setUsingKeybind(true);
+            }else if (a == InputConstants.RELEASE){
+                QuiverArrowSelectGui.setUsingKeybind(false);
             }
         }
     }

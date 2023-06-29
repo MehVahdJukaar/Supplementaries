@@ -47,7 +47,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
     public static void setUsingKeybind(boolean on) {
-        if (on != usingItem) lastCumulativeMouseDx = 0;
+        //if (on != usingItem) lastCumulativeMouseDx = 0;
         usingKey = on;
     }
 

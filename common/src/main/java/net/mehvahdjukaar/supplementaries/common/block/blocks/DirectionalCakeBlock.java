@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -66,11 +68,13 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public final CakeRegistry.CakeType type;
 
-    public DirectionalCakeBlock(Properties properties) {
-        super(properties);
+    public DirectionalCakeBlock(CakeRegistry.CakeType type) {
+        super(Utils.copyPropertySafe(type.cake).dropsLike(type.cake));
         this.registerDefaultState(this.stateDefinition.any().setValue(BITES, 0)
                 .setValue(FACING, Direction.WEST).setValue(WATERLOGGED, false));
+        this.type = type;
     }
 
     @Override
@@ -88,10 +92,16 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        return useGeneric(state, level, pos, player, handIn, hit, true);
+
+    }
+
+    protected InteractionResult useGeneric(BlockState state, Level level, BlockPos pos, Player player,
+                                           InteractionHand handIn, BlockHitResult hit, boolean canEat) {
         ItemStack itemstack = player.getItemInHand(handIn);
         Item item = itemstack.getItem();
 
-        if (CompatHandler.FARMERS_DELIGHT) {
+        if (CompatHandler.FARMERS_DELIGHT && this.type == CakeRegistry.VANILLA) {
             InteractionResult res = FarmersDelightCompat.onCakeInteract(state, pos, level, itemstack);
             if (res.consumesAction()) return res;
         }
@@ -110,9 +120,13 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
                 return InteractionResult.SUCCESS;
             }
         }
+        if (!canEat) return InteractionResult.PASS;
         return this.eatSliceD(level, pos, state, player,
-                hit.getDirection().getAxis() != Direction.Axis.Y ? hit.getDirection() : player.getDirection().getOpposite());
+                getHitDir(player, hit));
+    }
 
+    public static Direction getHitDir(Player player, BlockHitResult hit) {
+        return hit.getDirection().getAxis() != Direction.Axis.Y ? hit.getDirection() : player.getDirection().getOpposite();
     }
 
     public InteractionResult eatSliceD(LevelAccessor world, BlockPos pos, BlockState state, Player player, Direction dir) {

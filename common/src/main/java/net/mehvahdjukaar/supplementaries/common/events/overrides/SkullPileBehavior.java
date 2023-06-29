@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoubleSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -19,7 +18,6 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import org.jetbrains.annotations.Nullable;
 
 class SkullPileBehavior implements ItemUseOnBlockOverride {
@@ -54,25 +52,23 @@ class SkullPileBehavior implements ItemUseOnBlockOverride {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        if (Utils.mayBuild(player,hit.getBlockPos())) {
-            BlockPos pos = hit.getBlockPos();
+        BlockPos pos = hit.getBlockPos();
 
-            if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {
-                BlockState state = oldTile.getBlockState();
-                if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
+        if (world.getBlockEntity(pos) instanceof SkullBlockEntity oldTile) {
+            BlockState state = oldTile.getBlockState();
+            if ((state.getBlock() instanceof SkullBlock skullBlock && skullBlock.getType() != SkullBlock.Types.DRAGON)) {
 
-                    ItemStack copy = stack.copy();
+                ItemStack copy = stack.copy();
 
-                    InteractionResult result = InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.SKULL_PILE.get(),
-                            player, stack, pos, world, state, null, SkullBlock.ROTATION);
+                InteractionResult result = InteractEventOverrideHandler.replaceSimilarBlock(ModRegistry.SKULL_PILE.get(),
+                        player, stack, pos, world, state, null, SkullBlock.ROTATION);
 
-                    if (result.consumesAction()) {
-                        if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
-                            tile.initialize(oldTile, copy, player, hand);
-                        }
+                if (result.consumesAction()) {
+                    if (world.getBlockEntity(pos) instanceof DoubleSkullBlockTile tile) {
+                        tile.initialize(oldTile, copy, player, hand);
                     }
-                    return result;
                 }
+                return result;
             }
         }
         return InteractionResult.PASS;
