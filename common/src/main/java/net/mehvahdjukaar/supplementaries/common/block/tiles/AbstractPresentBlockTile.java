@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.ref.WeakReference;
 
 public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
 
@@ -87,6 +90,18 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
         return itemstack;
     }
 
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        var m = menu.get();
+        if (m != null) m.slotsChanged(this);
+    }
 
+    //hack
+    private WeakReference<AbstractContainerMenu> menu = new WeakReference<>(null);
+
+    public void addMenuCallbackOnChange(AbstractContainerMenu menu) {
+        if(this.level.isClientSide) this.menu = new WeakReference<>(menu);
+    }
 }
 

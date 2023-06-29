@@ -115,4 +115,8 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
         return new TrappedPresentContainerMenu(id, player, this);
     }
 
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
 }

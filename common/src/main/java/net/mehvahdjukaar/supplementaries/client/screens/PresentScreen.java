@@ -51,17 +51,18 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     //hasn't received items yet
     private boolean needsInitialization = true;
 
-    public PresentScreen(PresentContainerMenu container, Inventory inventory, Component text) {
-        super(container, inventory, text);
+    public PresentScreen(PresentContainerMenu menu, Inventory inventory, Component text) {
+        super(menu, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
 
-        this.tile = (PresentBlockTile) container.getContainer();
+        this.tile = (PresentBlockTile) menu.getContainer();
     }
 
     @Override
     public void init() {
         super.init();
+
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;

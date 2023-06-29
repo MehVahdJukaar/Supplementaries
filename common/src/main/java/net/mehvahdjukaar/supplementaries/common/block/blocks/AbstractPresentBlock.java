@@ -4,8 +4,13 @@ import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -163,4 +168,11 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
         return state;
     }
 
+    //schedule block tick
+    @Override
+    public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource rand) {
+        if (serverLevel.getBlockEntity(pos) instanceof PresentBlockTile tile) {
+            tile.recheckOpen();
+        }
+    }
 }

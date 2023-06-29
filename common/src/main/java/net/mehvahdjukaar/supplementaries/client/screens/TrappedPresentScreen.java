@@ -31,17 +31,18 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     private boolean needsInitialization = true;
 
 
-    public TrappedPresentScreen(TrappedPresentContainerMenu container, Inventory inventory, Component text) {
-        super(container, inventory, text);
+    public TrappedPresentScreen(TrappedPresentContainerMenu menu, Inventory inventory, Component text) {
+        super(menu, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
 
-        this.tile = (TrappedPresentBlockTile) container.getContainer();
+        this.tile = (TrappedPresentBlockTile) menu.getContainer();
     }
 
     @Override
     public void init() {
         super.init();
+
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;

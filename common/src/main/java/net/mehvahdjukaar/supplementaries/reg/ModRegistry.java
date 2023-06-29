@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -20,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
+import net.minecraft.client.gui.screens.inventory.BeaconScreen;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -34,9 +36,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.phys.shapes.Shapes;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -746,16 +746,19 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
     ));
 
+    //pancakes
     public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(
             15, ModSounds.PANCAKE_MUSIC.get(), new Item.Properties(), 3 * 60 + 48));
-    //pancakes
-    public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
+
+    public static final Supplier<Block> PANCAKE = regPlaceableItem(PANCAKE_NAME,
+            () -> new PancakeBlock(
                     BlockBehaviour.Properties.copy(Blocks.CAKE)
                             .mapColor(MapColor.TERRACOTTA_ORANGE)
                             .strength(0.5F)
-                            .sound(SoundType.WOOL))
+                            .sound(SoundType.WOOL)),
+            PANCAKE_ITEM,
+            () -> true
     );
-
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
             BlockBehaviour.Properties.copy(Blocks.WHEAT)

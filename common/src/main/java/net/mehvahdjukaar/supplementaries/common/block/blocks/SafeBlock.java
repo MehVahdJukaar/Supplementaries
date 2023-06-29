@@ -80,7 +80,6 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OPEN, FACING, WATERLOGGED, LAVALOGGED);
     }
-
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource rand) {

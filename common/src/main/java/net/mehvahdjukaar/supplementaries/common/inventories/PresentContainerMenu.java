@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlock
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -42,6 +41,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
 
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
+        this.inventory.addMenuCallbackOnChange(this);
 
         this.addSlot(new Slot(this.inventory, 0, getSlotX(), getSlotY()) {
             @Override

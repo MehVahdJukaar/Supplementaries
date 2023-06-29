@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -403,7 +404,7 @@ public class ModCreativeTabs {
 
         after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
                 ModConstants.PANCAKE_NAME,
-                ModRegistry.PANCAKE_ITEM);
+                ModRegistry.PANCAKE);
 
         after(e, Items.NETHER_BRICK, CreativeModeTabs.INGREDIENTS,
                 ModConstants.ASH_BRICKS_NAME,

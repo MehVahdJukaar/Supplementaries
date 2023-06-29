@@ -6,6 +6,8 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Topping;
+import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
+import net.mehvahdjukaar.supplementaries.common.items.PancakeItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -71,7 +74,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
                 //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-        } else if (item == ModRegistry.PANCAKE_ITEM.get()) {
+        } else if (item == this.asItem()) {
             return InteractionResult.PASS;
         } else if (player.canEat(false)) {
             player.getFoodData().eat(1, 0.1F);
@@ -134,7 +137,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
         if (!stateIn.canSurvive(worldIn, currentPos)) {
-            return Blocks.AIR.defaultBlockState();
+                return Blocks.AIR.defaultBlockState();
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
