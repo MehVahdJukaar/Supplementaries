@@ -17,8 +17,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HopperBlock;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -311,7 +309,7 @@ public class CommonConfigs {
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("Allows notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
             NOTICE_BOARD_GUI = builder.comment("Enables a GUI for the block. Not needed as the block just holds one item which you can place by clicking on it")
-                            .define("gui", true);
+                    .define("gui", true);
             builder.pop();
 
             builder.push("pedestal");
@@ -324,12 +322,15 @@ public class CommonConfigs {
             ASH_ENABLED = feature(builder);
             ASH_BURN = builder.comment("Burnable blocks will have a chance to create ash layers when burned")
                     .define("ash_from_fire", true);
+            ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? () -> false :
+                    builder.comment("Burning mobs will drop ash when they die")
+                            .define("ash_from_burning_mobs", true);
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
             //TODO REMOVE
             ///BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-             //       .define("attempts_per_patch", 36, 1, 1000);
+            //       .define("attempts_per_patch", 36, 1, 1000);
             //BASALT_ASH_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
             //        .define("spawn_attempts", 15, 0, 100);
             builder.pop();
@@ -403,11 +404,11 @@ public class CommonConfigs {
         public static final Supplier<Boolean> DOUBLE_IRON_GATE;
         public static final Supplier<Boolean> CONSISTENT_GATE;
 
+        public static final Supplier<Boolean> ASH_ENABLED;
+        public static final Supplier<Boolean> ASH_FROM_MOBS;
         public static final Supplier<Boolean> ASH_BURN;
         public static final Supplier<Boolean> ASH_RAIN;
         public static final Supplier<Boolean> BASALT_ASH_ENABLED;
-        public static final Supplier<Integer> BASALT_ASH_TRIES = null;
-        public static final Supplier<Integer> BASALT_ASH_PER_CHUNK = null;
 
         public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
         public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
@@ -447,8 +448,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> DAUB_ENABLED;
         public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
-
-        public static final Supplier<Boolean> ASH_ENABLED;
 
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
 
@@ -593,7 +592,7 @@ public class CommonConfigs {
             builder.push("soap");
             SOAP_ENABLED = feature(builder);
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
-                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta","botania:mystical_flower"));
+                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower"));
             builder.pop();
 
             builder.push("present");
@@ -608,7 +607,7 @@ public class CommonConfigs {
             //FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
             //        .define("rarity", 6, 1, 100);
             //FLAX_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-             //       .define("attempts_per_patch", 35, 1, 100);
+            //       .define("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -1100,11 +1099,13 @@ public class CommonConfigs {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
             case ModConstants.ASH_BRICK_NAME -> Building.ASH_BRICKS_ENABLED.get();
-            case ModConstants.TRAPPED_PRESENT_NAME -> Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
+            case ModConstants.TRAPPED_PRESENT_NAME ->
+                    Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
             case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
             case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
             case ModConstants.CHECKER_SLAB_NAME -> Building.CHECKERBOARD_ENABLED.get();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
+            case "ash_from_burning" -> Building.ASH_ENABLED.get() && Building.ASH_FROM_MOBS.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
@@ -1119,7 +1120,7 @@ public class CommonConfigs {
         }
         float percentage = disabled / (float) FEATURE_TOGGLES.size();
         if (percentage > 0.66f) {
-            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage*100));
+            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
         }
     }
 }

@@ -107,8 +107,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     }
 
     @Override
-    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+    public MenuProvider getMenuProvider(BlockState state, Level blockEntity, BlockPos pos) {
+        BlockEntity tileEntity = blockEntity.getBlockEntity(pos);
         return tileEntity instanceof MenuProvider mp ? mp : null;
     }
 

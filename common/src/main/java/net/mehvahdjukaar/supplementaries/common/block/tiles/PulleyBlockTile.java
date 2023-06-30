@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainerMenu;
@@ -168,7 +169,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
                 new Direction[]{moveDir, moveDir.getClockWise(axis), moveDir.getCounterClockWise(axis)};
 
         List<Direction> remaining = new ArrayList<>();
-        int maxSideDist = 6;
+        int maxSideDist = 7;
         for (var d : order) {
             if (RopeHelper.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
                 if (moveConnected( retracting, maxSideDist, d)) {

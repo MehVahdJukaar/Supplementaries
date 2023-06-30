@@ -30,13 +30,14 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         if (!this.player.isRemoved()) {
-            this.x = this.player.getX();
-            this.y = this.player.getY();
-            this.z = this.player.getZ();
 
             if (player.onClimbable() && CommonConfigs.Functional.ROPE_SLIDE.get()) {
                 BlockState b = player.getFeetBlockState();
                 if (b.is(ModRegistry.ROPE.get())) {
+
+                    this.x = this.player.getX();
+                    this.y = this.player.getY();
+                    this.z = this.player.getZ();
 
                     float downwardSpeed = -(float) player.getDeltaMovement().y;
                     float minPitch = 0.7f;
