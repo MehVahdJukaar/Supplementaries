@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -89,19 +90,38 @@ public class ModTextures {
     public static final ResourceLocation BUBBLE_BLOCK_TEXTURE = Supplementaries.res("block/bubble_block");
     public static final ResourceLocation BUBBLE_BLOCK_COLORS_TEXTURE = Supplementaries.res("block/bubble_block_colors");
 
+    public static final ResourceLocation FLAG_ICON = Supplementaries.res("item/gui_slots/empty_slot_flag");
+    public static final ResourceLocation BANNER_ICON = Supplementaries.res("item/gui_slots/empty_slot_banner");
+    public static final ResourceLocation MAP_ICON = Supplementaries.res("item/gui_slots/empty_slot_map");
+    public static final ResourceLocation ROPE_ICON = Supplementaries.res("item/gui_slots/empty_slot_rope");
+    public static final ResourceLocation CHAIN_ICON = Supplementaries.res("item/gui_slots/empty_slot_chain");
+    public static final ResourceLocation BANNER_PATTERN_ICON = Supplementaries.res("item/gui_slots/empty_slot_banner_pattern");
+    public static final ResourceLocation BOOK_ICON = Supplementaries.res("item/gui_slots/empty_slot_book");
+    public static final ResourceLocation ANTIQUE_INK_ICON = Supplementaries.res("item/gui_slots/empty_slot_antique_ink");
+    public static final ResourceLocation PAPER_ICON = Supplementaries.res("item/gui_slots/empty_slot_paper");
+    public static final ResourceLocation GLASS_PANE_ICON = Supplementaries.res("item/gui_slots/empty_slot_glass_pane");
+
+
+    public static final List<ResourceLocation> CARTOGRAPHY_INGREDIENTS_ICONS = Util.make(() -> {
+        var l = new ArrayList<ResourceLocation>();
+        l.add(PAPER_ICON);
+        l.add(GLASS_PANE_ICON);
+        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
+            l.add(ANTIQUE_INK_ICON);
+        }
+        return l;
+    });
+
+    public static final List<ResourceLocation> MAP_ICONS = List.of(MAP_ICON);
 
     public static final List<ResourceLocation> BANNER_SLOT_ICONS =
-            List.of(Supplementaries.res("item/gui_slots/empty_slot_banner"),
-                    Supplementaries.res("item/gui_slots/empty_slot_flag"));
+            List.of(BANNER_ICON, FLAG_ICON);
 
     public static final List<ResourceLocation> PULLEY_SLOT_ICONS =
-            List.of(Supplementaries.res("item/gui_slots/empty_slot_rope"),
-                    Supplementaries.res("item/gui_slots/empty_slot_chain"));
+            List.of(ROPE_ICON, CHAIN_ICON);
 
     public static final List<ResourceLocation> NOTICE_BOARD_SLOT_ICONS =
-            List.of(Supplementaries.res("item/gui_slots/empty_slot_map"),
-                    Supplementaries.res("item/gui_slots/empty_slot_banner_pattern"),
-                    Supplementaries.res("item/gui_slots/empty_slot_book"));
+            List.of(MAP_ICON, BANNER_PATTERN_ICON, BOOK_ICON);
 
 
     public static final Supplier<Map<Block, ResourceLocation>> SKULL_CANDLES_TEXTURES = Suppliers.memoize(() -> {

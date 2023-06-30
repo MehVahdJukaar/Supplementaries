@@ -1,6 +1,7 @@
-- Stackable cakes work with ANY modded cakes
-- Fixed crash with sign post screen when only lower sign as available
-- Fixed washing of signs withs soap
-- Fixed quiver gui not closing under certain circumstances
-- Suds particles now play a sound. Pop animation is also improved
-- Globe spin can be detected by observers
+- Vastly improved rope slide sound logic when falling through them
+- Sound pitch and volume now depends on player speed
+- This also fixes some cases where sound could play when not falling
+- Cartography tables can accept antique ink
+- They also have 2 animated slot icons, similar to smithing table
+- Fixed presents gui not working correctly
+- fixed pancakes not being stackable

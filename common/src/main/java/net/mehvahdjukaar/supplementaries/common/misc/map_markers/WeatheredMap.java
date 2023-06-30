@@ -281,7 +281,7 @@ public class WeatheredMap {
         );
     }
 
-    public static void setAntique(ServerLevel level, ItemStack stack, boolean on) {
+    public static void setAntique(Level level, ItemStack stack, boolean on) {
         MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 

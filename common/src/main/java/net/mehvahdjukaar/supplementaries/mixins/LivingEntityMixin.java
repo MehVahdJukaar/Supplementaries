@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.util.Mth;
@@ -13,14 +12,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import org.jetbrains.annotations.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -58,26 +55,9 @@ public abstract class LivingEntityMixin extends Entity {
 
                 if (this.isSuppressingSlidingDownLadder()) {
                     if (y < 0 && ((Object) this) instanceof Player) y = 0;
-                    if (ropeTicks > 0) ropeTicks--;
-                } else {
-                    if (this.level().isClientSide) {
-                        //cant use oldY since it has already been set
-                        if (this.getY() < lastY && y < -0.05) {
-                            if (RopeBlock.playEntitySlideSound(((LivingEntity) (Object) this), ropeTicks) && ropeTicks != 0) {
-                                ropeTicks = 1;
-                            } else ropeTicks++;
-                        }
-                    }
                 }
                 info.setReturnValue(new Vec3(x, y, z));
             }
-        } else if (ropeTicks > 0) ropeTicks--;
-        lastY = this.getY();
+        }
     }
-
-    @Unique
-    private int ropeTicks = 0;
-    @Unique
-    private double lastY = 0;
-
 }

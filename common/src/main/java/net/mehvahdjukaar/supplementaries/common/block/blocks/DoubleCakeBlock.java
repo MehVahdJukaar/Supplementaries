@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -12,12 +13,12 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -86,9 +87,11 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
                     box(1, 0, 1, 15, 8, 15)),
             Shapes.or(box(2, 8, 13, 14, 15, 14),
                     box(1, 0, 1, 15, 8, 15))};
+    private final BlockState mimic;
 
     public DoubleCakeBlock(CakeRegistry.CakeType type) {
         super(type);
+        this.mimic = type.cake.defaultBlockState();
     }
 
     @Override
@@ -127,17 +130,49 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
                 level.addParticle(ParticleTypes.HEART, d0, d1, d2, 0, 0, 0);
             }
         }
+        super.animateTick(stateIn, level, pos, rand);
+        mimic.getBlock().animateTick(mimic, level, pos, rand);
     }
+
+    @Override
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter worldIn, BlockPos pos) {
+        return Math.min(super.getDestroyProgress(state, player, worldIn, pos),
+                mimic.getDestroyProgress(player, worldIn, pos));
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+        return mimic.getSoundType();
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState state) {
+        return mimic.getSoundType();
+    }
+
+    //@Override
+    @PlatformOnly(PlatformOnly.FORGE)
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        return level instanceof Level l ?  Math.max(ForgeHelper.getExplosionResistance(mimic, l, pos, explosion),
+                state.getBlock().getExplosionResistance()) : super.getExplosionResistance();
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        return mimic.getBlock().getCloneItemStack(level, pos, state);
+    }
+
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         //hack
-        if(!player.getItemInHand(handIn).is(ItemTags.CANDLES)) {
+        if (!player.getItemInHand(handIn).is(ItemTags.CANDLES)) {
             BlockState newState = type.cake.withPropertiesOf(state);
             level.setBlock(pos, newState, Block.UPDATE_INVISIBLE);
             var res = newState.use(level, player, handIn, hit);
             level.setBlockAndUpdate(pos, state);
-            if(res.consumesAction()){
+            if (res.consumesAction()) {
                 if (!level.isClientSide()) {
                     this.removeSlice(state, pos, level, getHitDir(player, hit));
                 }
@@ -147,4 +182,5 @@ public class DoubleCakeBlock extends DirectionalCakeBlock {
 
         return super.use(state, level, pos, player, handIn, hit);
     }
+
 }
