@@ -1,2 +1,1 @@
-- fixed a crash when breaking urns
-- added tag for mobs that wont be angered when put in cages
+fixed cc compat

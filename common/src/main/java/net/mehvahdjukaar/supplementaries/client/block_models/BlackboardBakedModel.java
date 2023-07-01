@@ -92,7 +92,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
                 var blackboard = BlackboardManager.getInstance(key);
                 quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
-        }ItemRenderer
+        }
         return quads;
     }
 
@@ -105,8 +105,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();
-        ItemRenderer r;
-        r.renderGuiItem();
+
         for (int x = 0; x < pixels.length; x++) {
             int length = 0;
             int startY = 0;

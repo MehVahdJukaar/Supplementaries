@@ -267,7 +267,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             //ang.setLastHurtByMob(player);
             entity.hurt(entity.level.damageSources().playerAttack(player), 0);
         }
-        PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
+       // PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
 
     }
 
@@ -275,8 +275,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         //anger entities
         entity.hurt(entity.level.damageSources().playerAttack(player), 0);
 
-        if(true)return;
-        PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
+        //if(true)return;
+       // PiglinAi.wasHurtBy(this, (LivingEntity)source.getEntity());
 
         if (entity instanceof NeutralMob && entity instanceof Mob) {
             getEntitiesInRange((Mob) entity).stream()

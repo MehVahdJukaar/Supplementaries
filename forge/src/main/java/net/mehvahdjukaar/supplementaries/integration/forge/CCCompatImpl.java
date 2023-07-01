@@ -4,38 +4,29 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import dan200.computercraft.api.ForgeComputerCraftAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.shared.Capabilities;
 import dan200.computercraft.shared.media.items.PrintoutItem;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CCCompatImpl {
 
     public static void setup() {
-        ForgeComputerCraftAPI.registerPeripheralProvider(new  -> {
-                    if (blockEntity instanceof SpeakerBlockTile t) {
-                        if (t.ccHack == null) t.ccHack = new SpeakerPeripheral(t);
-                        return (IPeripheral) t.ccHack;
-                    }
-                    return null;
-                }
-                , ModRegistry.SPEAKER_BLOCK.get());
+        ForgeComputerCraftAPI.registerPeripheralProvider((level, blockPos, direction) -> {
+            var tile = level.getBlockEntity(blockPos);
+            if (tile instanceof SpeakerBlockTile) {
+                return tile.getCapability(Capabilities.CAPABILITY_PERIPHERAL, direction);
+            }
+            return LazyOptional.empty();
+        });
     }
 
     public static int getPages(ItemStack itemstack) {
@@ -50,26 +41,6 @@ public class CCCompatImpl {
         return item instanceof PrintoutItem;
     }
 
-    //TODO: maybe this isn't needed since tile alredy provides it
-    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties properties) {
-        //try loading this now, freaking classloader
-        class SpeakerCC extends SpeakerBlock implements IPeripheralProvider {
-
-            public SpeakerCC(Properties properties) {
-                super(properties);
-            }
-
-            @Override
-            public LazyOptional<IPeripheral> getPeripheral(Level world, BlockPos pos, Direction side) {
-                var tile = world.getBlockEntity(pos);
-                if (tile instanceof SpeakerBlockTile) {
-                    return tile.getCapability(Capabilities.CAPABILITY_PERIPHERAL, side);
-                }
-                return LazyOptional.empty();
-            }
-        }
-        return new SpeakerCC(properties);
-    }
 
     public static boolean isPeripheralCap(Capability<?> cap) {
         return cap == Capabilities.CAPABILITY_PERIPHERAL;

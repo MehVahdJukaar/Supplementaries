@@ -578,7 +578,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_BROWN)
                 .strength(1f, 2f)
                 .sound(SoundType.WOOD);
-        return CompatHandler.COMPUTERCRAFT ? CCCompat.makeSpeaker(p) : new SpeakerBlock(p);
+        return  new SpeakerBlock(p);
     }, 300);
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
