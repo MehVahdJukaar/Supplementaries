@@ -34,7 +34,8 @@ public abstract class ExplorationMapFunctionMixin {
     public void turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir){
         if(CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get()){
             cir.setReturnValue(QuarkCompat.makeAdventurerQuill(context.getLevel(), this.destination,
-                    this.searchRadius, this.skipKnownStructures, this.zoom, this.mapDecoration, null, 0));
+                    Math.max(CommonConfigs.Tweaks.QUILL_MIN_SEARCH_RADIUS.get(), this.searchRadius),
+                    this.skipKnownStructures, this.zoom, this.mapDecoration, null, 0));
         }
     }
 }
