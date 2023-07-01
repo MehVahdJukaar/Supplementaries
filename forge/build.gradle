@@ -133,7 +133,7 @@ dependencies {
     modCompileOnly("curse.maven:jei-238222:3928388")
     modImplementation("curse.maven:configured-457570:4462894")
 
-    modCompileOnly("curse.maven:cc-tweaked-282001:3904454")
+    modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
     modCompileOnly("curse.maven:curios-309927:3924518")
     modCompileOnly("curse.maven:autoreglib-250363:4100299")
     modCompileOnly("curse.maven:quark-oddities-301051:3575623")
