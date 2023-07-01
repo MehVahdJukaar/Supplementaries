@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,6 +49,22 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public BookPileBlockTile(BlockPos pos, BlockState state, boolean horizontal) {
         super(ModRegistry.BOOK_PILE_TILE.get(), pos, state, 4);
         this.horizontal = horizontal;
+    }
+
+
+    private static final RandomSource rand = RandomSource.create();
+
+    private void makeRandomBook(int i) {
+        for(int j = 0; j<i; j++) {
+            Item it;
+            int r = rand.nextInt(10);
+            if (r < 3) it = Items.ENCHANTED_BOOK;
+            else if (r < 4) it = Items.WRITABLE_BOOK;
+            else it = Items.BOOK;
+            ArrayList<BookColor> col = new ArrayList<>(List.of(BookColor.values()));
+            books.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
+                    col, null));
+        }
     }
 
     @Override
@@ -106,6 +123,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
             if (stack.isEmpty()) break;
             BookColor last = i == 0 ? null : this.books.get(i - 1).color;
             this.books.add(i, new VisualBook(stack, this.worldPosition, i, colors, last));
+        }
+
+        if(books.isEmpty()){
+            makeRandomBook(this.getBlockState().getValue(BookPileBlock.BOOKS));
         }
     }
 
