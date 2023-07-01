@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,6 +51,21 @@ public class BookPileBlockTile extends ItemDisplayTile {
         this.horizontal = horizontal;
     }
 
+    private static final RandomSource rand = RandomSource.create();
+
+    private void makeRandomBook(int i) {
+        for(int j = 0; j<i; j++) {
+            Item it;
+            int r = rand.nextInt(10);
+            if (r < 3) it = Items.ENCHANTED_BOOK;
+            else if (r < 4) it = Items.WRITABLE_BOOK;
+            else it = Items.BOOK;
+            ArrayList<BookColor> col = new ArrayList<>(List.of(BookColor.values()));
+            books.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
+                    col, null));
+        }
+    }
+
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
@@ -64,13 +80,13 @@ public class BookPileBlockTile extends ItemDisplayTile {
 
     @Override
     public void updateTileOnInventoryChanged() {
-        int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if(b == 0)this.level.removeBlock(this.worldPosition,false);
+        int nonEmptyBooks = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        if (nonEmptyBooks != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
+            if(nonEmptyBooks == 0)this.level.removeBlock(this.worldPosition,false);
             else {
                 //shifts books. Assumes at most one has been removed
                 consolidateBookPile();
-                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, nonEmptyBooks), 2);
             }
         }
         this.enchantPower = 0;
@@ -107,6 +123,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
             if (stack.isEmpty()) break;
             BookColor last = i == 0 ? null : this.books.get(i - 1).color;
             this.books.add(i, new VisualBook(stack, this.worldPosition, i, colors, last));
+        }
+
+        if(this.books.isEmpty()){
+            this.makeRandomBook(this.getBlockState().getValue(BookPileBlock.BOOKS));
         }
     }
 
