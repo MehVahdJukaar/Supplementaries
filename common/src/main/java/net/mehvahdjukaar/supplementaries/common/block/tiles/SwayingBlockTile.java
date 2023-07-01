@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
 public abstract class SwayingBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
@@ -103,6 +104,6 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
     }
 
     //rotation axis rotate 90 deg
-    public abstract Vec3i getRotationAxis(BlockState state);
+    public abstract Vector3f getRotationAxis(BlockState state);
 
 }

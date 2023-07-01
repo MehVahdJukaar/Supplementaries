@@ -26,6 +26,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.PitcherCropBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,15 +96,11 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
-    //cart cycle slot
-
-    //smarter farmers use simple harvest from quark
 
     //sack insert sound
 //3d jukebox thingie
     //mystical tree index out of bound
     //caibrated stuff
-    //cargographer gui antique ink
     //Tree chat gtp
     //tree splash text
     //lectern colors in gui
@@ -112,7 +109,6 @@ public class Supplementaries {
     //better sounds for item dislays
     //item lore clear
 
-    //rope slide animation and sound instance
     //finish bedbugs
     //blaze head ghast
 

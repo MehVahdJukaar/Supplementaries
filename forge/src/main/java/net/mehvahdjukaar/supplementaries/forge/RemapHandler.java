@@ -6,6 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.mixins.PaintingItemMixin;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.PitcherCropBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -24,6 +27,7 @@ public class RemapHandler {
     private static final Map<String, String> REMAP = new HashMap<>();
 
     static {
+        PitcherCropBlock
         REMAP.put("supplementaries:copper_lantern", "suppsquared:copper_lantern");
         REMAP.put("supplementaries:crimson_lantern", "suppsquared:crimson_lantern");
         REMAP.put("supplementaries:brass_lantern", "suppsquared:brass_lantern");

@@ -53,7 +53,7 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
             at = @At("HEAD"), cancellable = true)
     public void renderEnhancedSign(SignBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                                    int packedLight, int packedOverlay, CallbackInfo ci) {
-        if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() && ((IExtendedHangingSign) tile).getExtension().canSwing()) {
+        if (ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get()) {
             BlockState blockState = tile.getBlockState();
             WoodType woodType = SignBlock.getWoodType(blockState.getBlock());
             HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);

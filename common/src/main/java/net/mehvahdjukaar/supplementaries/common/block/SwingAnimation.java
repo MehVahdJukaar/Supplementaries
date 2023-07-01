@@ -5,21 +5,23 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.function.Function;
 
 //all client stuff
 public abstract class SwingAnimation {
 
-   private final Function<BlockState, Vec3i> axisGetter;
+   private final Function<BlockState, Vector3f> axisGetter;
    protected float angle = 0;
    protected float prevAngle = 0;
 
-   protected SwingAnimation(Function<BlockState, Vec3i> axisGetter){
+   protected SwingAnimation(Function<BlockState, Vector3f> axisGetter){
       this.axisGetter = axisGetter;
    }
 
-   protected Vec3i getRotationAxis(BlockState state){
+   protected Vector3f getRotationAxis(BlockState state){
       return axisGetter.apply(state);
    }
 

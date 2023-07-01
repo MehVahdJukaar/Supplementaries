@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.UUID;
 
@@ -46,8 +47,8 @@ public class WallLanternBlockTile extends SwayingBlockTile implements IBlockHold
     }
 
     @Override
-    public Vec3i getRotationAxis(BlockState state) {
-        return state.getValue(WallLanternBlock.FACING).getNormal();
+    public Vector3f getRotationAxis(BlockState state) {
+        return state.getValue(WallLanternBlock.FACING).step();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAttachment;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -13,8 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,10 +25,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(WallHangingSignBlock.class)
-public abstract class WallHangingSignBlockMixin extends Block implements EntityBlock {
+//unused
+@Mixin(CeilingHangingSignBlock.class)
+public abstract class CeilingHangingSignBlockMixin extends Block implements EntityBlock {
 
-    protected WallHangingSignBlockMixin(Properties properties) {
+    protected CeilingHangingSignBlockMixin(Properties properties) {
         super(properties);
     }
 
@@ -37,19 +37,6 @@ public abstract class WallHangingSignBlockMixin extends Block implements EntityB
     public void updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos, CallbackInfoReturnable<BlockState> cir) {
         if (level.getBlockEntity(currentPos) instanceof IExtendedHangingSign tile) {
             tile.getExtension().updateShape(state, direction, neighborState, level, currentPos, neighborPos);
-        }
-    }
-
-    @Inject(method = "canAttachTo",
-            locals = LocalCapture.CAPTURE_FAILEXCEPTION,
-            at = @At(value = "INVOKE",
-                    shift = At.Shift.AFTER,
-                    target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z"),
-            cancellable = true)
-    public void canAttachTo(LevelReader level, BlockState state, BlockPos facingPos, Direction direction,
-                            CallbackInfoReturnable<Boolean> cir, BlockState facingState) {
-        if (BlockAttachment.get(facingState, facingPos, level, direction) != null) {
-            cir.setReturnValue(true);
         }
     }
 

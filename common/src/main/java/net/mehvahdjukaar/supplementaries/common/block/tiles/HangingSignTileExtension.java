@@ -5,21 +5,20 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.food.FoodConstants;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.WallHangingSignBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RotationSegment;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public class HangingSignTileExtension {
 
@@ -48,15 +47,18 @@ public class HangingSignTileExtension {
     }
 
     public void clientTick(Level level, BlockPos pos, BlockState state) {
-        if (!canSwing || isCeiling) {
-            animation. reset();
+        if (!canSwing) {
+            animation.reset();
         } else {
             animation.tick(level, pos, state);
         }
     }
 
-    private Vec3i getRotationAxis(BlockState state) {
-        return state.getValue(WallHangingSignBlock.FACING).getClockWise().getNormal();
+    private Vector3f getRotationAxis(BlockState state) {
+        return state.hasProperty(WallHangingSignBlock.FACING) ?
+                state.getValue(WallHangingSignBlock.FACING).getClockWise().step() :
+                new Vector3f(0, 0, 1).rotateY(Mth.DEG_TO_RAD *
+                        (90+RotationSegment.convertToDegrees(state.getValue(CeilingHangingSignBlock.ROTATION))));
     }
 
 
@@ -69,11 +71,13 @@ public class HangingSignTileExtension {
     }
 
     public void saveAdditional(CompoundTag tag) {
-        if (leftAttachment != null) {
-            tag.putByte("left_attachment", (byte) leftAttachment.ordinal());
-        }
-        if (rightAttachment != null) {
-            tag.putByte("right_attachment", (byte) rightAttachment.ordinal());
+        if(!isCeiling) {
+            if (leftAttachment != null) {
+                tag.putByte("left_attachment", (byte) leftAttachment.ordinal());
+            }
+            if (rightAttachment != null) {
+                tag.putByte("right_attachment", (byte) rightAttachment.ordinal());
+            }
         }
         if (!canSwing) {
             tag.putBoolean("can_swing", false);
@@ -81,11 +85,13 @@ public class HangingSignTileExtension {
     }
 
     public void load(CompoundTag tag) {
-        if (tag.contains("left_attachment")) {
-            leftAttachment = ModBlockProperties.PostType.values()[tag.getByte("left_attachment")];
-        }
-        if (tag.contains("right_attachment")) {
-            rightAttachment = ModBlockProperties.PostType.values()[tag.getByte("right_attachment")];
+        if(!isCeiling) {
+            if (tag.contains("left_attachment")) {
+                leftAttachment = ModBlockProperties.PostType.values()[tag.getByte("left_attachment")];
+            }
+            if (tag.contains("right_attachment")) {
+                rightAttachment = ModBlockProperties.PostType.values()[tag.getByte("right_attachment")];
+            }
         }
         if (tag.contains("can_swing")) {
             canSwing = tag.getBoolean("can_swing");
@@ -97,25 +103,30 @@ public class HangingSignTileExtension {
     public void updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
                             BlockPos pos, BlockPos neighborPos) {
 
-        Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
-        if (direction == selfFacing.getClockWise()) {
-            rightAttachment = ModBlockProperties.PostType.get(neighborState, true);
-            ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
-        } else if (direction == selfFacing.getCounterClockWise()) {
-            leftAttachment = ModBlockProperties.PostType.get(neighborState, true);
-            ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
-        } else if (direction == Direction.DOWN) {
-            canSwing = !IRopeConnection.canConnectDown(neighborState);
+        if(!isCeiling) {
+            Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
+            if (direction == selfFacing.getClockWise()) {
+                rightAttachment = ModBlockProperties.PostType.get(neighborState, true);
+                ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+            } else if (direction == selfFacing.getCounterClockWise()) {
+                leftAttachment = ModBlockProperties.PostType.get(neighborState, true);
+                ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+            }
+        }
+        if (direction == Direction.DOWN) {
+            canSwing = (isCeiling && state.getValue(CeilingHangingSignBlock.ATTACHED)) || !IRopeConnection.canConnectDown(neighborState);
         }
     }
 
     public void updateAttachments(Level level, BlockPos pos, BlockState state) {
-        Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
+        if(!isCeiling) {
+            Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
 
-        rightAttachment = ModBlockProperties.PostType.get(level.getBlockState(pos.relative(selfFacing.getClockWise())), true);
-        leftAttachment = ModBlockProperties.PostType.get(level.getBlockState(pos.relative(selfFacing.getCounterClockWise())), true);
+            rightAttachment = ModBlockProperties.PostType.get(level.getBlockState(pos.relative(selfFacing.getClockWise())), true);
+            leftAttachment = ModBlockProperties.PostType.get(level.getBlockState(pos.relative(selfFacing.getCounterClockWise())), true);
+        }
         BlockState below = level.getBlockState(pos.below());
-        canSwing = !IRopeConnection.canConnectDown(below);
+        canSwing = (isCeiling && state.getValue(CeilingHangingSignBlock.ATTACHED)) || !IRopeConnection.canConnectDown(below);
 
     }
 

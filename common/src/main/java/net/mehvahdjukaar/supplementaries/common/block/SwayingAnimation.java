@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -33,7 +34,7 @@ public class SwayingAnimation extends SwingAnimation {
     private boolean inv = false;
 
 
-    public SwayingAnimation(Function<BlockState, Vec3i> getRotationAxis) {
+    public SwayingAnimation(Function<BlockState, Vector3f> getRotationAxis) {
         super(getRotationAxis);
     }
 
@@ -80,8 +81,7 @@ public class SwayingAnimation extends SwingAnimation {
         if (mot.length() > 0.05) {
 
             Vec3 norm = new Vec3(mot.x, 0, mot.z).normalize();
-            Vec3i rotationAxis = this.getRotationAxis(state);
-            Vec3 vec = MthUtils.V3itoV3(rotationAxis);
+            Vec3 vec = new Vec3(this.getRotationAxis(state));
             double dot = norm.dot(vec);
             if (dot != 0) {
                 this.inv = dot < 0;

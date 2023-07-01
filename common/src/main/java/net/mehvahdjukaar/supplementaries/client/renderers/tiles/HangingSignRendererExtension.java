@@ -63,17 +63,36 @@ public class HangingSignRendererExtension {
 
         boolean visible = model.plank.visible;
         boolean visibleC = model.normalChains.visible;
+        model.plank.visible = false;
+        if (wallSign) {
+            model.normalChains.visible = false;
+        }
 
         poseStack.pushPose();
 
-        model.plank.visible = false;
+        Quaternionf pitch = new Quaternionf();
+        if (((IExtendedHangingSign) tile).getExtension().canSwing()) {
+            float rot = sign.animation.getAngle(partialTicks);
 
-        if (wallSign) model.normalChains.visible = false;
-        Quaternionf pitch = Axis.XP.rotationDegrees(sign.animation.getAngle(partialTicks));
-        poseStack.mulPose(pitch);
+            if(!wallSign && attached){
+                //y swing
+                pitch = Axis.YP.rotationDegrees(rot);
+            }else{
+                pitch = Axis.XP.rotationDegrees(rot);
+
+            }
+
+            if(!wallSign){
+                poseStack.translate(0,-0.125,0);
+            }
+            poseStack.mulPose(pitch);
+            if(!wallSign){
+                poseStack.translate(0,0.125,0);
+            }
+        }
+
 
         Vector3f norm = Direction.SOUTH.step().rotate(pitch).rotate(yaw);
-
 
 
         //model
@@ -134,7 +153,7 @@ public class HangingSignRendererExtension {
             model.plank.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         }
 
-        ModBlockProperties.PostType right =  sign.getRightAttachment();
+        ModBlockProperties.PostType right = sign.getRightAttachment();
         ModBlockProperties.PostType left = sign.getLeftAttachment();
 
         VertexConsumer vc2 = null;

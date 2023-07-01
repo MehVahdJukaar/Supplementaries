@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,7 +33,7 @@ public class PendulumAnimation extends SwingAnimation {
     private float lastImpulse;
     private int immunity = 0;
 
-    public PendulumAnimation(Supplier<Config> config, Function<BlockState, Vec3i> axisGetter) {
+    public PendulumAnimation(Supplier<Config> config, Function<BlockState, Vector3f> axisGetter) {
         super(axisGetter);
         this.config = config;
         Config c = config.get();
@@ -51,8 +52,10 @@ public class PendulumAnimation extends SwingAnimation {
 
     @Override
     public void reset() {
-        angle = config.get().minAngle;
-        angularVel = 0;
+        angle = 0;
+        prevAngle = 0;
+        Config c = config.get();
+        this.angularVel = capVelocity(c.k, 1000, angle, c.minAngleEnergy);
     }
 
     @Override
@@ -165,8 +168,7 @@ public class PendulumAnimation extends SwingAnimation {
         //entity mass
         eVel = eVel.scale(config.collisionForce);
 
-
-        Vec3 rotationAxis = MthUtils.V3itoV3(this.getRotationAxis(state));
+        Vec3 rotationAxis = new Vec3(this.getRotationAxis(state));
 
         Vec3 normalVec = rotationAxis.cross(new Vec3(0, 1, 0));
 
