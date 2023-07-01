@@ -819,8 +819,10 @@ public class CommonConfigs {
 
 
     public static class Tweaks {
+
         public static void init() {
         }
+
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -945,11 +947,14 @@ public class CommonConfigs {
                         .define("map_trade_price_multiplier", 2d, 1, 10);
                 QUILL_MAX_TRADES = builder.comment("These maps will roll a difference structure every time. Decrease their max trades to balance them")
                         .define("map_trade_max_trades", 2, 1, 12);
+                QUILL_MIN_SEARCH_RADIUS = builder.comment("Increases any search done with a quoll to be at least this radius. Vanilla locate is 100 while buried treasure is 50 chunks for reference")
+                        .define("minimum_search_radius", 100, 0, 500);
             } else {
                 QUARK_QUILL = () -> false;
                 REPLACE_VANILLA_MAPS = () -> false;
                 QUILL_MAX_TRADES = () -> 1;
                 QUILL_TRADE_PRICE_MULT = () -> 1d;
+                QUILL_MIN_SEARCH_RADIUS = ()->50;
             }
             builder.pop();
 
@@ -1011,6 +1016,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUARK_QUILL;
         public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
         public static final Supplier<Integer> QUILL_MAX_TRADES;
+        public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS ;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
