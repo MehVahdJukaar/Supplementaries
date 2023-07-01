@@ -3,8 +3,9 @@ package net.mehvahdjukaar.supplementaries.integration.fabric;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import dan200.computercraft.shared.media.items.ItemPrintout;
+import dan200.computercraft.api.peripheral.PeripheralLookup;
+
+import dan200.computercraft.shared.media.items.PrintoutItem;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -23,40 +24,27 @@ import java.util.Objects;
 public class CCCompatImpl {
 
     public static void setup() {
-        ComputerCraftAPI.registerPeripheralProvider((IPeripheralProvider) ModRegistry.SPEAKER_BLOCK.get());
+        PeripheralLookup.get().registerForBlocks((world, pos, state, blockEntity, context) -> {
+                    if (blockEntity instanceof SpeakerBlockTile t) {
+                        if (t.ccHack == null) t.ccHack = new SpeakerPeripheral(t);
+                        return (IPeripheral) t.ccHack;
+                    }
+                    return null;
+                }
+                , ModRegistry.SPEAKER_BLOCK.get());
     }
 
+
     public static int getPages(ItemStack itemstack) {
-        return ItemPrintout.getPageCount(itemstack);
+        return PrintoutItem.getPageCount(itemstack);
     }
 
     public static String[] getText(ItemStack itemstack) {
-        return ItemPrintout.getText(itemstack);
+        return PrintoutItem.getText(itemstack);
     }
 
     public static boolean isPrintedBook(Item item) {
-        return item instanceof ItemPrintout;
-    }
-
-    public static SpeakerBlock makeSpeaker(BlockBehaviour.Properties properties) {
-        //try loading this now, freaking classloader
-        class SpeakerCC extends SpeakerBlock implements IPeripheralProvider {
-
-            public SpeakerCC(Properties properties) {
-                super(properties);
-            }
-
-            @Override
-            public IPeripheral getPeripheral(Level world, BlockPos pos, Direction side) {
-                var tile = world.getBlockEntity(pos);
-                if (tile instanceof SpeakerBlockTile t) {
-                    if (t.ccHack == null) t.ccHack = new SpeakerPeripheral(t);
-                    return (IPeripheral) t.ccHack;
-                }
-                return null;
-            }
-        }
-        return new SpeakerCC(properties);
+        return item instanceof PrintoutItem;
     }
 
     @SuppressWarnings({"ClassCanBeRecord"})
