@@ -31,7 +31,8 @@ class CompassItemBehavior implements ItemUseOverride {
                                                  ItemStack stack, BlockHitResult hit) {
         if (world.isClientSide && ClientConfigs.Tweaks.COMPASS_CLICK.get()) {
             GlobeBlock.displayCurrentCoordinates(world, player, player.blockPosition());
+            player.swing(hand);
         }
-        return InteractionResult.sidedSuccess(world.isClientSide);
+        return InteractionResult.PASS;
     }
 }

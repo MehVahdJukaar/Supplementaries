@@ -127,8 +127,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
                             int scale = (int) (ClientConfigs.Blocks.PEDESTAL_SPEED.get() * 360f);
                             long time = tile.getLevel().getGameTime();
-                            float angle = ((float) Math.floorMod(time, (long) scale) + partialTicks) / (float) scale;
-                            // float angle = (time % 360) * (float) ClientConfigs.cached.PEDESTAL_SPEED + partialTicks ;
+                            float angle = (Math.floorMod(time, (long) scale) + partialTicks) / (float) scale;
                             Quaternionf rotation = Axis.YP.rotation((float) (angle * Math.PI * 10));
 
                             matrixStackIn.mulPose(rotation);

@@ -27,7 +27,6 @@ public class RemapHandler {
     private static final Map<String, String> REMAP = new HashMap<>();
 
     static {
-        PitcherCropBlock
         REMAP.put("supplementaries:copper_lantern", "suppsquared:copper_lantern");
         REMAP.put("supplementaries:crimson_lantern", "suppsquared:crimson_lantern");
         REMAP.put("supplementaries:brass_lantern", "suppsquared:brass_lantern");

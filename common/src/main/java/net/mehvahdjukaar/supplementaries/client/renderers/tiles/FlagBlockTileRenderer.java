@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
@@ -19,14 +20,17 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.List;
@@ -81,12 +85,13 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             long time = tile.getLevel().getGameTime();
 
             double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
-            long period = ClientConfigs.Blocks.FLAG_PERIOD.get();
+            long  period =  (ClientConfigs.Blocks.FLAG_PERIOD.get());
             double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
             double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
 
             BlockPos bp = tile.getBlockPos();
             //always from 0 to 1
+            //TODO: fix
             float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
@@ -95,14 +100,16 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
+                float oldAng = 0;
                 for (int dX = 0; dX < w; dX += segmentLen) {
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
-                    renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen, ang);
+                    renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen,ang, oldAng);
                     matrixStackIn.mulPose(Axis.YP.rotationDegrees(ang));
                     matrixStackIn.translate(0, 0, segmentLen / 16f);
                     matrixStackIn.mulPose(Axis.YP.rotationDegrees(-ang));
+                    oldAng = ang;
                 }
             }
 
@@ -114,37 +121,38 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int combinedLightIn) {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0);
+        renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0,0);
     }
 
-    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int lu, int lv, int dX, int w, int h, int segmentlen, float ang) {
 
-        for (Pair<Holder<BannerPattern>, DyeColor> holderDyeColorPair : list) {
+    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<Holder<BannerPattern>, DyeColor>> list,
+                                       int lu, int lv, int dX, int w, int h, int segmentlen, float ang, float oldAng) {
 
-            Material material = ModMaterials.FLAG_MATERIALS.get().get(holderDyeColorPair.getFirst().value());
-            if (material == null) {
+        for (int p = 0; p < list.size(); p++) {
+
+            Material material = ModMaterials.FLAG_MATERIALS.get().get(list.get(p).getFirst().value());
+            if(material == null){
                 continue;
             }
-            RenderSystem.disableBlend();
-            VertexConsumer builder = material.buffer(bufferIn, RenderType::entityTranslucentCull);
+            VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();
 
-
-            float[] color = holderDyeColorPair.getSecond().getTextureDiffuseColors();
+            float[] color = list.get(p).getSecond().getTextureDiffuseColors();
             float b = color[2];
             float g = color[1];
             float r = color[0];
 
-            renderCurvedSegment(builder, material.sprite(), matrixStackIn, ang, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
+            renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
 
             matrixStackIn.popPose();
         }
     }
 
 
-    private static void renderCurvedSegment(VertexConsumer builder, TextureAtlasSprite sprite, PoseStack matrixStack, float angle, int dX,
-                                            int length, int height, int lu, int lv, boolean end, float r, float g, float b) {
+    private static void renderCurvedSegment(VertexConsumer builder, PoseStack matrixStack, float angle, float oldAng, int dX,
+                                            int length, int height, int lu, int lv, boolean end,
+                                            float r, float g, float b) {
 
         float textW = 32f;
         float textH = 16f;
@@ -158,20 +166,20 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         float l = length / 16f;
         float h = height / 16f;
 
-        float pU = VertexUtils.getRelativeU(sprite, maxU - (1 / textW));
-        float pV = VertexUtils.getRelativeV(sprite, maxV - w);
-        float pV2 = VertexUtils.getRelativeV(sprite, w);
+        float pU = maxU - (1 / textW);
+        float pV =  maxV - w;
+        float pV2 =  w;
 
-        maxU = VertexUtils.getRelativeU(sprite, maxU);
-        u = VertexUtils.getRelativeU(sprite, u);
-        maxV = VertexUtils.getRelativeV(sprite, maxV);
-        v = VertexUtils.getRelativeV(sprite, v);
+        //TODO: fix
+        Quaternionf rot = Axis.YP.rotationDegrees(angle);
+        Quaternionf oldRot = Axis.YP.rotationDegrees(oldAng);
+        Quaternionf rotInc = Axis.YP.rotationDegrees(angle-oldAng);
+        Quaternionf rotInv = Axis.YP.rotationDegrees(-angle);
 
-        Quaternionf rotation = Axis.YP.rotationDegrees(angle);
-        Quaternionf rotation2 = Axis.YP.rotationDegrees(-angle);
-
+        //correct
         int nx = 1;
         int nz = 0;
+        int ny = 0;
         //0.4, 0.6
 
         //left
@@ -179,14 +187,18 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.translate(hw, 0, 0);
 
-        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
-        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, nx, 0, nz);
+        matrixStack.mulPose(oldRot);
 
-        matrixStack.mulPose(rotation);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, nx, ny, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, nx, ny, nz);
+
+        //still slightly off but better than before
+        matrixStack.mulPose(rotInc);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, nx, 0, nz);
-        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, nx, 0, nz);
+
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, nx, ny, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, nx, ny, nz);
 
         matrixStack.popPose();
 
@@ -194,15 +206,16 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         matrixStack.pushPose();
 
         matrixStack.translate(-hw, 0, 0);
+        matrixStack.mulPose(oldRot);
 
-        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, -nx, 0, nz);
-        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, u, v, r, g, b, 1, lu, lv, -nx, ny, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, -nx, ny, nz);
 
-        matrixStack.mulPose(rotation);
+        matrixStack.mulPose(rotInc);
         matrixStack.translate(0, 0, l);
 
-        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, -nx, 0, nz);
-        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, -nx, 0, nz);
+        VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, -nx, ny, nz);
+        VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, -nx, ny, nz);
 
         matrixStack.popPose();
 
@@ -215,11 +228,11 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         matrixStack.translate(-w, 0, 0);
         VertexUtils.vert(builder, matrixStack, 0, h, 0, u, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
 
-        matrixStack.mulPose(rotation);
+        matrixStack.mulPose(rot);
         matrixStack.translate(0, 0, l);
 
         VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, pV2, r, g, b, 1, lu, lv, 0, 1, 0);
-        matrixStack.mulPose(rotation2);
+        matrixStack.mulPose(rotInv);
         matrixStack.translate(w, 0, 0);
         VertexUtils.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, 0, 1, 0);
 
@@ -234,11 +247,11 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         matrixStack.translate(w, 0, 0);
         VertexUtils.vert(builder, matrixStack, 0, 0, 0, u, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
 
-        matrixStack.mulPose(rotation);
+        matrixStack.mulPose(rot);
         matrixStack.translate(0, 0, l);
 
         VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, 0, -1, 0);
-        matrixStack.mulPose(rotation2);
+        matrixStack.mulPose(rotInv);
         matrixStack.translate(-w, 0, 0);
         VertexUtils.vert(builder, matrixStack, 0, 0, 0, maxU, pV, r, g, b, 1, lu, lv, 0, -1, 0);
 
@@ -249,9 +262,9 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         if (end) {
             matrixStack.pushPose();
 
-            matrixStack.mulPose(rotation);
+            matrixStack.mulPose(rot);
             matrixStack.translate(0, 0, l);
-            matrixStack.mulPose(rotation2);
+            matrixStack.mulPose(rotInv);
             matrixStack.translate(-hw, 0, 0);
 
             VertexUtils.vert(builder, matrixStack, 0, h, 0, pU, v, r, g, b, 1, lu, lv, 0, 0, 1);
@@ -265,6 +278,5 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             matrixStack.popPose();
         }
     }
-
 
 }

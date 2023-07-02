@@ -29,7 +29,8 @@ class ClockItemBehavior implements ItemUseOverride {
                                                  ItemStack stack, BlockHitResult hit) {
         if (world.isClientSide && ClientConfigs.Tweaks.CLOCK_CLICK.get()) {
             ClockBlock.displayCurrentHour(world, player);
+            player.swing(hand);
         }
-        return InteractionResult.sidedSuccess(world.isClientSide);
+        return InteractionResult.PASS;
     }
 }
