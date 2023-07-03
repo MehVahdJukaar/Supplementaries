@@ -222,7 +222,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             int lv = frontLight >> 16 & '\uffff';
             poseStack.mulPose(RotHlpr.Y180);
             VertexUtils.addQuadSide(builder, poseStack, -0.4375F, -0.4375F, -0.008f, 0.4375F, 0.4375F, -0.008f,
-                    0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1, pattern.sprite());
+                    0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv, 0, 0, 1);
 
         } else if (!tile.isNormalItem()) {
             BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);

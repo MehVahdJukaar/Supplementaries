@@ -4,11 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -20,7 +18,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -30,6 +27,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -43,19 +42,17 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     }
 
 
-    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn, boolean shading) {
+    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn) {
         poseStack.pushPose();
-        float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
-        VertexConsumer builder = bufferIn.getBuffer(RenderType.translucent());
+        VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
         Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
 
         VertexUtils.addCube(builder, poseStack,
                 dimensions.x(),
                 percentageFill * dimensions.y(),
-                sprite, light, color, opacity, combinedOverlayIn, true, true, shading, true);
+                 light, color);
 
         poseStack.popPose();
     }
@@ -121,16 +118,16 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
 
                     matrixStackIn.translate(0.5, 0.0015 + dimensions.z(), 0.5);
-                    VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
-                    TextureAtlasSprite sandSprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.SAND_TEXTURE);
+
+                    VertexConsumer builder = ModMaterials.SAND_MATERIAL.buffer(bufferIn, RenderType::entityCutout);
                     VertexUtils.addCube(builder, matrixStackIn, 0.99f * dimensions.x(), dimensions.y() / 12,
-                            sandSprite, combinedLightIn, 16777215, 1f, combinedOverlayIn, true, true, true, true);
+                             combinedLightIn, -1);
                     matrixStackIn.popPose();
                 }
                 matrixStackIn.pushPose();
                 SoftFluid s = fluid.get();
                 renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
-                        matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
+                        matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
                 matrixStackIn.popPose();
             }
         }
@@ -138,7 +135,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         if (!tile.fluidHolder.isEmpty()) {
             renderFluid(tile.fluidHolder.getHeight(1), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
                     tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
-                    matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, true);
+                    matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
 }

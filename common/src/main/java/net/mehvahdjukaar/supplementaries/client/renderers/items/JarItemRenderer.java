@@ -52,7 +52,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
                     if(s != null) {
                         renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
-                                matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+                                matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
                     }
                 }
             }
@@ -65,7 +65,7 @@ public class JarItemRenderer extends CageItemRenderer {
                 SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
                 if (fluid != null && !fluid.isEmpty() && count > 0) {
                     renderFluid(getHeight(count, 1), color, 0, fluid.getStillTexture(),
-                            matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, false);
+                            matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
                 }
             }
         }

@@ -34,7 +34,7 @@ public abstract class SignRendererMixin {
      * @reason adding color normal shading and color modifier
      */
     @Overwrite
-    static int getDarkColor(SignText signText) {
+    public static int getDarkColor(SignText signText) {
         int color = signText.getColor().getTextColor();
         if (color == DyeColor.BLACK.getTextColor() && signText.hasGlowingText()) {
             return -988212;

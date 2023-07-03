@@ -19,6 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +52,13 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
             }
             BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-            return model.getQuads(mimic, side, rand);
+            List<BakedQuad> quads = new ArrayList<>();
+            quads.addAll( model.getQuads(mimic, side, rand));
+
+
+
+            return quads;
+
         }
 
         return Collections.emptyList();

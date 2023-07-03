@@ -2,12 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.hourglass;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -67,16 +64,15 @@ public class HourglassTimeData {
         this.ordering = priority;
     }
 
-    @Environment(EnvType.CLIENT)
-    public TextureAtlasSprite computeSprite(ItemStack i, Level world) {
+    public ResourceLocation computeTexture(ItemStack i, Level world) {
         Minecraft mc = Minecraft.getInstance();
         if (this.texture.isEmpty()) {
             ItemRenderer itemRenderer = mc.getItemRenderer();
             BakedModel model = itemRenderer.getModel(i, world, null, 0);
-            return model.getParticleIcon();
+            return model.getParticleIcon().contents().name();
 
         }
-        return mc.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(this.texture.get());
+        return this.texture.get();
     }
 
     public Stream<Holder<Item>> getItems() {

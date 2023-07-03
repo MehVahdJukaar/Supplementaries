@@ -23,23 +23,17 @@ public class SpringLauncherArmBlockTileRenderer implements BlockEntityRenderer<S
     }
 
     @Override
-    public int getViewDistance() {
-        return 96;
-    }
-
-    @Override
     public void render(SpringLauncherArmBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
-        matrixStackIn.mulPose(RotHlpr.X180);
+        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
         matrixStackIn.translate(-0.5, -0.5, -0.5);
-        matrixStackIn.translate(0, tile.getRenderOffset(partialTicks), 0);
+        matrixStackIn.translate(0, 0, -tile.getRenderOffset(partialTicks));
         boolean flag1 = tile.getExtending() == tile.getAge() < 2;
 
-        BlockState state = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState().setValue(SpringLauncherHeadBlock.FACING, Direction.UP).setValue(BlockStateProperties.SHORT, flag1);
-        //RendererUtil.renderBlockPlus(state, matrixStackIn, bufferIn, blockRenderer, tile.getWorld(), tile.getPos());
+        BlockState state = ModRegistry.SPRING_LAUNCHER_HEAD.get().defaultBlockState().setValue(SpringLauncherHeadBlock.FACING, Direction.NORTH).setValue(BlockStateProperties.SHORT, flag1);
+
         blockRenderer.renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         matrixStackIn.popPose();
 

@@ -36,6 +36,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     public final ModelPart signModel;
 
     public static LayerDefinition createMesh() {
+        //TODO: use baked models instead
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
         root.addOrReplaceChild("sign", CubeListBuilder.create()

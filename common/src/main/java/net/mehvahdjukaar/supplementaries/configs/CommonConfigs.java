@@ -746,7 +746,7 @@ public class CommonConfigs {
                     .define("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
                     .define("break_blocks", BombEntity.BreakingMode.WEAK);
-            BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certaom amount of ticks instead than on contact")
+            BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certain amount of ticks instead than on contact")
                     .define("bomb_fuse", 0, 0, 100000);
             builder.push("blue_bomb");
             BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")

@@ -67,48 +67,47 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
 
     }
 
-    private void renderHorizontal(List<VisualBook> visualBooks, BlockState state, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
+    private void renderHorizontal(List<VisualBook> visualBooks, BlockState state, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
         int books = Math.min(state.getValue(BookPileBlock.BOOKS), visualBooks.size());
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
-        matrixStack.mulPose(RotHlpr.rot(dir));
-        matrixStack.mulPose(RotHlpr.X90);
-
-        matrixStack.translate(0, 3 / 16f, 0);
+        poseStack.mulPose(RotHlpr.rot(dir));
+FlagBlockTileRenderer
+        poseStack.translate(0, 3 / 16f, 0);
 
         float angle = (-11.25f) * Mth.DEG_TO_RAD;
         switch (books) {
             default -> {
             }
             case 4 -> {
-                matrixStack.translate(-6 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
-                matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
-                matrixStack.translate(4 / 16f, 0, 1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(2));
-                matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(3));
+                poseStack.translate(-6 / 16f, 0, 0);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                poseStack.translate(4 / 16f, 0, -1 / 16f);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
+                poseStack.translate(4 / 16f, 0, 1 / 16f);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(2));
+                poseStack.translate(4 / 16f, 0, -1 / 16f);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(3));
             }
             case 3 -> {
-                matrixStack.translate(-5 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
-                matrixStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
-                matrixStack.translate(5 / 16f, 0, 1 / 16f);
+                poseStack.translate(-5 / 16f, 0, 0);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                poseStack.translate(4 / 16f, 0, -1 / 16f);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
+                poseStack.translate(5 / 16f, 0, 1 / 16f);
                 book.zRot = angle;
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(2));
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(2));
                 book.zRot = 0;
             }
             case 2 -> {
-                matrixStack.translate(-3 / 16f, 0, 0);
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
-                matrixStack.translate(5 / 16f, 0, 1 / 16f);
+                poseStack.translate(-3 / 16f, 0, 0);
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                poseStack.translate(5 / 16f, 0, 1 / 16f);
                 book.zRot = angle;
-                this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(1));
+                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
                 book.zRot = 0;
             }
-            case 1 -> this.renderBook(matrixStack, buffer, light, overlay, visualBooks.get(0));
+            case 1 -> this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
         }
     }
 

@@ -63,7 +63,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     @Override
-    public void render(FlagBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(FlagBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         List<Pair<Holder<BannerPattern>, DyeColor>> list = tile.getPatterns();
@@ -76,11 +76,11 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             int w = 24;
             int h = 16;
 
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5, 0, 0.5);
-            matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
-            matrixStackIn.mulPose(RotHlpr.XN90);
-            matrixStackIn.translate(0, 0, (1 / 16f));
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0, 0.5);
+            poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
+            poseStack.scale(1,-1,-1);
+            poseStack.translate(0, 0, (1 / 16f));
 
             long time = tile.getLevel().getGameTime();
 
@@ -96,7 +96,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-                renderBanner(ang, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, list);
+                renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
@@ -105,15 +105,15 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
-                    renderPatterns(bufferIn, matrixStackIn, list, lu, lv, dX, w, h, segmentLen,ang, oldAng);
-                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(ang));
-                    matrixStackIn.translate(0, 0, segmentLen / 16f);
-                    matrixStackIn.mulPose(Axis.YP.rotationDegrees(-ang));
+                    renderPatterns(bufferIn, poseStack, list, lu, lv, dX, w, h, segmentLen,ang, oldAng);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(ang));
+                    poseStack.translate(0, 0, segmentLen / 16f);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
                     oldAng = ang;
                 }
             }
 
-            matrixStackIn.popPose();
+            poseStack.popPose();
         }
 
     }

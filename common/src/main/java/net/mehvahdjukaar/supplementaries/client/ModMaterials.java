@@ -15,7 +15,7 @@ import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.jetbrains.annotations.Nullable;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,6 +40,7 @@ public class ModMaterials {
     public static final Material BOOK_TATTERED_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_ANTIQUE_TEXTURES);
     public static final Material BLACKBOARD_WHITE = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_WHITE_TEXTURE);
     public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
+    public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
 
     public static final Supplier<Map<BookPileBlockTile.BookColor, Material>> BOOK_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BookPileBlockTile.BookColor, Material>();
@@ -93,5 +94,12 @@ public class ModMaterials {
 
     private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();
 
+
+    private static final Map<ResourceLocation, Material> CACHED_MATERIALS = new HashMap<>();
+
+    //cached materials
+    public static Material get(ResourceLocation bockTexture) {
+        return CACHED_MATERIALS.computeIfAbsent(bockTexture, t -> new Material(TextureAtlas.LOCATION_BLOCKS, t));
+    }
 
 }

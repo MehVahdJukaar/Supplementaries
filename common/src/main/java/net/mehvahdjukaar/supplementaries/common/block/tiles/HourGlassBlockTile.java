@@ -5,11 +5,11 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -26,7 +26,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     private float prevProgress = 0;
     private int power = 0;
     //client
-    private TextureAtlasSprite cachedTexture = null;
+    private ResourceLocation cachedTexture = null;
 
     public HourGlassBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.HOURGLASS_TILE.get(), pos, state);
@@ -53,9 +53,9 @@ public class HourGlassBlockTile extends ItemDisplayTile {
        return Mth.lerp(partialTicks, this.prevProgress, this.progress);
     }
 
-    public TextureAtlasSprite getOrCreateSprite() {
+    public ResourceLocation getTexture() {
         if (this.cachedTexture == null) {
-            this.cachedTexture = this.sandData.computeSprite(this.getDisplayedItem(), this.level);
+            this.cachedTexture = this.sandData.computeTexture(this.getDisplayedItem(), this.level);
         }
         return this.cachedTexture;
     }

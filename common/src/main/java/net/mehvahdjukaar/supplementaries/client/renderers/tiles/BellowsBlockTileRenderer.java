@@ -75,15 +75,13 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         matrixStackIn.translate(0.5, 0.5, 0.5);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(RotHlpr.rot(dir.getOpposite()));
-        matrixStackIn.mulPose(RotHlpr.XN90);
-        matrixStackIn.mulPose(RotHlpr.Z180);
+        matrixStackIn.mulPose(RotHlpr.rot(dir));
 
         center.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
 
 
         matrixStackIn.pushPose();
-        //TODO: maybe render bottom instead
+
         matrixStackIn.translate(0, -1+(3/16d)-dh, 0);
 
         top.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);

@@ -1,7 +1,1 @@
-- Vastly improved rope slide sound logic when falling through them
-- Sound pitch and volume now depends on player speed
-- This also fixes some cases where sound could play when not falling
-- Cartography tables can accept antique ink
-- They also have 2 animated slot icons, similar to smithing table
-- Fixed presents gui not working correctly
-- fixed pancakes not being stackable
+fixed flag, notice board and blackboard rendering

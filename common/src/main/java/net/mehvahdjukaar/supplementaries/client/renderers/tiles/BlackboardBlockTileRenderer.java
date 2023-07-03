@@ -71,15 +71,14 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         if (noise) {
             int lu = combinedLightIn & '\uffff';
             int lv = combinedLightIn >> 16 & '\uffff';
-
+ClockBlockTileRenderer
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
             SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
 
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(RotHlpr.rot(dir));
-            matrixStackIn.mulPose(RotHlpr.XN90);
+            matrixStackIn.mulPose(RotHlpr.rot(dir.getOpposite()));
             matrixStackIn.translate(-0.5, -0.5, -0.1875 + 0.001);
 
             VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppClientPlatformStuff::staticNoise);
@@ -87,7 +86,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1,
 
                     1, 1, 1, 1,
-                    lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
+                    lu, lv, 0, 0, 1);
             matrixStackIn.popPose();
 
             return;
@@ -107,7 +106,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         matrixStackIn.pushPose();
                         matrixStackIn.translate(0.5, 0.5, 0.5);
                         matrixStackIn.mulPose(RotHlpr.rot(dir));
-                        matrixStackIn.mulPose(RotHlpr.XN90);
+                        matrixStackIn.scale(1,-1,-1);
                         matrixStackIn.translate(-0.5, -0.5, -0.1875);
 
                         int lu = combinedLightIn & '\uffff';
@@ -123,7 +122,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                         matrixStackIn.translate(x, 1 - y - p, 0.001);
 
                         VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, lu, lv, 0, 0, 1, ModMaterials.BLACKBOARD_OUTLINE.sprite());
+                                1, 1, 1, 1, lu, lv, 0, 0, 1);
 
                         matrixStackIn.popPose();
                     }

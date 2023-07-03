@@ -27,7 +27,7 @@ public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockT
         TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
 
         VertexUtils.renderBubble(buffer.getBuffer(RenderType.translucent()), poseStack, 1, sprite, light,
-                false, tile.getBlockPos(), tile.getLevel(), partialTicks);
+                tile.getBlockPos(), tile.getLevel(), partialTicks);
 
         poseStack.popPose();
     }

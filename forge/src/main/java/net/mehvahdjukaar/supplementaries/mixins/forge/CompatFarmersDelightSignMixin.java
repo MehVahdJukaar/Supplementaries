@@ -33,7 +33,7 @@ public abstract class CompatFarmersDelightSignMixin {
      * @reason adding color normal shading and color modifier. Need override because we could loose precision due to int conversion if done on return
      */
     @Overwrite(remap = false)
-    static int getDarkColor(SignText signText, boolean isOutlineVisible) {
+    public static int getDarkColor(SignText signText, boolean isOutlineVisible) {
         int color = signText.getColor().getTextColor();
         if (color == DyeColor.BLACK.getTextColor() && signText.hasGlowingText()) {
             return -988212;

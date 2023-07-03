@@ -26,7 +26,7 @@ public class BubbleBlockItemRenderer extends ItemStackRenderer {
         TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
         poseStack.translate(0.5, 0.5, 0.5);
         VertexUtils.renderBubble(buffer.getBuffer(RenderType.translucent()), poseStack, 1, sprite, light,
-                false, BlockPos.ZERO, null, Minecraft.getInstance().getFrameTime());
+                 BlockPos.ZERO, null, Minecraft.getInstance().getFrameTime());
 
         poseStack.popPose();
     }

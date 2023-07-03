@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 
 
 public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockTile> {
@@ -32,6 +33,7 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
             ResourceLocation texture = tile.tempFluidHolder.getFluid().getFlowingTexture();
             TextureAtlasSprite sprite = minecraft.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
             VertexConsumer builder = bufferIn.getBuffer(RenderType.translucent());
+            builder = sprite.wrap(builder);
             int color = tile.tempFluidHolder.getFlowingTint(tile.getLevel(), tile.getBlockPos());
             int luminosity = tile.tempFluidHolder.getFluid().getLuminosity();
             if (luminosity != 0) light = light & 15728640 | luminosity << 4;
@@ -42,7 +44,7 @@ public class FaucetBlockTileRenderer implements BlockEntityRenderer<FaucetBlockT
             float h = 0.5f / 16f;
             for (int i = 0; i < 16; i++) {
                 opacity = Math.min(1, opacity - 0.0082f * i);
-                VertexUtils.addCube(builder, matrixStackIn, 0, i * h, 0.125f, h, sprite, light, color, opacity, false, false, true, false, true);
+                VertexUtils.addCube(builder, matrixStackIn, 0, i * h, 0.125f, h,  light, color, opacity, false, true, true);
                 matrixStackIn.translate(0, -h, 0);
             }
             matrixStackIn.popPose();

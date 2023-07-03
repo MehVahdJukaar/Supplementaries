@@ -50,7 +50,7 @@ public class HourglassBehavior implements MovementBehaviour {
         if (l.isEmpty()) return;
         this.sandData = HourglassTimesManager.getData(l.get(0).getItem());
         if (prevSandData != sandData && context.world.isClientSide) {
-            this.cachedTexture = sandData.computeSprite(l.get(0), context.world);
+            this.cachedTexture = sandData.computeTexture(l.get(0), context.world);
         }
         this.progress = com.getFloat("Progress");
         this.prevProgress = com.getFloat("PrevProgress");

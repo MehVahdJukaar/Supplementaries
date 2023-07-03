@@ -37,7 +37,7 @@ public class StatueEntityModel extends Model {
     public final ModelPart rightSleeveS;
 
     public StatueEntityModel(BlockEntityRendererProvider.Context context) {
-        super(RenderType::entityTranslucent);
+        super(RenderType::entityTranslucentCull);
         ModelPart modelPart = context.bakeLayer(ModelLayers.PLAYER);
         this.head = modelPart.getChild("head");
         this.hat = modelPart.getChild("hat");

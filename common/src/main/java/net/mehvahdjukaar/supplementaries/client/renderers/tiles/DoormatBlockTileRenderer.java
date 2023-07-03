@@ -34,6 +34,7 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
         poseStack.pushPose();
 
         poseStack.translate(0.5, 0, 0.5);
+        poseStack.mulPose(RotHlpr.XN90);
         poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
 
         // render text

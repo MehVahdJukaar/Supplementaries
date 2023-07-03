@@ -123,7 +123,6 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(RotHlpr.rot(dir));
-        matrixStackIn.mulPose(RotHlpr.X90);
 
         matrixStackIn.translate(0, -0.25, 0);
 

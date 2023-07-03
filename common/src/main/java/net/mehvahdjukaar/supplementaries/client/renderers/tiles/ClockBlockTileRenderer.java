@@ -57,8 +57,6 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         matrixStackIn.translate(0.5d, 0.5d, 0.5d);
         matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
 
-        matrixStackIn.mulPose(RotHlpr.X90);
-
         //hours
         matrixStackIn.pushPose();
 

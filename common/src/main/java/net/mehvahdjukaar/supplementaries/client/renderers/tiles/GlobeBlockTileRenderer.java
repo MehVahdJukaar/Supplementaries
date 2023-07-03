@@ -115,10 +115,10 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
-        matrixStackIn.mulPose(RotHlpr.XN90);
+        matrixStackIn.scale(1,-1,-1);
         matrixStackIn.translate(0, +0.0625, 0);
         matrixStackIn.mulPose(RotHlpr.XN22);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(tile.getRotation(partialTicks)));
+        matrixStackIn.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
 
 
         this.renderGlobe(tile.getRenderData(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn,
