@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
+import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -12,7 +12,7 @@ public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
 
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-        if (context.getSourceTE() instanceof NoticeBoardBlockTile tile) {
+        if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
             tile.updateText();
             return Component.literal(tile.getText());
         } else {

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
@@ -18,13 +18,10 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import org.jetbrains.annotations.NotNull;
-import java.util.Map;
 
 public class BambooSpikesBehavior implements MovementBehaviour {
 
@@ -33,7 +30,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
     }
 
     @Override
-    public boolean renderAsNormalTileEntity() {
+    public boolean renderAsNormalBlockEntity() {
         return true;
     }
 
@@ -96,7 +93,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
     private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
     private void doTileStuff(MovementContext context, @NotNull Level world, LivingEntity le) {
-        CompoundTag com = context.tileData;
+        CompoundTag com = context.blockEntityData;
         if (com == null) return;
         long lastTicked = com.getLong("LastTicked");
         if (!this.isOnCooldown(world, lastTicked)) {
@@ -107,7 +104,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
             com = DUMMY.saveWithFullMetadata();
             lastTicked = world.getGameTime();
             com.putLong("LastTicked", lastTicked);
-            context.tileData = com;
+            context.blockEntityData = com;
         }
     }
 

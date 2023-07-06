@@ -48,36 +48,37 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
     }
 
     @Override
-    public void render(ClockBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(ClockBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         VertexConsumer builder = ModMaterials.CLOCK_HAND.buffer(bufferIn, RenderType::entityCutoutNoCull);
 
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.5d, 0.5d, 0.5d);
-        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
+        poseStack.pushPose();
+        poseStack.translate(0.5d, 0.5d, 0.5d);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
+        poseStack.scale(-1,-1,1);
 
         //hours
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
 
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(tile.getRoll(partialTicks)));
-        matrixStackIn.translate(0, -1.5, -0.5 + 0.02083333);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getRoll(partialTicks)));
+        poseStack.translate(0, -1.5, -0.5 + 0.02083333);
 
-        this.hourHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+        this.hourHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
 
         //minutes
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
 
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(tile.getRollS(partialTicks)));
-        matrixStackIn.translate(0, -1.5, -0.5 + 0.04166667);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getRollS(partialTicks)));
+        poseStack.translate(0, -1.5, -0.5 + 0.04166667);
 
-        this.minuteHand.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+        this.minuteHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 
 }

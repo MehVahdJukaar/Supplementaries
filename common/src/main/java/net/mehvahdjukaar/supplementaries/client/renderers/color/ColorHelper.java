@@ -1,19 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ColorHelper {
     private static float[][] soapColors;
@@ -22,7 +17,8 @@ public class ColorHelper {
         return FastColor.ARGB32.color(255, (int) (rgb[0] * 255), (int) (rgb[1] * 255), (int) (rgb[2] * 255));
     }
 
-    public static float oneToOneSaturation(float saturation, float lightness) {
+    //caps saturation when it's outside the colorspace that has a shape of 2 cones, like that c function describes
+    public static float normalizeSaturation(float saturation, float lightness) {
         float c = 1 - Math.abs((2 * lightness) - 1);
         return Math.min(saturation, c);
     }
@@ -70,7 +66,7 @@ public class ColorHelper {
         float l = hsl.lightness();
         //map one to one. no effect on its own (false...)
         //s = s + (float)((1-s)*ClientConfigs.general.TEST3.get());
-        s = oneToOneSaturation(s, l);
+        s = normalizeSaturation(s, l);
 
         //remove darker colors
         float minLightness = 0.47f;

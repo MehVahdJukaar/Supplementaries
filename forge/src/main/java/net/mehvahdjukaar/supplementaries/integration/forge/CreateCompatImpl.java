@@ -2,14 +2,14 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 
 
 import com.simibubi.create.AllMovementBehaviours;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.logistics.block.display.AllDisplayBehaviours;
-import com.simibubi.create.content.logistics.block.display.DisplayBehaviour;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
+import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderTag;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -30,43 +30,45 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import static com.simibubi.create.infrastructure.ponder.AllPonderTags.DISPLAY_SOURCES;
+import static com.simibubi.create.infrastructure.ponder.AllPonderTags.DISPLAY_TARGETS;
+
 public class CreateCompatImpl {
 
     public static void setup() {
         try {
             AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
-            AllMovementBehaviours.registerBehaviour(ModRegistry.PULLEY_BLOCK.get(), new PulleyBehavior());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
             DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
 
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
-            AllDisplayBehaviours.assignTile(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("speaker_block_display_target"),
                     new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("blackboard_display_target"),
                     new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
 
             //sources
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("globe_display_source"),
                     new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_source"),
                     new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("clock_source"),
                     new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
 
@@ -75,11 +77,11 @@ public class CreateCompatImpl {
                     new ItemDisplayDisplaySource());
 
             AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.STATUE_TILE.get());
-            AllDisplayBehaviours.assignTile(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.STATUE_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
 
-            AllDisplayBehaviours.assignTile(AllDisplayBehaviours.register(
+            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
 
@@ -89,15 +91,15 @@ public class CreateCompatImpl {
     }
 
     public static void setupClient() {
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
-        PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(ModRegistry.NOTICE_BOARD.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(ModRegistry.GLOBE_ITEM.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(ModRegistry.PEDESTAL.get());
+        PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(ModRegistry.JAR.get());
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
 
 
@@ -116,14 +118,14 @@ public class CreateCompatImpl {
 
 
     public static ItemStack getDisplayedItem(DisplayLinkContext context, BlockEntity source,
-                                              Predicate<ItemStack> predicate) {
+                                             Predicate<ItemStack> predicate) {
         if (source instanceof ItemDisplayTile display) {
             var stack = display.getDisplayedItem();
             if (predicate.test(stack)) return stack;
         } else {
             for (int i = 0; i < 32; ++i) {
                 var pos = context.getSourcePos();
-                TransportedItemStackHandlerBehaviour behaviour = TileEntityBehaviour.get(
+                TransportedItemStackHandlerBehaviour behaviour = BlockEntityBehaviour.get(
                         context.level(), pos, TransportedItemStackHandlerBehaviour.TYPE
                 );
                 if (behaviour == null) {

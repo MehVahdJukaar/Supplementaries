@@ -105,26 +105,27 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
     }
 
     @Override
-    public void render(StatueBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(StatueBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.5, 0.5, 0.5);
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
         GameProfile playerInfo = tile.owner;
 
         if (this.canRenderName(tile)) {
             var name = tile.owner.getName();
             if (name != null) {
-                PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, matrixStackIn, bufferIn, combinedLightIn);
+                PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, poseStack, bufferIn, combinedLightIn);
             }
         }
 
         ResourceLocation resourceLocation = tile.owner == null ? ModTextures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(RotHlpr.rot(dir));
+        poseStack.mulPose(RotHlpr.rot(dir));
+        poseStack.scale(-1,-1,1);
 
-        matrixStackIn.translate(0, -0.25, 0);
+        poseStack.translate(0, -0.25, 0);
 
         RenderType renderType = RenderType.entityTranslucent(resourceLocation);
 
@@ -138,13 +139,13 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 pose = StatueBlockTile.StatuePose.HOLDING;
                 stack = Items.JACK_O_LANTERN.getDefaultInstance();
             } else {
-                matrixStackIn.pushPose();
-                matrixStackIn.scale(-0.625f, -0.625f, 0.625f);
+                poseStack.pushPose();
+                poseStack.scale(-0.625f, -0.625f, 0.625f);
 
-                matrixStackIn.translate(0, 0.1875, 0);
+                poseStack.translate(0, 0.1875, 0);
                 itemRenderer.renderStatic(Items.CARVED_PUMPKIN.getDefaultInstance(), ItemDisplayContext.FIXED,
-                        combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, tile.getLevel(), 0);
-                matrixStackIn.popPose();
+                        combinedLightIn, combinedOverlayIn, poseStack, bufferIn, tile.getLevel(), 0);
+                poseStack.popPose();
             }
         } else {
             this.model.head.visible = true;
@@ -152,13 +153,13 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         }
 
 
-        matrixStackIn.pushPose();
-        matrixStackIn.scale(0.5f, +0.499f, 0.5f);
+        poseStack.pushPose();
+        poseStack.scale(0.5f, +0.499f, 0.5f);
         VertexConsumer buffer = bufferIn.getBuffer(renderType);
 
         this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving(), slim);
-        this.model.renderToBuffer(matrixStackIn, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        matrixStackIn.popPose();
+        this.model.renderToBuffer(poseStack, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        poseStack.popPose();
         this.slim = false;
 
 
@@ -166,24 +167,24 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             case STANDING:
                 break;
             case CANDLE:
-                matrixStackIn.scale(1f, -1f, -1f);
-                matrixStackIn.translate(-0.5, -0.6875, -0.3125);
-                blockRenderer.renderSingleBlock(tile.hasCandle(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+                poseStack.scale(1f, -1f, -1f);
+                poseStack.translate(-0.5, -0.6875, -0.3125);
+                blockRenderer.renderSingleBlock(tile.hasCandle(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
                 break;
             default:
                 //holding
-                matrixStackIn.scale(-0.5f, -0.5f, 0.5f);
+                poseStack.scale(-0.5f, -0.5f, 0.5f);
                 BakedModel itemModel = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
 
                 if (pose == StatueBlockTile.StatuePose.SWORD) {
-                    matrixStackIn.translate(-0.35, -1.0625, 0.0);
-                    matrixStackIn.mulPose(RotHlpr.Z135);
+                    poseStack.translate(-0.35, -1.0625, 0.0);
+                    poseStack.mulPose(RotHlpr.Z135);
                 } else if (pose == StatueBlockTile.StatuePose.TOOL) {
-                    matrixStackIn.translate(-0.4, -1.25, 0.0);
-                    matrixStackIn.mulPose(RotHlpr.Z135);
+                    poseStack.translate(-0.4, -1.25, 0.0);
+                    poseStack.mulPose(RotHlpr.Z135);
                 }
 
-                matrixStackIn.translate(0, -0.5, -0.5);
+                poseStack.translate(0, -0.5, -0.5);
                 if (pose.isGlobe()) {
                     if (GlobeBlockTileRenderer.INSTANCE != null) {
 
@@ -193,11 +194,11 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                                         GlobeManager.Type.getModelAndTexture(stack.getHoverName().getString()) :
                                         Pair.of(GlobeManager.Model.GLOBE, null);
 
-                        GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
+                        GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, poseStack, bufferIn,
                                 combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                     }
                 } else {
-                    this.itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn, bufferIn, combinedLightIn,
+                    this.itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, bufferIn, combinedLightIn,
                             combinedOverlayIn, itemModel);
 
                 }
@@ -205,7 +206,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         }
 
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 
 }

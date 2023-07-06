@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.Quaternionf;
@@ -46,14 +47,13 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         poseStack.pushPose();
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
-        Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+        Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
 
         VertexUtils.addCube(builder, poseStack,
                 dimensions.x(),
                 percentageFill * dimensions.y(),
                  light, color);
-
         poseStack.popPose();
     }
 
@@ -98,7 +98,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 Quaternionf rotation = Axis.YP.rotationDegrees(-angle);
                 matrixStackIn.mulPose(rotation);
                 matrixStackIn.scale(0.625f, 0.625f, 0.625f);
-                Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+                Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
 
                 matrixStackIn.translate(0, -0.2, -0.335 * (dimensions.x() / 0.5f));
                 int fishType = data.getFishTexture();
@@ -115,7 +115,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 if (fluid.get() == BuiltInSoftFluids.WATER.get()) {
                     //sand
                     matrixStackIn.pushPose();
-                    Vector3f dimensions = ClientSpecialModelsManager.getJarLiquidDimensions();
+                    Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
 
                     matrixStackIn.translate(0.5, 0.0015 + dimensions.z(), 0.5);
 

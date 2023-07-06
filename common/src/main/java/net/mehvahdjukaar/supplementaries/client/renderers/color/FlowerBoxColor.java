@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
+import net.mehvahdjukaar.supplementaries.client.block_models.FlowerBoxBakedModel;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;

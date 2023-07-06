@@ -123,6 +123,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
+    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:0.2.0-beta.9"))
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
@@ -157,7 +158,7 @@ dependencies {
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941638")
     modCompileOnly("curse.maven:map-atlases-forge-519759:3949437")
-    modCompileOnly("curse.maven:create-328085:4011414")
+    modCompileOnly("curse.maven:create-328085:4626108")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")
     modImplementation("curse.maven:terrablender-563928:4590487")
     modCompileOnly("curse.maven:tetra-289712:4414851")

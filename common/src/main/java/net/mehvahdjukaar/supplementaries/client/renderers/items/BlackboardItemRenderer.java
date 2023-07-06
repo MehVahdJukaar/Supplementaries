@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -50,7 +51,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
 
         matrixStackIn.mulPose(RotHlpr.Y180);
         matrixStackIn.translate(-1, 0, -0.6875);
-        VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, lu, lv, 0, 0, 1);
+        VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
 
         matrixStackIn.popPose();
     }

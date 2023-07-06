@@ -2,15 +2,22 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -34,7 +41,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
-public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider {
+public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider, IExtraModelDataProvider {
+    public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<Integer> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
 
     private final int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
 
@@ -49,12 +58,26 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
+    public ExtraModelData getExtraModelData() {
+        return ExtraModelData.builder()
+                .with(FLUID, fluidHolder.getFluid())
+                .with(FILL_LEVEL, fluidHolder.getCount())
+                .build();
+    }
+
+    @Override
     public void updateTileOnInventoryChanged() {
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
         int light = this.fluidHolder.getFluid().getLuminosity();
         if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
+    }
+
+    @Override
+    public void updateClientVisualsOnLoad() {
+        super.updateClientVisualsOnLoad();
+        requestModelReload();
     }
 
     // does all the calculation for handling player interaction.

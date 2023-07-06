@@ -63,45 +63,46 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
     }
 
     @Override
-    public void render(BellowsBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(BellowsBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         VertexConsumer builder = ModMaterials.BELLOWS_MATERIAL.buffer(bufferIn, RenderType::entitySolid);
 
 
         float dh = tile.getHeight(partialTicks);
 
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
 
-        matrixStackIn.translate(0.5, 0.5, 0.5);
+        poseStack.translate(0.5, 0.5, 0.5);
 
         Direction dir = tile.getDirection();
-        matrixStackIn.mulPose(RotHlpr.rot(dir));
+        poseStack.mulPose(RotHlpr.rot(dir));
+        poseStack.scale(-1,-1,1);
 
-        center.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+        center.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
 
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
 
-        matrixStackIn.translate(0, -1+(3/16d)-dh, 0);
+        poseStack.translate(0, -1+(3/16d)-dh, 0);
 
-        top.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+        top.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
 
-        matrixStackIn.pushPose();
+        poseStack.pushPose();
 
-        matrixStackIn.translate(0, dh,0);
+        poseStack.translate(0, dh,0);
 
-        top.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+        top.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
 
         float j = 3.2f;
 
-        matrixStackIn.scale(1, 1+j*dh, 1);
+        poseStack.scale(1, 1+j*dh, 1);
 
-        leather.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
+        leather.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 }

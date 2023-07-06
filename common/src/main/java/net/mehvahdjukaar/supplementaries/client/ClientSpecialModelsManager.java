@@ -31,7 +31,6 @@ import java.util.Set;
 //handles wall lanterns and jar special models stuff. reloaded by dynamic pack early
 public class ClientSpecialModelsManager {
 
-    private static final Vector3f JAR_LIQUID_DIMENSIONS = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f); //Width, Height, y0
     private static final Map<Block, ResourceLocation> SPECIAL_MOUNT_TEXTURES = new IdentityHashMap<>();
     private static final Map<Block, ResourceLocation> SPECIAL_LANTERN_MODELS = new IdentityHashMap<>();
 
@@ -42,7 +41,6 @@ public class ClientSpecialModelsManager {
     public static void refreshModels(ResourceManager manager) {
         reloadTextures(manager);
         reloadModels(manager);
-        reloadJarDimensions(manager);
     }
 
     private static void reloadModels(ResourceManager manager) {
@@ -90,22 +88,6 @@ public class ClientSpecialModelsManager {
         }
     }
 
-    private static void reloadJarDimensions(ResourceManager manager) {
-
-        ResourceLocation fullPath = Supplementaries.res("textures/block/jar_fluid.json");
-        var resource = manager.getResource(fullPath);
-        if (resource.isPresent()) {
-            try (var stream = resource.get().open()) {
-                JsonObject bsElement = RPUtils.deserializeJson(stream);
-                float width = GsonHelper.getAsFloat(bsElement, "width") / 16f;
-                float height = GsonHelper.getAsFloat(bsElement, "height") / 16f;
-                float y0 = GsonHelper.getAsFloat(bsElement, "y") / 16f;
-                JAR_LIQUID_DIMENSIONS.set(width, height, y0);
-            } catch (Exception ignored) {
-            }
-        }
-    }
-
     private static void initialize() {
         ImmutableSet.Builder<Block> builder = ImmutableSet.builder();
         for (Block i : BuiltInRegistries.BLOCK) {
@@ -120,10 +102,6 @@ public class ClientSpecialModelsManager {
         var res = SPECIAL_MOUNT_TEXTURES.get(block);
         if (res == null) return null;
         return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(res);
-    }
-
-    public static Vector3f getJarLiquidDimensions() {
-        return JAR_LIQUID_DIMENSIONS;
     }
 
     public static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {

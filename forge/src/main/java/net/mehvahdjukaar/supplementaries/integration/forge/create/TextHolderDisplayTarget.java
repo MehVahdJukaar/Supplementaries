@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,7 +13,7 @@ public class TextHolderDisplayTarget extends DisplayTarget {
 
     @Override
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-        BlockEntity te = context.getTargetTE();
+        BlockEntity te = context.getTargetBlockEntity();
         if (te instanceof ITextHolderProvider th) {
             var textHolder = th.getTextHolder();
             boolean changed = false;
@@ -36,7 +36,7 @@ public class TextHolderDisplayTarget extends DisplayTarget {
 
     @Override
     public DisplayTargetStats provideStats(DisplayLinkContext context) {
-        var textHolder = ((ITextHolderProvider) context.getTargetTE()).getTextHolder();
+        var textHolder = ((ITextHolderProvider) context.getTargetBlockEntity()).getTextHolder();
         return new DisplayTargetStats(textHolder.size(), textHolder.getMaxLineCharacters(), this);
     }
 }

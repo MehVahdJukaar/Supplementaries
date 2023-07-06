@@ -307,7 +307,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, this.getOwner() instanceof Player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
         }
 
-        BombExplosion explosion = new BombExplosion(this.level(), this, null,
+        BombExplosion explosion = new BombExplosion(this.level(), this,
                 new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
                 this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);

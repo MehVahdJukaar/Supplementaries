@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.client.block_models.FlowerBoxBakedModel;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -75,8 +76,10 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FLOOR, context.getClickedFace() == Direction.UP)
-                .setValue(FACING, context.getHorizontalDirection().getOpposite());
+        var dir = context.getClickedFace();
+        return this.defaultBlockState().setValue(WATERLOGGED, flag)
+                .setValue(FLOOR, dir == Direction.UP)
+                .setValue(FACING, dir.getAxis().isVertical() ? context.getHorizontalDirection().getOpposite() : dir);
     }
 
     @Override

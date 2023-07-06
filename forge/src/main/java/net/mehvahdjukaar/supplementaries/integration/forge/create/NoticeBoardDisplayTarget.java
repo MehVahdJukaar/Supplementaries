@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTarget;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.foundation.utility.Lang;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +20,7 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
 
     @Override
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
-        BlockEntity te = context.getTargetTE();
+        BlockEntity te = context.getTargetBlockEntity();
         if (te instanceof NoticeBoardBlockTile lectern) {
             ItemStack book = lectern.getDisplayedItem();
             if (!book.isEmpty()) {

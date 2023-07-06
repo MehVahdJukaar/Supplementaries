@@ -38,7 +38,7 @@ public class VibeChecker {
                 i.tick();
             }
         }catch (Exception e){
-            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intented");
+            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
             e.printStackTrace();
         }
     }

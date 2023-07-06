@@ -20,26 +20,44 @@ import org.joml.Vector3f;
 public class VertexUtils {
     //centered on x,z. aligned on y=0
 
-    public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float w, float h, int light, int color) {
-        addCube(builder, matrixStackIn, 0, 0, w, h, light, color, true, true);
-    }
-
-    public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float uOff, float vOff, float w, float h, int combinedLightIn,
-                               int color, boolean up, boolean down) {
-        addCube(builder, matrixStackIn, uOff, vOff, w, h, combinedLightIn, color, 1, up, down, false);
-    }
-
+    @Deprecated(forRemoval = true)
     public static void addCube(VertexConsumer builder, PoseStack poseStack,
-                               float minU, float minV, float w, float h,
+                               float width, float height, int light, int color) {
+        addCube(builder, poseStack, 0, 0, width, height, light, color);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+                               float uOff, float vOff,
+                               float width, float height, int light, int color) {
+        addCube(builder, poseStack, uOff, vOff,
+                width, height, light, color, 1, true, true, false);
+    }
+
+    @Deprecated(forRemoval = true)
+    //automatic relative UV
+    //invert v axis automatically
+    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+                               float uOff, float vOff,
+                               float w, float h, int combinedLightIn,
+                               int color, float alpha,
+                               boolean up, boolean down, boolean wrap) {
+        addCube(builder, poseStack, uOff, 1 - (vOff + h), uOff + w, 1 - vOff, w, h, combinedLightIn, color, alpha, up, down, wrap);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+                               float minU, float minV,
+                               float maxU, float maxV,
+                               float w, float h,
                                int combinedLightIn,
                                int color,
                                float alpha,
                                boolean up, boolean down, boolean wrap) {
+
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        float maxU = minU + w;
-        float maxV = minV + h;
-        float maxV2 = minV + w;
+        float minV2 =  maxV - w ;
 
         int r = FastColor.ARGB32.red(color);
         int g = FastColor.ARGB32.green(color);
@@ -50,11 +68,11 @@ public class VertexUtils {
         float hh = h / 2f;
 
         float inc = 0;
-        poseStack.translate(0, hh, 0);
 
-        poseStack.scale(1, -1, -1);
+        poseStack.pushPose();
+        poseStack.translate(0, hh, 0);
         for (var d : Direction.values()) {
-            float v1 = maxV;
+            float v0 = minV;
             float t = hw;
             float y0 = -hh;
             float y1 = hh;
@@ -64,16 +82,18 @@ public class VertexUtils {
                 t = hh;
                 y0 = -hw;
                 y1 = hw;
-                v1 = maxV2;
+                v0 = minV2;
             } else if (wrap) {
                 inc += w;
             }
             poseStack.pushPose();
             poseStack.mulPose(RotHlpr.rot(d));
-            poseStack.translate(0, 0, t);
-            addQuad(builder, poseStack, -hw, y0, hw, y1, minU + i, minV, maxU + i, v1, r, g, b, a, lu, lv);
+            poseStack.translate(0, 0, -t);
+            addQuad(builder, poseStack, -hw, y0, hw, y1, minU + i, v0, maxU + i, maxV, r, g, b, a, lu, lv);
             poseStack.popPose();
+
         }
+        poseStack.popPose();
     }
 
     public static int setColorForAge(float age, float phase) {
@@ -169,7 +189,20 @@ public class VertexUtils {
         vert(builder, poseStack, l + use, l + use, l + use, minU, minV, cUse, lu, lv, 1, 0, 0);
     }
 
+    @Deprecated(forRemoval = true)
+    public static void addQuad(VertexConsumer builder, PoseStack poseStack,
+                               float x0, float y0, float x1, float y1, int lu, int lv) {
+        addQuad(builder, poseStack, x0, y0, x1, y1, 255, 255, 255, 255, lu, lv);
+    }
+    @Deprecated(forRemoval = true)
+    public static void addQuad(VertexConsumer builder, PoseStack poseStack,
+                               float x0, float y0, float x1, float y1,
+                               int r, int g, int b, int a,
+                               int lu, int lv) {
+        addQuad(builder, poseStack, x0, y0, x1, y1, 0, 0, 1, 1, r, g, b, a, lu, lv);
+    }
 
+    @Deprecated(forRemoval = true)
     //fast 2d quad. Use matrix to put where you want
     public static void addQuad(VertexConsumer builder, PoseStack poseStack,
                                float x0, float y0,
@@ -179,45 +212,18 @@ public class VertexUtils {
                                int r, int g, int b, int a,
                                int lu, int lv) {
         PoseStack.Pose last = poseStack.last();
-        Vector3f vector3f = last.normal().transform(new Vector3f(0, 0, 1));
+        Vector3f vector3f = last.normal().transform(new Vector3f(0, 0, -1));
         float nx = vector3f.x;
         float ny = vector3f.y;
         float nz = vector3f.z;
         //avoids having to multiply 3 times
-        vertF(builder, poseStack, x0, y0, 0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vertF(builder, poseStack, x1, y0, 0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vertF(builder, poseStack, x1, y1, 0, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
         vertF(builder, poseStack, x0, y1, 0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        vertF(builder, poseStack, x1, y1, 0, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
+        vertF(builder, poseStack, x1, y0, 0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
+        vertF(builder, poseStack, x0, y0, 0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
     }
 
-    public static void addQuadSide(VertexConsumer builder, PoseStack poseStack,
-                                   float x0, float y0, float z0,
-                                   float x1, float y1, float z1,
-                                   float u0, float v0,
-                                   float u1, float v1,
-                                   float r, float g, float b, float a,
-                                   int lu, int lv,
-                                   float nx, float ny, float nz) {
-        vert(builder, poseStack, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x1, y0, z1, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x0, y1, z0, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
-    }
-
-    public static void addQuadTop(VertexConsumer builder, PoseStack poseStack, float x0, float y0, float z0,
-                                  float x1, float y1, float z1,
-                                  float u0, float v0,
-                                  float u1, float v1,
-                                  float r, float g, float b, float a,
-                                  int lu, int lv,
-                                  float nx, float ny, float nz) {
-        vert(builder, poseStack, x0, y0, z0, u0, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x1, y0, z0, u1, v1, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x1, y1, z1, u1, v0, r, g, b, a, lu, lv, nx, ny, nz);
-        vert(builder, poseStack, x0, y1, z1, u0, v0, r, g, b, a, lu, lv, nx, ny, nz);
-    }
-
-
+    @Deprecated(forRemoval = true)
     public static void vert(VertexConsumer builder, PoseStack poseStack, float x, float y, float z,
                             float u, float v,
                             float r, float g, float b, float a,
@@ -306,5 +312,6 @@ public class VertexUtils {
 
         }
     }
+
 
 }

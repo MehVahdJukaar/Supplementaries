@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -275,7 +274,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
         //could even just use distance
         private float getAllowedHueShift(HSLColor color) {
             float l = color.lightness();
-            float s = ColorHelper.oneToOneSaturation(color.saturation(), l);
+            float s = ColorHelper.normalizeSaturation(color.saturation(), l);
             float minAngle = 90 / 360f;
             float addAngle = 65 / 360f;
             float distLightSq = 2;//(s * s) + (1 - l) * (1 - l);

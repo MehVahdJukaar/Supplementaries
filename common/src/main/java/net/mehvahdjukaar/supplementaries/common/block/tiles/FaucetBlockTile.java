@@ -1,9 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.*;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -35,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FaucetBlockTile extends BlockEntity {
+public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
     private static final List<IFaucetBlockSource> BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<IFaucetTileSource> TILE_INTERACTIONS = new ArrayList<>();
@@ -43,6 +47,8 @@ public class FaucetBlockTile extends BlockEntity {
     private static final List<IFaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
     private static final List<IFaucetBlockTarget> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<IFaucetTileTarget> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+    public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
 
     public static final int COOLDOWN = 20;
 
@@ -53,6 +59,17 @@ public class FaucetBlockTile extends BlockEntity {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
     }
 
+    @Override
+    public ExtraModelData getExtraModelData() {
+        int color = -1;
+        if (level != null) {
+            color = tempFluidHolder.getFlowingTint(level, worldPosition);
+        }
+        return ExtraModelData.builder()
+                .with(FLUID, tempFluidHolder.getFluid())
+                .with(FLUID_COLOR, color)
+                .build();
+    }
 
     public void updateLight() {
         if (this.level == null) return;
@@ -97,6 +114,8 @@ public class FaucetBlockTile extends BlockEntity {
         }
         boolean r = this.tryExtract(level, pos, state, false) != 0;
         this.updateLight();
+
+        requestModelReload();
         return r;         //returns if it has a fluid
     }
 
@@ -136,7 +155,8 @@ public class FaucetBlockTile extends BlockEntity {
                 return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
             }
         }
-        if (!this.isConnectedBelow()) {
+        if (!this.isConnectedBelow() && (
+                CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() || CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
             for (var bi : ITEM_INTERACTIONS) {
                 ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
                 if (!removed.isEmpty()) {

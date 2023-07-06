@@ -100,6 +100,8 @@ public class Supplementaries {
     //flags not renderinb bug
     //sack insert sound
 //3d jukebox thingie
+    //snowy spirit disc
+    //chef villager mod
     //mystical tree index out of bound
     //caibrated stuff
     //Tree chat gtp

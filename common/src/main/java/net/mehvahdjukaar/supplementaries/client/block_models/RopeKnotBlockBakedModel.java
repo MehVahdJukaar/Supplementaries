@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +28,7 @@ public class RopeKnotBlockBakedModel implements CustomBakedModel {
     private final BakedModel knot;
     private final BlockModelShaper blockModelShaper;
 
-    public RopeKnotBlockBakedModel(BakedModel knot) {
+    public RopeKnotBlockBakedModel(BakedModel knot, ModelState state) {
         this.knot = knot;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }

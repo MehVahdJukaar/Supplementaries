@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -16,10 +17,13 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,10 +32,12 @@ import java.util.List;
 public class WallLanternBakedModel implements CustomBakedModel {
     private final BakedModel support;
     private final BlockModelShaper blockModelShaper;
+    private final ModelState rotation;
 
-    public WallLanternBakedModel(BakedModel support) {
+    public WallLanternBakedModel(BakedModel support, ModelState state) {
         this.support = support;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
+        this.rotation = state;
     }
 
     @Override
@@ -81,8 +87,11 @@ public class WallLanternBakedModel implements CustomBakedModel {
 
                     for (BakedQuad q : mimicQuads) {
                         int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
-                        VertexUtil.moveVertices(v, Direction.UP, 2 / 16f);
-                        VertexUtil.moveVertices(v, dir, -2 / 16f);
+                        Matrix4f mat = new Matrix4f();
+                        mat.translate(0,2/16f,0);
+                        mat.translate(dir.step().mul(-2/16f));
+
+                        VertexUtil.transformVertices(v, mat);
 
                         quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
                     }

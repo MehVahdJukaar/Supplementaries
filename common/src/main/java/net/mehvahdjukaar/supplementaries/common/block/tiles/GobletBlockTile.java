@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
+import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -22,16 +26,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvider, IOwnerProtected {
+public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvider, IOwnerProtected, IExtraModelDataProvider {
 
     private UUID owner = null;
 
     public final SoftFluidTank fluidHolder;
+    public static final ModelDataKey<SoftFluid> FLUID_ID = ModBlockProperties.FLUID;
+
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
-        int CAPACITY = 1;
-        this.fluidHolder = SoftFluidTank.create(CAPACITY);
+        this.fluidHolder = SoftFluidTank.create(1);
+    }
+    @Override
+    public ExtraModelData getExtraModelData() {
+            return ExtraModelData.builder()
+                .with(FLUID_ID, getSoftFluidTank().getFluid())
+                .build();
     }
 
     @Nullable
@@ -103,6 +114,10 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
             Supplementaries.LOGGER.warn("Failed to load fluid container at {}:", this.getBlockPos(), e);
         }
         this.loadOwner(compound);
+
+        if (this.level != null) {
+            if (this.level.isClientSide) this.requestModelReload();
+        }
     }
 
     @Override
@@ -120,4 +135,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     public SoftFluidTank getSoftFluidTank() {
         return this.fluidHolder;
     }
+
+
+
 }

@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
+import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.foundation.utility.Components;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.minecraft.core.BlockPos;
@@ -15,7 +15,7 @@ public class GlobeDisplaySource extends SingleLineDisplaySource {
 
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-        if (context.getSourceTE() instanceof GlobeBlockTile tile) {
+        if (context.getSourceBlockEntity() instanceof GlobeBlockTile tile) {
             BlockPos pos = context.getSourcePos();
             return Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ());
         } else {

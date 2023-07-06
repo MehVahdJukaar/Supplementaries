@@ -52,7 +52,7 @@ public class ModVillagerTrades {
         trades.add(itemForEmeraldTrade(lantern, 1, 1, 12));
 
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 3, 8));
+            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 4, 8));
             if (CompatHandler.OREGANIZED) {
                 trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
             }

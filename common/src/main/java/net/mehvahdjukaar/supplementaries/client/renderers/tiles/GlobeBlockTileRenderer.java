@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -115,9 +116,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
-        matrixStackIn.scale(1,-1,-1);
-        matrixStackIn.translate(0, +0.0625, 0);
-        matrixStackIn.mulPose(RotHlpr.XN22);
+        matrixStackIn.translate(0, 0.0625, 0);
+        matrixStackIn.mulPose(RotHlpr.X22);
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
 
 

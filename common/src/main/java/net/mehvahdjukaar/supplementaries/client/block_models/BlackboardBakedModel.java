@@ -4,18 +4,13 @@ import com.mojang.math.Transformation;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,14 +28,12 @@ import java.util.function.Function;
 
 public class BlackboardBakedModel implements CustomBakedModel {
 
-    private final Function<Material, TextureAtlasSprite> spriteGetter;
     private final ModelState modelTransform;
 
     private final BakedModel back;
 
-    public BlackboardBakedModel(BakedModel back, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
+    public BlackboardBakedModel(BakedModel back, ModelState modelTransform) {
         this.back = back;
-        this.spriteGetter = spriteGetter;
         this.modelTransform = modelTransform;
     }
 
@@ -98,8 +91,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
         byte[][] pixels = blackboard.getPixels();
         boolean emissive = blackboard.isGlow();
         List<BakedQuad> quads;
-        TextureAtlasSprite black = spriteGetter.apply(ModMaterials.BLACKBOARD_BLACK);
-        TextureAtlasSprite white = spriteGetter.apply(ModMaterials.BLACKBOARD_WHITE);
+        TextureAtlasSprite black = ModMaterials.BLACKBOARD_BLACK.sprite();
+        TextureAtlasSprite white = ModMaterials.BLACKBOARD_WHITE.sprite();
 
         quads = new ArrayList<>();
         var rotation = modelTransform.getRotation();
@@ -121,9 +114,9 @@ public class BlackboardBakedModel implements CustomBakedModel {
                 //draws prev quad
                 int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
                 TextureAtlasSprite sprite = prevColor == 0 ? black : white;
-                quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f, 1 - 5 / 16f,
+                quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f,
                         1 / 16f, length / 16f, sprite, tint, rotation,
-                        prevColor != 0 && emissive, dir));
+                        prevColor != 0 && emissive));
 
                 startY = y;
                 if (current != null) {
@@ -136,52 +129,41 @@ public class BlackboardBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    public static BakedQuad createPixelQuad(float x, float y, float z, float width, float height,
+    public static BakedQuad createPixelQuad(float x, float y, float width, float height,
                                             TextureAtlasSprite sprite, int color, Transformation transform,
-                                            boolean litUp, Direction dd) {
+                                            boolean emissive) {
+        float u0 = 1 - x;
+        float v0 = 1 - y;
+        float u1 = 1 - (x + width);
+        float v1 = 1 - (y + height);
 
-        float tu = (1 - (1 + sprite.contents().width() * width));
-        float tv = (1 - (1 + sprite.contents().height() * height));
-        float u0 = (1 - x) * 16;
-        float v0 = (1 - y) * 16;
+        BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform);
 
-        //this just wraps around forge baked quad builder
-        BakedQuadBuilder builder = BakedQuadBuilder.create();
+        builder.setAutoDirection();
 
-        builder.setDirection(dd);
-        Vector3f normal = new Vector3f(dd.getStepX(), dd.getStepY(), dd.getStepZ());
+        putVertex(builder, x + width, y + height,
+                u1, v1, color);
+        putVertex(builder, x + width, y,
+                u1, v0, color);
+        putVertex(builder, x, y,
+                u0, v0, color);
+        putVertex(builder, x, y + height,
+                u0, v1, color);
 
-        builder.setSprite(sprite);
-
-        putVertex(builder, normal, x + width, y + height, z,
-                u0 + tu, v0 + tv, sprite, color, transform, litUp);
-        putVertex(builder, normal, x + width, y, z,
-                u0 + tu, v0, sprite, color, transform, litUp);
-        putVertex(builder, normal, x, y, z,
-                u0, v0, sprite, color, transform, litUp);
-        putVertex(builder, normal, x, y + height, z,
-                u0, v0 + tv, sprite, color, transform, litUp);
-
-
+        if (emissive) builder.lightEmission(15);
         return builder.build();
     }
 
 
-    private static void putVertex(BakedQuadBuilder builder, Vector3f normal,
-                                  float x, float y, float z, float u, float v,
-                                  TextureAtlasSprite sprite, int color,
-                                  Transformation transformation, boolean emissive) {
+    private static void putVertex(BakedQuadBuilder builder, float x, float y, float u, float v, int color) {
 
-        Vector3f posV = RotHlpr.rotateVertexOnCenterBy(x, y, z, transformation.getMatrix());
+        Vector3f posV = new Vector3f(x, y, 1 - 5 / 16f);
         //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
-
-        builder.pos(posV);
+        builder.vertex(posV.x, posV.y, posV.z);
         builder.color(color);
-        builder.uv(sprite.getU(u), sprite.getV(v));
-        builder.normal(normal.x(), normal.y(), normal.z());
-
-        if (emissive) builder.lightEmission(15);
+        builder.uv(u, v);
+        builder.normal(0, 0, -1);
 
         builder.endVertex();
     }

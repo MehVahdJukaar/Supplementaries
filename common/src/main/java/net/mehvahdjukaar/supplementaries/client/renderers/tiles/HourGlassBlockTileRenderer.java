@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +46,8 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        Quaternionf q = RotHlpr.rot(dir);
+        Quaternionf q = dir .getRotation();
+
         poseStack.mulPose(q);
 
         q = new Quaternionf(q);
@@ -57,10 +59,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             poseStack.mulPose(q);
             poseStack.translate(0, -0.125, 0);
             float h1 = height * 0.25f;
-            VertexUtils.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h1,  combinedLightIn, color,  true, true);
+            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h1,  combinedLightIn, color);
             if (dir == Direction.DOWN) {
                 poseStack.translate(0, -h1 - 0.25f, 0);
-                VertexUtils.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f,  combinedLightIn, color,   true, true);
+                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f,  combinedLightIn, color,
+                        1, false, false, false);
             }
             poseStack.popPose();
         }
@@ -70,11 +73,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             poseStack.mulPose(q);
             poseStack.translate(0, -0.125, 0);
             float h2 = (1 - height) * 0.25f;
-            VertexUtils.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h2,  combinedLightIn, color,  true,true);
+            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h2,  combinedLightIn, color);
             if (dir == Direction.UP) {
                 poseStack.translate(0, -h2 - 0.25, 0);
-                VertexUtils.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f,  combinedLightIn, color,
-                        true, false);
+                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f,  combinedLightIn, color,
+                        1, false, false, false);
             }
             poseStack.popPose();
         }
@@ -82,12 +85,12 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
     }
 
     @Override
-    public void render(HourGlassBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(HourGlassBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
         if (tile.getSandData().isEmpty()) return;
 
         Direction dir = tile.getBlockState().getValue(HourGlassBlock.FACING);
 
-        renderSand(matrixStackIn, bufferIn, combinedLightIn, tile.getTexture(), tile.getProgress(partialTicks), dir);
+        renderSand(poseStack, bufferIn, combinedLightIn, tile.getTexture(), tile.getProgress(partialTicks), dir);
     }
 }

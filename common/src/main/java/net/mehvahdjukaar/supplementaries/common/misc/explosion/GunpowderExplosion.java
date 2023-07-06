@@ -25,12 +25,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a tiny explosion that only destroys surrounding blocks if they have 0
@@ -41,20 +41,11 @@ import java.util.ArrayList;
  */
 public class GunpowderExplosion extends Explosion {
 
-    private final Level level;
-    private final double x;
-    private final double y;
-    private final double z;
-    private float radius;
-    private final ObjectArrayList<BlockPos> toBlow = new ObjectArrayList<>();
+    private float radius2;
 
     public GunpowderExplosion(Level world, Entity entity, double x, double y, double z, float size) {
         super(world, entity, null, null, x, y, z, size, false, BlockInteraction.DESTROY);
-        this.level = world;
-        this.radius = size;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.radius2 = size;
     }
 
     /**
@@ -67,9 +58,9 @@ public class GunpowderExplosion extends Explosion {
         int py = Mth.floor(this.y);
         int pz = Mth.floor(this.z);
 
-        this.radius *= 2.0F;
+        this.radius2 *= 2.0F;
 
-        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius);
+        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius2);
 
         explodeBlock(px + 1, py, pz);
         explodeBlock(px - 1, py, pz);
@@ -113,7 +104,7 @@ public class GunpowderExplosion extends Explosion {
 
             if (ForgeHelper.getExplosionResistance(state, this.level, pos, this) == 0) {
                 if (block instanceof TntBlock) {
-                    this.toBlow.add(pos);
+                    this.getToBlow().add(pos);
                 }
             }
             //lights up burnable blocks
@@ -128,14 +119,19 @@ public class GunpowderExplosion extends Explosion {
         }
     }
 
+    @Override
+    public ObjectArrayList<BlockPos> getToBlow() {
+        return (ObjectArrayList<BlockPos>) super.getToBlow();
+    }
+
     //needed cause toBlow is private
     @Override
     public void finalizeExplosion(boolean spawnFire) {
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
-        Util.shuffle(this.toBlow, this.level.random);
+        Util.shuffle(this.getToBlow(), this.level.random);
 
-        for (BlockPos blockpos : this.toBlow) {
+        for (BlockPos blockpos : this.getToBlow()) {
             BlockState blockstate = this.level.getBlockState(blockpos);
 
             BlockPos immutable = blockpos.immutable();
@@ -146,7 +142,7 @@ public class GunpowderExplosion extends Explosion {
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
                         .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, null);
 
-                builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius);
+                builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius2);
 
                 blockstate.getDrops(builder).forEach((d) -> addBlockDrops(drops, d, immutable));
             }
@@ -166,22 +162,6 @@ public class GunpowderExplosion extends Explosion {
                 this.level.setBlockAndUpdate(pos, BaseFireBlock.getState(this.level, pos));
             }
         }
-    }
-
-    private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> drops, ItemStack stack, BlockPos pos) {
-        int i = drops.size();
-        for (int j = 0; j < i; ++j) {
-            Pair<ItemStack, BlockPos> pair = drops.get(j);
-            ItemStack itemstack = pair.getFirst();
-            if (ItemEntity.areMergable(itemstack, stack)) {
-                ItemStack merge = ItemEntity.merge(itemstack, stack, 16);
-                drops.set(j, Pair.of(merge, pair.getSecond()));
-                if (stack.isEmpty()) {
-                    return;
-                }
-            }
-        }
-        drops.add(Pair.of(stack, pos));
     }
 
 }

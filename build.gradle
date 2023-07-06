@@ -28,6 +28,7 @@ subprojects {
                 setNameSyntheticMembers(false)
             }
         }
+
     }
 
     var env = System.getenv()
@@ -121,7 +122,6 @@ allprojects {
     group = rootProject.maven_group
     required_moonlight_version = rootProject.required_moonlight_version
 
-
     repositories {
 
         flatDir {
@@ -129,6 +129,7 @@ allprojects {
         }
 
         mavenLocal()
+
 
         maven { url "https://maven.parchmentmc.org" }
 
@@ -140,6 +141,8 @@ allprojects {
         maven {
             url "https://maven.firstdarkdev.xyz/snapshots"
         }
+        maven { url 'https://jitpack.io' }
+
 
     }
 

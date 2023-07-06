@@ -175,9 +175,9 @@ public class CommonConfigs {
             builder.push("faucet");
             FAUCET_ENABLED = feature(builder);
             FAUCET_DROP_ITEMS = builder.comment("Turn off to prevent faucets from dropping items")
-                    .define("drop_items", true);
+                    .define("spill_items", true);
             FAUCET_FILL_ENTITIES = builder.comment("Allows faucets to fill entities inventories")
-                    .define("drop_items", false);
+                    .define("fill_entities_below", false);
             builder.pop();
 
 

@@ -72,7 +72,8 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
         poseStack.mulPose(RotHlpr.rot(dir));
-FlagBlockTileRenderer
+        poseStack.scale(-1,-1,1);
+//todo: use baked models
         poseStack.translate(0, 3 / 16f, 0);
 
         float angle = (-11.25f) * Mth.DEG_TO_RAD;

@@ -82,6 +82,9 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
+    public static final ModelDataKey<SoftFluid> FLUID = new ModelDataKey<>(SoftFluid.class);
+    public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
+    public static final ModelDataKey<Integer> FILL_LEVEL = new ModelDataKey<>(Integer.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
 
 

@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
-import com.simibubi.create.content.logistics.trains.management.display.FlapDisplaySection;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
+import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -22,7 +22,7 @@ public class ClockDisplaySource extends SingleLineDisplaySource {
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         Level level = context.level();
         if (level instanceof ServerLevel sLevel) {
-            if (context.getSourceTE() instanceof ClockBlockTile tile) {
+            if (context.getSourceBlockEntity() instanceof ClockBlockTile tile) {
                 boolean c12 = context.sourceConfig().getInt("Cycle") == 0;
                 boolean isNatural = sLevel.dimensionType().natural();
                 int dayTime = (int) (sLevel.getDayTime() % 24000L);

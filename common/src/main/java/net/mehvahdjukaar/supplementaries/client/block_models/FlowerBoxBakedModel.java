@@ -1,12 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import com.teamabode.cave_enhancements.core.registry.misc.BlockProperties;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
@@ -22,15 +17,21 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,10 +39,12 @@ import java.util.List;
 public class FlowerBoxBakedModel implements CustomBakedModel {
     private final BakedModel box;
     private final BlockModelShaper blockModelShaper;
+    private final ModelState rotation;
 
-    public FlowerBoxBakedModel(BakedModel box) {
+    public FlowerBoxBakedModel(BakedModel box, ModelState rotation) {
         this.box = box;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
+        this.rotation = rotation;
     }
 
     @Override
@@ -64,40 +67,39 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                         data.get(FlowerBoxBlockTile.FLOWER_2)
                 };
 
-                PoseStack matrixStack = new PoseStack();
+                PoseStack poseStack = new PoseStack();
 
-                matrixStack.translate(0.5, 0.5, 0.5);
-
-                float yaw = -state.getValue(FlowerBoxBlock.FACING).getOpposite().toYRot();
-                Quaternionf quaternion = Axis.YP.rotationDegrees(yaw);
-                matrixStack.mulPose(quaternion);
-                matrixStack.translate(-0.3125, -3 / 16f, 0);
+                Matrix4f rot = rotation.getRotation().getMatrix();
+                Matrix4f inv = rot.invert(new Matrix4f());
+                poseStack.mulPoseMatrix(rot);
+                //no idea what these do anymore
+                poseStack.translate(-0.3125, 0, 0);
 
                 if (state.getValue(FlowerBoxBlock.FLOOR)) {
-                    matrixStack.translate(0, 0, -0.3125);
+                    poseStack.translate(0, 0, -0.3125);
                 }
-                matrixStack.scale(0.625f, 0.625f, 0.625f);
 
-                matrixStack.translate(0.5, 0.5, 0.5);
+                poseStack.scale(0.625f, 0.625f, 0.625f);
 
-                matrixStack.translate(-0.5, 0, 0);
+                poseStack.translate(0.5, 0.5, 1);
+
 
                 for (int i = 0; i < 3; i++) {
                     BlockState flower = flowers[i];
                     if (flower != null && !flower.isAir()) {
-                        matrixStack.pushPose();
-                        matrixStack.translate(0.5*i, 0, 0);
+                        poseStack.pushPose();
+                        poseStack.translate(0.5 * i, 0, 0);
 
-                        if(flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)){
-                            matrixStack.mulPose(quaternion.conjugate(new Quaternionf()));
-                            matrixStack.translate(0.25, 0, 0.25);
+                        if (flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)) {
+                            poseStack.mulPoseMatrix(inv);
+                            poseStack.translate(0.25, 0, 0.25);
                         }
-                        this.addBlockToModel(i, quads, flower, matrixStack, side, rand);
+                        this.addBlockToModel(i, quads, flower, poseStack, side, rand);
                         if (flower.hasProperty(DoublePlantBlock.HALF)) {
-                            matrixStack.translate(0, 1, 0);
-                            this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), matrixStack, side, rand);
+                            poseStack.translate(0, 1, 0);
+                            this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), poseStack, side, rand);
                         }
-                        matrixStack.popPose();
+                        poseStack.popPose();
                     }
 
                 }
@@ -108,7 +110,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack matrixStack, @Nullable Direction side, @NotNull RandomSource rand) {
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
 
         BakedModel model;
         //for special flowers
@@ -126,17 +128,19 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand);
         for (BakedQuad q : mimicQuads) {
+            poseStack.pushPose();
             int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
-            TextureAtlasSprite texture = this.getParticleIcon();
             if (res == null) {
-                VertexUtil.moveVertices(v, -0.5f, -0.5f, -0.5f);
-                VertexUtil.scaleVertices(v, 0.6249f);
+                poseStack.translate(-0.5f, -0.5f, -0.5f);
+                poseStack.scale(0.6249f, 0.6249f, 0.6249f);
             } else {
-                VertexUtil.moveVertices(v, -0.5f, -0.5f + 3 / 16f, -0.5f);
+                poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
             }
 
-            VertexUtil.transformVertices(v, matrixStack, texture);
+            VertexUtil.transformVertices(v, poseStack.last().pose());
+
+            poseStack.popPose();
 
             quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
         }

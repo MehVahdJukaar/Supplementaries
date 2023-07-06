@@ -61,7 +61,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
@@ -143,8 +142,6 @@ public class ClientRegistry {
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.JAR.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.FAUCET.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
@@ -175,6 +172,9 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.FLAX_WILD.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.FLAX_POT.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.JAR_BOAT.get(), RenderType.translucent());
+        ClientHelper.registerRenderType(ModRegistry.GOBLET.get(), RenderType.translucent(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.FAUCET.get(), RenderType.translucent(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.JAR.get(), RenderType.translucent(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.FLOWER_BOX.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.TIMBER_FRAME.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.TIMBER_BRACE.get(), RenderType.cutout());
@@ -342,7 +342,6 @@ public class ClientRegistry {
         event.register(ModRegistry.WIND_VANE_TILE.get(), WindVaneBlockTileRenderer::new);
         event.register(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
         event.register(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
-        event.register(ModRegistry.FAUCET_TILE.get(), FaucetBlockTileRenderer::new);
         event.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
         event.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
         event.register(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
@@ -353,7 +352,6 @@ public class ClientRegistry {
         event.register(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         event.register(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         event.register(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-        event.register(ModRegistry.GOBLET_TILE.get(), GobletBlockTileRenderer::new);
         event.register(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
         event.register(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
         event.register(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
@@ -386,12 +384,14 @@ public class ClientRegistry {
     private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
         event.register(Supplementaries.res("frame_block"), new NestedModelLoader("overlay", FrameBlockBakedModel::new));
         event.register(Supplementaries.res("wall_lantern"), new NestedModelLoader("support", WallLanternBakedModel::new));
-        event.register(Supplementaries.res("double_cake"), new NestedModelLoader("cake", DoubleCakeBlockModel::new));
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
-        event.register(Supplementaries.res("blackboard"), new BlackboardBlockLoader());
-        event.register(Supplementaries.res("mimic_block"), new SignPostBlockLoader());
+        event.register(Supplementaries.res("blackboard"),  new NestedModelLoader("frame", BlackboardBakedModel::new));
+        event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
+        event.register(Supplementaries.res("goblet"), new GobletModelLoader());
+        event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
+        event.register(Supplementaries.res("jar"), new JarModelLoader());
     }
 
     @EventCalled
@@ -421,6 +421,7 @@ public class ClientRegistry {
         event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
+        event.register(new FluidColor(), ModRegistry.GOBLET.get(), ModRegistry.JAR.get());
     }
 
     @EventCalled
@@ -428,10 +429,9 @@ public class ClientRegistry {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
+        event.register(new FluidColor(), ModRegistry.JAR.get());
         event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack),
                 ModRegistry.QUIVER_ITEM.get());
-
-
     }
 
     @EventCalled

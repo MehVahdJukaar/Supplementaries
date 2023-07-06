@@ -130,10 +130,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         IExtraModelDataProvider.super.afterDataPacket(oldData);
     }
 
-    @Override
-    public void requestModelReload() {
-        IExtraModelDataProvider.super.requestModelReload();
-    }
 
     @Override
     public SoundEvent getAddItemSound() {

@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
 import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.behaviour.MovementContext;
+import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
@@ -11,11 +11,11 @@ import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesMa
 import net.mehvahdjukaar.supplementaries.integration.forge.CreateCompatImpl;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +33,7 @@ public class HourglassBehavior implements MovementBehaviour {
     private float progress;
     private float prevProgress;
 
-    private TextureAtlasSprite cachedTexture;
+    private ResourceLocation cachedTexture;
 
     @Override
     public void tick(MovementContext context) {
@@ -42,7 +42,7 @@ public class HourglassBehavior implements MovementBehaviour {
         Direction dir = state.getValue(HourGlassBlock.FACING);
         Rotation rotation = CreateCompatImpl.isClockWise(rot, dir);
 
-        CompoundTag com = context.tileData;
+        CompoundTag com = context.blockEntityData;
         this.sandData = HourglassTimeData.EMPTY;
         var prevSandData = this.sandData;
         NonNullList<ItemStack> l = NonNullList.create();
@@ -89,7 +89,7 @@ public class HourglassBehavior implements MovementBehaviour {
 
         float h = Mth.lerp(partialTicks, prevProgress, progress);
         Direction dir = context.state.getValue(HourGlassBlock.FACING);
-        HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light, 0, cachedTexture, h, dir);
+        HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light,  cachedTexture, h, dir);
     }
 
 }

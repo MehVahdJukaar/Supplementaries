@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:block/faucet",
+  "parent": "supplementaries:block/faucet_model",
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [75, 45, 0],

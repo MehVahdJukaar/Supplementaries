@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.PercentOrProgressBarDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -17,7 +17,7 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         if (context.sourceConfig().getInt("Mode") == 2) {
-            if (context.getSourceTE() instanceof ISoftFluidTankProvider tp) {
+            if (context.getSourceBlockEntity() instanceof ISoftFluidTankProvider tp) {
                 return Components.literal(tp.getSoftFluidTank().getCount() + " mBtl");
             }
         }
@@ -26,7 +26,7 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
 
     @Override
     protected Float getProgress(DisplayLinkContext context) {
-        BlockEntity te = context.getSourceTE();
+        BlockEntity te = context.getSourceBlockEntity();
         if (te instanceof ISoftFluidTankProvider tp) {
             return tp.getSoftFluidTank().getHeight(1);
         }

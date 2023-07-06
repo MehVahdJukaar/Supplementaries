@@ -4,10 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -55,9 +54,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     }
 
     @Override
-    public void render(BlackboardBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferSource, int combinedLightIn,
+    public void render(BlackboardBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int light,
                        int combinedOverlayIn) {
-
 
         if (!CommonConfigs.Building.BLACKBOARD_MODE.get().canManualDraw() && !noise) return;
 
@@ -69,25 +67,26 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
 
         if (noise) {
-            int lu = combinedLightIn & '\uffff';
-            int lv = combinedLightIn >> 16 & '\uffff';
-ClockBlockTileRenderer
+            int lu = light & '\uffff';
+            int lv = light >> 16 & '\uffff';
+
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
             SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
 
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.mulPose(RotHlpr.rot(dir.getOpposite()));
-            matrixStackIn.translate(-0.5, -0.5, -0.1875 + 0.001);
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(RotHlpr.rot(dir));
+            poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
             VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppClientPlatformStuff::staticNoise);
 
-            VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1,
 
-                    1, 1, 1, 1,
-                    lu, lv, 0, 0, 1);
-            matrixStackIn.popPose();
+            VertexUtils.addQuad(builder, poseStack, 0, 0, 1, 1,
+                    0, 0, 1, 1,
+                    255, 255, 255, 255,
+                    lu, lv);
+            poseStack.popPose();
 
             return;
         }
@@ -103,14 +102,13 @@ ClockBlockTileRenderer
                 if (player != null && Utils.mayBuild(player, pos)) {
                     if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
 
-                        matrixStackIn.pushPose();
-                        matrixStackIn.translate(0.5, 0.5, 0.5);
-                        matrixStackIn.mulPose(RotHlpr.rot(dir));
-                        matrixStackIn.scale(1,-1,-1);
-                        matrixStackIn.translate(-0.5, -0.5, -0.1875);
+                        poseStack.pushPose();
+                        poseStack.translate(0.5, 0.5, 0.5);
+                        poseStack.mulPose(RotHlpr.rot(dir));
+                        poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
-                        int lu = combinedLightIn & '\uffff';
-                        int lv = combinedLightIn >> 16 & '\uffff';
+                        int lu = light & '\uffff';
+                        int lv = light >> 16 & '\uffff';
 
                         Vector2i pair = BlackboardBlock.getHitSubPixel(blockHit);
                         float p = 1 / 16f;
@@ -119,12 +117,11 @@ ClockBlockTileRenderer
 
                         VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, RenderType::entityCutout);
 
-                        matrixStackIn.translate(x, 1 - y - p, 0.001);
+                        poseStack.translate(1 - x - p, 1 - y - p, 0);
 
-                        VertexUtils.addQuadSide(builder, matrixStackIn, 0, 0, 0, p, p, 0, 0, 0, 1, 1,
-                                1, 1, 1, 1, lu, lv, 0, 0, 1);
+                        VertexUtil.addQuad(builder, poseStack, 0, 0, p, p, lu, lv);
 
-                        matrixStackIn.popPose();
+                        poseStack.popPose();
                     }
                 }
             }

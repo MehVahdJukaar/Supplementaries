@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +27,7 @@ public class FrameBlockBakedModel implements CustomBakedModel {
     private final BakedModel overlay;
     private final BlockModelShaper blockModelShaper;
 
-    public FrameBlockBakedModel(BakedModel overlay) {
+    public FrameBlockBakedModel(BakedModel overlay, ModelState state) {
         this.overlay = overlay;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
     }

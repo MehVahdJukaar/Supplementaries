@@ -18,8 +18,12 @@ dependencies {
     //modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
     modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
+    modCompileOnly("curse.maven:flan-forge-493246:3902633")
 
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
+
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
+    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
 }
 
 publishing {

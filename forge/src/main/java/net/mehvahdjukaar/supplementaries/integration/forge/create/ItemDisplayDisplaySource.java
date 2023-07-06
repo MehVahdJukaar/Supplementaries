@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
-import com.simibubi.create.content.logistics.block.display.DisplayLinkContext;
-import com.simibubi.create.content.logistics.block.display.source.SingleLineDisplaySource;
-import com.simibubi.create.content.logistics.block.display.target.DisplayTargetStats;
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
+import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -12,7 +12,7 @@ public class ItemDisplayDisplaySource extends SingleLineDisplaySource {
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         MutableComponent combined = EMPTY_LINE.copy();
 
-        if (context.getSourceTE() instanceof ItemDisplayTile te && !te.isEmpty()) {
+        if (context.getSourceBlockEntity() instanceof ItemDisplayTile te && !te.isEmpty()) {
             combined = combined.append(te.getDisplayedItem().getHoverName());
         }
         //else if(context.level().getBlockState(context.getSourcePos()) instanceof WorldlyContainerHolder wc){

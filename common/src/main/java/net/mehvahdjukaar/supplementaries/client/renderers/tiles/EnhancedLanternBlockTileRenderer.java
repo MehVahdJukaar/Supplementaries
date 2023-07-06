@@ -29,8 +29,7 @@ public class EnhancedLanternBlockTileRenderer<T extends WallLanternBlockTile> im
         poseStack.pushPose();
         // rotate towards direction
         poseStack.translate(0.5, 0.875, 0.5);
-        poseStack.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING).getOpposite()));
-        poseStack.scale(1,-1,-1);
+        poseStack.mulPose(RotHlpr.rot(tile.getBlockState().getValue(WallLanternBlock.FACING)));
 
         float angle = tile.animation.getAngle(partialTicks);
 
