@@ -244,7 +244,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 flipped.close();
                 this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/" + w.getVariantId("extension")), newIm);
             } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", w, e);
+                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}. Could be that the target mod isnt registering their wood type properly", w, e);
             }
         }
         if (CompatHandler.FARMERS_DELIGHT) {

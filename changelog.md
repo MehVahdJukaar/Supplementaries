@@ -3,3 +3,5 @@
 - creative players can open any present
 - added present recipient item attribute for create (feel free to suggest others)
 - fixed banner patterns not rendering on notice boards
+- fixed notice board interactions
+- luck stuff

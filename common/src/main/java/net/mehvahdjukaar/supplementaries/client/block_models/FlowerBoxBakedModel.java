@@ -138,8 +138,6 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
             } else {
                 poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
             }
-            ServerBoundSetSpeakerBlockPacket
-
             VertexUtil.transformVertices(v, poseStack.last().pose());
 
             poseStack.popPose();

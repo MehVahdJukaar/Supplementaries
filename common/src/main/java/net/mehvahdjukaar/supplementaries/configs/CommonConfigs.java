@@ -957,7 +957,7 @@ public class CommonConfigs {
                 REPLACE_VANILLA_MAPS = () -> false;
                 QUILL_MAX_TRADES = () -> 1;
                 QUILL_TRADE_PRICE_MULT = () -> 1d;
-                QUILL_MIN_SEARCH_RADIUS = ()->50;
+                QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
             builder.pop();
 
@@ -993,6 +993,14 @@ public class CommonConfigs {
             builder.push("noteblocks_scare");
             SCARE_VILLAGERS = builder.comment("Noteblocks with a zombie head will scare off villagers")
                     .define("enabled", true);
+            builder.pop();
+
+            builder.push("bad_luck_tweaks");
+            BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? () -> false :
+                    builder.comment("Hit a void cat, get the unluck")
+                            .define("cat_unluck", true);
+            BAD_LUCK_LIGHTNING = builder.comment("If you have unluck you are more likely to get hit by a lighting")
+                    .define("lightning_unluck", true);
             builder.pop();
 
             builder.pop();
@@ -1043,6 +1051,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
         public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
         public static final Supplier<Boolean> SCARE_VILLAGERS;
+        public static final Supplier<Boolean> BAD_LUCK_CAT;
+        public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
 
     }
 

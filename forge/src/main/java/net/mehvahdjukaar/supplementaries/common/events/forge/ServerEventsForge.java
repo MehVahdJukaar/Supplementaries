@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import net.mehvahdjukaar.moonlight.api.map.client.MapDecorationClientManager;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
@@ -10,40 +8,39 @@ import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VillagerScareStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.CatVariant;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -54,7 +51,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
-import org.lwjgl.glfw.GLFW;
 
 public class ServerEventsForge {
 
@@ -167,7 +163,7 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onAddLootTables(LootTableLoadEvent event) {
-       // ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
+        // ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
     }//TODO 1.20!!
 
     //TODO: add these on fabric
@@ -189,7 +185,7 @@ public class ServerEventsForge {
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {
         SongsManager.recordNote(event.getLevel(), event.getPos());
 
-        if(event.getInstrument() == NoteBlockInstrument.ZOMBIE){
+        if (event.getInstrument() == NoteBlockInstrument.ZOMBIE) {
             VillagerScareStuff.scareVillagers(event.getLevel(), event.getPos());
         }
     }
@@ -216,11 +212,23 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {
-        if(event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()){
+        if (event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()) {
             VibeChecker.checkVibe((Level) event.getLevel());
         }
     }
 
+    @SubscribeEvent
+    public static void onLivingDeath(LivingHurtEvent event) {
+        if (event.getEntity() instanceof Cat cat) {
+
+            if (CommonConfigs.Tweaks.BAD_LUCK_CAT.get() &&
+                    cat.getVariant() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
+                    event.getSource().getEntity() instanceof LivingEntity p) {
+                p.addEffect(new MobEffectInstance(MobEffects.UNLUCK, 20 * 60 * 5));
+
+            }
+        }
+    }
 
 
 }

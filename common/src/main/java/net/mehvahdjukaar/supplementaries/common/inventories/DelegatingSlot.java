@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 
 public class DelegatingSlot extends Slot {
-    public DelegatingSlot(BaseContainerBlockEntity inventory, int index, int xPosition, int yPosition) {
+    public DelegatingSlot(Container inventory, int index, int xPosition, int yPosition) {
         super(inventory, index, xPosition, yPosition);
     }
 

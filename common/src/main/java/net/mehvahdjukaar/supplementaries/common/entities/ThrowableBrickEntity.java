@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
@@ -11,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
@@ -27,6 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -83,7 +86,12 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
             if (entity instanceof Player player) {
                 if (CompatHandler.FLAN && !FlanCompat.canBreak(player, pos)) return;
-                if (!player.mayBuild()) return;
+                if (!Utils.mayBuild(player, pos)){
+                    if(!this.getItem().hasAdventureModeBreakTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK),
+                            new BlockInWorld(level, pos, false))){
+                        return;
+                    }
+                }
             }
             if (!(entity instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatHelper.isMobGriefingOn(level, this)) {
 

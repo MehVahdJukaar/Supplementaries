@@ -59,7 +59,6 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
             MapRenderer mr = this.minecraft.gameRenderer.getMapRenderer();
             MultiBufferSource.BufferSource buffer = graphics.bufferSource();
-
             NoticeBoardBlockTileRenderer.renderNoticeBoardContent(mr, font, minecraft.getItemRenderer(),
                     tile, graphics.pose(), buffer,
                     LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, stack, Direction.UP, LOD.MAX

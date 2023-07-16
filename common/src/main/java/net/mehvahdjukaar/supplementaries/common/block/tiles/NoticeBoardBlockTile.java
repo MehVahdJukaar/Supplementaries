@@ -266,9 +266,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
         Level level = player.level();
 
-        var r = this.interactWithTextHolder(0, level, pos, state, player, handIn);
-        if (r != InteractionResult.PASS) return r;
-        if (player.isShiftKeyDown() && !this.isEmpty()) {
+        if (player.isShiftKeyDown() && !this.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
             ItemStack it = this.removeItemNoUpdate(0);
             BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
             ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
@@ -279,14 +277,21 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         }
 
         //try place or open
-        if (hit.getDirection() != state.getValue(NoticeBoardBlock.FACING) ||
-                !super.interact(player, handIn).consumesAction()) {
-            if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
-                return InteractionResult.PASS;
+        if (hit.getDirection() == state.getValue(NoticeBoardBlock.FACING)) {
+            InteractionResult res = super.interact(player, handIn);
+            if (res.consumesAction()) {
+                return res;
             }
-            if (!level.isClientSide) {
-                this.tryOpeningEditGui((ServerPlayer) player, pos);
-            }
+        }
+        InteractionResult r = this.interactWithTextHolder(0, level, pos, state, player, handIn);
+        if (r != InteractionResult.PASS) return r;
+
+
+        if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
+            return InteractionResult.PASS;
+        }
+        if (!level.isClientSide) {
+            this.tryOpeningEditGui((ServerPlayer) player, pos);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
