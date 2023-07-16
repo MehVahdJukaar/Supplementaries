@@ -55,11 +55,6 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return PlatformHelper.getEntitySpawnPacket(this);
-    }
-
-    @Override
     protected void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Dispenser", this.dispenser.saveWithoutMetadata());
