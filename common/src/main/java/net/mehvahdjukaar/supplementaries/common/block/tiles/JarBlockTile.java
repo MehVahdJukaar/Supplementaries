@@ -43,7 +43,7 @@ import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider, IExtraModelDataProvider {
     public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
-    public static final ModelDataKey<Integer> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
+    public static final ModelDataKey<Float> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
 
     private final int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
 
@@ -61,7 +61,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
                 .with(FLUID, fluidHolder.getFluid())
-                .with(FILL_LEVEL, fluidHolder.getCount())
+                .with(FILL_LEVEL, fluidHolder.getHeight(1))
                 .build();
     }
 

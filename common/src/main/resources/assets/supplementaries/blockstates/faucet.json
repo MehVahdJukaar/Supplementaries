@@ -1,64 +1,258 @@
 {
   "variants": {
-    "facing=north,enabled=false,has_jar=false": {
+    "facing=north,enabled=false,connected=false,powered=false,has_water=true": {
+      "model": "supplementaries:block/faucet_model"
+    },
+    "facing=north,enabled=false,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model"
+    },
+    "facing=north,enabled=false,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model"
+    },
+    "facing=north,enabled=false,connected=false,powered=true,has_water=true": {
       "model": "supplementaries:block/faucet"
     },
-    "facing=north,enabled=true,has_jar=false": {
+    "facing=north,enabled=true,connected=false,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_on"
     },
-    "facing=east,enabled=false,has_jar=false": {
+    "facing=north,enabled=true,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on"
+    },
+    "facing=north,enabled=true,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on"
+    },
+    "facing=north,enabled=true,connected=false,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_model_on"
+    },
+
+
+    "facing=east,enabled=false,connected=false,powered=false,has_water=true": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 90
+    },
+    "facing=east,enabled=false,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 90
+    },
+    "facing=east,enabled=false,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 90
+    },
+    "facing=east,enabled=false,connected=false,powered=true,has_water=true": {
       "model": "supplementaries:block/faucet",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=false": {
+    "facing=east,enabled=true,connected=false,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=false": {
+    "facing=east,enabled=true,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 90
+    },
+    "facing=east,enabled=true,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 90
+    },
+    "facing=east,enabled=true,connected=false,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 90
+    },
+
+    "facing=south,enabled=false,connected=false,powered=false,has_water=true": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 180
+    },
+    "facing=south,enabled=false,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 180
+    },
+    "facing=south,enabled=false,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 180
+    },
+    "facing=south,enabled=false,connected=false,powered=true,has_water=true": {
       "model": "supplementaries:block/faucet",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=false": {
+    "facing=south,enabled=true,connected=false,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=false": {
+    "facing=south,enabled=true,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 180
+    },
+    "facing=south,enabled=true,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 180
+    },
+    "facing=south,enabled=true,connected=false,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 180
+    },
+
+    "facing=west,enabled=false,connected=false,powered=false,has_water=true": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 270
+    },
+    "facing=west,enabled=false,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 270
+    },
+    "facing=west,enabled=false,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model",
+      "y": 270
+    },
+    "facing=west,enabled=false,connected=false,powered=true,has_water=true": {
       "model": "supplementaries:block/faucet",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=false": {
+    "facing=west,enabled=true,connected=false,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_on",
       "y": 270
     },
-    "facing=north,enabled=false,has_jar=true": {
+    "facing=west,enabled=true,connected=false,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=false,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=false,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_model_on",
+      "y": 270
+    },
+
+
+    "facing=north,enabled=false,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar"
     },
-    "facing=north,enabled=true,has_jar=true": {
+    "facing=north,enabled=false,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar"
+    },
+    "facing=north,enabled=false,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar"
+    },
+    "facing=north,enabled=false,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar"
+    },
+    "facing=north,enabled=true,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar_on"
     },
-    "facing=east,enabled=false,has_jar=true": {
+    "facing=north,enabled=true,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on"
+    },
+    "facing=north,enabled=true,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on"
+    },
+    "facing=north,enabled=true,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar_on"
+    },
+
+
+    "facing=east,enabled=false,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar",
       "y": 90
     },
-    "facing=east,enabled=true,has_jar=true": {
+    "facing=east,enabled=false,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 90
+    },
+    "facing=east,enabled=false,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 90
+    },
+    "facing=east,enabled=false,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 90
+    },
+    "facing=east,enabled=true,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 90
     },
-    "facing=south,enabled=false,has_jar=true": {
+    "facing=east,enabled=true,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 90
+    },
+    "facing=east,enabled=true,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 90
+    },
+    "facing=east,enabled=true,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 90
+    },
+
+    "facing=south,enabled=false,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar",
       "y": 180
     },
-    "facing=south,enabled=true,has_jar=true": {
+    "facing=south,enabled=false,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 180
+    },
+    "facing=south,enabled=false,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 180
+    },
+    "facing=south,enabled=false,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 180
+    },
+    "facing=south,enabled=true,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 180
     },
-    "facing=west,enabled=false,has_jar=true": {
+    "facing=south,enabled=true,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 180
+    },
+    "facing=south,enabled=true,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 180
+    },
+    "facing=south,enabled=true,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 180
+    },
+
+    "facing=west,enabled=false,connected=true,powered=false,has_water=true": {
       "model": "supplementaries:block/faucet_jar",
       "y": 270
     },
-    "facing=west,enabled=true,has_jar=true": {
+    "facing=west,enabled=false,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 270
+    },
+    "facing=west,enabled=false,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 270
+    },
+    "facing=west,enabled=false,connected=true,powered=true,has_water=true": {
+      "model": "supplementaries:block/faucet_jar",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=true,powered=false,has_water=true": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=true,powered=false,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=true,powered=true,has_water=false": {
+      "model": "supplementaries:block/faucet_jar_on",
+      "y": 270
+    },
+    "facing=west,enabled=true,connected=true,powered=true,has_water=true": {
       "model": "supplementaries:block/faucet_jar_on",
       "y": 270
     }
+
+
+ 
+
   }
 }

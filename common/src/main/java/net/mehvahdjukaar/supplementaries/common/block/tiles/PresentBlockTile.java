@@ -99,6 +99,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     public boolean canOpen(Player player) {
         if (!super.canOpen(player)) return false;
         if (!this.isUnused()) return false;
+        if (player.isCreative()) return true;
         return this.recipient.isEmpty() || this.recipient.equalsIgnoreCase(PUBLIC_KEY) ||
                 this.recipient.equalsIgnoreCase(player.getName().getString()) ||
                 this.sender.equalsIgnoreCase(player.getName().getString());

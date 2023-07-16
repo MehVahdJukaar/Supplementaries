@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -59,18 +58,18 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty HAS_WATER = ModBlockProperties.HAS_WATER;
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_7;
-    public static final BooleanProperty HAS_JAR = ModBlockProperties.HAS_JAR;
+    public static final BooleanProperty CONNECTED = ModBlockProperties.CONNECTED;
 
     public FaucetBlock(Properties properties) {
         super(properties.lightLevel(s->s.getValue(LIGHT_LEVEL)));
-        this.registerDefaultState(this.stateDefinition.any().setValue(HAS_JAR, false).setValue(FACING, Direction.NORTH)
+        this.registerDefaultState(this.stateDefinition.any().setValue(CONNECTED, false).setValue(FACING, Direction.NORTH)
                 .setValue(ENABLED, false).setValue(POWERED, false)
                 .setValue(HAS_WATER, false).setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, 0));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (state.getValue(HAS_JAR)) {
+        if (state.getValue(CONNECTED)) {
             return switch (state.getValue(FACING)) {
                 default -> SHAPE_NORTH_JAR;
                 case SOUTH -> SHAPE_SOUTH_JAR;
@@ -114,7 +113,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         if (facing == Direction.DOWN) {
             boolean canConnectDown = canConnect(facingState, worldIn, facingPos, facing.getOpposite());
             //boolean water = canConnectDown?stateIn.getValue(HAS_WATER)&&this.isSpecialTankBelow(facingState): updateTileFluid(stateIn,currentPos,worldIn);
-            return stateIn.setValue(HAS_JAR, canConnectDown);
+            return stateIn.setValue(CONNECTED, canConnectDown);
         }
         if (facing == stateIn.getValue(FACING).getOpposite()) {
             boolean hasWater = updateTileFluid(stateIn, currentPos, worldIn);
@@ -171,7 +170,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, ENABLED, POWERED, HAS_WATER, HAS_JAR, WATERLOGGED, LIGHT_LEVEL);
+        builder.add(FACING, ENABLED, POWERED, HAS_WATER, CONNECTED, WATERLOGGED, LIGHT_LEVEL);
     }
 
     //TODO: fix water faucet connecting on rotation
@@ -198,13 +197,13 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         boolean powered = world.hasNeighborSignal(pos);
 
         return this.defaultBlockState().setValue(FACING, dir)
-                .setValue(HAS_JAR, hasJar).setValue(WATERLOGGED, water).setValue(POWERED, powered);
+                .setValue(CONNECTED, hasJar).setValue(WATERLOGGED, water).setValue(POWERED, powered);
     }
 
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         boolean flag = this.isOpen(state);
-        if (state.getValue(HAS_WATER) && !state.getValue(HAS_JAR)) {
+        if (state.getValue(HAS_WATER) && !state.getValue(CONNECTED)) {
             if (random.nextFloat() > (flag ? 0 : 0.06)) return;
             float d = 0.125f;
             double x = (pos.getX() + 0.5 + d * (random.nextFloat() - 0.5));

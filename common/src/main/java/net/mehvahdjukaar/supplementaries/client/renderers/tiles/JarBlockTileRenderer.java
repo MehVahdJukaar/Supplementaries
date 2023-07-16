@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
@@ -35,10 +36,10 @@ import java.util.Random;
 
 public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     private final ItemRenderer itemRenderer;
-    private final Minecraft minecraft = Minecraft.getInstance();
 
     public JarBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
+        Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
     }
 
@@ -49,7 +50,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
         Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
-
         VertexUtils.addCube(builder, poseStack,
                 dimensions.x(),
                 percentageFill * dimensions.y(),
@@ -132,11 +132,13 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
         }
         //render fluid
-        if (!tile.fluidHolder.isEmpty()) {
+        if (!USE_MODEL && !tile.fluidHolder.isEmpty()) {
             renderFluid(tile.fluidHolder.getHeight(1), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
                     tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
                     matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
+
+    private static final boolean USE_MODEL = PlatHelper.getPlatform().isForge();
 }
 

@@ -220,7 +220,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             poseStack.mulPose(RotHlpr.Y180);
             poseStack.translate(0,0,-0.008f);
             VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F,  0.4375F, 0.4375F,
-                    0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 1, lu, lv);
+                    0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 255, lu, lv);
 
         } else if (!tile.isNormalItem()) {
             BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);

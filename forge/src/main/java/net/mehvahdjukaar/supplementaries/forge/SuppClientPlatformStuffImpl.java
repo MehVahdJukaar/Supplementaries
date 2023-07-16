@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.ModSlider;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -20,8 +21,8 @@ public class SuppClientPlatformStuffImpl {
         return SupplementariesForgeClient.getStaticNoiseShader();
     }
 
-    public static AbstractSliderButton createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
-                                                    double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
+    public static ISlider createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
+                                       double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
         return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
 }

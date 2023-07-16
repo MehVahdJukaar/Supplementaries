@@ -36,7 +36,7 @@ public class ModBlockProperties {
     //BlockState properties
     public static final BooleanProperty EXTENDING = BooleanProperty.create("extending");
     public static final BooleanProperty HAS_WATER = BooleanProperty.create("has_water");
-    public static final BooleanProperty HAS_JAR = BooleanProperty.create("has_jar");
+    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
     public static final BooleanProperty KNOT = BooleanProperty.create("knot");
     public static final BooleanProperty TIPPED = BooleanProperty.create("tipped");
     public static final BooleanProperty FLIPPED = BooleanProperty.create("flipped");
@@ -84,7 +84,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<SoftFluid> FLUID = new ModelDataKey<>(SoftFluid.class);
     public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
-    public static final ModelDataKey<Integer> FILL_LEVEL = new ModelDataKey<>(Integer.class);
+    public static final ModelDataKey<Float> FILL_LEVEL = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
 
 

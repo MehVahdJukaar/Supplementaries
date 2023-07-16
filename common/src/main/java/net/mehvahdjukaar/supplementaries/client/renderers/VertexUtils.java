@@ -26,6 +26,13 @@ public class VertexUtils {
         addCube(builder, poseStack, 0, 0, width, height, light, color);
     }
 
+    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+                               float uOff, float vOff,
+                               float width, float height, int light, int color, float alpha) {
+        addCube(builder, poseStack, uOff, vOff,
+                width, height, light, color, alpha, true, true, false);
+    }
+
     @Deprecated(forRemoval = true)
     public static void addCube(VertexConsumer builder, PoseStack poseStack,
                                float uOff, float vOff,

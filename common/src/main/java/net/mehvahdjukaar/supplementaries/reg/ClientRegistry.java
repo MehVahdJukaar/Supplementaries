@@ -429,7 +429,6 @@ public class ClientRegistry {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register(new CrossbowColor(), Items.CROSSBOW);
-        event.register(new FluidColor(), ModRegistry.JAR.get());
         event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack),
                 ModRegistry.QUIVER_ITEM.get());
     }

@@ -82,7 +82,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppClientPlatformStuff::staticNoise);
 
 
-            VertexUtils.addQuad(builder, poseStack, 0, 0, 1, 1,
+            VertexUtil.addQuad(builder, poseStack, 0, 0, 1, 1,
                     0, 0, 1, 1,
                     255, 255, 255, 255,
                     lu, lv);

@@ -1,10 +1,5 @@
-- faucets and goblets now use baked models instead of tile renderers. This mean that they will not have any performance inpact as they render much faster
-- As a side effect faucet fluid now renders much smoother
-- Jar models can be customized in its model json
-- bombs have their own damage source
-- fixed an issue with bomb explosions
-- major rendering rewrites for many blocks. most have no external changes
-- updated create integration
-- fixed faucets deleting dropped items
-- fabulous flags have smooth correct normal map and shading
-- Simplified goblet model to be blockier
+- fixed speaker blocks not saving data
+- fixed faucet water color
+- creative players can open any present
+- added present recipient item attribute for create (feel free to suggest others)
+- fixed banner patterns not rendering on notice boards

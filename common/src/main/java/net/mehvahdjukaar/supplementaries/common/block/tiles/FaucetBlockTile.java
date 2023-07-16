@@ -227,7 +227,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     public boolean isConnectedBelow() {
-        return this.getBlockState().getValue(FaucetBlock.HAS_JAR);
+        return this.getBlockState().getValue(FaucetBlock.CONNECTED);
     }
 
     //------items------

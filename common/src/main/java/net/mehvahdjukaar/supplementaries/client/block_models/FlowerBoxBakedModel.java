@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -137,6 +138,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
             } else {
                 poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
             }
+            ServerBoundSetSpeakerBlockPacket
 
             VertexUtil.transformVertices(v, poseStack.last().pose());
 

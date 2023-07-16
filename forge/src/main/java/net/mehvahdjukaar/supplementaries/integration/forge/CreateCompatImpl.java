@@ -4,6 +4,8 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.content.logistics.filter.AttributeFilterMenu;
+import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -37,6 +39,8 @@ public class CreateCompatImpl {
 
     public static void setup() {
         try {
+            ItemAttribute.register(PresentRecipientAttribute.EMPTY);
+
             AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
 

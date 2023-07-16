@@ -66,7 +66,7 @@ public class GobletBakedModel implements CustomBakedModel {
 
     @Override
     public boolean useAmbientOcclusion() {
-        return false;
+        return true;
     }
 
     @Override

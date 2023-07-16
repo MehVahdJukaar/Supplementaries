@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -35,17 +36,12 @@ public class SpeakerBlockScreen extends Screen {
     private EditBox editBox;
     private final SpeakerBlockTile tileSpeaker;
     private SpeakerBlockTile.Mode mode;
-    private final String message;
     private Button modeBtn;
-    private AbstractSliderButton volumeSlider;
-    private final double initialVolume;
+    private ISlider volumeSlider;
 
     public SpeakerBlockScreen(SpeakerBlockTile te) {
         super(EDIT);
         this.tileSpeaker = te;
-        this.mode = tileSpeaker.getMode();
-        this.message =tileSpeaker.getMessage(Minecraft.getInstance().isTextFilteringEnabled()).getString();
-        this.initialVolume = tileSpeaker.getVolume();
     }
 
     public static void open(SpeakerBlockTile te) {
@@ -78,6 +74,10 @@ public class SpeakerBlockScreen extends Screen {
         assert this.minecraft != null;
 
         int range = CommonConfigs.Redstone.SPEAKER_RANGE.get();
+
+        this.mode = tileSpeaker.getMode();
+        String message = tileSpeaker.getMessage(Minecraft.getInstance().isTextFilteringEnabled()).getString();
+        double initialVolume = tileSpeaker.getVolume();
 
         this.volumeSlider = SuppClientPlatformStuff.createSlider(this.width / 2 - 75, this.height / 4 + 80, 150, 20,
                 VOLUME_TEXT, DISTANCE_BLOCKS, 1, range,
@@ -112,7 +112,7 @@ public class SpeakerBlockScreen extends Screen {
     @Override
     public void removed() {
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
-                this.message, this.tileSpeaker.getMode(), this.tileSpeaker.getVolume()));
+                this.editBox.getValue(), this.mode, this.volumeSlider.getValue()));
     }
 
     private void onDone() {

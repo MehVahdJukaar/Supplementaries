@@ -130,8 +130,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
     }
 
     public static BakedQuad createPixelQuad(float x, float y, float width, float height,
-                                            TextureAtlasSprite sprite, int color, Transformation transform,
-                                            boolean emissive) {
+                                            TextureAtlasSprite sprite, int color, Transformation transform, boolean emissive) {
         float u0 = 1 - x;
         float v0 = 1 - y;
         float u1 = 1 - (x + width);
@@ -141,14 +140,10 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
         builder.setAutoDirection();
 
-        putVertex(builder, x + width, y + height,
-                u1, v1, color);
-        putVertex(builder, x + width, y,
-                u1, v0, color);
-        putVertex(builder, x, y,
-                u0, v0, color);
-        putVertex(builder, x, y + height,
-                u0, v1, color);
+        putVertex(builder, x + width, y + height, u1, v1, color);
+        putVertex(builder, x + width, y, u1, v0, color);
+        putVertex(builder, x, y, u0, v0, color);
+        putVertex(builder, x, y + height, u0, v1, color);
 
         if (emissive) builder.lightEmission(15);
         return builder.build();

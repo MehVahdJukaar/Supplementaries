@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import com.google.common.base.Suppliers;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -15,9 +17,11 @@ import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.time.Duration;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -95,11 +99,17 @@ public class ModMaterials {
     private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();
 
 
-    private static final Map<ResourceLocation, Material> CACHED_MATERIALS = new HashMap<>();
+    private static final Cache<ResourceLocation, Material> CACHED_MATERIALS = CacheBuilder.newBuilder()
+            .expireAfterAccess(2, TimeUnit.MINUTES)
+            .build();
 
     //cached materials
     public static Material get(ResourceLocation bockTexture) {
-        return CACHED_MATERIALS.computeIfAbsent(bockTexture, t -> new Material(TextureAtlas.LOCATION_BLOCKS, t));
+        try {
+            return CACHED_MATERIALS.get(bockTexture, () -> new Material(TextureAtlas.LOCATION_BLOCKS, bockTexture));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
