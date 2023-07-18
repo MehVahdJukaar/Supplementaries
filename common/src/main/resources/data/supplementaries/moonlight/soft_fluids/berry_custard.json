@@ -1,0 +1,20 @@
+{
+  "color": "#FFF5E3",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:berry_custard"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "farmersdelight:berry_custard"
+  },
+  "from_mod": "farmersdelight",
+  "still_texture": "moonlight:block/soft_fluids/soup_liquid",
+  "translation_key": "item.farmersdelight.berry_custard"
+}

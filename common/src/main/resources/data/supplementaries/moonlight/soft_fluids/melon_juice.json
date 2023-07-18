@@ -1,0 +1,20 @@
+{
+  "color": "#E24334",
+  "containers": [
+    {
+      "filled": [
+        "farmersdelight:melon_juice"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "divider": 1,
+    "item": "farmersdelight:melon_juice"
+  },
+  "from_mod": "farmersdelight",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.farmersdelight.melon_juice"
+}

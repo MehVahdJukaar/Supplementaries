@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.ModSlider;
@@ -8,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -106,11 +108,6 @@ public class SuppPlatformStuffImpl {
 
     public static float getDownfall(Biome biome) {
         return biome.getModifiedClimateSettings().downfall();
-    }
-
-    public static Path getTags() {
-        IModFile file = ModList.get().getModFileById(Supplementaries.MOD_ID).getFile();
-      return  file.findResource("data/supplementaries/tags");
     }
 
 

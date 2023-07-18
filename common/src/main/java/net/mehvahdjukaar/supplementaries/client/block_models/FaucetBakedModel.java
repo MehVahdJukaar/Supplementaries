@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 
 public class FaucetBakedModel implements CustomBakedModel {
     private static final boolean SINGLE_PASS = PlatHelper.getPlatform().isFabric();
@@ -44,12 +46,12 @@ public class FaucetBakedModel implements CustomBakedModel {
                 var l = liquid.getQuads(state, side, rand);
                 if (!l.isEmpty()) {
                     int color = ColorUtil.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
-                    int col2 = (color & 0x00FFFFFF) | (40 << 24);
+                    int col2 = (color & 0x00FFFFFF) | (50 << 24);
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
                     var b = BakedQuadBuilder.create(sprite);
                     for (var q : l) {
                         q = VertexUtil.swapSprite(q, sprite);
-                        VertexUtil.recolorVertices(q.getVertices(), i -> {
+                        recolorVertices(q.getVertices(), i -> {
                             if (i == 1 || i == 2) return col2;
                             return color;
                         });
@@ -66,7 +68,11 @@ public class FaucetBakedModel implements CustomBakedModel {
         quads.addAll(goblet.getQuads(state, side, rand));
         return quads;
     }
-
+    public static void recolorVertices(int[] v, IntUnaryOperator indexToABGR) {
+        int stride = DefaultVertexFormat.BLOCK.getIntegerSize();
+        for (int i = 0; i < 4; i++)
+            v[i * stride + 3] = ColorUtil.swapFormat(indexToABGR.applyAsInt(i));
+    }
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData extraModelData) {
         return goblet.getParticleIcon();
