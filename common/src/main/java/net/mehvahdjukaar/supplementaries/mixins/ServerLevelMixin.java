@@ -69,7 +69,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
             locals = LocalCapture.CAPTURE_FAILEXCEPTION,
             cancellable = true)
     private void unluckyLightning(BlockPos pos, CallbackInfoReturnable<BlockPos> cir,
-                                  BlockPos blockPos, Optional<BlockPos> optional, AABB aABB, List<LivingEntity> list) {
+                                  BlockPos blockPos) {
 
         if (this.random.nextFloat() < 0.5 && CommonConfigs.Tweaks.BAD_LUCK_LIGHTNING.get()) {
             AABB aabb = (new AABB(blockPos, new BlockPos(blockPos.getX(), this.getMaxBuildHeight(), blockPos.getZ()))).inflate(16.0);
@@ -81,5 +81,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
                 cir.setReturnValue(list.get(this.random.nextInt(list.size())).blockPosition());
             }
         }
+
+
     }
 }
