@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.fabric;
+package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 //this is actually for trinkets
-public class CuriosCompatImpl {
+public class TrinketsCompat {
 
-    public static KeyLockableTile.KeyStatus isKeyInCurio(Player player, String password) {
+    public static KeyLockableTile.KeyStatus getKey(Player player, String password) {
 
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
@@ -37,7 +37,7 @@ public class CuriosCompatImpl {
     }
 
     @Nullable
-    public static ItemStack getQuiverInCurio(Player player) {
+    public static ItemStack getQuiver(Player player) {
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
             List<Tuple<SlotReference, ItemStack>> found = trinket.getEquipped(ModRegistry.QUIVER_ITEM.get());

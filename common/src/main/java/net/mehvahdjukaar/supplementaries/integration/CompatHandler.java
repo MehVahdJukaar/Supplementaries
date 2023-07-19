@@ -3,15 +3,20 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 public class CompatHandler {
 
@@ -23,7 +28,8 @@ public class CompatHandler {
     public static final boolean OREGANIZED = isLoaded("oreganized");
     public static final boolean CREATE = isLoaded("create");
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
-    public static final boolean CURIOS = isLoaded(PlatHelper.getPlatform().isForge() ? "curios" : "trinkets");
+    public static final boolean CURIOS = isLoaded("curios");
+    public static final boolean TRINKETS = isLoaded("trinkets");
     public static final boolean FARMERS_DELIGHT = isLoaded("farmersdelight");
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
     public static final boolean INSPIRATIONS = isLoaded("inspirations");
@@ -93,4 +99,32 @@ public class CompatHandler {
     public static Block DynTreesGetOptionalDynamicSapling(Item item, Level level, BlockPos worldPosition) {
         return null;
     }
+
+    public static KeyLockableTile.KeyStatus getKeyFromModsSlots(Player player, String key) {
+        IKeyLockable.KeyStatus status = IKeyLockable.KeyStatus.NO_KEY;
+        if (CompatHandler.CURIOS) {
+            status = CuriosCompat.getKey(player, key);
+            if (status != IKeyLockable.KeyStatus.NO_KEY) return status;
+        }
+        if (CompatHandler.TRINKETS) {
+            status = TrinketsCompat.getKey(player, key);
+            if (status != IKeyLockable.KeyStatus.NO_KEY) return status;
+        }
+        return status;
+    }
+
+    @NotNull
+    public static ItemStack getQuiverFromModsSlots(Player player) {
+        ItemStack stack = ItemStack.EMPTY;
+        if (CompatHandler.CURIOS) {
+            stack = CuriosCompat.getQuiver(player);
+            if(!stack.isEmpty())return stack;
+        }
+        if (CompatHandler.TRINKETS) {
+            stack = TrinketsCompat.getQuiver(player);
+            if(!stack.isEmpty())return stack;
+        }
+        return stack;
+    }
+
 }

@@ -19,6 +19,10 @@ dependencies {
     modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
+    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
+    modCompileOnly("curse.maven:curios-309927:4581099")
 
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
 

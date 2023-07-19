@@ -23,7 +23,7 @@ public class QuiverItemImpl {
         if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.supplementaries$getQuiver();
         if (entity instanceof Player p) {
             if (CompatHandler.CURIOS) {
-                var q = CuriosCompat.getQuiverInCurio(p);
+                var q = CuriosCompat.getQuiver(p);
                 if (q != null) return q;
                 if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
             }

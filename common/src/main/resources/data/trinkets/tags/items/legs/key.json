@@ -1,6 +1,10 @@
 {
-	"replace": false,
-    "values": [
-		"supplementaries:key"
-		]
+  "replace": false,
+  "values": [
+    "supplementaries:key",
+    {
+      "id": "suppsquared:heavy_key",
+      "required": false
+    }
+  ]
 }

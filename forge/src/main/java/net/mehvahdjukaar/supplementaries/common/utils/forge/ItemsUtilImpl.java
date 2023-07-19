@@ -28,7 +28,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,7 +135,7 @@ public class ItemsUtilImpl {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
         KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.NO_KEY;
         if (CompatHandler.CURIOS) {
-            found = CuriosCompat.isKeyInCurio(player, key);
+            found = CuriosCompat.getKey(player, key);
             if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
         }
 

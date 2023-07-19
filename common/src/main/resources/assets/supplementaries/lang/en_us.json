@@ -451,5 +451,8 @@
   "wood_type.twilightforest.trans": "Transwood",
   "wood_type.twilightforest.sorting": "Sortingwood",
   "leaves_type.twilightforest.dark": "Darkwood",
-  "leaves_type.ulterlands.souldrained": "Petrified"
+  "leaves_type.ulterlands.souldrained": "Petrified",
+
+  "trinkets.slot.chest.quiver": "Quiver",
+  "trinkets.slot.legs.key": "Key"
 }

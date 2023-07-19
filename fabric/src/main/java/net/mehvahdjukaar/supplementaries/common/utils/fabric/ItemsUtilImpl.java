@@ -4,7 +4,6 @@ import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,11 +45,8 @@ public class ItemsUtilImpl {
 
     public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
-        KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.NO_KEY;
-        if (CompatHandler.CURIOS) {
-            found = CuriosCompat.isKeyInCurio(player, key);
-            if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
-        }
+        KeyLockableTile.KeyStatus found = CompatHandler.getKeyFromModsSlots(player, key);
+        if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
         var inventory = player.getInventory();
         for (int idx = 0; idx < inventory.getContainerSize(); idx++) {
             ItemStack stack = inventory.getItem(idx);
@@ -97,7 +93,7 @@ public class ItemsUtilImpl {
             if (container instanceof WorldlyContainer wc && direction != null) {
                 slots = wc.getSlotsForFace(direction);
             } else {
-                slots = IntStream.rangeClosed(0,container.getContainerSize()).toArray();
+                slots = IntStream.rangeClosed(0, container.getContainerSize()).toArray();
             }
             for (int i : slots) {
                 stack = tryMoveInItem(container, stack, i, direction);
