@@ -192,7 +192,7 @@ dependencies {
 
     implementation fg.deobf("mezz.jei:jei-1.16.5:7.7.1.116")
 
-    implementation fg.deobf("curse.maven:tetra-289712:3371803")
+    compileOnly fg.deobf("curse.maven:tetra-289712:3371803")
     implementation fg.deobf("curse.maven:mgui-351914:3291267")
 
     //mixin stuff fore gradle 5+

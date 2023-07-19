@@ -222,10 +222,5 @@ public class ServerEvents {
 
     }
 
-    @SubscribeEvent
-    public static void serverAboutToStart(final FMLServerAboutToStartEvent event) {
-        StatueBlockTile.initializeSessionData(event.getServer());
-    }
-
 
 }

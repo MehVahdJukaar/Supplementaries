@@ -11,11 +11,9 @@ issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries/is
 
 modId="supplementaries" #mandatory
 
-version="0.18.2" #mandatory
+version="0.18.3" #mandatory
 
 displayName="Supplementaries" #mandatory
-
-updateJSONURL="http://myurl.me/" #optional
 
 displayURL="https://www.curseforge.com/minecraft/mc-mods/supplementaries" #optional
 

@@ -96,8 +96,8 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
                        int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        GameProfile playerInfo = tile.playerProfile;
-        ResourceLocation resourceLocation = tile.playerProfile == null ? Textures.STATUE : getSkin(playerInfo);
+        GameProfile playerInfo = tile.owner;
+        ResourceLocation resourceLocation = tile.owner == null ? Textures.STATUE : getSkin(playerInfo);
         matrixStackIn.translate(0.5, 0.5, 0.5);
         Direction dir = tile.getDirection();
         matrixStackIn.mulPose(Const.rot(dir));
@@ -108,7 +108,7 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
         //
         RenderType renderType = RenderType.entityCutout(resourceLocation);
 
-        StatueBlockTile.StatuePose pose = tile.pose;
+        StatueBlockTile.StatuePose pose = tile.getPose();
         ItemStack stack = tile.getDisplayedItem();
 
         if (CommonUtil.FESTIVITY.isHalloween()) {
@@ -137,7 +137,7 @@ public class StatueBlockTileRenderer extends TileEntityRenderer<StatueBlockTile>
             matrixStackIn.scale(0.5f, +0.499f, 0.5f);
             IVertexBuilder ivertexbuilder = bufferIn.getBuffer(renderType);
 
-            this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving, slim);
+            this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving(), slim);
             this.model.renderToBuffer(matrixStackIn, ivertexbuilder, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             matrixStackIn.popPose();
         }
