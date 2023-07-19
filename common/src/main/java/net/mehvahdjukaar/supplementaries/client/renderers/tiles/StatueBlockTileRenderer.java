@@ -53,7 +53,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
     }
 
     protected boolean canRenderName(StatueBlockTile tile) {
-        if (Minecraft.renderNames() && tile.owner != null) {
+        if (Minecraft.renderNames() && tile.getPlayerSkin() != null) {
             HitResult hit = Minecraft.getInstance().hitResult;
             if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
                 BlockPos pos = tile.getBlockPos();
@@ -110,16 +110,16 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        GameProfile playerInfo = tile.owner;
+        GameProfile playerInfo = tile.getPlayerSkin();
 
         if (this.canRenderName(tile)) {
-            var name = tile.owner.getName();
+            var name = playerInfo.getName();
             if (name != null) {
                 PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, poseStack, bufferIn, combinedLightIn);
             }
         }
 
-        ResourceLocation resourceLocation = tile.owner == null ? ModTextures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
+        ResourceLocation resourceLocation = playerInfo == null ? ModTextures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
 
         Direction dir = tile.getDirection();
         poseStack.mulPose(RotHlpr.rot(dir));

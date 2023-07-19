@@ -38,9 +38,9 @@ public abstract class ProjectileWeaponItemMixin {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);
                 if (stack.getItem() instanceof QuiverItem) {
                     quiverStack = stack;
-                }else if(shooter instanceof ServerPlayer sp && CompatHandler.CURIOS){
+                }else if(shooter instanceof ServerPlayer sp){
                     //server side curio stuff
-                   quiverStack = CuriosCompat.getQuiver(sp);
+                   quiverStack = CompatHandler.getQuiverFromModsSlots(sp);
                 }
             }
         }

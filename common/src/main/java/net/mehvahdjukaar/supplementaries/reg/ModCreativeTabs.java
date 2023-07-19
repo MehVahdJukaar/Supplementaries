@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -55,9 +54,10 @@ public class ModCreativeTabs {
         RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
     }
 
-    private static boolean hasRunSetup = false;
+    private static boolean isRunningSetup = false;
 
     public static void setup() {
+        isRunningSetup = true;
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
         Map<ResourceKey<CreativeModeTab>,List<ItemStack>> map = new HashMap<>();
@@ -79,7 +79,7 @@ public class ModCreativeTabs {
             all.remove(v.getItem());
         }
         HIDDEN_ITEMS.addAll(all);
-        hasRunSetup = true;
+        isRunningSetup = false;
     }
 
     public static boolean isHidden(Item item) {
@@ -87,12 +87,12 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
-        if (JAR_TAB != null && hasRunSetup) {
+        if (JAR_TAB != null && !isRunningSetup) {
             if (CommonConfigs.Functional.JAR_ENABLED.get()) {
                 e.addAfter(JAR_TAB.getHolder().unwrapKey().get(), null, getJars());
             }
         }
-        if (MOD_TAB != null && hasRunSetup) {
+        if (MOD_TAB != null && !isRunningSetup) {
             e.add(MOD_TAB.getHolder().unwrapKey().get(), NON_HIDDEN_ITEMS.toArray(ItemStack[]::new));
             return;
         }

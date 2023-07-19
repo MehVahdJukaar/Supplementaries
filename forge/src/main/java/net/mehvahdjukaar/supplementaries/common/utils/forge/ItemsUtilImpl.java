@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -133,11 +132,8 @@ public class ItemsUtilImpl {
 
     public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
-        KeyLockableTile.KeyStatus found = KeyLockableTile.KeyStatus.NO_KEY;
-        if (CompatHandler.CURIOS) {
-            found = CuriosCompat.getKey(player, key);
-            if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
-        }
+        KeyLockableTile.KeyStatus found = CompatHandler.getKeyFromModsSlots(player, key);
+        if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
 
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
         player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(itemHandler::set);
@@ -178,9 +174,9 @@ public class ItemsUtilImpl {
     public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction dir, Object container) {
         if (container instanceof ICapabilityProvider cp) {
             IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
-            if(container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im){
+            if (container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im) {
                 //thanks...
-                itemHandler = new RangedWrapper(im,1, itemHandler.getSlots());
+                itemHandler = new RangedWrapper(im, 1, itemHandler.getSlots());
             }
             if (itemHandler != null) {
                 return ItemHandlerHelper.insertItem(itemHandler, stack, false);

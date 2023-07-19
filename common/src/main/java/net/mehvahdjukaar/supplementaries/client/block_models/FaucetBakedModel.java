@@ -11,6 +11,8 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.integration.ClaimCompat;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -51,7 +53,7 @@ public class FaucetBakedModel implements CustomBakedModel {
                     var b = BakedQuadBuilder.create(sprite);
                     for (var q : l) {
                         q = VertexUtil.swapSprite(q, sprite);
-                        recolorVertices(q.getVertices(), i -> {
+                        VertexUtil.recolorVertices(q.getVertices(), i -> {
                             if (i == 1 || i == 2) return col2;
                             return color;
                         });
@@ -68,11 +70,7 @@ public class FaucetBakedModel implements CustomBakedModel {
         quads.addAll(goblet.getQuads(state, side, rand));
         return quads;
     }
-    public static void recolorVertices(int[] v, IntUnaryOperator indexToABGR) {
-        int stride = DefaultVertexFormat.BLOCK.getIntegerSize();
-        for (int i = 0; i < 4; i++)
-            v[i * stride + 3] = ColorUtil.swapFormat(indexToABGR.applyAsInt(i));
-    }
+
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData extraModelData) {
         return goblet.getParticleIcon();
