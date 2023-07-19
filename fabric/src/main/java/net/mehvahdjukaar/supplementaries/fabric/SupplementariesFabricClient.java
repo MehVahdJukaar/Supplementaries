@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.DifferentProspectiveItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.world.level.ItemLike;
@@ -17,11 +16,9 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
 
-    public static void clientInitAndSetup() {
-        ClientHelper.addClientSetup(ClientRegistry::init);
+    public static void init() {
+        ClientRegistry.init();
         ClientHelper.addClientSetup(SupplementariesFabricClient::fabricSetup);
-        ClientHelper.addClientSetup(ClientRegistry::setup);
-
     }
 
     private static void fabricSetup() {

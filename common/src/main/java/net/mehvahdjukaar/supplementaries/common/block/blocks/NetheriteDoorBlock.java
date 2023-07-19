@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -32,6 +33,11 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
 
     public NetheriteDoorBlock(Properties builder) {
         super(builder, BlockSetType.IRON);
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState state) {
+        return SoundType.NETHERITE_BLOCK;
     }
 
     @Override

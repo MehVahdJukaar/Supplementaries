@@ -33,7 +33,6 @@ public class SupplementariesForge {
     public SupplementariesForge() {
         Supplementaries.commonInit();
 
-
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.register(this);
 
@@ -43,7 +42,6 @@ public class SupplementariesForge {
         PlatHelper.getPhysicalSide().ifClient(() -> {
             ClientRegistry.init();
             ClientEventsForge.init();
-            ClientHelper.addClientSetup(ClientRegistry::setup);
         });
     }
 

@@ -1,1 +1,5 @@
-fixed crash when raining
+- added trinkets compat
+- added curios compat to fabric
+- added quiver keybind to fabric
+- fixed some jar rendering stuff
+- fixed netherite door sounds

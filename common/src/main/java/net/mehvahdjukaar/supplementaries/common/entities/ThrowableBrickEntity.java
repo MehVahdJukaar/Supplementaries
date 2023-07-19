@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -17,7 +18,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +35,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.UUID;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
@@ -86,37 +89,40 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
             if (entity instanceof Player player) {
                 if (CompatHandler.FLAN && !FlanCompat.canBreak(player, pos)) return;
-                if (!Utils.mayBuild(player, pos)){
-                    if(!this.getItem().hasAdventureModeBreakTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK),
-                            new BlockInWorld(level, pos, false))){
+                if (!Utils.mayBuild(player, pos)) {
+                    if (!this.getItem().hasAdventureModeBreakTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK),
+                            new BlockInWorld(level, pos, false))) {
                         return;
                     }
                 }
             }
             if (!(entity instanceof Mob) || level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) || PlatHelper.isMobGriefingOn(level, this)) {
-
+                var p = FakePlayerManager.get(BRICK_PLAYER, level);
+                p.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_PICKAXE.getDefaultInstance());
                 if (level.getBlockState(pos).is(ModTags.BRICK_BREAKABLE_POTS)) {
-                    level.destroyBlock(pos, true);
+                    level.destroyBlock(pos, true, p);
                 } else {
-                    breakGlass(pos, 6);
+                    breakGlass(pos, 6, p);
                 }
             }
         }
     }
 
-    private void breakGlass(BlockPos pos, int chance) {
+    private static final GameProfile BRICK_PLAYER = new GameProfile(UUID.randomUUID(), "Throwable Brick Fake Player");
+
+    private void breakGlass(BlockPos pos, int chance, Player p) {
         int c = chance - 1 - this.random.nextInt(4);
         BlockState state = level().getBlockState(pos);
         if (state.getBlock().getExplosionResistance() > 3) return;
         if (c < 0 || !state.is(ModTags.BRICK_BREAKABLE_GLASS)) return;
 
-        level().destroyBlock(pos, true);
-        breakGlass(pos.above(), c);
-        breakGlass(pos.below(), c);
-        breakGlass(pos.east(), c);
-        breakGlass(pos.west(), c);
-        breakGlass(pos.north(), c);
-        breakGlass(pos.south(), c);
+        level().destroyBlock(pos, true, p);
+        breakGlass(pos.above(), c, p);
+        breakGlass(pos.below(), c, p);
+        breakGlass(pos.east(), c, p);
+        breakGlass(pos.west(), c, p);
+        breakGlass(pos.north(), c, p);
+        breakGlass(pos.south(), c, p);
 
     }
 

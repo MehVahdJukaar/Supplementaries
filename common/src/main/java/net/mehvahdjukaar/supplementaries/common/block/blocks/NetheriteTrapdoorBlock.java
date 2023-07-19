@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +47,13 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(OPEN, false).setValue(HALF, Half.BOTTOM).setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
+    }
+
+    JarBlockTileRenderer
+
+    @Override
+    public SoundType getSoundType(BlockState state) {
+        return SoundType.NETHERITE_BLOCK;
     }
 
     @Override

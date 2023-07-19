@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
@@ -50,7 +51,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
         Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
-        VertexUtils.addCube(builder, poseStack,
+        VertexUtil.addCube(builder, poseStack,
                 dimensions.x(),
                 percentageFill * dimensions.y(),
                  light, color);
@@ -120,7 +121,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     matrixStackIn.translate(0.5, 0.0015 + dimensions.z(), 0.5);
 
                     VertexConsumer builder = ModMaterials.SAND_MATERIAL.buffer(bufferIn, RenderType::entityCutout);
-                    VertexUtils.addCube(builder, matrixStackIn, 0.99f * dimensions.x(), dimensions.y() / 12,
+                    VertexUtil.addCube(builder, matrixStackIn, 0.99f * dimensions.x(), dimensions.y() / 12,
                              combinedLightIn, -1);
                     matrixStackIn.popPose();
                 }
@@ -139,6 +140,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         }
     }
 
-    private static final boolean USE_MODEL = PlatHelper.getPlatform().isForge();
+    private static final boolean USE_MODEL = false;// PlatHelper.getPlatform().isForge();
 }
 

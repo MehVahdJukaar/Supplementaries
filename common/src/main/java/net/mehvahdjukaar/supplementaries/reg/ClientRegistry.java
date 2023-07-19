@@ -103,8 +103,8 @@ public class ClientRegistry {
     }
 
     public static void init() {
-
         CompatHandlerClient.init();
+        ClientHelper.addClientSetup(ClientRegistry::setup);
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
@@ -118,8 +118,6 @@ public class ClientRegistry {
         ClientHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
     }
-
-    private static boolean setupCompleted = false;
 
     public static void setup() {
 
@@ -231,8 +229,6 @@ public class ClientRegistry {
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
-
-        setupCompleted = true;
     }
 
     private static class GlobeProperty implements ClampedItemPropertyFunction {

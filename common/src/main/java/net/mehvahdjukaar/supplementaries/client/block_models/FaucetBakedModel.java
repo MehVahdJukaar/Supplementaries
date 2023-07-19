@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -8,11 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.integration.ClaimCompat;
-import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -26,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
 
 public class FaucetBakedModel implements CustomBakedModel {
     private static final boolean SINGLE_PASS = PlatHelper.getPlatform().isFabric();
@@ -48,7 +42,7 @@ public class FaucetBakedModel implements CustomBakedModel {
                 var l = liquid.getQuads(state, side, rand);
                 if (!l.isEmpty()) {
                     int color = ColorUtil.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
-                    int col2 = (color & 0x00FFFFFF) | (50 << 24);
+                    int col2 = (color & 0x00FFFFFF) | (40 << 24);
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
                     var b = BakedQuadBuilder.create(sprite);
                     for (var q : l) {

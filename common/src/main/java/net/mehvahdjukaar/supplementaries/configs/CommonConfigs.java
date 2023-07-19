@@ -1072,7 +1072,7 @@ public class CommonConfigs {
                     .gameRestart()
                     .define("dispensers", true);
 
-            JAR_TAB = builder.gameRestart().comment("Creates a creative tab full of filled jars")
+            JAR_TAB = PlatHelper.getPlatform().isFabric() ? () -> false : builder.gameRestart().comment("Creates a creative tab full of filled jars")
                     .define("jar_tab", false);
 
             DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")

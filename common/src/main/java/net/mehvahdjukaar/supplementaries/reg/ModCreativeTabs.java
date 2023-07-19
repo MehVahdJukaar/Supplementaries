@@ -87,6 +87,7 @@ public class ModCreativeTabs {
     }
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent e) {
+
         if (JAR_TAB != null && !isRunningSetup) {
             if (CommonConfigs.Functional.JAR_ENABLED.get()) {
                 e.addAfter(JAR_TAB.getHolder().unwrapKey().get(), null, getJars());

@@ -27,7 +27,7 @@ import java.util.List;
 
 public class JarBakedModel implements CustomBakedModel {
 
-    private static final boolean SINGLE_PASS = PlatHelper.getPlatform().isFabric();
+    private static final boolean SINGLE_PASS = true;// PlatHelper.getPlatform().isFabric();
 
     //hacky
     private static Vector3f lastKnownDimensions;
@@ -57,20 +57,22 @@ public class JarBakedModel implements CustomBakedModel {
             if (fluid != null && !fluid.isEmpty()) {
                 float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
-                TextureAtlasSprite sprite = ModMaterials. get(fluid.getStillTexture()).sprite();
+                TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
                 BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
                 builder.setAutoDirection();
                 builder.lightEmission(fluid.getLuminosity());
                 builder.setTint(1);
                 var p = new PoseStack();
-                p.translate(0.5,  yOffset, 0.5);
+                p.translate(0.5, yOffset, 0.5);
                 try {
                     builder.setAutoBuild(w -> {
                         quads.add(w);
                     });
                 } catch (Exception ignored) {
                 }
-                VertexUtils.addCube(builder, p,0.5f-width/2f,0, width, height*amount, LightTexture.FULL_BLOCK, -1, 0.4f);
+                VertexUtils.addCube(builder, p, 0.5f - width / 2f, 0, width, height * amount,
+                        0, -1, 1);
+
                 //VertexUtils.addQuad(builder, p, 0,0,1,1,1,1);
             }
             if (!SINGLE_PASS) return quads;
