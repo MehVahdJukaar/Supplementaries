@@ -9,8 +9,8 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
@@ -273,13 +273,11 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientHelper.KeyBindEvent event) {
-        if (PlatHelper.getPlatform().isForge()) {
-            QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
-                    InputConstants.Type.KEYSYM,
-                    InputConstants.getKey("key.keyboard.v").getValue(),
-                    "supplementaries.gui.controls");
-            event.register(QUIVER_KEYBIND);
-        }
+        QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
+                InputConstants.Type.KEYSYM,
+                InputConstants.getKey("key.keyboard.v").getValue(),
+                "supplementaries.gui.controls");
+        event.register(QUIVER_KEYBIND);
     }
 
     @EventCalled
@@ -387,7 +385,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
-        event.register(Supplementaries.res("blackboard"),  new NestedModelLoader("frame", BlackboardBakedModel::new));
+        event.register(Supplementaries.res("blackboard"), new NestedModelLoader("frame", BlackboardBakedModel::new));
         event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());

@@ -40,7 +40,7 @@ public abstract class ProjectileWeaponItemMixin {
                     quiverStack = stack;
                 }else if(shooter instanceof ServerPlayer sp && CompatHandler.CURIOS){
                     //server side curio stuff
-                   quiverStack = CuriosCompat.getEquippedQuiver(sp);
+                   quiverStack = CuriosCompat.getQuiverInCurio(sp);
                 }
             }
         }

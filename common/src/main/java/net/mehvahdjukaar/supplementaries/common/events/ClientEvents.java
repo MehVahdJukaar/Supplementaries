@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
@@ -63,26 +66,33 @@ public class ClientEvents {
         if (minecraft.isPaused() || minecraft.level == null) return;
         CapturedMobCache.tickCrystal();
         Player p = minecraft.player;
-        if (p != null) {
-            //TODO: TURN INTO SOUND INSTANCE
-            BlockState state = p.getFeetBlockState();
-            isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.is(ModRegistry.ROPE.get()) && !state.getValue(RopeBlock.UP) &&
-                    (p.getY() + 500) % 1 >= RopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
+        if (p == null) return;
+        BlockState state = p.getFeetBlockState();
+        isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.is(ModRegistry.ROPE.get()) && !state.getValue(RopeBlock.UP) &&
+                (p.getY() + 500) % 1 >= RopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
 
-            if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
-                GameRenderer renderer = Minecraft.getInstance().gameRenderer;
+        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
+            GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
-                String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
+            String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
-                ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
-                if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
-                String newShader = EFFECTS_PER_ITEM.get(stack.getItem());
-                if (newShader != null && !newShader.equals(current)) {
-                    renderer.loadEffect(new ResourceLocation(newShader));
-                } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {
-                    renderer.shutdownEffect();
-                }
+            ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
+            if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
+            String newShader = EFFECTS_PER_ITEM.get(stack.getItem());
+            if (newShader != null && !newShader.equals(current)) {
+                renderer.loadEffect(new ResourceLocation(newShader));
+            } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {
+                renderer.shutdownEffect();
             }
+        }
+
+        //forge handles key up with event
+        if (QuiverArrowSelectGui.isUsingKey() || PlatHelper.getPlatform().isFabric()) {
+            //handles release edge cases
+            QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
+                    Minecraft.getInstance().getWindow().getWindow(),
+                    ClientRegistry.QUIVER_KEYBIND.key.getValue()
+            ));
         }
     }
 

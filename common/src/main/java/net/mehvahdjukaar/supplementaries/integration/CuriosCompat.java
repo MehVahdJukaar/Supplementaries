@@ -16,7 +16,7 @@ public class CuriosCompat {
 
     @Nullable
     @ExpectPlatform
-    public static ItemStack getEquippedQuiver(Player player) {
+    public static ItemStack getQuiverInCurio(Player player) {
         throw new AssertionError();
     }
 }

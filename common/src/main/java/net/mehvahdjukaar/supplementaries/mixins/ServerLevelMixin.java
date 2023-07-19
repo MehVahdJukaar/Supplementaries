@@ -78,7 +78,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
                             && e.hasEffect(MobEffects.UNLUCK));
             if (!l.isEmpty()) {
                 Collections.shuffle(l);
-                cir.setReturnValue(list.get(this.random.nextInt(list.size())).blockPosition());
+                cir.setReturnValue(l.get(this.random.nextInt(l.size())).blockPosition());
             }
         }
 

@@ -43,6 +43,9 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
@@ -116,9 +119,12 @@ publishing {
         maven {
             url = "https://maven.shedaniel.me"
         }
+        maven { url 'https://maven.ladysnake.org/releases' }
+
     }
 }
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases" }
+    maven { url 'https://maven.ladysnake.org/releases' }
 }

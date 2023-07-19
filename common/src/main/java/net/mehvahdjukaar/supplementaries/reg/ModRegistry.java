@@ -586,6 +586,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F)
+                    .isRedstoneConductor((blockState, blockGetter, blockPos) -> false)
                     .sound(SoundType.METAL)
     ));
 

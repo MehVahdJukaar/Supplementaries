@@ -143,7 +143,14 @@ allprojects {
         }
         maven { url 'https://jitpack.io' }
 
-
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/"
+        }
+        maven {
+            name = 'Ladysnake Mods'
+            url = 'https://maven.ladysnake.org/releases'
+        }
     }
 
     tasks.withType(JavaCompile) {

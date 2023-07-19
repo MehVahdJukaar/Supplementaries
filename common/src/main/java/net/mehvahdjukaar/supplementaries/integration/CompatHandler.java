@@ -23,7 +23,7 @@ public class CompatHandler {
     public static final boolean OREGANIZED = isLoaded("oreganized");
     public static final boolean CREATE = isLoaded("create");
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
-    public static final boolean CURIOS = isLoaded("curios");
+    public static final boolean CURIOS = isLoaded(PlatHelper.getPlatform().isForge() ? "curios" : "trinkets");
     public static final boolean FARMERS_DELIGHT = isLoaded("farmersdelight");
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
     public static final boolean INSPIRATIONS = isLoaded("inspirations");

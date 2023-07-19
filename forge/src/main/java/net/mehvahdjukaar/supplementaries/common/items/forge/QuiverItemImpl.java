@@ -31,7 +31,7 @@ public class QuiverItemImpl {
     public static ItemStack getQuiver(LivingEntity entity) {
         if (entity instanceof Player player) {
             if (CompatHandler.CURIOS) {
-                var q = CuriosCompat.getEquippedQuiver(player);
+                var q = CuriosCompat.getQuiverInCurio(player);
                 if (q != null) return q;
                 if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
             }
