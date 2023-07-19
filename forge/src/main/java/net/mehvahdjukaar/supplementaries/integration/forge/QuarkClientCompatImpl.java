@@ -111,7 +111,7 @@ public class QuarkClientCompatImpl {
             //adds missing ones from quiver
 
             if (event.player instanceof IQuiverEntity qe) {
-                var q = qe.supplementaries$getQuiver();
+                var q = qe.getQuiver();
                 if (!q.isEmpty()) {
                     QuiverItem.Data data = QuiverItem.getQuiverData(q);
                     if (data != null) {

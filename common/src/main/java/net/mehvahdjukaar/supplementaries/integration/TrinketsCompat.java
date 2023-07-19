@@ -11,14 +11,13 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 //this is actually for trinkets
 public class TrinketsCompat {
 
-    public static KeyLockableTile.KeyStatus getKey(Player player, String password) {
+    static KeyLockableTile.KeyStatus getKey(Player player, String password) {
 
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
@@ -36,14 +35,12 @@ public class TrinketsCompat {
         return IKeyLockable.KeyStatus.NO_KEY;
     }
 
-    @Nullable
-    public static ItemStack getQuiver(Player player) {
+    static ItemStack getQuiver(Player player) {
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
             List<Tuple<SlotReference, ItemStack>> found = trinket.getEquipped(ModRegistry.QUIVER_ITEM.get());
             if (!found.isEmpty()) return found.get(0).getB();
-            return null;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

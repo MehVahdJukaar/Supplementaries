@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,9 +18,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,13 +28,11 @@ public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
         if (entity instanceof Player player) {
-            if (CompatHandler.CURIOS) {
-                var q = CuriosCompat.getQuiver(player);
-                if (q != null) return q;
-                if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
-            }
+            var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
+            if (!curioQuiver.isEmpty()) return curioQuiver;
+            if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
         } else if (entity instanceof IQuiverEntity e) {
-            return e.supplementaries$getQuiver();
+            return e.getQuiver();
         }
 
         var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);

@@ -66,13 +66,13 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Quiver")) {
-            this.supplementaries$setQuiver(ItemStack.of(compound.getCompound("Quiver")));
+            this.setQuiver(ItemStack.of(compound.getCompound("Quiver")));
             this.supplementaries$quiverDropChance = compound.getFloat("QuiverDropChance");
         }
     }
 
     @Override
-    public ItemStack supplementaries$getQuiver() {
+    public ItemStack getQuiver() {
         return supplementaries$quiver;
     }
 
@@ -85,7 +85,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     }
 
     @Override
-    public void supplementaries$setQuiver(ItemStack quiver) {
+    public void setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
         this.getEntityData().set(HAS_QUIVER, !quiver.isEmpty());
     }
@@ -102,7 +102,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
             if(this.supplementaries$quiver != null){
                 this.spawnAtLocation(supplementaries$quiver);
             }
-            this.supplementaries$setQuiver(stack);
+            this.setQuiver(stack);
             this.supplementaries$quiverDropChance = 1;
             return stack;
         }

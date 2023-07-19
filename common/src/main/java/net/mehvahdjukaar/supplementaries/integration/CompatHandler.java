@@ -118,11 +118,11 @@ public class CompatHandler {
         ItemStack stack = ItemStack.EMPTY;
         if (CompatHandler.CURIOS) {
             stack = CuriosCompat.getQuiver(player);
-            if(!stack.isEmpty())return stack;
+            if (!stack.isEmpty()) return stack;
         }
         if (CompatHandler.TRINKETS) {
             stack = TrinketsCompat.getQuiver(player);
-            if(!stack.isEmpty())return stack;
+            if (!stack.isEmpty()) return stack;
         }
         return stack;
     }

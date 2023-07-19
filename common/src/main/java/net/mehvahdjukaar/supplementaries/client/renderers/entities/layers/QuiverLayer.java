@@ -42,7 +42,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
 
         ItemStack quiver;
         if (!skeleton) {
-            quiver = livingEntity.supplementaries$getQuiver();
+            quiver = livingEntity.getQuiver();
             if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
                 return;
             }

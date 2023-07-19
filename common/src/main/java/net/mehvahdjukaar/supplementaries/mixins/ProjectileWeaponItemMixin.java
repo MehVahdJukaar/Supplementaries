@@ -32,7 +32,7 @@ public abstract class ProjectileWeaponItemMixin {
         }
         if(quiverStack == null){
             if(shooter instanceof IQuiverEntity quiverEntity){ //client only
-                quiverStack = quiverEntity.supplementaries$getQuiver();
+                quiverStack = quiverEntity.getQuiver();
             }
             else {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);

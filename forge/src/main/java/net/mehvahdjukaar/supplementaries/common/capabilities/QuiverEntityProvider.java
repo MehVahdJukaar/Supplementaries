@@ -22,12 +22,12 @@ public class QuiverEntityProvider implements ICapabilityProvider {
                 player instanceof IQuiverEntity qe ? qe :
                         new IQuiverEntity() {
                             @Override
-                            public ItemStack supplementaries$getQuiver() {
+                            public ItemStack getQuiver() {
                                 return QuiverItem.getQuiver(player);
                             }
 
                             @Override
-                            public void supplementaries$setQuiver(ItemStack quiver) {
+                            public void setQuiver(ItemStack quiver) {
                             }
                         });
     }

@@ -20,15 +20,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 import java.util.UUID;
 
 public class StatueBlockTile extends ItemDisplayTile {
 
     @Nullable
-    public GameProfile owner = null;
+    private GameProfile playerSkin = null;
 
     //clientside
     private StatuePose pose = StatuePose.STANDING;
@@ -57,19 +57,22 @@ public class StatueBlockTile extends ItemDisplayTile {
         return candle;
     }
 
-    //skull code
-    public void setOwner(@Nullable GameProfile input) {
-        if (this.owner == null) {
-            if (input == null || !(input.isComplete() && input.getProperties().containsKey("textures"))) {
-                synchronized (this) {
-                    this.owner = input;
-                }
+    @Nullable
+    public GameProfile getPlayerSkin() {
+        return playerSkin;
+    }
 
-                SkullBlockEntity.updateGameprofile(this.owner, (gameProfile) -> {
-                    this.owner = gameProfile;
-                    //this.setChanged();
-                });
+    //skull code
+    protected void setPlayerSkin(@Nullable GameProfile input) {
+        if (this.playerSkin == null) {
+            synchronized (this) {
+                this.playerSkin = input;
             }
+
+            SkullBlockEntity.updateGameprofile(this.playerSkin, (gameProfile) -> {
+                this.playerSkin = gameProfile;
+                this.setChanged();
+            });
         }
     }
 
@@ -80,12 +83,9 @@ public class StatueBlockTile extends ItemDisplayTile {
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
-                this.setOwner(new GameProfile(profile.getFirst(), profile.getSecond()));
+                this.setPlayerSkin(new GameProfile(profile.getFirst(), profile.getSecond()));
             }
-            //ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
-            //if(connection!=null)
-            //this.playerInfo = connection.getPlayerInfo(SpecialPlayers.STATUES.get(this.getCustomName().getString().toLowerCase(Locale.ROOT)));
-        } else this.owner = null;
+        } else this.playerSkin = null;
 
     }
 
@@ -125,7 +125,7 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.statuette");
+        return Component.translatable("block.supplementaries.statue");
     }
 
     public Direction getDirection() {

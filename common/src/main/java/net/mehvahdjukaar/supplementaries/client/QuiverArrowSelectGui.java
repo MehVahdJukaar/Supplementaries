@@ -190,7 +190,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     private static ItemStack getCurrentlyUsedQuiver(Player player) {
         if (usingKey) {
-            return ((IQuiverEntity) player).supplementaries$getQuiver();
+            return ((IQuiverEntity) player).getQuiver();
         }
         return player.getUseItem();
     }

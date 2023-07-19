@@ -17,7 +17,7 @@ import java.util.List;
 public class CuriosCompat {
 
 
-    public static KeyLockableTile.KeyStatus getKey(Player player, String password) {
+    static KeyLockableTile.KeyStatus getKey(Player player, String password) {
         List<SlotResult> found = CuriosApi.getCuriosHelper().findCurios(player, i ->
                 i.is(ModTags.KEY) || i.getItem() instanceof KeyItem);
         if (found.isEmpty()) return KeyLockableTile.KeyStatus.NO_KEY;
@@ -30,10 +30,9 @@ public class CuriosCompat {
         return KeyLockableTile.KeyStatus.INCORRECT_KEY;
     }
 
-    @Nullable
-    public static ItemStack getQuiver(Player player) {
+    static ItemStack getQuiver(Player player) {
         List<SlotResult> found = CuriosApi.getCuriosHelper().findCurios(player, i -> i.is(ModRegistry.QUIVER_ITEM.get()));
         if (!found.isEmpty()) return found.get(0).stack();
-        return null;
+        return ItemStack.EMPTY;
     }
 }

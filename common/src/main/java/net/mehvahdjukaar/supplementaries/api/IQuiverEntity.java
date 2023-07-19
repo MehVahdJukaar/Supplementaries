@@ -5,11 +5,11 @@ import net.minecraft.world.item.ItemStack;
 public interface IQuiverEntity {
 
     //only used for rendering for player and both for skeletons
-    ItemStack supplementaries$getQuiver();
+    ItemStack getQuiver();
 
     default boolean hasQuiver(){
-        return !this.supplementaries$getQuiver().isEmpty();
+        return !this.getQuiver().isEmpty();
     }
 
-    void supplementaries$setQuiver(ItemStack quiver);
+    void setQuiver(ItemStack quiver);
 }
