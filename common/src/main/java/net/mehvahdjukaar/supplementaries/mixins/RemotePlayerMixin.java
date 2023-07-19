@@ -6,10 +6,8 @@ import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class RemotePlayerMixin extends Player implements IQuiverEntity {
 
     @Unique
-    private ItemStack quiver = ItemStack.EMPTY;
+    private ItemStack supplementaries$quiver = ItemStack.EMPTY;
 
     protected RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -34,16 +32,16 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverEntity 
                     shift = At.Shift.AFTER)
     )
     private void checkIfHasQuiver(CallbackInfo ci) {
-        quiver = QuiverItem.getQuiver(this);
+        supplementaries$quiver = QuiverItem.getQuiver(this);
     }
 
     @Override
-    public ItemStack getQuiver() {
-        return quiver;
+    public ItemStack supplementaries$getQuiver() {
+        return supplementaries$quiver;
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
-        this.quiver = quiver;
+    public void supplementaries$setQuiver(ItemStack quiver) {
+        this.supplementaries$quiver = quiver;
     }
 }

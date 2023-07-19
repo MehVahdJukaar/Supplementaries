@@ -20,16 +20,16 @@ import java.util.function.Function;
 public abstract class FontRendererMixin implements IAntiqueTextProvider {
 
     @Unique
-    private boolean antique = false;
+    private boolean supplementaries$antique = false;
 
     @Override
     public boolean hasAntiqueInk() {
-        return antique;
+        return supplementaries$antique;
     }
 
     @Override
     public void setAntiqueInk(boolean hasInk) {
-        antique = hasInk;
+        supplementaries$antique = hasInk;
     }
 
     @Final
@@ -38,7 +38,7 @@ public abstract class FontRendererMixin implements IAntiqueTextProvider {
 
     @Inject(method = "getFontSet", at = @At("HEAD"), cancellable = true)
     private void getFontSet(ResourceLocation resourceLocation, CallbackInfoReturnable<FontSet> cir) {
-        if (antique) {
+        if (supplementaries$antique) {
             cir.setReturnValue(this.fonts.apply(ModTextures.ANTIQUABLE_FONT));
         }
     }

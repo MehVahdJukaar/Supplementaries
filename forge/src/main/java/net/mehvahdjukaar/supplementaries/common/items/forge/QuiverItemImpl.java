@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
-import net.mehvahdjukaar.supplementaries.mixins.forge.PlayerProjectileMixin;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +35,7 @@ public class QuiverItemImpl {
                 if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
             }
         } else if (entity instanceof IQuiverEntity e) {
-            return e.getQuiver();
+            return e.supplementaries$getQuiver();
         }
 
         var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);

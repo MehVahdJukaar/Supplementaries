@@ -1,14 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -48,5 +52,11 @@ public class ClientEventsFabric {
 
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
         QuiverArrowSelectGuiImpl.INSTANCE.render(graphics, partialTicks);
+        //also using to check keybind
+
+        QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
+                Minecraft.getInstance().getWindow().getWindow(),
+                ClientRegistry.QUIVER_KEYBIND.key.getValue()
+        ));
     }
 }

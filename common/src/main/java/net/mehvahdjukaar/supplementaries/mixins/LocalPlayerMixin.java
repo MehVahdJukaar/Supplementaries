@@ -2,23 +2,14 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.ClientRecipeBook;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.TickableSoundInstance;
-import net.minecraft.stats.StatsCounter;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -57,7 +48,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.BEFORE),
             require = 1)
     private void cancelQuiverSlow(CallbackInfo ci) {
-        this.cancelUsingQuiver = true;
+        this.supplementaries$usingQuiver = true;
     }
 
     @Inject(method = "aiStep",
@@ -66,22 +57,22 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER),
             require = 1)
     private void reset(CallbackInfo ci) {
-        this.cancelUsingQuiver = false;
+        this.supplementaries$usingQuiver = false;
     }
 
     @Inject(method = "isUsingItem",
             at = @At("HEAD"), cancellable = true)
     private void isUsingItem(CallbackInfoReturnable<Boolean> cir) {
-        if (cancelUsingQuiver && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
+        if (supplementaries$usingQuiver && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
             cir.setReturnValue(false);
         }
     }
 
     @Unique
-    private boolean cancelUsingQuiver = false;
+    private boolean supplementaries$usingQuiver = false;
 
     @Unique
-    private ItemStack quiver = ItemStack.EMPTY;
+    private ItemStack supplementaries$quiver = ItemStack.EMPTY;
 
     //this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",
@@ -90,16 +81,16 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER)
     )
     private void checkIfHasQuiver(CallbackInfo ci) {
-        quiver = QuiverItem.getQuiver(this);
+        supplementaries$quiver = QuiverItem.getQuiver(this);
     }
 
     @Override
-    public ItemStack getQuiver() {
-        return quiver;
+    public ItemStack supplementaries$getQuiver() {
+        return supplementaries$quiver;
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
-        this.quiver = quiver;
+    public void supplementaries$setQuiver(ItemStack quiver) {
+        this.supplementaries$quiver = quiver;
     }
 }

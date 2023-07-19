@@ -31,7 +31,7 @@ public abstract class StrongholdRoomSconceMixin extends StructurePiece {
     protected int type;
 
     @Unique
-    private final BlockState sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
+    private final BlockState supplementaries$sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
 
     protected StrongholdRoomSconceMixin(StructurePieceType pType, int pGenDepth, BoundingBox pBoundingBox) {
         super(pType, pGenDepth, pBoundingBox);
@@ -40,10 +40,10 @@ public abstract class StrongholdRoomSconceMixin extends StructurePiece {
     @Inject(method = "postProcess", at = @At("TAIL"))
         public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
         if (this.type == 0 && CommonConfigs.Building.SCONCE_ENABLED.get()) {
-            this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.WEST), 4, 3, 5, bb);
-            this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.EAST), 6, 3, 5, bb);
-            this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 5, 3, 4, bb);
-            this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.NORTH), 5, 3, 6, bb);
+            this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.WEST), 4, 3, 5, bb);
+            this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.EAST), 6, 3, 5, bb);
+            this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 5, 3, 4, bb);
+            this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.NORTH), 5, 3, 6, bb);
         }
 
     }

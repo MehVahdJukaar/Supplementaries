@@ -4,10 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
-import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -40,9 +38,9 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
     abstract Material getSignMaterial(WoodType woodType);
 
     @Unique
-    private List<ModelPart> barModel;
+    private List<ModelPart> supplementaries$barModel;
     @Unique
-    private ModelPart chains;
+    private ModelPart supplementaries$chains;
 
     protected HangingSignRendererMixin(BlockEntityRendererProvider.Context context) {
         super(context);
@@ -59,7 +57,7 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
             HangingSignRenderer.HangingSignModel model = this.hangingSignModels.get(woodType);
 
             HangingSignRendererExtension.render(tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay,
-                    blockState, model, barModel, chains,
+                    blockState, model, supplementaries$barModel, supplementaries$chains,
 
                     this.getSignMaterial(woodType),
                     ModMaterials.HANGING_SIGN_EXTENSIONS.get().get(woodType),
@@ -73,11 +71,11 @@ public abstract class HangingSignRendererMixin extends SignRenderer {
     public void initEnhancedSign(BlockEntityRendererProvider.Context context, CallbackInfo ci) {
         if (PlatHelper.isModLoadingValid()) {
             ModelPart model = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
-            this.barModel = List.of(model.getChild("extension_6"),
+            this.supplementaries$barModel = List.of(model.getChild("extension_6"),
                     model.getChild("extension_5"),
                     model.getChild("extension_4"),
                     model.getChild("extension_3"));
-            this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
+            this.supplementaries$chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
         }
     }
 

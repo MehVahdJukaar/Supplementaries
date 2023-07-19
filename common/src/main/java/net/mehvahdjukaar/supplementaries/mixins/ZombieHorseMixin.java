@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ZombieHorse.class)
 public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomDataHolder {
 
+    @Unique
     private static final int CONV_TIME = 4600;
 
     public boolean getVariable() {
@@ -41,7 +42,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     }
 
     @Unique
-    private int conversionTime = -1;
+    private int supplementaries$conversionTime = -1;
 
     protected ZombieHorseMixin(EntityType<? extends AbstractHorse> entityType, Level level) {
         super(entityType, level);
@@ -55,7 +56,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
 
     public void startConverting() {
         if (!this.isConverting()) {
-            this.conversionTime = CONV_TIME;
+            this.supplementaries$conversionTime = CONV_TIME;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, CONV_TIME, 2));
         }
@@ -64,17 +65,17 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putInt("ConversionTime", this.conversionTime);
+        tag.putInt("ConversionTime", this.supplementaries$conversionTime);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
         this.addAdditionalSaveData(compoundNBT);
-        this.conversionTime = compoundNBT.getInt("ConversionTime");
+        this.supplementaries$conversionTime = compoundNBT.getInt("ConversionTime");
     }
 
     public boolean isConverting() {
-        return this.conversionTime > 0;
+        return this.supplementaries$conversionTime > 0;
     }
 
     private void doHorseConvertion() {
@@ -123,7 +124,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     @Override
     public void handleEntityEvent(byte pId) {
         if (pId == EntityEvent.ZOMBIE_CONVERTING) {
-            this.conversionTime = CONV_TIME;
+            this.supplementaries$conversionTime = CONV_TIME;
             if (!this.isSilent()) {
                 this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }
@@ -136,9 +137,9 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
         super.tick();
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
             if (this.isConverting()) {
-                --this.conversionTime;
+                --this.supplementaries$conversionTime;
 
-                if (this.conversionTime == 0) {
+                if (this.supplementaries$conversionTime == 0) {
                     this.doHorseConvertion();
                 }
             }

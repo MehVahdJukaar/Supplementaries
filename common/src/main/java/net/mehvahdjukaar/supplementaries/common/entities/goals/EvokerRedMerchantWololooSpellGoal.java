@@ -45,7 +45,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
             if (list.isEmpty()) {
                 return false;
             } else {
-                ((ISuppEvoker) evoker).setCustomWololoo(list.get(evoker.getRandom().nextInt(list.size())));
+                ((ISuppEvoker) evoker).supplementaries$setCustomWololoo(list.get(evoker.getRandom().nextInt(list.size())));
                 return true;
             }
         }
@@ -53,17 +53,17 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return suppEvoker.getCustomWololoo() != null && this.attackWarmupDelay > 0;
+        return suppEvoker.supplementaries$getCustomWololoo() != null && this.attackWarmupDelay > 0;
     }
 
     @Override
     public void stop() {
         super.stop();
-        suppEvoker.setCustomWololoo(null);
+        suppEvoker.supplementaries$setCustomWololoo(null);
     }
 
     protected void performSpellCasting() {
-        LivingEntity entity = suppEvoker.getCustomWololoo();
+        LivingEntity entity = suppEvoker.supplementaries$getCustomWololoo();
         if (entity != null && entity.isAlive() && ForgeHelper.canLivingConvert(entity, ModEntities.RED_MERCHANT.get(),
                 (timer) -> {
                 })) {
@@ -110,7 +110,7 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
     @Override
     public void start() {
         this.attackWarmupDelay = this.adjustedTickDelay(this.getCastWarmupTime());
-        suppEvoker.setSpellCastingTime(this.getCastingTime());
+        suppEvoker.supplementaries$setSpellCastingTime(this.getCastingTime());
         this.nextAttackTickCount = evoker.tickCount + this.getCastingInterval();
         SoundEvent soundEvent = this.getSpellPrepareSound();
         if (soundEvent != null) {

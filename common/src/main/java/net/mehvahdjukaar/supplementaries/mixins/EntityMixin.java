@@ -18,7 +18,6 @@ public abstract class EntityMixin {
     @Shadow
     public abstract void playSound(SoundEvent pSound, float pVolume, float pPitch);
 
-    //TODO: use sound instance and redo
     //cancel rope slide down sound
     @Inject(method = "playStepSound", at = @At("HEAD"), cancellable = true)
     private void playStepSound(BlockPos pPos, BlockState state, CallbackInfo ci) {

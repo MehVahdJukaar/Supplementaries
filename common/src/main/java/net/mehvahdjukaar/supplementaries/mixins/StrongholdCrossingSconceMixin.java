@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class StrongholdCrossingSconceMixin extends StructurePiece {
 
     @Unique
-    private final BlockState sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
+    private final BlockState supplementaries$sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
 
     protected StrongholdCrossingSconceMixin(StructurePieceType structurePieceType, int i, BoundingBox boundingBox) {
         super(structurePieceType, i, boundingBox);
@@ -35,6 +35,6 @@ public abstract class StrongholdCrossingSconceMixin extends StructurePiece {
     @Inject(method = "postProcess", at = @At("TAIL"))
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
         if (CommonConfigs.Building.SCONCE_ENABLED.get())
-            this.placeBlock(level, sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
+            this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
     }
 }

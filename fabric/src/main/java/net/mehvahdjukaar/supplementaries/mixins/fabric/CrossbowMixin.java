@@ -19,7 +19,7 @@ public abstract class CrossbowMixin {
                                           ItemStack ammoStack, boolean hasAmmo, boolean isCreative,
                                           CallbackInfoReturnable<Boolean> cir) {
         var q = QuiverItem.getQuiver(shooter);
-        if (q != null) {
+        if (!q.isEmpty()) {
             var data = QuiverItem.getQuiverData(q);
             if (data != null) data.consumeArrow();
         }

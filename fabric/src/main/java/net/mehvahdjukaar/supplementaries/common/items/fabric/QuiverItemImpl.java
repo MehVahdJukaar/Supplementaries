@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items.fabric;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CuriosCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,10 +20,15 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.getQuiver();
+        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.supplementaries$getQuiver();
         if (entity instanceof Player p) {
+            if (CompatHandler.CURIOS) {
+                var q = CuriosCompat.getQuiverInCurio(p);
+                if (q != null) return q;
+                if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
+            }
             for (var s : p.getInventory().items) {
-                if (s.getItem() == ModRegistry.QUIVER_ITEM.get()) return s;
+                if (s.is(ModRegistry.QUIVER_ITEM.get())) return s;
             }
         }
         return ItemStack.EMPTY;

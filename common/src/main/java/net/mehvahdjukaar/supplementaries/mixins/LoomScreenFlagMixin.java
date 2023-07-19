@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -15,7 +14,6 @@ import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.LoomMenu;
 import net.minecraft.world.item.DyeColor;
@@ -37,7 +35,7 @@ import java.util.List;
 public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMenu> {
 
     @Unique
-    private final CyclingSlotBackground bannerFlagBG = new CyclingSlotBackground(0);
+    private final CyclingSlotBackground supplementaries$bannerFlagBG = new CyclingSlotBackground(0);
 
     @Shadow
     private List<Pair<Holder<BannerPattern>, DyeColor>> resultBannerPatterns;
@@ -67,7 +65,7 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void renderBg(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
-        this.bannerFlagBG.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
+        this.supplementaries$bannerFlagBG.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
 
         if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {
             int i = this.leftPos;
@@ -97,6 +95,6 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
     @Override
     protected void containerTick() {
         super.containerTick();
-        this.bannerFlagBG.tick(ModTextures.BANNER_SLOT_ICONS);
+        this.supplementaries$bannerFlagBG.tick(ModTextures.BANNER_SLOT_ICONS);
     }
 }

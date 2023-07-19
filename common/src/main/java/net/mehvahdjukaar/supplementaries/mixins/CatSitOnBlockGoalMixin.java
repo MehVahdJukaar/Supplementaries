@@ -22,26 +22,26 @@ public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
     }
 
     @Unique
-    private boolean doormat = false;
+    private boolean supplementaries$doormat = false;
 
     @Inject(method = "isValidTarget", at = @At("HEAD"), cancellable = true)
     protected void shouldMoveTo(LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
         Block block = worldIn.getBlockState(pos).getBlock();
-        this.doormat = block instanceof DoormatBlock;
-        if (block instanceof PlanterBlock || this.doormat) {
+        this.supplementaries$doormat = block instanceof DoormatBlock;
+        if (block instanceof PlanterBlock || this.supplementaries$doormat) {
             info.setReturnValue(true);
         }
     }
 
     @Override
     public double acceptedDistance() {
-        return this.doormat ? 0.8 : super.acceptedDistance();
+        return this.supplementaries$doormat ? 0.8 : super.acceptedDistance();
     }
 
     //TODO: check
     @Override
     protected BlockPos getMoveToTarget() {
-        return this.doormat ? this.blockPos : this.blockPos;
+        return this.supplementaries$doormat ? this.blockPos : this.blockPos;
     }
 
 }

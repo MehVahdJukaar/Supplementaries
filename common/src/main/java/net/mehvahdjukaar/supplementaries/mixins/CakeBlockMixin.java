@@ -41,7 +41,7 @@ public class CakeBlockMixin extends Block {
     protected static VoxelShape[] SHAPE_BY_BITE;
 
     @Unique
-    protected static Direction lastUseDir;
+    protected static Direction supplementaries$lastUseDir;
 
     @Unique
     protected static final VoxelShape[][] SHAPE_BY_BITE_BY_FACING = Arrays.stream(SHAPE_BY_BITE)
@@ -67,14 +67,14 @@ public class CakeBlockMixin extends Block {
 
     @Inject(method = "use", at = @At("HEAD"))
     public void interceptUseDir(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
-        lastUseDir = DoubleCakeBlock.getHitDir(player, hit);
+        supplementaries$lastUseDir = DoubleCakeBlock.getHitDir(player, hit);
     }
 
     @ModifyArg(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelAccessor;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private static BlockState eatDirectional(BlockState state) {
-        if (state.getValue(CakeBlock.BITES) == 5 && lastUseDir != null && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            lastUseDir = null;
-            return state.setValue(BlockStateProperties.HORIZONTAL_FACING, lastUseDir);
+        if (state.getValue(CakeBlock.BITES) == 5 && supplementaries$lastUseDir != null && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            supplementaries$lastUseDir = null;
+            return state.setValue(BlockStateProperties.HORIZONTAL_FACING, supplementaries$lastUseDir);
         }
         return state;
     }

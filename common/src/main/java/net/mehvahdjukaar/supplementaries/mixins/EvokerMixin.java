@@ -13,24 +13,24 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class EvokerMixin extends SpellcasterIllager implements ISuppEvoker {
 
     @Unique
-    private LivingEntity customWololoo;
+    private LivingEntity supplementaries$customWololoo;
 
     protected EvokerMixin(EntityType<? extends SpellcasterIllager> entityType, Level level) {
         super(entityType, level);
     }
 
     @Override
-    public LivingEntity getCustomWololoo() {
-        return customWololoo;
+    public LivingEntity supplementaries$getCustomWololoo() {
+        return supplementaries$customWololoo;
     }
 
     @Override
-    public void setCustomWololoo(LivingEntity customWololoo) {
-        this.customWololoo = customWololoo;
+    public void supplementaries$setCustomWololoo(LivingEntity customWololoo) {
+        this.supplementaries$customWololoo = customWololoo;
     }
 
     @Override
-    public void setSpellCastingTime(int time) {
+    public void supplementaries$setSpellCastingTime(int time) {
         this.spellCastingTickCount = time;
     }
 }

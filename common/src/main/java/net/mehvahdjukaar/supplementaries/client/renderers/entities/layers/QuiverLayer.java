@@ -3,14 +3,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.world.item.ItemDisplayContext;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -44,7 +42,7 @@ public class QuiverLayer<T extends LivingEntity & IQuiverEntity, M extends Human
 
         ItemStack quiver;
         if (!skeleton) {
-            quiver = livingEntity.getQuiver();
+            quiver = livingEntity.supplementaries$getQuiver();
             if (livingEntity.getMainHandItem() == quiver || livingEntity.getOffhandItem() == quiver) {
                 return;
             }

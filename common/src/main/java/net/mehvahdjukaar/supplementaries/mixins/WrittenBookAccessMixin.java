@@ -14,16 +14,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class WrittenBookAccessMixin implements IAntiqueTextProvider {
 
     @Unique
-    private boolean antiqueInk;
+    private boolean supplementaries$antiqueInk;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void checkAntiqueInk(ItemStack itemStack, CallbackInfo ci){
-        this.antiqueInk = AntiqueInkHelper.hasAntiqueInk(itemStack);
+        this.supplementaries$antiqueInk = AntiqueInkHelper.hasAntiqueInk(itemStack);
     }
 
     @Override
     public boolean hasAntiqueInk() {
-        return antiqueInk;
+        return supplementaries$antiqueInk;
     }
 
     @Override

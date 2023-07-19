@@ -40,9 +40,9 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     }
 
     @Unique
-    private int fleshCount = 0;
+    private int supplementaries$fleshCount = 0;
     @Unique
-    private int conversionTime = -1;
+    private int supplementaries$conversionTime = -1;
 
     protected SkellyHorseMixin(EntityType<? extends AbstractHorse> entityType, Level level) {
         super(entityType, level);
@@ -50,21 +50,21 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void addAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
-        compoundNBT.putInt("FleshCount", this.fleshCount);
-        compoundNBT.putInt("ConversionTime", this.conversionTime);
+        compoundNBT.putInt("FleshCount", this.supplementaries$fleshCount);
+        compoundNBT.putInt("ConversionTime", this.supplementaries$conversionTime);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundNBT, CallbackInfo ci) {
-        this.fleshCount = compoundNBT.getInt("FleshCount");
-        this.conversionTime = compoundNBT.getInt("ConversionTime");
+        this.supplementaries$fleshCount = compoundNBT.getInt("FleshCount");
+        this.supplementaries$conversionTime = compoundNBT.getInt("ConversionTime");
     }
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
     public void mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (CommonConfigs.Tweaks.ZOMBIE_HORSE.get() && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
-            if (stack.getItem() == Items.ROTTEN_FLESH && fleshCount < CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
+            if (stack.getItem() == Items.ROTTEN_FLESH && supplementaries$fleshCount < CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
                 this.feedRottenFlesh(player, hand, stack);
                 cir.cancel();
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
@@ -85,10 +85,10 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
 
         this.setEating(true);
-        this.fleshCount++;
+        this.supplementaries$fleshCount++;
 
-        if (this.fleshCount >= CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
-            this.conversionTime = 200;
+        if (this.supplementaries$fleshCount >= CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
+            this.supplementaries$conversionTime = 200;
             this.level().broadcastEntityEvent(this, (byte) 16);
         }
 
@@ -98,7 +98,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     }
 
     private boolean isConverting() {
-        return this.conversionTime > 0;
+        return this.supplementaries$conversionTime > 0;
     }
 
     private void doZombieConversion() {
@@ -162,9 +162,9 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         super.tick();
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
             if (this.isConverting()) {
-                --this.conversionTime;
+                --this.supplementaries$conversionTime;
 
-                if (this.conversionTime <= 0 && ForgeHelper.canLivingConvert(this, EntityType.ZOMBIE_HORSE, (timer) -> this.conversionTime = timer)) {
+                if (this.supplementaries$conversionTime <= 0 && ForgeHelper.canLivingConvert(this, EntityType.ZOMBIE_HORSE, (timer) -> this.supplementaries$conversionTime = timer)) {
                     this.doZombieConversion();
                 }
             }

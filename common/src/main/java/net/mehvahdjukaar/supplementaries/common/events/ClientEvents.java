@@ -87,7 +87,7 @@ public class ClientEvents {
         }
 
         //forge handles key up with event
-        if (QuiverArrowSelectGui.isUsingKey() || PlatHelper.getPlatform().isFabric()) {
+        if (QuiverArrowSelectGui.isUsingKey()) {
             //handles release edge cases
             QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
                     Minecraft.getInstance().getWindow().getWindow(),

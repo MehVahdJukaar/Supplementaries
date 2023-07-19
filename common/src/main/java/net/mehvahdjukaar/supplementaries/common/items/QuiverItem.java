@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -228,6 +229,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         throw new AssertionError();
     }
 
+    @NotNull
     @ExpectPlatform
     public static ItemStack getQuiver(LivingEntity entity) {
         throw new AssertionError();

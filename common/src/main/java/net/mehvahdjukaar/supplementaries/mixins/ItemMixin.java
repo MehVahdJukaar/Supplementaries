@@ -28,7 +28,7 @@ public abstract class ItemMixin implements IExtendedItem {
 
     @Unique
     @Nullable
-    private AdditionalPlacement additionalBehavior;
+    private AdditionalPlacement supplementaries$additionalBehavior;
 
     @Shadow
     @Final
@@ -56,11 +56,11 @@ public abstract class ItemMixin implements IExtendedItem {
 
     @Nullable
     public AdditionalPlacement getAdditionalBehavior() {
-        return this.additionalBehavior;
+        return this.supplementaries$additionalBehavior;
     }
 
     @Override
     public void addAdditionalBehavior(AdditionalPlacement placementOverride) {
-        this.additionalBehavior = placementOverride;
+        this.supplementaries$additionalBehavior = placementOverride;
     }
 }

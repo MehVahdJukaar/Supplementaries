@@ -40,20 +40,20 @@ public abstract class RedMerchantSpawnerMixin {
     private ServerLevelData serverLevelData;
 
     @Unique
-    private int redSpawnDelay = 0;
+    private int supplementaries$redSpawnDelay = 0;
 
     //remove
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(ServerLevel serverLevel, boolean b, boolean b1, CallbackInfoReturnable<Integer> cir) {
-        if (this.redSpawnDelay > 0) {
-            this.redSpawnDelay--;
+        if (this.supplementaries$redSpawnDelay > 0) {
+            this.supplementaries$redSpawnDelay--;
         }
     }
 
 
     @Inject(method = "spawn", at = @At("RETURN"))
     public void spawn(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && redSpawnDelay == 0) {
+        if (!cir.getReturnValue() && supplementaries$redSpawnDelay == 0) {
             //doesn't set cir to true, so it doesn't interfere with wandering trader spawn
             Player player = world.getRandomPlayer();
             //1/10 chance here already. raised it a bit since when normal one spawns it prevents this
@@ -80,7 +80,7 @@ public abstract class RedMerchantSpawnerMixin {
                                 trader.setDespawnDelay(lifetime);
                                 trader.setWanderTarget(targetPos);
                                 trader.restrictTo(targetPos, 16);
-                                this.redSpawnDelay = lifetime;
+                                this.supplementaries$redSpawnDelay = lifetime;
                             }
                         }
                     }

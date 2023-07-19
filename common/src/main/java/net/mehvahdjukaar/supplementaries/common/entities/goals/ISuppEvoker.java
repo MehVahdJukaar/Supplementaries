@@ -4,9 +4,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 public interface ISuppEvoker {
 
-    void setCustomWololoo(LivingEntity entity);
+    void supplementaries$setCustomWololoo(LivingEntity entity);
 
-    LivingEntity getCustomWololoo();
+    LivingEntity supplementaries$getCustomWololoo();
 
-    void setSpellCastingTime(int time);
+    void supplementaries$setSpellCastingTime(int time);
 }

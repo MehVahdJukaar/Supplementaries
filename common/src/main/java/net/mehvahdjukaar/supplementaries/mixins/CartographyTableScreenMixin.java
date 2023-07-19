@@ -22,19 +22,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CartographyTableScreenMixin extends AbstractContainerScreen<CartographyTableMenu> {
 
     @Unique
-    private final CyclingSlotBackground mapSlotIcon = new CyclingSlotBackground(0);
+    private final CyclingSlotBackground supplementaries$mapSlotIcon = new CyclingSlotBackground(0);
     @Unique
-    private final CyclingSlotBackground ingredientsSlotIcon = new CyclingSlotBackground(1);
+    private final CyclingSlotBackground supplementaries$ingredientsSlotIcon = new CyclingSlotBackground(1);
 
-    public CartographyTableScreenMixin(CartographyTableMenu abstractContainerMenu, Inventory inventory, Component component) {
+    protected CartographyTableScreenMixin(CartographyTableMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
     }
 
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void renderBg(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
-        this.mapSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
-        this.ingredientsSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
+        this.supplementaries$mapSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
+        this.supplementaries$ingredientsSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
     }
 
     @ModifyVariable(method = "renderBg", at = @At(value = "STORE"), ordinal = 1)
@@ -51,7 +51,7 @@ public abstract class CartographyTableScreenMixin extends AbstractContainerScree
     @Override
     protected void containerTick() {
         super.containerTick();
-        this.mapSlotIcon.tick(ModTextures.MAP_ICONS);
-        this.ingredientsSlotIcon.tick(ModTextures.CARTOGRAPHY_INGREDIENTS_ICONS);
+        this.supplementaries$mapSlotIcon.tick(ModTextures.MAP_ICONS);
+        this.supplementaries$ingredientsSlotIcon.tick(ModTextures.CARTOGRAPHY_INGREDIENTS_ICONS);
     }
 }

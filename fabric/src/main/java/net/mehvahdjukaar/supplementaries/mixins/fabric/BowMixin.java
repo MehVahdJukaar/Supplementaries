@@ -21,7 +21,7 @@ public abstract class BowMixin {
     private void shrinkQuiverArrow(ItemStack stack, Level level, LivingEntity livingEntity,
                                    int timeCharged, CallbackInfo ci) {
         var q = QuiverItem.getQuiver(livingEntity);
-        if (q != null) {
+        if (!q.isEmpty()) {
             var data = QuiverItem.getQuiverData(q);
             if (data != null) data.consumeArrow();
         }

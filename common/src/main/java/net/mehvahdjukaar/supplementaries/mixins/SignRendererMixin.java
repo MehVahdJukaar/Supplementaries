@@ -23,9 +23,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class SignRendererMixin {
 
     @Unique
-    private static Float signYaw;
+    private static Float supplementaries$signYaw;
     @Unique
-    private static Boolean front;
+    private static Boolean supplementaries$front;
 
     //screw this
 
@@ -40,11 +40,11 @@ public abstract class SignRendererMixin {
             return -988212;
         } else {
             float scale = (0.4f * ClientConfigs.getSignColorMult());
-            if (front != null && signYaw != null) {
+            if (supplementaries$front != null && supplementaries$signYaw != null) {
                 Vector3f normal = new Vector3f(0, 0, 1);
-                normal.rotateY(signYaw * Mth.DEG_TO_RAD * (front ? 1 : -1));
-                front = null;
-                signYaw = null;
+                normal.rotateY(supplementaries$signYaw * Mth.DEG_TO_RAD * (supplementaries$front ? 1 : -1));
+                supplementaries$front = null;
+                supplementaries$signYaw = null;
                 scale *= ColorUtil.getShading(normal);
             }
             return ColorUtil.multiply(color, scale);
@@ -53,12 +53,12 @@ public abstract class SignRendererMixin {
 
     @Inject(method = "translateSign", at = @At("HEAD"))
     private void captureYaw(PoseStack poseStack, float yaw, BlockState blockState, CallbackInfo ci) {
-        signYaw = yaw;
+        supplementaries$signYaw = yaw;
     }
 
     @Inject(method = "renderSignText", at = @At("HEAD"))
     private void captureFace(BlockPos blockPos, SignText signText, PoseStack poseStack, MultiBufferSource multiBufferSource,
                              int i, int j, int k, boolean face, CallbackInfo ci) {
-        front = face;
+        supplementaries$front = face;
     }
 }

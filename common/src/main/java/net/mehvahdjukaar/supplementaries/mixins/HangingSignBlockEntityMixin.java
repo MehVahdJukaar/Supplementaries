@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignTileExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class HangingSignBlockEntityMixin extends BlockEntity implements IExtendedHangingSign {
 
     @Unique
-    private final HangingSignTileExtension extension = new HangingSignTileExtension(this.getBlockState());;
+    private final HangingSignTileExtension supplementaries$extension = new HangingSignTileExtension(this.getBlockState());;
 
     protected HangingSignBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -32,17 +31,17 @@ public abstract class HangingSignBlockEntityMixin extends BlockEntity implements
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        this.extension.saveAdditional(tag);
+        this.supplementaries$extension.saveAdditional(tag);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.extension.load(tag);
+        this.supplementaries$extension.load(tag);
     }
 
     @Override
     public HangingSignTileExtension getExtension() {
-        return extension;
+        return supplementaries$extension;
     }
 }
