@@ -67,7 +67,7 @@ public class ItemsUtilImpl {
             if (container instanceof WorldlyContainer wc && direction != null) {
                 slots = wc.getSlotsForFace(direction);
             } else {
-                slots = IntStream.rangeClosed(0, container.getContainerSize()).toArray();
+                slots = IntStream.rangeClosed(0, container.getContainerSize()-1).toArray();
             }
             for (int slot : slots) {
                 ItemStack itemStack = container.getItem(slot);
@@ -93,7 +93,7 @@ public class ItemsUtilImpl {
             if (container instanceof WorldlyContainer wc && direction != null) {
                 slots = wc.getSlotsForFace(direction);
             } else {
-                slots = IntStream.rangeClosed(0, container.getContainerSize()).toArray();
+                slots = IntStream.rangeClosed(0, container.getContainerSize()-1).toArray();
             }
             for (int i : slots) {
                 stack = tryMoveInItem(container, stack, i, direction);
