@@ -107,10 +107,12 @@ public class HangingSignTileExtension {
             Direction selfFacing = state.getValue(WallHangingSignBlock.FACING);
             if (direction == selfFacing.getClockWise()) {
                 rightAttachment = ModBlockProperties.PostType.get(neighborState, true);
-                ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                if(level instanceof Level l)
+                   l.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
             } else if (direction == selfFacing.getCounterClockWise()) {
                 leftAttachment = ModBlockProperties.PostType.get(neighborState, true);
-                ((Level) level).sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+                if(level instanceof Level l)
+                  l.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
             }
         }
         if (direction == Direction.DOWN) {
