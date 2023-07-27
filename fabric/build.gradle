@@ -51,8 +51,8 @@ dependencies {
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
     //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
-
-    modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
+    modImplementation("curse.maven:selene-499980:4656566")
+    //modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
 
 }
 
