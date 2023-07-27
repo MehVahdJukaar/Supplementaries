@@ -51,7 +51,7 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
     }
 
     public static boolean isAcceptableItem(ItemStack stack) {
-        return MiscUtils.isAllowedInShulker(stack) && !(stack.getItem() instanceof PresentItem);
+        return MiscUtils.isAllowedInShulker(stack, this.getLevel()) && !(stack.getItem() instanceof PresentItem);
     }
 
 
