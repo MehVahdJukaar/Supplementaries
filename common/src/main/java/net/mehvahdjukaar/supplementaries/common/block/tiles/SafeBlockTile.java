@@ -238,7 +238,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return MiscUtils.isAllowedInShulker(stack) && !getKeyStatus(stack).isCorrect();
+        return MiscUtils.isAllowedInShulker(stack, this.getLevel()) && !getKeyStatus(stack).isCorrect();
     }
 
     @Override
