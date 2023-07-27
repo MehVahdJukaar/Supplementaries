@@ -73,7 +73,7 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return isSlotUnlocked(index) && MiscUtils.isAllowedInShulker(stack);
+        return isSlotUnlocked(index) && MiscUtils.isAllowedInShulker(stack, this.getLevel());
     }
 
     @Override
