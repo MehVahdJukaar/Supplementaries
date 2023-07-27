@@ -128,9 +128,8 @@ public class MiscUtils {
     private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
             Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
 
-    public static boolean isAllowedInShulker(ItemStack stack) {
+    public static boolean isAllowedInShulker(ItemStack stack, Level level) {
         var te = SHULKER_TILE.get();
-        Level = PlatHelper.getCurrentServer();
         te.setLevel(level);
         var r = te.canPlaceItemThroughFace(0, stack, null);
         te.setLevel(null);
