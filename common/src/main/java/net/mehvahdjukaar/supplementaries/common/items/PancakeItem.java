@@ -31,7 +31,13 @@ public class PancakeItem extends RecordItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        int oldAmount = itemStack.getCount();
+        itemStack.setCount(1);
         var r = super.useOn(context);
+        if(itemStack.isEmpty()){
+            itemStack.setCount(oldAmount-1);
+        }else itemStack.setCount(oldAmount);
         if (!r.consumesAction()) {
             return ModRegistry.BLOCK_PLACER.get().mimicUseOn(context, ModRegistry.PANCAKE.get(), null);
         }

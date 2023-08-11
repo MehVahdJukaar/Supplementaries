@@ -1,5 +1,13 @@
-- added trinkets compat
-- added curios compat to fabric
-- added quiver keybind to fabric
-- fixed some jar rendering stuff
-- fixed netherite door sounds
+- fixed a crash with faucets on fabric
+- increased mineshaft elevator spawn frequency
+- fixed mineshaft elevator sometimes spawning without pulley
+- fixed speaker slider on fabric
+- fixed basalt ash not spawning
+- fixed all other structures not spawning on fabric
+- fixed jar item being invisible on fabric
+- basalt ash patches can spawn different height ash layers
+- fixed basalt ash feature not using correct ashen basalt block below
+- fixed flower boxes not rendering double plants correctly
+- fixed petals in flower boxes
+- added configs to turn off villager trades
+- fixed pancakes duplicating in jukeboxes

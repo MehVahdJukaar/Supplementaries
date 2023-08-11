@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.inventories.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;

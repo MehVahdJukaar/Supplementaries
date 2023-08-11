@@ -93,7 +93,8 @@ public class WallLanternBakedModel implements CustomBakedModel {
 
                         VertexUtil.transformVertices(v, mat);
 
-                        quads.add(new BakedQuad(v, q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
+                        quads.add(new BakedQuad(v, q.getTintIndex(),
+                               Direction.rotate(mat, q.getDirection()), q.getSprite(), q.isShade()));
                     }
                 }
             }

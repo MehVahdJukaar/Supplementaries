@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;

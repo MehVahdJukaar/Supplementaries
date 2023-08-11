@@ -13,13 +13,25 @@
       "predicate_type": "minecraft:blockstate_match"
     },
     "top_block": {
-      "Name": "supplementaries:ash"
-    },
-    "below_block":{
-      "Name": "minecraft:basalt",
-      "Properties": {
-        "axis": "y"
+      "type": "randomized_int_state_provider",
+      "values": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+            { "data": 1, "weight": 11 },
+            { "data": 2, "weight": 4 },
+            { "data": 3, "weight": 1 }
+          ]
+      },
+      "property": "layers",
+      "source": {
+        "type": "simple_state_provider",
+        "state": {
+          "Name": "supplementaries:ash"
+        }
       }
+    },
+    "below_block": {
+      "Name": "supplementaries:ashen_basalt"
     }
   },
   "type": "supplementaries:surface_scan_random_patch"

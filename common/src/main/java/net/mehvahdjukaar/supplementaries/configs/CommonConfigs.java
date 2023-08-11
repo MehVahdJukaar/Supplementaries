@@ -163,7 +163,7 @@ public class CommonConfigs {
             builder.push("pulley_block");
             PULLEY_ENABLED = feature(builder);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
-                    .define("mineshaft_elevator", 0.02, 0, 1);
+                    .define("mineshaft_elevator", 0.035, 0, 1);
             builder.pop();
 
             builder.push("dispenser_minecart");
@@ -352,7 +352,7 @@ public class CommonConfigs {
             GLOBE_ENABLED = feature(builder);
             GLOBE_SEPIA = feature(builder, "sepia_globe");
             GLOBE_TRADES = builder.comment("How many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
-                    .define("chance", 2, 0, 50);
+                    .define("wandering_trader_trades", 2, 0, 50);
             builder.pop();
 
             builder.push("sign_post");
@@ -370,7 +370,11 @@ public class CommonConfigs {
             WATTLE_AND_DAUB_ENABLED = feature(builder, ModConstants.WATTLE_AND_DAUB);
             builder.pop();
 
-            ASH_BRICKS_ENABLED = feature(builder, ModConstants.ASH_BRICKS_NAME);
+            builder.push("ash_bricks");
+            ASH_BRICKS_ENABLED = feature(builder);
+            ASH_BRICK_TRADES = builder.define("mason_trades", true);
+            builder.pop();
+
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -450,6 +454,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
 
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
+        public static final Supplier<Boolean> ASH_BRICK_TRADES;
 
         public static final Supplier<Boolean> SCONCE_ENABLED;
 
@@ -604,6 +609,10 @@ public class CommonConfigs {
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
             WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
+            FLAX_TRADES_WANDERING = builder.comment("How many trades to give to wandering trader")
+                    .define("wandering_trader_trades", 2, 0, 10);
+            FLAX_TRADES_FARMER = builder.comment("How many trades to give to farmers")
+                    .define("farmer_trades", 1, 0, 10);
             //FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
             //        .define("rarity", 6, 1, 100);
             //FLAX_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
@@ -665,6 +674,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> FLAX_ENABLED;
         public static final Supplier<Boolean> WILD_FLAX_ENABLED;
+        public static final Supplier<Integer> FLAX_TRADES_WANDERING;
+        public static final Supplier<Integer> FLAX_TRADES_FARMER;
         public static final Supplier<Integer> FLAX_PATCH_TRIES = null;
         public static final Supplier<Integer> FLAX_AVERAGE_EVERY = null;
 
@@ -768,7 +779,10 @@ public class CommonConfigs {
                     .define("unrestricted_enderman_intercept", true);
             builder.pop();
 
-            ANTIQUE_INK_ENABLED = feature(builder, ModConstants.ANTIQUE_INK_NAME);
+            builder.push("antique_ink");
+            ANTIQUE_INK_ENABLED = feature(builder);
+            ANTIQUE_INK_TRADES = builder.define("cartographer_trades", true);
+            builder.pop();
             CANDY_ENABLED = feature(builder, ModConstants.CANDY_NAME);
             STASIS_ENABLED = feature(builder, ModConstants.STASIS_NAME);
 
@@ -814,6 +828,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
 
         public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
+        public static final Supplier<Boolean> ANTIQUE_INK_TRADES;
 
         public static final Supplier<Boolean> CANDY_ENABLED;
 

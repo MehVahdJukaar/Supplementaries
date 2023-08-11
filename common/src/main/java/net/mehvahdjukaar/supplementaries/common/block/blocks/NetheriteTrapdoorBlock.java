@@ -49,8 +49,6 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
                 .setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
     }
 
-    JarBlockTileRenderer
-
     @Override
     public SoundType getSoundType(BlockState state) {
         return SoundType.NETHERITE_BLOCK;

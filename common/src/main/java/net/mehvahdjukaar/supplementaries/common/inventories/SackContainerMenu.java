@@ -1,20 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 
-public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider{
+public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
 
     @Override
@@ -23,9 +25,24 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, ModRegistry.SACK_TILE.get().getBlockEntity(
-                playerInventory.player.level(), packetBuffer.readBlockPos()
-        ));
+        this(id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer));
+    }
+
+    //hack for snowy spirit sleds entities
+    @Nullable
+    private static Container getContainerFromPacket(Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        boolean isBlockPos = packetBuffer.readBoolean();
+        Level level = playerInventory.player.level();
+        if (isBlockPos) {
+            return ModRegistry.SACK_TILE.get().getBlockEntity(
+                    level, packetBuffer.readBlockPos()
+            );
+        } else {
+            var e = level.getEntity(packetBuffer.readVarInt());
+            if (e instanceof Container c) return c;
+            else if (e instanceof IContainerProvider c) return c.getContainer();
+            throw new UnsupportedOperationException("Cannot find container associated with entity "+ e);
+        }
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, Container container) {

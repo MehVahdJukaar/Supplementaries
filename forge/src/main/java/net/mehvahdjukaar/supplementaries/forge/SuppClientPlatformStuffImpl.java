@@ -25,4 +25,5 @@ public class SuppClientPlatformStuffImpl {
                                        double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
         return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
+
 }

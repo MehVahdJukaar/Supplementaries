@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -71,7 +72,6 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 PoseStack poseStack = new PoseStack();
 
                 Matrix4f rot = rotation.getRotation().getMatrix();
-                Matrix4f inv = rot.invert(new Matrix4f());
                 poseStack.mulPoseMatrix(rot);
                 //no idea what these do anymore
                 poseStack.translate(-0.3125, 0, 0);
@@ -80,7 +80,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                     poseStack.translate(0, 0, -0.3125);
                 }
 
-                poseStack.scale(0.625f, 0.625f, 0.625f);
+                float scale = 0.625f;
+                poseStack.scale(scale, scale, scale);
 
                 poseStack.translate(0.5, 0.5, 1);
 
@@ -92,12 +93,11 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                         poseStack.translate(0.5 * i, 0, 0);
 
                         if (flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)) {
-                            poseStack.mulPoseMatrix(inv);
-                            poseStack.translate(0.25, 0, 0.25);
+                            poseStack.translate(scale/4f, 0, scale/4f);
                         }
                         this.addBlockToModel(i, quads, flower, poseStack, side, rand);
                         if (flower.hasProperty(DoublePlantBlock.HALF)) {
-                            poseStack.translate(0, 1, 0);
+                            poseStack.translate(0, scale, 0);
                             this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), poseStack, side, rand);
                         }
                         poseStack.popPose();
@@ -138,11 +138,13 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
             } else {
                 poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
             }
-            VertexUtil.transformVertices(v, poseStack.last().pose());
+            Matrix4f matrix = poseStack.last().pose();
+            VertexUtil.transformVertices(v, matrix);
 
             poseStack.popPose();
 
-            quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(), q.getDirection(), q.getSprite(), q.isShade()));
+            quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(),
+                    Direction.rotate(matrix, q.getDirection()), q.getSprite(), q.isShade()));
         }
     }
 

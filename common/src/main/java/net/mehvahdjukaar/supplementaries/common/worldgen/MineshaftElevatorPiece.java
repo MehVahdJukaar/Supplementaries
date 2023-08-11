@@ -19,10 +19,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -32,6 +29,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.structures.MineshaftPieces;
 import net.minecraft.world.level.levelgen.structure.structures.MineshaftStructure;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +58,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     public static MineshaftPieces.MineShaftPiece getElevator(
             StructurePieceAccessor pieces, RandomSource random, int x, int y, int z,
             Direction direction, int genDepth, MineshaftStructure.Type type) {
-        if (y > 40) {
+        if (y > 48) {
             return null;
         }
         if (random.nextFloat() < CommonConfigs.Redstone.MINESHAFT_ELEVATOR.get() && CommonConfigs.Redstone.PULLEY_ENABLED.get() && CommonConfigs.Redstone.TURN_TABLE_ENABLED.get()) {
@@ -132,7 +130,8 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     }
 
     //runs once per chunk. can generate in between so random stuff is generated on object creation
-    public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random, BoundingBox box, ChunkPos chunkPos, BlockPos pos) {
+    public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random,
+                            BoundingBox box, ChunkPos chunkPos, BlockPos pos) {
         if (!this.isInInvalidLocation(level, box)) {
             BlockState plank = this.type.getPlanksState();
 
@@ -182,10 +181,10 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
             if (!b1 && !b2 && !b3 && !b4) wood = plank;
 
-            boolean p1 = this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
-            boolean p2 = this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
-            boolean p3 = this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
-            boolean p4 = this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
+           this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
+           this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
+           this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
+           this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
 
             for (int j = minX; j <= maxX; ++j) {
                 for (int k = minZ; k <= maxZ; ++k) {
@@ -193,37 +192,28 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     if (j == minX || j == maxX || k == minZ || k == maxZ) {
                         this.setPlanksBlock(level, box, plank, j, i + 4, k);
                         this.setPlanksBlock(level, box, plank, j, i + 8, k);
-                        placeBlockSafe(level, plank, j, i + 12, k, box);
+                        placeBlock(level, plank, j, i + 12, k, box);
                     }
                 }
             }
-            if (p1 && p2 && p3 && p4) addPulley(level, random, box, minZ, minX, maxY);
+            //we need to make this safe across chunk boundaries
+            addPulley(level, random, box, minZ, minX, maxY);
         }
     }
 
     private void maybePlaceCobWeb(WorldGenLevel level, BoundingBox box, RandomSource random, float chance, int x, int y, int z) {
         if (this.isInterior(level, x, y, z, box) && random.nextFloat() < chance
                 && this.hasSturdyNeighbours(level, box, x, y, z, 2)) {
-            placeBlockSafe(level, Blocks.COBWEB.defaultBlockState(), x, y, z, box);
+            this.placeBlock(level, Blocks.COBWEB.defaultBlockState(), x, y, z, box);
         }
     }
 
-    protected void placeBlockSafe(WorldGenLevel level, BlockState plankState, int x, int y, int z, BoundingBox box) {
-        if (this.isInterior(level, x, y, z, box)) {
-            BlockPos blockPos = this.getWorldPos(x, y, z);
-            level.setBlock(blockPos, plankState, 2);
-        }
-    }
-
-    private boolean placeSidePillar(WorldGenLevel level, BoundingBox box, int x, int y, int z, int maxY, BlockState state) {
+    private void placeSidePillar(WorldGenLevel level, BoundingBox box, int x, int y, int z, int maxY, BlockState state) {
         if (this.isInterior(level, x, y, z, box)) {
             var hack = this.getOrientation();
             this.setOrientation(hack);
-            this.generateBox(level, box, x, y, z, x, maxY, z, state,
-                    CAVE_AIR, false);
-            return true;
+            this.generateBox(level, box, x, y, z, x, maxY, z, state, CAVE_AIR, false);
         }
-        return false;
     }
 
     protected boolean fillPillarDownOrChainUp(WorldGenLevel level, BlockState state, int x, int z, BoundingBox box) {
@@ -264,7 +254,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     level.setBlock(mutableBlockPos.setY(maxY + 1), this.type.getFenceState(), 2);
 
                     BlockState chain;
-                    if (maxY + 2 < MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Functional.ROPE_ENABLED.get()) {
+                    if (maxY + 2 > MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Functional.ROPE_ENABLED.get()) {
                         chain = ModRegistry.ROPE.get().defaultBlockState().setValue(RopeBlock.DISTANCE, 0)
                                 .setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
                     } else chain = Blocks.CHAIN.defaultBlockState();
@@ -342,7 +332,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                 .setValue(PulleyBlock.TYPE, hasRope ? ModBlockProperties.Winding.ROPE : ModBlockProperties.Winding.CHAIN)
                 .setValue(PulleyBlock.AXIS, d.getAxis()), contraptionPos.getX(), contraptionPos.getY(), contraptionPos.getZ(), box);
 
-        if (level.getBlockEntity(contraptionPos) instanceof PulleyBlockTile tile) {
+        if (boundingBox.isInside(contraptionPos) && level.getBlockEntity(contraptionPos) instanceof PulleyBlockTile tile) {
             tile.setDisplayedItem(new ItemStack(ropeItem, 16 + random.nextInt(8)));
         }
         contraptionPos.move(d);
@@ -378,8 +368,11 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
         BlockState chest = (hasRope ? ModRegistry.SACK.get() : Blocks.CHEST).defaultBlockState();
         this.placeBlock(level, chest, minX + 2, maxY - 2, minZ + 2, box);
-        if (level.getBlockEntity(new BlockPos(minX + 2, maxY - 2, minZ + 2)) instanceof RandomizableContainerBlockEntity tile) {
-            tile.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, random.nextLong());
+        if(isInterior(level,minX + 2, maxY - 2, minZ + 2, box)){
+            //if we placed the tile
+            if (level.getBlockEntity(new BlockPos(minX + 2, maxY - 2, minZ + 2)) instanceof RandomizableContainerBlockEntity tile) {
+                tile.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, random.nextLong());
+            }
         }
     }
 }

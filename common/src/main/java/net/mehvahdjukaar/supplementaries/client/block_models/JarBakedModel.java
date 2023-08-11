@@ -4,12 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -27,10 +25,10 @@ import java.util.List;
 
 public class JarBakedModel implements CustomBakedModel {
 
-    private static final boolean SINGLE_PASS = true;// PlatHelper.getPlatform().isFabric();
+    private static final boolean SINGLE_PASS =  PlatHelper.getPlatform().isFabric();
 
     //hacky
-    private static Vector3f lastKnownDimensions;
+    private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8/16f, 12/16f, 1/16f);
 
     private final BakedModel jar;
     private final float width;
@@ -42,11 +40,11 @@ public class JarBakedModel implements CustomBakedModel {
         this.width = width;
         this.height = height;
         this.yOffset = yOffset;
-        lastKnownDimensions = new Vector3f(width, height, yOffset);
+        LAST_KNOWN_DIMENSIONS.set(width, height, yOffset);
     }
 
     public static Vector3f getJarLiquidDimensions() {
-        return lastKnownDimensions;
+        return LAST_KNOWN_DIMENSIONS;
     }
 
     @Override

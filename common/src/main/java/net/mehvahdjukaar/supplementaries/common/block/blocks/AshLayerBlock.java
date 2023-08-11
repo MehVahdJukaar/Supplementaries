@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
+import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -30,14 +31,13 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -203,13 +203,22 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
+    public boolean canBeReplaced(BlockState pState, BlockPlaceContext useContext) {
         int i = pState.getValue(LAYERS);
-        if (pUseContext.getItemInHand().is(this.asItem()) && i < MAX_LAYERS) {
-            return true;
+        if (useContext.getItemInHand().is(this.asItem()) && i < MAX_LAYERS) {
+            if (useContext.replacingClickedOnBlock()) {
+                return useContext.getClickedFace() == Direction.UP;
+            } else {
+                return true;
+            }
         } else {
-            return i == 1;
+            return i <= 3;
         }
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, Fluid fluid) {
+        return true;
     }
 
     @EventCalled

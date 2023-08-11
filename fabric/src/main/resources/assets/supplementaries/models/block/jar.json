@@ -1,0 +1,6 @@
+{
+	"textures": {
+		"particle": "supplementaries:block/jar_side"
+	},
+	"parent": "supplementaries:block/jar_model"
+}

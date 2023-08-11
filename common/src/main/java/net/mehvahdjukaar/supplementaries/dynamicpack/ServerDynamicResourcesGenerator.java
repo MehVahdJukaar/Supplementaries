@@ -69,46 +69,49 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             addSignPostRecipes(manager);
         }
 
-        //way signs tag
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-            if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+        //fabric has it done another way
+        if(PlatHelper.getPlatform().isForge()) {
+            //way signs tag
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
+                if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //cave urns tag
+            //cave urns tag
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-            if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //wild flax tag
+            //wild flax tag
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
-            if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //ash
+            //ash
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
 
-            if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                builder.add(Biomes.BASALT_DELTAS.location());
+                if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
+                    builder.add(Biomes.BASALT_DELTAS.location());
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
     }
@@ -134,13 +137,17 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
             if (w != oak) {
-                //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
+                try {
+                    //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+                    IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 
-                FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                if (newR == null) return;
-                newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
-                this.dynamicPack.addRecipe(newR);
+                    FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                    if (newR == null) return;
+                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                    this.dynamicPack.addRecipe(newR);
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
+                }
             }
         });
     }

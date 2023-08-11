@@ -148,7 +148,10 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         } else {
             if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
 
-                PlatHelper.openCustomMenu((ServerPlayer) player, tile, pos);
+                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p->{
+                    p.writeBoolean(true);
+                    p.writeBlockPos(pos);
+                });
                 PiglinAi.angerNearbyPiglins(player, true);
 
                 return InteractionResult.CONSUME;

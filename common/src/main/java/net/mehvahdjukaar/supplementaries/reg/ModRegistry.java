@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -1043,6 +1044,8 @@ public class ModRegistry {
                     .sound(SoundType.SAND)
                     .randomTicks()
                     .strength(0.1F)
+                     .forceSolidOff()
+                    .isViewBlocking((state, l, p) -> state.getValue(AshLayerBlock.LAYERS) >= 8)
                     .requiresCorrectToolForDrops()
     ));
 

@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ModVillagerTrades {
@@ -191,8 +190,9 @@ public class ModVillagerTrades {
 
     //runs on init since we need to be early enough to register stuff to forge busses
     public static void init() {
+
         RegHelper.registerWanderingTraderTrades(2, listings -> {
-            if(!CommonConfigs.SPEC.isLoaded()){
+            if (!CommonConfigs.SPEC.isLoaded()) {
                 throw new AssertionError("Common config was not loaded. How is this possible");
             }
             if (CommonConfigs.Building.GLOBE_ENABLED.get()) {
@@ -204,33 +204,35 @@ public class ModVillagerTrades {
         });
         RegHelper.registerWanderingTraderTrades(1, listings -> {
             if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < CommonConfigs.Functional.FLAX_TRADES_WANDERING.get(); i++) {
                     listings.add(itemForEmeraldTrade(ModRegistry.FLAX_SEEDS_ITEM.get(), 1, 6, 8));
                 }
             }
         });
         RegHelper.registerVillagerTrades(VillagerProfession.FARMER, 3, itemListings -> {
-            if(!CommonConfigs.SPEC.isLoaded()){
+            if (!CommonConfigs.SPEC.isLoaded()) {
                 throw new AssertionError("Common config was not loaded. How is this possible");
             }
             if (CommonConfigs.Functional.FLAX_ENABLED.get())
-                itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
+                for (int i = 0; i < CommonConfigs.Functional.FLAX_TRADES_WANDERING.get(); i++) {
+                    itemListings.add(new ModItemListing(new ItemStack(ModRegistry.FLAX_SEEDS_ITEM.get(), 15), new ItemStack(Items.EMERALD), 16, 2, 0.05f));
+                }
         });
 
         RegHelper.registerVillagerTrades(VillagerProfession.MASON, 1, itemListings -> {
-            if(!CommonConfigs.SPEC.isLoaded()){
+            if (!CommonConfigs.SPEC.isLoaded()) {
                 throw new AssertionError("Common config was not loaded. How is this possible");
             }
-            if (CommonConfigs.Building.ASH_BRICKS_ENABLED.get())
-                itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD), new ItemStack(ModRegistry.ASH_BRICK_ITEM.get(),10), 16, 1, 0.05f));
+            if (CommonConfigs.Building.ASH_BRICKS_ENABLED.get() && CommonConfigs.Building.ASH_BRICK_TRADES.get())
+                itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD), new ItemStack(ModRegistry.ASH_BRICK_ITEM.get(), 10), 16, 1, 0.05f));
         });
 
         RegHelper.registerVillagerTrades(VillagerProfession.CARTOGRAPHER, 5, itemListings -> {
-            if(!CommonConfigs.SPEC.isLoaded()){
+            if (!CommonConfigs.SPEC.isLoaded()) {
                 throw new AssertionError("Common config was not loaded. How is this possible");
             }
-            if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get())
-                itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD , 8),
+            if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get() && CommonConfigs.Tools.ANTIQUE_INK_TRADES.get())
+                itemListings.add(new ModItemListing(new ItemStack(Items.EMERALD, 8),
                         new ItemStack(ModRegistry.ANTIQUE_INK.get()), 16, 30, 0.05f));
         });
 
