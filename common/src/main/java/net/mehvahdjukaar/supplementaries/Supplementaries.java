@@ -106,6 +106,7 @@ public class Supplementaries {
     //use mixin extras
     //refactor moonlight to use objects
 //item frame opt mod
+    //villsger psrticle when inv is full
     //sack insert sound
 //3d jukebox thingie
     //snowy spirit disc

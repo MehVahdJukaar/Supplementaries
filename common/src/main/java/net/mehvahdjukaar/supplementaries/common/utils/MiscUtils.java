@@ -128,8 +128,12 @@ public class MiscUtils {
     private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
             Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
 
-    public static boolean isAllowedInShulker(ItemStack stack) {
-        return SHULKER_TILE.get().canPlaceItemThroughFace(0, stack, null);
+    public static boolean isAllowedInShulker(ItemStack stack, Level level) {
+        var te = SHULKER_TILE.get();
+        te.setLevel(level);
+        var r = te.canPlaceItemThroughFace(0, stack, null);
+        te.setLevel(null);
+        return r;
     }
 
     //cylinder distance
