@@ -44,12 +44,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         this.inventory.startOpen(playerInventory.player);
         this.inventory.addMenuCallbackOnChange(this);
 
-        this.addSlot(new Slot(this.inventory, 0, getSlotX(), getSlotY()) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return PresentBlockTile.isAcceptableItem(stack);
-            }
-        });
+        this.addSlot(new DelegatingSlot(this.inventory, 0, getSlotX(), getSlotY()));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)

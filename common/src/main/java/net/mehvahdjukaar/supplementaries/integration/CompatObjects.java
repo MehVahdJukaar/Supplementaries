@@ -1,12 +1,16 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +65,8 @@ public class CompatObjects {
     public static final Supplier<ParticleType<?>> SHARPNEL = makeCompatObject("oreganized:lead_shrapnel", BuiltInRegistries.PARTICLE_TYPE);
 
     public static final Supplier<MobEffect> STUNNED_EFFECT = makeCompatObject("oreganized:stunned", BuiltInRegistries.MOB_EFFECT);
+
+    public static final Supplier<Enchantment> END_VEIL = makeCompatObject("betterend:end_veil", BuiltInRegistries.ENCHANTMENT);
 
 
 

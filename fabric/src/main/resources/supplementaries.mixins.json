@@ -4,6 +4,7 @@
   "package": "net.mehvahdjukaar.supplementaries.mixins.fabric",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "FabricFixSheetsClassloadingPlsMixin",
     "MC263524FixMixin",
     "MouseScrollMixin",
     "SkullBlockRendererMixin"
@@ -12,6 +13,7 @@
     "BiomeAccessor",
     "BowMixin",
     "BushBlockMixin",
+    "CompatFarmersDelightTomatoMixin",
     "CropBlockMixin",
     "CrossbowMixin",
     "MobBucketItemAccessor",

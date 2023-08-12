@@ -60,11 +60,6 @@ public class BellowsBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public boolean hasDynamicShape() {
-        return true;
-    }
-
-    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
         if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {

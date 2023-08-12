@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -43,7 +45,9 @@ public class SuppPlatformStuffImpl {
     }
 
     public static boolean isEndermanMask(EnderMan enderman, Player player, ItemStack itemstack) {
-        return itemstack.getItem() == Blocks.CARVED_PUMPKIN.asItem();
+        return itemstack.getItem() == Blocks.CARVED_PUMPKIN.asItem() ||
+                EnchantmentHelper.getEnchantments(itemstack)
+                        .containsKey(CompatObjects.END_VEIL.get());
     }
 
     public static int getItemLifeSpawn(ItemEntity itemEntity) {

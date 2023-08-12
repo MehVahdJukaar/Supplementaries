@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
-import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -14,8 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -31,20 +28,22 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 
 public class AshLayerBlock extends FallingBlock {
@@ -202,15 +201,22 @@ public class AshLayerBlock extends FallingBlock {
         else level.removeBlock(pos, false);
     }
 
+    //thanks mojang
+    public static final ThreadLocal<Boolean> RECURSION_HACK = ThreadLocal.withInitial(()->false);
+
     @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext useContext) {
         int i = pState.getValue(LAYERS);
         if (useContext.getItemInHand().is(this.asItem()) && i < MAX_LAYERS) {
+            boolean ret = true;
+            if (RECURSION_HACK.get()) return true;
+            RECURSION_HACK.set(true);
+            //directional placing context, called from the block entity, will override replacinb clicked caling this again
             if (useContext.replacingClickedOnBlock()) {
-                return useContext.getClickedFace() == Direction.UP;
-            } else {
-                return true;
+                ret = useContext.getClickedFace() == Direction.UP;
             }
+            RECURSION_HACK.set(false);
+            return ret;
         } else {
             return i <= 3;
         }
@@ -299,9 +305,9 @@ public class AshLayerBlock extends FallingBlock {
         return false;
     }
 
-    public static boolean updateBasaltBelow(BlockPos selfPos, Level level){
-        if(level.getBlockState(selfPos.below()) == Blocks.BASALT.defaultBlockState()){
-            level.setBlock(selfPos.below(), ModRegistry.ASHEN_BASALT.get().defaultBlockState(),2);
+    public static boolean updateBasaltBelow(BlockPos selfPos, Level level) {
+        if (level.getBlockState(selfPos.below()) == Blocks.BASALT.defaultBlockState()) {
+            level.setBlock(selfPos.below(), ModRegistry.ASHEN_BASALT.get().defaultBlockState(), 2);
             return true;
         }
         return false;

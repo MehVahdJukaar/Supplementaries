@@ -1,4 +1,0 @@
-This is where I write bugs to be fixed, notes, ideas and future plans
-
-bellows contract on click
-Improve stack on existing for ropes to fill current hand last

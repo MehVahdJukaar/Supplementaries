@@ -67,7 +67,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
             }
         });
-        if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded  " + temp.size() + " flute songs");
+        if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded " + temp.size() + " flute songs");
     }
 
     private static void addSong(Song song) {

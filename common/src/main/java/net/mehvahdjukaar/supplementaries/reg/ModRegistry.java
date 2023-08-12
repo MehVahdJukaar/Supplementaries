@@ -10,8 +10,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -22,7 +20,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
-import net.minecraft.client.gui.screens.inventory.BeaconScreen;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -108,7 +105,7 @@ public class ModRegistry {
             .defaultDurability(32)));
 
     //soap bubbler
-    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlower(new Item.Properties()
+    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(new Item.Properties()
             .stacksTo(1).durability(250)));
 
     //slingshot
@@ -406,7 +403,8 @@ public class ModRegistry {
                     .noOcclusion()));
 
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
-            BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
+            BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)
+                    .dynamicShape()));
 
     public static final Supplier<Item> ROPE_ITEM = regItem(ROPE_NAME, () -> new RopeItem(
             ROPE.get(), new Item.Properties()));
@@ -595,6 +593,7 @@ public class ModRegistry {
     public static final Supplier<Block> BELLOWS = regWithItem(BELLOWS_NAME, () -> new BellowsBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .mapColor(MapColor.COLOR_BROWN)
+                    .dynamicShape()
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
                     .noOcclusion()
@@ -981,6 +980,7 @@ public class ModRegistry {
     //feather block
     public static final Supplier<Block> FEATHER_BLOCK = regWithItem(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
             BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f)
+                    .dynamicShape()
                     .noCollission()
     ));
 

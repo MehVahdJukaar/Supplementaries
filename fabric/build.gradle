@@ -39,7 +39,7 @@ dependencies {
     //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
     modRuntimeOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
-    modCompileOnly("curse.maven:farmers-delight-fabric-482834:4111426")
+    modImplementation("curse.maven:farmers-delight-fabric-482834:4640640")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
@@ -50,9 +50,8 @@ dependencies {
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
-    //modImplementation(fileTree(dir: 'mods_fabric', include: '*.jar'))
-    modImplementation("curse.maven:selene-499980:4656566")
-    //modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
+    //modImplementation("curse.maven:selene-499980:4656566")
+    modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
 
 }
 

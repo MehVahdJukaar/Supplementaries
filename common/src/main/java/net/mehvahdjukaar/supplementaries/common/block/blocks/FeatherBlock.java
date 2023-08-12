@@ -23,22 +23,24 @@ public class FeatherBlock extends Block {
 
     protected static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 11, 16);
 
-    private static final TreeMap<Float, VoxelShape> COLLISIONS = new TreeMap<>() {{
+    private static final TreeMap<Float, VoxelShape> COLLISIONS;
+
+    static {
+        COLLISIONS = new TreeMap<>();
         float y = (float) COLLISION_SHAPE.max(Direction.Axis.Y);
 
         float i = 0.0015f;
         //adds an extra lower one for lower key access
-        put(y - i, Shapes.box(0, 0, 0, 1, y, 1));
+        COLLISIONS.put(y - i, Shapes.box(0, 0, 0, 1, y, 1));
 
         while (y < 1) {
-            put(y, Shapes.box(0, 0, 0, 1, y, 1));
+            COLLISIONS.put(y, Shapes.box(0, 0, 0, 1, y, 1));
             i *= 1.131;
             y += i;
         }
-        put(1f, Shapes.block());
-        put(0f, Shapes.block());
-
-    }};
+        COLLISIONS.put(1f, Shapes.block());
+        COLLISIONS.put(0f, Shapes.block());
+    }
 
 
     public FeatherBlock(Properties properties) {
@@ -56,7 +58,7 @@ public class FeatherBlock extends Block {
                 RandomSource random = world.getRandom();
                 double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055);
                 world.addParticle(ModParticles.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.35),
-                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy*0.5, r(random, 0.007));
+                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy * 0.5, r(random, 0.007));
             }
         }
     }
@@ -94,11 +96,6 @@ public class FeatherBlock extends Block {
     //triangle distribution?
     private double r(RandomSource random, double a) {
         return a * (random.nextFloat() + random.nextFloat() - 1);
-    }
-
-    @Override
-    public boolean hasDynamicShape() {
-        return true;
     }
 
     @Override

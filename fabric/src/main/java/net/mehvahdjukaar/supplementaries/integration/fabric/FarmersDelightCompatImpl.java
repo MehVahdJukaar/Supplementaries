@@ -34,10 +34,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CakeBlock;
-import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -64,10 +61,13 @@ public class FarmersDelightCompatImpl {
             () -> SoundEvents.GRASS_FALL);
 
     public static final Supplier<Block> ROPE_TOMATO = RegHelper.registerBlock(Supplementaries.res("rope_tomatoes"),
-            () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)));
+            () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+                    .forceSolidOff()));
 
     public static final Supplier<Block> STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
-            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT).sound(STICK_TOMATO_SOUND)));
+            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+                    .forceSolidOff()
+                    .sound(STICK_TOMATO_SOUND)));
 
 
     public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack stack) {
@@ -92,13 +92,8 @@ public class FarmersDelightCompatImpl {
     public static void init() {
     }
 
-    @org.jetbrains.annotations.Contract
-    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
-        return false;
-    }
-
     public static Block getStickTomato() {
-        return null;
+        return STICK_TOMATOES.get();
     }
 
 
@@ -272,11 +267,6 @@ public class FarmersDelightCompatImpl {
             super(properties);
             this.registerDefaultState(this.defaultBlockState().setValue(ROPELOGGED, true)
                     .setValue(AXIS_X, false).setValue(AXIS_Z, false));
-        }
-
-        @Override
-        public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-            return StickBlock.getStickShape(state.getValue(AXIS_X), true, state.getValue(AXIS_Z));
         }
 
         public Block getInnerBlock() {

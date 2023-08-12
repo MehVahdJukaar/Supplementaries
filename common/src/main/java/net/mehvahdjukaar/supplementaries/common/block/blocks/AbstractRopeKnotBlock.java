@@ -110,11 +110,6 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
 
 
     @Override
-    public boolean hasDynamicShape() {
-        return true;
-    }
-
-    @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
             try {

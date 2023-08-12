@@ -46,10 +46,11 @@ public class FarmersDelightCompat {
         throw new AssertionError();
     }
 
-    @Contract
-    @ExpectPlatform
     public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
-        throw new ArrayStoreException();
+        if (blockstate.getBlock() == getStickTomato()) {
+            return !blockstate.getValue(axis);
+        }
+        return false;
     }
 
     @Contract

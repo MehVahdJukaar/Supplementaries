@@ -40,9 +40,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
-public class BubbleBlower extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
+public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
-    public BubbleBlower(Properties properties) {
+    public BubbleBlowerItem(Properties properties) {
         super(properties);
     }
 
@@ -122,7 +122,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
     }
 
     private int getCharges(ItemStack stack) {
-        return stack.getMaxDamage() - stack.getDamageValue();
+        return this.getMaxDamage(stack) - this.getDamage(stack);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class BubbleBlower extends Item implements IThirdPersonAnimationProvider,
 
     @PlatformOnly(PlatformOnly.FABRIC)
     public int getMaxDamage(ItemStack stack) {
-        return 250;
+        return getMaxDamage();
     }
 
     @PlatformOnly(PlatformOnly.FABRIC)

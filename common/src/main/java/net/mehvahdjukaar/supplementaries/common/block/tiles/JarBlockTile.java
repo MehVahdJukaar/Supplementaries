@@ -9,49 +9,40 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider, IExtraModelDataProvider {
     public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Float> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
 
-    private final int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
-
     public final MobContainer mobContainer;
     public final SoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.JAR_TILE.get(), pos, state);
+        super(ModRegistry.JAR_TILE.get(), pos, state, 12);
+        int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
         this.fluidHolder = SoftFluidTank.create(capacity);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
@@ -93,8 +84,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         //empty hand: eat food
 
         // can I insert this item? For cookies and fish buckets
-        else if (this.mobContainer.isEmpty() && this.canPlaceItem(0, handStack)) {
-            this.handleAddItem(handStack, player, hand);
+        else if (tryAddingItem(handStack, player, hand)) {
             return true;
         }
         //fish buckets
@@ -120,19 +110,19 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     // removes item from te. only 1 increment
     public ItemStack extractItem() {
-        ItemStack myStack = this.getDisplayedItem();
-        if (myStack.getCount() > 0) {
-            return myStack.split(1);
+        for (var j = this.getContainerSize() - 1; j <= 0; j++) {
+            ItemStack s = this.getItem(j);
+            if (!s.isEmpty()) {
+                this.removeItemNoUpdate(j);
+                return s;
+            }
         }
         return ItemStack.EMPTY;
     }
 
     // removes item from te and gives it to player
     public boolean handleExtractItem(Player player, InteractionHand hand) {
-        if (this.getDisplayedItem().getItem() instanceof MobBucketItem) {
-            if (player.getItemInHand(hand).getItem() != Items.BUCKET) return false;
-            player.level().playSound(null, player.blockPosition(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-        } else if (!player.getItemInHand(hand).isEmpty()) return false;
+        if (!player.getItemInHand(hand).isEmpty()) return false;
         ItemStack extracted = this.extractItem();
         if (!extracted.isEmpty()) {
             Utils.swapItem(player, hand, extracted);
@@ -142,33 +132,35 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     // adds item to te, removes from player
-    public void handleAddItem(ItemStack stack, @Nullable Player player, InteractionHand handIn) {
+    public boolean tryAddingItem(ItemStack stack, @Nullable Player player, InteractionHand handIn) {
         ItemStack handStack = stack.copy();
         handStack.setCount(1);
-        Item item = handStack.getItem();
+        if (this.tryAddingItem(handStack)) {
 
-        this.addItem(handStack);
-
-        if (player != null) {
-            ItemStack returnStack = ItemStack.EMPTY;
-            Level level = player.level();
-            level.playSound(player, this.worldPosition, ModSounds.JAR_COOKIE.get(), SoundSource.BLOCKS,
-                    1, 0.9f + level.random.nextFloat() * 0.1f);
-            player.awardStat(Stats.ITEM_USED.get(item));
-            // shrink stack and replace bottle /bucket with empty ones
-            if (!player.isCreative()) {
-                Utils.swapItem(player, handIn, returnStack);
+            if (player != null) {
+                ItemStack returnStack = ItemStack.EMPTY;
+                Level level = player.level();
+                level.playSound(player, this.worldPosition, ModSounds.JAR_COOKIE.get(), SoundSource.BLOCKS,
+                        1, 0.9f + level.random.nextFloat() * 0.1f);
+                player.awardStat(Stats.ITEM_USED.get(handStack.getItem()));
+                // shrink stack and replace bottle /bucket with empty ones
+                if (!player.isCreative()) {
+                    Utils.swapItem(player, handIn, returnStack);
+                }
             }
+            return true;
         }
+        return false;
     }
 
-    public void addItem(ItemStack itemstack) {
-        if (this.isEmpty()) {
-            NonNullList<ItemStack> stacks = NonNullList.withSize(1, itemstack);
-            this.setItems(stacks);
-        } else {
-            this.getDisplayedItem().grow(Math.min(1, this.getMaxStackSize() - this.getDisplayedItem().getCount()));
+    public boolean tryAddingItem(ItemStack itemstack) {
+        for (int i = 0; i < this.getItems().size(); i++) {
+            if (canPlaceItem(i, itemstack)) {
+                this.setItem(i, itemstack);
+                return true;
+            }
         }
+        return false;
     }
 
     public void resetHolders() {
@@ -186,20 +178,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         return false;
     }
 
-    //can this item be added?
-    @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        if (CommonConfigs.Functional.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
-            Item i = stack.getItem();
-            if (!this.isFull()) {
-                //might add other accepted items here
-                if (isCookie(i)) {
-                    return this.isEmpty() || i == this.getDisplayedItem().getItem();
-                }
-            }
-        }
-        return false;
-    }
 
     @Override
     public void load(CompoundTag compound) {
@@ -228,12 +206,12 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     public boolean isFull() {
-        return this.getDisplayedItem().getCount() >= this.getMaxStackSize();
+        return this.getItems().stream().noneMatch(ItemStack::isEmpty);
     }
 
     @Override
     public int getMaxStackSize() {
-        return this.capacity;
+        return 1;
     }
 
     @Override
@@ -243,9 +221,17 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        //can only insert cookies
-        if (!CommonConfigs.Functional.JAR_COOKIES.get()) return false;
-        return isCookie(stack.getItem()) && (this.isEmpty() || stack.getItem() == this.getDisplayedItem().getItem());
+        return canPlaceItem(index, stack);
+    }
+
+    //can this item be added?
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        if (this.getItem(index).getCount() < this.getMaxStackSize() &&
+                CommonConfigs.Functional.JAR_COOKIES.get() && this.fluidHolder.isEmpty() && this.mobContainer.isEmpty()) {
+            return stack.is(ModTags.COOKIES);
+        }
+        return false;
     }
 
     @Override
@@ -274,9 +260,5 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public boolean canInteractWithSoftFluidTank() {
         return CommonConfigs.Functional.JAR_LIQUIDS.get() && this.isEmpty() && (this.mobContainer.isEmpty() || isPonyJar());
-    }
-
-    private static boolean isCookie(Item i) {
-        return (i.builtInRegistryHolder().is(ModTags.COOKIES));
     }
 }

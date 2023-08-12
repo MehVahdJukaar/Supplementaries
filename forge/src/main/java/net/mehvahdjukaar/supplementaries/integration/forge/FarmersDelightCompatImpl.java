@@ -65,10 +65,13 @@ public class FarmersDelightCompatImpl {
             () -> SoundEvents.GRASS_FALL);
 
     public static final Supplier<Block> ROPE_TOMATO = RegHelper.registerBlock(Supplementaries.res("rope_tomatoes"),
-            () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)));
+            () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+                    .forceSolidOff()));
 
     public static final Supplier<Block> STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
-            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT).sound(STICK_TOMATO_SOUND)));
+            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+                    .forceSolidOff()
+                    .sound(STICK_TOMATO_SOUND)));
 
     public static void init() {
     }
@@ -108,13 +111,6 @@ public class FarmersDelightCompatImpl {
                 level.setBlock(pos, toPlace, 3);
                 return true;
             }
-        }
-        return false;
-    }
-
-    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
-        if (blockstate.getBlock() == STICK_TOMATOES.get()) {
-            return !blockstate.getValue(axis);
         }
         return false;
     }
@@ -186,10 +182,10 @@ public class FarmersDelightCompatImpl {
         }
 
         @Override
-        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
+        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos,
                                       BlockPos facingPos) {
-            if (!state.canSurvive(world, currentPos)) {
-                world.scheduleTick(currentPos, this, 1);
+            if (!state.canSurvive(level, currentPos)) {
+                level.scheduleTick(currentPos, this, 1);
             }
             return state;
         }
@@ -228,14 +224,14 @@ public class FarmersDelightCompatImpl {
         }
 
         @Override
-        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos,
+        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos,
                                       BlockPos facingPos) {
-            super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+            super.updateShape(state, facing, facingState, level, currentPos, facingPos);
 
             if (facing.getAxis() == Direction.Axis.Y) {
                 return state;
             }
-            BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
+            BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, level));
             boolean hasKnot = newState.getValue(SOUTH) || newState.getValue(EAST) || newState.getValue(NORTH) || newState.getValue(WEST);
             newState = newState.setValue(KNOT, hasKnot);
 

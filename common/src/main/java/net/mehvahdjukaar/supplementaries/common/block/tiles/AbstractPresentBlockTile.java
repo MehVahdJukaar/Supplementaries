@@ -51,13 +51,8 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return isAcceptableItem(stack);
+        return MiscUtils.isAllowedInShulker(stack, level) && !(stack.getItem() instanceof PresentItem);
     }
-
-    public static boolean isAcceptableItem(ItemStack stack) {
-        return MiscUtils.isAllowedInShulker(stack, this.getLevel()) && !(stack.getItem() instanceof PresentItem);
-    }
-
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
