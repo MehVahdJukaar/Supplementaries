@@ -1,5 +1,2 @@
-- fixed sign shade not working for back face
-- compat sconces are now only registered when the right mods are on
-- fixed jars cookies not coming out
-- fixed loot tables for optional blocks
-- fixed framed blocks filling logic being offset causing some possible dupes
+- fixed a rare crash with mineshaft elevator piece
+- added config to allow other blocks to be "xp bottlers"

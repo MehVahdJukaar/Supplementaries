@@ -44,7 +44,7 @@ class XPBottlingBehavior implements ItemUseOnBlockOverride {
 
         BlockPos pos = hit.getBlockPos();
         Item i = stack.getItem();
-        if (world.getBlockState(pos).getBlock() instanceof EnchantmentTableBlock) {
+        if  (CommonConfigs.xpBottlingOverride.test(world.getBlockState(pos).getBlock())) {
             ItemStack returnStack = null;
 
             //prevent accidentally releasing bottles

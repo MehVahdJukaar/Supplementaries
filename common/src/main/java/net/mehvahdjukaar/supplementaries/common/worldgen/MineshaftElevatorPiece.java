@@ -44,6 +44,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         this.direction = Direction.from2DDataValue(compoundTag.getInt("D"));
         this.floor = compoundTag.getByte("F");
         this.hasChain = compoundTag.getBoolean("C");
+        this.setOrientation(direction);
     }
 
     public MineshaftElevatorPiece(int depth, BoundingBox boundingBox, @Nullable Direction direction,
@@ -52,6 +53,8 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         this.direction = direction;
         this.floor = floor;
         this.hasChain = hasChain;
+        this.setOrientation(direction);
+
     }
 
     @Nullable
@@ -210,8 +213,6 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
     private void placeSidePillar(WorldGenLevel level, BoundingBox box, int x, int y, int z, int maxY, BlockState state) {
         if (this.isInterior(level, x, y, z, box)) {
-            var hack = this.getOrientation();
-            this.setOrientation(hack);
             this.generateBox(level, box, x, y, z, x, maxY, z, state, CAVE_AIR, false);
         }
     }

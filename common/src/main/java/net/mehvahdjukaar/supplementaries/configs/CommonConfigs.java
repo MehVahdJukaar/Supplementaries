@@ -18,6 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
@@ -56,6 +58,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
+    public static Predicate<Block> xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -66,6 +69,12 @@ public class CommonConfigs {
                 return o.get();
             }
             return null;
+        });
+
+        String xp = Tweaks.BOTTLING_TARGET.get();
+        if(xp.isEmpty()) xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
+        else xpBottlingOverride = b -> b == Suppliers.memoize(() -> {
+            return BuiltInRegistries.BLOCK.get(new ResourceLocation(xp));
         });
 
         stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
@@ -949,6 +958,8 @@ public class CommonConfigs {
                     .define("enabled", false);
             BOTTLING_COST = builder.comment("bottling health cost")
                     .define("cost", 2, 0, 20);
+            BOTTLING_TARGET = builder.comment("Block that should be clicked on for bottling to work. Leave blank for enchanting table. You can put another block here from another mod if you find it more fitting")
+                            .define("target_block", "");
             builder.pop();
 
             builder.push("map_tweaks");
@@ -1043,6 +1054,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> RAKED_GRAVEL;
         public static final Supplier<Boolean> BOTTLE_XP;
         public static final Supplier<Integer> BOTTLING_COST;
+        public static final Supplier<String> BOTTLING_TARGET;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<Boolean> QUARK_QUILL;
