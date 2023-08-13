@@ -3,12 +3,14 @@ package net.mehvahdjukaar.supplementaries.integration;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SconceBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SconceWallBlock;
+import net.mehvahdjukaar.supplementaries.common.worldgen.MineshaftElevatorPiece;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.function.Supplier;

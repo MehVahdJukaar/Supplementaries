@@ -13,10 +13,6 @@ accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMeth
 #shulker menu
 accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/minecraft/world/Container;
 
-#sign renderer
-accessible method net/minecraft/client/renderer/blockentity/SignRenderer translateSignText (Lcom/mojang/blaze3d/vertex/PoseStack;ZLnet/minecraft/world/phys/Vec3;)V
-accessible method net/minecraft/client/renderer/blockentity/SignRenderer getTextOffset ()Lnet/minecraft/world/phys/Vec3;
-
 accessible method net/minecraft/server/network/ServerGamePacketListenerImpl filterTextPacket (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 accessible method net/minecraft/server/network/ServerGamePacketListenerImpl filterTextPacket (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
 accessible method net/minecraft/world/level/block/entity/SignBlockEntity createCommandSourceStack (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/commands/CommandSourceStack;

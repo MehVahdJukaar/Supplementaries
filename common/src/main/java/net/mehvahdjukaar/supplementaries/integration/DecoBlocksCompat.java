@@ -20,11 +20,6 @@ public class DecoBlocksCompat {
         throw new AssertionError();
     }
 
-    @Contract
-    @ExpectPlatform
-    public static boolean isPalisade(BlockState state) {
-        throw new AssertionError();
-    }
 
     @ExpectPlatform
     public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos) {

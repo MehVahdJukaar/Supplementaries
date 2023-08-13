@@ -13,16 +13,11 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOv
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.FireworkRocketItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.FireworkStarRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.ArrayList;
@@ -38,7 +33,7 @@ public class ModSetup {
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
-            FlowerPotHandler::setup,
+            FlowerBoxModelsManager::setup,
             WeatheredMap::setup,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,

@@ -117,42 +117,4 @@ public class LightableLanternBlock extends LanternBlock {
         BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 
-    //TODO: hitting sounds
-    //called by mixin
-    public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader worldIn) {
-        if (!IRopeConnection.isSupportingCeiling(pos.above(), worldIn) && worldIn instanceof Level l) {
-            if (CommonConfigs.Tweaks.FALLING_LANTERNS.get().isOn() && l.getBlockState(pos).is(state.getBlock())) {
-                return createFallingLantern(state, pos, l);
-            }
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean createFallingLantern(BlockState state, BlockPos pos, Level level) {
-        if (FallingBlock.isFree(level.getBlockState(pos.below())) && pos.getY() >= level.getMinBuildHeight()) {
-            if (state.hasProperty(LanternBlock.HANGING)) {
-                double maxY = state.getShape(level, pos).bounds().maxY;
-                state = state.setValue(LanternBlock.HANGING, false);
-                double yOffset = maxY - state.getShape(level, pos).bounds().maxY;
-                FallingLanternEntity.fall(level, pos, state, yOffset);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public enum FallMode {
-        ON,
-        OFF,
-        NO_FIRE;
-
-        public boolean hasFire() {
-            return this != NO_FIRE;
-        }
-
-        public boolean isOn() {
-            return this != OFF;
-        }
-    }
 }

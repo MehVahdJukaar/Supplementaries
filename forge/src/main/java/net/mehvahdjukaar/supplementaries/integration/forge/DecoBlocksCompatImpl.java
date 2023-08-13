@@ -92,10 +92,6 @@ public class DecoBlocksCompatImpl {
                 && !state.getValue(BlockStateProperties.LIT);
     }
 
-    public static boolean isPalisade(BlockState state) {
-        return state.getBlock() instanceof PalisadeBlock;
-    }
-
     public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor world, BlockPos facingPos) {
         Block b = facingState.getBlock();
         if (b == CompatObjects.CHANDELIER.get()) {

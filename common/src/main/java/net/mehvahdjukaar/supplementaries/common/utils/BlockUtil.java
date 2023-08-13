@@ -30,6 +30,7 @@ import java.util.Optional;
 
 public class BlockUtil {
 
+    @Deprecated(forRemoval = true)
     public static <T extends Comparable<T>, A extends Property<T>> BlockState replaceProperty(BlockState from, BlockState to, A property) {
         if (from.hasProperty(property)) {
             return to.setValue(property, from.getValue(property));

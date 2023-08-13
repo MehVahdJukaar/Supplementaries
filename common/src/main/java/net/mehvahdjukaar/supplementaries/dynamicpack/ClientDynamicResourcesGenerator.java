@@ -10,24 +10,16 @@ import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Rotation;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,8 +53,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
-        //need this here for reasons I forgot
-        ClientSpecialModelsManager.refreshModels(manager);
+
         GlobeManager.refreshColorsAndTextures(manager);
         ColorHelper.refreshBubbleColors(manager);
 
@@ -222,85 +213,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
 
-
-        ImageTransformer transformer = ImageTransformer.builder(32, 64, 16, 16)
-                .copyRect(26, 0, 2, 4, 4, 0)
-                .copyRect(26, 8, 6, 8, 4, 4)
-                .copyRect(28, 24, 4, 8, 0, 4)
-                .copyRect(26, 20, 2, 4, 6, 0)
-                //cheaty as it has to be flipped. todo: find a way to rotate it instead as this work wotk with packs
-                .copyRect(26, 28, 1, 8, 11, 4)
-                .copyRect(27, 28, 1, 8, 10, 4)
-                .build();
-
-        for (WoodType w : WoodTypeRegistry.getTypes()) {
-            //hanging sign extension textures
-            try (TextureImage vanillaTexture = TextureImage.open(manager,
-                    Sheets.getHangingSignMaterial(w.toVanilla()).texture())) {
-                TextureImage flipped = vanillaTexture.createRotated(Rotation.CLOCKWISE_90);
-                TextureImage newIm = flipped.createResized(0.5f, 0.25f);
-                newIm.clear();
-
-                transformer.apply(flipped, newIm);
-                flipped.close();
-                this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/" + w.getVariantId("extension")), newIm);
-            } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}. Could be that the target mod isnt registering their wood type properly", w, e);
-            }
-        }
-        if (CompatHandler.FARMERS_DELIGHT) {
-            //hanging sign extension textures
-            try (TextureImage vanillaTexture = TextureImage.open(manager,
-                    new ResourceLocation("farmersdelight:entity/signs/hanging/canvas"))) {
-                TextureImage flipped = vanillaTexture.createRotated(Rotation.CLOCKWISE_90);
-                TextureImage newIm = flipped.createResized(0.5f, 0.25f);
-                newIm.clear();
-
-                transformer.apply(flipped, newIm);
-                flipped.close();
-                this.dynamicPack.addAndCloseTexture(Supplementaries.res("entity/signs/hanging/farmersdelight/extension_canvas"), newIm);
-            } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to generate hanging sign extension texture for {}, ", "canvas sign", e);
-            }
-        }
-
-        {
-            StaticResource[] cakeModels = Stream.of("full","slice1","slice2", "slice3", "slice4", "slice5", "slice6")
-                    .map(s-> StaticResource.getOrLog(manager,
-                            ResType.BLOCK_MODELS.getPath(Supplementaries.res("double_cake/vanilla_"+s)))).toArray(StaticResource[]::new);
-
-            StaticResource doubleCakeModelState = StaticResource.getOrLog(manager,
-                    ResType.BLOCKSTATES.getPath(Supplementaries.res("double_cake")));
-            for (var t : CakeRegistry.INSTANCE.getValues()) {
-                if (!t.isVanilla()) {
-                    try {
-                        ResourceLocation dcId = Utils.getID(t.getBlockOfThis("double_cake"));
-                        ResourceLocation top = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("top"));
-                        ResourceLocation side = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("side"));
-                        ResourceLocation bottom = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("bottom"));
-                        ResourceLocation inner = RPUtils.findFirstBlockTextureLocation(manager, t.cake, s -> s.contains("inner"));
-
-                        for(var m  : cakeModels) {
-                            addSimilarJsonResource(manager, m, s -> s
-                                            .replace("supplementaries:block/double_cake", "")
-                                            .replace("supplementaries:block/cake", "")
-                                            .replace("\"/", "\"supplementaries:block/double_cake/")
-                                            .replace("_top", top.toString())
-                                            .replace("_side", side.toString())
-                                            .replace("_inner", inner.toString())
-                                            .replace("_bottom", bottom.toString()),
-                                    s -> s.replace("vanilla", dcId.getPath()));
-                        }
-                        addSimilarJsonResource(manager, doubleCakeModelState,
-                                s -> s.replace("vanilla", dcId.getPath()),
-                                s -> s.replace("double_cake", dcId.getPath()));
-                    } catch (Exception e) {
-                        Supplementaries.LOGGER.error("Failed to generate model for double cake {},", t, e);
-                    }
-
-                }
-            }
-        }
     }
 
 

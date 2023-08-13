@@ -1,49 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import org.jetbrains.annotations.Contract;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 
-public class FlowerPotHandler {
-
-    @Contract
-    @ExpectPlatform
-    public static Block getEmptyPot(FlowerPotBlock fullPot) {
-        throw new AssertionError();
-    }
-
-    @Contract
-    @ExpectPlatform
-    public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static boolean isEmptyPot(Block b) {
-        throw new AssertionError();
-    }
-
-    //move to forge
-    @ExpectPlatform
-    public static void setup() {
-        throw new AssertionError();
-    }
+public class FlowerBoxModelsManager {
 
 
     //flower box stuff
@@ -71,7 +44,7 @@ public class FlowerPotHandler {
     }
 
     //to manually add
-    public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
+    private static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
     //static registerBus for client and server sync
     static {
@@ -162,7 +135,7 @@ public class FlowerPotHandler {
 
         //flower box
 
-        toAdd.forEach(FlowerPotHandler::registerCompatFlower);
+        toAdd.forEach(FlowerBoxModelsManager::registerCompatFlower);
 
     }
 
@@ -184,4 +157,7 @@ public class FlowerPotHandler {
         return getSpecialFlowerModel(i) != null;
     }
 
+    public static void regisperSpecialModels(ClientHelper.SpecialModelEvent event) {
+        CUSTOM_MODELS.forEach(event::register);
+    }
 }

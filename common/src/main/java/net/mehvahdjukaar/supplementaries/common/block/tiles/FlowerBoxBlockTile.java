@@ -7,11 +7,10 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -121,7 +120,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (this.getItem(index).isEmpty()) {
-            return (stack.getItem() instanceof BlockItem && stack.is(ModTags.FLOWER_BOX_PLANTABLE)) || FlowerPotHandler.hasSpecialFlowerModel(stack.getItem());
+            return (stack.getItem() instanceof BlockItem && stack.is(ModTags.FLOWER_BOX_PLANTABLE)) || FlowerBoxModelsManager.hasSpecialFlowerModel(stack.getItem());
         }
         return false;
     }

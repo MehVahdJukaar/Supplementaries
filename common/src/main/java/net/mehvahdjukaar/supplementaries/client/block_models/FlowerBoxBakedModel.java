@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -8,9 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -29,10 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,7 +110,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         BakedModel model;
         //for special flowers
         //TODO: automatically scan and load models from blockstate flower folder
-        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem());
+        ResourceLocation res = FlowerBoxModelsManager.getSpecialFlowerModel(state.getBlock().asItem());
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants

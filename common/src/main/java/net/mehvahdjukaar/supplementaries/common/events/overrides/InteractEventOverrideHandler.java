@@ -52,6 +52,7 @@ public class InteractEventOverrideHandler {
     //equivalent to Block.use
     private static final Map<Block, BlockUseOverride> BLOCK_USE = new IdentityHashMap<>();
 
+    @Deprecated(forRemoval = true)
     public static boolean hasBlockPlacementAssociated(Item item) {
         var v = ITEM_USE_ON_BLOCK.getOrDefault(item, ITEM_USE_ON_BLOCK_HP.get(item));
         return v != null && v.placesBlock();

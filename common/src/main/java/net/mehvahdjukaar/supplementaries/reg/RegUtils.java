@@ -11,16 +11,11 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry.CakeType;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -47,8 +42,6 @@ import java.util.function.Supplier;
 public class RegUtils {
 
     public static void initDynamicRegistry() {
-        BlockSetAPI.registerBlockSetDefinition(CakeRegistry.INSTANCE);
-        BlockSetAPI.addDynamicBlockRegistration(RegUtils::registerDoubleCakes, CakeType.class);
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
         BlockSetAPI.addDynamicBlockRegistration(RegUtils::dummy, WoodType.class);
     }
@@ -165,25 +158,6 @@ public class RegUtils {
         return map;
     }
 
-    //ceiling banners
-    public static Map<DyeColor, Supplier<Block>> registerCeilingBanners(String baseName) {
-        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
-        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
-            String name = baseName + "_" + color.getName();
-            map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
-                            BlockBehaviour.Properties.of()
-                                    .ignitedByLava()
-                                    .forceSolidOn()
-                                    .mapColor(color.getMapColor())
-                                    .strength(1.0F)
-                                    .noCollission()
-                                    .sound(SoundType.WOOD)
-                    ), color.getName() + "_banner", CommonConfigs.Tweaks.CEILING_BANNERS
-            ));
-        }
-        return map;
-    }
-
     //presents
     public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
@@ -222,18 +196,6 @@ public class RegUtils {
             wood.addChild("supplementaries:sign_post", item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
-        }
-    }
-
-
-    private static void registerDoubleCakes(Registrator<Block> event, Collection<CakeType> cakeTypes) {
-        for (CakeType type : cakeTypes) {
-
-            ResourceLocation id = Supplementaries.res(type.getVariantId("double"));
-            DoubleCakeBlock block = new DoubleCakeBlock(type);
-            type.addChild("double_cake", block);
-            event.register(id, block);
-            ModRegistry.DOUBLE_CAKES.put(type, block);
         }
     }
 

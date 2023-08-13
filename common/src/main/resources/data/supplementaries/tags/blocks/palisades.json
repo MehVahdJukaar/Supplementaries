@@ -12,6 +12,7 @@
     {"id":"decorative_blocks:jungle_palisade","required":false},
     {"id":"decorative_blocks:warped_palisade","required":false},
     {"id":"decorative_blocks:crimson_palisade","required":false},
+    {"id":"#decorative_blocks:palisades","required":false},
     {"id":"#druidcraft:beams","required":false},
     {"id":"druidcraftrg:beam","required":false},
     {"id":"druidcraft:oak_beam","required":false},

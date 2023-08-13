@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
@@ -10,9 +11,12 @@ import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -55,6 +59,9 @@ public class SupplementariesForge {
         event.enqueueWork(ModSetup::setup);
         ModSetup.asyncSetup();
         VillagerScareStuff.setup();
+
+        //registers pots
+        ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM.get()), ModRegistry.FLAX_POT);
     }
 
     @SubscribeEvent

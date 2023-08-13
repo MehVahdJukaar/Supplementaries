@@ -13,12 +13,10 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -171,12 +169,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = regTile(
             FLAG_NAME, () -> PlatHelper.newBlockEntityType(
                     FlagBlockTile::new, FLAGS.values().stream().map(Supplier::get).toArray(Block[]::new)));
-    //ceiling banner
-    public static final Map<DyeColor, Supplier<Block>> CEILING_BANNERS = RegUtils.registerCeilingBanners(CEILING_BANNER_NAME);
-
-    public static final Supplier<BlockEntityType<CeilingBannerBlockTile>> CEILING_BANNER_TILE = regTile(
-            CEILING_BANNER_NAME, () -> PlatHelper.newBlockEntityType(
-                    CeilingBannerBlockTile::new, CEILING_BANNERS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
     //presents
 
@@ -675,35 +667,6 @@ public class ModRegistry {
     public static final Supplier<Block> GOLD_GATE = regWithItem(GOLD_GATE_NAME, () -> new IronGateBlock(
             BlockBehaviour.Properties.copy(Blocks.IRON_BARS), true));
 
-    //wall lantern
-    public static final Supplier<WallLanternBlock> WALL_LANTERN = regBlock(WALL_LANTERN_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.LANTERN)
-                .pushReaction(PushReaction.DESTROY)
-                .lightLevel((state) -> 15).noLootTable();
-
-        return /*CompatHandler.create ? SchematicCannonStuff.makeWallLantern(p):*/  new WallLanternBlock(p);
-    });
-
-    public static final Supplier<BlockEntityType<WallLanternBlockTile>> WALL_LANTERN_TILE = regTile(
-            WALL_LANTERN_NAME, () -> PlatHelper.newBlockEntityType(
-                    WallLanternBlockTile::new, WALL_LANTERN.get()));
-
-
-    //hanging flower pot
-    public static final Supplier<Block> HANGING_FLOWER_POT = regPlaceableItem(HANGING_FLOWER_POT_NAME,
-            () -> new HangingFlowerPotBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)),
-            () -> Items.FLOWER_POT, CommonConfigs.Tweaks.HANGING_POT_PLACEMENT);
-
-    public static final Supplier<BlockEntityType<HangingFlowerPotBlockTile>> HANGING_FLOWER_POT_TILE = regTile(
-            HANGING_FLOWER_POT_NAME, () -> PlatHelper.newBlockEntityType(
-                    HangingFlowerPotBlockTile::new, HANGING_FLOWER_POT.get()));
-
-    public static final Map<CakeRegistry.CakeType, DoubleCakeBlock> DOUBLE_CAKES = new LinkedHashMap<>();
-
-    //directional cake
-    public static final Supplier<Block> DIRECTIONAL_CAKE = regBlock(DIRECTIONAL_CAKE_NAME, () -> new DirectionalCakeBlock(
-            CakeRegistry.VANILLA
-    ));
 
     //checker block
     public static final Supplier<Block> CHECKER_BLOCK = regWithItem(CHECKER_BLOCK_NAME, () -> new Block(
@@ -1033,40 +996,6 @@ public class ModRegistry {
                     .strength(1.25F, 4.0F)
                     .sound(SoundType.CORAL_BLOCK)
     ));
-
-    //stackable skulls
-    public static final Supplier<Block> SKULL_PILE = regBlock(SKULL_PILE_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK);
-
-        return /*CompatHandler.create ? SchematicCannonStuff.makeDoubleSkull(p) :*/ new DoubleSkullBlock(p);
-    });
-
-    public static final Supplier<BlockEntityType<DoubleSkullBlockTile>> SKULL_PILE_TILE = regTile(
-            SKULL_PILE_NAME, () -> PlatHelper.newBlockEntityType(
-                    DoubleSkullBlockTile::new, SKULL_PILE.get()));
-
-    //skulls candles
-    public static final Supplier<Block> SKULL_CANDLE = regBlock(SKULL_CANDLE_NAME, () ->
-            new FloorCandleSkullBlock(BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).sound(SoundType.BONE_BLOCK)));
-
-    public static final Supplier<Block> SKULL_CANDLE_WALL = regBlock(SKULL_CANDLE_NAME + "_wall", () ->
-            new WallCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get())));
-
-
-    //needed for tag so it can repel piglins
-    public static final Supplier<Block> SKULL_CANDLE_SOUL = regBlock(SKULL_CANDLE_SOUL_NAME, () ->
-            new FloorCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get()),
-                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME));
-
-    public static final Supplier<Block> SKULL_CANDLE_SOUL_WALL = regBlock(SKULL_CANDLE_SOUL_NAME + "_wall", () ->
-            new WallCandleSkullBlock(BlockBehaviour.Properties.copy(SKULL_CANDLE.get()),
-                    CompatHandler.BUZZIER_BEES ? CompatObjects.SMALL_SOUL_FLAME : () -> ParticleTypes.SOUL_FIRE_FLAME));
-
-
-    public static final Supplier<BlockEntityType<CandleSkullBlockTile>> SKULL_CANDLE_TILE = regTile(
-            SKULL_CANDLE_NAME, () -> PlatHelper.newBlockEntityType(
-                    CandleSkullBlockTile::new, SKULL_CANDLE.get(), SKULL_CANDLE_WALL.get(),
-                    SKULL_CANDLE_SOUL.get(), SKULL_CANDLE_SOUL_WALL.get()));
 
     //bubble
     public static final Supplier<BubbleBlock> BUBBLE_BLOCK = regBlock(BUBBLE_BLOCK_NAME, () ->

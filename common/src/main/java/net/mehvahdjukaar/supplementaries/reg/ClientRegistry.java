@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -20,12 +19,12 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRend
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
@@ -34,7 +33,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverT
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
@@ -61,7 +60,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
 public class ClientRegistry {
@@ -77,12 +75,8 @@ public class ClientRegistry {
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static final ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
-    public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
-    public static final ModelLayerLocation HANGING_SIGN_EXTENSION = loc("hanging_sign_extension");
-    public static final ModelLayerLocation HANGING_SIGN_EXTENSION_CHAINS = loc("hanging_sign_chains");
-    //public static ModelLayerLocation BELL_EXTENSION = loc("bell_extension");
 
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
@@ -90,8 +84,6 @@ public class ClientRegistry {
     public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
     public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
 
-    public static final ResourceLocation BELL_ROPE = Supplementaries.res("block/bell_rope");
-    public static final ResourceLocation BELL_CHAIN = Supplementaries.res("block/bell_chain");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
@@ -141,7 +133,6 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE.get(), RenderType.cutout());
@@ -176,7 +167,6 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.HANGING_FLOWER_POT.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
 
@@ -317,7 +307,6 @@ public class ClientRegistry {
         event.register(ModEntities.ROPE_ARROW.get(), RopeArrowRenderer::new);
         event.register(ModEntities.FALLING_URN.get(), FallingBlockRenderer::new);
         event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
-        event.register(ModEntities.FALLING_LANTERN.get(), FallingBlockRenderer::new);
         event.register(ModEntities.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModEntities.PEARL_MARKER.get(), PearlMarkerRenderer::new);
     }
@@ -332,7 +321,6 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
         event.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
         event.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
-        event.register(ModRegistry.WALL_LANTERN_TILE.get(), WallLanternBlockTileRenderer::new);
         event.register(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
         event.register(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         event.register(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
@@ -340,25 +328,19 @@ public class ClientRegistry {
         event.register(ModRegistry.GLOBE_TILE.get(), GlobeBlockTileRenderer::new);
         event.register(ModRegistry.HOURGLASS_TILE.get(), HourGlassBlockTileRenderer::new);
         event.register(ModRegistry.BLACKBOARD_TILE.get(), BlackboardBlockTileRenderer::new);
-        event.register(ModRegistry.CEILING_BANNER_TILE.get(), CeilingBannerBlockTileRenderer::new);
         event.register(ModRegistry.STATUE_TILE.get(), StatueBlockTileRenderer::new);
         event.register(ModRegistry.BOOK_PILE_TILE.get(), BookPileBlockTileRenderer::new);
         event.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
-        event.register(ModRegistry.SKULL_PILE_TILE.get(), DoubleSkullBlockTileRenderer::new);
-        event.register(ModRegistry.SKULL_CANDLE_TILE.get(), CandleSkullBlockTileRenderer::new);
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
     }
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
-        FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
-        ClientSpecialModelsManager.registerSpecialModels(event);
+        FlowerBoxModelsManager.regisperSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
-        event.register(BELL_ROPE);
-        event.register(BELL_CHAIN);
         //not needed on forge
         if (PlatHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);
@@ -371,7 +353,6 @@ public class ClientRegistry {
     @EventCalled
     private static void registerModelLoaders(ClientHelper.ModelLoaderEvent event) {
         event.register(Supplementaries.res("frame_block"), new NestedModelLoader("overlay", FrameBlockBakedModel::new));
-        event.register(Supplementaries.res("wall_lantern"), new NestedModelLoader("support", WallLanternBakedModel::new));
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("hanging_pot"), new NestedModelLoader("rope", HangingPotBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
@@ -402,9 +383,8 @@ public class ClientRegistry {
     private static void registerBlockColors(ClientHelper.BlockColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
-        event.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         event.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
-                ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(),
+                ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(),
                 ModRegistry.ROPE_KNOT.get());
         event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
@@ -430,11 +410,8 @@ public class ClientRegistry {
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
-        event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
-        event.register(HANGING_SIGN_EXTENSION, HangingSignRendererExtension::createMesh);
-        event.register(HANGING_SIGN_EXTENSION_CHAINS, HangingSignRendererExtension::createChainMesh);
     }
 
 

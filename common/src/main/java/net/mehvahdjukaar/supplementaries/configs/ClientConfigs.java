@@ -6,9 +6,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public class ClientConfigs {
 
         static {
             ConfigBuilder builder = builderReference.get();
-
+            ModTextures
             builder.push("items");
 
             builder.push("slingshot");
@@ -254,12 +254,6 @@ public class ClientConfigs {
 
         public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
 
-        public static final Supplier<Boolean> FAST_SIGNS;
-        public static final Supplier<Boolean> ENHANCED_HANGING_SIGNS;
-        public static final Supplier<PendulumAnimation.Config> HANGING_SIGN_CONFIG;
-
-        public static final Supplier<Boolean> FAST_LANTERNS;
-        public static final Supplier<PendulumAnimation.Config> WALL_LANTERN_CONFIG;
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
         public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
@@ -351,31 +345,6 @@ public class ClientConfigs {
 
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"));
-
-            builder.pop();
-
-            builder.push("wall_lantern");
-            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
-                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
-                    .define("fast_lanterns", false);
-
-            WALL_LANTERN_CONFIG = builder.defineObject("swing_physics",
-                    PendulumAnimation.Config::new,
-                    PendulumAnimation.Config.CODEC);
-            builder.pop();
-
-            builder.push("enhanced_hanging_sign");
-            ENHANCED_HANGING_SIGNS = builder.comment("Modifies vanilla hanging signs to make them like old Supplementaries ones")
-                    .define("enabled", true);
-
-            HANGING_SIGN_CONFIG = builder.defineObject("swing_physics",
-                    PendulumAnimation.Config::new,
-                    PendulumAnimation.Config.CODEC);
-
-            //remove
-            FAST_SIGNS = builder.comment("Makes supplementaries hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
-                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
-                    .define("fast_signs", false);
 
             builder.pop();
 

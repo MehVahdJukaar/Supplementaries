@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -89,27 +88,6 @@ public class TextUtils {
         for (int i = 0; i < textHolder.size(); i++) {
             TextUtil.renderLine(textHolder.getRenderMessages(i, font), font,  ySeparation * i, poseStack, buffer, properties);
         }
-
-
     }
-
-    public static void renderSignText(SignText signText, Font font, PoseStack poseStack,
-                                      MultiBufferSource buffer,
-                                      int light, Vector3f normal, LOD lod, boolean filtered,
-                                      int lineHeight, int lineWidth,
-                                      float colorMult){
-        TextUtil.RenderProperties properties = TextUtil.renderProperties(signText.getColor(),
-                signText.hasGlowingText(), colorMult, light, Style.EMPTY, normal, lod::isVeryNear);
-
-        FormattedCharSequence[] formattedCharSequences = signText.getRenderMessages(filtered, (component) -> {
-            List<FormattedCharSequence> list = font.split(component, lineWidth);
-            return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
-        });
-        for (int i = 0; i < formattedCharSequences.length; i++) {
-            TextUtil.renderLine(formattedCharSequences[i], font,  lineHeight * i, poseStack, buffer, properties);
-        }
-
-    }
-
 
 }
