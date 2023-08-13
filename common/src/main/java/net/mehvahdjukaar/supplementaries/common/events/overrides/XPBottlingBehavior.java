@@ -21,7 +21,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.BlockHitResult;
 
 class XPBottlingBehavior implements ItemUseOnBlockOverride {
@@ -37,14 +36,14 @@ class XPBottlingBehavior implements ItemUseOnBlockOverride {
     }
 
     @Override
-    public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
+    public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
 
         JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
         BlockPos pos = hit.getBlockPos();
         Item i = stack.getItem();
-        if (world.getBlockState(pos).getBlock() instanceof EnchantmentTableBlock) {
+        if (CommonConfigs.isXpBottlingTarget(level.getBlockState(pos).getBlock())) {
             ItemStack returnStack = null;
 
             //prevent accidentally releasing bottles
@@ -76,14 +75,14 @@ class XPBottlingBehavior implements ItemUseOnBlockOverride {
                     Utils.swapItem(player, hand, returnStack);
 
                     if (!player.isCreative())
-                        player.giveExperiencePoints(-Utils.getXPinaBottle(1, world.random) - 3);
+                        player.giveExperiencePoints(-Utils.getXPinaBottle(1, level.random) - 3);
 
-                    if (world.isClientSide) {
+                    if (level.isClientSide) {
                         Minecraft.getInstance().particleEngine.createTrackingEmitter(player, ModParticles.BOTTLING_XP_PARTICLE.get(), 1);
                     }
-                    world.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundSource.BLOCKS, 1, 1);
+                    level.playSound(null, player.blockPosition(), SoundEvents.BOTTLE_FILL_DRAGONBREATH, SoundSource.BLOCKS, 1, 1);
 
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
         }

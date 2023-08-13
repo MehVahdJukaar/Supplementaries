@@ -18,6 +18,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class CommonConfigs {
@@ -56,6 +59,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
+    private static Predicate<Block> xpBottlingOverride = b->b instanceof EnchantmentTableBlock;;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -66,6 +70,13 @@ public class CommonConfigs {
                 return o.get();
             }
             return null;
+        });
+
+
+        String xp = Tweaks.BOTTLING_TARGET.get();
+        if(xp.isEmpty()) xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
+        else xpBottlingOverride = b -> b == Suppliers.memoize(() -> {
+            return BuiltInRegistries.BLOCK.get(new ResourceLocation(xp));
         });
 
         stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
@@ -82,6 +93,10 @@ public class CommonConfigs {
     @Nullable
     public static Holder.Reference<Block> getRopeOverride() {
         return ropeOverride.get();
+    }
+
+    public static boolean isXpBottlingTarget(Block block){
+        return xpBottlingOverride.test(block);
     }
 
     public static boolean stasisEnabled() {
@@ -869,58 +884,10 @@ public class CommonConfigs {
                     .define("shoot_ender_pearls", true);
             builder.pop();
 
-
-            //double cake
-            builder.push("cake_tweaks");
-            DOUBLE_CAKE_PLACEMENT = dep(() -> builder.comment("Allows you to place a cake on top of another")
-                    .define("double_cake", true));
-            DIRECTIONAL_CAKE = dep(() -> builder.comment("Allows eating a cake from every side")
-                    .define("directional_cake", true));
-            builder.pop();
-
-            //skulls stuff
-            builder.push("mob_head_tweaks");
-            SKULL_PILES = dep(() -> builder.comment("Allows you to place two mob heads on top of each other")
-                    .define("skull_piles", true));
-            SKULL_CANDLES =dep(() ->  builder.comment("Allows candles to be placed on top of skulls")
-                    .define("skull_candles", true));
-            SKULL_CANDLES_MULTIPLE = dep(() -> builder.comment("Allows placing more than one candle ontop of each skull")
-                    .define("multiple_candles", true));
-            builder.pop();
-
-            //hanging pot
-            builder.push("hanging_flower_pots");
-            HANGING_POT_PLACEMENT = dep(() -> builder.comment("allows you to place hanging flower pots. Works with any modded pot too")
-                    .define("enabled", true));
-            builder.pop();
-
             //throwable bricks
             builder.push("throwable_bricks");
             THROWABLE_BRICKS_ENABLED = builder.comment("Throw bricks at your foes! Might break glass blocks")
                     .define("enabled", true);
-            builder.pop();
-
-            //wall lantern
-            builder.push("lantern_tweaks");
-            WALL_LANTERN_PLACEMENT = dep(() -> builder.comment("Allow wall lanterns placement")
-                    .define("enabled", true));
-
-            WALL_LANTERN_HIGH_PRIORITY = builder.comment("Gives high priority to wall lantern placement. Enable to override other wall lanterns placements, disable if it causes issues with other mods that use lower priority block click events")
-                    .define("high_priority", true);
-
-            List<String> modBlacklist = Arrays.asList("extlights", "betterendforge", "tconstruct", "enigmaticlegacy");
-            WALL_LANTERN_BLACKLIST = builder.comment("Mod ids of mods that have lantern block that extend the base lantern class but don't look like one")
-                    .define("mod_blacklist", modBlacklist);
-            FALLING_LANTERNS = builder.comment("Allows ceiling lanterns to fall if their support is broken." +
-                            "Additionally if they fall from high enough they will break creating a fire where they land")
-                    .define("falling_lanterns", LightableLanternBlock.FallMode.ON);
-            builder.pop();
-            //bells
-            builder.push("bells_tweaks");
-            BELL_CHAIN = dep(() -> builder.comment("Ring a bell by clicking on a chain that's connected to it")
-                    .define("chain_ringing", true));
-            BELL_CHAIN_LENGTH = builder.comment("Max chain length that allows a bell to ring")
-                    .define("chain_length", 16, 0, 256);
             builder.pop();
 
             builder.push("placeable_sticks");
@@ -949,6 +916,9 @@ public class CommonConfigs {
                     .define("enabled", false);
             BOTTLING_COST = builder.comment("bottling health cost")
                     .define("cost", 2, 0, 20);
+            BOTTLING_TARGET = builder.comment("Block that should be clicked on for bottling to work. Leave blank for enchanting table. You can put another block here from another mod if you find it more fitting")
+                    .define("target_block", "");
+
             builder.pop();
 
             builder.push("map_tweaks");
@@ -975,11 +945,6 @@ public class CommonConfigs {
                 QUILL_TRADE_PRICE_MULT = () -> 1d;
                 QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
-            builder.pop();
-
-            builder.push("ceiling_banners");
-            CEILING_BANNERS = dep(() -> builder.comment("Allow banners to be placed on ceilings")
-                    .define("enabled", true));
             builder.pop();
 
             builder.push("placeable_books");
@@ -1028,21 +993,13 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
         public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
-        public static final Supplier<Boolean> DIRECTIONAL_CAKE;
-        public static final Supplier<Boolean> DOUBLE_CAKE_PLACEMENT;
-        public static final Supplier<Boolean> HANGING_POT_PLACEMENT;
-        public static final Supplier<Boolean> WALL_LANTERN_PLACEMENT;
-        public static final Supplier<Boolean> WALL_LANTERN_HIGH_PRIORITY;
         public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
-        public static final Supplier<List<String>> WALL_LANTERN_BLACKLIST;
-        public static final Supplier<LightableLanternBlock.FallMode> FALLING_LANTERNS;
-        public static final Supplier<Boolean> BELL_CHAIN;
-        public static final Supplier<Integer> BELL_CHAIN_LENGTH;
         public static final Supplier<Boolean> PLACEABLE_STICKS;
         public static final Supplier<Boolean> PLACEABLE_RODS;
         public static final Supplier<Boolean> RAKED_GRAVEL;
         public static final Supplier<Boolean> BOTTLE_XP;
         public static final Supplier<Integer> BOTTLING_COST;
+        public static final Supplier<String> BOTTLING_TARGET;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<Boolean> QUARK_QUILL;
@@ -1050,7 +1007,6 @@ public class CommonConfigs {
         public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
-        public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
         public static final Supplier<Boolean> WRITTEN_BOOKS;
         public static final Supplier<Double> BOOK_POWER;
@@ -1063,9 +1019,6 @@ public class CommonConfigs {
         public static final Supplier<Integer> GUNPOWDER_BURN_SPEED;
         public static final Supplier<Integer> GUNPOWDER_SPREAD_AGE;
         public static final Supplier<Boolean> MIXED_BOOKS;
-        public static final Supplier<Boolean> SKULL_PILES;
-        public static final Supplier<Boolean> SKULL_CANDLES;
-        public static final Supplier<Boolean> SKULL_CANDLES_MULTIPLE;
         public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
         public static final Supplier<Boolean> SCARE_VILLAGERS;
         public static final Supplier<Boolean> BAD_LUCK_CAT;
@@ -1123,11 +1076,6 @@ public class CommonConfigs {
         var config = builder.gameRestart().define(name, value);
         FEATURE_TOGGLES.put(key, config);
         return config;
-    }
-
-
-    private static Supplier<Boolean> dep(Supplier<Supplier<Boolean>> original) {
-        return CompatHandler.AMENDMENTS ? () -> false : original.get();
     }
 
     //TODO: cleanup
