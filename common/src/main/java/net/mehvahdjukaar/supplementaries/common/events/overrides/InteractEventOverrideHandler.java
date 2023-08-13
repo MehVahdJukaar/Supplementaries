@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.AdditionalOptionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -60,13 +60,14 @@ public class InteractEventOverrideHandler {
     public static void init() {
         //register placeable items
         if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            AdditionalItemPlacementsAPI.registerSimple(ModRegistry.BOOK_PILE_H, () -> Items.WRITABLE_BOOK);
-            AdditionalItemPlacementsAPI.registerSimple(ModRegistry.BOOK_PILE_H, () -> Items.WRITTEN_BOOK);
+            AdditionalItemPlacementsAPI.register(
+                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get()), () -> Items.WRITABLE_BOOK);
+            AdditionalItemPlacementsAPI.register(
+                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get()), () -> Items.WRITTEN_BOOK);
         }
         if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
-            AdditionalItemPlacementsAPI.register(() ->
-                    new AdditionalOptionalPlacement(ModRegistry.BOOK_PILE.get(),
-                            CommonConfigs.Tweaks.PLACEABLE_BOOKS), CompatObjects.TOME);
+            AdditionalItemPlacementsAPI.register(
+                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.TOME);
         }
 
     }

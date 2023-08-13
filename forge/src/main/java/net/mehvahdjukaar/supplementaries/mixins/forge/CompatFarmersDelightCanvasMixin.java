@@ -35,9 +35,9 @@ import java.util.List;
 public abstract class CompatFarmersDelightCanvasMixin extends SignRenderer {
 
     @Unique
-    private List<ModelPart> barModel;
+    private List<ModelPart> supplementaries$barModel;
     @Unique
-    private ModelPart chains;
+    private ModelPart supplementaries$chains;
 
     protected CompatFarmersDelightCanvasMixin(BlockEntityRendererProvider.Context arg) {
         super(arg);
@@ -60,7 +60,7 @@ public abstract class CompatFarmersDelightCanvasMixin extends SignRenderer {
 
             HangingSignRendererExtension.render(tile, partialTick,
                     poseStack, bufferSource, packedLight, packedOverlay,
-                    blockState, model, barModel, chains,
+                    blockState, model, supplementaries$barModel, supplementaries$chains,
 
                     this.getCanvasSignMaterial(dye),
                     ModMaterials.CANVAS_SIGH_MATERIAL,
@@ -73,11 +73,11 @@ public abstract class CompatFarmersDelightCanvasMixin extends SignRenderer {
     public void initEnhancedSign(BlockEntityRendererProvider.Context context, CallbackInfo ci) {
         if (PlatHelper.isModLoadingValid()) {
             ModelPart model = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION);
-            this.barModel = List.of(model.getChild("extension_6"),
+            this.supplementaries$barModel = List.of(model.getChild("extension_6"),
                     model.getChild("extension_5"),
                     model.getChild("extension_4"),
                     model.getChild("extension_3"));
-            this.chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
+            this.supplementaries$chains = context.bakeLayer(ClientRegistry.HANGING_SIGN_EXTENSION_CHAINS);
         }
     }
 }

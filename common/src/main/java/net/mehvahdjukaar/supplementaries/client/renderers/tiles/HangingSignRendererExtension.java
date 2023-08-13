@@ -31,6 +31,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class HangingSignRendererExtension {
 
 

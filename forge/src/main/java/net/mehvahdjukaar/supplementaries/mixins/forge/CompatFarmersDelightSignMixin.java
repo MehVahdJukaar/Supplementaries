@@ -65,7 +65,7 @@ public abstract class CompatFarmersDelightSignMixin {
         supplementaries$canvasFront = face;
     }
 
-    @Inject(method = "renderSignWithText", at = @At("TAIL"))
+    @Inject(method = "renderSignWithText", at = @At("TAIL"), remap = false)
     private void resetYaw(SignBlockEntity signBlockEntity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, BlockState state, SignBlock block, DyeColor dye, Model model, CallbackInfo ci) {
         supplementaries$canvasSignYaw = null;
     }

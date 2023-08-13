@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-
+@Deprecated(forRemoval = true)
 @Mixin(HangingSignBlockEntity.class)
 public abstract class HangingSignBlockEntityMixin extends BlockEntity implements IExtendedHangingSign {
 
