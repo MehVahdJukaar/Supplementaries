@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -110,7 +111,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     // removes item from te. only 1 increment
     public ItemStack extractItem() {
-        for (var j = this.getContainerSize() - 1; j <= 0; j++) {
+        for (var j = this.getContainerSize() - 1; j >= 0; j--) {
             ItemStack s = this.getItem(j);
             if (!s.isEmpty()) {
                 this.removeItemNoUpdate(j);
@@ -166,7 +167,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public void resetHolders() {
         this.fluidHolder.clear();
         this.mobContainer.clear();
-        this.setDisplayedItem(ItemStack.EMPTY);
+        this.setItems(NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY));
     }
 
     public boolean isPonyJar() {
@@ -207,11 +208,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     public boolean isFull() {
         return this.getItems().stream().noneMatch(ItemStack::isEmpty);
-    }
-
-    @Override
-    public int getMaxStackSize() {
-        return 1;
     }
 
     @Override

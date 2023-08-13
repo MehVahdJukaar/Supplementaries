@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+@Deprecated(forRemoval = true)
 public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerProtected {
 
     private UUID owner = null;
@@ -29,7 +31,7 @@ public class HangingFlowerPotBlockTile extends MimicBlockTile implements IOwnerP
         super.setHeldBlock(state);
         if (this.level instanceof ServerLevel) {
             //this.setChanged();
-            int newLight = SuppPlatformStuff.getLightEmission(this.getHeldBlock(), level, worldPosition);
+            int newLight = ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition);
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
             //this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }

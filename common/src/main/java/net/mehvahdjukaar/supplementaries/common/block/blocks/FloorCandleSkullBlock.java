@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true)
 public class FloorCandleSkullBlock extends AbstractCandleSkullBlock {
 
     public static final IntegerProperty ROTATION = BlockStateProperties.ROTATION_16;

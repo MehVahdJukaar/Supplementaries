@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.RotationSegment;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+@Deprecated(forRemoval = true)
 public class HangingSignTileExtension {
 
     @Nullable

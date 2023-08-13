@@ -5,7 +5,7 @@
       "rolls": 1,
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "moonlight:optional_item",
           "name": "supplementaries:sconce_glow"
         }
       ],

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.MoonlightRegistry;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;

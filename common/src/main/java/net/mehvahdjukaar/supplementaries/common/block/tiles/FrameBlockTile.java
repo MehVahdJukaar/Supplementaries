@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FeatherBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.IFrameBlock;
@@ -21,10 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoulSandBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,7 +40,7 @@ public class FrameBlockTile extends MimicBlockTile {
 
         if (this.level instanceof ServerLevel) {
             this.setChanged();
-            int newLight = SuppPlatformStuff.getLightEmission(this.getHeldBlock(), level, worldPosition);
+            int newLight = ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition);
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.HAS_BLOCK, true)
                     .setValue(FrameBlock.WATERLOGGED, false)
                     .setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
@@ -78,24 +75,37 @@ public class FrameBlockTile extends MimicBlockTile {
         return state;
     }
 
+    public static class SelfPlacementContext extends BlockPlaceContext{
+
+        public SelfPlacementContext(Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
+            super(player, interactionHand, itemStack, blockHitResult);
+            this.replaceClicked = true;
+        }
+    }
+
     public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace, boolean canStrip) {
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
-        if (Utils.mayBuild(player,pos)) {
+        if (Utils.mayBuild(player,pos) && !trace.isInside()) {
             if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
-                BlockState toPlace = blockItem.getBlock().getStateForPlacement(new BlockPlaceContext(player, hand, stack, trace));
+                BlockPlaceContext context = new SelfPlacementContext(player, hand, stack, trace);
+                if(context.getClickedPos().equals(pos)) {
+                    BlockState toPlace = blockItem.getBlock().getStateForPlacement(context);
 
-                if (isValidBlock(toPlace, pos, level)) {
+                    if (isValidBlock(toPlace, pos, level)) {
+                        if (((BlockItem) item).getBlock() instanceof SlabBlock) {
+                            int aa = 1;
+                        }
+                        BlockState newState = this.acceptBlock(toPlace);
 
-                    BlockState newState = this.acceptBlock(toPlace);
-
-                    SoundType s = newState.getSoundType();
-                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                    level.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
-                    if (!player.getAbilities().instabuild && !level.isClientSide()) {
-                        stack.shrink(1);
+                        SoundType s = newState.getSoundType();
+                        level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                        level.playSound(player, pos, s.getPlaceSound(), SoundSource.BLOCKS, (s.getVolume() + 1.0F) / 2.0F, s.getPitch() * 0.8F);
+                        if (!player.getAbilities().instabuild && !level.isClientSide()) {
+                            stack.shrink(1);
+                        }
+                        return InteractionResult.sidedSuccess(level.isClientSide);
                     }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             } else if (canStrip && item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Building.AXE_TIMBER_FRAME_STRIP.get()) {
                 BlockState held = this.getHeldBlock();

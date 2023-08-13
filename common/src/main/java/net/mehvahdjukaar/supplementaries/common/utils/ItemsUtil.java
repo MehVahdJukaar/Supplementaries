@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
+import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SimplePlacement;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.items.additional_placements.AdditionalOptionalPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
 
 public class ItemsUtil {
@@ -33,7 +33,7 @@ public class ItemsUtil {
 
     @Nullable
     public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
-        return ModRegistry.BLOCK_PLACER.get().mimicGetPlacementState(context, block);
+        return BlockPlacerItem.get().mimicGetPlacementState(context, block);
     }
 
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace) {
@@ -41,15 +41,16 @@ public class ItemsUtil {
     }
 
     public static InteractionResult place(BlockPlaceContext context, Block blockToPlace, @Nullable SoundType placeSound) {
-        return ModRegistry.BLOCK_PLACER.get().mimicPlace(context, blockToPlace, placeSound);
+        return BlockPlacerItem.get().mimicPlace(context, blockToPlace, placeSound);
     }
 
     //helper for slingshot. Calls both block item and this in case it as additional behavior
     public static InteractionResult place(Item item, BlockPlaceContext pContext) {
         //this also calls mixin
+        //TODO: find better way to do
         if (item instanceof BlockItem bi) return bi.place(pContext);
-        if (((IExtendedItem) item).getAdditionalBehavior() instanceof SimplePlacement si)
-            return si.overridePlace(pContext);
+        var placement = AdditionalItemPlacementsAPI.getBehavior(item);
+         if(placement != null) return placement.overridePlace(pContext);
         return InteractionResult.PASS;
     }
 
@@ -62,7 +63,7 @@ public class ItemsUtil {
                 break;
             }
         }
-        if(avoidHands && !added){
+        if (avoidHands && !added) {
             for (int j = 0; j < inv.items.size(); j++) {
                 if (inv.getItem(j).isEmpty() && j != inv.selected && inv.add(j, stack)) {
                     added = true;
@@ -132,7 +133,7 @@ public class ItemsUtil {
     }
 
     @ExpectPlatform
-    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction direction, Object container){
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction direction, Object container) {
         throw new AssertionError();
     }
 

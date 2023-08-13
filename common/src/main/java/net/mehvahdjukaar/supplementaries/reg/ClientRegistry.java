@@ -147,14 +147,8 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.SCONCE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL_SOUL.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_SOUL.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL_ENDER.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_ENDER.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL_GLOW.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_GLOW.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL_GREEN.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_GREEN.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL_NETHER_BRASS.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(ModRegistry.SCONCE_NETHER_BRASS.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.ITEM_SHELF.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CAGE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SCONCE_LEVER.get(), RenderType.cutout());

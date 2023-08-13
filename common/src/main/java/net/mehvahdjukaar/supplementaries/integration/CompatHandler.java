@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -20,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CompatHandler {
 
+    public static final boolean AMENDMENTS = isLoaded("amendments");
     public static final boolean QUARK = isLoaded("quark");
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
@@ -69,6 +69,7 @@ public class CompatHandler {
     public static final boolean CAVE_ENHANCEMENTS = isLoaded("cave_enhancements");
     public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
+    public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
 
 
     private static boolean isLoaded(String name) {
@@ -78,16 +79,15 @@ public class CompatHandler {
     public static void setup() {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
-
-        var i = BuiltInRegistries.ITEM.getOptional(new ResourceLocation("quark:ancient_tome"));
-
-        i.ifPresent(b -> BlockPlacerItem.registerPlaceableItem(ModRegistry.BOOK_PILE.get(), () -> b, CommonConfigs.Tweaks.PLACEABLE_BOOKS));
     }
 
     public static void initOptionalRegistries() {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
+        if (ENDERGETIC) EndergeticCompat.init();
+        if (INFERNALEXP) InfernalExpCompat.init();
+        if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

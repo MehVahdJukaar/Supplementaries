@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true)
 public class DoubleSkullBlockTile extends EnhancedSkullBlockTile {
 
     //so we don't have to save the whole texture location but its index instead

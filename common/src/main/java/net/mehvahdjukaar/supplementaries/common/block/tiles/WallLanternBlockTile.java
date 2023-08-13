@@ -22,7 +22,7 @@ import org.joml.Vector3f;
 
 import java.util.UUID;
 
-
+@Deprecated(forRemoval = true)
 public class WallLanternBlockTile extends SwayingBlockTile implements IBlockHolder, IOwnerProtected, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlockState> MIMIC_KEY = MimicBlockTile.MIMIC_KEY;
@@ -62,7 +62,7 @@ public class WallLanternBlockTile extends SwayingBlockTile implements IBlockHold
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.setHeldBlock(MiscUtils.readBlockState(compound.getCompound("Lantern"), level));
+        this.setHeldBlock(Utils.readBlockState(compound.getCompound("Lantern"), level));
         this.isRedstoneLantern = compound.getBoolean("IsRedstone");
     }
 

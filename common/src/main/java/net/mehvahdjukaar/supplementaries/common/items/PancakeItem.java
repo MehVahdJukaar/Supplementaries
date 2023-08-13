@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -39,7 +40,8 @@ public class PancakeItem extends RecordItem {
             itemStack.setCount(oldAmount-1);
         }else itemStack.setCount(oldAmount);
         if (!r.consumesAction()) {
-            return ModRegistry.BLOCK_PLACER.get().mimicUseOn(context, ModRegistry.PANCAKE.get(), null);
+            return AdditionalItemPlacement.getBlockPlacer()
+                    .mimicUseOn(context, ModRegistry.PANCAKE.get(), null);
         }
         return r;
     }

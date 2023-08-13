@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated(forRemoval = true)
 public class DoubleSkullBlock extends SkullBlock implements IRotatable {
     protected static final VoxelShape SHAPE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 16.0D, 12.0D);
 

@@ -2,19 +2,18 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.common.items.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
@@ -61,21 +60,21 @@ public class RegUtils {
     /**
      * Registers a placeable item for a modded item with the given string
      */
-    public static Supplier<Block> regPlaceableItem(
-            String name, Supplier<? extends Block> sup, String itemLocation, Supplier<Boolean> config) {
+    public static <T extends Block> RegSupplier<T> regPlaceableItem(
+            String name, Supplier<T> sup,
+            String itemLocation, Supplier<Boolean> config) {
         Supplier<Item> itemSupp = () -> BuiltInRegistries.ITEM.get(new ResourceLocation(itemLocation));
         return regPlaceableItem(name, sup, itemSupp, config);
     }
 
-    public static Supplier<Block> regPlaceableItem(String name, Supplier<? extends Block> sup,
-                                                   Supplier<? extends Item> itemSupplier,
-                                                   Supplier<Boolean> config) {
-        Supplier<Block> newSupp = () -> {
-            Block b = sup.get();
-            BlockPlacerItem.registerPlaceableItem(b, itemSupplier, config);
-            return b;
-        };
-        return regBlock(name, newSupp);
+    public static <T extends Block> RegSupplier<T> regPlaceableItem(
+            String name, Supplier<T> blockFactory,
+            Supplier<? extends Item> itemSupplier, Supplier<Boolean> config) {
+        var block = regBlock(name, blockFactory);
+        if (config.get()) {
+            AdditionalItemPlacementsAPI.registerSimple(block, itemSupplier);
+        }
+        return block;
     }
 
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {

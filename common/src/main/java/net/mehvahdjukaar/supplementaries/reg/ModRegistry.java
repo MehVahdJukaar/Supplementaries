@@ -35,7 +35,9 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -346,48 +348,17 @@ public class ModRegistry {
     public static final Supplier<Item> SCONCE_ITEM_SOUL = regItem(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(
             SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(), new Item.Properties(), Direction.DOWN));
 
-    //optional: endergetic
-    public static final Supplier<Block> SCONCE_ENDER = regBlock(SCONCE_NAME_ENDER, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()), 13,
-            CompatObjects.ENDER_FLAME));
-    public static final Supplier<Block> SCONCE_WALL_ENDER = regBlock("sconce_wall_ender", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
-                    .dropsLike(SCONCE_ENDER.get()),
-            CompatObjects.ENDER_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_ENDER = regItem(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(
-            SCONCE_ENDER.get(), SCONCE_WALL_ENDER.get(), new Item.Properties(), Direction.DOWN));
-
-    //glow
-    public static final Supplier<Block> SCONCE_GLOW = regBlock(SCONCE_NAME_GLOW, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()), 13,
-            CompatObjects.GLOW_FLAME));
-    public static final Supplier<Block> SCONCE_WALL_GLOW = regBlock("sconce_wall_glow", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
-                    .dropsLike(SCONCE_GLOW.get()),
-            CompatObjects.GLOW_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_GLOW = regItem(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(
-            SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(), new Item.Properties(), Direction.DOWN));
+    public static final List<Supplier<Item>> SCONCES = new ArrayList<>(List.of(SCONCE_ITEM, SCONCE_ITEM_SOUL));
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get()), 14, ModParticles.GREEN_FLAME));
+            BlockBehaviour.Properties.copy(SCONCE.get()), 14, ModParticles.GREEN_FLAME));
     public static final Supplier<Block> SCONCE_WALL_GREEN = regBlock("sconce_wall_green", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
+            BlockBehaviour.Properties.copy(SCONCE.get())
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(
             SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(), new Item.Properties(), Direction.DOWN));
 
-    //nether brass
-    public static final Supplier<Block> SCONCE_NETHER_BRASS = regBlock(SCONCE_NAME_NETHER_BRASS, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()), 14,
-            CompatObjects.NETHER_BRASS_FLAME));
-    public static final Supplier<Block> SCONCE_WALL_NETHER_BRASS = regBlock("sconce_wall_nether_brass", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
-                    .dropsLike(SCONCE_NETHER_BRASS.get()),
-            CompatObjects.NETHER_BRASS_FLAME));
-    public static final Supplier<Item> SCONCE_ITEM_NETHER_BRASS = regItem(SCONCE_NAME_NETHER_BRASS, () -> new StandingAndWallBlockItem(
-            SCONCE_NETHER_BRASS.get(), SCONCE_WALL_NETHER_BRASS.get(),
-            new Item.Properties(), Direction.DOWN));
 
 
     //candle holder
@@ -810,9 +781,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<StructureTempBlockTile>> STRUCTURE_TEMP_TILE = regTile(
             STRUCTURE_TEMP_NAME, () -> PlatHelper.newBlockEntityType(
                     StructureTempBlockTile::new, STRUCTURE_TEMP.get()));
-
-    public static final Supplier<BlockPlacerItem> BLOCK_PLACER = regItem("placeable_item", () -> new BlockPlacerItem(
-            STRUCTURE_TEMP.get(), new Item.Properties()));
 
     public static final Supplier<Block> BLOCK_GENERATOR = regBlock(BLOCK_GENERATOR_NAME, () -> new BlockGeneratorBlock(
             BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));

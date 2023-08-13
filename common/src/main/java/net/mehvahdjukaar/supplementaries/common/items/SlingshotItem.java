@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.particle.ShriekParticle;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -179,7 +178,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
             return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
                     i instanceof BlockItem ||
-                    ((IExtendedItem) i).hasPlacementBehavior() ||
+                    AdditionalItemPlacementsAPI.hasBehavior(i) ||
                     InteractEventOverrideHandler.hasBlockPlacementAssociated(i);
         };
     }
@@ -237,7 +236,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft =  stack.getUseDuration() - ( entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = stack.getUseDuration() - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {
@@ -258,8 +257,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
         //mainHand.xRot = -0.97079635F;
         offHand.xRot = mainHand.xRot;
-        float f =  CrossbowItem.getChargeDuration(entity.getUseItem());
-        float f1 = Mth.clamp( entity.getTicksUsingItem(), 0.0F, f);
+        float f = CrossbowItem.getChargeDuration(entity.getUseItem());
+        float f1 = Mth.clamp(entity.getTicksUsingItem(), 0.0F, f);
         float f2 = f1 / f;
         offHand.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (right ? 1 : -1);
         offHand.xRot = Mth.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));

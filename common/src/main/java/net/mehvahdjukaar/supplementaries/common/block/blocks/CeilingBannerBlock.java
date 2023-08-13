@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class CeilingBannerBlock extends AbstractBannerBlock {
     public static final BooleanProperty ATTACHED = BlockStateProperties.ATTACHED;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;

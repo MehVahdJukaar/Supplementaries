@@ -11,6 +11,7 @@ import org.joml.Vector3f;
 import java.util.function.Function;
 
 //all client stuff
+@Deprecated(forRemoval = true)
 public abstract class SwingAnimation {
 
    private final Function<BlockState, Vector3f> axisGetter;

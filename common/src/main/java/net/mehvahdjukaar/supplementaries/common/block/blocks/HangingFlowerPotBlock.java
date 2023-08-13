@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class HangingFlowerPotBlock extends Block implements EntityBlock {
 
     protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);

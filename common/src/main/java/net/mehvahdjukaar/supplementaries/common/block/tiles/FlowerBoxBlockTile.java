@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
@@ -60,9 +61,9 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         super.setItem(slot, stack);
         if (this.level instanceof ServerLevel) {
             this.setBlockFromitem(slot, stack.getItem());
-            int newLight = Math.max(Math.max(SuppPlatformStuff.getLightEmission(this.getHeldBlock(), level, worldPosition),
-                            SuppPlatformStuff.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
-                    SuppPlatformStuff.getLightEmission(this.getHeldBlock(2), level, worldPosition));
+            int newLight = Math.max(Math.max(ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition),
+                            ForgeHelper.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
+                    ForgeHelper.getLightEmission(this.getHeldBlock(2), level, worldPosition));
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FrameBlock.LIGHT_LEVEL, newLight), 3);
             //this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }

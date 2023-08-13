@@ -4,12 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -24,9 +28,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CompatFarmersDelightSignMixin {
 
     @Unique
-    private static Float canvasSignYaw;
+    private static Float supplementaries$canvasSignYaw;
     @Unique
-    private static Boolean canvasFront;
+    private static Boolean supplementaries$canvasFront;
 
     /**
      * @author MehVahDjukaar
@@ -40,11 +44,10 @@ public abstract class CompatFarmersDelightSignMixin {
         } else {
             float brightness = isOutlineVisible ? 0.4f : 0.6f;
             float scale = (brightness * ClientConfigs.getSignColorMult());
-            if (canvasFront != null && canvasSignYaw != null) {
+            if (supplementaries$canvasFront != null && supplementaries$canvasSignYaw != null) {
                 Vector3f normal = new Vector3f(0, 0, 1);
-                normal.rotateY(canvasSignYaw * Mth.DEG_TO_RAD * (canvasFront ? 1 : -1));
-                canvasFront = null;
-                canvasSignYaw = null;
+                normal.rotateY(supplementaries$canvasSignYaw * Mth.DEG_TO_RAD * (supplementaries$canvasFront ? 1 : -1));
+                supplementaries$canvasFront = null;
                 scale *= ColorUtil.getShading(normal);
             }
             return ColorUtil.multiply(color, scale);
@@ -53,12 +56,17 @@ public abstract class CompatFarmersDelightSignMixin {
 
     @Inject(method = "translateSign", at = @At("HEAD"))
     private void captureYaw(PoseStack poseStack, float yaw, BlockState blockState, CallbackInfo ci) {
-        canvasSignYaw = yaw;
+        supplementaries$canvasSignYaw = yaw;
     }
 
     @Inject(method = "renderSignText", at = @At("HEAD"))
     private void captureFace(BlockPos blockPos, SignText signText, PoseStack poseStack, MultiBufferSource multiBufferSource,
                              int i, int j, int k, boolean face, CallbackInfo ci) {
-        canvasFront = face;
+        supplementaries$canvasFront = face;
+    }
+
+    @Inject(method = "renderSignWithText", at = @At("TAIL"))
+    private void resetYaw(SignBlockEntity signBlockEntity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, BlockState state, SignBlock block, DyeColor dye, Model model, CallbackInfo ci) {
+        supplementaries$canvasSignYaw = null;
     }
 }

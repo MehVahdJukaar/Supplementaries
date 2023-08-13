@@ -57,6 +57,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true)
 public abstract class AbstractCandleSkullBlock extends AbstractCandleBlock implements EntityBlock, ILightable, IWashable {
 
     protected static final Int2ObjectMap<List<Vec3>> PARTICLE_OFFSETS = Util.make(() -> {

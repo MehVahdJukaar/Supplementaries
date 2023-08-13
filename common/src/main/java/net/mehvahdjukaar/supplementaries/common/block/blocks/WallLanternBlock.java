@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public static final VoxelShape SHAPE_NORTH = Block.box(5, 2, 6, 11, 15.99, 16);
     public static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);

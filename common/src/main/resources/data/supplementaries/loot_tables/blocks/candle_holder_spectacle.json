@@ -12,13 +12,13 @@
       "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:item",
+          "type": "moonlight:optional_item",
           "functions": [
             {
               "function": "minecraft:set_count",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
+                  "condition": "moonlight:optional_block_state_property",
                   "block": "supplementaries:candle_holder_spectacle",
                   "properties": {
                     "candles": "2"
@@ -32,7 +32,7 @@
               "function": "minecraft:set_count",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
+                  "condition": "moonlight:optional_block_state_property",
                   "block": "supplementaries:candle_holder_spectacle",
                   "properties": {
                     "candles": "3"
@@ -46,7 +46,7 @@
               "function": "minecraft:set_count",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
+                  "condition": "moonlight:optional_block_state_property",
                   "block": "supplementaries:candle_holder_spectacle",
                   "properties": {
                     "candles": "4"

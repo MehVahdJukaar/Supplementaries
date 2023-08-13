@@ -1,21 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SimplePlacement;
+import net.mehvahdjukaar.supplementaries.common.items.additional_placements.AdditionalOptionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -36,8 +34,8 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -55,12 +53,26 @@ public class InteractEventOverrideHandler {
     private static final Map<Block, BlockUseOverride> BLOCK_USE = new IdentityHashMap<>();
 
     public static boolean hasBlockPlacementAssociated(Item item) {
-        var v = ITEM_USE_ON_BLOCK.getOrDefault(item,ITEM_USE_ON_BLOCK_HP.get(item));
+        var v = ITEM_USE_ON_BLOCK.getOrDefault(item, ITEM_USE_ON_BLOCK_HP.get(item));
         return v != null && v.placesBlock();
     }
 
-    public static void registerOverrides() {
+    public static void init() {
+        //register placeable items
+        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
+            AdditionalItemPlacementsAPI.registerSimple(ModRegistry.BOOK_PILE_H, () -> Items.WRITABLE_BOOK);
+            AdditionalItemPlacementsAPI.registerSimple(ModRegistry.BOOK_PILE_H, () -> Items.WRITTEN_BOOK);
+        }
+        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
+            AdditionalItemPlacementsAPI.register(() ->
+                    new AdditionalOptionalPlacement(ModRegistry.BOOK_PILE.get(),
+                            CommonConfigs.Tweaks.PLACEABLE_BOOKS), CompatObjects.TOME);
+        }
 
+    }
+
+    public static void registerOverrides() {
+        //registers event stuff
         List<ItemUseOnBlockOverride> itemUseOnBlockHP = new ArrayList<>();
         List<ItemUseOnBlockOverride> itemUseOnBlock = new ArrayList<>();
         List<ItemUseOverride> itemUse = new ArrayList<>();
@@ -88,25 +100,18 @@ public class InteractEventOverrideHandler {
         itemUseOnBlock.add(new MapMarkerBehavior());
         itemUseOnBlock.add(new XPBottlingBehavior());
 
-        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            ((IExtendedItem) Items.WRITABLE_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE_H.get()));
-            ((IExtendedItem) Items.WRITTEN_BOOK).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE_H.get()));
-        }
+
         outer:
         for (Item i : BuiltInRegistries.ITEM) {
 
             if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
                 if (i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock())) {
-                    ((IExtendedItem) i).addAdditionalBehavior(new WallLanternPlacement());
+                    AdditionalItemPlacementsAPI.register(() -> new WallLanternPlacement(bi.getBlock()),
+                            () -> bi);
                     continue;
                 }
             }
-            if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
-                if (BookPileBlock.isQuarkTome(i)) {
-                    ((IExtendedItem) i).addAdditionalBehavior(new SimplePlacement(ModRegistry.BOOK_PILE.get()));
-                    continue;
-                }
-            }
+
             //block items don't work here
             /*
             if (ServerConfigs.cached.SKULL_CANDLES) {
@@ -153,10 +158,10 @@ public class InteractEventOverrideHandler {
 
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK_HP.get(item);
         if (override != null && override.isEnabled()) {
-            if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+            if (CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
             }
-            if(override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())){
+            if (override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
             }
             return override.tryPerformingAction(level, player, hand, stack, hit);
@@ -172,11 +177,11 @@ public class InteractEventOverrideHandler {
 
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
         if (override != null && override.isEnabled()) {
-            if(CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+            if (CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
             }
             //TODO: merge
-            if(override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())){
+            if (override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
             }
             InteractionResult result = override.tryPerformingAction(level, player, hand, stack, hit);
@@ -191,7 +196,7 @@ public class InteractEventOverrideHandler {
 
             BlockUseOverride o = BLOCK_USE.get(state.getBlock());
             if (o != null && o.isEnabled()) {
-                if(CompatHandler.FLAN && o.altersWorld() && !FlanCompat.canPlace(player,hit.getBlockPos())){
+                if (CompatHandler.FLAN && o.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return InteractionResult.PASS;
                 }
                 return o.tryPerformingAction(state, pos, level, player, hand, stack, hit);
@@ -206,7 +211,7 @@ public class InteractEventOverrideHandler {
     public static InteractionResultHolder<ItemStack> onItemUse(
             Player player, Level level, InteractionHand hand, ItemStack stack) {
         Item item = stack.getItem();
-        
+
         ItemUseOverride override = ITEM_USE.get(item);
         if (override != null && override.isEnabled()) {
             var ret = override.tryPerformingAction(level, player, hand, stack, null);

@@ -96,12 +96,6 @@ public class SuppPlatformStuffImpl {
         ForgeEventFactory.firePlayerItemPickupEvent(player, itemEntity, copy);
     }
 
-    public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
-        return state.getLightEmission(level, pos);
-    }
-
-
-
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c.withSearchBar();
     }

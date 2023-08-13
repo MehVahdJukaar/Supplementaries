@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
@@ -871,26 +872,26 @@ public class CommonConfigs {
 
             //double cake
             builder.push("cake_tweaks");
-            DOUBLE_CAKE_PLACEMENT = builder.comment("Allows you to place a cake on top of another")
-                    .define("double_cake", true);
-            DIRECTIONAL_CAKE = builder.comment("Allows eating a cake from every side")
-                    .define("directional_cake", true);
+            DOUBLE_CAKE_PLACEMENT = dep(() -> builder.comment("Allows you to place a cake on top of another")
+                    .define("double_cake", true));
+            DIRECTIONAL_CAKE = dep(() -> builder.comment("Allows eating a cake from every side")
+                    .define("directional_cake", true));
             builder.pop();
 
             //skulls stuff
             builder.push("mob_head_tweaks");
-            SKULL_PILES = builder.comment("Allows you to place two mob heads on top of each other")
-                    .define("skull_piles", true);
-            SKULL_CANDLES = builder.comment("Allows candles to be placed on top of skulls")
-                    .define("skull_candles", true);
-            SKULL_CANDLES_MULTIPLE = builder.comment("Allows placing more than one candle ontop of each skull")
-                    .define("multiple_candles", true);
+            SKULL_PILES = dep(() -> builder.comment("Allows you to place two mob heads on top of each other")
+                    .define("skull_piles", true));
+            SKULL_CANDLES =dep(() ->  builder.comment("Allows candles to be placed on top of skulls")
+                    .define("skull_candles", true));
+            SKULL_CANDLES_MULTIPLE = dep(() -> builder.comment("Allows placing more than one candle ontop of each skull")
+                    .define("multiple_candles", true));
             builder.pop();
 
             //hanging pot
             builder.push("hanging_flower_pots");
-            HANGING_POT_PLACEMENT = builder.comment("allows you to place hanging flower pots. Works with any modded pot too")
-                    .define("enabled", true);
+            HANGING_POT_PLACEMENT = dep(() -> builder.comment("allows you to place hanging flower pots. Works with any modded pot too")
+                    .define("enabled", true));
             builder.pop();
 
             //throwable bricks
@@ -901,8 +902,8 @@ public class CommonConfigs {
 
             //wall lantern
             builder.push("lantern_tweaks");
-            WALL_LANTERN_PLACEMENT = builder.comment("Allow wall lanterns placement")
-                    .define("enabled", true);
+            WALL_LANTERN_PLACEMENT = dep(() -> builder.comment("Allow wall lanterns placement")
+                    .define("enabled", true));
 
             WALL_LANTERN_HIGH_PRIORITY = builder.comment("Gives high priority to wall lantern placement. Enable to override other wall lanterns placements, disable if it causes issues with other mods that use lower priority block click events")
                     .define("high_priority", true);
@@ -916,8 +917,8 @@ public class CommonConfigs {
             builder.pop();
             //bells
             builder.push("bells_tweaks");
-            BELL_CHAIN = builder.comment("Ring a bell by clicking on a chain that's connected to it")
-                    .define("chain_ringing", true);
+            BELL_CHAIN = dep(() -> builder.comment("Ring a bell by clicking on a chain that's connected to it")
+                    .define("chain_ringing", true));
             BELL_CHAIN_LENGTH = builder.comment("Max chain length that allows a bell to ring")
                     .define("chain_length", 16, 0, 256);
             builder.pop();
@@ -977,8 +978,8 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("ceiling_banners");
-            CEILING_BANNERS = builder.comment("Allow banners to be placed on ceilings")
-                    .define("enabled", true);
+            CEILING_BANNERS = dep(() -> builder.comment("Allow banners to be placed on ceilings")
+                    .define("enabled", true));
             builder.pop();
 
             builder.push("placeable_books");
@@ -1020,6 +1021,7 @@ public class CommonConfigs {
 
             builder.pop();
         }
+
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
         public static final Supplier<Boolean> DYE_BLOCKS;
@@ -1121,6 +1123,11 @@ public class CommonConfigs {
         var config = builder.gameRestart().define(name, value);
         FEATURE_TOGGLES.put(key, config);
         return config;
+    }
+
+
+    private static Supplier<Boolean> dep(Supplier<Supplier<Boolean>> original) {
+        return CompatHandler.AMENDMENTS ? () -> false : original.get();
     }
 
     //TODO: cleanup

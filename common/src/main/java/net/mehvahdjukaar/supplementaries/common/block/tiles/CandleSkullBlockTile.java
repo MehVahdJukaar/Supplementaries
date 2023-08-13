@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated(forRemoval = true)
 public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
 
     private BlockState candle = Blocks.AIR.defaultBlockState();
@@ -46,7 +48,7 @@ public class CandleSkullBlockTile extends EnhancedSkullBlockTile {
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("Candle", 10)) {
-            this.candle = MiscUtils.readBlockState(tag.getCompound("Candle"), level);
+            this.candle = Utils.readBlockState(tag.getCompound("Candle"), level);
             if (this.candle.getBlock() instanceof CandleBlock candleBlock) {
                 this.waxTexture = getWaxColor(candleBlock);
             } else this.waxTexture = getWaxColor((CandleBlock) Blocks.CANDLE);

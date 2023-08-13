@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
 
-import net.mehvahdjukaar.supplementaries.api.AdditionalPlacement;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -13,7 +13,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class DoubleCakePlacement implements AdditionalPlacement {
+import java.util.function.Supplier;
+
+public class DoubleCakePlacement extends AdditionalItemPlacement {
+
+    public DoubleCakePlacement(Block placeable) {
+        super(placeable);
+    }
 
     @Override
     public BlockPlaceContext overrideUpdatePlacementContext(BlockPlaceContext pContext) {

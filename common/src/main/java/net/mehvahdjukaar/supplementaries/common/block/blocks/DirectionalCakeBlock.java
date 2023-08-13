@@ -39,6 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+@Deprecated(forRemoval = true)
 public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterloggedBlock {
     protected static final VoxelShape[] SHAPES_NORTH = new VoxelShape[]{
             Block.box(1, 0, 1, 15, 8, 15),

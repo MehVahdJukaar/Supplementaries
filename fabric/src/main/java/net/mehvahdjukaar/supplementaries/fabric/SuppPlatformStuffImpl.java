@@ -57,10 +57,6 @@ public class SuppPlatformStuffImpl {
     public static void onItemPickup(Player player, ItemEntity itemEntity, ItemStack copy) {
     }
 
-    public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
-        return state.getLightEmission();
-    }
-
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         return c;
     }

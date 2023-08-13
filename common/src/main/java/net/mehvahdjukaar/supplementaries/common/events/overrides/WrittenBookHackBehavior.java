@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.supplementaries.api.IExtendedItem;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
+import net.mehvahdjukaar.moonlight.core.misc.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,7 +34,8 @@ class WrittenBookHackBehavior implements ItemUseOnBlockOverride {
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
         if (player.isSecondaryUseActive()) {
-            var r = ((IExtendedItem) stack.getItem()).getAdditionalBehavior()
+            //calls the placement logic that the item already has, skipping the open book stuff
+            var r = AdditionalItemPlacementsAPI.getBehavior(stack.getItem())
                     .overrideUseOn(new UseOnContext(player, hand, hit), null);
             if (r.consumesAction()) return r;
         }

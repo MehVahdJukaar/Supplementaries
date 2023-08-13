@@ -26,6 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.*;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true)
 public class WallCandleSkullBlock extends AbstractCandleSkullBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;

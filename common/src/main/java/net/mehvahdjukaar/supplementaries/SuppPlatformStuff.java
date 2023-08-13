@@ -53,11 +53,6 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static int getLightEmission(BlockState state, Level level, BlockPos pos) {
-        throw new ArrayStoreException();
-    }
-
-    @ExpectPlatform
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
         throw new ArrayStoreException();
     }

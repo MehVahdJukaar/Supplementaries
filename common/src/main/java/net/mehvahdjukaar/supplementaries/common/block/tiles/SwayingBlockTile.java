@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
+@Deprecated(forRemoval = true)
 public abstract class SwayingBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
     public static final ModelDataKey<Boolean> FANCY = ModBlockProperties.FANCY;

@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
+@Deprecated(forRemoval = true)
 public class CakeRegistry extends BlockTypeRegistry<CakeRegistry.CakeType> {
 
     public static final CakeRegistry INSTANCE = new CakeRegistry();

@@ -60,10 +60,10 @@ public class ModCreativeTabs {
         isRunningSetup = true;
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
-        Map<ResourceKey<CreativeModeTab>,List<ItemStack>> map = new HashMap<>();
-        CreativeModeTabs.tabs().forEach(t->map.putIfAbsent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(t).get(), new ArrayList<>()));
+        Map<ResourceKey<CreativeModeTab>, List<ItemStack>> map = new HashMap<>();
+        CreativeModeTabs.tabs().forEach(t -> map.putIfAbsent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(t).get(), new ArrayList<>()));
         var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, reverse, itemStacks) -> {
-            var l = map.computeIfAbsent(creativeModeTab,t->new ArrayList<>());
+            var l = map.computeIfAbsent(creativeModeTab, t -> new ArrayList<>());
             if (reverse) {
                 var v = new ArrayList<>(itemStacks);
                 Collections.reverse(v);
@@ -71,7 +71,7 @@ public class ModCreativeTabs {
             } else l.addAll(itemStacks);
         });
         registerItemsToTabs(dummy);
-        for(var e : map.values()){
+        for (var e : map.values()) {
             NON_HIDDEN_ITEMS.addAll(e);
         }
 
@@ -98,9 +98,12 @@ public class ModCreativeTabs {
             return;
         }
 
+        List<Supplier<? extends ItemLike>> sconces = new ArrayList<>(ModRegistry.SCONCES);
+        sconces.add(ModRegistry.SCONCE_LEVER);
+
         before(e, Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SCONCE_NAME,
-                ModRegistry.SCONCE, ModRegistry.SCONCE_SOUL, ModRegistry.SCONCE_LEVER);
+                sconces.toArray(Supplier[]::new));
 
         before(e, Items.CHAIN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.ROPE_NAME,

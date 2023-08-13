@@ -145,10 +145,4 @@ public class MiscUtils {
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
 
-    public static BlockState readBlockState(CompoundTag compound, @Nullable Level level) {
-        HolderGetter<Block> holderGetter = level != null ? level.holderLookup(Registries.BLOCK) : BuiltInRegistries.BLOCK.asLookup();
-        return NbtUtils.readBlockState(holderGetter, compound);
-    }
-
-
 }

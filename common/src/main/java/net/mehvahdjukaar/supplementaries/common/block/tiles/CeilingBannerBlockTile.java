@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-
+@Deprecated(forRemoval = true)
 public class CeilingBannerBlockTile extends BlockEntity implements Nameable {
     @Nullable
     private Component name;
