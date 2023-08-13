@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
+@Deprecated(forRemoval = true)
 @Mixin(BrewingStandBlockEntity.class)
 public abstract class BrewingStandMixin extends BlockEntity{
 

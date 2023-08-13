@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated(forRemoval = true)
 @Mixin(HangingSignRenderer.class)
 public abstract class HangingSignRendererMixin extends SignRenderer {
 

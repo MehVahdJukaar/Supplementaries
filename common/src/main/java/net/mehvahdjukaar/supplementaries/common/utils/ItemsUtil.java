@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
 import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.AdditionalOptionalPlacement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

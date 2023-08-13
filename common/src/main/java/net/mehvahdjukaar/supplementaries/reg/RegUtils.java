@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry.CakeType;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -72,7 +73,8 @@ public class RegUtils {
             Supplier<? extends Item> itemSupplier, Supplier<Boolean> config) {
         var block = regBlock(name, blockFactory);
         if (config.get()) {
-            AdditionalItemPlacementsAPI.registerSimple(block, itemSupplier);
+            AdditionalItemPlacementsAPI.register(
+                    () -> new SuppAdditionalPlacement(block.get()), itemSupplier);
         }
         return block;
     }

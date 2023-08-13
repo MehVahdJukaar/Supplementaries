@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.minecraft.util.StringRepresentable;
 
+@Deprecated(forRemoval = true)
 public interface IBellConnections {
 
     BellConnection getConnected();
@@ -10,6 +11,7 @@ public interface IBellConnections {
 
     enum BellConnection implements StringRepresentable {
         NONE, CHAIN, ROPE;
+
 
         public boolean isRope() {
             return this == ROPE;
