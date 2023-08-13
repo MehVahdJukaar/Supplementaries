@@ -12,7 +12,6 @@ public interface IBellConnections {
     enum BellConnection implements StringRepresentable {
         NONE, CHAIN, ROPE;
 
-
         public boolean isRope() {
             return this == ROPE;
         }
