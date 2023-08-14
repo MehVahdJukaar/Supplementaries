@@ -70,6 +70,12 @@ public class InteractEventOverrideHandler {
                     () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.TOME);
         }
 
+        if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
+                AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(b),
+                         WallLanternBlock::isValidBlock, );
+
+        }
+
     }
 
     public static void registerOverrides() {
@@ -104,14 +110,6 @@ public class InteractEventOverrideHandler {
 
         outer:
         for (Item i : BuiltInRegistries.ITEM) {
-
-            if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                if (i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock())) {
-                    AdditionalItemPlacementsAPI.register(() -> new WallLanternPlacement(bi.getBlock()),
-                            () -> bi);
-                    continue;
-                }
-            }
 
             //block items don't work here
             /*

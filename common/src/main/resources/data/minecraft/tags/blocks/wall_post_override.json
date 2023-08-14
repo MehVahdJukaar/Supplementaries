@@ -1,10 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:sconce",
-    "supplementaries:sconce_soul",
-    "supplementaries:sconce_ender",
-    "supplementaries:sconce_green",
+    "#supplementaries:sconces",
     "#supplementaries:candle_holders",
     "supplementaries:crank"
   ]
