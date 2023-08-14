@@ -83,7 +83,7 @@ public class ClientConfigs {
 
         static {
             ConfigBuilder builder = builderReference.get();
-            ModTextures
+
             builder.push("items");
 
             builder.push("slingshot");

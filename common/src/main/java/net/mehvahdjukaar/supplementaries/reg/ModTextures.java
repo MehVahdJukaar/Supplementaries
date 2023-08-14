@@ -130,7 +130,6 @@ public class ModTextures {
         for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
             map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
         }
-        TextUtils
         return map;
     });
 
