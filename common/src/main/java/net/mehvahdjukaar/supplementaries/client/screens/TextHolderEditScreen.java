@@ -73,6 +73,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
                 textHolderIndex+=1;
                 textHolderIndex%=messages.length;
             }
+            textInputUtil.setCursorToEnd();
         }
     }
 
