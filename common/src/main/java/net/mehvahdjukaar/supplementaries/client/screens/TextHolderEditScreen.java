@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -66,18 +65,20 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
         if (canScroll()) {
             lineIndex = lineIndex - amount;
 
-            while (lineIndex<0)lineIndex+=totalLines;
+            while (lineIndex < 0) lineIndex += totalLines;
 
-            while(lineIndex>=messages[textHolderIndex].length){
-                lineIndex-=messages[textHolderIndex].length;
-                textHolderIndex+=1;
-                textHolderIndex%=messages.length;
+            while (lineIndex >= messages[textHolderIndex].length) {
+                lineIndex -= messages[textHolderIndex].length;
+                textHolderIndex += 1;
+                textHolderIndex %= messages.length;
             }
+            this.textInputUtil.setCursorToEnd();
         }
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+
         // up arrow
         if (keyCode == 265) {
             this.scrollText(1);
@@ -115,8 +116,8 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     @Override
     public void removed() {
         // send new text to the server
-            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
-                    this.tile.getBlockPos(), this.messages));
+        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
+                this.tile.getBlockPos(), this.messages));
     }
 
     private void close() {

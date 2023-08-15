@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -105,25 +103,6 @@ public class InteractEventOverrideHandler {
 
         outer:
         for (Item i : BuiltInRegistries.ITEM) {
-
-            if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                if (i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock())) {
-                    AdditionalItemPlacementsAPI.register(() -> new WallLanternPlacement(bi.getBlock()),
-                            () -> bi);
-                    continue;
-                }
-            }
-
-            //block items don't work here
-            /*
-            if (ServerConfigs.cached.SKULL_CANDLES) {
-                if (i.builtInRegistryHolder().is(ItemTags.CANDLES) &&
-                        i.getRegistryName().getNamespace().equals("minecraft")) {
-                    ((IExtendedItem) i).addAdditionalBehavior(new SkullCandlesPlacement());
-                    continue;
-                }
-            }*/
-
 
             for (ItemUseOnBlockOverride b : itemUseOnBlock) {
                 if (b.appliesToItem(i)) {
