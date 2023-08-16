@@ -129,7 +129,8 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${rootProject.moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4656567")
-    modImplementation("vectorwing.farmersdelight:FarmersDelight:1.20.1-1.2.1-beta")
+    modImplementation("curse.maven:farmers-delight-398521:4679319")
+
     modImplementation("einstein.jmc:JustMoreCakes:forge-1.20-1.12.1")
     modImplementation("curse.maven:modernfix-790626:4599348")
 

@@ -17,14 +17,16 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vectorwing.farmersdelight.client.renderer.CanvasSignRenderer;
 
 //fixes plain text shade
-@OptionalMixin("vectorwing.farmersdelight.client.renderer.CanvasSignRenderer")
-@Mixin(targets = "vectorwing.farmersdelight.client.renderer.CanvasSignRenderer")
+@Pseudo
+@Mixin(CanvasSignRenderer.class)
 public abstract class CompatFarmersDelightSignMixin {
 
     @Unique
