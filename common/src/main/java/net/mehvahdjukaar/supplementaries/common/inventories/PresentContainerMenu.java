@@ -55,7 +55,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         this.addSlot(new Slot(this.inventory, 0, getSlotX(), getSlotY()) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PresentBlockTile.isAcceptableItem(stack);
+                return PresentBlockTile.isAcceptableItem(stack, null);
             }
         });
 

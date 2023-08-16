@@ -80,7 +80,7 @@ public class SupplementariesForgeClient {
             new BakedQuad(new int[]{}, 0, Direction.UP, null, true, false);
         } catch (Exception e) {
             if(e instanceof NoSuchMethodException){
-                throw new Error("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
+                throw new VibeCheck.ModErrorException("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
             }
         }
     }

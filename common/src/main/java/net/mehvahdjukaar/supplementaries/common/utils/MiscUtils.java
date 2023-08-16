@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -118,8 +119,12 @@ public class MiscUtils {
     private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
             Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
 
-    public static boolean isAllowedInShulker(ItemStack stack) {
-        return SHULKER_TILE.get().canPlaceItemThroughFace(0, stack, null);
+    public static boolean isAllowedInShulker(ItemStack stack, Level level) {
+        var te = SHULKER_TILE.get();
+        if(level != null) te.setLevel(level);
+        var ret = te.canPlaceItemThroughFace(0, stack, null);
+        te.setLevel(null);
+        return ret;
     }
 
     //cylinder distance

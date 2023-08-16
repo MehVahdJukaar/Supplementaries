@@ -196,10 +196,16 @@ public class ServerEventsForge {
         }
     }
 
+    private static boolean checked = false;
+    private static int counter = 0;
+
     @SubscribeEvent
-    public static void onWorldLoad(LevelEvent.Load event){
-        if(event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()) {
-            VibeCheck.checkVibe((Level) event.getLevel());
+    public static void onLevelTick(TickEvent.LevelTickEvent event){
+        if(!checked){
+            if(counter++>20){
+                VibeCheck.checkVibe(event.level);
+                checked = true;
+            }
         }
     }
 }

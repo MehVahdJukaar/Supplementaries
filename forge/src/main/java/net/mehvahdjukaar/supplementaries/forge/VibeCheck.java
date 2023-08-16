@@ -17,23 +17,35 @@ public class VibeCheck {
     // better to crash right on when shit is wrong
     public static void checkVibe(Level level) {
             if (PlatformHelper.isDev()) return;
-            var m = new Spider(EntityType.SPIDER, level);
-            var m2 = new Spider(EntityType.SPIDER, level);
+            try {
+                var m = new Spider(EntityType.SPIDER, level);
+                var m2 = new Spider(EntityType.SPIDER, level);
 
-            m.setOnGround(true);
-            Path path = m.getNavigation().createPath(BlockPos.ZERO, 0);
-            if (path != null) {
-                m.setTarget(m2);
-            }
-            var i = new ItemEntity(EntityType.ITEM, level);
-            i.setItem(ModRegistry.FLAX_SEEDS_ITEM.get().getDefaultInstance());
-            i.tickCount = 21;
-            var v = level.getSharedSpawnPos();
-            i.setNoGravity(true);
-            i.setPos(v.getX(), level.getMinBuildHeight() + 1d, v.getZ());
-            for (int j = 0; j < 42; j++) {
-                i.tick();
+                m.setOnGround(true);
+                Path path = m.getNavigation().createPath(BlockPos.ZERO, 0);
+                if (path != null) {
+                    m.setTarget(m2);
+                }
+                var i = new ItemEntity(EntityType.ITEM, level);
+                i.setItem(ModRegistry.FLAX_SEEDS_ITEM.get().getDefaultInstance());
+                i.tickCount = 21;
+                var v = level.getSharedSpawnPos();
+                i.setNoGravity(true);
+                i.setPos(v.getX(), level.getMinBuildHeight() + 1d, v.getZ());
+                for (int j = 0; j < 42; j++) {
+                    i.tick();
+                }
+            }catch (Exception e){
+                throw new ModErrorException("Some mods have errors which will prevent Supplementaries from working correctly (see below). Refusing to continue further to prevent random crashes caused by them",
+                        e);
             }
 
+    }
+
+    public static class ModErrorException extends RuntimeException{
+
+        public ModErrorException(String s, Exception e) {
+            super(s,e);
+        }
     }
 }

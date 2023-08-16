@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -47,11 +48,11 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return isAcceptableItem(stack);
+        return isAcceptableItem(stack, this.level);
     }
 
-    public static boolean isAcceptableItem(ItemStack stack) {
-        return MiscUtils.isAllowedInShulker(stack, this.getLevel()) && !(stack.getItem() instanceof PresentItem);
+    public static boolean isAcceptableItem(ItemStack stack, Level level) {
+        return MiscUtils.isAllowedInShulker(stack, level) && !(stack.getItem() instanceof PresentItem);
     }
 
 
