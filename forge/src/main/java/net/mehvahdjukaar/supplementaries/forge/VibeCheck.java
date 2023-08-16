@@ -16,7 +16,6 @@ public class VibeCheck {
     //fix your bugs. all reported stuff that somehow ends up to me. people then gets frustrated when stuff randomly crashes.
     // better to crash right on when shit is wrong
     public static void checkVibe(Level level) {
-        try {
             if (PlatformHelper.isDev()) return;
             var m = new Spider(EntityType.SPIDER, level);
             var m2 = new Spider(EntityType.SPIDER, level);
@@ -35,14 +34,6 @@ public class VibeCheck {
             for (int j = 0; j < 42; j++) {
                 i.tick();
             }
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Something went wrong:");
-            e.printStackTrace();
-            if (level instanceof ServerLevel s) {
-                s.players().forEach(p -> p.sendSystemMessage(
-                        Component.literal("Something went wrong, Supplementaries might now work as expected. check logs for details"),
-                        true));
-            }
-        }
+
     }
 }

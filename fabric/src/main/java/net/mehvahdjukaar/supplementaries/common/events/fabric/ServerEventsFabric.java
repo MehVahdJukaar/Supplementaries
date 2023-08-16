@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -47,17 +48,17 @@ public class ServerEventsFabric {
         if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_CAVE_URNS.getId()));
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, Supplementaries.res("cave_urns")));
         }
         if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get() && CommonConfigs.Functional.FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),
                     GenerationStep.Decoration.VEGETAL_DECORATION,
-                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_WILD_FLAX_PATCH.getId()));
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, Supplementaries.res("wild_flax")));
         }
         if (CommonConfigs.Building.BASALT_ASH_ENABLED.get() && CommonConfigs.Building.ASH_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BASALT_ASH),
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, ModWorldgenRegistry.PLACED_BASALT_ASH.getId()));
+                    ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, Supplementaries.res("basalt_ash")));
         }
     }
 

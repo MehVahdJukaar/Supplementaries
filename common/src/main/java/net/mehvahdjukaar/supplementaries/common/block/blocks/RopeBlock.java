@@ -582,17 +582,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return true;
     }
 
-    public static boolean playEntitySlideSound(LivingEntity entity, int ropeTicks) {
-        if (ropeTicks % 14 == 0) {
-            if (!entity.isSilent()) {
-                Player p = entity instanceof Player pl ? pl : null;
-                entity.level.playSound(p, entity.getX(), entity.getY(), entity.getZ(), ModSounds.ROPE_SLIDE.get(),
-                        entity.getSoundSource(), 0.1f, 1);
-            }
-            return true;
-        }
-        return false;
-    }
 
 
 }

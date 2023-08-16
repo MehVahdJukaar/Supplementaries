@@ -1,0 +1,35 @@
+{
+  "feature": "supplementaries:cave_urns",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 7
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "above_bottom": 96
+        },
+        "min_inclusive": {
+          "above_bottom": 16
+        }
+      }
+    },
+    {
+      "type": "supplementaries:cave",
+      "heightmaps": [
+        "MOTION_BLOCKING_NO_LEAVES",
+        "OCEAN_FLOOR_WG"
+      ],
+      "below_sea_level": true
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

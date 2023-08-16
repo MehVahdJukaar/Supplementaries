@@ -95,4 +95,3 @@ public class SoapClearRecipe extends CustomRecipe {
         return ModRecipes.SOAP_CLEARING.get();
     }
 }
-

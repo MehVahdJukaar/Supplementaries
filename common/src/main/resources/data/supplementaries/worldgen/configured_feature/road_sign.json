@@ -1,0 +1,51 @@
+{
+  "config": {
+    "sign_wood": "minecraft:oak",
+    "post_wood": "minecraft:spruce",
+    "cobble": {
+      "Name": "minecraft:cobblestone"
+    },
+    "mossy_cobble": {
+      "Name": "minecraft:mossy_cobblestone"
+    },
+    "wall": {
+      "Name": "minecraft:cobblestone_wall"
+    },
+    "mossy_wall": {
+      "Name": "minecraft:mossy_cobblestone_wall"
+    },
+    "lantern_up": {
+      "Name": "minecraft:lantern",
+      "Properties": {
+        "hanging": "true",
+        "waterlogged": "false"
+      }
+    },
+    "lantern_down": {
+      "Name": "minecraft:lantern"
+    },
+    "candle_holder": {
+      "Name": "supplementaries:candle_holder"
+    },
+    "stone": {
+      "Name": "minecraft:stone"
+    },
+    "stone_stairs": {
+      "Name": "minecraft:stone_stairs"
+    },
+    "stone_slab": {
+      "Name": "minecraft:stone_slab"
+    },
+    "random_state": {
+      "double_sign_chance": 0.7,
+      "double_lantern_chance": 0.25,
+      "stone_chance": 0.3,
+      "stone_lantern_chance": 0.35,
+      "candle_holder_chance": 0.25,
+      "wall_lantern_chance": 0.32,
+      "trapdoor_chance": 0.35,
+      "log_chance": 0.25
+    }
+  },
+  "type": "supplementaries:road_sign_feature"
+}

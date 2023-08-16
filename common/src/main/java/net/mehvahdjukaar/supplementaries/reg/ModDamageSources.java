@@ -5,6 +5,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,15 @@ public class ModDamageSources extends DamageSource {
 
     public static final DamageSource SPIKE_DAMAGE = new ModDamageSources("supplementaries.bamboo_spikes");
     public static final DamageSource BOTTLING_DAMAGE = new ModDamageSources("supplementaries.xp_extracting");
+
+    public static DamageSource bombExplosion(@Nullable Explosion explosion) {
+        return explosion(explosion != null ? explosion.getSourceMob() : null);
+    }
+
+    public static DamageSource bombExplosion(@Nullable LivingEntity livingEntity) {
+        return livingEntity != null ? (new EntityDamageSource("supplementaries.bomb_explosion.player", livingEntity)).setScalesWithDifficulty().setExplosion() :
+                (new ModDamageSources("supplementaries.bomb_explosion")).setScalesWithDifficulty().setExplosion();
+    }
 
     public static class SpikePlayer extends EntityDamageSource {
 

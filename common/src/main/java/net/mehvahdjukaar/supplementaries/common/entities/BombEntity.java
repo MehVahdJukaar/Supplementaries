@@ -304,10 +304,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
         }
 
-        BombExplosion explosion = new BombExplosion(this.level, this, null,
+        BombExplosion explosion = new BombExplosion(this.level, this,
                 new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
-                this.type, breaks ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE);
+                this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
 
         explosion.explode();
         explosion.doFinalizeExplosion();

@@ -1,18 +1,21 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 
+//idk whats going on in here anymore
 public class SudsParticle extends BubbleBlockParticle {
 
     private final double additionalSize;
 
     SudsParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
-        super(pLevel, pX, pY, pZ,pXSpeed, pYSpeed, pZSpeed, pSprites);
+        super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pSprites);
         this.friction = 0.96F;
         this.gravity = -0.05F;
         this.speedUpWhenYMotionIsBlocked = true;
@@ -46,9 +49,16 @@ public class SudsParticle extends BubbleBlockParticle {
         int i = this.lifetime - this.age;
         int s = 2;
         if (i < 3 * s) {
-            int length = 4;
+            int popParticleLen = 4;
             int j = Math.max(i, 0) / s;
-            this.setSprite(this.sprites.get((int) (30 * (3f - j) / (length - 1f)), 30));
+            int popTime = 30;
+            this.setSprite(this.sprites.get((int) (popTime * (3f - j) / (popParticleLen - 1f)), popTime));
+            if (gravity != 0) {
+                level.playLocalSound(x, y, z, ModSounds.BUBBLE_POP.get(), SoundSource.BLOCKS, 0.15f,
+                        2f - this.quadSize * 0.2f, false);
+                this.gravity = 0;
+                this.yd = 0;
+            }
         }
     }
 
@@ -65,9 +75,9 @@ public class SudsParticle extends BubbleBlockParticle {
             RandomSource r = pLevel.random;
             //TODO: add randomness here
             return new SudsParticle(pLevel, pX, pY, pZ,
-                    pXSpeed + ((0.5-r.nextFloat()) * 0.04),
-                    pYSpeed + ((0.5-r.nextFloat()) * 0.04),
-                    pZSpeed + ((0.5-r.nextFloat()) * 0.04), this.sprite);
+                    pXSpeed + ((0.5 - r.nextFloat()) * 0.04),
+                    pYSpeed + ((0.5 - r.nextFloat()) * 0.04),
+                    pZSpeed + ((0.5 - r.nextFloat()) * 0.04), this.sprite);
         }
     }
 }
