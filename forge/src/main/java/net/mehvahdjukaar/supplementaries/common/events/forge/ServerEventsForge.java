@@ -161,11 +161,6 @@ public class ServerEventsForge {
         }
     }
 
-    @SubscribeEvent
-    public static void onAddLootTables(LootTableLoadEvent event) {
-        // ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
-    }//TODO 1.20!!
-
     //TODO: add these on fabric
     //forge only
 
@@ -211,13 +206,6 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onLevelLoad(LevelEvent.Load event) {
-        if (event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()) {
-            VibeChecker.checkVibe((Level) event.getLevel());
-        }
-    }
-
-    @SubscribeEvent
     public static void onLivingDeath(LivingHurtEvent event) {
         if (event.getEntity() instanceof Cat cat) {
 
@@ -230,5 +218,17 @@ public class ServerEventsForge {
         }
     }
 
+    private static boolean checked = false;
+    private static int counter = 0;
+
+    @SubscribeEvent
+    public static void onLevelTick(TickEvent.LevelTickEvent event){
+        if(!checked){
+            if(counter++>20){
+                VibeChecker.checkVibe(event.level);
+                checked = true;
+            }
+        }
+    }
 
 }

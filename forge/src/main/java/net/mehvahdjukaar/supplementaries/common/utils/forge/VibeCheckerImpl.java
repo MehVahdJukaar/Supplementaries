@@ -17,7 +17,7 @@ public class VibeCheckerImpl {
             new BakedQuad(new int[]{}, 0, Direction.UP, null, true, false);
         } catch (Exception e) {
             if (e instanceof NoSuchMethodException) {
-                throw new VibeChecker.UnsupportedModError("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
+                throw new VibeChecker.OtherModError("Your Optifine version is incompatible with Forge. Refusing to continue further", e);
             }
         }
     }

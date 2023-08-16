@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeChecker {
@@ -38,8 +37,7 @@ public class VibeChecker {
                 i.tick();
             }
         }catch (Exception e){
-            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
-            e.printStackTrace();
+            throw new OtherModError("An error caused by other mods has occurred (see below). This will prevent the mod from working correctly, possibly crashing at random times. Refusing to procede any further", e);
         }
     }
 
@@ -53,13 +51,13 @@ public class VibeChecker {
     }
 
 
-    public static class UnsupportedModError extends Error{
+    public static class OtherModError extends Error{
 
-        public UnsupportedModError(String s) {
+        public OtherModError(String s) {
             super(s);
         }
 
-        public UnsupportedModError(String s, Exception e) {
+        public OtherModError(String s, Exception e) {
             super(s, e);
         }
     }
