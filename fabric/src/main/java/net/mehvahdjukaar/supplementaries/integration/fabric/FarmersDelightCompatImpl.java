@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
-import com.nhoryzon.mc.farmersdelight.Configuration;
 import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
 import com.nhoryzon.mc.farmersdelight.block.TomatoVineBlock;
 import com.nhoryzon.mc.farmersdelight.registry.BlocksRegistry;
-import com.nhoryzon.mc.farmersdelight.registry.ItemsRegistry;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -13,41 +11,32 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -69,25 +58,6 @@ public class FarmersDelightCompatImpl {
                     .forceSolidOff()
                     .sound(STICK_TOMATO_SOUND)));
 
-
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack stack) {
-        if (stack.is(TagsRegistry.KNIVES)) {
-            int bites = state.getValue(CakeBlock.BITES);
-            if (bites < 6) {
-                level.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);
-            } else {
-                if (state.is(ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA)))
-                    level.setBlock(pos, Blocks.CAKE.defaultBlockState(), 3);
-                else
-                    level.removeBlock(pos, false);
-            }
-            //Block.popResource();
-            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ItemsRegistry.CAKE_SLICE.get()));
-            level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        return InteractionResult.PASS;
-    }
 
     public static void init() {
     }
@@ -175,7 +145,7 @@ public class FarmersDelightCompatImpl {
         @Override
         public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
             super.playerDestroy(level, player, pos, state.setValue(ROPELOGGED, false), blockEntity, stack);
-             level.setBlock(pos, getInnerBlock().withPropertiesOf(state), level.isClientSide ? 11 : 3);
+            level.setBlock(pos, getInnerBlock().withPropertiesOf(state), level.isClientSide ? 11 : 3);
 
         }
 

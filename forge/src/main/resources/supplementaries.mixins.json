@@ -9,10 +9,8 @@
     "BlockEntityRendererDispatcherMixin"
   ],
   "mixins": [
-    "CompatFarmersDelightCanvasMixin",
     "CompatFarmersDelightSignMixin",
     "CompatFarmersDelightTomatoMixin",
-    "CompatQuarkSelfCandleSkullMixin",
     "SelfSpeakerBlockTileMixin",
     "SelfSlingshotMixin",
     "SelfWrenchMixin",

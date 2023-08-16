@@ -24,7 +24,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;

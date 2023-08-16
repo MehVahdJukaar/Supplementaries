@@ -35,11 +35,6 @@ public class FarmersDelightCompat {
                 .randomTicks(), CompatObjects.RICH_SOIL);
     }
 
-    @ExpectPlatform
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
-        throw new AssertionError();
-    }
-
     @Nullable
     @ExpectPlatform
     public static Block getStickTomato() {

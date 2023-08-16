@@ -22,6 +22,7 @@ public class CompatObjects {
     //these can return null on get instead of throwing
 
     public static final Supplier<Block> COPPER_LANTERN = makeCompatObject("suppsquared:copper_lantern", BuiltInRegistries.BLOCK);
+    public static final Supplier<Block> WALL_LANTERN = makeCompatObject("amendments:amendments", BuiltInRegistries.BLOCK);
     public static final Supplier<Block> CHANDELIER = makeCompatObject("decorative_blocks:chandelier", BuiltInRegistries.BLOCK);
 
     public static final Supplier<Block> SOUL_CHANDELIER = makeCompatObject("decorative_blocks:soul_chandelier", BuiltInRegistries.BLOCK);

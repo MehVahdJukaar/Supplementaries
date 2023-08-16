@@ -126,10 +126,11 @@ public class BlockUtil {
         if (dir.getAxis() == Direction.Axis.Y) {
 
             if (block == Blocks.CAKE) {
-                int bites = state.getValue(CakeBlock.BITES);
-                if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
-                        ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
-                                .setValue(CakeBlock.BITES, bites), world, targetPos, rot));
+                //TODO: re add
+                //int bites = state.getValue(CakeBlock.BITES);
+                //if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
+                //        ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
+                //                .setValue(CakeBlock.BITES, bites), world, targetPos, rot));
             }
 
             BlockState rotated = ForgeHelper.rotateBlock(state, world, targetPos, rot);

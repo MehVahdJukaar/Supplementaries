@@ -4,17 +4,17 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.client.screens.RedMerchantScreen;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlockGeneratorBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,8 +27,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -42,6 +44,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -281,7 +284,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
             //only 1 sing found/ 1 tile post. always to closest village. posts that are relatively close to a village will always have two.
             //posts in a village will point away
-            if (villages.size() == 1 || (r.doubleSignChance>rand.nextFloat() && villages.get(0).getFirst() > 192)) {
+            if (villages.size() == 1 || (r.doubleSignChance > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
                 dist1 = villages.get(0).getFirst();
                 village1 = villages.get(0).getSecond();
                 dist2 = dist1;
@@ -364,7 +367,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     }
                     stonePos = stonePos.offset(sideDir.getNormal());
                     level.setBlock(stonePos, c.stone, 2);
-                    if ( rand.nextFloat() < r.stoneLanternChance) {
+                    if (rand.nextFloat() < r.stoneLanternChance) {
                         level.setBlock(stonePos.above(), hasFirefly ? c.lanternDown : c.lanternDown, 3);
                         hasGroundLantern = true;
                     }
@@ -386,7 +389,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     pos = pos.above(2);
 
                     BlockState light = hasFirefly ? c.lanternUp : c.lanternUp;
-                    if (rand.nextFloat()<r.candleHolderChance) {
+                    if (rand.nextFloat() < r.candleHolderChance) {
                         light = c.candleHolder
                                 .setValue(CandleHolderBlock.LIT, true)
                                 .setValue(CandleHolderBlock.FACE, AttachFace.CEILING);
@@ -400,15 +403,16 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     }
 
                     //wall lanterns
-                    if ( rand.nextFloat() < r.wallLanternChance) {
+                    Block wl = CompatObjects.WALL_LANTERN.get();
+
+                    if (wl != null && rand.nextFloat() < r.wallLanternChance) {
                         topState = rand.nextFloat() < r.trapdoorChance ? c.trapdoor : AIR;
 
-                        WallLanternBlock wl = ModRegistry.WALL_LANTERN.get();
-                        wl.placeOn(c.lanternDown, pos.below(), dir, level);
+                        placeWallLantern(c.lanternDown, level, dir, wl, pos.below());
 
                         //double
                         if (doubleSided) {
-                            wl.placeOn(c.lanternDown, pos.below(), dir.getOpposite(), level);
+                            placeWallLantern(c.lanternDown, level, dir.getOpposite(), wl, pos.below());
                         }
 
                     } else {
@@ -452,6 +456,15 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
             }
         }
         level.setBlock(generatorPos, topState, 3);
+    }
+
+    private static void placeWallLantern(BlockState lanternState, ServerLevel level, Direction dir, Block wallLantern, BlockPos pos) {
+        BlockState state = wallLantern.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND,
+                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir, pos, false)));
+        if (state != null) level.setBlockAndUpdate(pos, state);
+        if (level.getBlockEntity(pos) instanceof IBlockHolder tt) {
+            tt.setHeldBlock(lanternState);
+        }
     }
 
     private static Component getSignText(int d) {

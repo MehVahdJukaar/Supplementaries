@@ -78,8 +78,8 @@ public class InteractEventOverrideHandler {
         List<ItemUseOverride> itemUse = new ArrayList<>();
         List<BlockUseOverride> blockUse = new ArrayList<>();
 
-        blockUse.add(new DirectionalCakeConversionBehavior());
-        blockUse.add(new BellChainBehavior());
+       // blockUse.add(new DirectionalCakeConversionBehavior());
+       // blockUse.add(new BellChainBehavior());
         blockUse.add(new FDStickBehavior());
 
         itemUse.add(new ThrowableBricksBehavior());
@@ -90,11 +90,11 @@ public class InteractEventOverrideHandler {
         itemUseOnBlockHP.add(new SoapBehavior());
         itemUseOnBlockHP.add(new DyeBehavior());
         itemUseOnBlockHP.add(new WrenchBehavior());
-        itemUseOnBlockHP.add(new SkullCandlesBehavior());
+       // itemUseOnBlockHP.add(new SkullCandlesBehavior());
 
         //maybe move in mixin system (can't for cakes as block interaction has priority)
-        itemUseOnBlock.add(new SkullPileBehavior());
-        itemUseOnBlock.add(new DoubleCakeBehavior());
+       // itemUseOnBlock.add(new SkullPileBehavior());
+       // itemUseOnBlock.add(new DoubleCakeBehavior());
         itemUseOnBlock.add(new WrittenBookHackBehavior());
 
         itemUseOnBlock.add(new MapMarkerBehavior());
@@ -228,7 +228,7 @@ public class InteractEventOverrideHandler {
 
         BlockState newState = blockOverride.defaultBlockState();
         for (Property<?> p : properties) {
-            newState = BlockUtil.replaceProperty(replaced, newState, p);
+            newState = Utils.replaceProperty(replaced, newState, p);
         }
         if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
             FluidState fluidstate = level.getFluidState(pos);

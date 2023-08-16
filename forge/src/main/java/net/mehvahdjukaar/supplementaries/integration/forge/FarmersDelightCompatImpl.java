@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -75,27 +74,6 @@ public class FarmersDelightCompatImpl {
 
     public static void init() {
     }
-
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, @NotNull ItemStack stack) {
-        if (stack.is(ModTags.KNIVES)) {
-            int bites = state.getValue(CakeBlock.BITES);
-            if (bites < 6) {
-                level.setBlock(pos, state.setValue(CakeBlock.BITES, bites + 1), 3);
-            } else {
-                if (state.is(ModRegistry.DOUBLE_CAKES.get(CakeRegistry.VANILLA)))
-                    level.setBlock(pos, Blocks.CAKE.defaultBlockState(), 3);
-                else
-                    level.removeBlock(pos, false);
-            }
-
-            //Block.popResource();
-            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.CAKE_SLICE.get()));
-            level.playSound(null, pos, SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8F, 0.8F);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        return InteractionResult.PASS;
-    }
-
 
     public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
