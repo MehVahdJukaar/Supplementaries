@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeChecker {
@@ -53,13 +52,13 @@ public class VibeChecker {
     }
 
 
-    public static class UnsupportedModError extends Error{
+    public static class BadModError extends Error{
 
-        public UnsupportedModError(String s) {
+        public BadModError(String s) {
             super(s);
         }
 
-        public UnsupportedModError(String s, Exception e) {
+        public BadModError(String s, Exception e) {
             super(s, e);
         }
     }

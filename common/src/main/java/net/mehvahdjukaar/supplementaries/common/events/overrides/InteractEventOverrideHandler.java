@@ -71,8 +71,8 @@ public class InteractEventOverrideHandler {
         }
 
         if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(b),
-                         WallLanternBlock::isValidBlock, );
+                AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(((BlockItem)b).getBlock()),
+                        i->i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock()) );
 
         }
 

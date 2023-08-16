@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 
 public class VibeCheckerImpl {
@@ -15,7 +14,7 @@ public class VibeCheckerImpl {
     public static void crashIfFabricRenderingAPIHasBeenNuked() {
 
         if (PlatHelper.isModLoaded("sodium") && !PlatHelper.isModLoaded("indium")) {
-            Supplementaries.LOGGER.error("You seem to have installed Sodium which has been known to break fabric rendering API." +
+            throw new VibeChecker.BadModError("You seem to have installed Sodium which has been known to break fabric rendering API." +
                     "Things might not work well");
         }
     }

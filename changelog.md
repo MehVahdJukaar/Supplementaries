@@ -1,2 +1,2 @@
-- fixed a rare crash with mineshaft elevator piece
-- added config to allow other blocks to be "xp bottlers"
+fixed wall lanterns not working anymore
+lowered skeleton quiver spawn chance
