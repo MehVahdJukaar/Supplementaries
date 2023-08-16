@@ -91,6 +91,11 @@ public class PedestalBlockTile extends ItemDisplayTile {
         return true;
     }
 
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction direction) {
+        return true;
+    }
+
     public enum DisplayType {
         ITEM,
         BLOCK,
