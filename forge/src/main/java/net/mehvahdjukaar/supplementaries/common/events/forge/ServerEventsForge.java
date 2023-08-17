@@ -26,10 +26,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -39,7 +37,6 @@ import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -210,10 +207,17 @@ public class ServerEventsForge {
         }
     }
 
+
+    private static int counter = 0;
+    private static boolean flag = false;
+
     @SubscribeEvent
-    public static void onLevelLoad(LevelEvent.Load event) {
-        if (event.getLevel().dimensionType().natural() && !event.getLevel().isClientSide()) {
-            VibeChecker.checkVibe((Level) event.getLevel());
+    public static void onServerTick(TickEvent.LevelTickEvent event) {
+        if (!flag) {
+            if (counter++ > 20) {
+                VibeChecker.checkVibe( event.level);
+                flag = true;
+            }
         }
     }
 
