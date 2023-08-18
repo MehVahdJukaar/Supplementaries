@@ -59,28 +59,35 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+    @Override
+    public ItemStack quickMoveStack(Player player, int index) {
+        ItemStack itemCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
+            ItemStack item = slot.getItem();
+            itemCopy = item.copy();
             if (index < this.container.getContainerSize()) {
-                if (!this.moveItemStackTo(itemstack1, this.container.getContainerSize(), this.slots.size(), true)) {
+                if (!this.moveItemStackTo(item, this.container.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize(), false)) {
+            } else if (this.moveItemStackTo(item, 0, this.container.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (itemstack1.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+            if (item.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
+
+            if (item.getCount() == itemCopy.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(player, item);
         }
 
-        return itemstack;
+        return itemCopy;
     }
 
     /**

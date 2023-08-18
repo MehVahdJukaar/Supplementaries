@@ -67,28 +67,34 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     }
 
     @Override
-    public ItemStack quickMoveStack(Player playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
+    public ItemStack quickMoveStack(Player player, int index) {
+        ItemStack itemCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
-            itemstack = item.copy();
+            itemCopy = item.copy();
             if (index < this.inventory.getContainerSize()) {
                 if (!this.moveItemStackTo(item, this.inventory.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(item, 0, this.inventory.getContainerSize(), false)) {
+            } else if (this.moveItemStackTo(item, 0, this.inventory.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
             if (item.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
+
+            if (item.getCount() == itemCopy.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(player, item);
         }
 
-        return itemstack;
+        return itemCopy;
     }
 
     @Override

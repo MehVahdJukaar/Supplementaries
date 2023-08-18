@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
@@ -61,7 +62,8 @@ public class QuarkClientCompatImpl {
     }
 
     public static boolean canRenderQuarkTooltip() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class) &&
+        return ModuleLoader.INSTANCE.isModuleEnabled(ImprovedTooltipsModule.class)
+                && ImprovedTooltipsModule.shulkerTooltips &&
                 (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
     }
 

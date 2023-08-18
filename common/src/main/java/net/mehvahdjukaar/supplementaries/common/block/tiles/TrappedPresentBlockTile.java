@@ -20,6 +20,7 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +50,6 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     }
 
     public void updateState(boolean primed) {
-
         if (!this.level.isClientSide && this.isPrimed() != primed) {
             if (primed) {
                 this.level.playSound(null, this.worldPosition,
