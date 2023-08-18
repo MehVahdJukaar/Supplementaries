@@ -2,10 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.*;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
@@ -42,7 +40,6 @@ import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BooleanSupplier;
 
 
 public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeBoardBlockTile> {
@@ -129,8 +126,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
         //render book
         String page = tile.getText();
-        if (!(page == null || page.equals(""))) {
-
+        if (page != null) {
+            if (page.isEmpty()) return;
             if (!lod.isNearMed()) {
                 return;
             }
@@ -158,9 +155,9 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 float paperWidth = 1 - (2 * PAPER_X_MARGIN);
                 float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
                 var text = TextUtil.parseText(page);
-                if(text instanceof MutableComponent mc){
+                if (text instanceof MutableComponent mc) {
                     text = mc.setStyle(textProperties.style());
-                }else{
+                } else {
                     text = Component.literal(page).setStyle(textProperties.style());
                 }
                 var p = TextUtil.fitLinesToBox(font,
@@ -210,15 +207,15 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         Material pattern = tile.getCachedPattern();
         if (pattern != null) {
             VertexConsumer builder = pattern.buffer(buffer, RenderType::entityTranslucent);
-            int i =  tile.getDyeColor().getTextColor();
+            int i = tile.getDyeColor().getTextColor();
             float scale = 0.5f;//so its more similar to text. idk why its needed
-            int b = (int) (scale* (FastColor.ARGB32.blue(i)));
-            int g = (int) (scale*(FastColor.ARGB32.green(i)));
-            int r = (int) (scale*(FastColor.ARGB32.red(i)));
+            int b = (int) (scale * (FastColor.ARGB32.blue(i)));
+            int g = (int) (scale * (FastColor.ARGB32.green(i)));
+            int r = (int) (scale * (FastColor.ARGB32.red(i)));
             int lu = frontLight & '\uffff';
             int lv = frontLight >> 16 & '\uffff';
-            poseStack.translate(0,0,0.008f);
-            VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F,  0.4375F, 0.4375F,
+            poseStack.translate(0, 0, 0.008f);
+            VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F, 0.4375F, 0.4375F,
                     0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 255, lu, lv);
 
         } else if (!tile.isNormalItem()) {

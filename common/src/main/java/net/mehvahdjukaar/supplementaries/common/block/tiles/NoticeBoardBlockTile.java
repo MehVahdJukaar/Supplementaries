@@ -54,6 +54,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     private UUID playerWhoMayEdit;
 
     //client stuff
+    @Nullable
     private String text = null;
     private float fontScale = 1;
     private List<FormattedCharSequence> cachedPageLines = Collections.emptyList();
@@ -124,9 +125,19 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         ItemStack itemstack = getDisplayedItem();
         Item item = itemstack.getItem();
         CompoundTag com = itemstack.getTag();
-        if ((item instanceof WrittenBookItem && WrittenBookItem.makeSureTagIsValid(com)) ||
-                (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
-
+        boolean isValidBook = false;
+        if(item instanceof WrittenBookItem) {
+            if (WrittenBookItem.makeSureTagIsValid(com)) {
+                isValidBook = true;
+            }
+            this.text = "";
+        }else if( item instanceof WritableBookItem) {
+            if (WritableBookItem.makeSureTagIsValid(com)) {
+                isValidBook = true;
+            }
+            this.text = "";
+        }
+        if(isValidBook){
             ListTag pages = com.getList("pages", 8).copy();
             if (!pages.isEmpty()) {
                 if (this.pageNumber >= pages.size()) {
@@ -135,8 +146,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
                 this.text = pages.getString(this.pageNumber);
             }
-
-        } else if (CompatHandler.COMPUTERCRAFT) {
+        }
+        else if (CompatHandler.COMPUTERCRAFT) {
             if (CCCompat.isPrintedBook(item)) {
 
                 if (com != null) {
@@ -158,6 +169,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 }
             }
         }
+
     }
 
     @Override
