@@ -36,8 +36,9 @@ public class VibeCheck {
                     i.tick();
                 }
             }catch (Exception e){
-                throw new ModErrorException("Some mods have errors which will prevent Supplementaries from working correctly (see below). Refusing to continue further to prevent random crashes caused by them",
-                        e);
+                Supplementaries.LOGGER.error("Some mods have errors which will prevent Supplementaries from working correctly (see below)." +
+                        "Continuing anyways but you might experience random crashes. You have been warned");
+                e.printStackTrace();
             }
 
     }

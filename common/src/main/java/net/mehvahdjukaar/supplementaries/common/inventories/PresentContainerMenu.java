@@ -94,7 +94,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
                 if (!this.moveItemStackTo(item, this.inventory.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(item, 0, this.inventory.getContainerSize(), false)) {
+            } else if (this.moveItemStackTo(item, 0, this.inventory.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
