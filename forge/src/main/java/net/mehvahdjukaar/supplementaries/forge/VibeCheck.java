@@ -18,11 +18,14 @@ public class VibeCheck {
     public static void checkVibe(Level level) {
             if (PlatformHelper.isDev()) return;
             try {
+                BlockPos pos = level.getSharedSpawnPos();
+                if(!level.isLoaded(pos))return;
+                pos = new BlockPos(pos.getX(), 0, pos.getY());
                 var m = new Spider(EntityType.SPIDER, level);
                 var m2 = new Spider(EntityType.SPIDER, level);
 
                 m.setOnGround(true);
-                Path path = m.getNavigation().createPath(BlockPos.ZERO, 0);
+                Path path = m.getNavigation().createPath(pos, 0);
                 if (path != null) {
                     m.setTarget(m2);
                 }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.simibubi.create.infrastructure.worldgen.BuiltinRegistration;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -16,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VibeCheck;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -198,7 +200,7 @@ public class ServerEventsForge {
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (!checked) {
             if (event.level.isClientSide) checked = true;
-            if (counter++ > 20 && event.level instanceof ServerLevel) {
+            if (counter++ > 20 && event.level instanceof ServerLevel l && l.dimensionType().natural()) {
                 VibeCheck.checkVibe(event.level);
                 checked = true;
             }
