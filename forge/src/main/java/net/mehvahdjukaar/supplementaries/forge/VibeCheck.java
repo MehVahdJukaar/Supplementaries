@@ -20,7 +20,7 @@ public class VibeCheck {
             try {
                 BlockPos pos = level.getSharedSpawnPos();
                 if(!level.isLoaded(pos))return;
-                pos = new BlockPos(pos.getX(), 0, pos.getY());
+                pos = new BlockPos(pos.getX(), 0, pos.getZ());
                 var m = new Spider(EntityType.SPIDER, level);
                 var m2 = new Spider(EntityType.SPIDER, level);
 
