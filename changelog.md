@@ -1,2 +1,1 @@
-fixed wall lanterns not working anymore
-lowered skeleton quiver spawn chance
+fixed a weird issue with speaker block on fabric
