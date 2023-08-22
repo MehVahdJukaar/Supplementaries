@@ -21,9 +21,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 

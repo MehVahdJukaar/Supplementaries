@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
+import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -38,6 +39,11 @@ public class ModSlider extends AbstractSliderButton implements ISlider {
 
     @Override
     protected void applyValue() {
+        DispenserBehaviorsManager
+    }
 
+    @Override
+    public void onRelease(double mouseX, double mouseY) {
+        super.playDownSound(Minecraft.getInstance().getSoundManager());
     }
 }

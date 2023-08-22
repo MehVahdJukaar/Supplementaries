@@ -106,9 +106,7 @@ public class Supplementaries {
 
     //sled emissions skulk
 
-    //backport bombs, basalt and mineshaft stuff and fixes. fix soap wool 1.19
-    //fix timber frames placement
-    //async setup stuff
+    //dispenser brick use same texture
     //HH cookies in sacks
     //use mixin extras
 //item frame opt mod
