@@ -37,9 +37,9 @@ public abstract class LivingEntityMixin extends Entity {
     public abstract MobEffectInstance getEffect(MobEffect pPotion);
 
     @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
-    private void getJumpBoostPower(CallbackInfoReturnable<Float> cir) {
+    private void getJumpBoostPower(CallbackInfoReturnable<Double> cir) {
         var effect = this.getEffect(ModRegistry.OVERENCUMBERED.get());
-        if (effect != null && effect.getAmplifier() > 0) cir.setReturnValue(cir.getReturnValue() - 0.1f);
+        if (effect != null && effect.getAmplifier() > 0) cir.setReturnValue(cir.getReturnValue() - 0.1);
     }
 
     @SuppressWarnings("ConstantConditions")

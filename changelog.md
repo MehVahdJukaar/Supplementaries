@@ -1,1 +1,2 @@
-fixed a dupe with present menu
+- fixed a crash with present screen
+- fixed a crash with overencumbered effect
