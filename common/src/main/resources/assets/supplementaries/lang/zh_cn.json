@@ -443,6 +443,10 @@
   "block_type.supplementaries.hanging_sign": "挂牌",
   "block_type.supplementaries.sign_post": "路标",
   
+  "death.attack.supplementaries.bomb_explosion": "%1$s爆炸了",
+  "death.attack.supplementaries.bomb_explosion.player": "%1$s被%2$s炸死了",
+  "death.attack.supplementaries.bomb_explosion.player.item": "%1$s被%2$s用%3$s炸死了",
+
 
   "wood_type.domum_ornamentum.cactus": "绿色仙人掌",
   "wood_type.domum_ornamentum.cactus_extra": "仙人掌",
