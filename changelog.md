@@ -1,1 +1,1 @@
-fixed a weird issue with speaker block on fabric
+fixed quiver not working in offhand

@@ -24,6 +24,9 @@ public class QuiverItemImpl {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(p);
             if (!curioQuiver.isEmpty()) return curioQuiver;
             if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
+            for(var h : p.getHandSlots()){
+                if (h.is(ModRegistry.QUIVER_ITEM.get())) return h;
+            }
             for (var s : p.getInventory().items) {
                 if (s.is(ModRegistry.QUIVER_ITEM.get())) return s;
             }

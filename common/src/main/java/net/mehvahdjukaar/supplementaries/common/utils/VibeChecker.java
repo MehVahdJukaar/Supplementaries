@@ -13,6 +13,7 @@ import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeChecker {
 
+
     @ExpectPlatform
     public static void checkVibe() {
     }

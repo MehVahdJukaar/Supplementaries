@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.metadata.ModDependency;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.world.entity.LivingEntity;
