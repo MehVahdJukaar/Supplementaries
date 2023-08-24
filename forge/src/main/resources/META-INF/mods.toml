@@ -1,21 +1,21 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
-issueTrackerURL = "https://github.com/MehVahdJukaar/Supplementaries/issues"
+loaderVersion = "${loader_version_range}"
 
-license = "ARR"
+license = "${mod_license}"
+issueTrackerURL = "${mod_source}/issues"
 
 [[mods]]
     modId = "supplementaries"
     version = "${version}"
-    displayName = "Supplementaries"
+    displayName = "${mod_name}"
     logoFile = "icon.png"
-    authors = "MehVahdJukaar, Plantkillable"
-    credits = "Put a book named 'credits' inside a notice board"
+    authors = "${mod_authors}"
+    credits = "${mod_credits}"
+    description = '''${mod_description}'''
+    modUrl = "${mod_homepage}"
 
     updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/1.20/forge/update.json"
-    modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries"
 
-    description = '''Many functional and useful Vanilla+ blocks'''
 
 [modproperties.supplementaries]
     catalogueItemIcon = "supplementaries:globe" #catalogue icon
@@ -24,14 +24,14 @@ license = "ARR"
 [[dependencies.supplementaries]]
     modId = "forge"
     mandatory = true
-    versionRange = "[47.0.19,)"
+    versionRange = "${neo_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
 [[dependencies.supplementaries]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.20,)"
+    versionRange = "[${minecraft_min_version},${minecraft_max_version})"
     ordering = "NONE"
     side = "BOTH"
 

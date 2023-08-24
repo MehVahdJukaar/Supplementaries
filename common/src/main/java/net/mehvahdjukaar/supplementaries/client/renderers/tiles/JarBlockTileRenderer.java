@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -42,7 +43,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn) {
         poseStack.pushPose();
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
-        VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
+        VertexConsumer builder = ClientHelper.getBlockMaterial(texture).buffer(bufferIn, RenderType::entityTranslucentCull);
         Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
         poseStack.translate(0.5, dimensions.z(), 0.5);
         VertexUtil.addCube(builder, poseStack,

@@ -1,6 +1,8 @@
 {
   "pack": {
-    "description": "Supplementaries Resources",
-    "pack_format": 15
-  }
+    "description": {
+      "text": "${mod_id} resources"
+    },
+    "pack_format": ${pack_format_number}
+}
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -55,7 +56,7 @@ public class JarBakedModel implements CustomBakedModel {
             if (fluid != null && !fluid.isEmpty()) {
                 float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
-                TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
+                TextureAtlasSprite sprite = ClientHelper.getBlockMaterial(fluid.getStillTexture()).sprite();
                 BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
                 builder.setAutoDirection();
                 builder.lightEmission(fluid.getLuminosity());

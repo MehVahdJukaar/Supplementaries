@@ -1,6 +1,3 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
 
 architectury {
     platformSetupLoomIde()
@@ -57,14 +54,31 @@ dependencies {
 
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mod_id", rootProject.mod_id
+    // input variables of this task:
+    var replaceProperties = [
+            minecraft_version    : minecraft_version,
+            minecraft_min_version: minecraft_min_version,
+            minecraft_max_version: minecraft_max_version,
+
+            mod_id               : mod_id,
+            mod_name             : mod_name,
+            mod_version          : mod_version,
+            mod_license          : mod_license,
+            mod_authors          : mod_authors,
+            mod_description      : mod_description,
+            mod_credits          : mod_credits,
+            mod_homepage         : mod_homepage,
+            mod_github           : mod_github,
+
+            required_moonlight_version : required_moonlight_version
+    ]
+    // setting them as input
+    inputs.properties replaceProperties
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "mod_id": rootProject.mod_id, "required_moonlight_version": rootProject.required_moonlight_version
+        expand replaceProperties + [project: project]
     }
 }
-
 
 shadowJar {
     exclude "architectury.common.json"

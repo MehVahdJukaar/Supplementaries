@@ -87,7 +87,11 @@ public class ClientRegistry {
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
 
-    public static KeyMapping QUIVER_KEYBIND = null;
+    public static final KeyMapping QUIVER_KEYBIND = new KeyMapping(
+            "supplementaries.keybind.quiver",
+            InputConstants.Type.KEYSYM,
+            InputConstants.getKey("key.keyboard.v").getValue(),
+            "supplementaries.gui.controls");
 
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
@@ -252,10 +256,6 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientHelper.KeyBindEvent event) {
-        QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
-                InputConstants.Type.KEYSYM,
-                InputConstants.getKey("key.keyboard.v").getValue(),
-                "supplementaries.gui.controls");
         event.register(QUIVER_KEYBIND);
     }
 
