@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.BaseColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -25,7 +26,7 @@ public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, 
                     Codec.INT.optionalFieldOf("minPrice", 7).forGetter(p -> p.minPrice),
                     Codec.INT.optionalFieldOf("maxPrice", 13).forGetter(p -> p.maxPrice),
                     Codec.STRING.optionalFieldOf("mapName", "").forGetter(p -> p.mapName),
-                    BaseColor.CODEC.optionalFieldOf("mapColor", 0xffffff).forGetter(p -> p.mapColor),
+                    ColorUtil.CODEC.optionalFieldOf("mapColor", 0xffffff).forGetter(p -> p.mapColor),
                     ResourceLocation.CODEC.optionalFieldOf("mapMarker", new ResourceLocation("")).forGetter(p -> p.mapMarker))
             .apply(i, AdventurerMapTrade::new)).comapFlatMap(trade -> {
         if (trade.maxPrice < trade.minPrice)

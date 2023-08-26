@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
@@ -23,10 +22,10 @@ import net.minecraft.world.level.block.ComposterBlock;
 import java.util.ArrayList;
 import java.util.List;
 
-//Merge with supplementaries main class
+//Merge with Supplementaries' main class
 public class ModSetup {
 
-    //damn I hate this. If setup fails forge doesn't do anything, and it keeps on going quietly
+    //Damn, I hate this. If the setup fails, forge doesn't do anything, and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
     private static boolean firstTagLoad = false;
@@ -74,7 +73,7 @@ public class ModSetup {
     }
 
     private static void terminateWhenSetupFails() {
-        //if setup fails crash the game. idk why it doesn't do that on its own wtf
+        //if setup fails to crash the game. IDK why it doesn't do that on its own wtf
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
@@ -85,9 +84,9 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
-        AnimalFoodHelper.addChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
-        AnimalFoodHelper.addHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
-        AnimalFoodHelper.addParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
+        RegHelper.registerChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
+        RegHelper.registerHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
+        RegHelper.registerParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
     }
 
     private static void registerFrameBlocks() {
