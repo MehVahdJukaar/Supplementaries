@@ -194,8 +194,11 @@ public class CommonConfigs {
                     .define("fill_entities_below", false);
             builder.pop();
 
-
-            WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
+            builder.push("wind_vane");
+            WIND_VANE_ENABLED = feature(builder);
+            WIND_VANE_SKY_ACCESS = builder.comment("If wind vanes need sky access to work")
+                            .define("needs_sky_access", true);
+            builder.pop();
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
             ILLUMINATOR_ENABLED = feature(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME);
             CRANK_ENABLED = feature(builder, ModConstants.CRANK_NAME);
@@ -233,6 +236,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
 
         public static final Supplier<Boolean> WIND_VANE_ENABLED;
+        public static final Supplier<Boolean> WIND_VANE_SKY_ACCESS;
 
         public static final Supplier<Boolean> CLOCK_ENABLED;
 

@@ -5,8 +5,8 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -56,10 +56,13 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
 
     public static void updatePower(BlockState bs, Level world, BlockPos pos) {
         int weather = 0;
-        if (world.isThundering()) {
-            weather = 2;
-        } else if (world.isRaining()) {
-            weather = 1;
+
+        if (!CommonConfigs.Redstone.WIND_VANE_SKY_ACCESS.get() || world.canSeeSky(pos)) {
+            if (world.isThundering()) {
+                weather = 2;
+            } else if (world.isRaining()) {
+                weather = 1;
+            }
         }
         if (weather != bs.getValue(WIND_STRENGTH)) {
             world.setBlock(pos, bs.setValue(WIND_STRENGTH, weather), 3);
