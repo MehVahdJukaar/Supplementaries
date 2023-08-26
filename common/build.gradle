@@ -7,10 +7,6 @@ loom {
 }
 
 dependencies {
-    // mixin extras
-    //implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-beta.10"))
-    //implementation(include("io.github.llamalad7:mixinextras-forge:0.2.0-beta.10"))
-
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
