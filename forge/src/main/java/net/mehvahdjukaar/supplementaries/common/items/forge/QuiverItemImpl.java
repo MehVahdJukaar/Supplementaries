@@ -32,7 +32,7 @@ public class QuiverItemImpl {
             if (!curioQuiver.isEmpty()) return curioQuiver;
             if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
         } else if (entity instanceof IQuiverEntity e) {
-            return e.getQuiver();
+            return e.supplementaries$getQuiver();
         }
 
         var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);

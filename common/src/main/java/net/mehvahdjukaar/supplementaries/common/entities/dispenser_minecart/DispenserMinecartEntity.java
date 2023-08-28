@@ -212,7 +212,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     protected void dispenseFrom(ServerLevel pLevel, BlockPos pPos) {
 
-        ((ILevelEventRedirect) pLevel).setRedirected(true, this.position());
+        ((ILevelEventRedirect) pLevel).supplementaries$setRedirected(true, this.position());
 
         int i = this.dispenser.getRandomSlot(pLevel.getRandom());
 
@@ -234,7 +234,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                 Supplementaries.LOGGER.warn("Failed to execute Dispenser Minecart behavior for item {}", itemstack.getItem());
             }
         }
-        ((ILevelEventRedirect) pLevel).setRedirected(false, Vec3.ZERO);
+        ((ILevelEventRedirect) pLevel).supplementaries$setRedirected(false, Vec3.ZERO);
 
     }
 

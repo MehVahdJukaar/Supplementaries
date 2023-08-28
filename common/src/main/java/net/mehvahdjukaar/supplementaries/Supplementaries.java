@@ -105,6 +105,9 @@ public class Supplementaries {
 
     //sled emissions skulk
 
+    //sack on head gives blindness
+    //enderman animation teleport mod
+    // cat loaf mod
     //dispenser brick use same texture
     //HH cookies in sacks
     //use mixin extras

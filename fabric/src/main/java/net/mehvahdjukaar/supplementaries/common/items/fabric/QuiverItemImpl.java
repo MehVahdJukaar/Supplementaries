@@ -19,7 +19,7 @@ import java.util.Optional;
 public class QuiverItemImpl {
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.getQuiver();
+        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.supplementaries$getQuiver();
         if (entity instanceof Player p) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(p);
             if (!curioQuiver.isEmpty()) return curioQuiver;

@@ -20,15 +20,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ExplorationMapFunction.class)
 public abstract class ExplorationMapFunctionMixin {
 
-    @Shadow @Final private TagKey<Structure> destination;
+    @Shadow @Final
+    TagKey<Structure> destination;
 
-    @Shadow @Final private byte zoom;
+    @Shadow @Final
+    byte zoom;
 
-    @Shadow @Final private MapDecoration.Type mapDecoration;
+    @Shadow @Final
+    MapDecoration.Type mapDecoration;
 
-    @Shadow @Final private int searchRadius;
+    @Shadow @Final
+    int searchRadius;
 
-    @Shadow @Final private boolean skipKnownStructures;
+    @Shadow @Final
+    boolean skipKnownStructures;
 
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
     public void turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir){

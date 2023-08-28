@@ -27,8 +27,9 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4656567")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
 
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
-    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")
+
 }
 
 publishing {

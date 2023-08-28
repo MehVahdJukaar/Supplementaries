@@ -17,6 +17,6 @@ public abstract class UndeadHorseRenderMixin extends AbstractHorseRenderer<Abstr
 
     @Override
     public boolean isShaking(AbstractHorse horse) {
-        return super.isShaking(horse) || (horse instanceof ICustomDataHolder dataHolder && dataHolder.getVariable());
+        return super.isShaking(horse) || (horse instanceof ICustomDataHolder dataHolder && dataHolder.supplementaries$getVariable());
     }
 }

@@ -63,26 +63,26 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         if (compound.contains("Quiver")) {
-            this.setQuiver(ItemStack.of(compound.getCompound("Quiver")));
+            this.supplementaries$setQuiver(ItemStack.of(compound.getCompound("Quiver")));
             this.quiverDropChance = compound.getFloat("QuiverDropChance");
         }
     }
 
     @Override
-    public ItemStack getQuiver() {
+    public ItemStack supplementaries$getQuiver() {
         return quiver;
     }
 
     @Override
-    public boolean hasQuiver() {
+    public boolean supplementaries$hasQuiver() {
         if (this.level() != null && this.level().isClientSide) {
             return this.getEntityData().get(HAS_QUIVER);
         }
-        return IQuiverEntity.super.hasQuiver();
+        return IQuiverEntity.super.supplementaries$hasQuiver();
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
+    public void supplementaries$setQuiver(ItemStack quiver) {
         this.quiver = quiver;
         this.getEntityData().set(HAS_QUIVER, !quiver.isEmpty());
     }
@@ -99,7 +99,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
             if (this.quiver != null) {
                 this.spawnAtLocation(quiver);
             }
-            this.setQuiver(stack);
+            this.supplementaries$setQuiver(stack);
             this.quiverDropChance = 1;
             return stack;
         }

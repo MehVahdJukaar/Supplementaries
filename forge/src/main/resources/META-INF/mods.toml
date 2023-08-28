@@ -6,7 +6,7 @@ issueTrackerURL = "${mod_source}/issues"
 
 [[mods]]
     modId = "supplementaries"
-    version = "${version}"
+    version = "${mod_version}"
     displayName = "${mod_name}"
     logoFile = "icon.png"
     authors = "${mod_authors}"

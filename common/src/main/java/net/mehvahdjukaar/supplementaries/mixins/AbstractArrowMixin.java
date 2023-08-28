@@ -19,23 +19,21 @@ public abstract class AbstractArrowMixin extends Entity {
         super(entityType, level);
     }
 
-    @Shadow protected abstract ItemStack getPickupItem();
+    @Shadow
+    protected abstract ItemStack getPickupItem();
 
-    @Shadow protected boolean inGround;
+    @Shadow
+    public AbstractArrow.Pickup pickup;
 
-    @Shadow public abstract boolean isNoPhysics();
-
-    @Shadow public int shakeTime;
-
-    @Shadow public AbstractArrow.Pickup pickup;
-
-    @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
-    public void onPlayerTouch(Player player, CallbackInfo ci){
-        if(!this.level().isClientSide) {
-            if ((this.inGround || this.isNoPhysics()) && this.pickup == AbstractArrow.Pickup.ALLOWED && this.shakeTime <= 0 &&
-                    ServerEvents.onArrowPickup((AbstractArrow) (Object) this, player, this::getPickupItem)) {
-                ci.cancel();
-            }
+    //TODO: test
+    @Inject(method = "playerTouch",
+            at = @At(value = "INVOKE",
+            shift = At.Shift.BEFORE,
+            target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;tryPickup(Lnet/minecraft/world/entity/player/Player;)Z"), cancellable = true)
+    public void onPlayerTouch(Player player, CallbackInfo ci) {
+        if (this.pickup == AbstractArrow.Pickup.ALLOWED &&
+                ServerEvents.onArrowPickup((AbstractArrow) (Object) this, player, this::getPickupItem)) {
+            ci.cancel();
         }
     }
 }

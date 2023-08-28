@@ -34,11 +34,11 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     @Unique
     private static final int CONV_TIME = 4600;
 
-    public boolean getVariable() {
-        return this.isConverting();
+    public boolean supplementaries$getVariable() {
+        return this.supplementaries$isConverting();
     }
 
-    public void setVariable(boolean val) {
+    public void supplementaries$setVariable(boolean val) {
     }
 
     @Unique
@@ -55,7 +55,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     //called server side. needs syncing with entity event
 
     public void startConverting() {
-        if (!this.isConverting()) {
+        if (!this.supplementaries$isConverting()) {
             this.supplementaries$conversionTime = CONV_TIME;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, CONV_TIME, 2));
@@ -74,11 +74,13 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
         this.supplementaries$conversionTime = compoundNBT.getInt("ConversionTime");
     }
 
-    public boolean isConverting() {
+    @Unique
+    public boolean supplementaries$isConverting() {
         return this.supplementaries$conversionTime > 0;
     }
 
-    private void doHorseConvertion() {
+    @Unique
+    private void supplementaries$doHorseConvertion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
@@ -136,11 +138,11 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     public void tick() {
         super.tick();
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
-            if (this.isConverting()) {
+            if (this.supplementaries$isConverting()) {
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime == 0) {
-                    this.doHorseConvertion();
+                    this.supplementaries$doHorseConvertion();
                 }
             }
         }

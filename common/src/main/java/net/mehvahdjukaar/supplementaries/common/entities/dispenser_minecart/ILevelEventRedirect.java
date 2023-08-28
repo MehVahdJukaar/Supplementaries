@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 
 public interface ILevelEventRedirect {
 
-    void setRedirected(boolean redirected, Vec3 entityId);
+    void supplementaries$setRedirected(boolean redirected, Vec3 entityId);
 
     static boolean tryRedirect(ILevelEventRedirect serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
         if (pType == 2000) {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
@@ -27,17 +28,17 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
 
-
     @Shadow
     @Override
     public abstract InteractionHand getUsedItemHand();
 
 
-    @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)
-    private void hasEnoughImpulseToStartSprinting(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && this.hasEffect(ModRegistry.OVERENCUMBERED.get())) {
-            cir.setReturnValue(false);
+    @ModifyReturnValue(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"))
+    private boolean hasEnoughImpulseToStartSprinting(boolean oldValue) {
+        if (oldValue && this.hasEffect(ModRegistry.OVERENCUMBERED.get())) {
+            return false;
         }
+        return oldValue;
     }
 
     //hack. this will be ugly. Prevents quiver from slowing down
@@ -85,12 +86,12 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
     @Override
-    public ItemStack getQuiver() {
+    public ItemStack supplementaries$getQuiver() {
         return supplementaries$quiver;
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
+    public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
     }
 }

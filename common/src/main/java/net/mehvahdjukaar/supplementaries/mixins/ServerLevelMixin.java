@@ -51,7 +51,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
 
 
     @Override
-    public void setRedirected(boolean redirected, Vec3 id) {
+    public void supplementaries$setRedirected(boolean redirected, Vec3 id) {
         this.supplementaries$redirectLevelEvents = redirected;
         this.supplementaries$redirectedEntityPos = id;
     }

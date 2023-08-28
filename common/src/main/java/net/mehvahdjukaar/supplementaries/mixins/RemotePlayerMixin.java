@@ -36,12 +36,12 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverEntity 
     }
 
     @Override
-    public ItemStack getQuiver() {
+    public ItemStack supplementaries$getQuiver() {
         return supplementaries$quiver;
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
+    public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
     }
 }

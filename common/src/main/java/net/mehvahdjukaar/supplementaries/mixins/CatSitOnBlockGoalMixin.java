@@ -8,11 +8,13 @@ import net.minecraft.world.entity.ai.goal.CatSitOnBlockGoal;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(CatSitOnBlockGoal.class)
 public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
@@ -24,12 +26,19 @@ public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
     @Unique
     private boolean supplementaries$doormat = false;
 
-    @Inject(method = "isValidTarget", at = @At("HEAD"), cancellable = true)
-    protected void shouldMoveTo(LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
-        Block block = worldIn.getBlockState(pos).getBlock();
+    // TODO: test
+    @Inject(method = "isValidTarget",
+            at = @At(value = "INVOKE",
+            shift = At.Shift.BEFORE,
+            target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z",
+            ordinal = 0),
+            locals = LocalCapture.CAPTURE_FAILEXCEPTION,
+            cancellable = true)
+    protected void shouldMoveTo(LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir, BlockState blockState) {
+        Block block = blockState.getBlock();
         this.supplementaries$doormat = block instanceof DoormatBlock;
-        if (block instanceof PlanterBlock || this.supplementaries$doormat) {
-            info.setReturnValue(true);
+        if (this.supplementaries$doormat || block instanceof PlanterBlock) {
+            cir.setReturnValue(true);
         }
     }
 
@@ -38,10 +47,5 @@ public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
         return this.supplementaries$doormat ? 0.8 : super.acceptedDistance();
     }
 
-    //TODO: check
-    @Override
-    protected BlockPos getMoveToTarget() {
-        return this.supplementaries$doormat ? this.blockPos : this.blockPos;
-    }
 
 }

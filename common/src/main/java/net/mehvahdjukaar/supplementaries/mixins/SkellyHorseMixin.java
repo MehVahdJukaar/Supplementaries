@@ -32,11 +32,11 @@ import org.jetbrains.annotations.Nullable;
 @Mixin(SkeletonHorse.class)
 public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomDataHolder {
 
-    public boolean getVariable() {
+    public boolean supplementaries$getVariable() {
         return this.isConverting();
     }
 
-    public void setVariable(boolean val) {
+    public void supplementaries$setVariable(boolean val) {
     }
 
     @Unique

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.util.Mth;
@@ -36,10 +37,14 @@ public abstract class LivingEntityMixin extends Entity {
     @Nullable
     public abstract MobEffectInstance getEffect(MobEffect pPotion);
 
-    @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
-    private void getJumpBoostPower(CallbackInfoReturnable<Float> cir) {
+    //TODO: test
+    @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
+    private float getJumpBoostPower(float oldValue) {
         var effect = this.getEffect(ModRegistry.OVERENCUMBERED.get());
-        if (effect != null && effect.getAmplifier() > 0) cir.setReturnValue(cir.getReturnValue() - 0.1f);
+        if (effect != null && effect.getAmplifier() > 0) {
+            return oldValue - 0.1f;
+        }
+        return oldValue;
     }
 
     @SuppressWarnings("ConstantConditions")

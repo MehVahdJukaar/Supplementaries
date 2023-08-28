@@ -13,7 +13,7 @@ public abstract class CampfireBlockMixin {
 
     @Inject(method = "isSmokeSource", at = @At("HEAD"), cancellable = true)
     public void isSmokeSource(BlockState state, CallbackInfoReturnable<Boolean> info ) {
-        if(state.getBlock() == ModRegistry.FLAX_BLOCK.get())
+        if(state.is(ModRegistry.FLAX_BLOCK.get()))
             info.setReturnValue(true);
     }
 }

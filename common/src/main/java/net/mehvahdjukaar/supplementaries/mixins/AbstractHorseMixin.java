@@ -1,5 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,7 +16,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.EntityGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,24 +32,6 @@ public abstract class AbstractHorseMixin extends Animal {
         super(entityType, level);
     }
 
-    @Shadow
-    public abstract int getTemper();
-
-    @Shadow
-    public abstract int getMaxTemper();
-
-    @Shadow
-    public abstract int modifyTemper(int addedTemper);
-
-    @Shadow
-    protected abstract void eating();
-
-    @Shadow
-    protected int temper;
-
-    @Shadow
-    public abstract boolean isTamed();
-
     @Inject(method = "addBehaviourGoals", at = @At("HEAD"))
     public void addSugarCube(CallbackInfo ci) {
         if (CommonConfigs.Building.SUGAR_CUBE_ENABLED.get()) {
@@ -54,47 +39,26 @@ public abstract class AbstractHorseMixin extends Animal {
         }
     }
 
-    @Inject(method = "handleEating", at = @At("HEAD"), cancellable = true)
-    public void eatSugarCube(Player player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    //TODO: test
+    @Inject(method = "handleEating", at = @At(value = "INVOKE",
+            shift = At.Shift.BEFORE,
+            target = "Lnet/minecraft/world/entity/animal/horse/AbstractHorse;getHealth()F"))
+    private void eatSugarCube(Player player, ItemStack stack, CallbackInfoReturnable<Boolean> cir,
+                                    @Local(ordinal = 0) LocalBooleanRef eat,
+                                    @Local(ordinal = 0) LocalFloatRef healing,
+                                    @Local(ordinal = 0) LocalIntRef ageIncrement,
+                                    @Local(ordinal = 1) LocalIntRef newTemper) {
         if (stack.is(ModRegistry.SUGAR_CUBE.get().asItem())) {
+            healing.set(1.0F);
+            ageIncrement.set(30);
+            newTemper.set(5);
+
             int duration = CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get();
-            boolean eat = false;
-            float healing = 1.0F;
-            int ageIncrement = 30;
-            int newTemper = 5;
-
-
-            if (this.getHealth() < this.getMaxHealth()) {
-                this.heal(healing);
-                eat = true;
-            }
-
-            Level level = this.level();
-            if (this.isBaby()) {
-                level.addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0.0, 0.0, 0.0);
-                if (!level.isClientSide) {
-                    this.ageUp(ageIncrement);
-                }
-                eat = true;
-
-            }
-
-            if ((eat || !this.isTamed()) && this.getTemper() < this.getMaxTemper()) {
-                eat = true;
-                if (!level.isClientSide) {
-                    this.modifyTemper(newTemper);
-                }
-            }
             if (duration != 0) {
                 this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * duration, 1));
-                eat = true;
-            }
-
-            if (eat) {
-                this.eating();
-                this.gameEvent(GameEvent.EAT);
-                cir.setReturnValue(true);
+                eat.set(true);
             }
         }
     }
+
 }
