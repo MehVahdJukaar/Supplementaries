@@ -105,6 +105,9 @@ public class Supplementaries {
 
     //sled emissions skulk
 
+    //map atlas stuff
+    //infested beds in woodland mansions
+    //dummy particle mod for mobs
     //sack on head gives blindness
     //enderman animation teleport mod
     // cat loaf mod

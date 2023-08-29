@@ -117,7 +117,8 @@ public class ClientRegistry {
     public static void setup() {
 
         //compat
-        CompatHandlerClient.setup(); //if this fails other stuff below will to. In other words we'll at least know that it failed since nothing will work anymore
+        CompatHandlerClient.setup(); //If this fails, the other stuff below will too.
+        // In other words, we'll at least know that it failed since nothing will work anymore
 
         //map markers
         ModMapMarkersClient.init();
