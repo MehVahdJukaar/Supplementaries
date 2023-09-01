@@ -47,6 +47,8 @@ processResources {
             neo_version          : neo_version,
             neo_version_range    : neo_version_range,
             loader_version_range : loader_version_range,
+
+            required_moonlight_version: required_moonlight_version
     ]
     // setting them as input
     inputs.properties replaceProperties

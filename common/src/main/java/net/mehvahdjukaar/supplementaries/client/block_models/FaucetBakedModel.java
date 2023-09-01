@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -43,7 +44,7 @@ public class FaucetBakedModel implements CustomBakedModel {
                 if (!l.isEmpty()) {
                     int color = ColorUtil.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
                     int col2 = (color & 0x00FFFFFF) | (40 << 24);
-                    TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
+                    TextureAtlasSprite sprite = ClientHelper.getBlockMaterial(fluid.getFlowingTexture()).sprite();
                     var b = BakedQuadBuilder.create(sprite);
                     for (var q : l) {
                         q = VertexUtil.swapSprite(q, sprite);

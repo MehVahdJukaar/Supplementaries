@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -41,7 +42,7 @@ public class GobletBakedModel implements CustomBakedModel {
             if (fluid != null && !fluid.isEmpty()) {
                 var l = liquid.getQuads(state, side, rand);
                 if (!l.isEmpty()) {
-                    TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
+                    TextureAtlasSprite sprite = ClientHelper.getBlockMaterial(fluid.getStillTexture()).sprite();
                   var b =  BakedQuadBuilder.create(sprite);
                   for(var q : VertexUtil.swapSprite(l, sprite)) {
                       b.fromVanilla(q);

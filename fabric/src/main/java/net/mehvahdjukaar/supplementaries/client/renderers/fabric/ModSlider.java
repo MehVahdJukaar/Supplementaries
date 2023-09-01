@@ -39,7 +39,6 @@ public class ModSlider extends AbstractSliderButton implements ISlider {
 
     @Override
     protected void applyValue() {
-        DispenserBehaviorsManager
     }
 
     @Override

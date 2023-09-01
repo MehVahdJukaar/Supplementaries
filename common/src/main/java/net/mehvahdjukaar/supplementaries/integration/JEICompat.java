@@ -38,15 +38,12 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), new SpikesSubtypeInterpreter());
     }
 
     public static class SpikesSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
-        public static final SpikesSubtypeInterpreter INSTANCE = new SpikesSubtypeInterpreter();
 
-        private SpikesSubtypeInterpreter() {
-        }
-
+        @Override
         public String apply(ItemStack itemStack, UidContext uidContext) {
 
             Potion potionType = PotionUtils.getPotion(itemStack);

@@ -19,6 +19,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
         TextureAtlasSprite white = ModMaterials.BLACKBOARD_WHITE.sprite();
 
         quads = new ArrayList<>();
-        var rotation = modelTransform.getRotation();
+        Transformation rotation = modelTransform.getRotation();
 
         for (int x = 0; x < pixels.length; x++) {
             int length = 0;
@@ -128,7 +129,8 @@ public class BlackboardBakedModel implements CustomBakedModel {
     }
 
     public static BakedQuad createPixelQuad(float x, float y, float width, float height,
-                                            TextureAtlasSprite sprite, int color, Transformation transform, boolean emissive) {
+                                            TextureAtlasSprite sprite, int color, Transformation transform,
+                                            boolean emissive) {
         float u0 = 1 - x;
         float v0 = 1 - y;
         float u1 = 1 - (x + width);
