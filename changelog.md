@@ -1,1 +1,1 @@
-fixed quiver not working in offhand
+fixed mobs not rendering in jars

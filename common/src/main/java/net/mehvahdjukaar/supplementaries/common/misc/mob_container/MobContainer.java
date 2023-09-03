@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -284,7 +285,7 @@ public class MobContainer {
         }
 
         CompoundTag cmp = new CompoundTag();
-        data.save(cmp, isAquarium);
+        data.save(cmp, isAquarium && cap.renderAs2DFish());
         return cmp;
     }
 
@@ -488,11 +489,11 @@ public class MobContainer {
             }
 
             @Override
-            protected void save(CompoundTag tag, boolean isAquarium) {
+            protected void save(CompoundTag tag, boolean rendersAsFish) {
                 CompoundTag cmp = new CompoundTag();
                 cmp.putString("Name", name);
                 cmp.put("Bucket", filledBucket.save(new CompoundTag()));
-                if (isAquarium) {
+                if (rendersAsFish) {
                     cmp.putInt("FishTexture", this.fishTexture);
                     if (fluidID != null) {
                         cmp.putString("Fluid", this.fluidID.toString());

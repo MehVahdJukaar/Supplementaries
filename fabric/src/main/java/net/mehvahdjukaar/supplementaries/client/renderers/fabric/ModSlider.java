@@ -1,14 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
-import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 
 public class ModSlider extends AbstractSliderButton implements ISlider {
     private final double maxValue;

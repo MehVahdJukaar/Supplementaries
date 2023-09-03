@@ -54,9 +54,11 @@ public class ClientEventsFabric {
         QuiverArrowSelectGuiImpl.INSTANCE.render(graphics, partialTicks);
         //also using to check keybind
 
-        QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
-                Minecraft.getInstance().getWindow().getWindow(),
-                ClientRegistry.QUIVER_KEYBIND.key.getValue()
-        ));
+        if(ClientRegistry.QUIVER_KEYBIND.isUnbound()) {
+            QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
+                    Minecraft.getInstance().getWindow().getWindow(),
+                    ClientRegistry.QUIVER_KEYBIND.key.getValue()
+            ));
+        }
     }
 }
