@@ -146,7 +146,7 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:4551115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
-    modCompileOnly("curse.maven:haunted-harvest-541753:4557328")
+    modImplementation("curse.maven:haunted-harvest-541753:4647081")
     modCompileOnly("curse.maven:waystones-245755:3835119")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")
