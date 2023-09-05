@@ -24,7 +24,6 @@ public class ModCommands {
                         )
                         .then(ReloadConfigsCommand.register(dispatcher))
                         .then(OpenConfiguredCommand.register(dispatcher))
-                        .then(IUsedToRollTheDice.register(dispatcher))
                         .then(AddCageMobCommand.register(dispatcher, context))
                         .then(RecordSongCommand.register(dispatcher))
                         .then(Commands.literal("map")

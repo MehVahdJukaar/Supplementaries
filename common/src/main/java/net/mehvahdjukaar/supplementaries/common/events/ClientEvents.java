@@ -89,10 +89,12 @@ public class ClientEvents {
         //forge handles key up with event
         if (QuiverArrowSelectGui.isUsingKey()) {
             //handles release edge cases
-            QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
-                    Minecraft.getInstance().getWindow().getWindow(),
-                    ClientRegistry.QUIVER_KEYBIND.key.getValue()
-            ));
+            if(!ClientRegistry.QUIVER_KEYBIND.isUnbound()) {
+                QuiverArrowSelectGui.setUsingKeybind(InputConstants.isKeyDown(
+                        Minecraft.getInstance().getWindow().getWindow(),
+                        ClientRegistry.QUIVER_KEYBIND.key.getValue()
+                ));
+            }
         }
     }
 

@@ -284,7 +284,7 @@ public class MobContainer {
         }
 
         CompoundTag cmp = new CompoundTag();
-        data.save(cmp, isAquarium);
+        data.save(cmp, isAquarium && cap.renderAs2DFish());
         return cmp;
     }
 
@@ -453,7 +453,7 @@ public class MobContainer {
             return fluidID;
         }
 
-        protected abstract void save(CompoundTag tag, boolean isAquarius);
+        protected abstract void save(CompoundTag tag, boolean renderAsFish);
 
         @Nullable
         protected static MobNBTData load(CompoundTag tag) {
@@ -488,11 +488,11 @@ public class MobContainer {
             }
 
             @Override
-            protected void save(CompoundTag tag, boolean isAquarium) {
+            protected void save(CompoundTag tag, boolean renderAsFish) {
                 CompoundTag cmp = new CompoundTag();
                 cmp.putString("Name", name);
                 cmp.put("Bucket", filledBucket.save(new CompoundTag()));
-                if (isAquarium) {
+                if (renderAsFish) {
                     cmp.putInt("FishTexture", this.fishTexture);
                     if (fluidID != null) {
                         cmp.putString("Fluid", this.fluidID.toString());
@@ -553,10 +553,10 @@ public class MobContainer {
             }
 
             @Override
-            protected void save(CompoundTag tag, boolean isAquarium) {
+            protected void save(CompoundTag tag, boolean renderAsFish) {
                 CompoundTag cmp = new CompoundTag();
                 cmp.putString("Name", name);
-                if (isAquarium) {
+                if (renderAsFish) {
                     cmp.putInt("FishTexture", this.fishTexture);
                     if (fluidID != null) {
                         cmp.putString("Fluid", this.fluidID.toString());

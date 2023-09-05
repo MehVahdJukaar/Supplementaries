@@ -105,7 +105,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (Minecraft.getInstance().screen == null &&
+        if (Minecraft.getInstance().screen == null && !ClientRegistry.QUIVER_KEYBIND.isUnbound() &&
                 event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
             int a = event.getAction();
             if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
