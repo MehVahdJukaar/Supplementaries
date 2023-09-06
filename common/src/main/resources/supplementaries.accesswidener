@@ -34,8 +34,6 @@ accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2spe
 #relayer diode block reading
 accessible method net/minecraft/world/level/block/DiodeBlock getOutputSignal (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I
 
-#explosions
-accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
 
 accessible field net/minecraft/world/level/block/CrossCollisionBlock PROPERTY_BY_DIRECTION Ljava/util/Map;
 
@@ -86,6 +84,7 @@ accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/mi
 accessible field net/minecraft/world/level/block/FlowerPotBlock POTTED_BY_CONTENT Ljava/util/Map;
 
 #bomb stuff
+accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;
 accessible field net/minecraft/world/level/Explosion damageCalculator Lnet/minecraft/world/level/ExplosionDamageCalculator;
 accessible field net/minecraft/world/level/Explosion level Lnet/minecraft/world/level/Level;
 accessible field net/minecraft/world/level/Explosion radius F
