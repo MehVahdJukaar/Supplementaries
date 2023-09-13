@@ -1,1 +1,3 @@
-fixed mobs not rendering in jars
+- added altimeter
+- added slice maps
+- added config to shoot bombs, snowballs and potions from slingshots

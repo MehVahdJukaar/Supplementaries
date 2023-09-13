@@ -101,7 +101,7 @@ public class SliceMap extends EmptyMapItem {
     }
 
     public static double getRangeMultiplier() {
-        return CommonConfigs.Tools.SLINGSHOT_RANGE.get();
+        return CommonConfigs.Tools..get();
     }
 
     public static boolean canPlayerSee(int targetY, Entity entity) {

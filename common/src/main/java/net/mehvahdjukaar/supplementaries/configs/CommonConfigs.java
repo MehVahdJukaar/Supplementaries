@@ -385,12 +385,6 @@ public class CommonConfigs {
             ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
-            builder.push("slice_map");
-            SLICE_MAP_ENABLED = feature(builder);
-            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
-                    .define("range_multiplier", 0.25, 0, 1);
-            builder.pop();
-
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -412,7 +406,6 @@ public class CommonConfigs {
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
-            DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
          //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -515,11 +508,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
 
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
-
-        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
-
-        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
-        public static final Supplier<Double> SLICE_MAP_RANGE;
 
     }
 
@@ -735,6 +723,12 @@ public class CommonConfigs {
                     .define("quiver_pickup", true);
             builder.pop();
 
+            builder.push("slice_map");
+            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
+                    .define("range_multiplier", 0.25, 0, 1);
+            builder.pop();
+
             builder.push("bubble_blower");
             BUBBLE_BLOWER_ENABLED = feature(builder);
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
@@ -816,6 +810,7 @@ public class CommonConfigs {
             builder.pop();
             CANDY_ENABLED = feature(builder, ModConstants.CANDY_NAME);
             STASIS_ENABLED = feature(builder, ModConstants.STASIS_NAME);
+            DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
 
             builder.pop();
         }
@@ -869,6 +864,10 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> STASIS_ENABLED;
 
+        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
+
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
     }
 
 
