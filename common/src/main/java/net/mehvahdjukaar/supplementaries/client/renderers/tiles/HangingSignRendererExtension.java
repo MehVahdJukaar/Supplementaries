@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.IExtendedHangingSign;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.HangingSignTileExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -41,6 +42,9 @@ public class HangingSignRendererExtension {
                               Material material, Material extensionMaterial, SignRenderer renderer,
                               float colorMult) { //color mult for FD
 
+        if(!(tile instanceof IExtendedHangingSign ex)){
+            return;
+        }
         poseStack.pushPose();
 
         boolean wallSign = !(state.getBlock() instanceof CeilingHangingSignBlock);
@@ -57,7 +61,7 @@ public class HangingSignRendererExtension {
 
         model.evaluateVisibleParts(state);
         VertexConsumer vertexConsumer = material.buffer(bufferSource, model::renderType);
-        var sign = ((IExtendedHangingSign) tile).getExtension();
+        HangingSignTileExtension signExtension = ex.getExtension();
 
         poseStack.scale(1, -1, -1);
         //TODO: ceiling banner rot
@@ -72,8 +76,8 @@ public class HangingSignRendererExtension {
         poseStack.pushPose();
 
         Quaternionf pitch = new Quaternionf();
-        if (((IExtendedHangingSign) tile).getExtension().canSwing()) {
-            float rot = sign.animation.getAngle(partialTicks);
+        if (signExtension.canSwing()) {
+            float rot = signExtension.animation.getAngle(partialTicks);
 
             if(!wallSign && attached){
                 //y swing
@@ -154,8 +158,8 @@ public class HangingSignRendererExtension {
             model.plank.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         }
 
-        ModBlockProperties.PostType right = sign.getRightAttachment();
-        ModBlockProperties.PostType left = sign.getLeftAttachment();
+        ModBlockProperties.PostType right = signExtension.getRightAttachment();
+        ModBlockProperties.PostType left = signExtension.getLeftAttachment();
 
         VertexConsumer vc2 = null;
         if (right != null || left != null) {

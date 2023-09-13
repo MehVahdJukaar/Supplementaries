@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WallHangingSignBlock.class)
+@Deprecated(forRemoval = true)
 public abstract class WallHangingSignBlockMixin extends Block implements EntityBlock {
 
     protected WallHangingSignBlockMixin(Properties properties) {

@@ -138,7 +138,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
             if (w != oak) {
                 try {
-                    //check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
+                    //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 
                     FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
