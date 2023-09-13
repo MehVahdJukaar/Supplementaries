@@ -24,6 +24,9 @@ public final class ModConstants {
     public static final String ANTIQUE_INK_NAME = "antique_ink";
     public static final String WRENCH_NAME = "wrench";
     public static final String QUIVER_NAME = "quiver";
+    public static final String SPEEDOMETER_NAME = "speedometer";
+    public static final String DEPTH_METER_NAME = "altimeter";
+    public static final String SLICE_MAP_NAME = "slice_map";
 
     public static final String HANGING_SIGN_NAME = "hanging_sign";
     public static final String SIGN_POST_NAME = "sign_post";

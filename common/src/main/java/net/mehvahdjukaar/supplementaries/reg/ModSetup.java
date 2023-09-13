@@ -32,7 +32,6 @@ public class ModSetup {
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
-            WeatheredMap::setup,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,

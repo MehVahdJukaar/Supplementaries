@@ -1,0 +1,20 @@
+{
+  "color": "#fff5eb",
+  "containers": [
+    {
+      "filled": [
+        "autumnity:snail_goo"
+      ],
+      "empty": "minecraft:air",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "autumnity:block/snail_goo",
+  "food": {
+    "divider": 1,
+    "item": "autumnity:snail_goo"
+  },
+  "from_mod": "autumnity",
+  "still_texture": "autumnity:block/snail_goo",
+  "translation_key": "item.autumnity.snail_goo"
+}

@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -99,6 +101,7 @@ public class ModTextures {
     public static final ResourceLocation BANNER_PATTERN_ICON = Supplementaries.res("item/gui_slots/empty_slot_banner_pattern");
     public static final ResourceLocation BOOK_ICON = Supplementaries.res("item/gui_slots/empty_slot_book");
     public static final ResourceLocation ANTIQUE_INK_ICON = Supplementaries.res("item/gui_slots/empty_slot_antique_ink");
+    public static final ResourceLocation MAP_ATLAS_ICON = Supplementaries.res("item/gui_slots/empty_slot_map_atlas");
     public static final ResourceLocation PAPER_ICON = Supplementaries.res("item/gui_slots/empty_slot_paper");
     public static final ResourceLocation GLASS_PANE_ICON = Supplementaries.res("item/gui_slots/empty_slot_glass_pane");
 
@@ -110,7 +113,10 @@ public class ModTextures {
         if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
             l.add(ANTIQUE_INK_ICON);
         }
-        return l;
+        if(CompatHandler.MAPATLAS){
+            l.add(MAP_ATLAS_ICON);
+        }
+        return ImmutableList.copyOf(l);
     });
 
     public static final List<ResourceLocation> MAP_ICONS = List.of(MAP_ICON);

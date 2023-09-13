@@ -52,6 +52,8 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4656566")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}")))
+
 }
 
 

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -73,7 +74,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         PARTICLE_OFFSETS = new EnumMap<>(Direction.class);
         EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> temp = new EnumMap<>(AttachFace.class);
         {
-            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectOpenHashMap<>();
+            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectArrayMap<>();
             int2ObjectMap.put(1, List.of(new Vec3(0.5, 0.6875, 0.5)));
             int2ObjectMap.put(2, List.of(new Vec3(0.3125, 0.875, 0.5), new Vec3(0.6875, 0.875, 0.5)));
             int2ObjectMap.put(3, List.of(new Vec3(0.1875, 0.9375, 0.5), new Vec3(0.5, 0.9375, 0.5), new Vec3(0.8125, 0.9375, 0.5)));
@@ -81,7 +82,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             temp.put(AttachFace.FLOOR, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
         {
-            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectOpenHashMap<>();
+            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectArrayMap<>();
             int2ObjectMap.put(1, List.of(new Vec3(0.5, 0.9375, 0.1875)));
             int2ObjectMap.put(2, List.of(new Vec3(0.3125, 0.9375, 0.1875), new Vec3(0.6875, 0.9375, 0.1875)));
             int2ObjectMap.put(3, List.of(new Vec3(0.8125, 0.9375, 0.1875), new Vec3(0.1875, 0.9375, 0.1875), new Vec3(0.5, 0.9375, 0.25)));
@@ -89,7 +90,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             temp.put(AttachFace.WALL, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
         {
-            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectOpenHashMap<>();
+            Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectArrayMap<>();
             int2ObjectMap.put(1, List.of(new Vec3(0.5, 9 / 16f, 0.5)));
             int2ObjectMap.put(2, List.of(new Vec3(0.25f, 0.875, 0.5), new Vec3(0.75, 0.875, 0.5)));
             int2ObjectMap.put(3, List.of(new Vec3(0.5f, 0.875, 0.75), new Vec3(0.75, 0.875, 0.375), new Vec3(0.25, 0.875, 0.375)));
@@ -99,7 +100,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         for (Direction direction : Direction.values()) {
             EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> newFaceMap = new EnumMap<>(AttachFace.class);
             for (var faceList : temp.entrySet()) {
-                Int2ObjectMap<List<Vec3>> newCandleList = new Int2ObjectOpenHashMap<>();
+                Int2ObjectMap<List<Vec3>> newCandleList = new Int2ObjectArrayMap<>();
                 newCandleList.defaultReturnValue(List.of());
                 int c = 1;
                 var oldVec = faceList.getValue();

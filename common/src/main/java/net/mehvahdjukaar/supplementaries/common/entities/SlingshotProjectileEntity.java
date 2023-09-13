@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.items.BombItem;
+import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -32,10 +34,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -120,7 +120,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
-        if (entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
+        if (!trySplashPotStuff() &&
+                entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
             Item item = this.getItem().getItem();
             if (item instanceof BlockItem bi) {
                 Block block = bi.getBlock();
@@ -141,8 +142,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
         boolean success = false;
-        if (owner instanceof Player player && player.mayBuild()) {
-            Level level = level();
+        Level level = level();
+        success = trySplashPotStuff();
+        if (!success && owner instanceof Player player && player.mayBuild()) {
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return; //hack since we need client interaction aswell
@@ -168,10 +170,44 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 success = ItemsUtil.place(item,
                         new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
             }
-            if (success) {
-                this.remove(RemovalReason.DISCARDED);
+        }
+        if (success) {
+            this.remove(RemovalReason.DISCARDED);
+        }
+    }
+
+    private boolean trySplashPotStuff() {
+        if (this.getOwner() instanceof LivingEntity le) {
+            Projectile ent = null;
+            Item item = this.getItem().getItem();
+            Level level = level();
+            if (item instanceof ThrowablePotionItem) {
+                var p = new ThrownPotion(level, le);
+                p.setPos(this.getX(), this.getY(), this.getZ());
+                p.setItem(this.getItem());
+                ent = p;
+            } else if (item == Items.FIRE_CHARGE) {
+                var p = new SmallFireball(level, le, this.getX(), this.getY(), this.getZ());
+                p.setItem(this.getItem());
+            }else if( item instanceof SnowballItem){
+                var s = new Snowball(level, le);
+                s.setPos(this.getX(), this.getY(), this.getZ());
+                s.setItem(this.getItem());
+                ent = s;
+            }else if(item instanceof BombItem bi){
+                var s = new BombEntity(level, le, bi.getType());
+                s.setPos(this.getX(), this.getY(), this.getZ());
+                s.setItem(this.getItem());
+                ent = s;
+            }
+
+            if (ent != null) {
+                level.addFreshEntity(ent);
+                ent.tick();
+                return true;
             }
         }
+        return false;
     }
 
     @Override

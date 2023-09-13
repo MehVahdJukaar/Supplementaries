@@ -1,0 +1,20 @@
+{
+  "color": "#42a073",
+  "containers": [
+    {
+      "filled": [
+        "goodending:algae_bucket"
+      ],
+      "empty": "minecraft:bucket",
+      "capacity": 4
+    }
+  ],
+  "flowing_texture": "goodending:block/algae",
+  "food": {
+    "divider": 4,
+    "item": "goodending:algae_bucket"
+  },
+  "from_mod": "goodending",
+  "still_texture": "goodending:block/algae",
+  "translation_key": "item.goodending.algae_bucket"
+}

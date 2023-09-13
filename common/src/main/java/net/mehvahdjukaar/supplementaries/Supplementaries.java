@@ -5,17 +5,15 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
-import net.mehvahdjukaar.moonlight.core.mixins.BeeGoalMixin;
-import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.items.SliceMap;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
+import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -25,17 +23,9 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.PitcherCropBlock;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 
 public class Supplementaries {
@@ -79,9 +69,10 @@ public class Supplementaries {
         ModCreativeTabs.init();
         LootTablesInjects.init();
         InteractEventOverrideHandler.init();
+        SliceMap.init();
+        WeatheredMap.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
-
 
         PlatHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
         PlatHelper.addServerReloadListener(HourglassTimesManager.RELOAD_INSTANCE, res("hourglass_data"));
@@ -105,6 +96,7 @@ public class Supplementaries {
 
     //sled emissions skulk
 
+
     //map atlas stuff
     //infested beds in woodland mansions
     //dummy particle mod for mobs
@@ -112,6 +104,14 @@ public class Supplementaries {
     //enderman animation teleport mod
     // cat loaf mod
     //dispenser brick use same texture
+
+    //safe shulker recipe broken as it deletes items inside
+    //sleep tight beds infested in mansion
+    //dynamic candy bag with just tile
+    // heartstone m
+    //fix timber frames placement
+    //async setup stuff
+
     //HH cookies in sacks
     //use mixin extras
 //item frame opt mod

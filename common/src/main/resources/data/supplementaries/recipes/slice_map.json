@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "altimeter"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "slice_map"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:altimeter"
+    },
+    {
+      "item": "minecraft:map"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:slice_map",
+    "count": 1
+  }
+}
