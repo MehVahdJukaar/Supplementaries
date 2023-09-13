@@ -385,6 +385,12 @@ public class CommonConfigs {
             ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
+            builder.push("slice_map");
+            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
+                    .define("range_multiplier", 0.25, 0, 1);
+            builder.pop();
+
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -406,6 +412,8 @@ public class CommonConfigs {
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
+            DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
+         //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
         }
@@ -507,6 +515,11 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
 
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
+
+        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
+
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
 
     }
 
@@ -787,6 +800,14 @@ public class CommonConfigs {
                     .define("stasis_deceleration", 0.9625, 0.1, 1);
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
+            SLINGSHOT_POTIONS = builder.comment("Allows splash potions to be thrown by slingshots")
+                            .define("allow_splash_potions", false);
+            SLINGSHOT_BOMBS = builder.comment("Allows bombs to be thrown by slingshots")
+                    .define("allow_bombs", false);
+            SLINGSHOT_FIRECHARGE = builder.comment("Allows fire charges to be thrown by slingshots")
+                    .define("allow_fire_charges", false);
+            SLINGSHOT_SNOWBALL = builder.comment("Allows snowballs to be thrown by slingshots")
+                    .define("allow_snowballs", false);
             builder.pop();
 
             builder.push("antique_ink");
@@ -821,6 +842,10 @@ public class CommonConfigs {
         public static final Supplier<Integer> SLINGSHOT_CHARGE;
         public static final Supplier<Double> SLINGSHOT_DECELERATION;
         public static final Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
+        public static final Supplier<Boolean> SLINGSHOT_POTIONS;
+        public static final Supplier<Boolean> SLINGSHOT_BOMBS;
+        public static final Supplier<Boolean> SLINGSHOT_FIRECHARGE;
+        public static final Supplier<Boolean> SLINGSHOT_SNOWBALL;
 
         public static final Supplier<Boolean> BOMB_ENABLED;
         public static final Supplier<Double> BOMB_RADIUS;

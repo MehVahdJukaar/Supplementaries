@@ -141,11 +141,13 @@ public class ModRegistry {
 
 
     //speedometer
-    /*
-    public static final String SPEEDOMETER_NAME = "speedometer";
-    public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(
-            (new Item.Properties()).tab(null)));
-    */
+    //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));
+
+
+    //altimeter
+    public static final Supplier<Item> DEPTH_METER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()));
+
+    public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new SliceMap(new Item.Properties()));
 
 
     //blocks
@@ -358,7 +360,6 @@ public class ModRegistry {
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(
             SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(), new Item.Properties(), Direction.DOWN));
-
 
 
     //candle holder
@@ -1012,7 +1013,7 @@ public class ModRegistry {
                     .sound(SoundType.SAND)
                     .randomTicks()
                     .strength(0.1F)
-                     .forceSolidOff()
+                    .forceSolidOff()
                     .isViewBlocking((state, l, p) -> state.getValue(AshLayerBlock.LAYERS) >= 8)
                     .requiresCorrectToolForDrops()
     ));

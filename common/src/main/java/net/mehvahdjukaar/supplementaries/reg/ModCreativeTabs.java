@@ -369,6 +369,14 @@ public class ModCreativeTabs {
                 ModConstants.QUIVER_NAME,
                 ModRegistry.QUIVER_ITEM);
 
+        after(e, Items.CLOCK, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.DEPTH_METER_NAME,
+                ModRegistry.DEPTH_METER_ITEM);
+
+        after(e, Items.MAP, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.SLICE_MAP_NAME,
+                ModRegistry.SLICE_MAP);
+
         before(e, Items.LIGHT_WEIGHTED_PRESSURE_PLATE, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.GOLD_DOOR_NAME,
                 ModRegistry.GOLD_DOOR);

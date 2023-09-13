@@ -73,6 +73,7 @@
     {"id":"pamhc2crops:roastedalmonditem","required":false},
     {"id":"pamhc2crops:roastedpinenutitem","required":false},
     {"id":"pamhc2crops:garlicitem","required":false},
+    {"id":"windswept:wild_berry_cookie","required":false},
     {"id":"cookielicious:strawberry_cookie","required":false},
 
     {"id":"cookielicious:vanilla_cookie","required":false},

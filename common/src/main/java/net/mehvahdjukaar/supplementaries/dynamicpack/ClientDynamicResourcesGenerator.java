@@ -17,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

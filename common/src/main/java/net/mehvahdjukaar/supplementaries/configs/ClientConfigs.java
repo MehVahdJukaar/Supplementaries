@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -57,7 +59,7 @@ public class ClientConfigs {
 
     private static float signColorMult = 1;
 
-    public static float getSignColorMult(){
+    public static float getSignColorMult() {
         return signColorMult;
     }
 
@@ -80,6 +82,9 @@ public class ClientConfigs {
         public static final Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
         public static final Supplier<Boolean> WRENCH_PARTICLES;
         public static final Supplier<Boolean> FLUTE_PARTICLES;
+        public static final Supplier<Boolean> DEPTH_METER_CLICK;
+        public static final Supplier<Integer> DEPTH_METER_STEP_MULT;
+        public static final Supplier<List<ResourceLocation>> DEPTH_METER_DIMENSIONS;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -95,6 +100,15 @@ public class ClientConfigs {
                     .defineColor("block_outline_color", 0xffffff66);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .define("projectile_scale", 0.5, 0, 1);
+            builder.pop();
+
+            builder.push("altimeter");
+            DEPTH_METER_CLICK = builder.comment("Click action for depth meter which displays current depth")
+                    .define("click_action", true);
+            DEPTH_METER_DIMENSIONS = builder.comment("Allows depth meter to have unique textures per each dimension. Add more dimensions IDs and a matching texture in the correct path replacing ':' with '_'")
+                    .defineObjectList("extra_dimension_textures", () -> List.of(Level.NETHER.location(), Level.END.location()), ResourceLocation.CODEC);
+            DEPTH_METER_STEP_MULT = builder.comment("Increasing this to be more than 1 will result in delth meter display image to be shown in float amounts instead of pixel perfect ones")
+                            .define("texture_precision_multiplier", 1, 1, 10);
             builder.pop();
 
             builder.push("quiver");

@@ -1,0 +1,20 @@
+{
+  "color": "#a53b75",
+  "containers": [
+    {
+      "filled": [
+        "windswept:wild_berry_juice"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "flowing_texture": "moonlight:soft_fluids/potion_flow",
+  "food": {
+    "divider": 1,
+    "item": "windswept:wild_berry_juice"
+  },
+  "from_mod": "farmersdelight",
+  "still_texture": "moonlight:soft_fluids/potion_still",
+  "translation_key": "item.windswept.wild_berry_juice"
+}

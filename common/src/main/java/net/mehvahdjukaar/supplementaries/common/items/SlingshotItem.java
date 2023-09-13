@@ -175,7 +175,18 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         return s -> {
             Item i = s.getItem();
             //no buckets
-
+            if(i instanceof ThrowablePotionItem &&  CommonConfigs.Tools.SLINGSHOT_POTIONS.get()){
+                return true;
+            }
+            if(i instanceof BombItem &&  CommonConfigs.Tools.SLINGSHOT_BOMBS.get()){
+                return true;
+            }
+            if(i instanceof SnowballItem &&  CommonConfigs.Tools.SLINGSHOT_SNOWBALL.get()){
+                return true;
+            }
+            if(i instanceof FireChargeItem &&  CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get()){
+                return true;
+            }
             return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
                     i instanceof BlockItem ||
                     AdditionalItemPlacementsAPI.hasBehavior(i) ||

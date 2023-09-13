@@ -64,7 +64,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
-        player.displayClientMessage(Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ()), true);
+        player.displayClientMessage(Component.translatable("message.supplementaries.compass", pos.getX() ,pos.getZ()), true);
     }
 
     @Override

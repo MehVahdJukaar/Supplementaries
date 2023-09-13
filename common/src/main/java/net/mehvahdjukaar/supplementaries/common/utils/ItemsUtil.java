@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,7 +47,7 @@ public class ItemsUtil {
         //TODO: find better way to do
         if (item instanceof BlockItem bi) return bi.place(pContext);
         var placement = AdditionalItemPlacementsAPI.getBehavior(item);
-         if(placement != null) return placement.overridePlace(pContext);
+        if (placement != null) return placement.overridePlace(pContext);
         return InteractionResult.PASS;
     }
 

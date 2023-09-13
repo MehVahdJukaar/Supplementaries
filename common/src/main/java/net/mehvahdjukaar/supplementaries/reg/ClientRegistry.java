@@ -89,6 +89,8 @@ public class ClientRegistry {
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
     public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
     public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
+    public static final ResourceLocation ALTIMETER_TEMPLATE = Supplementaries.res("item/altimeter_template");
+    public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
 
     public static final ResourceLocation BELL_ROPE = Supplementaries.res("block/bell_rope");
     public static final ResourceLocation BELL_CHAIN = Supplementaries.res("block/bell_chain");
@@ -359,6 +361,8 @@ public class ClientRegistry {
         event.register(BOAT_MODEL);
         event.register(BELL_ROPE);
         event.register(BELL_CHAIN);
+        event.register(ALTIMETER_TEMPLATE);
+        event.register(ALTIMETER_OVERLAY);
         //not needed on forge
         if (PlatHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);
