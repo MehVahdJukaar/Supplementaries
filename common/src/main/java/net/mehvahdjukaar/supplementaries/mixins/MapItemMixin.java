@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.mehvahdjukaar.supplementaries.common.items.SliceMap;
+import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.MapItem;
@@ -44,14 +44,14 @@ public class MapItemMixin {
     public void checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
                                 @Local(ordinal = 5) LocalIntRef range,
                                 @Share("heightLock") LocalIntRef height) {
-        int mapHeight = SliceMap.getMapHeight(data);
+        int mapHeight = SliceMapItem.getMapHeight(data);
         height.set(mapHeight);
 
         if (mapHeight != Integer.MAX_VALUE) {
-            if (!SliceMap.canPlayerSee(mapHeight, viewer)) {
+            if (!SliceMapItem.canPlayerSee(mapHeight, viewer)) {
                 ci.cancel();
             }
-            range.set((int) (range.get() * SliceMap.getRangeMultiplier()));
+            range.set((int) (range.get() * SliceMapItem.getRangeMultiplier()));
         }
     }
 
@@ -72,7 +72,7 @@ public class MapItemMixin {
                                @Local LevelChunk chunk,
                                @Local(ordinal = 14) int w, @Share("heightLock") LocalIntRef height) {
         if (height.get() != Integer.MAX_VALUE && height.get() <= w) {
-            return SliceMap.getCutoffColor(pos, chunk);
+            return SliceMapItem.getCutoffColor(pos, chunk);
         }
         return operation.call(instance, level, pos);
     }

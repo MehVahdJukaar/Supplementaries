@@ -3,9 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -29,9 +27,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.item.MapItem.makeKey;
 
-public class SliceMap extends EmptyMapItem {
+public class SliceMapItem extends EmptyMapItem {
 
-    public SliceMap(Properties properties) {
+    public SliceMapItem(Properties properties) {
         super(properties);
     }
 
@@ -49,7 +47,7 @@ public class SliceMap extends EmptyMapItem {
             player.level().playSound(null, player, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, player.getSoundSource(), 1.0F, 1.0F);
 
             int slice = (int) player.getY()+1;
-            ItemStack itemStack2 = SliceMap.createSliced(level, player.getBlockX(), player.getBlockZ(), (byte) 0,
+            ItemStack itemStack2 = SliceMapItem.createSliced(level, player.getBlockX(), player.getBlockZ(), (byte) 0,
                     true, false, slice);
             if (itemStack.isEmpty()) {
                 return InteractionResultHolder.consume(itemStack2);
@@ -101,7 +99,7 @@ public class SliceMap extends EmptyMapItem {
     }
 
     public static double getRangeMultiplier() {
-        return CommonConfigs.Tools..get();
+        return CommonConfigs.Tools.SLICE_MAP_RANGE.get();
     }
 
     public static boolean canPlayerSee(int targetY, Entity entity) {

@@ -9,7 +9,7 @@ import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.SliceMap;
+import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -79,10 +79,10 @@ public class WeatheredMap {
 
             if (!(level.dimension() == data.dimension && entity instanceof Player pl)) return true;
 
-            int minHeight = SliceMap.getMapHeight(data);
+            int minHeight = SliceMapItem.getMapHeight(data);
 
             boolean hasDepthLock = minHeight != Integer.MAX_VALUE;
-            if (hasDepthLock && !SliceMap.canPlayerSee(minHeight, pl)) {
+            if (hasDepthLock && !SliceMapItem.canPlayerSee(minHeight, pl)) {
                 return true;
             }
 
@@ -93,7 +93,7 @@ public class WeatheredMap {
             int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
             int centerY = 128 / scale;
             if (hasDepthLock) {
-                centerY = (int) (centerY * SliceMap.getRangeMultiplier());
+                centerY = (int) (centerY * SliceMapItem.getRangeMultiplier());
             }
             if (level.dimensionType().hasCeiling()) {
                 centerY /= 2;
@@ -196,7 +196,7 @@ public class WeatheredMap {
                                             maxY += (double) cY / (double) (scale * scale);
 
                                             if (cY >= minHeight) {
-                                                newColor = SliceMap.getCutoffColor(mutable1, levelchunk);
+                                                newColor = SliceMapItem.getCutoffColor(mutable1, levelchunk);
                                             }
 
                                             multiset.add(newColor);
