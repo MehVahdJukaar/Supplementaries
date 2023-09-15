@@ -34,7 +34,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -145,7 +144,7 @@ public class ModRegistry {
     //altimeter
     public static final Supplier<Item> DEPTH_METER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()));
 
-    public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new SliceMap(new Item.Properties()));
+    public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new SliceMapItem(new Item.Properties()));
 
 
     //blocks

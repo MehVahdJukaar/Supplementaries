@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHa
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.items.SliceMap;
+import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -69,7 +69,7 @@ public class Supplementaries {
         ModCreativeTabs.init();
         LootTablesInjects.init();
         InteractEventOverrideHandler.init();
-        SliceMap.init();
+        SliceMapItem.init();
         WeatheredMap.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
