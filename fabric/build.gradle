@@ -49,8 +49,8 @@ dependencies {
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
-    //modImplementation("curse.maven:selene-499980:4656566")
-    modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
+    modImplementation("curse.maven:selene-499980:4754432")
+    //modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
 
 
 }
