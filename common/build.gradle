@@ -7,9 +7,15 @@ loom {
 }
 
 dependencies {
+
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+    implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
+
 
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
@@ -27,8 +33,6 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4656567")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
 
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.2.0-beta.10")
-    implementation("com.github.LlamaLad7:MixinExtras:0.2.0-beta.10")
 }
 
 publishing {

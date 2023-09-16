@@ -1,6 +1,3 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
 
 architectury {
     platformSetupLoomIde()
@@ -120,11 +117,17 @@ repositories {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
 
     implementation 'org.jetbrains:annotations:22.0.0'
+
+
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4656567")
@@ -173,9 +176,7 @@ dependencies {
     modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
 
-
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
-
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
+
+
 }

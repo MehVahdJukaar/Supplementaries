@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+//TODO: replace with onUpdatecall override
 @Mixin(MapItem.class)
 public class MapItemMixin {
 
@@ -34,7 +34,7 @@ public class MapItemMixin {
         return original;
     }
 
-    //TODO: replace with onUpdatecall override
+
     @Inject(method = "update", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z",
             shift = At.Shift.BEFORE,
@@ -55,6 +55,7 @@ public class MapItemMixin {
         }
     }
 
+
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/chunk/LevelChunk;getHeight(Lnet/minecraft/world/level/levelgen/Heightmap$Types;II)I"))
@@ -63,6 +64,7 @@ public class MapItemMixin {
         if (h != Integer.MAX_VALUE) return Math.min(original, h);
         return original;
     }
+
 
     @WrapOperation(method = "update", at = @At(
             value = "INVOKE",
@@ -76,6 +78,5 @@ public class MapItemMixin {
         }
         return operation.call(instance, level, pos);
     }
-
 
 }

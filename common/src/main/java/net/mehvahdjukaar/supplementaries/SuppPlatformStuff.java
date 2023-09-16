@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import com.llamalad7.mixinextras.MixinExtrasAP;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
@@ -15,6 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mixins;
+import org.spongepowered.asm.mixin.throwables.MixinApplyError;
+import org.spongepowered.tools.obfuscation.MixinObfuscationProcessorInjection;
 
 
 public class SuppPlatformStuff {
