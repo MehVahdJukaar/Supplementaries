@@ -1,11 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import einstein.jmc.JustMoreCakes;
-import einstein.jmc.JustMoreCakesForge;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.PicklePlayer;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

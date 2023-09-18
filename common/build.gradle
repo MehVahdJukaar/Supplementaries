@@ -13,9 +13,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
 
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
-    implementation("com.github.LlamaLad7:MixinExtras:${mixin_extras_version}")
-
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")
 
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
@@ -30,8 +29,8 @@ dependencies {
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
 
-    modImplementation("curse.maven:selene-499980:4754433")
-    //modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
+    //modImplementation("curse.maven:selene-499980:4754433")
+    modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
 
 }
 

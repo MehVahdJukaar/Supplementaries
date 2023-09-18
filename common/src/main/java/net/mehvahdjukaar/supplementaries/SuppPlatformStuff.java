@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries;
 
-import com.llamalad7.mixinextras.MixinExtrasAP;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
