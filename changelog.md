@@ -1,5 +1,1 @@
-- added altimeter
-- added slice maps
-- added config to shoot bombs, snowballs and potions from slingshots
-- fixed soap clean recipe
-- misc fixes
+- maps can now display biome colors

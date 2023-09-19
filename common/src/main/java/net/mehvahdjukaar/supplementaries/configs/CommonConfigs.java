@@ -1010,6 +1010,8 @@ public class CommonConfigs {
                 QUILL_TRADE_PRICE_MULT = () -> 1d;
                 QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
+            TINTED_MAP = builder.comment("Makes blocks tagged as 'tinted_on_map' use their tint color. This allows for accurate biome colors for water and grass as well as other custom block that use any tint")
+                            .define("tinted_blocks_on_maps", true);
             builder.pop();
 
             builder.push("ceiling_banners");
@@ -1086,6 +1088,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
+        public static final Supplier<Boolean> TINTED_MAP;
         public static final Supplier<Boolean> CEILING_BANNERS;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
         public static final Supplier<Boolean> WRITTEN_BOOKS;

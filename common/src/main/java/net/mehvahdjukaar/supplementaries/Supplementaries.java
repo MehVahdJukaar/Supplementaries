@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrade
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -71,6 +72,7 @@ public class Supplementaries {
         InteractEventOverrideHandler.init();
         SliceMapItem.init();
         WeatheredMap.init();
+        ColoredMapHandler.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
@@ -100,11 +102,9 @@ public class Supplementaries {
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile
-    // heartstone m
-    //fix timber frames placement
     //async setup stuff
     //HH cookies in sacks
-    //use mixin extras
+    //farmland smarter farmers rich soil
 //item frame opt mod
     //endrman teleport shader animation
     //villsger psrticle when inv is full
