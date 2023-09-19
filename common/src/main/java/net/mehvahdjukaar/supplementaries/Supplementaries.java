@@ -110,12 +110,10 @@ public class Supplementaries {
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile
-    // heartstone m
-    //fix timber frames placement
     //async setup stuff
 
     //HH cookies in sacks
-    //use mixin extras
+    //farmland smarter farmers rich soil
 //item frame opt mod
     //endrman teleport shader animation
     //villsger psrticle when inv is full
