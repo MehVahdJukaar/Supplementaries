@@ -155,7 +155,7 @@ public class DispenserBehaviorsManager {
                         DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
                     }
                 } catch (Exception e) {
-                    Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);
+                    Supplementaries.LOGGER.warn("Error while registering dispenser behavior for item {}: {}", i, e);
                 }
             }
         }
