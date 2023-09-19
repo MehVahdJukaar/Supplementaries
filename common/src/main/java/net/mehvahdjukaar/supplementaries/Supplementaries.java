@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrade
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -71,6 +72,7 @@ public class Supplementaries {
         InteractEventOverrideHandler.init();
         SliceMapItem.init();
         WeatheredMap.init();
+        ColoredMapHandler.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 

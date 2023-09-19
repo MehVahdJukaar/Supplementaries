@@ -119,7 +119,14 @@ public class ModTextures {
         return ImmutableList.copyOf(l);
     });
 
-    public static final List<ResourceLocation> MAP_ICONS = List.of(MAP_ICON);
+    public static final List<ResourceLocation> MAP_ICONS = Util.make(() -> {
+        var l = new ArrayList<ResourceLocation>();
+        l.add(MAP_ICON);
+        if (CompatHandler.MAPATLAS) {
+            l.add(MAP_ATLAS_ICON);
+        }
+        return ImmutableList.copyOf(l);
+    });
 
     public static final List<ResourceLocation> BANNER_SLOT_ICONS =
             List.of(BANNER_ICON, FLAG_ICON);
