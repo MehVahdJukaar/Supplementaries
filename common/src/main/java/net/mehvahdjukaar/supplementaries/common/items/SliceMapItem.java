@@ -67,6 +67,7 @@ public class SliceMapItem extends EmptyMapItem {
         MapItemSavedData data = MapItemSavedData.createFresh(x, z, scale, trackingPosition, unlimitedTracking, level.dimension());
         DepthMapData instance = DEPTH_DATA_KEY.getOrCreate(data, DepthMapData::new);
         instance.set(slice);
+        instance.setDirty(data);
         int mapId = level.getFreeMapId();
         level.setMapData(makeKey(mapId), data);
         itemStack.getOrCreateTag().putInt("map", mapId);

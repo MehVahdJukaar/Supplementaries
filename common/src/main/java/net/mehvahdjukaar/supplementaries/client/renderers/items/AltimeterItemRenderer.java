@@ -26,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -75,27 +76,11 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
         LocalPlayer player = Minecraft.getInstance().player;
         double depth = player == null ? 64 : player.position().y;
-        double normDepth = (depth - min) / (max - min);
-        return (normDepth * (textureH - 5));
+        //from 0 to 1
+        double normDepth = Mth.clamp((depth - min) / (max - min), 0, 1);
+        return (normDepth * (textureH - 6));
     }
 
-
-    private static void addScaledQuad(BakedQuadBuilder builder, PoseStack ps,
-                                      float shrink,
-                                      boolean top,
-                                      float x0, float y0,
-                                      float x1, float y1,
-                                      float u0, float v0, float u1, float v1) {
-        float ix0 = shrink * (x0 - 0.5f) * 2;
-        float ix1 = shrink * (x1 - 0.5f) * 2;
-        float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
-        float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
-        VertexUtil.addQuad(builder, ps,
-                x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
-                u0, v0, u1, v1,
-                255, 255, 255, 255,
-                0, 0);
-    }
 
     public static void onReload() {
         MODEL_CACHE.clear();
@@ -194,6 +179,24 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         @Override
         public ItemOverrides getOverrides() {
             return overrides;
+        }
+
+
+        private static void addScaledQuad(BakedQuadBuilder builder, PoseStack ps,
+                                          float shrink,
+                                          boolean top,
+                                          float x0, float y0,
+                                          float x1, float y1,
+                                          float u0, float v0, float u1, float v1) {
+            float ix0 = shrink * (x0 - 0.5f) * 2;
+            float ix1 = shrink * (x1 - 0.5f) * 2;
+            float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
+            float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
+            VertexUtil.addQuad(builder, ps,
+                    x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
+                    u0, v0, u1, v1,
+                    255, 255, 255, 255,
+                    0, 0);
         }
     }
 }

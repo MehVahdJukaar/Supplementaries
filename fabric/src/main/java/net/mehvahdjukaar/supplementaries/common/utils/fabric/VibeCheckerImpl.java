@@ -17,9 +17,39 @@ public class VibeCheckerImpl {
     public static void checkVibe() {
         // crashIfFabricRenderingAPIHasBeenNuked();
         // I've got a better idea
-        fixSodiumDeps();
-
+        //fixSodiumDeps();
+        unfixSodiumDeps();
     }
+
+    private static void unfixSodiumDeps() {
+        JsonElement obj = null;
+        var file = FabricLoader.getInstance().getConfigDir().resolve("fabric_loader_dependencies.json").toFile();
+        if (file.exists() && file.isFile()) {
+            try (FileInputStream fileInputStream = new FileInputStream(file);
+                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
+
+                obj = GSON.fromJson(bufferedReader, JsonElement.class);
+            } catch (IOException ignored) {
+            }
+        }
+        if (obj instanceof JsonObject jo) {
+            if (jo.has("overrides")) {
+                JsonObject overrides = jo.getAsJsonObject("overrides");
+                overrides.remove("sodium");
+                jo.add("overrides", overrides);
+            }
+        }
+        if(obj != null) {
+            try (FileOutputStream stream = new FileOutputStream(file);
+                 Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
+
+                GSON.toJson(obj, writer);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
 
     private static void fixSodiumDeps() {
         JsonElement obj = new JsonObject();
@@ -34,11 +64,11 @@ public class VibeCheckerImpl {
             }
         }
         if (obj instanceof JsonObject jo) {
-            if(!jo.has("version")){
+            if (!jo.has("version")) {
                 jo.addProperty("version", 1);
             }
             JsonObject overrides = new JsonObject();
-            if(jo.has("overrides")){
+            if (jo.has("overrides")) {
                 overrides = jo.getAsJsonObject("overrides");
             }
             JsonObject prop = new JsonObject();

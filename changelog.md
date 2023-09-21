@@ -1,1 +1,2 @@
-- maps can now display biome colors
+- fixed maps sending their data constantly
+- greatly improved and optimized extra map data memory allocation
