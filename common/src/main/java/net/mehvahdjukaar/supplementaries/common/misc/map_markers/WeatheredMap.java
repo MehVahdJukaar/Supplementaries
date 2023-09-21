@@ -327,7 +327,7 @@ public class WeatheredMap {
             MapItemSavedData newData = data.copy();
             WeatheredMapData instance = ANTIQUE_DATA_KEY.getOrCreate(newData, WeatheredMapData::new);
             instance.set(on);
-
+            instance.setDirty(newData);
             int mapId = level.getFreeMapId();
             String mapKey = MapItem.makeKey(mapId);
 
