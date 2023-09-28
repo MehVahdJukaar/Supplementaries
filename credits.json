@@ -114,10 +114,12 @@
     "E_Y_E_": {
       "has_globe": true
     },
-    "Chu":{
-      "has_globe": true,
+    "MORTHRIN":{
       "has_statue": true,
       "uuid": "5fff49c9-77e7-40c7-b2d3-c63c48113075"
+    },
+    "chu":{
+      "has_globe": true
     },
     "OutrightWings":{
       "has_statue": true,
