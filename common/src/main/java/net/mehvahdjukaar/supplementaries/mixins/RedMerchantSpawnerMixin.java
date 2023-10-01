@@ -90,10 +90,11 @@ public abstract class RedMerchantSpawnerMixin {
 
     }
 
+    @Unique
     private static double getRedMerchantSpawnMultiplier() {
         return CommonConfigs.getRedMerchantSpawnMultiplier();
     }
-
+    @Unique
     private float calculateNormalizeDifficulty(ServerLevel world, BlockPos pos) {
         float dragon = 1;
         EndDragonFight.Data dragonData = world.getServer().getWorldData().endDragonFightData();

@@ -80,6 +80,7 @@ subprojects {
                         optionalDependency "the-bumblezone-fabric"
                         optionalDependency "decorative-blocks"
                         optionalDependency("flan")
+                        optionalDependency("multi-item-lib")
                         optionalDependency("snowy-spirit")
                         optionalDependency("haunted-harvest")
                         optionalDependency("model-gap-fix")

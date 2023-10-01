@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
-import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
@@ -14,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,9 +59,14 @@ public class ColoredMapHandler {
         return state.builtInRegistryHolder().is(ModTags.TINTED_ON_MAPS);
     }
 
+    public static class DirtyCounter {
+        private final long[] dirtyPatches = new long[256];
+
+    }
 
     public static class ColorData implements CustomMapData, BlockAndTintGetter {
 
+        //TODO: optimize data packet
         private final Data tintData;
 
         public ColorData() {
@@ -185,15 +190,16 @@ public class ColoredMapHandler {
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
                 //dither biomes
                 var biome = level.getBiome(pos).unwrapKey().get();
-                Vec2b v = new Vec2b(x,z);
+                Vec2b v = new Vec2b(x, z);
                 Pair<Block, ResourceLocation> pair = Pair.of(block, biome.location());
-                if(!Objects.equals(tintData.getEntry(v), pair)){
+                if (!Objects.equals(tintData.getEntry(v), pair)) {
                     tintData.addEntry(v, pair);
                     this.setDirty(data);
                 }
             } else {
-                if (tintData.removeIfPresent(new Vec2b(x,z))) {
-                    this.setDirty(data);
+                if (tintData.removeIfPresent(new Vec2b(x, z))) {
+                    // this.setDirty(data);
+                    //dont need to sync these, they just stay unused
                 }
             }
         }
@@ -235,26 +241,38 @@ public class ColoredMapHandler {
                 var v = e.getKey();
                 Block block = e.getValue().getFirst();
                 BlockPos pos = new BlockPos(v.x, 0, v.z);
-                int tint = Minecraft.getInstance().getBlockColors().getColor(block.defaultBlockState(),
+                BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+                int tint = blockColors.getColor(block.defaultBlockState(),
                         this, pos, 0);
-                tint = ColorUtils.swapFormat(tint);
-                int k = pos.getX() + pos.getZ() * 128;
-                byte packedId = colors[k];
-                int color = MapColor.getColorFromPackedId(packedId);
+                if (tint != -1) {
+                    int k = pos.getX() + pos.getZ() * 128;
+                    byte packedId = colors[k];
 
-                float lumIncrease = 1.3f;
-                boolean water = false;
-                if (packedId >= (12 << 2) && ((12 << 2) | 3) > packedId) {
-                    water = true;
-                    lumIncrease = 2f;
+                    float lumIncrease = 1.3f;
+                    MapColor mapColor = MapColor.byId((packedId & 255) >> 2);
+                    if (mapColor == MapColor.WATER) {
+                        lumIncrease = 2f;
+                    }
+                    /*
+                    else if(mapColor == MapColor.PLANT){
+                        if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
+                             packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+                        }
+                    }*/
+                    else if(mapColor == MapColor.PLANT &&  !block.defaultBlockState().isSolid()){
+                        packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+                    }
+                    int color = MapColor.getColorFromPackedId(packedId);
+
+                    tint = ColorUtils.swapFormat(tint);
+                    RGBColor tintColor = new RGBColor(tint);
+                    LABColor c = new RGBColor(color).asLAB();
+                    RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
+                    var grayscaled = gray
+                            .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+                            .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
+                    texture.getPixels().setPixelRGBA(pos.getX(), pos.getZ(), grayscaled);
                 }
-                RGBColor tintColor = new RGBColor(tint);
-                LABColor c = new RGBColor(color).asLAB();
-                RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
-                var grayscaled = gray
-                        .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
-                        .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
-                texture.getPixels().setPixelRGBA(pos.getX(), pos.getZ(), grayscaled);
             }
         }
 
@@ -273,7 +291,7 @@ public class ColoredMapHandler {
 
             int x = pos.getX();
             int z = pos.getZ();
-            ResourceLocation biome = tintData.getBiome(new Vec2b(x,z));
+            ResourceLocation biome = tintData.getBiome(new Vec2b(x, z));
             if (biome != null) {
                 Biome b = Utils.hackyGetRegistry(Registries.BIOME).get(biome);
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
@@ -299,12 +317,12 @@ public class ColoredMapHandler {
     private interface Data {
 
         @Nullable
-       default ResourceLocation getBiome(Vec2b v){
+        default ResourceLocation getBiome(Vec2b v) {
             return getEntry(v).getSecond();
         }
 
         @Nullable
-        default Block getBlock(Vec2b v){
+        default Block getBlock(Vec2b v) {
             return getEntry(v).getFirst();
         }
 
@@ -405,7 +423,7 @@ public class ColoredMapHandler {
         }
 
         @Override
-        public @Nullable Pair<Block,ResourceLocation> getEntry(Vec2b v) {
+        public @Nullable Pair<Block, ResourceLocation> getEntry(Vec2b v) {
             byte index = blockArray[v.x][v.z];
             if (index == 0) return null;
             return indexes.get(index - 1);

@@ -43,8 +43,8 @@ public class VibeChecker {
         }
     }
 
-    //Its been prooven that CFTS is primarely made up of code shamelessly stolen from frozen up
-    //enfoncing its ARR license
+    //It's been proven that CFTS is primarely made up of code shamelessly stolen from frozen up
+    //enforcing its ARR license
     private static void crashWhenStolenMod() {
         String s = "creaturesfromthesnow";
         if (PlatHelper.isModLoaded(s)) {

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
@@ -17,6 +18,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +61,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
-    public static Predicate<Block> xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
+    public static Predicate<Block> xpBottlingOverride = b -> b instanceof EnchantmentTableBlock;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -72,7 +75,7 @@ public class CommonConfigs {
         });
 
         String xp = Tweaks.BOTTLING_TARGET.get();
-        if(xp.isEmpty()) xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
+        if (xp.isEmpty()) xpBottlingOverride = b -> b instanceof EnchantmentTableBlock;
         else xpBottlingOverride = b -> b == Suppliers.memoize(() -> {
             return BuiltInRegistries.BLOCK.get(new ResourceLocation(xp));
         });
@@ -103,6 +106,23 @@ public class CommonConfigs {
 
     public enum Hands {
         MAIN_HAND, OFF_HAND, BOTH, NONE
+    }
+
+    public enum DeathMarkerMode {
+        OFF, WITH_COMPASS, ALWAYS;
+
+        public boolean isOn(Player player) {
+            return switch (this) {
+                case OFF -> false;
+                case ALWAYS -> true;
+                case WITH_COMPASS -> {
+                    if (CompatHandler.MAPATLAS && MapAtlasCompat.canPlayerSeeDeathMarker(player)) {
+                        yield true;
+                    }
+                    yield player.getInventory().hasAnyMatching(i -> i.is(Items.RECOVERY_COMPASS));
+                }
+            };
+        }
     }
 
 
@@ -406,7 +426,7 @@ public class CommonConfigs {
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
-         //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
+            //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
         }
@@ -795,7 +815,7 @@ public class CommonConfigs {
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
             SLINGSHOT_POTIONS = builder.comment("Allows splash potions to be thrown by slingshots")
-                            .define("allow_splash_potions", false);
+                    .define("allow_splash_potions", false);
             SLINGSHOT_BOMBS = builder.comment("Allows bombs to be thrown by slingshots")
                     .define("allow_bombs", false);
             SLINGSHOT_FIRECHARGE = builder.comment("Allows fire charges to be thrown by slingshots")
@@ -915,7 +935,7 @@ public class CommonConfigs {
             builder.push("mob_head_tweaks");
             SKULL_PILES = dep(() -> builder.comment("Allows you to place two mob heads on top of each other")
                     .define("skull_piles", true));
-            SKULL_CANDLES =dep(() ->  builder.comment("Allows candles to be placed on top of skulls")
+            SKULL_CANDLES = dep(() -> builder.comment("Allows candles to be placed on top of skulls")
                     .define("skull_candles", true));
             SKULL_CANDLES_MULTIPLE = dep(() -> builder.comment("Allows placing more than one candle ontop of each skull")
                     .define("multiple_candles", true));
@@ -983,7 +1003,7 @@ public class CommonConfigs {
             BOTTLING_COST = builder.comment("bottling health cost")
                     .define("cost", 2, 0, 20);
             BOTTLING_TARGET = builder.comment("Block that should be clicked on for bottling to work. Leave blank for enchanting table. You can put another block here from another mod if you find it more fitting")
-                            .define("target_block", "");
+                    .define("target_block", "");
             builder.pop();
 
             builder.push("map_tweaks");
@@ -992,6 +1012,8 @@ public class CommonConfigs {
                     .define("random_adventurer_maps", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
+            DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
+                    .define("death_marker", DeathMarkerMode.WITH_COMPASS);
             if (PlatHelper.getPlatform().isForge()) {
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
@@ -1011,7 +1033,7 @@ public class CommonConfigs {
                 QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
             TINTED_MAP = builder.comment("Makes blocks tagged as 'tinted_on_map' use their tint color. This allows for accurate biome colors for water and grass as well as other custom block that use any tint")
-                            .define("tinted_blocks_on_maps", true);
+                    .define("tinted_blocks_on_maps", true);
             builder.pop();
 
             builder.push("ceiling_banners");
@@ -1083,6 +1105,7 @@ public class CommonConfigs {
         public static final Supplier<String> BOTTLING_TARGET;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
         public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
         public static final Supplier<Integer> QUILL_MAX_TRADES;

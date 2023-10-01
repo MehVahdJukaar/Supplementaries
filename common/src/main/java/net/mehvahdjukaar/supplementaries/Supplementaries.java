@@ -98,7 +98,7 @@ public class Supplementaries {
     //yes this is where I write crap. deal with it XD
 
     //sled emissions skulk
-
+//cheap map recie and altimeter stuff
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile

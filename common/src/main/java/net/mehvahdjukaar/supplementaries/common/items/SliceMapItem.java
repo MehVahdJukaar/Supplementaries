@@ -25,6 +25,8 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Properties;
+
 import static net.minecraft.world.item.MapItem.makeKey;
 
 public class SliceMapItem extends EmptyMapItem {
@@ -46,7 +48,7 @@ public class SliceMapItem extends EmptyMapItem {
             player.awardStat(Stats.ITEM_USED.get(this));
             player.level().playSound(null, player, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, player.getSoundSource(), 1.0F, 1.0F);
 
-            int slice = (int) player.getY()+1;
+            int slice = (int) player.getY() + 1;
             ItemStack itemStack2 = SliceMapItem.createSliced(level, player.getBlockX(), player.getBlockZ(), (byte) 0,
                     true, false, slice);
             if (itemStack.isEmpty()) {
@@ -148,6 +150,7 @@ public class SliceMapItem extends EmptyMapItem {
 
         @Override
         public @Nullable Component onItemTooltip(MapItemSavedData data, ItemStack stack) {
+            if (height == Integer.MAX_VALUE) return null;
             return Component.translatable("filled_map.sliced.tooltip", height).withStyle(ChatFormatting.GRAY);
         }
 

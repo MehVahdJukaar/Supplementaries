@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.markers.DummyMapBlockMarker;
 import net.mehvahdjukaar.moonlight.api.map.type.CustomDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers.*;
-import net.minecraft.resources.ResourceLocation;
 
 public class ModMapMarkers {
 
@@ -30,6 +30,9 @@ public class ModMapMarkers {
     public static final CustomDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = new CustomDecorationType<>(
             Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
 
+    public static final CustomDecorationType<CustomMapDecoration, ?> DEATH_MARKER = CustomDecorationType.dynamic(
+            Supplementaries.res("death_marker"),  CustomMapDecoration::new, DeathMarker::getForPlayer);
+
 
     public static void init() {
         MapDecorationRegistry.registerCustomType(SIGN_POST_DECORATION_TYPE);
@@ -40,6 +43,7 @@ public class ModMapMarkers {
         MapDecorationRegistry.registerCustomType(BANNER_DECORATION_TYPE);
         MapDecorationRegistry.registerCustomType(CHEST_DECORATION_TYPE);
         MapDecorationRegistry.registerCustomType(WAYSTONE_DECORATION_TYPE);
+        MapDecorationRegistry.registerCustomType(DEATH_MARKER);
     }
 
 }

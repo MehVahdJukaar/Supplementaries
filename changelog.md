@@ -1,2 +1,3 @@
-- fixed maps sending their data constantly
-- greatly improved and optimized extra map data memory allocation
+- added death map markers
+- tall grass will now have same color as grass when colored map option is on
+- fixed simple safes not working
