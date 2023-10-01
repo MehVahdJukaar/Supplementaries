@@ -91,29 +91,29 @@ public class WeatheredMap {
             int mapZ = data.centerZ;
             int playerX = Mth.floor(entity.getX() - mapX) / scale + 64;
             int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
-            int centerY = 128 / scale;
+            int range = 128 / scale;
             if (hasDepthLock) {
-                centerY = (int) (centerY * SliceMapItem.getRangeMultiplier());
+                range = (int) (range * SliceMapItem.getRangeMultiplier());
             }
             if (level.dimensionType().hasCeiling()) {
-                centerY /= 2;
+                range /= 2;
             }
 
             MapItemSavedData.HoldingPlayer player = data.getHoldingPlayer((Player) entity);
             ++player.step;
-            boolean flag = false;
+            boolean hasChangedAColorThisZ = false;
 
 
-            for (int pixelX = playerX - centerY + 1; pixelX < playerX + centerY; ++pixelX) {
-                if ((pixelX & 15) == (player.step & 15) || flag) {
-                    flag = false;
+            for (int pixelX = playerX - range + 1; pixelX < playerX + range; ++pixelX) {
+                if ((pixelX & 15) == (player.step & 15) || hasChangedAColorThisZ) {
+                    hasChangedAColorThisZ = false;
                     double somethingY = 0.0D;
 
-                    for (int pixelZ = playerZ - centerY - 1; pixelZ < playerZ + centerY; ++pixelZ) {
+                    for (int pixelZ = playerZ - range - 1; pixelZ < playerZ + range; ++pixelZ) {
                         if (pixelX >= 0 && pixelZ >= -1 && pixelX < 128 && pixelZ < 128) {
                             int offsetX = pixelX - playerX;
                             int offsetZ = pixelZ - playerZ;
-                            boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (centerY - 2) * (centerY - 2);
+                            boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (range - 2) * (range - 2);
                             int worldX = (mapX / scale + pixelX - 64) * scale;
                             int worldZ = (mapZ / scale + pixelZ - 64) * scale;
                             Multiset<MapColor> multiset = LinkedHashMultiset.create();
@@ -254,8 +254,8 @@ public class WeatheredMap {
                                 somethingY = maxY;
 
 
-                                if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < centerY * centerY && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
-                                    flag |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
+                                if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < range * range && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
+                                    hasChangedAColorThisZ |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
                                 }
                             }
                         }

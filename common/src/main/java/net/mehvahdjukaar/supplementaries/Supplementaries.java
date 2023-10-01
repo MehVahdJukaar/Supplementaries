@@ -107,6 +107,7 @@ public class Supplementaries {
     // cat loaf mod
     //dispenser brick use same texture
 
+//cheap map recie and altimeter stuff
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile

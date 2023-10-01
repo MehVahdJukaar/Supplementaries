@@ -33,7 +33,7 @@ class DyeBehavior implements ItemUseOnBlockOverride {
 
     @Override
     public boolean appliesToItem(Item item) {
-        return ForgeHelper.getColor(item.getDefaultInstance()) != null;
+        return ForgeHelper.getColor(new ItemStack(item)) != null;
     }
 
     @Override

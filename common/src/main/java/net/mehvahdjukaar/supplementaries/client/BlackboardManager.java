@@ -6,6 +6,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -127,8 +128,8 @@ public class BlackboardManager {
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
+            //no need for mipmap, we use block sheet
             this.texture = new DynamicTexture(WIDTH, WIDTH, false);
-
             for (int y = 0; y < pixels.length && y < WIDTH; y++) {
                 for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
                     this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));

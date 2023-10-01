@@ -169,7 +169,7 @@ dependencies {
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941638")
-    modCompileOnly("curse.maven:map-atlases-forge-519759:3949437")
+    modCompileOnly("curse.maven:map-atlases-forge-519759:4777281")
     modImplementation("curse.maven:create-328085:4626108")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")
     modImplementation("curse.maven:terrablender-563928:4590487")
@@ -178,7 +178,7 @@ dependencies {
     modCompileOnly("curse.maven:breezy-690628:4055467")
     modCompileOnly("curse.maven:geckolib-388172:4064451")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
-   
+
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")

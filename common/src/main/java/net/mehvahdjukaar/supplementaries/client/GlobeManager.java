@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
@@ -61,11 +62,13 @@ public class GlobeManager {
         private TextureInstance(Level world, boolean sepia) {
             this.sepia = sepia;
             this.dimensionId = world.dimension().location();
+            RenderUtil.setDynamicTexturesToUseMipmap(true);
             this.texture = new DynamicTexture(32, 16, false);
+            RenderUtil.setDynamicTexturesToUseMipmap(false);
             this.updateTexture(world);
             this.textureLocation = Minecraft.getInstance().getTextureManager()
                     .register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
-            this.renderType = RenderType.entitySolid(textureLocation);
+            this.renderType = RenderUtil.getEntitySolidMipmapRenderType(textureLocation);
         }
 
         private void updateTexture(Level world) {
@@ -84,7 +87,9 @@ public class GlobeManager {
                             getRGBA(pixels[y][x], this.dimensionId, this.sepia));
                 }
             }
+            RenderUtil.setDynamicTexturesToUseMipmap(true);
             this.texture.upload();
+            RenderUtil.setDynamicTexturesToUseMipmap(false);
         }
 
         @Override

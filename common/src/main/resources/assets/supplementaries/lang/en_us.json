@@ -437,6 +437,7 @@
   "message.supplementaries.compass": "X: %d, Z: %d",
   "item.supplementaries.slice_map": "Slice Map",
   "filled_map.sliced.tooltip": "Slice: %d",
+  "message.supplementaries.death_marker": "Last Death",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",
