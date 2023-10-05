@@ -1,3 +1,1 @@
-- added death map markers
-- tall grass will now have same color as grass when colored map option is on
-- fixed simple safes not working
+fixed another issue

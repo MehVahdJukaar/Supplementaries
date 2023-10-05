@@ -37,22 +37,9 @@ public class ModMaterials {
     public static final Material BLACKBOARD_OUTLINE = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_GRID);
     public static final Material BELLOWS_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BELLOWS_TEXTURE);
     public static final Material BUBBLE_BLOCK_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BUBBLE_BLOCK_TEXTURE);
-    public static final Material BOOK_ENCHANTED_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_ENCHANTED_TEXTURES);
-    public static final Material BOOK_TOME_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_TOME_TEXTURES);
-    public static final Material BOOK_WRITTEN_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_WRITTEN_TEXTURES);
-    public static final Material BOOK_AND_QUILL_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_AND_QUILL_TEXTURES);
-    public static final Material BOOK_TATTERED_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.BOOK_ANTIQUE_TEXTURES);
     public static final Material BLACKBOARD_WHITE = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_WHITE_TEXTURE);
     public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
     public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
-
-    public static final Supplier<Map<BookPileBlockTile.BookColor, Material>> BOOK_MATERIALS = Suppliers.memoize(() -> {
-        var map = new IdentityHashMap<BookPileBlockTile.BookColor, Material>();
-        for (var e : ModTextures.BOOK_TEXTURES.entrySet()) {
-            map.put(e.getKey(), new Material(LOCATION_BLOCKS, e.getValue()));
-        }
-        return map;
-    });
 
     public static final Supplier<Map<WoodType, Material>> SIGN_POSTS_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<WoodType, Material>();

@@ -61,7 +61,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
-    public static Predicate<Block> xpBottlingOverride = b -> b instanceof EnchantmentTableBlock;
+    public static Predicate<Block> xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -75,10 +75,9 @@ public class CommonConfigs {
         });
 
         String xp = Tweaks.BOTTLING_TARGET.get();
-        if (xp.isEmpty()) xpBottlingOverride = b -> b instanceof EnchantmentTableBlock;
-        else xpBottlingOverride = b -> b == Suppliers.memoize(() -> {
-            return BuiltInRegistries.BLOCK.get(new ResourceLocation(xp));
-        });
+        if (xp.isEmpty()) xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
+        else xpBottlingOverride = b -> b == Suppliers.memoize(() ->
+                BuiltInRegistries.BLOCK.get(new ResourceLocation(xp)));
 
         stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
     }

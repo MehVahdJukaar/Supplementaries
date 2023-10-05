@@ -21,6 +21,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Items;
@@ -109,6 +110,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
                 if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
                     builder.add(Biomes.BASALT_DELTAS.location());
+                    builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
                 }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }

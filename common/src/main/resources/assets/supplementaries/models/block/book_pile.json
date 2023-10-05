@@ -1,5 +1,6 @@
 {
     "textures": {
         "particle": "minecraft:block/bookshelf"
-    }
+    },
+    "loader": "supplementaries:book_pile"
 }

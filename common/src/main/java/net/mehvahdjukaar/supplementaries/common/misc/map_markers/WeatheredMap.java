@@ -7,7 +7,7 @@ import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.minecraft.ChatFormatting;
@@ -37,7 +37,7 @@ public class WeatheredMap {
 
     private static final String ANTIQUE_KEY = "antique";
 
-    private static final CustomMapData.Type<WeatheredMapData> ANTIQUE_DATA_KEY = MapDecorationRegistry.registerCustomMapSavedData(
+    private static final CustomMapData.Type<WeatheredMapData> ANTIQUE_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
             Supplementaries.res(ANTIQUE_KEY), WeatheredMapData::new
     );
 

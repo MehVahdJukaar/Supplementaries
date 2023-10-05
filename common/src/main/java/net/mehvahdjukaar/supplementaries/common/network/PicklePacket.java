@@ -3,25 +3,31 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
 
-public abstract class PicklePacket implements Message {
+public class PicklePacket implements Message {
 
     protected UUID playerID;
     protected final boolean on;
+    private final boolean isJar;
 
-    private PicklePacket(UUID appliesTo, boolean on) {
+    public PicklePacket(UUID appliesTo, boolean on, boolean isJar) {
         this.playerID = appliesTo;
         this.on = on;
+        this.isJar = isJar;
     }
 
-    private PicklePacket(FriendlyByteBuf buf) {
+    public PicklePacket(FriendlyByteBuf buf) {
         this.on = buf.readBoolean();
+        this.isJar = buf.readBoolean();
         if (buf.isReadable()) {
             this.playerID = buf.readUUID();
         }
@@ -30,56 +36,34 @@ public abstract class PicklePacket implements Message {
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeBoolean(this.on);
+        buf.writeBoolean(this.isJar );
         if (this.playerID != null) {
             buf.writeUUID(this.playerID);
         }
     }
 
-    public static class ServerBound extends PicklePacket {
-
-        public ServerBound(UUID appliesTo, boolean on) {
-            super(appliesTo, on);
-        }
-
-        public ServerBound(FriendlyByteBuf buf) {
-            super(buf);
-        }
-
-        @Override
-        public void handle(ChannelHandler.Context context) {
+    @Override
+    public void handle(ChannelHandler.Context context) {
+        if (context.getDirection() == NetworkDir.PLAY_TO_CLIENT) {
+            PickleData.set(this.playerID, this.on, isJar);
+        } else {
             //gets id from server just to be sure
             Player player = context.getSender();
             UUID id = player.getGameProfile().getId();
-            if (PickleData.isDev(id)) { //validate if it is indeed a dev
+            if (PickleData.isDev(id, isJar)) { //validate if it is indeed a dev
 
                 //stores value server side
-                PickleData.set(id, this.on);
+                PickleData.set(id, this.on, this.isJar);
                 this.playerID = id;
                 //broadcast to all players
                 for (ServerPlayer p : player.getServer().getPlayerList().getPlayers()) {
                     if (p != player) {
-                        NetworkHandler.CHANNEL.sendToClientPlayer(p, new ClientBound(this.playerID, this.on));
+                        NetworkHandler.CHANNEL.sendToClientPlayer(p, new PicklePacket(this.playerID, this.on, this.isJar));
                     }
                 }
             }
         }
     }
 
-    public static class ClientBound extends PicklePacket {
-
-        public ClientBound(UUID appliesTo, boolean on) {
-            super(appliesTo, on);
-        }
-
-        public ClientBound(FriendlyByteBuf buf) {
-            super(buf);
-        }
-
-        @Override
-        public void handle(ChannelHandler.Context context) {
-            //receive broadcasted message
-            PickleData.set(this.playerID, this.on);
-        }
-    }
 }
 

@@ -4,11 +4,12 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.LABColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.moonlight.core.mixins.MapDataMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -23,12 +24,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -49,7 +50,7 @@ public class ColoredMapHandler {
     protected static int DITHERING = 1;
 
     public static final CustomMapData.Type<ColorData> COLOR_DATA =
-            MapDecorationRegistry.registerCustomMapSavedData(Supplementaries.res("color_data"), ColorData::new);
+            MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("color_data"), ColorData::new);
 
     public static ColorData getColorData(MapItemSavedData data) {
         return COLOR_DATA.getOrCreate(data, ColorData::new);
@@ -259,7 +260,7 @@ public class ColoredMapHandler {
                              packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
                         }
                     }*/
-                    else if(mapColor == MapColor.PLANT &&  !block.defaultBlockState().isSolid()){
+                    else if(mapColor == MapColor.PLANT &&  block instanceof BushBlock){
                         packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
                     }
                     int color = MapColor.getColorFromPackedId(packedId);

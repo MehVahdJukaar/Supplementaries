@@ -37,7 +37,7 @@ public class ModSlider extends AbstractSliderButton implements ISlider {
     }
 
     @Override
-    public void onRelease(double mouseX, double mouseY) {
+    public void onReleased(double mouseX, double mouseY) {
         super.playDownSound(Minecraft.getInstance().getSoundManager());
     }
 }

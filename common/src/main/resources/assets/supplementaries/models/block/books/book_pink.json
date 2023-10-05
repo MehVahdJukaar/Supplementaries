@@ -1,0 +1,6 @@
+{
+	"parent": "supplementaries:block/books/book_enchanted",
+	"textures": {
+		"0": "supplementaries:block/books/book_pink"
+	}
+}

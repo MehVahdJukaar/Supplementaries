@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -176,7 +176,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         //adds custom decoration
         if (decoration == null) {
-            var type = MapDecorationRegistry.getAssociatedType(structure);
+            var type = MapDataRegistry.getAssociatedType(structure);
             decoration = Utils.getID(type);
             if (color == 0) {
                 color = type.getDefaultMapColor();

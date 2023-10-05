@@ -2,139 +2,147 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.VisualBook;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
+import java.util.EnumMap;
+import java.util.function.Function;
 
 public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBlockTile> {
 
-    private final ModelPart book;
-    private final ModelPart lock;
-
-    public static LayerDefinition createMesh() {
-        MeshDefinition mesh = new MeshDefinition();
-        PartDefinition root = mesh.getRoot();
-        PartDefinition book = root.addOrReplaceChild("book", CubeListBuilder.create()
-                        .texOffs(0, 0).addBox(-2.0F, -5.0F, -4.0F, 4.0F, 10.0F, 7.0F)
-                        .texOffs(28, 6).addBox(1.0F, -5.0F, 3.0F, 1.0F, 10.0F, 1.0F)
-                        .texOffs(23, 6).addBox(-2.0F, -5.0F, 3.0F, 1.0F, 10.0F, 1.0F),
-                PartPose.ZERO);
-
-        book.addOrReplaceChild("lock", CubeListBuilder.create()
-                        .texOffs(0, 0)
-                        .addBox(-1.0F, -1.0F, 3.0F, 2.0F, 2.0F, 1.0F),
-                PartPose.ZERO);
-
-        return LayerDefinition.create(mesh, 32, 32);
-    }
+    private static ModelBlockRenderer renderer;
+    private static final EnumMap<BookPileBlockTile.BookColor, BakedModel> MODELS = new EnumMap<>(BookPileBlockTile.BookColor.class);
 
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart model = context.bakeLayer(ClientRegistry.BOOK_MODEL);
-        this.book = model.getChild("book");
-        this.lock = this.book.getChild("lock");
+        ModelManager manager = Minecraft.getInstance().getModelManager();
+        MODELS.clear();
+        for (var e : ClientRegistry.BOOK_MODELS.entrySet()) {
+            MODELS.put(e.getKey(), ClientHelper.getModel(manager, e.getValue()));
+        }
+        renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+    }
+
+
+    @Override
+    public boolean shouldRender(BookPileBlockTile blockEntity, Vec3 cameraPos) {
+        return ClientConfigs.Tweaks.BOOK_GLINT.get();
     }
 
     @Override
     public void render(BookPileBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int light,
                        int overlay) {
-
         BlockState state = tile.getBlockState();
-
-        matrixStack.translate(0.5, 0.5, 0.5);
-
-        if (tile.horizontal) {
-            this.renderHorizontal(tile.books, state, matrixStack, bufferIn, light, overlay);
-        } else {
-            this.renderVertical(tile, state, matrixStack, bufferIn, light, overlay);
-        }
-
+        renderBookPile(tile.horizontal, tile.books, matrixStack, v -> v.getBuilder(bufferIn), light, overlay, state);
     }
 
-    private void renderHorizontal(List<VisualBook> visualBooks, BlockState state, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
+    public static void renderBookPile(boolean horizontal, BooksList books, PoseStack matrixStack,
+                                      Function<VisualBook, VertexConsumer> bufferIn,
+                                      int light, int overlay, BlockState state) {
+
+        if (horizontal) {
+            renderHorizontal(books, state, matrixStack, bufferIn, light, overlay);
+        } else {
+            renderVertical(books, state, matrixStack, bufferIn, light, overlay);
+        }
+    }
+
+    private static void renderHorizontal(BooksList visualBooks, BlockState state, PoseStack poseStack, Function<VisualBook, VertexConsumer> buffer, int light, int overlay) {
         int books = Math.min(state.getValue(BookPileBlock.BOOKS), visualBooks.size());
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
+        poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(RotHlpr.rot(dir));
-        poseStack.scale(-1,-1,1);
-//todo: use baked models
-        poseStack.translate(0, 3 / 16f, 0);
+        poseStack.translate(-0.5, -0.5 - 3 / 16f, -0.5);
 
-        float angle = (-11.25f) * Mth.DEG_TO_RAD;
+        float angle = (11.25f) * Mth.DEG_TO_RAD;
         switch (books) {
             default -> {
             }
             case 4 -> {
                 poseStack.translate(-6 / 16f, 0, 0);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
                 poseStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
                 poseStack.translate(4 / 16f, 0, 1 / 16f);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(2));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(2));
                 poseStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(3));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(3));
             }
             case 3 -> {
                 poseStack.translate(-5 / 16f, 0, 0);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
                 poseStack.translate(4 / 16f, 0, -1 / 16f);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
                 poseStack.translate(5 / 16f, 0, 1 / 16f);
-                book.zRot = angle;
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(2));
-                book.zRot = 0;
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(2), 0, angle);
             }
             case 2 -> {
                 poseStack.translate(-3 / 16f, 0, 0);
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
                 poseStack.translate(5 / 16f, 0, 1 / 16f);
-                book.zRot = angle;
-                this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(1));
-                book.zRot = 0;
+                renderBook(poseStack, buffer, light, overlay, visualBooks.get(1), 0, angle);
             }
-            case 1 -> this.renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+            case 1 -> renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
         }
     }
 
-    private void renderVertical(BookPileBlockTile tile, BlockState state, PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay) {
+    private static void renderVertical(BooksList booksList, BlockState state, PoseStack matrixStack, Function<VisualBook, VertexConsumer> builder, int light, int overlay) {
 
-        int books = Math.min(state.getValue(BookPileBlock.BOOKS), tile.books.size());
-
+        int maxBooks = Math.min(state.getValue(BookPileBlock.BOOKS), booksList.size());
         matrixStack.translate(0, -6 / 16f, 0);
-        book.zRot = (float) (Math.PI / 2f);
 
-        for (int i = 0; i < books; i++) {
-            VisualBook b = tile.books.get(i);
-            book.xRot = b.getAngle();
+        float zRot = -(float) (Math.PI / 2f);
 
-            this.renderBook(matrixStack, buffer, light, overlay, b);
+        for (int i = 0; i < maxBooks; i++) {
+            VisualBook b = booksList.get(i);
+
+            renderBook(matrixStack, builder, light, overlay, b, b.getAngle(), zRot);
 
             matrixStack.translate(0, 4 / 16f, 0);
         }
-        book.xRot = 0;
-        book.zRot = 0;
     }
 
-    private void renderBook(PoseStack matrixStack, MultiBufferSource buffer, int light, int overlay, VisualBook b) {
-        VertexConsumer builder = b.getBuilder(buffer);
-        this.lock.visible = b.isEnchanted();
-        this.book.render(matrixStack, builder, light, overlay);
+    private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
+                                   int light, int overlay, VisualBook b) {
+        renderBook(poseStack, vertexBuilder, light, overlay, b, 0, 0);
+    }
+
+    private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
+                                   int light, int overlay, VisualBook b, float xRot, float zRot) {
+        VertexConsumer builder = vertexBuilder.apply(b);
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        if (zRot != 0) poseStack.mulPose(Axis.ZP.rotation(zRot));
+        if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
+        poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
+
+        renderer.renderModel(poseStack.last(),
+                builder,
+                null,
+                MODELS.get(b.getColor()),
+                1.0F, 1.0F, 1.0F,
+                light, overlay);
+
+        poseStack.popPose();
     }
 
 }

@@ -12,30 +12,14 @@ import net.minecraft.world.level.block.entity.BedBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
-public class BedMarker extends MapBlockMarker<CustomMapDecoration> {
-    //additional data to be stored
-    private DyeColor color;
+public class BedMarker extends ColoredMarker {
 
     public BedMarker() {
         super(ModMapMarkers.BED_DECORATION_TYPE);
     }
 
     public BedMarker(BlockPos pos, DyeColor color) {
-        super(ModMapMarkers.BED_DECORATION_TYPE, pos);
-        this.color = color;
-    }
-
-    @Override
-    public CompoundTag saveToNBT(CompoundTag compoundnbt) {
-        super.saveToNBT(compoundnbt);
-        compoundnbt.putString("Color", this.color.getName());
-        return compoundnbt;
-    }
-
-    @Override
-    public void loadFromNBT(CompoundTag compound) {
-        super.loadFromNBT(compound);
-        this.color = DyeColor.byName(compound.getString("Color"), DyeColor.WHITE);
+        super(ModMapMarkers.BED_DECORATION_TYPE, pos, color, null);
     }
 
     @Nullable
@@ -46,29 +30,6 @@ public class BedMarker extends MapBlockMarker<CustomMapDecoration> {
         } else {
             return null;
         }
-    }
-
-    @Nullable
-    @Override
-    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, null);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        } else if (other != null && this.getClass() == other.getClass()) {
-            BedMarker marker = (BedMarker) other;
-            return Objects.equals(this.getPos(), marker.getPos()) && this.color == marker.color;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getPos(), this.color);
     }
 
 }

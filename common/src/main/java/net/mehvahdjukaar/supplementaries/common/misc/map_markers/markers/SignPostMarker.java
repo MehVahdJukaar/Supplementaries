@@ -1,25 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
-import net.mehvahdjukaar.moonlight.api.map.markers.NamedMapBlockMarker;
+import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
+import net.mehvahdjukaar.moonlight.api.map.markers.SimpleMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
-
 import org.jetbrains.annotations.Nullable;
 
-public class SignPostMarker extends NamedMapBlockMarker<CustomMapDecoration> {
-
+public class SignPostMarker extends SimpleMapBlockMarker {
 
     public SignPostMarker() {
         super(ModMapMarkers.SIGN_POST_DECORATION_TYPE);
     }
 
     public SignPostMarker(BlockPos pos, Component name) {
-        super(ModMapMarkers.SIGN_POST_DECORATION_TYPE, pos);
-        this.name = name;
+        super(ModMapMarkers.SIGN_POST_DECORATION_TYPE);
+        this.setName(name);
+        this.setPos(pos);
     }
 
     @Nullable
@@ -34,12 +34,6 @@ public class SignPostMarker extends NamedMapBlockMarker<CustomMapDecoration> {
         } else {
             return null;
         }
-    }
-
-    @Nullable
-    @Override
-    public CustomMapDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
-        return new CustomMapDecoration(this.getType(), mapX, mapY, rot, name);
     }
 
 }

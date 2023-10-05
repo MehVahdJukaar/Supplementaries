@@ -14,10 +14,15 @@ import java.util.UUID;
 //server and client side. might move into data
 public class PickleData {
 
-    public static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
+    private static final UUID ME = UUID.fromString("898b3a39-e486-405c-a873-d6b472dc3ba2");
+    protected static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
 
     static {
-        for (UUID id : Credits.INSTANCE.getDevs()) PICKLE_PLAYERS.put(id, new PickleValues());
+        for (UUID id : Credits.INSTANCE.getDevs()) {
+            PickleValues value = new PickleValues();
+            PICKLE_PLAYERS.put(id, value);
+            if (ME.equals(id)) value.toggle(true, true);
+        }
     }
 
     //reset
@@ -28,22 +33,22 @@ public class PickleData {
     }
 
     public static void onPlayerLogin(Player player) {
-        for (UUID id : PICKLE_PLAYERS.keySet()) {
-            boolean on = PICKLE_PLAYERS.get(id).isOn();
+        for (var e : PICKLE_PLAYERS.entrySet()) {
+            boolean on = e.getValue().isOn();
+            var id = e.getKey();
             if (on) {
                 //to client
-                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player,
-                        new PicklePacket.ClientBound(id, on));
+                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) player, new PicklePacket(id, on, e.getValue().isJar));
             }
         }
     }
 
-    public static boolean isDev(UUID id) {
-        return PICKLE_PLAYERS.containsKey(id);
+    public static boolean isDev(UUID id, boolean isJar) {
+        return PICKLE_PLAYERS.containsKey(id); //isJar ? id.equals(ME) :
     }
 
-    public static void set(UUID id, boolean on) {
-        PICKLE_PLAYERS.getOrDefault(id, DEF).toggle(on);
+    public static void set(UUID id, boolean on, boolean isJar) {
+        PICKLE_PLAYERS.getOrDefault(id, DEF).toggle(on, isJar);
     }
 
     public static boolean isActiveAndTick(UUID id, PlayerRenderer renderer) {
@@ -58,9 +63,11 @@ public class PickleData {
 
     public static class PickleValues {
         private State state = State.OFF;
+        private boolean isJar = false;
         private float oldShadowSize = 1;
 
-        public void toggle(boolean on) {
+        public void toggle(boolean on, boolean isJar) {
+            this.isJar = isJar;
             if (on) this.state = State.FIRST_ON;
             else this.state = State.FIRST_OFF;
         }
@@ -71,20 +78,35 @@ public class PickleData {
 
         public boolean isOnAndTick(PlayerRenderer renderer) {
             switch (this.state) {
-                case ON:
-                    return true;
-                default:
-                case OFF:
+                case ON -> {
+                    if (isJar) {
+                        renderer.getModel().head.visible = false;
+                        renderer.getModel().hat.visible = false;
+                        return false;
+                    } else return true;
+                }
+                default -> {
                     return false;
-                case FIRST_ON:
+                }
+                case FIRST_ON -> {
                     this.oldShadowSize = renderer.shadowRadius;
-                    renderer.shadowRadius = 0;
                     this.state = State.ON;
-                    return true;
-                case FIRST_OFF:
+                    if (isJar) {
+                        renderer.getModel().head.visible = false;
+                        renderer.getModel().hat.visible = false;
+                        return false; // dont cancel render
+                    } else {
+                        renderer.shadowRadius = 0;
+                        return true;
+                    }
+                }
+                case FIRST_OFF -> {
                     renderer.shadowRadius = this.oldShadowSize;
+                    renderer.getModel().head.visible = true;
+                    renderer.getModel().hat.visible = true;
                     this.state = State.OFF;
                     return true;
+                }
             }
         }
 

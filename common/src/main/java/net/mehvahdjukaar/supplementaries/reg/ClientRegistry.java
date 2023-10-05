@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.PearlMarkerRe
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullCandleOverlayModel;
@@ -26,6 +27,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
@@ -36,9 +38,11 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -66,6 +70,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public class ClientRegistry {
 
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
@@ -73,7 +80,6 @@ public class ClientRegistry {
 
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
-    public static final ModelLayerLocation BOOK_MODEL = loc("book");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
     public static final ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
@@ -81,6 +87,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
+    public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     public static final ModelLayerLocation HANGING_SIGN_EXTENSION = loc("hanging_sign_extension");
     public static final ModelLayerLocation HANGING_SIGN_EXTENSION_CHAINS = loc("hanging_sign_chains");
@@ -99,6 +106,14 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
+
+    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_MODELS = Util.make(() -> {
+        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
+        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
+            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
+        }
+        return map;
+    });
 
     public static KeyMapping QUIVER_KEYBIND = null;
 
@@ -143,6 +158,10 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.BOOK_PILE_H.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.GLOBE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.GLOBE_SEPIA.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
@@ -358,6 +377,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
+        BOOK_MODELS.values().forEach(event::register);
         ClientSpecialModelsManager.registerSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
@@ -366,6 +386,7 @@ public class ClientRegistry {
         event.register(BELL_CHAIN);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
+
         //not needed on forge
         if (PlatHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);
@@ -386,6 +407,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
+        event.register(Supplementaries.res("book_pile"), BookPileModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }
 
@@ -431,7 +453,6 @@ public class ClientRegistry {
     @EventCalled
     private static void registerModelLayers(ClientHelper.ModelLayerEvent event) {
         event.register(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
-        event.register(BOOK_MODEL, BookPileBlockTileRenderer::createMesh);
         event.register(CLOCK_HANDS_MODEL, ClockBlockTileRenderer::createMesh);
         event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
@@ -439,6 +460,7 @@ public class ClientRegistry {
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
+        event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(HANGING_SIGN_EXTENSION, HangingSignRendererExtension::createMesh);
         event.register(HANGING_SIGN_EXTENSION_CHAINS, HangingSignRendererExtension::createChainMesh);

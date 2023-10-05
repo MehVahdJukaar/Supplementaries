@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -81,7 +81,7 @@ public class SliceMapItem extends EmptyMapItem {
     public static void init() {
     }
 
-    public static final CustomMapData.Type<DepthMapData> DEPTH_DATA_KEY = MapDecorationRegistry.registerCustomMapSavedData(
+    public static final CustomMapData.Type<DepthMapData> DEPTH_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
             Supplementaries.res(DEPTH_LOCK_KEY), DepthMapData::new
     );
 

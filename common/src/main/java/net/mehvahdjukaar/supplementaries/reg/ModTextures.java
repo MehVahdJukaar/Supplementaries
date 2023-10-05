@@ -155,13 +155,6 @@ public class ModTextures {
         return map;
     });
 
-    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = Util.make(() -> {
-        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
-        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
-            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
-        }
-        return map;
-    });
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {
         var map = new IdentityHashMap<BannerPattern, ResourceLocation>();
