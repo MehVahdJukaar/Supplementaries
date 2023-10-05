@@ -178,7 +178,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         float f = player.getSwimAmount(partialTicks);
         if (player.isFallFlying()) {
             super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
-            float f1 = (float) player.getFallFlyingTicks() + partialTicks;
+            float f1 = player.getFallFlyingTicks() + partialTicks;
             float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
                 matrixStack.mulPose(Axis.XP.rotationDegrees(inclination * (-90.0F - player.getXRot())));

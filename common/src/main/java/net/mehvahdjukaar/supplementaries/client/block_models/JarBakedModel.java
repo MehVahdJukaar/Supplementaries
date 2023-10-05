@@ -26,7 +26,7 @@ import java.util.List;
 
 public class JarBakedModel implements CustomBakedModel {
 
-    private static final boolean SINGLE_PASS =  PlatHelper.getPlatform().isFabric();
+    private static final boolean SINGLE_PASS = true;//  PlatHelper.getPlatform().isFabric();
 
     //hacky
     private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8/16f, 12/16f, 1/16f);

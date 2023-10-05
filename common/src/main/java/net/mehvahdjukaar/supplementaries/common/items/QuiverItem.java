@@ -133,11 +133,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        return super.finishUsingItem(stack, level, livingEntity);
-    }
-
-    @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
             QuiverArrowSelectGui.setUsingItem(false);

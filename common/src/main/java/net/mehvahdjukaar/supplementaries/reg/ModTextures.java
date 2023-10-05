@@ -138,13 +138,24 @@ public class ModTextures {
             List.of(MAP_ICON, BANNER_PATTERN_ICON, BOOK_ICON);
 
 
-    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_TEXTURES = Util.make(() -> {
-        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
-        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
-            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
+    public static final Supplier<Map<Block, ResourceLocation>> SKULL_CANDLES_TEXTURES = Suppliers.memoize(() -> {
+        Map<Block, ResourceLocation> map = new LinkedHashMap<>();
+        //first key and default one too
+        map.put(Blocks.CANDLE, Supplementaries.res("textures/block/skull_candles/default.png"));
+        for (DyeColor color : DyeColor.values()) {
+            Block candle = BlocksColorAPI.getColoredBlock("candle", color);
+            map.put(candle, Supplementaries.res("textures/block/skull_candles/" + color.getName() + ".png"));
+        }
+        //worst case this becomes null
+        if (CompatObjects.SOUL_CANDLE.get() != null) {
+            map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/soul.png"));
+        }
+        if (CompatObjects.SPECTACLE_CANDLE.get() != null) {
+            map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/spectacle.png"));
         }
         return map;
     });
+
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {
         var map = new IdentityHashMap<BannerPattern, ResourceLocation>();

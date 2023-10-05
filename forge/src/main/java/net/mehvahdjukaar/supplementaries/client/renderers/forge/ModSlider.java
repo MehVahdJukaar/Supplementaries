@@ -15,4 +15,9 @@ public class ModSlider extends ForgeSlider implements ISlider, GuiEventListener 
     public ModSlider(int x, int y, int width, int height, Component prefix, Component suffix, double minValue, double maxValue, double currentValue, boolean drawString) {
         super(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, drawString);
     }
+
+    @Override
+    public void onReleased(double x, double y) {
+        onRelease(x,y);
+    }
 }

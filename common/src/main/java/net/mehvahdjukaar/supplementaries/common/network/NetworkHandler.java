@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 
 public class NetworkHandler {
 
@@ -77,11 +78,8 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 OpenConfigsPacket.class, OpenConfigsPacket::new);
 
-        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
-                PicklePacket.ServerBound.class, PicklePacket.ServerBound::new);
-
-        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
-                PicklePacket.ClientBound.class, PicklePacket.ClientBound::new);
+        CHANNEL.register(NetworkDir.BOTH,
+                PicklePacket.class, PicklePacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::new);

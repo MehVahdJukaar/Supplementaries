@@ -128,6 +128,7 @@ repositories {
 dependencies {
     forge "net.neoforged:forge:${minecraft_version}-${neo_version}"
     //forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    //forge "net.neoforged:forge:${minecraft_version}-${neo_version}"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))

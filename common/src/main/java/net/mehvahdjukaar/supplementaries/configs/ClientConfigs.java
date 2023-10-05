@@ -176,7 +176,8 @@ public class ClientConfigs {
                     .define("clock_right_click", true);
             COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
                     .define("compass_right_click", false);
-            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
+            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
+                            "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
             BOOK_COLORS = builder.comment("Placeable books random colors")
                     .defineObjectList("placeable_books_random_colors", () -> BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);

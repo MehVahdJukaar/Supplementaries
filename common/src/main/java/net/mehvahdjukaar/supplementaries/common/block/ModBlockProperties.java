@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -85,6 +86,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
     public static final ModelDataKey<Float> FILL_LEVEL = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
+    public static final ModelDataKey<BookPileBlockTile.BooksList> BOOKS_KEY = new ModelDataKey<>(BookPileBlockTile.BooksList.class);
 
 
     public enum PostType implements StringRepresentable {

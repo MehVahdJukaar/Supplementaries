@@ -1,14 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
 import net.fabricmc.loader.api.FabricLoader;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.DummySprite;
 import net.mehvahdjukaar.supplementaries.client.block_models.WallLanternBakedModel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -37,7 +41,7 @@ public class VibeCheckerImpl {
        // crashIfFabricRenderingAPIHasBeenNuked();
 
         //fixSodiumDeps();unfixSodiumDeps();
-        vibeCheckModels();
+        //vibeCheckModels();
     }
 
     private static void unfixSodiumDeps() {
@@ -121,18 +125,24 @@ public class VibeCheckerImpl {
 
     public static void vibeCheckModels() {
         try {
-            var dummy = new BakedQuad(new int[]{}, 0, Direction.UP, null, true);
+            DummySprite textureAtlasSprite = DummySprite.INSTANCE;
+
+            BakedQuadBuilder b = BakedQuadBuilder.create(textureAtlasSprite);
+            b.setAutoDirection();
+            VertexUtil.addQuad(b, new PoseStack(), 0, 0, 1, 1, 0, 0);
+            var dummy = b.build();
 
             List<BakedQuad> l = List.of(dummy);
+            Map<Direction, List<BakedQuad>> map = Maps.newEnumMap(Direction.class);
+            map.putAll(Map.of(Direction.DOWN, l,
+                    Direction.UP, l,
+                    Direction.SOUTH, l,
+                    Direction.NORTH, l,
+                    Direction.WEST, l,
+                    Direction.EAST, l));
             new WallLanternBakedModel(new SimpleBakedModel(l,
-                    Map.of(Direction.DOWN, l,
-                            Direction.UP, l,
-                            Direction.SOUTH, l,
-                            Direction.NORTH, l,
-                            Direction.WEST, l,
-                            Direction.EAST, l),
-                    false, false, false,
-                    new DummySprite(),
+                    map,
+                    false, false, false, ,
                     ItemTransforms.NO_TRANSFORMS, ItemOverrides.EMPTY
 
             ),
@@ -143,30 +153,10 @@ public class VibeCheckerImpl {
                                     null, null, null);
                         }
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new VibeChecker.BadModError("Some OTHER mod failed to load baked models. Refusing to proceed further to prevent in game issues. See logs for details", e);
         }
     }
 
-    public static class DummySprite extends TextureAtlasSprite {
-        public static final ResourceLocation LOCATION = new ResourceLocation("dummy", "unit");
-
-        private DummySprite() {
-            super(LOCATION, new SpriteContents(LOCATION,
-                    new FrameSize(1, 1),
-                    new NativeImage(1, 1, false),
-                    AnimationMetadataSection.EMPTY), 1, 1, 0, 0);
-        }
-
-        @Override
-        public float getU(double u) {
-            return (float) u / 16;
-        }
-
-        @Override
-        public float getV(double v) {
-            return (float) v / 16;
-        }
-    }
 
 }

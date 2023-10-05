@@ -10,6 +10,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -74,7 +75,7 @@ public class CompatObjects {
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T> Supplier<@Nullable T> makeCompatObject(String name, Registry<T> registry) {
+    private static <T> Supplier<@Nullable T>    makeCompatObject(String name, Registry<T> registry) {
         return Suppliers.memoize(() -> registry.getOptional(new ResourceLocation(name)).orElse(null));
     }
 

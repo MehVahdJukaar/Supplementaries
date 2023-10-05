@@ -1,0 +1,55 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 16],
+	"textures": {
+		"0": "supplementaries:block/books/book_enchanted",
+		"particle": "supplementaries:block/books/book_enchanted"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 4],
+			"to": [10, 10, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 8, 16]},
+			"faces": {
+				"north": {"uv": [4, 6, 6, 16], "texture": "#0"},
+				"south": {"uv": [10.5, 6, 12.5, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 0, 4],
+			"to": [10, 10, 12],
+			"faces": {
+				"east": {"uv": [0, 6, 4, 16], "texture": "#0"},
+				"west": {"uv": [6, 6, 10, 16], "texture": "#0"},
+				"up": {"uv": [6, 2, 10, 6], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 2, 4, 6], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 0, 11],
+			"to": [7, 10, 12],
+			"faces": {
+				"east": {"uv": [10, 6, 10.5, 16], "texture": "#0"},
+				"south": {"uv": [10.5, 6, 11, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [9, 0, 11],
+			"to": [10, 10, 12],
+			"faces": {
+				"north": {"uv": [0, 0, 0.5, 10], "texture": "#0"},
+				"south": {"uv": [12, 6, 12.5, 16], "texture": "#0"},
+				"west": {"uv": [12.5, 6, 13, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7, 4, 11],
+			"to": [9, 6, 12],
+			"faces": {
+				"south": {"uv": [14, 3, 15, 5], "texture": "#0"},
+				"up": {"uv": [12.5, 2, 13.5, 3], "texture": "#0"},
+				"down": {"uv": [13.5, 2, 14.5, 3], "texture": "#0"}
+			}
+		}
+	]
+}
