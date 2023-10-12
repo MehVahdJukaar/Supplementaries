@@ -41,7 +41,7 @@ public class VibeCheckerImpl {
         // I've got a better idea
         //fixSodiumDeps();
         unfixSodiumDeps();
-        //vibeCheckModels();
+        vibeCheckModels();
     }
 
     private static void unfixSodiumDeps() {
@@ -144,7 +144,8 @@ public class VibeCheckerImpl {
                     Direction.EAST, l));
             new WallLanternBakedModel(new SimpleBakedModel(l,
                     map,
-                    false, false, false, ,
+                    false, false, false,
+                    textureAtlasSprite,
                     ItemTransforms.NO_TRANSFORMS, ItemOverrides.EMPTY
 
             ),

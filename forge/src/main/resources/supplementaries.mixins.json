@@ -27,7 +27,6 @@
     "FriendlyByteBufMixin",
     "PlayerProjectileMixin",
     "MobBucketItemAccessor",
-    "ExplorationMapFunctionMixin",
     "TreasureMapForEmeraldsMixin"
   ],
   "injectors": {

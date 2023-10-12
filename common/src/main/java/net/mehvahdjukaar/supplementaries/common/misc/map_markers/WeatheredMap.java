@@ -44,19 +44,28 @@ public class WeatheredMap {
     public static void init() {
     }
 
-    private static class WeatheredMapData implements CustomMapData {
+    private static class WeatheredMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
         private boolean antique = false;
 
-        public WeatheredMapData(){}
-        public WeatheredMapData(CompoundTag tag) {
+        public void load(CompoundTag tag) {
             if (tag.contains(ANTIQUE_KEY)) {
                 antique = tag.getBoolean(ANTIQUE_KEY);
             }
         }
 
         @Override
+        public void loadUpdateTag(CompoundTag tag) {
+            load(tag);
+        }
+
+        @Override
         public void save(CompoundTag tag) {
             if (antique) tag.putBoolean(ANTIQUE_KEY, true);
+        }
+
+        @Override
+        public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
+            save(tag);
         }
 
         @Override
@@ -70,6 +79,11 @@ public class WeatheredMap {
                 return Component.translatable("filled_map.antique.tooltip").withStyle(ChatFormatting.GRAY);
             }
             return null;
+        }
+
+        @Override
+        public SimpleDirtyCounter createDirtyCounter() {
+            return new SimpleDirtyCounter();
         }
 
         @Override
@@ -325,9 +339,9 @@ public class WeatheredMap {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
             MapItemSavedData newData = data.copy();
-            WeatheredMapData instance = ANTIQUE_DATA_KEY.getOrCreate(newData, WeatheredMapData::new);
+            WeatheredMapData instance = ANTIQUE_DATA_KEY.get(newData);
             instance.set(on);
-            instance.setDirty(newData);
+            instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
             int mapId = level.getFreeMapId();
             String mapKey = MapItem.makeKey(mapId);
 

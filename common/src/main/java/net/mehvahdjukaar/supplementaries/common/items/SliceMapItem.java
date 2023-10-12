@@ -25,8 +25,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Properties;
-
 import static net.minecraft.world.item.MapItem.makeKey;
 
 public class SliceMapItem extends EmptyMapItem {
@@ -67,9 +65,9 @@ public class SliceMapItem extends EmptyMapItem {
                                          int slice) {
         ItemStack itemStack = new ItemStack(Items.FILLED_MAP);
         MapItemSavedData data = MapItemSavedData.createFresh(x, z, scale, trackingPosition, unlimitedTracking, level.dimension());
-        DepthMapData instance = DEPTH_DATA_KEY.getOrCreate(data, DepthMapData::new);
+        DepthMapData instance = DEPTH_DATA_KEY.get(data);
         instance.set(slice);
-        instance.setDirty(data);
+        instance.setDirty(data, CustomMapData.SimpleDirtyCounter::markDirty);
         int mapId = level.getFreeMapId();
         level.setMapData(makeKey(mapId), data);
         itemStack.getOrCreateTag().putInt("map", mapId);
@@ -88,7 +86,7 @@ public class SliceMapItem extends EmptyMapItem {
 
     public static int getMapHeight(MapItemSavedData data) {
         DepthMapData depth = DEPTH_DATA_KEY.get(data);
-        return depth == null ? Integer.MAX_VALUE : depth.height;
+        return depth.height == null ? Integer.MAX_VALUE : depth.height;
     }
 
     public static MapColor getCutoffColor(BlockPos pos, BlockGetter level) {
@@ -125,17 +123,30 @@ public class SliceMapItem extends EmptyMapItem {
         return true;
     }
 
-    private static class DepthMapData implements CustomMapData {
+    private static class DepthMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
 
-        private int height;
+        private Integer height = null;
 
-        public DepthMapData(CompoundTag tag) {
+        @Override
+        public void load(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
-            } else this.height = Integer.MAX_VALUE;
+            } else this.height = null;
         }
 
-        public DepthMapData() {
+        @Override
+        public void loadUpdateTag(CompoundTag tag) {
+            load(tag);
+        }
+
+        @Override
+        public void save(CompoundTag tag) {
+            if (height != null) tag.putInt(DEPTH_LOCK_KEY, height);
+        }
+
+        @Override
+        public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
+            save(tag);
         }
 
         @Override
@@ -144,18 +155,18 @@ public class SliceMapItem extends EmptyMapItem {
         }
 
         @Override
-        public void save(CompoundTag tag) {
-            if (height != Integer.MAX_VALUE) tag.putInt(DEPTH_LOCK_KEY, height);
-        }
-
-        @Override
         public @Nullable Component onItemTooltip(MapItemSavedData data, ItemStack stack) {
-            if (height == Integer.MAX_VALUE) return null;
+            if (height == null) return null;
             return Component.translatable("filled_map.sliced.tooltip", height).withStyle(ChatFormatting.GRAY);
         }
 
         public void set(int slice) {
             this.height = slice;
+        }
+
+        @Override
+        public SimpleDirtyCounter createDirtyCounter() {
+            return new SimpleDirtyCounter();
         }
     }
 }

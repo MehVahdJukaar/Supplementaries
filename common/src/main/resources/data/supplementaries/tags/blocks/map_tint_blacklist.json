@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:azalea_leaves","required":false},
+    {"id":"minecraft:dead_bush","required":false}
+  ]
+}
