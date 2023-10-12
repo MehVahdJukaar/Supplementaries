@@ -2,11 +2,8 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
@@ -44,7 +41,11 @@ public class ModTags {
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
     public static final TagKey<Block> LIGHTS_GUNPOWDER = blockTag("lights_gunpowder");
     public static final TagKey<Block> PREVENTS_OFFSET_ABOVE = blockTag("prevents_offset_above");
-    public static final TagKey<Block> TINTED_ON_MAPS = blockTag("tinted_on_maps");
+    public static final TagKey<Block> TINTED_ON_MAPS_GENERIC = blockTag("map_tint_generic");
+    public static final TagKey<Block> TINTED_ON_MAPS_GC = blockTag("map_tint_grass_color");
+    public static final TagKey<Block> TINTED_ON_MAPS_FC = blockTag("map_tint_foliage_color");
+    public static final TagKey<Block> TINTED_ON_MAPS_WC = blockTag("map_tint_water_color");
+    public static final TagKey<Block> NOT_TINTED_ON_MAPS = blockTag("map_tint_blacklist");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

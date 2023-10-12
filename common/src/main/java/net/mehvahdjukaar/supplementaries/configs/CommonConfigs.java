@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.gui.screens.worldselection.WorldSelectionList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,8 +20,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -142,6 +145,8 @@ public class CommonConfigs {
             SPEAKER_BLOCK_ENABLED = feature(builder);
             SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
                     .define("narrator_enabled", true);
+            MAX_TEXT = builder.comment("Max text")
+                    .define("max_text", 32, 0, 10000);
             SPEAKER_RANGE = builder.comment("Maximum block range")
                     .define("range", 64, 0, 100000000);
             builder.pop();
@@ -232,6 +237,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
         public static final Supplier<Integer> SPEAKER_RANGE;
+        public static final Supplier<Integer> MAX_TEXT;
         public static final Supplier<Boolean> SPEAKER_NARRATOR;
 
         public static final Supplier<Boolean> BELLOWS_ENABLED;

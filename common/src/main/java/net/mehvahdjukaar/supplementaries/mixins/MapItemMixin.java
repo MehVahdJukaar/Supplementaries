@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(MapItem.class)
-public class MapItemMixin {
+public abstract class MapItemMixin {
 
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",

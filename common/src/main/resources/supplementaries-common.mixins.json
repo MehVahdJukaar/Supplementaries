@@ -42,6 +42,8 @@
     "EndermanMixin",
     "EntityMixin",
     "EvokerMixin",
+    "ExplorationMapFunctionMixin",
+    "ExplorationMapSerializerMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",

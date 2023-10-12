@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.core.map.MapDataInternal;
 import net.minecraft.commands.CommandBuildContext;
@@ -23,7 +24,7 @@ public class MapMarkerCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         return Commands.literal("add_marker")
                 .requires(cs -> cs.hasPermission(2))
-                .then(Commands.argument("marker", ResourceArgument.resource(context, MapDataInternal.KEY))
+                .then(Commands.argument("marker", ResourceArgument.resource(context, MapDataRegistry.REGISTRY_KEY))
                         .executes(MapMarkerCommand::addMapMarker)
                 );
     }

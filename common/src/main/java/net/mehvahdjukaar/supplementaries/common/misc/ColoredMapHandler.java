@@ -9,8 +9,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.LABColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
-import net.mehvahdjukaar.moonlight.core.mixins.MapDataMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
@@ -18,18 +18,20 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -38,7 +40,9 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class ColoredMapHandler {
@@ -53,131 +57,256 @@ public class ColoredMapHandler {
             MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("color_data"), ColorData::new);
 
     public static ColorData getColorData(MapItemSavedData data) {
-        return COLOR_DATA.getOrCreate(data, ColorData::new);
+        return COLOR_DATA.get(data);
     }
 
-    public static boolean hasCustomColor(Block state) {
-        return state.builtInRegistryHolder().is(ModTags.TINTED_ON_MAPS);
+    //null if no color to be sent
+    @Nullable
+    public static Block getCustomColor(Block state) {
+        Holder.Reference<Block> blockReference = state.builtInRegistryHolder();
+        if (blockReference.is(ModTags.NOT_TINTED_ON_MAPS)) return null;
+        //packs similar colored blocks so we stay in the 16 blocks limit
+        if (blockReference.is(ModTags.TINTED_ON_MAPS_GC)) {
+            if (state instanceof BushBlock) return Blocks.GRASS;
+            return Blocks.GRASS_BLOCK;
+        }
+        if (blockReference.is(ModTags.TINTED_ON_MAPS_FC)) {
+            return Blocks.OAK_LEAVES;
+        }
+        if (blockReference.is(ModTags.TINTED_ON_MAPS_WC)) {
+            return Blocks.WATER;
+        }
+        if (blockReference.is(ModTags.TINTED_ON_MAPS_GENERIC)) {
+            return state;
+        }
+        return null;
     }
 
-    public static class DirtyCounter {
-        private final long[] dirtyPatches = new long[256];
+    private static class Counter implements CustomMapData.DirtyCounter {
+        private int minDirtyX = 0;
+        private int maxDirtyX = 127;
+        private int minDirtyZ = 0;
+        private int maxDirtyZ = 127;
+        private boolean posDirty = true;
+        private boolean blockDirty = true;
+        private boolean biomesDirty = true;
 
-    }
+        public void markDirty(int x, int z, boolean changedBiome, boolean changedBlock) {
+            if (changedBiome) this.biomesDirty = true;
+            if (changedBlock) this.blockDirty = true;
+            if (this.posDirty) {
+                this.minDirtyX = Math.min(this.minDirtyX, x);
+                this.minDirtyZ = Math.min(this.minDirtyZ, z);
+                this.maxDirtyX = Math.max(this.maxDirtyX, x);
+                this.maxDirtyZ = Math.max(this.maxDirtyZ, z);
+            } else {
+                //reset
+                this.posDirty = true;
+                this.minDirtyX = x;
+                this.minDirtyZ = z;
+                this.maxDirtyX = x;
+                this.maxDirtyZ = z;
+            }
 
-    public static class ColorData implements CustomMapData, BlockAndTintGetter {
-
-        //TODO: optimize data packet
-        private final Data tintData;
-
-        public ColorData() {
-            tintData = Data.create(Map.of(), Map.of());
         }
 
-        public ColorData(CompoundTag tag) {
-            HashMap<Vec2b, Block> positionsToBlocks = new HashMap<>();
-            HashMap<Vec2b, ResourceLocation> biomeCache = new HashMap<>();
-            ListTag list = tag.getList("color_data", Tag.TAG_COMPOUND);
-            for (int i = 0; i < list.size(); ++i) {
-                CompoundTag c = list.getCompound(i);
-                long[] positions = c.getLongArray("positions");
-                var block = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(c.getString("block")));
-                if (block.isPresent()) {
-                    for (char j = 0; j < positions.length; j++) {
-                        long y = positions[j];
-                        for (var x : decodePositions(y >> ((j % 2 == 0) ? 0 : 64))) {
-                            x = x + ((j % 2 == 0) ? 0 : 64);
-                            int z = (char) (j / 2);
-                            if (x > 127 || z > 127 || x < 0 || z < 0) {
-                                int error = 1;
-                            } else {
-                                positionsToBlocks.put(new Vec2b(x, z), block.get());
-                            }
-                        }
+        @Override
+        public boolean isDirty() {
+            return posDirty || biomesDirty || blockDirty;
+        }
+
+        @Override
+        public void clearDirty() {
+            this.biomesDirty = false;
+            this.blockDirty = false;
+            this.posDirty = false;
+            this.minDirtyX = 0;
+            this.minDirtyZ = 0;
+            this.maxDirtyX = 0;
+            this.maxDirtyZ = 0;
+        }
+
+    }
+
+    public static class ColorData implements CustomMapData<ColoredMapHandler.Counter>, BlockAndTintGetter {
+
+        public static final int BIOME_SIZE = 4;
+        public static final String MIN_X = "min_x";
+        public static final String MAX_X = "max_x";
+        public static final String MIN_Z = "min_z";
+        private byte[][] data = null;
+        private final List<ResourceLocation> biomesIndexes = new ArrayList<>();
+        private final List<Block> blockIndexes = new ArrayList<>();
+
+        @Nullable
+        private Pair<Block, ResourceLocation> getEntry(int x, int z) {
+            if (data == null) return null;
+            if (data[x] != null) {
+                int packed = Byte.toUnsignedInt(data[x][z]); //treated as unsigned
+                if (packed == 0) return null;
+                packed -= 1; //discard 0 index
+                int bi = packed & ((1 << BIOME_SIZE) - 1);
+                int bli = packed >> BIOME_SIZE;
+                if (bi >= blockIndexes.size() || bli >= biomesIndexes.size()) {
+                    return null;
+                }
+                if (bi < 0 || bli < 0) {
+                    return null;
+                }
+                return Pair.of(blockIndexes.get(bi), biomesIndexes.get(bli));
+            }
+            return null;
+        }
+
+        private void addEntry(MapItemSavedData md, int x, int z, Pair<Block, ResourceLocation> res) {
+
+            boolean changedBiome;
+            boolean changedBlock;
+            Block block = res.getFirst();
+            if (!blockIndexes.contains(block)) {
+                if (blockIndexes.size() >= 16) {
+                    //TODO: add counter and recompute every now and then when this exceeds
+                    return;
+                    //cant store biomes anymore... oh well
+                }
+                blockIndexes.add(block);
+                changedBlock = true;
+            } else {
+                changedBlock = false;
+            }
+            int blockIndex = blockIndexes.indexOf(block);
+            ResourceLocation biome = res.getSecond();
+            if (!biomesIndexes.contains(biome)) {
+                if (biomesIndexes.size() >= 16) {
+                    return;
+                    //cant store biomes anymore... oh well
+                }
+                biomesIndexes.add(biome);
+                changedBiome = true;
+            } else {
+                changedBiome = false;
+            }
+            int biomeIndex = biomesIndexes.indexOf(biome);
+
+
+            if (data == null) {
+                data = new byte[128][];
+            }
+            if (data[x] == null) data[x] = new byte[128];
+            data[x][z] = (byte) (((blockIndex & ((1 << BIOME_SIZE) - 1)) | (biomeIndex << BIOME_SIZE)) + 1); //discard 0 index
+
+
+            this.setDirty(md, counter -> counter.markDirty(x, z, changedBiome, changedBlock));
+
+        }
+
+        @Override
+        public void load(CompoundTag tag) {
+            if (tag.contains("positions")) {
+                CompoundTag t = tag.getCompound("positions");
+
+                int minX = 0;
+                if (t.contains(MIN_X)) minX = t.getInt(MIN_X);
+                int maxX = 127;
+                if (t.contains(MAX_X)) maxX = t.getInt(MAX_X);
+                int minZ = 0;
+                if (t.contains(MIN_Z)) minZ = t.getInt(MIN_Z);
+
+                for (int x = minX; x <= maxX; x++) {
+                    byte[] rowData = t.getByteArray("pos_" + x);
+                    if (data == null) {
+                        data = new byte[128][];
                     }
+                    if (data[x] == null) {
+                        data[x] = new byte[128];
+                    }
+                    System.arraycopy(rowData, 0, data[x], minZ, rowData.length);
                 }
             }
-            ListTag list2 = tag.getList("biome_data", Tag.TAG_COMPOUND);
-            for (int i = 0; i < list2.size(); ++i) {
-                CompoundTag c = list2.getCompound(i);
-                long[] positions = c.getLongArray("positions");
-                var biome = ResourceLocation.tryParse(c.getString("biome"));
-                if (biome == null) continue;
-                for (char j = 0; j < positions.length; j++) {
-                    long y = positions[j];
-                    for (var x : decodePositions(y >> ((j % 2 == 0) ? 0 : 64))) {
-                        x = x + ((j % 2 == 0) ? 0 : 64);
-                        int z = (char) (j / 2);
-                        if (x > 127 || z > 127 || x < 0 || z < 0) {
-                            int error = 1;
-                        } else {
-                            biomeCache.put(new Vec2b(x, z), biome);
-                        }
-                    }
+            if (tag.contains("biomes")) {
+                biomesIndexes.clear();
+                var biomes = tag.getList("biomes", Tag.TAG_COMPOUND);
+                for (int j = 0; j < biomes.size(); j++) {
+                    CompoundTag c = biomes.getCompound(j);
+                    int i = c.getByte("index");
+                    String id = c.getString("id");
+                    biomesIndexes.add(i, new ResourceLocation(id));
                 }
             }
-            tintData = Data.create(positionsToBlocks, biomeCache);
+            if (tag.contains("blocks")) {
+                blockIndexes.clear();
+                var blocks = tag.getList("blocks", Tag.TAG_COMPOUND);
+                for (int j = 0; j < blocks.size(); j++) {
+                    CompoundTag c = blocks.getCompound(j);
+                    int i = c.getByte("index");
+                    String id = c.getString("id");
+                    blockIndexes.add(i, BuiltInRegistries.BLOCK.get(new ResourceLocation(id)));
+                }
+            }
+        }
+
+        private void savePatch(CompoundTag tag, int minX, int maxX, int minZ, int maxZ,
+                               boolean pos, boolean block, boolean biome) {
+
+            if (pos && data != null) {
+                CompoundTag t = new CompoundTag();
+                if (minX != 0) t.putInt(MIN_X, minX);
+                if (maxX != 127) t.putInt(MAX_X, maxX);
+                if (minZ != 0) t.putInt(MIN_Z, minZ);
+
+                for (int x = minX; x <= maxX; x++) {
+                    if (data[x] != null) {
+                        byte[] rowData = new byte[maxZ - minZ + 1];
+
+                        System.arraycopy(data[x], minZ, rowData, 0, rowData.length);
+                        t.putByteArray("pos_" + x, rowData);
+                    }
+                }
+                tag.put("positions", t);
+            }
+
+            if (biome && !biomesIndexes.isEmpty()) {
+                ListTag biomesList = new ListTag();
+                for (int i = 0; i < biomesIndexes.size(); i++) {
+                    CompoundTag biomeTag = new CompoundTag();
+                    biomeTag.putByte("index", (byte) i);
+                    biomeTag.putString("id", biomesIndexes.get(i).toString());
+                    biomesList.add(biomeTag);
+                }
+                tag.put("biomes", biomesList);
+            }
+            if (block && !blockIndexes.isEmpty()) {
+                ListTag blocksList = new ListTag();
+                for (int i = 0; i < blockIndexes.size(); i++) {
+                    CompoundTag blockTag = new CompoundTag();
+                    blockTag.putByte("index", (byte) i);
+                    blockTag.putString("id", Utils.getID(blockIndexes.get(i)).toString());
+                    blocksList.add(blockTag);
+                }
+                tag.put("blocks", blocksList);
+            }
         }
 
         @Override
         public void save(CompoundTag tag) {
-            ListTag blockTagList = new ListTag();
-            ListTag biomeTagList = new ListTag();
-            Map<Block, long[]> blockMap = new HashMap<>();
-            Map<ResourceLocation, long[]> biomeMap = new HashMap<>();
-            var iterator = tintData.getAllEntries();
-
-            while (iterator.hasNext()) {
-                var e = iterator.next();
-                Vec2b v = e.getKey();
-                var blockBiomePair = e.getValue();
-                Block block = blockBiomePair.getFirst();
-                ResourceLocation biome = blockBiomePair.getSecond();
-
-                var blockArray = blockMap.computeIfAbsent(block, m -> new long[256]);
-                var biomeArray = biomeMap.computeIfAbsent(biome, m -> new long[256]);
-
-                int index = 2 * v.z + (v.x >= 64 ? 1 : 0);
-                blockArray[index] |= encodePosition(v.x % 64);
-                biomeArray[index] |= encodePosition(v.x % 64);
-            }
-
-            for (var blockEntry : blockMap.entrySet()) {
-                CompoundTag blockCompound = new CompoundTag();
-                blockCompound.putString("block", Utils.getID(blockEntry.getKey()).toString());
-                blockCompound.putLongArray("positions", blockEntry.getValue());
-                blockTagList.add(blockCompound);
-            }
-
-            for (var biomeEntry : biomeMap.entrySet()) {
-                CompoundTag biomeCompound = new CompoundTag();
-                biomeCompound.putString("biome", biomeEntry.getKey().toString());
-                biomeCompound.putLongArray("positions", biomeEntry.getValue());
-                biomeTagList.add(biomeCompound);
-            }
-
-            tag.put("color_data", blockTagList);
-            tag.put("biome_data", biomeTagList);
+            // save all
+            savePatch(tag, 0, 127, 0, 127, true, true, true);
         }
 
-
-        public static long encodePosition(int position) {
-            return (1L << (position));
+        @Override
+        public void saveToUpdateTag(CompoundTag tag, ColoredMapHandler.Counter dc) {
+            this.savePatch(tag, dc.minDirtyX, dc.maxDirtyX, dc.minDirtyZ, dc.maxDirtyZ,
+                    dc.posDirty, dc.blockDirty, dc.biomesDirty);
         }
 
-        public static List<Integer> decodePositions(long encodedValue) {
-            List<Integer> positionsList = new ArrayList<>();
-            long position = 1; // Start with position 1 (0-based index)
+        @Override
+        public void loadUpdateTag(CompoundTag tag) {
+            load(tag);
+        }
 
-            while (encodedValue != 0) {
-                if ((encodedValue & 1L) != 0) {
-                    positionsList.add((int) position - 1);
-                }
-                encodedValue >>>= 1; // Use unsigned right shift to check the next bit
-                position++;
-            }
-
-            return positionsList;
+        @Override
+        public boolean persistOnCopyOrLock() {
+            return false;
         }
 
         @Override
@@ -185,26 +314,33 @@ public class ColoredMapHandler {
             return COLOR_DATA;
         }
 
+        @Override
+        public Counter createDirtyCounter() {
+            return new Counter();
+        }
+
         public void markColored(int x, int z, Block block, Level level, BlockPos pos, MapItemSavedData data) {
-            if (hasCustomColor(block)) {
+            Block customColor = getCustomColor(block);
+            if (customColor != null) {
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
                 //dither biomes
                 var biome = level.getBiome(pos).unwrapKey().get();
-                Vec2b v = new Vec2b(x, z);
-                Pair<Block, ResourceLocation> pair = Pair.of(block, biome.location());
-                if (!Objects.equals(tintData.getEntry(v), pair)) {
-                    tintData.addEntry(v, pair);
-                    this.setDirty(data);
+                Pair<Block, ResourceLocation> pair = Pair.of(customColor, biome.location());
+                if (!Objects.equals(this.getEntry(x, z), pair)) {
+                    this.addEntry(data, x, z, pair);
                 }
             } else {
-                if (tintData.removeIfPresent(new Vec2b(x, z))) {
-                    // this.setDirty(data);
-                    //dont need to sync these, they just stay unused
+                //remove unneded stufff
+                if (this.data != null && this.data[x] != null) {
+                    this.data[x][z] = 0;
+                    for (var b : this.data[x]) {
+                        if (b != 0) return;
+                    }
+                    this.data[x] = null;
                 }
             }
         }
-
 
         @Nullable
         @Override
@@ -214,9 +350,10 @@ public class ColoredMapHandler {
 
         @Override
         public BlockState getBlockState(BlockPos pos) {
-            var b = tintData.getBlock(new Vec2b(pos.getX(), pos.getZ()));
-            return b == null ? Blocks.AIR.defaultBlockState() : b.defaultBlockState();
+            Pair<Block, ResourceLocation> entry = this.getEntry(pos.getX(), pos.getZ());
+            return entry == null ? Blocks.AIR.defaultBlockState() : entry.getFirst().defaultBlockState();
         }
+
 
         @Override
         public FluidState getFluidState(BlockPos pos) {
@@ -236,43 +373,46 @@ public class ColoredMapHandler {
 
         @Environment(EnvType.CLIENT)
         public void processTexture(DynamicTexture texture, byte[] colors) {
-            var iterator = tintData.getAllEntries();
-            while (iterator.hasNext()) {
-                var e = iterator.next();
-                var v = e.getKey();
-                Block block = e.getValue().getFirst();
-                BlockPos pos = new BlockPos(v.x, 0, v.z);
-                BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-                int tint = blockColors.getColor(block.defaultBlockState(),
-                        this, pos, 0);
-                if (tint != -1) {
-                    int k = pos.getX() + pos.getZ() * 128;
-                    byte packedId = colors[k];
+            if (!ClientConfigs.Tweaks.COLORED_MAPS.get()) return;
+            boolean tg = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
+            for (int x = 0; x < 128; ++x) {
+                for (int z = 0; z < 128; ++z) {
+                    var e = getEntry(x, z);
+                    if (e == null) continue;
+                    Block block = e.getFirst();
+                    BlockPos pos = new BlockPos(x, 64, z); //this is bad. dont want to send extra data tho
+                    BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+                    int tint = blockColors.getColor(block.defaultBlockState(),
+                            this, pos, 0);
+                    if (tint != -1) {
+                        int k = x + z * 128;
+                        byte packedId = colors[k];
 
-                    float lumIncrease = 1.3f;
-                    MapColor mapColor = MapColor.byId((packedId & 255) >> 2);
-                    if (mapColor == MapColor.WATER) {
-                        lumIncrease = 2f;
-                    }
+                        float lumIncrease = 1.3f;
+                        MapColor mapColor = MapColor.byId((packedId & 255) >> 2);
+                        if (mapColor == MapColor.WATER) {
+                            lumIncrease = 2f;
+                        }
                     /*
                     else if(mapColor == MapColor.PLANT){
                         if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
                              packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
                         }
                     }*/
-                    else if(mapColor == MapColor.PLANT &&  block instanceof BushBlock){
-                        packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
-                    }
-                    int color = MapColor.getColorFromPackedId(packedId);
+                        else if (mapColor == MapColor.PLANT && block instanceof BushBlock && tg) {
+                            packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+                        }
+                        int color = MapColor.getColorFromPackedId(packedId);
 
-                    tint = ColorUtils.swapFormat(tint);
-                    RGBColor tintColor = new RGBColor(tint);
-                    LABColor c = new RGBColor(color).asLAB();
-                    RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
-                    var grayscaled = gray
-                            .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
-                            .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
-                    texture.getPixels().setPixelRGBA(pos.getX(), pos.getZ(), grayscaled);
+                        tint = ColorUtils.swapFormat(tint);
+                        RGBColor tintColor = new RGBColor(tint);
+                        LABColor c = new RGBColor(color).asLAB();
+                        RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
+                        var grayscaled = gray
+                                .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+                                .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
+                        texture.getPixels().setPixelRGBA(x,z, grayscaled);
+                    }
                 }
             }
         }
@@ -292,186 +432,14 @@ public class ColoredMapHandler {
 
             int x = pos.getX();
             int z = pos.getZ();
-            ResourceLocation biome = tintData.getBiome(new Vec2b(x, z));
+            var biome = this.getEntry(x, z);
             if (biome != null) {
-                Biome b = Utils.hackyGetRegistry(Registries.BIOME).get(biome);
+                Biome b = Utils.hackyGetRegistry(Registries.BIOME).get(biome.getSecond());
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
                 return colorResolver.getColor(b, pos.getX() + 0.5, pos.getZ() + 0.5);
             }
             return 0;
-        }
-    }
-
-    private record Vec2b(byte x, byte z) {
-        public Vec2b(int x, int y) {
-            this((byte) x, (byte) y);
-        }
-
-        @Override
-        public String toString() {
-            return "X:" + (int) x + "Z:" + (int) z;
-        }
-    }
-
-    //unnecessary questionable optimization stuff
-    private interface Data {
-
-        @Nullable
-        default ResourceLocation getBiome(Vec2b v) {
-            return getEntry(v).getSecond();
-        }
-
-        @Nullable
-        default Block getBlock(Vec2b v) {
-            return getEntry(v).getFirst();
-        }
-
-        Pair<Block, ResourceLocation> getEntry(Vec2b v);
-
-        static Data create(Map<Vec2b, Block> blockMap, Map<Vec2b, ResourceLocation> biomeData) {
-            if (blockMap.size() < 6000 || biomeData.size() < 6000) {
-                return new HashMapData(blockMap, biomeData);
-            } else return new ArrayData(blockMap, biomeData);
-        }
-
-        Iterator<Map.Entry<Vec2b, Pair<Block, ResourceLocation>>> getAllEntries();
-
-        void addEntry(Vec2b v, Pair<Block, ResourceLocation> pair);
-
-        boolean removeIfPresent(Vec2b v);
-    }
-
-    private static class HashMapData implements Data {
-
-        private final Map<Vec2b, Pair<Block, ResourceLocation>> blockMap = new HashMap<>();
-
-        public HashMapData(Map<Vec2b, Block> blocks, Map<Vec2b, ResourceLocation> biomes) {
-            // Iterate over one of the maps (assuming they have the same keys)
-            for (Map.Entry<Vec2b, Block> blockEntry : blocks.entrySet()) {
-                Vec2b key = blockEntry.getKey();
-                Block block = blockEntry.getValue();
-                ResourceLocation biome = biomes.get(key); // Get the corresponding biome
-                if (biome != null) {
-                    Pair<Block, ResourceLocation> pair = Pair.of(block, biome);
-                    blockMap.put(key, pair);
-                }
-            }
-        }
-
-        @Override
-        public @Nullable Pair<Block, ResourceLocation> getEntry(Vec2b v) {
-            return blockMap.get(v);
-        }
-
-        @Override
-        public boolean removeIfPresent(Vec2b v) {
-            if (blockMap.containsKey(v)) {
-                blockMap.remove(v);
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public Iterator<Map.Entry<Vec2b, Pair<Block, ResourceLocation>>> getAllEntries() {
-            return blockMap.entrySet().iterator();
-        }
-
-        @Override
-        public void addEntry(Vec2b v, Pair<Block, ResourceLocation> pair) {
-            blockMap.put(v, pair);
-        }
-    }
-
-    private static class ArrayData implements Data {
-
-        private final List<Pair<Block, ResourceLocation>> indexes = new ArrayList<>();
-        private final byte[][] blockArray = new byte[128][128];
-
-        public ArrayData(Map<Vec2b, Block> blocks, Map<Vec2b, ResourceLocation> biomes) {
-            for (var entry : blocks.entrySet()) {
-                Vec2b key = entry.getKey();
-                Block block = entry.getValue();
-                ResourceLocation biome = biomes.get(key);
-                int index = getOrCreateBlockIndex(Pair.of(block, biome));
-                blockArray[key.x()][key.z()] = (byte) (index + 1);
-            }
-        }
-
-        @Override
-        public boolean removeIfPresent(Vec2b v) {
-            if (blockArray[v.x][v.z] != 0) {
-                blockArray[v.x][v.z] = 0;
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void addEntry(Vec2b v, Pair<Block, ResourceLocation> pair) {
-            int index = getOrCreateBlockIndex(pair);
-            blockArray[v.x][v.z] = (byte) (index + 1);
-        }
-
-        private int getOrCreateBlockIndex(Pair<Block, ResourceLocation> key) {
-            int index = indexes.indexOf(key);
-            if (index == -1) {
-                indexes.add(key);
-                index = indexes.indexOf(key);
-            }
-            return index;
-        }
-
-        @Override
-        public @Nullable Pair<Block, ResourceLocation> getEntry(Vec2b v) {
-            byte index = blockArray[v.x][v.z];
-            if (index == 0) return null;
-            return indexes.get(index - 1);
-        }
-
-        @Override
-        public Iterator<Map.Entry<Vec2b, Pair<Block, ResourceLocation>>> getAllEntries() {
-            return new ArrayIterator();
-        }
-
-        // Custom iterator for blocks
-        private class ArrayIterator implements Iterator<Map.Entry<Vec2b, Pair<Block, ResourceLocation>>> {
-            private int x = 0;
-            private int z = 0;
-
-            @Override
-            public boolean hasNext() {
-                while (x < 128) {
-                    while (z < 128) {
-                        if (blockArray[x][z] != 0) {
-                            return true;
-                        }
-                        z++;
-                    }
-                    z = 0;
-                    x++;
-                }
-                return false;
-            }
-
-            @Override
-            public Map.Entry<Vec2b, Pair<Block, ResourceLocation>> next() {
-                while (x < 128) {
-                    while (z < 128) {
-                        if (blockArray[x][z] != 0) {
-                            var entry = indexes.get(blockArray[x][z] - 1);
-                            Vec2b position = new Vec2b((byte) x, (byte) z);
-                            z++;
-                            return new AbstractMap.SimpleEntry<>(position, entry);
-                        }
-                        z++;
-                    }
-                    z = 0;
-                    x++;
-                }
-                return null; // No more elements
-            }
         }
     }
 
