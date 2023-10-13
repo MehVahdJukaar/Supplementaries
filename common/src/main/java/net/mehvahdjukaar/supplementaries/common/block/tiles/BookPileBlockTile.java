@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -10,6 +9,9 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.SpriteCoordinateUnExpander;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
@@ -18,14 +20,14 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -155,11 +157,9 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
     public static class VisualBook {
         private final float angle;
-        private final @Nullable
-        BookColor color;
+        private final @Nullable BookColor color;
         private final ItemStack stack;
         private final boolean isEnchanted;
-        private final ResourceLocation texture;
 
         public VisualBook(ItemStack stack, BlockPos pos, int index, List<BookColor> colors, @Nullable BookColor lastColor) {
             this.stack = stack;
@@ -190,7 +190,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 this.color = BookPileBlock.isQuarkTome(item) ? BookColor.TOME : BookColor.ENCHANTED;
                 this.isEnchanted = true;
             }
-            this.texture = ClientRegistry.BOOK_MODELS.get(this.color);
         }
 
         @SuppressWarnings("ConstantConditions")
@@ -201,11 +200,12 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                     foilBuilder = EnchantRedesignCompat.getBookColoredFoil(this.stack, buffer);
                 }
                 if (foilBuilder == null) {
-                    foilBuilder = buffer.getBuffer(RenderType.entityGlint());
+                    foilBuilder = new SpriteCoordinateUnExpander(buffer.getBuffer(RenderType.entityGlint()),
+                            ModMaterials.BOOK_GLINT_MATERIAL.sprite());
                 }
-                return VertexMultiConsumer.create(foilBuilder, null);
+                return foilBuilder;
             }
-            return null;// material.buffer(buffer, RenderType::entitySolid);
+            return null;// buffer.getBuffer(RenderType.cutout());
         }
 
         public float getAngle() {

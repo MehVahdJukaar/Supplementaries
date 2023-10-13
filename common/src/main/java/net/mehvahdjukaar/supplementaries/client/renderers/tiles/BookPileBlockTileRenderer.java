@@ -129,6 +129,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
                                    int light, int overlay, VisualBook b, float xRot, float zRot) {
         VertexConsumer builder = vertexBuilder.apply(b);
+        if(builder == null)return;
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         if (zRot != 0) poseStack.mulPose(Axis.ZP.rotation(zRot));

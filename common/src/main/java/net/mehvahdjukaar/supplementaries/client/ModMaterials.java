@@ -40,6 +40,7 @@ public class ModMaterials {
     public static final Material BLACKBOARD_WHITE = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_WHITE_TEXTURE);
     public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
     public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
+    public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/books/book_enchanted"));
 
     public static final Supplier<Map<WoodType, Material>> SIGN_POSTS_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<WoodType, Material>();
