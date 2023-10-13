@@ -28,6 +28,7 @@
     "SignRendererMixin",
     "UndeadHorseRenderMixin",
     "WrittenBookAccessMixin"
+
   ],
   "mixins": [
     "AbstractArrowMixin",

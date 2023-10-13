@@ -148,7 +148,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return ClientConfigs.Tweaks.BOOK_GLINT.get() ? RenderShape.INVISIBLE : RenderShape.MODEL;
+        return RenderShape.MODEL;
     }
 
     @Override
