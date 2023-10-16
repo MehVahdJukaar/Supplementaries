@@ -20,7 +20,7 @@ public class ExplorationMapSerializerMixin {
     @Inject(at = @At("HEAD"),
             method = "serialize(Lcom/google/gson/JsonObject;Lnet/minecraft/world/level/storage/loot/functions/ExplorationMapFunction;Lcom/google/gson/JsonSerializationContext;)V")
     public void saveCustomDeco(JsonObject json, ExplorationMapFunction value, JsonSerializationContext serializationContext, CallbackInfo ci){
-        if(value instanceof IExplorationFunctionExtension e){
+        if(value instanceof IExplorationFunctionExtension e && e.supplementaries$getCustomDecoration() != null){
             json.addProperty("custom_decoration", e.supplementaries$getCustomDecoration().toString());
         }
     }

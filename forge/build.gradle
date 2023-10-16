@@ -167,7 +167,7 @@ dependencies {
     modImplementation("curse.maven:terrablender-563928:4590487")
     modCompileOnly("curse.maven:tetra-289712:4414851")
     modCompileOnly("curse.maven:mutil-351914:3941314")
-    modCompileOnly("curse.maven:breezy-690628:4055467")
+    modCompileOnly("curse.maven:breezy-690628:4788101")
     modCompileOnly("curse.maven:geckolib-388172:4064451")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
 

@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
@@ -32,7 +31,6 @@ import vazkii.quark.api.event.UsageTickerEvent;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
-import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +111,7 @@ public class QuarkClientCompatImpl {
             //adds missing ones from quiver
 
             if (event.player instanceof IQuiverEntity qe) {
-                var q = qe.getQuiver();
+                var q = qe.supplementaries$getQuiver();
                 if (!q.isEmpty()) {
                     QuiverItem.Data data = QuiverItem.getQuiverData(q);
                     if (data != null) {

@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VillagerScareStuff;
+import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +27,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -158,24 +158,27 @@ public class ServerEventsForge {
         }
     }
 
-    @SubscribeEvent
-    public static void onAddLootTables(LootTableLoadEvent event) {
-        // ServerEvents.injectLootTables(event.getLootTableManager(), event.getName(), (b) -> event.getTable().addPool(b.build()));
-    }//TODO 1.20!!
+
+
 
     //TODO: add these on fabric
     //forge only
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onProjectileImpact(final ProjectileImpactEvent event) {
-        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
-    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START) {
-            CandyItem.checkSweetTooth(event.player);
+        if (event.phase == TickEvent.Phase.START) {
+            if (event.side == LogicalSide.SERVER) {
+                ServerEvents.serverPlayerTick(event.player);
+            }else{
+                ServerEvents.clientPlayerTick(event.player);
+            }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onProjectileImpact(final ProjectileImpactEvent event) {
+        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
     }
 
     @SubscribeEvent
@@ -215,7 +218,7 @@ public class ServerEventsForge {
     public static void onServerTick(TickEvent.LevelTickEvent event) {
         if (!flag) {
             if (counter++ > 20) {
-                VibeChecker.checkVibe( event.level);
+                VibeChecker.checkVibe(event.level);
                 flag = true;
             }
         }

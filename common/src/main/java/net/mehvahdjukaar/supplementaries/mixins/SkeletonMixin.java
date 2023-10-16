@@ -24,11 +24,12 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
 
     //server
     @Unique
-    private ItemStack quiver = ItemStack.EMPTY;
+    private ItemStack supplementaries$quiver = ItemStack.EMPTY;
     @Unique
-    private float quiverDropChance = 0.6f;
+    private float supplementaries$quiverDropChance = 0.6f;
 
     //for just used to sync this to client
+    @Unique
     private static final EntityDataAccessor<Boolean> HAS_QUIVER =
             SynchedEntityData.defineId(Skeleton.class, EntityDataSerializers.BOOLEAN);
 
@@ -43,64 +44,64 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
 
     @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer, CallbackInfo ci) {
-        if (this.quiver != null && hitByPlayer) {
-            ItemStack itemStack = this.quiver;
-            if (Math.max(this.random.nextFloat() - looting * 0.02F, 0.0F) < quiverDropChance) {
+        if (this.supplementaries$quiver != null && hitByPlayer) {
+            ItemStack itemStack = this.supplementaries$quiver;
+            if (Math.max(this.random.nextFloat() - looting * 0.02F, 0.0F) < supplementaries$quiverDropChance) {
                 this.spawnAtLocation(itemStack);
-                this.quiver = ItemStack.EMPTY;
+                this.supplementaries$quiver = ItemStack.EMPTY;
             }
         }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        if (!this.quiver.isEmpty()) {
-            compound.put("Quiver", quiver.save(new CompoundTag()));
-            compound.putFloat("QuiverDropChance", quiverDropChance);
+        if (!this.supplementaries$quiver.isEmpty()) {
+            compound.put("Quiver", supplementaries$quiver.save(new CompoundTag()));
+            compound.putFloat("QuiverDropChance", supplementaries$quiverDropChance);
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         if (compound.contains("Quiver")) {
-            this.setQuiver(ItemStack.of(compound.getCompound("Quiver")));
-            this.quiverDropChance = compound.getFloat("QuiverDropChance");
+            this.supplementaries$setQuiver(ItemStack.of(compound.getCompound("Quiver")));
+            this.supplementaries$quiverDropChance = compound.getFloat("QuiverDropChance");
         }
     }
 
     @Override
-    public ItemStack getQuiver() {
-        return quiver;
+    public ItemStack supplementaries$getQuiver() {
+        return supplementaries$quiver;
     }
 
     @Override
-    public boolean hasQuiver() {
+    public boolean supplementaries$hasQuiver() {
         if (this.level() != null && this.level().isClientSide) {
             return this.getEntityData().get(HAS_QUIVER);
         }
-        return IQuiverEntity.super.hasQuiver();
+        return IQuiverEntity.super.supplementaries$hasQuiver();
     }
 
     @Override
-    public void setQuiver(ItemStack quiver) {
-        this.quiver = quiver;
+    public void supplementaries$setQuiver(ItemStack quiver) {
+        this.supplementaries$quiver = quiver;
         this.getEntityData().set(HAS_QUIVER, !quiver.isEmpty());
     }
 
     @Override
     public boolean wantsToPickUp(ItemStack stack) {
-        if (this.quiver == null && stack.getItem() == ModRegistry.QUIVER_ITEM.get()) return true;
+        if (this.supplementaries$quiver == null && stack.getItem() == ModRegistry.QUIVER_ITEM.get()) return true;
         return super.wantsToPickUp(stack);
     }
 
     @Override
     public ItemStack equipItemIfPossible(ItemStack stack) {
         if (stack.getItem() == ModRegistry.QUIVER_ITEM.get()) {
-            if (this.quiver != null) {
-                this.spawnAtLocation(quiver);
+            if (this.supplementaries$quiver != null) {
+                this.spawnAtLocation(supplementaries$quiver);
             }
-            this.setQuiver(stack);
-            this.quiverDropChance = 1;
+            this.supplementaries$setQuiver(stack);
+            this.supplementaries$quiverDropChance = 1;
             return stack;
         }
         return super.equipItemIfPossible(stack);
