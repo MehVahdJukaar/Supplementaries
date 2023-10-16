@@ -25,6 +25,8 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Stray;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,6 +47,10 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
+
+        //loads entity data accessors immediarely so hopefully they stay synced between client and server
+        var s = Stray.class;
+        var c = Skeleton.class;
 
         Credits.fetchFromServer();
 

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
@@ -12,10 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesMa
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
-import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
@@ -172,6 +170,18 @@ public class ServerEvents {
         }
     }
 
+    @EventCalled
+    public static void serverPlayerTick(Player player) {
+        CandyItem.checkSweetTooth(player);
+    }
+
+    @EventCalled
+    public static void clientPlayerTick(Player player) {
+        if(player instanceof IQuiverEntity){
+
+        }
+    }
+
     //TODO: fabric
     @EventCalled
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
@@ -222,5 +232,6 @@ public class ServerEvents {
         }
         return false;
     }
+
 
 }
