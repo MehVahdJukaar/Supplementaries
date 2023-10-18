@@ -1,6 +1,5 @@
 name: Request Feature
-description: Suggest feature to be added to Supplementaries
-title: "[📝]: "
+description: Suggest an idea for this project
 labels: "enhancement"
 body:
   - type: markdown
