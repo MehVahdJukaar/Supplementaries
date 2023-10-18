@@ -1,0 +1,88 @@
+name: Report Bug
+description: Got a bug? Report it.
+title: "[🐞]: "
+labels: "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        BUG
+
+  - type: checkboxes
+    id: pre-report-bug
+    attributes:
+      label: "Before Continuing:"
+      options:
+        - label: "Always check you are using the latest version of the mods and its dependencies"
+          required: true
+        - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others"
+          required: true
+        - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
+          required: true
+        - label: "Ensure you have given enough RAM to Minecraft\n- Minimum: 4GB\n- Modpack, Minimum: 6GB or 8GB"
+          required: true
+
+  - type: dropdown
+    id: version
+    attributes:    
+      label: Version-Loader
+      description: Which version-loader is Minecraft running?
+      options:      
+        - 1.20.1-forge
+        - 1.19.2-forge
+        - 1.18.2-forge
+        - 1.20.1-fabric
+        - 1.19.2-fabric
+        - 1.18.2-fabric
+      default: 0
+    validations:    
+      required: true
+  
+  - type: input
+    id: supplementaries-version
+    attributes:
+      label: Supplementaries Version
+      description: The current version of EveryCompat
+      placeholder: ex. supplementaries-1.20-2.6.13
+    validations:
+      required: true
+
+  
+  - type: input
+    id: moonlight-version
+    attributes:
+      label: Moonlight Lib Version
+      description: The current version of EveryCompat
+      placeholder: ex. moonlight-1.20-2.8.46
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-details
+    attributes:
+      label: "Issue Detail"
+      description: "A clear and concise description of what the bug is"
+      placeholder: The more details, the better. (REQUIRED)
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+      label: Optional Attachment
+      description: |
+        If your Minecraft crashes, it creates a crash-report file which is located in ~/.minecraft/crash-report/
+        Tip: You can attach images, too
+      placeholder: Attach log files (latest.log or crash-report) by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
+
+  - type: textarea
+    id: to-reproduce
+    attributes:
+      label: "To Produce"
+      description: "Steps to reproduce the behaviour"
+      placeholder: OPTIONAL
+    validations:
+        required: false
+
+
