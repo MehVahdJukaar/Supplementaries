@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+@Deprecated(forRemoval = true)
 @Mixin(Sheets.class)
 public class FabricFixSheetsClassloadingPlsMixin {
 

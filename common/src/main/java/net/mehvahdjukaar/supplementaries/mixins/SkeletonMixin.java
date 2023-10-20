@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.core.mixins.MapItemDataPacketMixin;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
+import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,6 +13,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,6 +49,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
     @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
     protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer, CallbackInfo ci) {
         if (this.supplementaries$quiver != null && hitByPlayer) {
+
             ItemStack itemStack = this.supplementaries$quiver;
             if (Math.max(this.random.nextFloat() - looting * 0.02F, 0.0F) < supplementaries$quiverDropChance) {
                 this.spawnAtLocation(itemStack);
