@@ -9,6 +9,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.LABColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.moonlight.core.mixins.MapDataMixin;
+import net.mehvahdjukaar.moonlight.core.mixins.MapItemDataPacketMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -25,6 +27,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.LootCommand;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
@@ -141,6 +144,9 @@ public class ColoredMapHandler {
         @Nullable
         private Pair<Block, ResourceLocation> getEntry(int x, int z) {
             if (data == null) return null;
+            if(x<0 || x>=128 || z<0 || z>=128){
+                return null; //error
+            }
             if (data[x] != null) {
                 int packed = Byte.toUnsignedInt(data[x][z]); //treated as unsigned
                 if (packed == 0) return null;
@@ -148,10 +154,10 @@ public class ColoredMapHandler {
                 int bi = packed & ((1 << BIOME_SIZE) - 1);
                 int bli = packed >> BIOME_SIZE;
                 if (bi >= blockIndexes.size() || bli >= biomesIndexes.size()) {
-                    return null;
+                    return null; //error
                 }
                 if (bi < 0 || bli < 0) {
-                    return null;
+                    return null; //error
                 }
                 return Pair.of(blockIndexes.get(bi), biomesIndexes.get(bli));
             }

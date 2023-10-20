@@ -41,7 +41,7 @@ public class StructureLocator {
             ServerLevel level, @NotNull HolderSet<Structure> targets, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated) {
         var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
-                newlyGenerated, 1, true);
+                newlyGenerated, 1, false);
         if (!found.isEmpty()) return found.get(0);
         return null;
     }
