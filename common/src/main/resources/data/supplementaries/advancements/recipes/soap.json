@@ -1,0 +1,60 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:soap"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:soap"
+      }
+    },
+    "has_porkchop": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:porkchop"
+            ]
+          }
+        ]
+      }
+    },
+    "has_water_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:water_bucket"
+            ]
+          }
+        ]
+      }
+    },
+    "forge:ash": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ash"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_porkchop",
+      "forge:ash",
+      "has_the_recipe",
+      "has_porkchop",
+      "has_water_bucket",
+      "forge:ash"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

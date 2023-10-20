@@ -184,6 +184,8 @@ dependencies {
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
+    modImplementation("curse.maven:alexs-caves-924854:4806837")
+    modImplementation("curse.maven:citadel-331936:4786380")
 
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))

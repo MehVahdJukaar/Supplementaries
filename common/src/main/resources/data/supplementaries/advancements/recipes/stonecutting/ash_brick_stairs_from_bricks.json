@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:stonecutting/ash_brick_stairs_from_bricks"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:stonecutting/ash_brick_stairs_from_bricks"
+      }
+    },
+    "has_ash_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:ash_bricks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_ash_bricks",
+      "has_the_recipe",
+      "has_ash_bricks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

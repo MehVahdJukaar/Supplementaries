@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
@@ -38,7 +39,7 @@ public class VibeCheckerImpl {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public static void checkVibe() {
-       // crashIfFabricRenderingAPIHasBeenNuked();
+        crashIfFabricRenderingAPIHasBeenNuked();
 
         //fixSodiumDeps();unfixSodiumDeps();
         vibeCheckModels();
@@ -116,7 +117,6 @@ public class VibeCheckerImpl {
     //I hate this. I've got to do what I've got to do. Cant stand random reports anymore
     //you were supposed to destroy the loader api nuking mods, not join them!
     public static void crashIfFabricRenderingAPIHasBeenNuked() {
-
         if (PlatHelper.isModLoaded("sodium") && !PlatHelper.isModLoaded("indium")) {
             Supplementaries.LOGGER.error("You seem to have installed Sodium which has been known to break fabric rendering API." +
                     "Things might not work well");
