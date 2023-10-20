@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:daub"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:daub"
+      }
+    },
+    "has_clay_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:clay_ball"
+            ]
+          }
+        ]
+      }
+    },
+    "supplementaries:straw": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "supplementaries:straw"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_clay_ball",
+      "has_the_recipe",
+      "has_clay_ball",
+      "supplementaries:straw"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

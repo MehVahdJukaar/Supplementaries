@@ -1,0 +1,33 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:doormat_2"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:doormat_2"
+      }
+    },
+    "forge:crops/flax": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:crops/flax"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "forge:crops/flax",
+      "has_the_recipe",
+      "forge:crops/flax"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

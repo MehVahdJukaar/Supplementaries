@@ -1,0 +1,73 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:slingshot"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:slingshot"
+      }
+    },
+    "has_string": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:string"
+            ]
+          }
+        ]
+      }
+    },
+    "has_slime_ball": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:slime_ball"
+            ]
+          }
+        ]
+      }
+    },
+    "has_rabbit_hide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:rabbit_hide"
+            ]
+          }
+        ]
+      }
+    },
+    "forge:rods/wooden": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:rods/wooden"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_string",
+      "has_rabbit_hide",
+      "has_the_recipe",
+      "has_string",
+      "has_slime_ball",
+      "has_rabbit_hide",
+      "forge:rods/wooden"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

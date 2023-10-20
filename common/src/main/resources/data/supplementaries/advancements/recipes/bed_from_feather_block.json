@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:bed_from_feather_block"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:bed_from_feather_block"
+      }
+    },
+    "has_feather_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:feather_block"
+            ]
+          }
+        ]
+      }
+    },
+    "minecraft:planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_feather_block",
+      "has_the_recipe",
+      "has_feather_block",
+      "minecraft:planks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

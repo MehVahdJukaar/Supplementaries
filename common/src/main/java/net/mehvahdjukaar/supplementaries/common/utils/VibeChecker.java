@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -21,12 +24,13 @@ public class VibeChecker {
     }
 
     public static void checkVibe(Level level) {
-        //check sheets class
-        for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
-            if (!Sheets.DECORATED_POT_MATERIALS.containsKey(v)) {
-                throw new BadModError("Some other mod loaded the Sheets class to early, causing modded banner patterns and sherds to be invalid. Refusing to proceed further");
-            }
+        try{
+            SoftFluidRegistry.getEmpty();
+        }catch (Exception e){
+            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?",e);
         }
+        //check sheets class
+        if(PlatHelper.getPhysicalSide().isClient()) clientStuff();
         try {
             var m = new Spider(EntityType.SPIDER, level);
             var m2 = new Spider(EntityType.SPIDER, level);
@@ -48,6 +52,17 @@ public class VibeChecker {
         } catch (Exception e) {
             Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
             e.printStackTrace();
+        }
+    }
+
+    @Environment(EnvType.CLIENT) //prob not needed
+    private static void clientStuff() {
+        for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
+            if (!Sheets.DECORATED_POT_MATERIALS.containsKey(v)) {
+                throw new BadModError("Some other mod loaded the Sheets class to early, causing modded banner patterns and sherds to be invalid." +
+                        "Refusing to proceed further." +
+                        "Check previous forge log to find the offending mod");
+            }
         }
     }
 

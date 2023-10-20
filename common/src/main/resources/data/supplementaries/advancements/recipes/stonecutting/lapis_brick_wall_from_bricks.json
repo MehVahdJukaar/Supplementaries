@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:stonecutting/lapis_brick_wall_from_bricks"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:stonecutting/lapis_brick_wall_from_bricks"
+      }
+    },
+    "has_lapis_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:lapis_bricks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lapis_bricks",
+      "has_the_recipe",
+      "has_lapis_bricks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

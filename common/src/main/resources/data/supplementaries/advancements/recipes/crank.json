@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:crank"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:crank"
+      }
+    },
+    "has_cobblestone_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cobblestone_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "forge:rods/wooden": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:rods/wooden"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cobblestone_slab",
+      "has_the_recipe",
+      "has_cobblestone_slab",
+      "forge:rods/wooden"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

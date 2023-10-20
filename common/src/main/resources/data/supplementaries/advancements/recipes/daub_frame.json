@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:daub_frame"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:daub_frame"
+      }
+    },
+    "has_daub": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:daub"
+            ]
+          }
+        ]
+      }
+    },
+    "forge:rods/wooden": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:rods/wooden"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_daub",
+      "has_the_recipe",
+      "has_daub",
+      "forge:rods/wooden"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

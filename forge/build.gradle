@@ -175,6 +175,8 @@ dependencies {
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
+    modImplementation("curse.maven:alexs-caves-924854:4806837")
+    modImplementation("curse.maven:citadel-331936:4786380")
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
 
