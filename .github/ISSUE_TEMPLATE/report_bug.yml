@@ -62,7 +62,7 @@ body:
     attributes:
       label: "Issue Detail"
       description: "A clear and concise description of what the bug is"
-      placeholder: The more details, the better. (REQUIRED)
+      placeholder: DO NOT COPY & PASTE a part from Crash-report or latest.log (See Optional Attachment for details). A full log always helps Devs to find out what is the problem. 
     validations:
         required: true
 
