@@ -64,6 +64,8 @@ public class ClientConfigs {
         public static final Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
         public static final Supplier<Boolean> WRENCH_PARTICLES;
         public static final Supplier<Boolean> FLUTE_PARTICLES;
+        public static final Supplier<Boolean> DEPTH_METER_CLICK;
+        public static final Supplier<Integer> DEPTH_METER_STEP_MULT;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -106,6 +108,11 @@ public class ClientConfigs {
             builder.push("flute");
             FLUTE_PARTICLES = builder.comment("Display visual particles when a playing a flute")
                     .define("note_particles", true);
+            builder.pop();
+
+            builder.push("altimeter");
+            DEPTH_METER_CLICK = builder.define("click", true);
+            DEPTH_METER_STEP_MULT = builder.define("step_multiplier", 1, 0, 64);
             builder.pop();
 
             builder.pop();

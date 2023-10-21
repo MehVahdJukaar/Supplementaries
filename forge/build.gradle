@@ -164,7 +164,7 @@ dependencies {
     modImplementation("curse.maven:geckolib-388172:4064451")
     modImplementation("curse.maven:farmers-respite-551453:4081312")
     //modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-    modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    //modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     modImplementation("curse.maven:flywheel-486392:4341471")
 
 

@@ -398,6 +398,7 @@ public class ModRegistry {
     public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(Supplementaries.res(CANDLE_HOLDER_NAME));
 
 
+
     //copper lantern
     public static final Supplier<Block> COPPER_LANTERN = regWithItem(COPPER_LANTERN_NAME, () -> new CopperLanternBlock(
             BlockBehaviour.Properties.of(Material.METAL, MaterialColor.TERRACOTTA_ORANGE)
@@ -1194,6 +1195,10 @@ public class ModRegistry {
     public static final Supplier<Block> ASHEN_BASALT = regBlock("ashen_basalt", () ->
             new AshenBasaltBlock(BlockBehaviour.Properties.copy(Blocks.BASALT))
     );
+
+    //altimeter
+    public static final Supplier<Item> DEPTH_METER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()
+            .tab(CreativeModeTabs.TOOLS)));
 
     //public static final String CRE
     // ATIVE_WAND = "creative_wand";
