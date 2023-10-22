@@ -59,7 +59,7 @@ public class SoapClearRecipe extends CustomRecipe {
                 Item item = stack.getItem();
                 if (BlocksColorAPI.getColor(item) != null ||
                         item instanceof DyeableLeatherItem) {
-                    toRecolor = stack;
+                    toRecolor = stack.copyWithCount(1);
                 }
             }
         }
@@ -83,7 +83,7 @@ public class SoapClearRecipe extends CustomRecipe {
         if (tag != null) {
             result.setTag(tag.copy());
         }
-
+        result.setCount(1);
         return result;
     }
 
