@@ -13,16 +13,11 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
-import net.mehvahdjukaar.supplementaries.client.block_models.WallLanternBakedModel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
-import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
-import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
@@ -124,39 +119,6 @@ public class VibeCheckerImpl {
     }
 
     public static void vibeCheckModels() {
-        try {
-            DummySprite textureAtlasSprite = DummySprite.INSTANCE;
-
-            BakedQuadBuilder b = BakedQuadBuilder.create(textureAtlasSprite);
-            b.setAutoDirection();
-            VertexUtil.addQuad(b, new PoseStack(), 0, 0, 1, 1, 0, 0);
-            var dummy = b.build();
-
-            List<BakedQuad> l = List.of(dummy);
-            Map<Direction, List<BakedQuad>> map = Maps.newEnumMap(Direction.class);
-            map.putAll(Map.of(Direction.DOWN, l,
-                    Direction.UP, l,
-                    Direction.SOUTH, l,
-                    Direction.NORTH, l,
-                    Direction.WEST, l,
-                    Direction.EAST, l));
-            new WallLanternBakedModel(new SimpleBakedModel(l,
-                    map,
-                    false, false, false,
-                    textureAtlasSprite,
-                    ItemTransforms.NO_TRANSFORMS, ItemOverrides.EMPTY
-
-            ),
-                    new ModelState() {
-                        @Override
-                        public Transformation getRotation() {
-                            return new Transformation(new Vector3f(1, 1, 1),
-                                    null, null, null);
-                        }
-                    });
-        } catch (Exception e) {
-            throw new VibeChecker.BadModError("Some OTHER mod failed to load baked models. Refusing to proceed further to prevent in game issues. See logs for details", e);
-        }
     }
 
 
