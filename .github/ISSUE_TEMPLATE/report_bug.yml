@@ -19,6 +19,8 @@ body:
           required: true
         - label: "If you are unsure which mod is the culprit.\nDisable half your mods at time until you isolate the culprit"
           required: true
+        - label: "If you have a crash ALWAYS post LATEST.LOG below"
+          required: true
 
   - type: dropdown
     id: version
