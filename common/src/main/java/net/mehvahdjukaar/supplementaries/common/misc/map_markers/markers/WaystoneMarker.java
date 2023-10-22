@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers;
 
-import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
-import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.moonlight.api.map.markers.SimpleMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -9,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.integration.WaystonesCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
-
 import org.jetbrains.annotations.Nullable;
 
 public class WaystoneMarker extends SimpleMapBlockMarker {

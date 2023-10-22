@@ -1,14 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers;
 
-import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
-import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.moonlight.api.map.markers.SimpleMapBlockMarker;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.ChestBlock;
-
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.jetbrains.annotations.Nullable;
 

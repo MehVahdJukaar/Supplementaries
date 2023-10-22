@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SconceBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SconceWallBlock;
-import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Direction;

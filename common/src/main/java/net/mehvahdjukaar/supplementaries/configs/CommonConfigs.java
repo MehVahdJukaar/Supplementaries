@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.gui.screens.worldselection.WorldSelectionList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,10 +19,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -417,12 +414,6 @@ public class CommonConfigs {
             ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
-            builder.push("slice_map");
-            SLICE_MAP_ENABLED = feature(builder);
-            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
-                    .define("range_multiplier", 0.25, 0, 1);
-            builder.pop();
-
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -550,8 +541,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> DEPTH_METER_ENABLED;
 
-        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
-        public static final Supplier<Double> SLICE_MAP_RANGE;
 
     }
 
@@ -842,6 +831,12 @@ public class CommonConfigs {
                     .define("allow_snowballs", false);
             builder.pop();
 
+            builder.push("slice_map");
+            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
+                    .define("range_multiplier", 0.25, 0, 1);
+            builder.pop();
+
             builder.push("antique_ink");
             ANTIQUE_INK_ENABLED = feature(builder);
             ANTIQUE_INK_TRADES = builder.define("cartographer_trades", true);
@@ -901,6 +896,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> STASIS_ENABLED;
 
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
     }
 
 

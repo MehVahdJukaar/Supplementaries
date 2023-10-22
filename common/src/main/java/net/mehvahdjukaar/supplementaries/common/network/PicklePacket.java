@@ -4,10 +4,8 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 

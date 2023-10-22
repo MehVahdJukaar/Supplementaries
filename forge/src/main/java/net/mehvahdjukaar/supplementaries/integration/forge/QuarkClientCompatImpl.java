@@ -31,6 +31,7 @@ import vazkii.quark.api.event.UsageTickerEvent;
 import vazkii.quark.base.handler.GeneralConfig;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.content.client.module.ImprovedTooltipsModule;
+import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 
 import java.util.ArrayList;
 import java.util.List;

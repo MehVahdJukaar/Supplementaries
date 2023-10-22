@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.model.HumanoidModel;

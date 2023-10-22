@@ -49,7 +49,7 @@ public class VibeChecker {
                 i.tick();
             }
         } catch (Exception e) {
-            throw new OtherModError("An error caused by other mods has occurred (see below). This will prevent the mod from working correctly, possibly crashing at random times. Refusing to procede any further", e);
+            throw new BadModError("An error caused by other mods has occurred (see below). This will prevent the mod from working correctly, possibly crashing at random times. Refusing to procede any further", e);
         }
     }
 
@@ -74,13 +74,13 @@ public class VibeChecker {
     }
 
 
-    public static class OtherModError extends Error {
+    public static class BadModError extends Error {
 
-        public OtherModError(String s) {
+        public BadModError(String s) {
             super(s);
         }
 
-        public OtherModError(String s, Exception e) {
+        public BadModError(String s, Exception e) {
             super(s, e);
         }
     }

@@ -36,7 +36,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
@@ -64,7 +63,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
@@ -362,9 +360,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
-        FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         BOOK_MODELS.values().forEach(event::register);
-        ClientSpecialModelsManager.registerSpecialModels(event);
         FlowerBoxModelsManager.regisperSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);

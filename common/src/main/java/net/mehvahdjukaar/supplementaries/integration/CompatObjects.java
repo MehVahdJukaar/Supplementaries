@@ -1,16 +1,11 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.moonlight.api.MoonlightRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
-import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;

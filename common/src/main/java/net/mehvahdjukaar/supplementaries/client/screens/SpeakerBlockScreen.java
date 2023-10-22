@@ -1,28 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.level.levelgen.feature.trunkplacers.FancyTrunkPlacer;
-
-import java.util.stream.IntStream;
 
 public class SpeakerBlockScreen extends Screen {
     private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");

@@ -1,33 +1,17 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 
-import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.UrnBlock;
-import net.mehvahdjukaar.supplementaries.common.worldgen.*;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
+import net.mehvahdjukaar.supplementaries.common.worldgen.MineshaftElevatorPiece;
+import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignFeature;
+import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.material.Fluids;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class ModWorldgenRegistry {

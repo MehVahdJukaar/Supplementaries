@@ -6,7 +6,6 @@ import com.google.common.cache.CacheBuilder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -17,10 +16,8 @@ import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;

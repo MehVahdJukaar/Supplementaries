@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,14 +17,16 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vectorwing.farmersdelight.client.renderer.CanvasSignRenderer;
 
 //fixes plain text shade
-@OptionalMixin("vectorwing.farmersdelight.client.renderer.CanvasSignRenderer")
-@Mixin(targets = "vectorwing.farmersdelight.client.renderer.CanvasSignRenderer")
+@Pseudo
+@Mixin(CanvasSignRenderer.class)
 public abstract class CompatFarmersDelightSignMixin {
 
     @Unique
@@ -48,9 +50,9 @@ public abstract class CompatFarmersDelightSignMixin {
                 Vector3f normal = new Vector3f(0, 0, 1);
                 normal.rotateY(supplementaries$canvasSignYaw * Mth.DEG_TO_RAD * (supplementaries$canvasFront ? 1 : -1));
                 supplementaries$canvasFront = null;
-                scale *= ColorUtil.getShading(normal);
+                scale *= ColorUtils.getShading(normal);
             }
-            return ColorUtil.multiply(color, scale);
+            return ColorUtils.multiply(color, scale);
         }
     }
 

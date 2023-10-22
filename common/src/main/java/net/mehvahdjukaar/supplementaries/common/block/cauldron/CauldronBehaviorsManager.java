@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.block.cauldron;
 
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

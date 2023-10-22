@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
-
 import org.jetbrains.annotations.Nullable;
 
 public class BeaconMarker extends MapBlockMarker<CustomMapDecoration> {

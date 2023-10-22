@@ -1,11 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 
 

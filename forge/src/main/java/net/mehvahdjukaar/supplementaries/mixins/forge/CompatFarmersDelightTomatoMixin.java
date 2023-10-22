@@ -8,12 +8,14 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FarmBlock;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 
-@OptionalMixin("vectorwing.farmersdelight.common.block.TomatoVineBlock")
-@Mixin(targets = "vectorwing.farmersdelight.common.block.TomatoVineBlock")
+@Pseudo
+@Mixin(TomatoVineBlock.class)
 public abstract class CompatFarmersDelightTomatoMixin extends Block {
 
     protected CompatFarmersDelightTomatoMixin(Properties arg) {

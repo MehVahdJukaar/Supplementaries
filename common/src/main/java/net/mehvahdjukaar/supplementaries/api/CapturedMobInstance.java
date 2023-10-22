@@ -10,7 +10,6 @@ import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
-
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CapturedMobInstance<T extends Entity> {

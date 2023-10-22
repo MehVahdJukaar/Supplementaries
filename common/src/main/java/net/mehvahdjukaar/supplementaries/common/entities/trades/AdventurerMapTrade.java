@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
-import net.mehvahdjukaar.moonlight.api.util.math.colors.BaseColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -12,8 +11,8 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
-
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 public record AdventurerMapTrade(ResourceLocation structure, int villagerLevel, int minPrice, int maxPrice,

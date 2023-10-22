@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

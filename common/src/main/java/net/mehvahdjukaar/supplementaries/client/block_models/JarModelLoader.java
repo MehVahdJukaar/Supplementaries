@@ -5,8 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomGeometry;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomModelLoader;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.minecraft.util.GsonHelper;
 
 import static net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader.parseModel;

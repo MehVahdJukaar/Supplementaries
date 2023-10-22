@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
@@ -15,8 +14,6 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(BlockBehaviour.BlockStateBase.class)

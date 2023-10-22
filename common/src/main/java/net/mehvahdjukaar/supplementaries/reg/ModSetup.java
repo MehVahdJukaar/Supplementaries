@@ -11,8 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsMa
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.FireworkRocketItem;

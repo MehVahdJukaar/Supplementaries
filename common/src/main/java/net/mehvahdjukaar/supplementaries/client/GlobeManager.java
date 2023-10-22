@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.*;
-import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SUN_TEXTURE;
 
 public class GlobeManager {
 

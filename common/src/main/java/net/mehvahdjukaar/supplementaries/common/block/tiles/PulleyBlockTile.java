@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainerMenu;

@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;

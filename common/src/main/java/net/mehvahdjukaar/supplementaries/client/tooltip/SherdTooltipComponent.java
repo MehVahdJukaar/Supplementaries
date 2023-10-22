@@ -10,8 +10,6 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 
 public class SherdTooltipComponent implements ClientTooltipComponent {
 

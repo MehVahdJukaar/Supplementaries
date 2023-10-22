@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;

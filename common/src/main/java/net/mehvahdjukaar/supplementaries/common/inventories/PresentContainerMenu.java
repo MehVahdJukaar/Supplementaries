@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
