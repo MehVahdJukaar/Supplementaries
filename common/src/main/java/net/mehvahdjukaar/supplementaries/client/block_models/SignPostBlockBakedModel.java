@@ -1,7 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.supplementaries.client.DummySprite;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -34,6 +39,9 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         BlockState mimic = data.get(ModBlockProperties.MIMIC);
         Boolean isFramed = data.get(ModBlockProperties.FRAMED);
+        SignPostBlockTile.Sign up = data.get(ModBlockProperties.SIGN_UP);
+        SignPostBlockTile.Sign down = data.get(ModBlockProperties.SIGN_DOWN);
+        Boolean slim = data.get(ModBlockProperties.SLIM);
 
         boolean framed = CompatHandler.FRAMEDBLOCKS && (isFramed != null && isFramed);
 
@@ -52,10 +60,15 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
             }
             BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-            List<BakedQuad> quads = new ArrayList<>();
-            quads.addAll( model.getQuads(mimic, side, rand));
+            List<BakedQuad> quads = new ArrayList<>(model.getQuads(mimic, side, rand));
 
-
+            if(up != null && down != null) {
+                BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
+                builder.setAutoDirection();
+                builder.setAutoBuild(quads::add);
+                SignPostBlockTileRenderer.renderSigns(new PoseStack(),
+                        builder, 0, 0, up, down, slim);
+            }
 
             return quads;
 

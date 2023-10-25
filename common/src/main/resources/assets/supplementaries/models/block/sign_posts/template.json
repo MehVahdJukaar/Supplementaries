@@ -1,0 +1,44 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube",
+	"textures": {
+		"particle": "supplementaries:block/sign_posts/sign_post_oak",
+		"east": "supplementaries:block/sign_posts/sign_post_oak"
+	},
+	"elements": [
+		{
+			"from": [-1, 2, 6],
+			"to": [15, 7, 7],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 5], "texture": "#east"},
+				"east": {"uv": [0, 0, 1, 5], "texture": "#east"},
+				"south": {"uv": [16, 0, 0, 5], "texture": "#east"},
+				"west": {"uv": [15, 0, 16, 5], "texture": "#east"},
+				"up": {"uv": [16, 0, 0, 1], "texture": "#east"},
+				"down": {"uv": [16, 4, 0, 5], "texture": "#east"}
+			}
+		},
+		{
+			"from": [15, 3, 6],
+			"to": [17, 6, 7],
+			"faces": {
+				"north": {"uv": [2, 6, 4, 9], "texture": "#east"},
+				"east": {"uv": [2, 6, 3, 9], "texture": "#east"},
+				"south": {"uv": [4, 6, 2, 9], "texture": "#east"},
+				"up": {"uv": [4, 6, 2, 7], "texture": "#east"},
+				"down": {"uv": [4, 8, 2, 9], "texture": "#east"}
+			}
+		},
+		{
+			"from": [17, 4, 6],
+			"to": [19, 5, 7],
+			"faces": {
+				"north": {"uv": [0, 7, 2, 8], "texture": "#east"},
+				"east": {"uv": [0, 7, 1, 8], "texture": "#east"},
+				"south": {"uv": [2, 7, 0, 8], "texture": "#east"},
+				"up": {"uv": [2, 7, 0, 8], "texture": "#east"},
+				"down": {"uv": [2, 7, 0, 8], "texture": "#east"}
+			}
+		}
+	]
+}

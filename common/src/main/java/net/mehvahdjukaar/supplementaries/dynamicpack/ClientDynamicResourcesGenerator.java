@@ -126,7 +126,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         {
             StaticResource spItemModel = StaticResource.getOrLog(manager,
                     ResType.ITEM_MODELS.getPath(Supplementaries.res("sign_post_oak")));
-
+            StaticResource spBlockModel = StaticResource.getOrLog(manager,
+                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("sign_posts/sign_post_oak")));
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) return;
                 String id = Utils.getID(sign).getPath();
@@ -134,6 +135,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
                 try {
                     addSimilarJsonResource(manager, spItemModel, "sign_post_oak", id);
+                    addSimilarJsonResource(manager, spBlockModel, "sign_post_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }
@@ -147,10 +149,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
-                //if (wood.isVanilla()) continue;
-
                 ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
-
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;

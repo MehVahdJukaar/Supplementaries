@@ -18,16 +18,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-//turn back now while you can. You have been warned
+//Turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
 
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
-    private final AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = new AtomicReference<>(null);
+    private final AtomicReference<List<StructureLocator.LocatedStruct>> threadResult = new AtomicReference<>(null);
     private boolean firstTick = true;
     private RoadSignFeature.Config config = null;
 
@@ -43,7 +44,6 @@ public class BlockGeneratorBlockTile extends BlockEntity {
             tile.firstTick = false;
 
             ServerLevel serverLevel = (ServerLevel) level;
-
             EXECUTORS.submit(() -> {
                 try {
                     tile.threadResult.set(StructureLocator.findNearestMapFeatures(

@@ -18,14 +18,15 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
+import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer.MODELS;
 
-    private ModelPart signModel;
+public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
     private SignPostScreen(SignPostBlockTile tile) {
         super(tile, Component.translatable("sign.edit"));
@@ -39,16 +40,7 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
     @Override
     protected boolean canScroll() {
         return this.tile.getSignUp().active() && this.tile.getSignDown().active();
-
     }
-
-
-    @Override
-    protected void init() {
-        super.init();
-        this.signModel = this.minecraft.getEntityModels().bakeLayer(ClientRegistry.SIGN_POST_MODEL);
-    }
-
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
@@ -60,7 +52,7 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
         PoseStack poseStack = graphics.pose();
-        MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
+        var bufferSource = graphics.bufferSource();
         poseStack.pushPose();
         poseStack.translate(this.width / 2d, 0.0D, 50.0D);
         poseStack.scale(93.75F, -93.75F, 93.75F);
@@ -82,11 +74,12 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
         boolean blink = this.updateCounter / 6 % 2 == 0;
 
+        var modelRenderer = blockRenderer.getModelRenderer();
         poseStack.pushPose();
-        renderSign(poseStack, bufferSource, signUp, leftUp);
+        renderSign(poseStack,modelRenderer, bufferSource, signUp, leftUp);
 
         poseStack.translate(0, -0.5, 0);
-        renderSign(poseStack, bufferSource, signDown, leftDown);
+        renderSign(poseStack,modelRenderer, bufferSource, signDown, leftDown);
 
         poseStack.popPose();
 
@@ -125,19 +118,27 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
         Lighting.setupFor3DItems();
     }
 
-    private void renderSign(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, SignPostBlockTile.Sign active, boolean leftDown) {
-        if (active.active()) {
+    private void renderSign(PoseStack poseStack, ModelBlockRenderer renderer, MultiBufferSource bufferSource, SignPostBlockTile.Sign sign, boolean leftDown) {
+        if (sign.active()) {
 
             poseStack.pushPose();
+
             if (!leftDown) {
                 poseStack.mulPose(RotHlpr.YN180);
-                poseStack.translate(0, 0, -0.3125);
-            }
-            poseStack.scale(1, -1, -1);
-            Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(active.woodType());
-            VertexConsumer builder = material.buffer(bufferSource, RenderType::entitySolid);
+                poseStack.translate(0, 0, -0.55);
+            }else{
+                poseStack.translate(0, 0, -0.3);
 
-            this.signModel.render(poseStack, builder, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            }
+            poseStack.translate(-0.5, 0, 0);
+
+            renderer.renderModel(poseStack.last(),
+                    bufferSource.getBuffer(RenderType.cutout()),
+                    null,
+                    MODELS.get(sign.woodType()),
+                    1.0F, 1.0F, 1.0F,
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+
             poseStack.popPose();
         }
     }

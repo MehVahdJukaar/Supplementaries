@@ -162,8 +162,8 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
                 serverLevel, targets, pos, radius, skipKnown);
 
         if (found != null) {
-            BlockPos toPos = found.getFirst();
-            return createStructureMap(serverLevel, toPos, found.getSecond(), zoom, mapMarker, name, color);
+            BlockPos toPos = found.pos();
+            return createStructureMap(serverLevel, toPos, found.structure(), zoom, mapMarker, name, color);
         }
         return ItemStack.EMPTY;
     }

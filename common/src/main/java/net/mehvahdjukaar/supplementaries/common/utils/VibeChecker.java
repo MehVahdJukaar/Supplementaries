@@ -55,7 +55,6 @@ public class VibeChecker {
         }
     }
 
-    @Environment(EnvType.CLIENT) //prob not needed
     private static void clientStuff() {
         for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
             if (!Sheets.DECORATED_POT_MATERIALS.containsKey(v)) {

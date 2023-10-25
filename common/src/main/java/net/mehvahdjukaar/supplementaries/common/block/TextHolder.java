@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -97,17 +98,21 @@ public class TextHolder implements IAntiqueTextProvider {
             this.hasGlowingText = com.getBoolean("has_glowing_text");
             this.hasAntiqueInk = com.getBoolean("has_antique_ink");
             if (lines != 0) {
-                var v = decodeMessage(com.get("message"), level, pos);
-                System.arraycopy(v, 0, messages, 0, v.length);
-                var filtered = com.get("filtered_message");
-                if (filtered != null) {
-                    v = decodeMessage(filtered, level, pos);
-                    System.arraycopy(v, 0, filteredMessages, 0, v.length);
-                } else {
-                    System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
-                }
-                for (int j = 0; j < renderMessages.length; j++) {
-                    this.renderMessages[j] = null;
+                try {
+                    var v = decodeMessage(com.get("message"), level, pos);
+                    System.arraycopy(v, 0, messages, 0, v.length);
+                    var filtered = com.get("filtered_message");
+                    if (filtered != null) {
+                        v = decodeMessage(filtered, level, pos);
+                        System.arraycopy(v, 0, filteredMessages, 0, v.length);
+                    } else {
+                        System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
+                    }
+                    for (int j = 0; j < renderMessages.length; j++) {
+                        this.renderMessages[j] = null;
+                    }
+                }catch (Exception e){
+                    Supplementaries.LOGGER.error("Failed to load textholder data for block at {}", pos);
                 }
             }
         }

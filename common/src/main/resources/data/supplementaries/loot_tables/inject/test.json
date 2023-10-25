@@ -13,7 +13,7 @@
               "destination": "minecraft:village",
               "custom_decoration": "supplementaries:village",
               "zoom": 2,
-              "skip_existing_chunks": false
+              "skip_existing_chunks": true
             }
           ]
         }

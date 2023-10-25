@@ -297,7 +297,6 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Environment(EnvType.CLIENT)
     class TradeOfferButton extends Button {
         final int index;
 

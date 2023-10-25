@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
@@ -7,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.ClientSpecialModelsManager;
@@ -38,7 +41,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
@@ -63,6 +65,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -72,6 +75,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ClientRegistry {
 
@@ -83,7 +89,6 @@ public class ClientRegistry {
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
     public static final ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
-    public static final ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
@@ -106,6 +111,10 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
+    public static final Supplier<Map<WoodType, ResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
+            WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
+                    w -> Supplementaries.res("block/sign_posts/" + w.getVariantId("sign_post"))))
+    );
 
     public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_MODELS = Util.make(() -> {
         Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
@@ -256,8 +265,9 @@ public class ClientRegistry {
             CompoundTag compoundTag = itemStack.getTagElement("display");
             if (compoundTag != null) {
                 var n = compoundTag.getString("Name");
-                if (n != null) {
-                    var v = GlobeManager.Type.getTextureID(Component.Serializer.fromJson(n).getString());
+                MutableComponent mutableComponent = Component.Serializer.fromJson(n);
+                if (mutableComponent != null) {
+                    var v = GlobeManager.Type.getTextureID(mutableComponent.getString());
                     if (v != null) return Float.valueOf(v);
                 }
             }
@@ -378,6 +388,7 @@ public class ClientRegistry {
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         BOOK_MODELS.values().forEach(event::register);
+        SIGN_POST_MODELS.get().values().forEach(event::register);
         ClientSpecialModelsManager.registerSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
@@ -456,7 +467,6 @@ public class ClientRegistry {
         event.register(CLOCK_HANDS_MODEL, ClockBlockTileRenderer::createMesh);
         event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
-        event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);

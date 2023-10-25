@@ -47,6 +47,9 @@ import java.util.UUID;
 public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
 
     public static final ModelDataKey<Boolean> FRAMED_KEY = ModBlockProperties.FRAMED;
+    public static final ModelDataKey<Boolean> SLIM_KEY = ModBlockProperties.SLIM;
+    public static final ModelDataKey<Sign> SIGN_UP_KEY = ModBlockProperties.SIGN_UP;
+    public static final ModelDataKey<Sign> SIGN_DOWN_KEY = ModBlockProperties.SIGN_DOWN;
 
     private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
@@ -68,6 +71,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
                 .with(FRAMED_KEY, this.framed)
+                .with(SIGN_UP_KEY, this.signUp)
+                .with(SIGN_DOWN_KEY, this.signDown)
+                .with(SLIM_KEY, this.isSlim)
                 .with(MIMIC_KEY, this.getHeldBlock())
                 .build();
     }
@@ -108,6 +114,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.isSlim = this.mimic.getBlock() instanceof StickBlock;
         if (compound.contains("Waxed")) {
             this.isWaxed = compound.getBoolean("Waxed");
+        }
+        if (this.level != null) {
+            if (this.level.isClientSide) this.requestModelReload();
         }
     }
 
@@ -189,6 +198,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.yaw = compound.getFloat("Yaw");
             this.woodType = WoodTypeRegistry.fromNBT(compound.getString("WoodType"));
             this.text.load(compound, level, pos);
+
         }
 
         public CompoundTag save() {
@@ -372,5 +382,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public UUID getPlayerWhoMayEdit() {
         return playerWhoMayEdit;
     }
+
 }
 

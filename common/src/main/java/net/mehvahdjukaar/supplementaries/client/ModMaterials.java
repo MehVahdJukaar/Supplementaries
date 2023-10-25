@@ -42,14 +42,6 @@ public class ModMaterials {
     public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
     public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/books/book_enchanted"));
 
-    public static final Supplier<Map<WoodType, Material>> SIGN_POSTS_MATERIALS = Suppliers.memoize(() -> {
-        var map = new IdentityHashMap<WoodType, Material>();
-        ModRegistry.SIGN_POST_ITEMS.forEach((wood, item) -> map
-                .put(wood, new Material(LOCATION_BLOCKS, Supplementaries.res("block/sign_posts/" +
-                        Utils.getID(item).getPath()))));
-        return map;
-    });
-
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BannerPattern, Material>();
         for (var v : ModTextures.FLAG_TEXTURES.entrySet()) {

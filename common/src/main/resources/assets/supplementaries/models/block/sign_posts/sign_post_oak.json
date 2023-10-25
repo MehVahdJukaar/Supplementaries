@@ -1,0 +1,8 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/sign_posts/template",
+	"textures": {
+		"particle": "supplementaries:block/sign_posts/sign_post_oak",
+		"east": "supplementaries:block/sign_posts/sign_post_oak"
+	}
+}

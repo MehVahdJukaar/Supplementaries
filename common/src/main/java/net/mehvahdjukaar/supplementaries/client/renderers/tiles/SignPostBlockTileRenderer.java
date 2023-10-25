@@ -6,72 +6,69 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
+    public static final Map<WoodType, BakedModel> MODELS = new IdentityHashMap<>();
+    private static ModelBlockRenderer renderer;
+
     private final Camera camera;
     private final Font font;
-    public final ModelPart signModel;
-
-    public static LayerDefinition createMesh() {
-        //TODO: use baked models instead
-        MeshDefinition mesh = new MeshDefinition();
-        PartDefinition root = mesh.getRoot();
-        root.addOrReplaceChild("sign", CubeListBuilder.create()
-                        .texOffs(0, 10)
-                        .addBox(-12.0F, -5.0F, -3.0F, 2.0F, 1.0F, 1.0F)
-                        .texOffs(0, 0)
-                        .addBox(-8.0F, -7.0F, -3.0F, 16.0F, 5.0F, 1.0F)
-                        .texOffs(0, 6)
-                        .addBox(-10.0F, -6.0F, -3.0F, 2.0F, 3.0F, 1.0F),
-                PartPose.ZERO);
-
-        return LayerDefinition.create(mesh, 64, 16);
-    }
 
     public SignPostBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart model = context.bakeLayer(ClientRegistry.SIGN_POST_MODEL);
-        this.signModel = model.getChild("sign");
         this.camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         this.font = context.getFont();
+        ModelManager manager = Minecraft.getInstance().getModelManager();
+        MODELS.clear();
+        for (var e : ClientRegistry.SIGN_POST_MODELS.get().entrySet()) {
+            MODELS.put(e.getKey(), ClientHelper.getModel(manager, e.getValue()));
+        }
+        renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+
     }
 
     @Override
     public int getViewDistance() {
-        return 96;
+        return 32;
     }
 
     @Override
     public void render(SignPostBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
+        renderSignsText(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
+
+    }
+
+    private void renderSignsText(SignPostBlockTile tile, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockPos pos = tile.getBlockPos();
         Vec3 cameraPos = camera.getPosition();
 
         //don't render signs from far away
         LOD lod = new LOD(cameraPos, pos);
+
+        if (!lod.isNear()) return;
 
         var signUp = tile.getSignUp();
         var signDown = tile.getSignDown();
@@ -87,41 +84,36 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             poseStack.translate(0.5, 0.5, 0.5);
 
             if (up) {
-                var v = new Vector3f();
-                v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
-                var textProperties = tile.getTextHolder(0)
-                        .computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+                if (LOD.isOutOfFocus(relAngle, signUp.yaw() + 90, 2)) {
+                    var v = new Vector3f();
+                    v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
+                    var textProperties = tile.getTextHolder(0).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
 
-                poseStack.pushPose();
-                renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
-                        lod, signUp, relAngle, textProperties, 0);
-                poseStack.popPose();
+                    renderSignText(tile, poseStack, bufferIn, signUp, textProperties, 0);
+                }
             }
 
             if (down) {
-                var v = new Vector3f();
-                v.rotateY(signUp.yaw()* Mth.DEG_TO_RAD);
-                var textProperties = tile.getTextHolder(1)
-                        .computeRenderProperties(combinedLightIn,
-                                v, lod::isVeryNear);
+                if (LOD.isOutOfFocus(relAngle, signDown.yaw() + 90, 2)) {
 
-                poseStack.pushPose();
-                poseStack.translate(0, -0.5, 0);
-                renderSign(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
-                        lod, signDown, relAngle, textProperties, 1);
-                poseStack.popPose();
+                    var v = new Vector3f();
+                    v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
+                    var textProperties = tile.getTextHolder(1).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+
+                    poseStack.translate(0, -0.5, 0);
+                    renderSignText(tile, poseStack, bufferIn, signDown, textProperties, 1);
+                }
             }
             poseStack.popPose();
         }
-
     }
 
-    private void renderSign(SignPostBlockTile tile,
-                            PoseStack matrixStackIn, MultiBufferSource bufferIn,
-                            int combinedLightIn, int combinedOverlayIn, LOD lod,
-                            SignPostBlockTile.Sign sign, float relAngle,
-                            TextUtil.RenderProperties textProperties, int line) {
+    private void renderSignText(SignPostBlockTile tile,
+                                PoseStack matrixStackIn, MultiBufferSource bufferIn,
+                                SignPostBlockTile.Sign sign,
+                                TextUtil.RenderProperties textProperties, int line) {
 
+        matrixStackIn.pushPose();
         boolean left = sign.left();
         int o = left ? 1 : -1;
 
@@ -129,29 +121,64 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
         if (tile.isSlim()) matrixStackIn.translate(0, 0, -1 / 16f);
 
-        //sign block
-        matrixStackIn.pushPose();
 
-        if (!left) {
-            matrixStackIn.mulPose(RotHlpr.YN180);
-            matrixStackIn.translate(0, 0, -0.3125);
-        }
+        matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
+        matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-        matrixStackIn.scale(1, -1, -1);
-        Material material = ModMaterials.SIGN_POSTS_MATERIALS.get().get(sign.woodType());
-        VertexConsumer builder = material.buffer(bufferIn, RenderType::entitySolid);
-        signModel.render(matrixStackIn, builder, combinedLightIn, combinedOverlayIn);
-
+        TextUtil.renderLine(tile.getTextHolder(line).getRenderMessages(0, font), font,
+                -4, matrixStackIn, bufferIn, textProperties);
         matrixStackIn.popPose();
 
-        if (lod.isNear() && LOD.isOutOfFocus(relAngle, sign.yaw() + 90, 2)) {
+    }
 
-            matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
-            matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
-            TextUtil.renderLine(tile.getTextHolder(line).getRenderMessages(0, font), font,
-                    -4, matrixStackIn, bufferIn, textProperties);
+    public static void renderSigns(PoseStack poseStack, VertexConsumer builder, int combinedLightIn, int combinedOverlayIn,
+                                   SignPostBlockTile.Sign signUp, SignPostBlockTile.Sign signDown, boolean slim) {
 
+        boolean up = signUp.active();
+        boolean down = signDown.active();
+        //render signs
+        if (up || down) {
+            poseStack.pushPose();
+
+            if (down) {
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signDown, slim);
+            }
+
+            if (up) {
+                poseStack.translate(0, 0.5, 0);
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signUp, slim);
+            }
+
+            poseStack.popPose();
         }
+    }
+
+    public static void renderSign(
+            PoseStack posestack, VertexConsumer builder,
+            int light, int overlay,
+            SignPostBlockTile.Sign sign, boolean slim) {
+        posestack.pushPose();
+
+        boolean left = sign.left();
+        posestack.translate(0.5, 0.5, 0.5);
+        posestack.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
+
+        if (slim) posestack.translate(0, 0, -1 / 16f);
+
+        //sign block
+        if (!left) {
+            posestack.mulPose(RotHlpr.YN180);
+            posestack.translate(0, 0, -0.3125);
+        }
+        posestack.translate(-0.5, -0.5, -0.25);
+        renderer.renderModel(posestack.last(),
+                builder,
+                null,
+                MODELS.get(sign.woodType()),
+                1.0F, 1.0F, 1.0F,
+                light, overlay);
+
+        posestack.popPose();
     }
 }
