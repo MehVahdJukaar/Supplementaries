@@ -582,5 +582,6 @@
   "item.supplementaries.sign_post_pine_lotr": "Pine Sign Post",
   "item.supplementaries.sign_post_rotten_lotr": "Rotten Sign Post",
   "item.supplementaries.sign_post_runewood": "Runewood Sign Post",
-  "item.supplementaries.sign_post_archwood": "Archwood Sign Post"
+  "item.supplementaries.sign_post_archwood": "Archwood Sign Post",
+  "block.supplementaries.gunpowder": "Gunpowder"
 }
