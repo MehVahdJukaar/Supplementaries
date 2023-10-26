@@ -52,7 +52,7 @@ body:
     id: moonlight-version
     attributes:
       label: Moonlight Lib Version
-      description: The current version of EveryCompat
+      description: The current version of Moonlight lib
       placeholder: ex. moonlight-1.20-2.8.46
     validations:
       required: false
