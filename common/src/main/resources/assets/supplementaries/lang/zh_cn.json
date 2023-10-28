@@ -392,6 +392,7 @@
   "block.supplementaries.ceiling_banner_red": "红色旗帜",
   "block.supplementaries.ceiling_banner_white": "白色旗帜",
   "block.supplementaries.ceiling_banner_yellow": "黄色旗帜",
+  "block.supplementaries.gunpowder": "火药",
 
   "item.supplementaries.pancake_disc": "煎饼",
 
@@ -437,6 +438,7 @@
   "message.supplementaries.compass": "X：%d，Z：%d",
   "item.supplementaries.slice_map": "切面地图",
   "filled_map.sliced.tooltip": "切面高度：%d",
+  "message.supplementaries.death_marker": "上一次死亡",
 
   "supplementaries.display_source.item_name": "物品名称",
   "supplementaries.display_source.world_position": "位置",
