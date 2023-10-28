@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.client;
 
 import net.mehvahdjukaar.moonlight.api.map.client.MapDecorationClientManager;
-import net.mehvahdjukaar.moonlight.core.network.ClientBoundSyncCustomMapDecorationMessage;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;

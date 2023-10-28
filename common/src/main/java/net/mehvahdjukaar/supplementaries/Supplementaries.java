@@ -25,6 +25,8 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Stray;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,6 +47,10 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
+
+        //loads entity data accessors immediarely so hopefully they stay synced between client and server
+        var s = Stray.class;
+        var c = Skeleton.class;
 
         Credits.fetchFromServer();
 
@@ -96,6 +102,9 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
 
+    //villagers close eyelids sleep tight
+    //sleep tight particles
+    //snowy spirit bingerbread house
     //sled emissions skulk
 
 
@@ -107,15 +116,14 @@ public class Supplementaries {
     // cat loaf mod
     //dispenser brick use same texture
 
+//cheap map recie and altimeter stuff
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile
-    // heartstone m
-    //fix timber frames placement
     //async setup stuff
 
     //HH cookies in sacks
-    //use mixin extras
+    //farmland smarter farmers rich soil
 //item frame opt mod
     //endrman teleport shader animation
     //villsger psrticle when inv is full

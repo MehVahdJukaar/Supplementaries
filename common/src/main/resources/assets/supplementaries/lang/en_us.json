@@ -392,6 +392,7 @@
   "block.supplementaries.ceiling_banner_red": "Red Banner",
   "block.supplementaries.ceiling_banner_white": "White Banner",
   "block.supplementaries.ceiling_banner_yellow": "Yellow Banner",
+  "block.supplementaries.gunpowder": "Gunpowder",
 
   "item.supplementaries.pancake_disc": "Pancake",
 
@@ -437,6 +438,7 @@
   "message.supplementaries.compass": "X: %d, Z: %d",
   "item.supplementaries.slice_map": "Slice Map",
   "filled_map.sliced.tooltip": "Slice: %d",
+  "message.supplementaries.death_marker": "Last Death",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",

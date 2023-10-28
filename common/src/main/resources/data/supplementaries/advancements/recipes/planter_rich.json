@@ -1,0 +1,62 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:planter_rich"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:planter_rich"
+      }
+    },
+    "has_rich_soil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "farmersdelight:rich_soil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_brick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:brick"
+            ]
+          }
+        ]
+      }
+    },
+    "has_bone_meal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:bone_meal"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_rich_soil",
+      "has_bone_meal",
+      "has_the_recipe",
+      "has_rich_soil",
+      "has_brick",
+      "has_bone_meal"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

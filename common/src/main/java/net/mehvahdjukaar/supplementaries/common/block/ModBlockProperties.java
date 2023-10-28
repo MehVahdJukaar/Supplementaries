@@ -7,12 +7,8 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.StringRepresentable;
@@ -20,8 +16,6 @@ import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
@@ -85,6 +79,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
     public static final ModelDataKey<Float> FILL_LEVEL = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
+    public static final ModelDataKey<BookPileBlockTile.BooksList> BOOKS_KEY = new ModelDataKey<>(BookPileBlockTile.BooksList.class);
 
 
     public enum PostType implements StringRepresentable {

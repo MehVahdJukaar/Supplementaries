@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:flower_box"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:flower_box"
+      }
+    },
+    "has_dirt": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:dirt"
+            ]
+          }
+        ]
+      }
+    },
+    "minecraft:wooden_slabs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wooden_slabs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dirt",
+      "has_the_recipe",
+      "has_dirt",
+      "minecraft:wooden_slabs"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

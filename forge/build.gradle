@@ -128,6 +128,7 @@ repositories {
 dependencies {
     forge "net.neoforged:forge:${minecraft_version}-${neo_version}"
     //forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    //forge "net.neoforged:forge:${minecraft_version}-${neo_version}"
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
@@ -141,7 +142,6 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-forge:${rootProject.moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4656567")
     modCompileOnly("curse.maven:farmers-delight-398521:4679319")
-    modImplementation("einstein.jmc:JustMoreCakes:forge-1.20-1.12.1")
     modImplementation("curse.maven:modernfix-790626:4599348")
 
     modCompileOnly("curse.maven:jei-238222:3928388")
@@ -169,20 +169,22 @@ dependencies {
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941638")
-    modCompileOnly("curse.maven:map-atlases-forge-519759:3949437")
+    modCompileOnly("curse.maven:map-atlases-forge-519759:4777281")
     modImplementation("curse.maven:create-328085:4626108")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")
     modImplementation("curse.maven:terrablender-563928:4590487")
     modCompileOnly("curse.maven:tetra-289712:4414851")
     modCompileOnly("curse.maven:mutil-351914:3941314")
-    modCompileOnly("curse.maven:breezy-690628:4055467")
+    modCompileOnly("curse.maven:breezy-690628:4788101")
     modCompileOnly("curse.maven:geckolib-388172:4064451")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
-   
+
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
+    modImplementation("curse.maven:alexs-caves-924854:4806837")
+    modImplementation("curse.maven:citadel-331936:4786380")
 
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))

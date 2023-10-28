@@ -34,6 +34,7 @@ import java.util.UUID;
 public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwnerProtected, IKeyLockable {
 
     //max length a item name can have
+    @Nullable
     private String password = null;
     private String ownerName = null;
     private UUID owner = null;
@@ -146,6 +147,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             if (owner != null) {
                 var p = level.getPlayerByUUID(owner);
                 if (p != null) this.ownerName = p.getName().getString();
+                this.owner = owner;
             }
             this.setChanged();
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);

@@ -46,9 +46,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);

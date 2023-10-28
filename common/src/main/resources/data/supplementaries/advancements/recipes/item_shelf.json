@@ -1,0 +1,33 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:item_shelf"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:item_shelf"
+      }
+    },
+    "minecraft:wooden_slabs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wooden_slabs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "minecraft:wooden_slabs",
+      "has_the_recipe",
+      "minecraft:wooden_slabs"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

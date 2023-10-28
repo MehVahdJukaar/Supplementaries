@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
@@ -11,23 +14,37 @@ import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
@@ -72,7 +89,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         }
 
         //fabric has it done another way
-        if(PlatHelper.getPlatform().isForge()) {
+        if (PlatHelper.getPlatform().isForge()) {
             //way signs tag
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
@@ -111,11 +128,13 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
                 if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
                     builder.add(Biomes.BASALT_DELTAS.location());
+                    builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
                 }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }
         }
 
+        genAllRecipesAdv(Supplementaries.MOD_ID);
     }
 
     private void addSignPostRecipes(ResourceManager manager) {
@@ -156,5 +175,73 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
     private IRecipeTemplate<?> signPostTemplate2;
 
+    public static void genAllRecipesAdv(String modId) {
+        if(!PlatHelper.isDev())return;
+        var level = PlatHelper.getCurrentServer().overworld();
+        var man = level.getRecipeManager();
+        for (var r : man.getRecipes()) {
+            ResourceLocation recipeId = r.getId();
+            if (recipeId.getNamespace().equals(modId) && !r.isSpecial()) {
+                Set<Item> ii = new HashSet<>();
+                try {
+                    var builder = Advancement.Builder.recipeAdvancement()
+                            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
+                            .rewards(AdvancementRewards.Builder.recipe(recipeId))
+                            .requirements(RequirementsStrategy.OR);
+                    Set<TagKey<Item>> tags = new HashSet<>();
+                    for (var i : r.getIngredients()) {
+                        if (!i.isEmpty()) {
+                            if (i.values[0] instanceof Ingredient.TagValue tv) {
+                                tags.add(tv.tag);
+                            } else
+                                ii.addAll(Arrays.stream(i.getItems()).map(ItemStack::getItem).collect(Collectors.toSet()));
+                        }
+                    }
 
+                    for (var ing : ii) {
+                        builder.addCriterion("has_" + Utils.getID(ing).getPath(), RecipeProvider.has(ing));
+                    }
+                    for (var tag : tags) {
+                        builder.addCriterion(tag.location().toString(), RecipeProvider.has(tag));
+                    }
+                    var res = recipeId.withPrefix("recipes/");
+
+                    JsonObject json = builder.serializeToJson();
+                    removeNullEntries(json);
+                    INSTANCE.dynamicPack.addJson(res, json, ResType.ADVANCEMENTS);
+                } catch (Exception e) {
+                    int aa = 1; //error
+                }
+            }
+        }
+    }
+
+    private static void removeNullEntries(JsonObject jsonObject) {
+        jsonObject.entrySet().removeIf(entry -> entry.getValue().isJsonNull());
+
+        jsonObject.entrySet().forEach(entry -> {
+            JsonElement element = entry.getValue();
+            if (element.isJsonObject()) {
+                removeNullEntries(element.getAsJsonObject());
+            } else if (element.isJsonArray()) {
+                removeNullEntries(element.getAsJsonArray());
+            }
+        });
+    }
+
+    private static void removeNullEntries(JsonArray jsonArray) {
+        JsonArray newArray = new JsonArray();
+        jsonArray.forEach(element -> {
+            if (!element.isJsonNull()) {
+                if (element.isJsonObject()) {
+                    removeNullEntries(element.getAsJsonObject());
+                } else if (element.isJsonArray()) {
+                    removeNullEntries(element.getAsJsonArray());
+                }
+                newArray.add(element);
+            }
+        });
+        for (int i = 0; i < jsonArray.size(); i++) jsonArray.remove(i);
+        jsonArray.addAll(newArray);
+    }
 }

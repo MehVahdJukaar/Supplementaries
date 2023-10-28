@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:feather_block"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:feather_block"
+      }
+    },
+    "has_feather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:feather"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_feather",
+      "has_the_recipe",
+      "has_feather"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

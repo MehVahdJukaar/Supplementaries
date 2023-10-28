@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.GlobeBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;

@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:present"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:present"
+      }
+    },
+    "has_paper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:paper"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paper",
+      "has_the_recipe",
+      "has_paper"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

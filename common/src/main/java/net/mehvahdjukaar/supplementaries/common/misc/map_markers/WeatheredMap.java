@@ -7,7 +7,7 @@ import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.minecraft.ChatFormatting;
@@ -37,26 +37,35 @@ public class WeatheredMap {
 
     private static final String ANTIQUE_KEY = "antique";
 
-    private static final CustomMapData.Type<WeatheredMapData> ANTIQUE_DATA_KEY = MapDecorationRegistry.registerCustomMapSavedData(
+    private static final CustomMapData.Type<WeatheredMapData> ANTIQUE_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
             Supplementaries.res(ANTIQUE_KEY), WeatheredMapData::new
     );
 
     public static void init() {
     }
 
-    private static class WeatheredMapData implements CustomMapData {
+    private static class WeatheredMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
         private boolean antique = false;
 
-        public WeatheredMapData(){}
-        public WeatheredMapData(CompoundTag tag) {
+        public void load(CompoundTag tag) {
             if (tag.contains(ANTIQUE_KEY)) {
                 antique = tag.getBoolean(ANTIQUE_KEY);
             }
         }
 
         @Override
+        public void loadUpdateTag(CompoundTag tag) {
+            load(tag);
+        }
+
+        @Override
         public void save(CompoundTag tag) {
             if (antique) tag.putBoolean(ANTIQUE_KEY, true);
+        }
+
+        @Override
+        public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
+            save(tag);
         }
 
         @Override
@@ -70,6 +79,11 @@ public class WeatheredMap {
                 return Component.translatable("filled_map.antique.tooltip").withStyle(ChatFormatting.GRAY);
             }
             return null;
+        }
+
+        @Override
+        public SimpleDirtyCounter createDirtyCounter() {
+            return new SimpleDirtyCounter();
         }
 
         @Override
@@ -91,29 +105,29 @@ public class WeatheredMap {
             int mapZ = data.centerZ;
             int playerX = Mth.floor(entity.getX() - mapX) / scale + 64;
             int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
-            int centerY = 128 / scale;
+            int range = 128 / scale;
             if (hasDepthLock) {
-                centerY = (int) (centerY * SliceMapItem.getRangeMultiplier());
+                range = (int) (range * SliceMapItem.getRangeMultiplier());
             }
             if (level.dimensionType().hasCeiling()) {
-                centerY /= 2;
+                range /= 2;
             }
 
             MapItemSavedData.HoldingPlayer player = data.getHoldingPlayer((Player) entity);
             ++player.step;
-            boolean flag = false;
+            boolean hasChangedAColorThisZ = false;
 
 
-            for (int pixelX = playerX - centerY + 1; pixelX < playerX + centerY; ++pixelX) {
-                if ((pixelX & 15) == (player.step & 15) || flag) {
-                    flag = false;
+            for (int pixelX = playerX - range + 1; pixelX < playerX + range; ++pixelX) {
+                if ((pixelX & 15) == (player.step & 15) || hasChangedAColorThisZ) {
+                    hasChangedAColorThisZ = false;
                     double somethingY = 0.0D;
 
-                    for (int pixelZ = playerZ - centerY - 1; pixelZ < playerZ + centerY; ++pixelZ) {
+                    for (int pixelZ = playerZ - range - 1; pixelZ < playerZ + range; ++pixelZ) {
                         if (pixelX >= 0 && pixelZ >= -1 && pixelX < 128 && pixelZ < 128) {
                             int offsetX = pixelX - playerX;
                             int offsetZ = pixelZ - playerZ;
-                            boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (centerY - 2) * (centerY - 2);
+                            boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (range - 2) * (range - 2);
                             int worldX = (mapX / scale + pixelX - 64) * scale;
                             int worldZ = (mapZ / scale + pixelZ - 64) * scale;
                             Multiset<MapColor> multiset = LinkedHashMultiset.create();
@@ -254,8 +268,8 @@ public class WeatheredMap {
                                 somethingY = maxY;
 
 
-                                if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < centerY * centerY && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
-                                    flag |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
+                                if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < range * range && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
+                                    hasChangedAColorThisZ |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
                                 }
                             }
                         }
@@ -325,9 +339,9 @@ public class WeatheredMap {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
             MapItemSavedData newData = data.copy();
-            WeatheredMapData instance = ANTIQUE_DATA_KEY.getOrCreate(newData, WeatheredMapData::new);
+            WeatheredMapData instance = ANTIQUE_DATA_KEY.get(newData);
             instance.set(on);
-
+            instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
             int mapId = level.getFreeMapId();
             String mapKey = MapItem.makeKey(mapId);
 

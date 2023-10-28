@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -159,6 +158,8 @@ public class ClientConfigs {
         public static final Supplier<Integer> TOOLTIP_IMAGE_SIZE;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
+        public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Double> BRIGHTEN_SIGN_TEXT_COLOR;
 
 
@@ -176,7 +177,8 @@ public class ClientConfigs {
                     .define("clock_right_click", true);
             COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
                     .define("compass_right_click", false);
-            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books")
+            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
+                            "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
             BOOK_COLORS = builder.comment("Placeable books random colors")
                     .defineObjectList("placeable_books_random_colors", () -> BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);
@@ -194,6 +196,11 @@ public class ClientConfigs {
                     .define("send_chat_on_death", true);
             BRIGHTEN_SIGN_TEXT_COLOR = builder.comment("A scalar multiplier that will be applied to sign text making it brighter, supposedly more legible")
                     .define("sign_text_color_multiplier", 1.2f, 0, 5);
+            COLORED_MAPS = builder
+                    .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
+                    .define("tinted_blocks_on_maps", true);
+            TALL_GRASS_COLOR_CHANGE = builder.comment("Colors tall grass same color as grass")
+                    .define("tall_grass_color", true);
             builder.pop();
         }
     }

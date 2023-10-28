@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 

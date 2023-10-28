@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VillagerScareStuff;
+import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -164,16 +165,21 @@ public class ServerEventsForge {
     //TODO: add these on fabric
     //forge only
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onProjectileImpact(final ProjectileImpactEvent event) {
-        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
-    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START) {
-            CandyItem.checkSweetTooth(event.player);
+        if (event.phase == TickEvent.Phase.START) {
+            if (event.side == LogicalSide.SERVER) {
+                ServerEvents.serverPlayerTick(event.player);
+            }else{
+                ServerEvents.clientPlayerTick(event.player);
+            }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onProjectileImpact(final ProjectileImpactEvent event) {
+        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
     }
 
     @SubscribeEvent

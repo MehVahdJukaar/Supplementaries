@@ -34,7 +34,6 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
 
     public JarredRenderer(EntityRendererProvider.Context context) {
         super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)), 0);
-
         this.shadowStrength = 0;
         this.shadowRadius = 0;
         this.addLayer(new PlayerItemInHandLayer<>(this, context.getItemInHandRenderer()));
@@ -50,6 +49,7 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
 
     protected float axisFacing = 0;
     protected boolean wasCrouching = false;
+
 
     @Override
     public ResourceLocation getTextureLocation(AbstractClientPlayer player) {

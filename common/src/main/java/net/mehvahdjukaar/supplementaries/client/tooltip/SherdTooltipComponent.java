@@ -8,9 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 
 public class SherdTooltipComponent implements ClientTooltipComponent {
 
@@ -33,10 +32,14 @@ public class SherdTooltipComponent implements ClientTooltipComponent {
 
     @Override
     public void renderImage(Font pFont, int x, int y, GuiGraphics graphics) {
-        TextureAtlasSprite sprite = Sheets.getDecoratedPotMaterial(pattern).sprite();
-        var contents = sprite.contents();
-        int width = contents.width();
-        int height = contents.height();
-        RenderUtil.blitSpriteSection(graphics, x, y, size, size, 2 * (16f / width), 2 * (16f / height), (int) (12 * (16f / width)), (int) (12 * (16f / width)), sprite);
+        Material decoratedPotMaterial = Sheets.getDecoratedPotMaterial(pattern);
+        if (decoratedPotMaterial != null) {
+            TextureAtlasSprite sprite = decoratedPotMaterial.sprite();
+            //else error
+            var contents = sprite.contents();
+            int width = contents.width();
+            int height = contents.height();
+            RenderUtil.blitSpriteSection(graphics, x, y, size, size, 2 * (16f / width), 2 * (16f / height), (int) (12 * (16f / width)), (int) (12 * (16f / width)), sprite);
+        }
     }
 }

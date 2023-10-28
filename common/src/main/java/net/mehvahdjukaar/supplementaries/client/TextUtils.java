@@ -1,19 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.Style;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.entity.SignText;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;

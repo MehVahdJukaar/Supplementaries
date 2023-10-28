@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;

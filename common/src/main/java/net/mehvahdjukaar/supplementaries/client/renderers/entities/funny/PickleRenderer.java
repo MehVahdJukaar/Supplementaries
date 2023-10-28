@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.model.HumanoidModel;
@@ -178,7 +177,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         float f = player.getSwimAmount(partialTicks);
         if (player.isFallFlying()) {
             super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
-            float f1 = (float) player.getFallFlyingTicks() + partialTicks;
+            float f1 = player.getFallFlyingTicks() + partialTicks;
             float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
                 matrixStack.mulPose(Axis.XP.rotationDegrees(inclination * (-90.0F - player.getXRot())));

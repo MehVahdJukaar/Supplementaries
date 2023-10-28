@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.PearlMarkerRe
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverlayRenderer;
@@ -24,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
@@ -37,7 +39,9 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -59,7 +63,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class ClientRegistry {
 
@@ -68,13 +76,13 @@ public class ClientRegistry {
 
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
-    public static final ModelLayerLocation BOOK_MODEL = loc("book");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
     public static final ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static final ModelLayerLocation SIGN_POST_MODEL = loc("sign_post");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
+    public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
 
     //special models locations
@@ -88,6 +96,14 @@ public class ClientRegistry {
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
+
+    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_MODELS = Util.make(() -> {
+        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
+        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
+            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
+        }
+        return map;
+    });
 
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping(
             "supplementaries.keybind.quiver",
@@ -137,6 +153,10 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.BOOK_PILE_H.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.GLOBE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.GLOBE_SEPIA.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
@@ -220,6 +240,7 @@ public class ClientRegistry {
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
     }
+
 
     private static class GlobeProperty implements ClampedItemPropertyFunction {
 
@@ -339,12 +360,14 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
+        BOOK_MODELS.values().forEach(event::register);
         FlowerBoxModelsManager.regisperSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
+
         //not needed on forge
         if (PlatHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);
@@ -364,6 +387,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
+        event.register(Supplementaries.res("book_pile"), BookPileModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }
 
@@ -408,13 +432,13 @@ public class ClientRegistry {
     @EventCalled
     private static void registerModelLayers(ClientHelper.ModelLayerEvent event) {
         event.register(BELLOWS_MODEL, BellowsBlockTileRenderer::createMesh);
-        event.register(BOOK_MODEL, BookPileBlockTileRenderer::createMesh);
         event.register(CLOCK_HANDS_MODEL, ClockBlockTileRenderer::createMesh);
         event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.register(SIGN_POST_MODEL, SignPostBlockTileRenderer::createMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
+        event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
     }
 
@@ -457,4 +481,7 @@ public class ClientRegistry {
  */
 
 
+    public static LevelLightEngine getLightEngine() {
+        return Minecraft.getInstance().level.getLightEngine();
+    }
 }

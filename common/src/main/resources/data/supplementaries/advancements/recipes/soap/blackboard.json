@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:soap/blackboard"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:soap/blackboard"
+      }
+    },
+    "has_blackboard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:blackboard"
+            ]
+          }
+        ]
+      }
+    },
+    "has_soap": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:soap"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blackboard",
+      "has_the_recipe",
+      "has_blackboard",
+      "has_soap"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

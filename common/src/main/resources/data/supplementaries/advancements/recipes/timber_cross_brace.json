@@ -1,0 +1,33 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:timber_cross_brace"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:timber_cross_brace"
+      }
+    },
+    "forge:rods/wooden": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:rods/wooden"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "forge:rods/wooden",
+      "has_the_recipe",
+      "forge:rods/wooden"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

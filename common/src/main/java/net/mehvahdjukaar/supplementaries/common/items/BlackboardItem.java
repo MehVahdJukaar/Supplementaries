@@ -14,8 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -2,7 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.client.util.*;
+import net.mehvahdjukaar.moonlight.api.client.util.LOD;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -136,7 +140,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             poseStack.translate(0, 0.5, 0.008);
 
             if (MiscUtils.FESTIVITY.isAprilsFool()) {
-                float d0 = ColorUtil.getShading(dir.step());
+                float d0 = ColorUtils.getShading(dir.step());
                 TextUtils.renderBeeMovie(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;
@@ -144,7 +148,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
             if (bookName.equals("credits")) {
-                float d0 = ColorUtil.getShading(dir.step());
+                float d0 = ColorUtils.getShading(dir.step());
                 TextUtils.renderCredits(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;

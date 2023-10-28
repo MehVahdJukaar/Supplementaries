@@ -2,29 +2,29 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
-import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
-import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.*;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSetup;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -46,12 +46,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 
@@ -142,6 +140,12 @@ public class ServerEvents {
         if(!client) {
             ModDamageSources.reload(registryAccess);
             WaySignStructure.recomputeValidStructureCache(registryAccess);
+
+            try {
+                SoftFluidRegistry.getRegistry(registryAccess).get(SoftFluidRegistry.EMPTY_ID);
+            }catch (Exception e){
+                throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
+            }
         }
     }
 
@@ -162,6 +166,18 @@ public class ServerEvents {
         if (entity.getType() == EntityType.EVOKER) {
             ((Evoker) entity).goalSelector.addGoal(6,
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
+        }
+    }
+
+    @EventCalled
+    public static void serverPlayerTick(Player player) {
+        CandyItem.checkSweetTooth(player);
+    }
+
+    @EventCalled
+    public static void clientPlayerTick(Player player) {
+        if(player instanceof IQuiverEntity){
+
         }
     }
 
@@ -215,5 +231,6 @@ public class ServerEvents {
         }
         return false;
     }
+
 
 }

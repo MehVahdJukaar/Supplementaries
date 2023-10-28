@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeBookHack;
 import net.minecraft.network.protocol.game.ClientboundPlaceGhostRecipePacket;
 import net.minecraft.recipebook.ServerPlaceRecipe;

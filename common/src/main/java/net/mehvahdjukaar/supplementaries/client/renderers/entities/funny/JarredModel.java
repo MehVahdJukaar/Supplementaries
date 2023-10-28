@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -56,6 +55,8 @@ public class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
                         .texOffs(40, 16).addBox(-2.0F, 0.0F, -0.5F, 4.0F, 1.0F, 3.0F, false)
                         .texOffs(40, 20).addBox(-1.0F, 1.0F, 0.5F, 2.0F, 1.0F, 2.0F, false)
                 , PartPose.offset(0.0F, 5.0F, 0.0F));
+
+
 
         head.addOrReplaceChild("left_eye", CubeListBuilder.create()
                         .texOffs(30, 6)

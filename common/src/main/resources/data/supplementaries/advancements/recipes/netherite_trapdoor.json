@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:netherite_trapdoor"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:netherite_trapdoor"
+      }
+    },
+    "has_gold_trapdoor": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:gold_trapdoor"
+            ]
+          }
+        ]
+      }
+    },
+    "has_netherite_scrap": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:netherite_scrap"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gold_trapdoor",
+      "has_the_recipe",
+      "has_gold_trapdoor",
+      "has_netherite_scrap"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

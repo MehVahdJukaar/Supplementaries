@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
-import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;

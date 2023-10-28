@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:acacia_leaves","required":false},
+    {"id":"minecraft:vines","required":false},
+    {"id":"minecraft:dark_oak_leaves","required":false},
+    {"id":"minecraft:oak_leaves","required":false}
+  ]
+}

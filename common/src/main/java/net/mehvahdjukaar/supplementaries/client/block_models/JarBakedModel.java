@@ -5,8 +5,6 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +24,7 @@ import java.util.List;
 
 public class JarBakedModel implements CustomBakedModel {
 
-    private static final boolean SINGLE_PASS =  PlatHelper.getPlatform().isFabric();
+    private static final boolean SINGLE_PASS = true;//  PlatHelper.getPlatform().isFabric();
 
     //hacky
     private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8/16f, 12/16f, 1/16f);

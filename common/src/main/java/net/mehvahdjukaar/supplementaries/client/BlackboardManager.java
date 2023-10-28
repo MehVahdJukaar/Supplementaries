@@ -4,10 +4,8 @@ package net.mehvahdjukaar.supplementaries.client;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -21,9 +19,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -127,8 +125,8 @@ public class BlackboardManager {
         //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
 
         private void initializeTexture() {
+            //no need for mipmap, we use block sheet
             this.texture = new DynamicTexture(WIDTH, WIDTH, false);
-
             for (int y = 0; y < pixels.length && y < WIDTH; y++) {
                 for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
                     this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));

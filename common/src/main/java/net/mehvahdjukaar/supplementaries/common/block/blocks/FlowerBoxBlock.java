@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.client.block_models.FlowerBoxBakedModel;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

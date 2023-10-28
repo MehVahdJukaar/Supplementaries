@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:flax_block"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:flax_block"
+      }
+    },
+    "has_flax": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:flax"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_flax",
+      "has_the_recipe",
+      "has_flax"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

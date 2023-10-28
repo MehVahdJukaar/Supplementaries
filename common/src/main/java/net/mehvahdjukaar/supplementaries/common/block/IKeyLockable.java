@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.Nullable;
 
 public interface IKeyLockable {
@@ -33,7 +32,8 @@ public interface IKeyLockable {
 
 
     default boolean shouldShowPassword() {
-        return this.getPassword().length() <= MAX_ITEM_NAME_LEN;
+        String password = this.getPassword();
+        return password != null && password.length() <= MAX_ITEM_NAME_LEN;
     }
 
     default void onKeyAssigned(Level level, BlockPos pos, Player player, String newKey) {

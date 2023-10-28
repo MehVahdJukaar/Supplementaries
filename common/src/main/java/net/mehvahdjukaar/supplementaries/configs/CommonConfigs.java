@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
@@ -16,12 +17,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +59,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
-    private static Predicate<Block> xpBottlingOverride = b->b instanceof EnchantmentTableBlock;;
+    private static Predicate<Block> xpBottlingOverride = EnchantmentTableBlock.class::isInstance;;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -72,10 +74,9 @@ public class CommonConfigs {
 
 
         String xp = Tweaks.BOTTLING_TARGET.get();
-        if(xp.isEmpty()) xpBottlingOverride = b->b instanceof EnchantmentTableBlock;
-        else xpBottlingOverride = b -> b == Suppliers.memoize(() -> {
-            return BuiltInRegistries.BLOCK.get(new ResourceLocation(xp));
-        });
+        if (xp.isEmpty()) xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
+        else xpBottlingOverride = b -> b == Suppliers.memoize(() ->
+                BuiltInRegistries.BLOCK.get(new ResourceLocation(xp)));
 
         stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
     }
@@ -109,6 +110,23 @@ public class CommonConfigs {
         MAIN_HAND, OFF_HAND, BOTH, NONE
     }
 
+    public enum DeathMarkerMode {
+        OFF, WITH_COMPASS, ALWAYS;
+
+        public boolean isOn(Player player) {
+            return switch (this) {
+                case OFF -> false;
+                case ALWAYS -> true;
+                case WITH_COMPASS -> {
+                    if (CompatHandler.MAPATLAS && MapAtlasCompat.canPlayerSeeDeathMarker(player)) {
+                        yield true;
+                    }
+                    yield player.getInventory().hasAnyMatching(i -> i.is(Items.RECOVERY_COMPASS));
+                }
+            };
+        }
+    }
+
 
     public static class Redstone {
 
@@ -124,6 +142,8 @@ public class CommonConfigs {
             SPEAKER_BLOCK_ENABLED = feature(builder);
             SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
                     .define("narrator_enabled", true);
+            MAX_TEXT = builder.comment("Max text")
+                    .define("max_text", 32, 0, 10000);
             SPEAKER_RANGE = builder.comment("Maximum block range")
                     .define("range", 64, 0, 100000000);
             builder.pop();
@@ -214,6 +234,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
         public static final Supplier<Integer> SPEAKER_RANGE;
+        public static final Supplier<Integer> MAX_TEXT;
         public static final Supplier<Boolean> SPEAKER_NARRATOR;
 
         public static final Supplier<Boolean> BELLOWS_ENABLED;
@@ -393,12 +414,6 @@ public class CommonConfigs {
             ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
-            builder.push("slice_map");
-            SLICE_MAP_ENABLED = feature(builder);
-            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
-                    .define("range_multiplier", 0.25, 0, 1);
-            builder.pop();
-
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -526,8 +541,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> DEPTH_METER_ENABLED;
 
-        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
-        public static final Supplier<Double> SLICE_MAP_RANGE;
 
     }
 
@@ -809,13 +822,19 @@ public class CommonConfigs {
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
             SLINGSHOT_POTIONS = builder.comment("Allows splash potions to be thrown by slingshots")
-                            .define("allow_splash_potions", false);
+                    .define("allow_splash_potions", false);
             SLINGSHOT_BOMBS = builder.comment("Allows bombs to be thrown by slingshots")
                     .define("allow_bombs", false);
             SLINGSHOT_FIRECHARGE = builder.comment("Allows fire charges to be thrown by slingshots")
                     .define("allow_fire_charges", false);
             SLINGSHOT_SNOWBALL = builder.comment("Allows snowballs to be thrown by slingshots")
                     .define("allow_snowballs", false);
+            builder.pop();
+
+            builder.push("slice_map");
+            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
+                    .define("range_multiplier", 0.25, 0, 1);
             builder.pop();
 
             builder.push("antique_ink");
@@ -877,6 +896,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> STASIS_ENABLED;
 
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
     }
 
 
@@ -945,7 +966,6 @@ public class CommonConfigs {
                     .define("cost", 2, 0, 20);
             BOTTLING_TARGET = builder.comment("Block that should be clicked on for bottling to work. Leave blank for enchanting table. You can put another block here from another mod if you find it more fitting")
                     .define("target_block", "");
-
             builder.pop();
 
             builder.push("map_tweaks");
@@ -954,6 +974,8 @@ public class CommonConfigs {
                     .define("random_adventurer_maps", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
+            DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
+                    .define("death_marker", DeathMarkerMode.WITH_COMPASS);
             if (PlatHelper.getPlatform().isForge()) {
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
@@ -972,6 +994,8 @@ public class CommonConfigs {
                 QUILL_TRADE_PRICE_MULT = () -> 1d;
                 QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
+            TINTED_MAP = builder.comment("Makes blocks tagged as 'tinted_on_map' use their tint color. This allows for accurate biome colors for water and grass as well as other custom block that use any tint")
+                    .define("tinted_blocks_on_maps", true);
             builder.pop();
 
             builder.push("placeable_books");
@@ -1029,11 +1053,13 @@ public class CommonConfigs {
         public static final Supplier<String> BOTTLING_TARGET;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
         public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
         public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
+        public static final Supplier<Boolean> TINTED_MAP;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
         public static final Supplier<Boolean> WRITTEN_BOOKS;
         public static final Supplier<Double> BOOK_POWER;

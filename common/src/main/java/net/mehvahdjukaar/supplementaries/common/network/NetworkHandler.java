@@ -77,11 +77,8 @@ public class NetworkHandler {
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 OpenConfigsPacket.class, OpenConfigsPacket::new);
 
-        CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
-                PicklePacket.ServerBound.class, PicklePacket.ServerBound::new);
-
-        CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
-                PicklePacket.ClientBound.class, PicklePacket.ClientBound::new);
+        CHANNEL.register(NetworkDir.BOTH,
+                PicklePacket.class, PicklePacket::new);
 
         CHANNEL.register(NetworkDir.PLAY_TO_SERVER,
                 ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::new);

@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.item.FuelBlockItem;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
@@ -21,8 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public class TimberFrameItem extends FuelBlockItem {

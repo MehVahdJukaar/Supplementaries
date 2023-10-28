@@ -1,0 +1,69 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:pancake_fd"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:pancake_fd"
+      }
+    },
+    "has_sugar": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:sugar"
+            ]
+          }
+        ]
+      }
+    },
+    "forge:milk": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:milk"
+          }
+        ]
+      }
+    },
+    "forge:eggs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:eggs"
+          }
+        ]
+      }
+    },
+    "forge:dough": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:dough"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sugar",
+      "forge:eggs",
+      "has_the_recipe",
+      "has_sugar",
+      "forge:milk",
+      "forge:eggs",
+      "forge:dough"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

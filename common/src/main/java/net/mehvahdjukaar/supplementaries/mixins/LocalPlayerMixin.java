@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
@@ -48,30 +50,17 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
                     shift = At.Shift.BEFORE),
             require = 1)
-    private void cancelQuiverSlow(CallbackInfo ci) {
-        this.supplementaries$usingQuiver = true;
-    }
-
-    @Inject(method = "aiStep",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
-                    shift = At.Shift.AFTER),
-            require = 1)
-    private void reset(CallbackInfo ci) {
-        this.supplementaries$usingQuiver = false;
+    private void cancelQuiverSlow(CallbackInfo ci, @Share("usingQuiver") LocalBooleanRef usingQuiver) {
+        usingQuiver.set(true);
     }
 
     @Inject(method = "isUsingItem",
             at = @At("HEAD"), cancellable = true)
-    private void isUsingItem(CallbackInfoReturnable<Boolean> cir) {
-        if (supplementaries$usingQuiver && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
+    private void isUsingItem(CallbackInfoReturnable<Boolean> cir,@Share("usingQuiver") LocalBooleanRef usingQuiver) {
+        if (usingQuiver.get() && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
             cir.setReturnValue(false);
         }
     }
-
-    @Unique
-    private boolean supplementaries$usingQuiver = false;
-
     @Unique
     private ItemStack supplementaries$quiver = ItemStack.EMPTY;
 

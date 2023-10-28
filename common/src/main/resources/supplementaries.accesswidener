@@ -10,6 +10,8 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+accessible class net/minecraft/client/gui/MapRenderer$MapInstance
+
 #shulker menu
 accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/minecraft/world/Container;
 
@@ -82,6 +84,11 @@ accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/mi
 
 #flower pot fabric
 accessible field net/minecraft/world/level/block/FlowerPotBlock POTTED_BY_CONTENT Ljava/util/Map;
+
+#recipe stuff to remove
+accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
+accessible field net/minecraft/world/item/crafting/Ingredient values [Lnet/minecraft/world/item/crafting/Ingredient$Value;
+accessible field net/minecraft/world/item/crafting/Ingredient$TagValue tag Lnet/minecraft/tags/TagKey;
 
 #bomb stuff
 accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;

@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
+import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -124,7 +124,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
             if (entity.level() instanceof ServerLevel serverLevel) {
                 ItemStack itemstack = createMapOrQuill(serverLevel, entity.blockPosition(), null,
-                        2, null, "filled_map.adventure", 0x78151a);
+                       SEARCH_RADIUS,true, 2, null, "filled_map.adventure", 0x78151a);
 
                 int uses = CommonConfigs.Tweaks.QUILL_MAX_TRADES.get();
                 int x = 6;
@@ -139,11 +139,12 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
     }
 
     public static ItemStack createMapOrQuill(ServerLevel serverLevel, BlockPos pos, @Nullable HolderSet<Structure> targets,
+                                             int radius, boolean skipKnown,
                                              int zoom, @Nullable ResourceLocation mapMarker,
                                              @Nullable String name, int color) {
         if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
             var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
-                    SEARCH_RADIUS, true, zoom, null, name, color);
+                    radius, skipKnown, zoom, null, name, color);
             item.setHoverName(Component.translatable(name));
             return item;
         }
@@ -158,7 +159,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
         }
 
         var found = StructureLocator.findNearestRandomMapFeature(
-                serverLevel, targets, pos, SEARCH_RADIUS, true);
+                serverLevel, targets, pos, radius, skipKnown);
 
         if (found != null) {
             BlockPos toPos = found.getFirst();
@@ -176,7 +177,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
 
         //adds custom decoration
         if (decoration == null) {
-            var type = MapDecorationRegistry.getAssociatedType(structure);
+            var type = MapDataRegistry.getAssociatedType(structure);
             decoration = Utils.getID(type);
             if (color == 0) {
                 color = type.getDefaultMapColor();
@@ -202,7 +203,7 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
                     .getTag(destination).orElse(null);
 
             if (targets != null) {
-                return createMapOrQuill(serverLevel, pos, targets, 2, mapMarker, name, mapColor);
+                return createMapOrQuill(serverLevel, pos, targets, SEARCH_RADIUS, true,2, mapMarker, name, mapColor);
             }
         }
         return ItemStack.EMPTY;

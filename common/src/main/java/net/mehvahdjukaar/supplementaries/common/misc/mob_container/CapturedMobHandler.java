@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,8 +19,8 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

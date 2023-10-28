@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:deepslate_lamp"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:deepslate_lamp"
+      }
+    },
+    "has_shroomlight": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:shroomlight"
+            ]
+          }
+        ]
+      }
+    },
+    "has_deepslate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:deepslate"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shroomlight",
+      "has_the_recipe",
+      "has_shroomlight",
+      "has_deepslate"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

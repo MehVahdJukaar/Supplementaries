@@ -2,13 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.world.item.ItemDisplayContext;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -18,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.item.ItemDisplayContext;
 
 public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & ItemSupplier> extends EntityRenderer<T> {
     private final ItemRenderer itemRenderer;

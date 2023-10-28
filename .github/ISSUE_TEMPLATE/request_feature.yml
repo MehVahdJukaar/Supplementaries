@@ -1,0 +1,30 @@
+name: Request Feature
+description: Suggest an idea for this project
+labels: "enhancement"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        New Feature
+
+  - type: checkboxes
+    id: pre-checklist
+    attributes:
+      label: "Before continuing, do the following checklist:"
+      options:
+        - label: Read the list of features via [Home](https://github.com/MehVahdJukaar/Supplementaries/wiki)
+          required: true
+        - label: Confirm there is no existing feature that meets your ideal feature
+          required: true
+        - label: Confirm there is no existing submitted feature request in the issue
+          required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "A clear and concise description of your feature is"
+      value: "## Description:\n\n## Why should we implement the feature?"
+    validations:
+        required: true
+

@@ -1,10 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.moonlight.api.MoonlightRegistry;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
-import net.mehvahdjukaar.supplementaries.common.items.EndermanHeadItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -74,7 +70,7 @@ public class CompatObjects {
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T> Supplier<@Nullable T> makeCompatObject(String name, Registry<T> registry) {
+    private static <T> Supplier<@Nullable T>    makeCompatObject(String name, Registry<T> registry) {
         return Suppliers.memoize(() -> registry.getOptional(new ResourceLocation(name)).orElse(null));
     }
 

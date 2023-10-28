@@ -3,17 +3,15 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 

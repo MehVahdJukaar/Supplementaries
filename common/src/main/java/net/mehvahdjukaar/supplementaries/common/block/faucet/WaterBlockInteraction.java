@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;

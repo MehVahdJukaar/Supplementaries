@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:globe_sepia"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:globe_sepia"
+      }
+    },
+    "has_globe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:globe"
+            ]
+          }
+        ]
+      }
+    },
+    "has_antique_ink": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:antique_ink"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_globe",
+      "has_the_recipe",
+      "has_globe",
+      "has_antique_ink"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

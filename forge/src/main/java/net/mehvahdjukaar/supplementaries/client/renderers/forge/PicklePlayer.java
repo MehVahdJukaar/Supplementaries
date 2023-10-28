@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleR
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -40,30 +39,27 @@ public class PicklePlayer {
     //event doesn't fire for "/" anymore....
     //@SubscribeEvent
     public static boolean onChatEvent(String m) {
-        // String m = event.getOriginalMessage();
         UUID id = Minecraft.getInstance().player.getGameProfile().getId();
         if (m.startsWith("/jarman")) {
             jarvis = !jarvis;
-            // event.setCanceled(true);
             if (jarvis) {
                 Minecraft.getInstance().player.displayClientMessage(
                         Component.literal("I am Jarman"), true);
             }
             return true;
-        } else if (PickleData.isDev(id)) {
-            if (m.startsWith("/pickle")) {
-
-                //event.setCanceled(true);
+        }
+        boolean jar = m.startsWith("/jar");
+        if (PickleData.isDev(id, jar)) {
+            boolean pick = m.startsWith("/pickle");
+            if (pick || jar) {
                 boolean turnOn = !PickleData.isActive(id);
 
-                if (turnOn) {
+                if (turnOn && pick) {
                     Minecraft.getInstance().player.displayClientMessage(
                             Component.literal("I turned myself into a pickle!"), true);
                 }
-
-                PickleData.set(id, turnOn);
-                NetworkHandler.CHANNEL.sendToServer(new PicklePacket.ServerBound(id, turnOn));
-
+                PickleData.set(id, turnOn, jar);
+                NetworkHandler.CHANNEL.sendToServer(new PicklePacket(id, turnOn, jar));
                 return true;
             }
         }

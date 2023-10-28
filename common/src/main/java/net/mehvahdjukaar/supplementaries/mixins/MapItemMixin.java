@@ -11,8 +11,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.MapItem;
@@ -34,19 +36,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(MapItem.class)
-public class MapItemMixin {
+public abstract class MapItemMixin {
 
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z"))
     public boolean removeCeiling(boolean original, @Share("heightLock") LocalIntRef height) {
-        if (original && height.get() != Integer.MAX_VALUE) {
+        if (original && height.get() != Integer.MAX_VALUE && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
             return false;
         }
         return original;
     }
 
-    //TODO: replace with onUpdatecall override
+
     @Inject(method = "update", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z",
             shift = At.Shift.BEFORE,
@@ -55,11 +57,12 @@ public class MapItemMixin {
             cancellable = true)
     public void checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
                                 @Local(ordinal = 5) LocalIntRef range,
-                                @Share("customColorMap") LocalRef<Map<Vector2i, Multiset<Block>>> colorMap,
+                                @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
                                 @Share("heightLock") LocalIntRef height) {
         int mapHeight = SliceMapItem.getMapHeight(data);
         height.set(mapHeight);
-        colorMap.set(new HashMap<>());
+
+        colorMap.set(CommonConfigs.Tweaks.TINTED_MAP.get() ? new HashMap<>() : null);
         if (mapHeight != Integer.MAX_VALUE) {
             if (!SliceMapItem.canPlayerSee(mapHeight, viewer)) {
                 ci.cancel();
@@ -67,6 +70,7 @@ public class MapItemMixin {
             range.set((int) (range.get() * SliceMapItem.getRangeMultiplier()));
         }
     }
+
 
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",
@@ -77,6 +81,7 @@ public class MapItemMixin {
         return original;
     }
 
+
     @WrapOperation(method = "update", at = @At(
             value = "INVOKE",
             ordinal = 3,
@@ -84,16 +89,19 @@ public class MapItemMixin {
     public MapColor removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MapColor> operation,
                                                   @Local LevelChunk chunk,
                                                   @Local(ordinal = 14) int w,
-                                                  @Local BlockState state,
+                                                  @Local(ordinal = 0) BlockState state,
                                                   @Local(ordinal = 6) int k1,
                                                   @Local(ordinal = 7) int l1,
-                                                  @Share("customColorMap") LocalRef<Map<Vector2i, Multiset<Block>>> colorMap,
+                                                  @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
                                                   @Share("heightLock") LocalIntRef height) {
         if (height.get() != Integer.MAX_VALUE && height.get() <= w) {
             return SliceMapItem.getCutoffColor(pos, chunk);
         }
-        colorMap.get().computeIfAbsent(new Vector2i(k1, l1), p -> LinkedHashMultiset.create())
-                .add(state.getBlock());
+        if (colorMap.get() != null) {
+            colorMap.get().computeIfAbsent(new Vector2i(k1, l1), p -> Pair.of(pos, LinkedHashMultiset.create()))
+                    .getSecond()
+                    .add(state.getBlock());
+        }
 
         return operation.call(instance, level, pos);
     }
@@ -101,14 +109,19 @@ public class MapItemMixin {
     @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;updateColor(IIB)Z"
     ))
-    public boolean updateCustomColor(boolean original, int x, int z, byte color,
-                                     @Local MapItemSavedData data,
-                                     @Share("customColorMap") LocalRef<Map<Vector2i, Multiset<Block>>> colorMap) {
+    public boolean updateCustomColor(boolean original,
+                                     Level level, Entity viewer, MapItemSavedData data,
+                                     @Local(ordinal = 6) int x,
+                                     @Local(ordinal = 7) int z,
+                                     @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap) {
+        if (colorMap.get() == null) return original;
         var l = colorMap.get().get(new Vector2i(x, z));
         if (l != null) {
-            Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l), Blocks.AIR);
+            Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l.getSecond()), Blocks.AIR);
             var c = ColoredMapHandler.getColorData(data);
-            if(c != null) c.markColored(x, z, block);
+            if (c != null) {
+                c.markColored(x, z, block, level, l.getFirst(), data);
+            }
         }
 
         return original;

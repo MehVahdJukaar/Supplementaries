@@ -16,6 +16,7 @@
     "LevelRendererMixin",
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",
+    "MapTextureMixin",
     "MouseHandlerMixin",
     "PageButtonMixin",
     "ParrotLayerMixin",
@@ -25,6 +26,7 @@
     "SignRendererMixin",
     "UndeadHorseRenderMixin",
     "WrittenBookAccessMixin"
+
   ],
   "mixins": [
     "AbstractArrowMixin",
@@ -41,6 +43,8 @@
     "EndermanMixin",
     "EntityMixin",
     "EvokerMixin",
+    "ExplorationMapFunctionMixin",
+    "ExplorationMapSerializerMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
@@ -48,9 +52,9 @@
     "LivingEntityMixin",
     "LoomInputSlotMixin",
     "LoomMenuMixin",
+    "MapItemMixin",
     "MineshaftCorridorMixin",
     "MineshaftPiecesMixin",
-    "MapItemMixin",
     "PaintingItemMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",

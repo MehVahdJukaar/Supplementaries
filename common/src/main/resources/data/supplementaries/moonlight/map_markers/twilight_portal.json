@@ -1,0 +1,13 @@
+
+{
+  "global_conditions": [
+    {
+      "modid": "twilightforest",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "target_block": {
+    "block": "twilightforest:twilight_portal",
+    "predicate_type": "minecraft:block_match"
+  }
+}

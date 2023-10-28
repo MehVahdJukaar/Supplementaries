@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -33,7 +32,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.Nullable;
 
 public class BookPileBlock extends WaterBlock implements EntityBlock {
@@ -146,7 +144,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
     }
 
     @Override
