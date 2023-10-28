@@ -5,11 +5,23 @@
       "flag": "planter"
     },
     {
-      "type": "forge:not",
-      "value": {
-        "modid": "farmersdelight",
-        "type": "forge:mod_loaded"
-      }
+      "type": "forge:or",
+      "value": [
+        {
+          "type": "forge:not",
+          "value": {
+            "modid": "farmersdelight",
+            "type": "forge:mod_loaded"
+          }
+        },
+        {
+          "type": "forge:not",
+          "value": {
+            "flag": "rich_soil_planter",
+            "type": "supplementaries:flag"
+          }
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

@@ -11,7 +11,6 @@ public class NetworkHandler {
 
     public static void registerMessages() {
 
-
         CHANNEL.register(NetworkDir.PLAY_TO_CLIENT,
                 ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::new);
 

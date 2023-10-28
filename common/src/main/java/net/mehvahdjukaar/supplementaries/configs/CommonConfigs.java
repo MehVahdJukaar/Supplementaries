@@ -337,6 +337,8 @@ public class CommonConfigs {
             PLANTER_ENABLED = feature(builder);
             PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
                     .define("broken_by_sapling", true);
+            FD_PLANTER = builder.comment("When Farmers Delight is on planter will also act like rich soil and use it in its recipe")
+                            .define("rich_soil_planter", true);
             builder.pop();
 
             builder.push("notice_board");
@@ -469,6 +471,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> PLANTER_ENABLED;
         public static final Supplier<Boolean> PLANTER_BREAKS;
+        public static final Supplier<Boolean> FD_PLANTER;
 
         public static final Supplier<Boolean> SIGN_POST_ENABLED;
         public static final Supplier<Boolean> WAY_SIGN_DISTANCE_TEXT;

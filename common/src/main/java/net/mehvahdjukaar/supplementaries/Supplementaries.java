@@ -23,10 +23,12 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
+import net.mehvahdjukaar.supplementaries.mixins.StrayMixin;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Stray;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -102,7 +104,9 @@ public class Supplementaries {
 
 
     //yes this is where I write crap. deal with it XD
-    //sign post baked model
+    //damage numbers mod
+
+    //heartstone pets with system taht keeps track in unloaded chunks
 //sign post highlight text bug
     //villagers close eyelids sleep tight
     //sleep tight particles

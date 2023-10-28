@@ -5,6 +5,10 @@
       "flag": "planter"
     },
     {
+      "type": "supplementaries:flag",
+      "flag": "rich_soil_planter"
+    },
+    {
       "modid": "farmersdelight",
       "type": "forge:mod_loaded"
     }

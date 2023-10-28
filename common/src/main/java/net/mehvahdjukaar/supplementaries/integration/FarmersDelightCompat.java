@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 import com.google.common.base.Suppliers;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -80,7 +81,9 @@ public class FarmersDelightCompat {
         @Override
         public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
             //hax
-            richSoilDelegate.get().randomTick(worldIn, pos, rand);
+            if(CommonConfigs.Building.FD_PLANTER.get()) {
+                richSoilDelegate.get().randomTick(worldIn, pos, rand);
+            }
         }
     }
 
