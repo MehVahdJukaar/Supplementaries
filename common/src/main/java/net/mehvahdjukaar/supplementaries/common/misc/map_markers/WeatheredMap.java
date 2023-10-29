@@ -50,12 +50,14 @@ public class WeatheredMap {
         public void load(CompoundTag tag) {
             if (tag.contains(ANTIQUE_KEY)) {
                 antique = tag.getBoolean(ANTIQUE_KEY);
-            }
+            }else antique = false;
         }
 
         @Override
         public void loadUpdateTag(CompoundTag tag) {
-            load(tag);
+            if (tag.contains(ANTIQUE_KEY)) {
+                antique = tag.getBoolean(ANTIQUE_KEY);
+            }
         }
 
         @Override
@@ -65,7 +67,7 @@ public class WeatheredMap {
 
         @Override
         public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
-            save(tag);
+            tag.putBoolean(ANTIQUE_KEY, antique);
         }
 
         @Override

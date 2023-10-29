@@ -136,7 +136,9 @@ public class SliceMapItem extends EmptyMapItem {
 
         @Override
         public void loadUpdateTag(CompoundTag tag) {
-            load(tag);
+            if (tag.contains(DEPTH_LOCK_KEY)) {
+                this.height = tag.getInt(DEPTH_LOCK_KEY);
+            }
         }
 
         @Override
@@ -146,7 +148,7 @@ public class SliceMapItem extends EmptyMapItem {
 
         @Override
         public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
-            save(tag);
+            tag.putInt(DEPTH_LOCK_KEY, height);
         }
 
         @Override

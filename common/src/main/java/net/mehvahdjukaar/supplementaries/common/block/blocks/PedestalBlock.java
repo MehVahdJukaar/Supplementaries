@@ -168,7 +168,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     }
 
     public static DisplayStatus getStatus(LevelAccessor level, BlockPos pos, boolean hasItem) {
-        if(hasItem)return  DisplayStatus.FULL;
+        if (hasItem) return DisplayStatus.FULL;
         return canHaveItemAbove(level, pos) ? DisplayStatus.EMPTY : DisplayStatus.NONE;
     }
 
@@ -334,7 +334,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         public void setChanged() {
             if (!this.isEmpty()) {
                 var item = this.getItem(0);
-                if(!item.isEmpty()) {
+                if (!item.isEmpty()) {
                     level.setBlock(pos, state.setValue(PedestalBlock.ITEM_STATUS, DisplayStatus.EMPTY), 3);
                 }
                 if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile) {
