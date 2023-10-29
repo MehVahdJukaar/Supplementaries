@@ -1,0 +1,33 @@
+{
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "modid": "spelunkery",
+        "type": "forge:mod_loaded"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "altimeter"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:copper_ingot"
+    },
+    "0": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "supplementaries:altimeter",
+    "count": 1
+  }
+}
