@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDecorationRegistry;
-import net.mehvahdjukaar.moonlight.core.mixins.MapItemDataPacketMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -133,6 +132,7 @@ public class SliceMapItem extends EmptyMapItem {
         public void load(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
+                if (this.height == Integer.MAX_VALUE) this.height = null;
             } else this.height = null;
         }
 
@@ -140,6 +140,7 @@ public class SliceMapItem extends EmptyMapItem {
         public void loadUpdateTag(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
+                if (this.height == Integer.MAX_VALUE) this.height = null;
             }
         }
 
@@ -150,7 +151,7 @@ public class SliceMapItem extends EmptyMapItem {
 
         @Override
         public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
-            tag.putInt(DEPTH_LOCK_KEY, height);
+            tag.putInt(DEPTH_LOCK_KEY, height == null ? Integer.MAX_VALUE : height);
         }
 
         @Override
