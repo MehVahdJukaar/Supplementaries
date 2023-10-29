@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -48,7 +49,10 @@ public abstract class TreasureMapForEmeraldsMixin {
     public void turnToQuill(Entity trader, RandomSource random, CallbackInfoReturnable<MerchantOffer> cir) {
         if (trader.level instanceof ServerLevel serverLevel) {
             if (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get()) {
-                ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, this.destination,
+                var targets = trader.getLevel().registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY)
+                        .getTag(destination).orElse(null);
+
+                ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
                         100, true, 2, this.destinationType, null, 0);
                 map.setHoverName(Component.translatable(this.displayName));
                 int uses = CommonConfigs.Tweaks.QUILL_MAX_TRADES.get();

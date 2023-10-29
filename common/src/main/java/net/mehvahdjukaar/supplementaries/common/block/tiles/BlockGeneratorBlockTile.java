@@ -27,7 +27,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
-    private final AtomicReference<List<Pair<BlockPos, Holder<Structure>>>> threadResult = new AtomicReference<>(null);
+    private final AtomicReference<List<StructureLocator.LocatedStruct>> threadResult = new AtomicReference<>(null);
     private boolean firstTick = true;
     private RoadSignFeature.Config config = null;
 

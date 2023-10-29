@@ -319,7 +319,7 @@ public class QuarkCompatImpl {
         }
     }
 
-    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, TagKey<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @org.jetbrains.annotations.Nullable String name, int color) {
+    public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @org.jetbrains.annotations.Nullable String name, int color) {
        return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown,zoom, destinationType, name, color);
     }
 }

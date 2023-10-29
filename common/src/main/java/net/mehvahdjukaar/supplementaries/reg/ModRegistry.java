@@ -1198,7 +1198,11 @@ public class ModRegistry {
 
     //altimeter
     public static final Supplier<Item> DEPTH_METER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()
-            .tab(CreativeModeTabs.TOOLS)));
+            .tab(getTab(CreativeModeTab.TAB_TOOLS, DEPTH_METER_NAME))));
+
+    public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new SliceMapItem(new Item.Properties()
+            .tab(getTab(CreativeModeTab.TAB_TOOLS,SLICE_MAP_NAME))));
+
 
     //public static final String CRE
     // ATIVE_WAND = "creative_wand";

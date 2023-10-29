@@ -9,7 +9,9 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -66,11 +68,20 @@ public class ClientConfigs {
         public static final Supplier<Boolean> FLUTE_PARTICLES;
         public static final Supplier<Boolean> DEPTH_METER_CLICK;
         public static final Supplier<Integer> DEPTH_METER_STEP_MULT;
-
+        public static final Supplier<List<ResourceLocation>> DEPTH_METER_DIMENSIONS;
         static {
             ConfigBuilder builder = builderReference.get();
 
             builder.push("items");
+
+            builder.push("altimeter");
+            DEPTH_METER_CLICK = builder.comment("Click action for depth meter which displays current depth")
+                    .define("click_action", true);
+            DEPTH_METER_DIMENSIONS = builder.comment("Allows depth meter to have unique textures per each dimension. Add more dimensions IDs and a matching texture in the correct path replacing ':' with '_'")
+                    .defineObjectList("extra_dimension_textures", () -> List.of(Level.NETHER.location(), Level.END.location()), ResourceLocation.CODEC);
+            DEPTH_METER_STEP_MULT = builder.comment("Increasing this to be more than 1 will result in delth meter display image to be shown in float amounts instead of pixel perfect ones")
+                    .define("texture_precision_multiplier", 1, 1, 10);
+            builder.pop();
 
             builder.push("slingshot");
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
@@ -110,11 +121,6 @@ public class ClientConfigs {
                     .define("note_particles", true);
             builder.pop();
 
-            builder.push("altimeter");
-            DEPTH_METER_CLICK = builder.define("click", true);
-            DEPTH_METER_STEP_MULT = builder.define("step_multiplier", 1, 0, 64);
-            builder.pop();
-
             builder.pop();
         }
     }
@@ -133,6 +139,8 @@ public class ClientConfigs {
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
+        public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
+        public static final Supplier<Boolean> COLORED_MAPS;
 
         static{
             ConfigBuilder builder = builderReference.get();
@@ -158,6 +166,11 @@ public class ClientConfigs {
                     .define("paintings_tooltip", true);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
+            COLORED_MAPS = builder
+                    .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
+                    .define("tinted_blocks_on_maps", true);
+            TALL_GRASS_COLOR_CHANGE = builder.comment("Colors tall grass same color as grass")
+                    .define("tall_grass_color", true);
             builder.pop();
         }
     }

@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -23,8 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
@@ -64,10 +61,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     public CartographersQuillItem() {
         super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
-                new Properties().stacksTo(1)
-                        .tab(RegUtils.getTab(CreativeModeTab.TAB_TOOLS, "adventurer_map")));
+                new Properties().stacksTo(1));
         QuarkCompatImpl.removeStuffFromARLHack();
-
     }
 
     private static Thread mainThread;
@@ -84,21 +79,12 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     @Override
     protected String getFailedMessage() {
-        return "message.supplementaries.quill_finished";
-    }
-
-    @Override
-    protected String getFinishedMessage() {
         return "message.supplementaries.quill_failed";
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-        if (this.category != null) {
-            if (group == category || group == CreativeModeTab.TAB_SEARCH) {
-                items.add(new ItemStack(this));
-            }
-        }
+    protected String getFinishedMessage() {
+        return "message.supplementaries.quill_finished";
     }
 
     @Override
@@ -268,7 +254,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
         Map<StructurePlacement, Set<Holder<Structure>>> map = new Object2ObjectArrayMap<>();
 
-        for (StructurePlacement structurePlacement : gen.getPlacementsForStructure(holder, source.randomState())) {
+        var structureState = level.getChunkSource().randomState();
+
+        for (StructurePlacement structurePlacement : level.getChunkSource().getGenerator().getPlacementsForStructure(holder, structureState)) {
             map.computeIfAbsent(structurePlacement, (ss) -> new ObjectArraySet<>()).add(holder);
         }
 
@@ -450,15 +438,15 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag, int searchRadius,
+    public static ItemStack forStructure(ServerLevel level, @Nullable HolderSet<Structure> targets, int searchRadius,
                                          boolean skipKnown, int zoom, @Nullable MapDecoration.Type deco,
                                          @Nullable String name, int color) {
-        ItemStack stack = forStructure(level, tag);
+        ItemStack stack = forStructure(level, targets);
         var t = stack.getOrCreateTag();
         t.putInt(TAG_SEARCH_RADIUS, searchRadius);
         t.putBoolean(TAG_SKIP_KNOWN, skipKnown);
         t.putInt(TAG_ZOOM, zoom);
-        if(deco != null) {
+        if (deco != null) {
             t.putString(TAG_DECORATION, deco.toString().toLowerCase(Locale.ROOT));
         }
         if (name != null) {
@@ -470,8 +458,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         return stack;
     }
 
-    public static int getItemColor(ItemStack stack, int layer){
-        if(layer == 0)return -1;
+    public static int getItemColor(ItemStack stack, int layer) {
+        if (layer == 0) return -1;
         CompoundTag compoundTag = stack.getTag();
         if (compoundTag != null && compoundTag.contains(TAG_COLOR)) {
             int i = compoundTag.getInt(TAG_COLOR);
@@ -481,9 +469,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         }
     }
 
-    public static ItemStack forStructure(ServerLevel level, @Nullable TagKey<Structure> tag) {
+    public static ItemStack forStructure(ServerLevel level, @Nullable HolderSet<Structure> tag) {
         ItemStack stack = QuarkCompatImpl.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
-        if(tag != null) {
+        if (tag != null) {
             //adventurer ones are always random
             String target = selectRandomTarget(level, tag);
             if (target == null) return ItemStack.EMPTY;
@@ -494,25 +482,24 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     @Nullable
     private static String selectRandomTarget(ServerLevel level, TagKey<Structure> tag) {
-        Optional<HolderSet.Named<Structure>> taggedStructures = level.registryAccess()
-                .registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tag);
-        if (taggedStructures.isPresent()) {
+        var targets = level.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(tag);
+        return targets.map(holders -> selectRandomTarget(level, holders)).orElse(null);
+    }
 
-            List<Holder<Structure>> reachable = new ArrayList<>();
-            ServerChunkCache source = level.getChunkSource();
-            ChunkGenerator chunkGenerator = source.getGenerator();
-            for (var s : taggedStructures.get()) {
-                if (!chunkGenerator.getPlacementsForStructure(s, source.randomState()).isEmpty()) {
-                    reachable.add(s);
-                }
-            }
-            if (!reachable.isEmpty()) {
-                Holder<Structure> selected = reachable.get(level.random.nextInt(reachable.size()));
-                return selected.unwrapKey().get().location().toString();
+    @Nullable
+    private static String selectRandomTarget(ServerLevel level, HolderSet<Structure> taggedStructures) {
+        List<Holder<Structure>> reachable = new ArrayList<>();
+        for (var s : taggedStructures) {
+            var randomState = level.getChunkSource().randomState();
+            if (!level.getChunkSource().getGenerator().getPlacementsForStructure(s, randomState).isEmpty()) {
+                reachable.add(s);
             }
         }
+        if (!reachable.isEmpty()) {
+            Holder<Structure> selected = reachable.get(level.random.nextInt(reachable.size()));
+            return selected.unwrapKey().get().location().toString();
+        }
         return null;
-
     }
 
     //in the end we dont even need this. iterating over those 3 looks is not what slows this down

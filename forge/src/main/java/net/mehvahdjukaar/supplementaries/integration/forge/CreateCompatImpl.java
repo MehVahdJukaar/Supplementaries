@@ -142,6 +142,7 @@ public class CreateCompatImpl {
     }
 
     public static void setupClient() {
+        /*
         PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
         PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_TARGETS).add(ModRegistry.HANGING_SIGNS.get(WoodTypeRegistry.OAK_TYPE));
@@ -153,7 +154,7 @@ public class CreateCompatImpl {
         PonderRegistry.TAGS.forTag(AllPonderTags.DISPLAY_SOURCES).add(ModRegistry.JAR.get());
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_SOURCES).add(ModRegistry.CLOCK_BLOCK.get());
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
-
+*/
     }
 
     private static void changeState(MovementContext context, BlockState newState) {

@@ -45,6 +45,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -66,6 +67,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
@@ -105,6 +107,8 @@ public class ClientRegistry {
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Map<WoodType, ResourceLocation> HANGING_SIGNS_BLOCK_MODELS = new IdentityHashMap<>();
+    public static final ResourceLocation ALTIMETER_TEMPLATE = Supplementaries.res("item/altimeter_template");
+    public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
 
     public static KeyMapping QUIVER_KEYBIND = null;
 
@@ -269,6 +273,10 @@ public class ClientRegistry {
         }
     }
 
+    public static LevelLightEngine getLightEngine() {
+      return   Minecraft.getInstance().level.getLightEngine();
+    }
+
     private static class GlobeProperty implements ClampedItemPropertyFunction {
 
         @Override
@@ -414,6 +422,8 @@ public class ClientRegistry {
         event.register(BOAT_MODEL);
         event.register(BELL_ROPE);
         event.register(BELL_CHAIN);
+        event.register(ALTIMETER_TEMPLATE);
+        event.register(ALTIMETER_OVERLAY);
         //not needed on forge
         if (PlatformHelper.getPlatform().isFabric()) {
             event.register(FLUTE_3D_MODEL);

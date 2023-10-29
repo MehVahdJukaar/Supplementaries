@@ -39,7 +39,6 @@ public class ModSetup {
             CurseLootFunction::setup,
             CompatHandler::setup,
             FlowerPotHandler::setup,
-            WeatheredMap::setup,
             ModSetup::registerCompostables,
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,

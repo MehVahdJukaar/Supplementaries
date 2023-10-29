@@ -1,0 +1,131 @@
+package net.mehvahdjukaar.supplementaries.mixins;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
+import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Mixin(MapItem.class)
+public abstract class MapItemMixin {
+
+    @ModifyExpressionValue(method = "update", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z"))
+    public boolean removeCeiling(boolean original, @Share("heightLock") LocalIntRef height) {
+        if (original && height.get() != Integer.MAX_VALUE && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
+            return false;
+        }
+        return original;
+    }
+
+
+    @Inject(method = "update", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z",
+            shift = At.Shift.BEFORE,
+            ordinal = 0),
+            require = 1,
+            cancellable = true)
+    public void checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
+                                @Local(ordinal = 5) LocalIntRef range,
+                                @Share("customColorMap") LocalRef<Map<Vec2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
+                                @Share("heightLock") LocalIntRef height) {
+        int mapHeight = SliceMapItem.getMapHeight(data);
+        height.set(mapHeight);
+
+        colorMap.set(CommonConfigs.Tweaks.TINTED_MAP.get() ? new HashMap<>() : null);
+        if (mapHeight != Integer.MAX_VALUE) {
+            if (!SliceMapItem.canPlayerSee(mapHeight, viewer)) {
+                ci.cancel();
+            }
+            range.set((int) (range.get() * SliceMapItem.getRangeMultiplier()));
+        }
+    }
+
+
+    @ModifyExpressionValue(method = "update", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/chunk/LevelChunk;getHeight(Lnet/minecraft/world/level/levelgen/Heightmap$Types;II)I"))
+    public int modifySampleHeight(int original, @Share("heightLock") LocalIntRef height) {
+        int h = height.get();
+        if (h != Integer.MAX_VALUE) return Math.min(original, h);
+        return original;
+    }
+
+
+    @WrapOperation(method = "update", at = @At(
+            value = "INVOKE",
+            ordinal = 3,
+            target = "Lnet/minecraft/world/level/block/state/BlockState;getMapColor(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/MaterialColor;"))
+    public MaterialColor removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MaterialColor> operation,
+                                                       @Local LevelChunk chunk,
+                                                       @Local(ordinal = 17) int w, //levelchunk getheight
+                                                       @Local(ordinal = 0) BlockState state,
+                                                       @Local(ordinal = 6) int k1,
+                                                       @Local(ordinal = 7) int l1,
+                                                       @Share("customColorMap") LocalRef<Map<Vec2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
+                                                       @Share("heightLock") LocalIntRef height) {
+        if (height.get() != Integer.MAX_VALUE && height.get() <= w) {
+            return SliceMapItem.getCutoffColor(pos, chunk);
+        }
+        if (colorMap.get() != null) {
+            colorMap.get().computeIfAbsent(new Vec2i(k1, l1), p -> Pair.of(pos, LinkedHashMultiset.create()))
+                    .getSecond()
+                    .add(state.getBlock());
+        }
+
+        return operation.call(instance, level, pos);
+    }
+
+    @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;updateColor(IIB)Z"
+    ))
+    public boolean updateCustomColor(boolean original,
+                                     Level level, Entity viewer, MapItemSavedData data,
+                                     @Local(ordinal = 6) int x,
+                                     @Local(ordinal = 7) int z,
+                                     @Share("customColorMap") LocalRef<Map<Vec2i, Pair<BlockPos, Multiset<Block>>>> colorMap) {
+        if (colorMap.get() == null) return original;
+        var l = colorMap.get().get(new Vec2i(x, z));
+        if (l != null) {
+            Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l.getSecond()), Blocks.AIR);
+            var c = ColoredMapHandler.getColorData(data);
+            if (c != null) {
+                c.markColored(x, z, block, level, l.getFirst(), data);
+            }
+        }
+
+        return original;
+    }
+
+
+}

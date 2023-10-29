@@ -6,9 +6,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ColoredDecoration extends CustomMapDecoration {
     private final DyeColor color;

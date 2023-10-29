@@ -2,9 +2,11 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
+import net.mehvahdjukaar.moonlight.core.mixins.HoldingPlayerMixin;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.WallLanternTexturesManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.Util;
@@ -12,7 +14,6 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -39,6 +40,9 @@ public class ModTextures {
     public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("blocks/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("blocks/hourglass_gunpowder");
     public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("blocks/blackboard_grid");
+    public static final ResourceLocation ALTIMETER_1 = Supplementaries.res("items/altimeter/minecraft_overworld");
+    public static final ResourceLocation ALTIMETER_2 = Supplementaries.res("items/altimeter/minecraft_the_end");
+    public static final ResourceLocation ALTIMETER_3 = Supplementaries.res("items/altimeter/minecraft_the_nether");
 
 
     public static final ResourceLocation SUGAR = Supplementaries.res("blocks/sugar");
@@ -100,10 +104,10 @@ public class ModTextures {
             map.put(candle, Supplementaries.res("textures/entity/skull_candles/" + color.getName() + ".png"));
         }
         //worst case this becomes null
-        if(CompatObjects.SOUL_CANDLE.get() != null) {
+        if (CompatObjects.SOUL_CANDLE.get() != null) {
             map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/soul.png"));
         }
-        if(CompatObjects.SPECTACLE_CANDLE.get() != null) {
+        if (CompatObjects.SPECTACLE_CANDLE.get() != null) {
             map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/entity/skull_candles/spectacle.png"));
         }
         return map;
@@ -121,8 +125,8 @@ public class ModTextures {
         List<ResourceLocation> blocks = new ArrayList<>(List.of(
                 FISHIES_TEXTURE, BELLOWS_TEXTURE, CLOCK_HAND_TEXTURE, HOURGLASS_REDSTONE,
                 HOURGLASS_GLOWSTONE, HOURGLASS_BLAZE,
+                ALTIMETER_1, ALTIMETER_2, ALTIMETER_3,
                 HOURGLASS_GUNPOWDER, BLACKBOARD_GRID, BUBBLE_BLOCK_TEXTURE));
-
         for (var s : ModMaterials.SIGN_POSTS_MATERIALS.get().values()) {
             blocks.add(s.texture());
         }

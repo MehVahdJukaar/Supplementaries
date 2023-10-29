@@ -13,7 +13,10 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
+import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -83,6 +86,8 @@ public class Supplementaries {
         ModVillagerTrades.init();
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
+        WeatheredMap.init();
+        ColoredMapHandler.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 

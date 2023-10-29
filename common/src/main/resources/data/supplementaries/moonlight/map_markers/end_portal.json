@@ -1,0 +1,6 @@
+{
+  "target_block": {
+    "block": "minecraft:end_portal",
+    "predicate_type": "minecraft:block_match"
+  }
+}

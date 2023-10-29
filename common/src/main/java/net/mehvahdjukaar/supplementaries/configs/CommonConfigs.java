@@ -16,6 +16,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -698,6 +700,14 @@ public class CommonConfigs {
                     .define("quiver_pickup", true);
             builder.pop();
 
+            builder.push("slice_map");
+            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
+                    .define("range_multiplier", 0.25, 0, 1);
+            builder.pop();
+
+            DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
+
             builder.push("bubble_blower");
             BUBBLE_BLOWER_ENABLED = feature(builder);
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
@@ -787,6 +797,11 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
+        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
+
+
         public static final Supplier<Boolean> WRENCH_ENABLED;
         public static final Supplier<CommonConfigs.Hands> WRENCH_BYPASS;
 
@@ -825,6 +840,8 @@ public class CommonConfigs {
         public static void init() {
         }
 
+
+        public static final Supplier<Boolean> TINTED_MAP;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -940,11 +957,14 @@ public class CommonConfigs {
                     .define("random_adventurer_maps", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
+            DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
+                    .define("death_marker", DeathMarkerMode.WITH_COMPASS);
+            TINTED_MAP = builder.define("colored_map", true);
             if (PlatformHelper.getPlatform().isForge()) {
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
                 REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
-                        .define("quill_vanilla_maps", true);
+                        .define("quill_vanilla_maps", false);
                 QUILL_TRADE_PRICE_MULT = builder.comment("These maps will roll a difference structure every time. Increase their price to balance them")
                         .define("map_trade_price_multiplier", 2d, 1, 10);
                 QUILL_MAX_TRADES = builder.comment("These maps will roll a difference structure every time. Decrease their max trades to balance them")
@@ -1015,6 +1035,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> BOTTLING_COST;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
         public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
         public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
         public static final Supplier<Integer> QUILL_MAX_TRADES;
@@ -1120,6 +1141,20 @@ public class CommonConfigs {
         float percentage = disabled / (float) FEATURE_TOGGLES.size();
         if (percentage > 0.66f) {
             Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
+        }
+    }
+
+    public enum DeathMarkerMode {
+        OFF, WITH_COMPASS, ALWAYS;
+
+        public boolean isOn(Player player) {
+            return switch (this) {
+                case OFF -> false;
+                case ALWAYS -> true;
+                case WITH_COMPASS -> {
+                    yield player.getInventory().hasAnyMatching(i -> i.is(Items.RECOVERY_COMPASS));
+                }
+            };
         }
     }
 }

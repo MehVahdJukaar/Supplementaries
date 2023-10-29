@@ -38,6 +38,11 @@ public class ModTags {
     public static final TagKey<Block> WALL_LANTERNS_BLACKLIST = blockTag("wall_lanterns_blacklist");
     public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
+    public static final TagKey<Block> TINTED_ON_MAPS_GENERIC = blockTag("map_tint_generic");
+    public static final TagKey<Block> TINTED_ON_MAPS_GC = blockTag("map_tint_grass_color");
+    public static final TagKey<Block> TINTED_ON_MAPS_FC = blockTag("map_tint_foliage_color");
+    public static final TagKey<Block> TINTED_ON_MAPS_WC = blockTag("map_tint_water_color");
+    public static final TagKey<Block> NOT_TINTED_ON_MAPS = blockTag("map_tint_blacklist");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

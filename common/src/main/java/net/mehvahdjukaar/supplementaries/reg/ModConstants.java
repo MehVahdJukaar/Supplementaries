@@ -141,4 +141,5 @@ public final class ModConstants {
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
     public static final String ENDERMAN_HEAD_NAME = "enderman_head";
     public static final String DEPTH_METER_NAME = "altimeter";
+    public static final String SLICE_MAP_NAME = "slice_map";
 }

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -16,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -34,10 +37,12 @@ public class ClientEventsForge {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(ClientEventsForge.class);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddLayers);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onAddGuiLayers);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::onRegisterSkullModels);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEventsForge::loadComplete);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(ClientEventsForge::onAddLayers);
+        bus.addListener(ClientEventsForge::onAddGuiLayers);
+        bus.addListener(ClientEventsForge::onRegisterSkullModels);
+        bus.addListener(ClientEventsForge::loadComplete);
+        bus.addListener(ClientEventsForge::onPackReload);
     }
 
     public static void loadComplete(FMLLoadCompleteEvent event){
@@ -143,4 +148,9 @@ public class ClientEventsForge {
         }
     }
 
+    public static void onPackReload(TextureStitchEvent.Post event){
+        if(event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+            //AltimeterItemRenderer.onReload();
+        }
+    }
 }

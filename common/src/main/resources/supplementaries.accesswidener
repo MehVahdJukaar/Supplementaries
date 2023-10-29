@@ -16,7 +16,7 @@ accessible method net/minecraft/client/model/ParrotModel prepare (Lnet/minecraft
 accessible method net/minecraft/client/model/ParrotModel setupAnim (Lnet/minecraft/client/model/ParrotModel$State;IFFFFF)V
 
 accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2speech/Narrator;
-
+accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 #structure locator
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getStructureGeneratingAt (Ljava/util/Set;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/StructureManager;ZLnet/minecraft/world/level/levelgen/structure/placement/StructurePlacement;Lnet/minecraft/world/level/ChunkPos;)Lcom/mojang/datafixers/util/Pair;
 

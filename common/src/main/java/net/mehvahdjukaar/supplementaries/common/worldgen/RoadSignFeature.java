@@ -251,7 +251,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
     //post process
 
-    public static void applyPostProcess(Config c, ServerLevel level, BlockPos generatorPos, List<Pair<BlockPos, Holder<Structure>>> foundVillages) {
+    public static void applyPostProcess(Config c, ServerLevel level, BlockPos generatorPos, List<StructureLocator.LocatedStruct> foundVillages) {
 
 
         RandomState r = c.randomState;
@@ -261,7 +261,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
         List<Pair<Integer, BlockPos>> villages = new ArrayList<>();
         for (var f : foundVillages) {
-            villages.add(Pair.of((int) Mth.sqrt((float) f.getFirst().distToCenterSqr(pos.getX(), pos.getY(), pos.getZ())), f.getFirst()));
+            villages.add(Pair.of((int) Mth.sqrt((float) f.pos().distToCenterSqr(pos.getX(), pos.getY(), pos.getZ())), f.pos()));
         }
 
         //if I am in a village

@@ -4,17 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,11 +24,10 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -47,8 +44,10 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
     private static final Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> MODEL_CACHE = new HashMap<>();
 
+
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+        if(MODEL_CACHE.isEmpty())onReload();
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
 
@@ -93,7 +92,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         float ix1 = shrink * (x1 - 0.5f) * 2;
         float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
         float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
-        addQuad(builder, ps,
+        VertexUtil. addQuad(builder, ps,
                 x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
                 u0, v0, u1, v1,
                 255, 255, 255, 255,
@@ -105,9 +104,9 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         List<ResourceLocation> resourceLocations = new ArrayList<>(ClientConfigs.Items.DEPTH_METER_DIMENSIONS.get());
         resourceLocations.add(Level.OVERWORLD.location());
         for (var d : resourceLocations) {
-            ResourceKey<Level> res = ResourceKey.create(Registries.DIMENSION, d);
+            ResourceKey<Level> res = ResourceKey.create(Registry.DIMENSION_REGISTRY, d);
             TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(
-                    Supplementaries.res("item/altimeter/" + d.toString().replace(":", "_"))
+                    Supplementaries.res("items/altimeter/" + d.toString().replace(":", "_"))
             );
             if (sprite != null) {
                 MODEL_CACHE.put(res, Pair.of(sprite, new Int2ObjectOpenHashMap<>()));
@@ -153,7 +152,8 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
             }
 
 
-            BakedModel copy = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), ClientRegistry.ALTIMETER_TEMPLATE);
+            BakedModel copy = ClientPlatformHelper.getModel(Minecraft.getInstance().getModelManager(),
+                    ClientRegistry.ALTIMETER_TEMPLATE);
             this.quads.addAll(copy.getQuads(null, null, RandomSource.create()));
             this.overrides = copy.getOverrides();
             this.transforms = copy.getTransforms();

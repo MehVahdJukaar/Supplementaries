@@ -154,8 +154,8 @@ dependencies {
     modImplementation("curse.maven:the-bumblezone-forge-362479:4103196")
    // modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-362528:3941638")
-    modImplementation("curse.maven:map-atlases-forge-519759:3949437")
-    modImplementation("curse.maven:create-328085:4547147")
+    modImplementation("curse.maven:map-atlases-forge-519759:4796342")
+    modCompileOnly("curse.maven:create-328085:4547147")
     //modCompileOnly("curse.maven:biomes-o-plenty-220318:4128419")
     modImplementation("curse.maven:terrablender-563928:4013816")
     modImplementation("curse.maven:tetra-289712:4414851")
@@ -167,6 +167,8 @@ dependencies {
     //modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     modImplementation("curse.maven:flywheel-486392:4341471")
 
-
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
 }
