@@ -21,6 +21,8 @@ body:
           required: true
         - label: "If you have a crash ALWAYS post LATEST.LOG below"
           required: true
+        - label: "Do NOT report an issue related to Indium/Sodium/Optifine or other rendering mods unless you have contacted them first"
+          required: true
 
   - type: dropdown
     id: version
