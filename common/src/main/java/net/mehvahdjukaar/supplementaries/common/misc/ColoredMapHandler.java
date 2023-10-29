@@ -30,6 +30,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -61,6 +62,9 @@ public class ColoredMapHandler {
     //null if no color to be sent
     @Nullable
     public static Block getCustomColor(Block state) {
+        if(state instanceof VineBlock){
+            return Blocks.OAK_LEAVES;
+        }
         Holder.Reference<Block> blockReference = state.builtInRegistryHolder();
         if (blockReference.is(ModTags.NOT_TINTED_ON_MAPS)) return null;
         //packs similar colored blocks so we stay in the 16 blocks limit

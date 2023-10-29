@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.moonlight.api.map.type.CustomDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
-import net.mehvahdjukaar.moonlight.core.map.MapDataInternal;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -41,7 +40,7 @@ public class ModMapMarkers {
             Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
 
     public static final DataObjectReference<MapDecorationType<?,?>> DEATH_MARKER =
-    new DataObjectReference<>(Supplementaries.res("death_marker"), MapDataInternal.KEY);
+    new DataObjectReference<>(Supplementaries.res("death_marker"), MapDecorationRegistry.REGISTRY_KEY);
 
 
 

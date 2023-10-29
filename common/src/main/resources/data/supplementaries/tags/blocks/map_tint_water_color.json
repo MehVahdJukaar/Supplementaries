@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:water","required":false},
+    {"id":"minecraft:flowing_water","required":false}
+  ]
+}
