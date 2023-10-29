@@ -8,12 +8,15 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
+import forge.net.raphimc.immediatelyfast.ImmediatelyFast;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
 import net.mehvahdjukaar.supplementaries.client.block_models.WallLanternBakedModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BookPileBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -42,7 +45,12 @@ public class VibeCheckerImpl {
         // I've got a better idea
         //fixSodiumDeps();
         unfixSodiumDeps();
-        vibeCheckModels();
+        if(PlatHelper.getPhysicalSide().isClient()) vibeCheckModels();
+
+        if(PlatHelper.isModLoaded("immediatelyfast")){
+            Supplementaries.LOGGER.warn("Immediately fast was detected. Colored maps and map texture mipmap will not work unless you turn map changes off in IF configs");
+        }
+
     }
 
     private static void unfixSodiumDeps() {
@@ -126,7 +134,9 @@ public class VibeCheckerImpl {
     }
 
     public static void vibeCheckModels() {
+
         try {
+
             DummySprite textureAtlasSprite = DummySprite.INSTANCE;
 
             BakedQuadBuilder b = BakedQuadBuilder.create(textureAtlasSprite);

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -378,7 +379,7 @@ public class ColoredMapHandler {
 
 
         @Environment(EnvType.CLIENT)
-        public void processTexture(DynamicTexture texture, byte[] colors) {
+        public void processTexture(NativeImage texture, int startX, int startY,  byte[] colors) {
             if (!ClientConfigs.Tweaks.COLORED_MAPS.get()) return;
             boolean tg = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
             for (int x = 0; x < 128; ++x) {
@@ -417,7 +418,7 @@ public class ColoredMapHandler {
                         var grayscaled = gray
                                 .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
                                 .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
-                        texture.getPixels().setPixelRGBA(x,z, grayscaled);
+                        texture.setPixelRGBA(startX+ x,startY + z, grayscaled);
                     }
                 }
             }
@@ -446,6 +447,12 @@ public class ColoredMapHandler {
                 return colorResolver.getColor(b, pos.getX() + 0.5, pos.getZ() + 0.5);
             }
             return 0;
+        }
+
+        public void clear() {
+            data = null;
+            biomesIndexes.clear();
+            blockIndexes.clear();
         }
     }
 

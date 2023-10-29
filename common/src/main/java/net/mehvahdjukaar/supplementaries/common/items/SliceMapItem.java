@@ -131,6 +131,7 @@ public class SliceMapItem extends EmptyMapItem {
         public void load(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
+                if (this.height == Integer.MAX_VALUE) this.height = null;
             } else this.height = null;
         }
 
@@ -138,6 +139,7 @@ public class SliceMapItem extends EmptyMapItem {
         public void loadUpdateTag(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
+                if (this.height == Integer.MAX_VALUE) this.height = null;
             }
         }
 
@@ -148,9 +150,8 @@ public class SliceMapItem extends EmptyMapItem {
 
         @Override
         public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
-            tag.putInt(DEPTH_LOCK_KEY, height);
+            tag.putInt(DEPTH_LOCK_KEY, height == null ? Integer.MAX_VALUE : height);
         }
-
         @Override
         public Type<DepthMapData> getType() {
             return DEPTH_DATA_KEY;

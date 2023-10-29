@@ -912,6 +912,10 @@ public class CommonConfigs {
             SHULKER_HELMET_ENABLED = feature(builder.comment("Allows wearing shulker shells"));
             builder.pop();
 
+            builder.push("golden_apple_disenchant");
+            APPLE_DISENCHANT = feature(builder);
+            builder.pop();
+
             builder.push("dye_blocks");
             DYE_BLOCKS = builder.comment("Allows using dye on blocks just like with soap")
                     .define("enabled", false);
@@ -1092,6 +1096,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
         public static final Supplier<Boolean> DYE_BLOCKS;
+        public static final Supplier<Boolean> APPLE_DISENCHANT;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
         public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;

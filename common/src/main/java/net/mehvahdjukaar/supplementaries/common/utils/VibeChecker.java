@@ -29,6 +29,7 @@ public class VibeChecker {
         }catch (Exception e){
             throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?",e);
         }
+
         //check sheets class
         if(PlatHelper.getPhysicalSide().isClient()) clientStuff();
         try {

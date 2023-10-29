@@ -177,7 +177,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
     private IRecipeTemplate<?> signPostTemplate2;
 
     public static void genAllRecipesAdv(String modId) {
-        if(!PlatHelper.isDev())return;
+        if(true || !PlatHelper.isDev())return;
         var level = PlatHelper.getCurrentServer().overworld();
         var man = level.getRecipeManager();
         for (var r : man.getRecipes()) {

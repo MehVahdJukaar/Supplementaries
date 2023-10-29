@@ -20,6 +20,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}")))
+    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")))
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
@@ -52,6 +53,7 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4754432")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
 
+    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
 }
 

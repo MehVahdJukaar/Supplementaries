@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -50,7 +51,7 @@ public class WeatheredMap {
         public void load(CompoundTag tag) {
             if (tag.contains(ANTIQUE_KEY)) {
                 antique = tag.getBoolean(ANTIQUE_KEY);
-            }else antique = false;
+            } else antique = false;
         }
 
         @Override
@@ -342,6 +343,9 @@ public class WeatheredMap {
 
             MapItemSavedData newData = data.copy();
             WeatheredMapData instance = ANTIQUE_DATA_KEY.get(newData);
+            var colorData = ColoredMapHandler.COLOR_DATA.get(newData);
+            colorData.clear();
+
             instance.set(on);
             instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
             int mapId = level.getFreeMapId();

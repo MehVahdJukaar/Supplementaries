@@ -120,6 +120,8 @@ dependencies {
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+    implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
+    implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
 
@@ -181,5 +183,6 @@ dependencies {
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
 
+    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
 }

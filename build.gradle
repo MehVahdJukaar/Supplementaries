@@ -157,6 +157,10 @@ allprojects {
         maven {
             url = 'https://maven.neoforged.net'
         }
+
+        repositories {
+            maven { url "https://api.modrinth.com/maven" }
+        }
     }
 
     tasks.withType(JavaCompile) {
