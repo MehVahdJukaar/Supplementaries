@@ -1,4 +1,5 @@
 {
+  "weight":45,
   "name": "wet hands",
   "tempo": 8,
   "notes": [
@@ -361,6 +362,5 @@
     11,
 	-2
   ],
-  "credits":"c418, candy craft",
-  "weight":50
+  "credits":"c418, candy craft"
 }

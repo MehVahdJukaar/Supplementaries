@@ -1,4 +1,5 @@
 {
+  "weight": 1,
   "name": "despacito",
   "tempo": 4,
   "notes": [
@@ -1839,6 +1840,5 @@
     -2,
     1
   ],
-  "credits": "luis fonzi ft daddy yankee, noteblock studio",
-  "weight": 1
+  "credits": "luis fonzi ft daddy yankee, noteblock studio"
 }

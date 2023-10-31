@@ -1,4 +1,5 @@
 {
+  "weight": 35,
   "name": "revenge",
   "tempo": 1,
   "notes": [
@@ -87,6 +88,5 @@
     21,
 	-10
   ],
-  "credits": "candy craft,captain sparklez",
-  "weight": 40
+  "credits": "candy craft,captain sparklez"
 }
