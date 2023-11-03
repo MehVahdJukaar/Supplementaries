@@ -1,1 +1,1 @@
-hotfix 2
+possibly fixed an issue with colored maps

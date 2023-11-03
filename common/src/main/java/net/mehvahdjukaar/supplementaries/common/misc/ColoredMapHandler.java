@@ -62,7 +62,7 @@ public class ColoredMapHandler {
     //null if no color to be sent
     @Nullable
     public static Block getCustomColor(Block state) {
-        if(state instanceof VineBlock){
+        if (state instanceof VineBlock) {
             return Blocks.OAK_LEAVES;
         }
         Holder.Reference<Block> blockReference = state.builtInRegistryHolder();
@@ -143,7 +143,7 @@ public class ColoredMapHandler {
         @Nullable
         private Pair<Block, ResourceLocation> getEntry(int x, int z) {
             if (data == null) return null;
-            if(x<0 || x>=128 || z<0 || z>=128){
+            if (x < 0 || x >= 128 || z < 0 || z >= 128) {
                 return null; //error
             }
             if (data[x] != null) {
@@ -337,8 +337,9 @@ public class ColoredMapHandler {
                 }
             } else {
                 //remove unneded stufff
-                if (this.data != null && this.data[x] != null) {
+                if (this.data != null && this.data[x] != null && this.data[x][z] == 0) {
                     this.data[x][z] = 0;
+                    this.setDirty(data, d -> d.markDirty(x, z, false, false));
                     for (var b : this.data[x]) {
                         if (b != 0) return;
                     }
@@ -412,11 +413,11 @@ public class ColoredMapHandler {
                         tint = swapFormat(tint);
                         RGBColor tintColor = new RGBColor(tint);
                         LABColor c = new RGBColor(color).asLAB();
-                        RGBColor gray = c.multiply(null,lumIncrease, 0, 0, 1).asRGB();
+                        RGBColor gray = c.multiply(null, lumIncrease, 0, 0, 1).asRGB();
                         var grayscaled = gray
-                                .multiply(null,tintColor.red(), tintColor.green(), tintColor.blue(), 1)
-                                .asHSL().multiply(null,1, 1.3f, 1, 1).asRGB().toInt();
-                        texture.getPixels().setPixelRGBA(x,z, grayscaled);
+                                .multiply(null, tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+                                .asHSL().multiply(null, 1, 1.3f, 1, 1).asRGB().toInt();
+                        texture.getPixels().setPixelRGBA(x, z, grayscaled);
                     }
                 }
             }
