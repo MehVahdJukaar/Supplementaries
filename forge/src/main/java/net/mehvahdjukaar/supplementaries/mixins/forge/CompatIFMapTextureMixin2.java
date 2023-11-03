@@ -26,6 +26,7 @@ public class CompatIFMapTextureMixin2 {
             name = "updateAtlasTexture"
     )
     @WrapOperation(method = "@MixinSquared:Handler",
+            require = 0,
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/NativeImage;upload(IIIIIIIZZ)V"))
     public void supplementaries_IFupdateColoredTexture(NativeImage instance,
                                                        int level, int xOffset, int yOffset, int unpackSkipPixels, int unpackSkipRows, int width, int height, boolean mipmap, boolean autoClose,

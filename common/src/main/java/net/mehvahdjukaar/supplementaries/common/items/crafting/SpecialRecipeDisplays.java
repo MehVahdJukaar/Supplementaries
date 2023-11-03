@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.RecipeBookCategories;
@@ -170,7 +171,7 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<CraftingRecipe> makePresentCloringRecipes() {
+    private static List<CraftingRecipe> makePresentColoringRecipes() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "presents";
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
@@ -181,6 +182,22 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
             ResourceLocation id = Supplementaries.res("present_" + color.getName() + "_display");
+            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
+        }
+        return recipes;
+    }
+
+    private static List<CraftingRecipe> makeSackColoringRecipes() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "sacks";
+        Ingredient ingredients = Ingredient.of(ModRegistry.SACK.get());
+        for (DyeColor color : DyeColor.values()) {
+            DyeItem dye = DyeItem.byColor(color);
+            ItemStack output = BlocksColorAPI.changeColor(ModRegistry.SACK.get().asItem(), color).getDefaultInstance();
+
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
+
+            ResourceLocation id = Supplementaries.res("sack_" + color.getName() + "_display");
             recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
         }
         return recipes;
@@ -369,6 +386,9 @@ public class SpecialRecipeDisplays {
                 registry.accept(createAntiqueMapRecipe());
                 registry.accept(createAntiqueBookRecipe());
             }
+            if(CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED){
+                registry.accept(makeSackColoringRecipes());
+            }
             registry.accept(createItemLoreRecipe());
             if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
                 registry.accept(createSoapCleanRecipe());
@@ -377,7 +397,7 @@ public class SpecialRecipeDisplays {
                 }
             }
             if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
-                registry.accept(makePresentCloringRecipes());
+                registry.accept(makePresentColoringRecipes());
                 if(CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
                     registry.accept(makeTrappedPresentRecipes());
                 }

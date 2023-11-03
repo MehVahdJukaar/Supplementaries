@@ -1,4 +1,4 @@
-fixed an issue with slice maps
-fixed vine color on colroed maps
-added extra config
-very cursed attempt to mixin into Immediately Fast to make their system work with colored maps
+fixed sign post direction
+added fallen kingdom flute song
+added midi to flute format python script in flute folder. see wiki
+fixed colored maps not clearing colors

@@ -328,6 +328,9 @@ public class ColoredMapHandler {
 
         public void markColored(int x, int z, Block block, Level level, BlockPos pos, MapItemSavedData data) {
             Block customColor = getCustomColor(block);
+            if(block == Blocks.BLUE_WOOL){
+                int aa = 1;
+            }
             if (customColor != null) {
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
@@ -339,8 +342,9 @@ public class ColoredMapHandler {
                 }
             } else {
                 //remove unneded stufff
-                if (this.data != null && this.data[x] != null) {
+                if (this.data != null && this.data[x] != null && this.data[x][z] != 0) {
                     this.data[x][z] = 0;
+                    this.setDirty(data, counter -> counter.markDirty(x, z, false, false));
                     for (var b : this.data[x]) {
                         if (b != 0) return;
                     }

@@ -2,54 +2,18 @@
   "replace": false,
   "values": [
     "#minecraft:village",
-    {
-      "id": "hauntedharvest:abandoned_farm",
-      "required": false
-    },
-    {
-      "id": "harvestseason:abandoned_farm",
-      "required": false
-    },
-    {
-      "id": "pokecube_legends:village",
-      "required": false
-    },
-    {
-      "id": "pokecube_legends:village/ocean",
-      "required": false
-    },
-    {
-      "id": "valhelsia_structures:castle",
-      "required": false
-    },
-    {
-      "id": "valhelsia_structures:castle_ruin",
-      "required": false
-    },
-    {
-      "id": "valhelsia_structures:small_castle",
-      "required": false
-    },
-    {
-      "id": "valhelsia_structures:tower_ruin",
-      "required": false
-    },
-    {
-      "id": "stoneholm:underground_village",
-      "required": false
-    },
-    {
-      "id": "blue_skies:gatekeeper_house",
-      "required": false
-    },
-    {
-      "id": "feywild:library",
-      "required": false
-    },
-    {
-      "id": "feywild:blacksmith",
-      "required": false
-    },
+    {"id": "hauntedharvest:abandoned_farm", "required": false},
+    {"id": "harvestseason:abandoned_farm", "required": false},
+    {"id": "pokecube_legends:village", "required": false},
+    {"id": "pokecube_legends:village/ocean", "required": false},
+    {"id": "valhelsia_structures:castle", "required": false},
+    {"id": "valhelsia_structures:castle_ruin", "required": false},
+    {"id": "valhelsia_structures:small_castle", "required": false},
+    {"id": "valhelsia_structures:tower_ruin", "required": false},
+    {"id": "stoneholm:underground_village", "required": false},
+    {"id": "blue_skies:gatekeeper_house", "required": false},
+    {"id": "feywild:library", "required": false},
+    {"id": "feywild:blacksmith", "required": false},
     {"id":"idas:bazaar","required":false},
     {"id":"idas:castle","required":false},
     {"id":"idas:farmhouse","required":false},
