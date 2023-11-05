@@ -1,1 +1,1 @@
-possibly fixed an issue with colored maps
+fixed bed marker texture

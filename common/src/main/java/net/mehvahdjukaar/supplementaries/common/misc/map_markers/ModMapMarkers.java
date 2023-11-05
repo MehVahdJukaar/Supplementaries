@@ -24,8 +24,8 @@ public class ModMapMarkers {
     //with markers
     public static final CustomDecorationType<CustomMapDecoration, SignPostMarker> SIGN_POST_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
             Supplementaries.res("sign_post"), SignPostMarker::new, SignPostMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<ColoredDecoration, BedMarker> BED_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
-            Supplementaries.res("bed"), BedMarker::new, BedMarker::getFromWorld, ColoredDecoration::new);
+    public static final CustomDecorationType<CustomMapDecoration, BedMarker> BED_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+            Supplementaries.res("bed"), BedMarker::new, BedMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<ColoredDecoration, FlagMarker> FLAG_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
             Supplementaries.res("flag"), FlagMarker::new, FlagMarker::getFromWorld, ColoredDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
