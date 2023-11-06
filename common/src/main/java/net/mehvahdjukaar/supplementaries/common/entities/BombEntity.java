@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -291,26 +292,31 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     private void createExplosion() {
+        try {
+            boolean breaks = this.getOwner() instanceof Player ||
+                    PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
 
-        boolean breaks = this.getOwner() instanceof Player ||
-                PlatformHelper.isMobGriefingOn(this.level, this.getOwner());
+            if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))) {
+                breaks = false;
+            }
 
-        if (CompatHandler.FLAN && this.getOwner() instanceof Player p && !FlanCompat.canBreak(p, new BlockPos(position()))) {
-            breaks = false;
+            if (this.superCharged) {
+                //second explosion when supercharged
+                this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+            }
+
+            BombExplosion explosion = new BombExplosion(this.level, this,
+                    new BombExplosionDamageCalculator(this.type),
+                    this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
+                    this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+
+            explosion.explode();
+            explosion.doFinalizeExplosion();
+        }catch (Exception e){
+            this.discard();
+            Supplementaries.LOGGER.error("Something went wrong while exploding a bomb:", e);
+            throw e;
         }
-
-        if (this.superCharged) {
-            //second explosion when supercharged
-            this.level.explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
-        }
-
-        BombExplosion explosion = new BombExplosion(this.level, this,
-                new BombExplosionDamageCalculator(this.type),
-                this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
-                this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
-
-        explosion.explode();
-        explosion.doFinalizeExplosion();
     }
 
     public enum BreakingMode {

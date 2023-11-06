@@ -1,1 +1,1 @@
-fixed bed marker texture
+added some safety checks and more logging in bomb code
