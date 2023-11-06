@@ -105,7 +105,11 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
     //damage numbers mod
-
+//potion flask that works liqui quiver/big pot storage
+    //group rally ping map aylas
+    //quark pipes projectiles
+    //villagers regen health and trades when sleeping. malus otherwise
+    //enchantment durability bar
     //heartstone pets with system taht keeps track in unloaded chunks
 //sign post highlight text bug
     //villagers close eyelids sleep tight
