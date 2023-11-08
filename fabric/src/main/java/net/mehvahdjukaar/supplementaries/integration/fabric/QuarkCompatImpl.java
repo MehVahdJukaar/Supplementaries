@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -90,6 +91,10 @@ public class QuarkCompatImpl {
 
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @Nullable String name, int color) {
         return ItemStack.EMPTY;
+    }
+
+    public static boolean hasCompassNerf() {
+        return false;
     }
 
 

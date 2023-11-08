@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 public class ModMapMarkersClient {
     public static void init() {
 
-        MapDecorationClientHandler.registerCustomRenderer(ModMapMarkers.FLAG_DECORATION_TYPE, new ColoredDecorationRenderer(Supplementaries.res("map_markers/flag")));
-        MapDecorationClientHandler.registerCustomRenderer(ModMapMarkers.BANNER_DECORATION_TYPE, new ColoredDecorationRenderer(Supplementaries.res("map_markers/banner")));
+        MapDecorationClientHandler.registerCustomRenderer(ModMapMarkers.FLAG_DECORATION_TYPE, new ColoredDecorationRenderer(Supplementaries.res("textures/map_markers/flag.png")));
+        MapDecorationClientHandler.registerCustomRenderer(ModMapMarkers.BANNER_DECORATION_TYPE, new ColoredDecorationRenderer(Supplementaries.res("textures/map_markers/banner.png")));
     }
 }

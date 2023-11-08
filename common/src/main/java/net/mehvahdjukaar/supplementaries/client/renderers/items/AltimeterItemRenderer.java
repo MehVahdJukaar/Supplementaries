@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Vector3f;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
@@ -11,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientPlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.items.AltimeterItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -44,10 +43,9 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
     private static final Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> MODEL_CACHE = new HashMap<>();
 
-
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        if(MODEL_CACHE.isEmpty())onReload();
+        if (MODEL_CACHE.isEmpty()) onReload();
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
 
@@ -60,7 +58,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         TextureAtlasSprite sprite = pair.getFirst();
         int textureH = sprite.getHeight();
 
-        double stripDepth = calculateDepthIndex(level, textureH);
+        double stripDepth = calculateDepthIndex(stack, level, textureH);
         int mult = ClientConfigs.Items.DEPTH_METER_STEP_MULT.get();
         int index = (int) Math.round(stripDepth * mult);
 
@@ -71,12 +69,12 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         poseStack.popPose();
     }
 
-    private static double calculateDepthIndex(ClientLevel level, int textureH) {
+    private static double calculateDepthIndex(ItemStack stack, ClientLevel level, int textureH) {
         int min = level.getMinBuildHeight();
         int max = level.getMaxBuildHeight();
 
         LocalPlayer player = Minecraft.getInstance().player;
-        double depth = player == null ? 64 : player.position().y;
+        double depth = (player == null || !(AltimeterItem.isInInventory(stack))) ? 64 : player.position().y;
         double normDepth = (depth - min) / (max - min);
         return (normDepth * (textureH - 5));
     }
@@ -92,7 +90,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         float ix1 = shrink * (x1 - 0.5f) * 2;
         float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
         float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
-        VertexUtil. addQuad(builder, ps,
+        VertexUtil.addQuad(builder, ps,
                 x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
                 u0, v0, u1, v1,
                 255, 255, 255, 255,

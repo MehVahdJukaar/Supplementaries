@@ -15,6 +15,8 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPack
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VibeCheck;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.data.BuiltinRegistries;
@@ -40,6 +42,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import vazkii.quark.content.tweaks.module.CompassesWorkEverywhereModule;
 
 public class ServerEventsForge {
 
@@ -164,8 +167,10 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START) {
-            CandyItem.checkSweetTooth(event.player);
+        if(event.phase == TickEvent.Phase.START) {
+            if (event.side == LogicalSide.SERVER) {
+                CandyItem.checkSweetTooth(event.player);
+            }
         }
     }
 

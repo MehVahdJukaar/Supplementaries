@@ -1,1 +1,1 @@
-added some safety checks and more logging in bomb code
+fixed some map markers not having tedxtures

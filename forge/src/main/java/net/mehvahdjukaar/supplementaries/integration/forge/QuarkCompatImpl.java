@@ -13,19 +13,21 @@ import net.mehvahdjukaar.supplementaries.integration.forge.quark.CartographersQu
 import net.mehvahdjukaar.supplementaries.integration.forge.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -67,13 +69,13 @@ import vazkii.quark.content.client.module.UsesForCursesModule;
 import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
 import vazkii.quark.content.tools.item.SlimeInABucketItem;
 import vazkii.quark.content.tools.module.SlimeInABucketModule;
-import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
-import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
-import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
-import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
+import vazkii.quark.content.tweaks.module.*;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class QuarkCompatImpl {
@@ -320,6 +322,11 @@ public class QuarkCompatImpl {
     }
 
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> destination, int radius, boolean skipKnown, int zoom, MapDecoration.Type destinationType, @org.jetbrains.annotations.Nullable String name, int color) {
-       return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown,zoom, destinationType, name, color);
+        return CartographersQuillItem.forStructure(serverLevel, destination, radius, skipKnown, zoom, destinationType, name, color);
     }
+
+    public static boolean hasCompassNerf() {
+        return CompassesWorkEverywhereModule.enableCompassNerf;
+    }
+
 }
