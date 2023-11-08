@@ -19,6 +19,10 @@ body:
           required: true
         - label: "If you are unsure which mod is the culprit.\nDisable half your mods at time until you isolate the culprit"
           required: true
+        - label: "If you have a crash ALWAYS post LATEST.LOG below"
+          required: true
+        - label: "Do NOT report an issue related to Indium/Sodium/Optifine or other rendering mods unless you have contacted them first"
+          required: true
 
   - type: dropdown
     id: version
@@ -50,7 +54,7 @@ body:
     id: moonlight-version
     attributes:
       label: Moonlight Lib Version
-      description: The current version of EveryCompat
+      description: The current version of Moonlight lib
       placeholder: ex. moonlight-1.20-2.8.46
     validations:
       required: false
