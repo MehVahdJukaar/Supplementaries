@@ -5,6 +5,7 @@
   {"id":"#forge:dyes/white","required":false},
   {"id":"#c:white_dyes","required":false},
   {"id":"chalk:white_chalk","required":false},
+  {"id":"chalk:chalk","required":false},
   {"id":"minecraft:quartz","required":false},
   {"id":"minecraft:white_dye","required":false}
   ]

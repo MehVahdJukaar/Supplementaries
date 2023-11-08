@@ -133,6 +133,17 @@ public class Supplementaries {
     //sleep tight particles
     //snowy spirit bingerbread house
     //sled emissions skulk
+    //egg crack sound HH
+    //heartstone custom sounds
+
+    //map atlas stuff
+    //infested beds in woodland mansions
+    //dummy particle mod for mobs
+    //sack on head gives blindness
+    //enderman animation teleport mod
+    // cat loaf mod
+    //dispenser brick use same texture
+
 //cheap map recie and altimeter stuff
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
