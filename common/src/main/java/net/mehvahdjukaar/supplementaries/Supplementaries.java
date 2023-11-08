@@ -106,7 +106,8 @@ public class Supplementaries {
     //sleep tight particles
     //snowy spirit bingerbread house
     //sled emissions skulk
-
+    //egg crack sound HH
+    //heartstone custom sounds
 
     //map atlas stuff
     //infested beds in woodland mansions
