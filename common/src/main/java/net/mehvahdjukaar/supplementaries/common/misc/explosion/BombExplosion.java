@@ -173,7 +173,7 @@ public class BombExplosion extends Explosion {
         int j2 = Mth.floor(this.z - diameter - 1.0D);
         int j1 = Mth.floor(this.z + diameter + 1.0D);
 
-        List<Entity> list = this.level.getEntities(this.getSourceMob(), new AABB(k1, i2, j2, l1, i1, j1));
+        List<Entity> list = this.level.getEntities(this.source, new AABB(k1, i2, j2, l1, i1, j1));
         ForgeHelper.onExplosionDetonate(this.level, this, list, diameter);
         Vec3 vector3d = new Vec3(this.x, this.y, this.z);
 

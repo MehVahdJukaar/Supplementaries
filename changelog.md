@@ -1,1 +1,1 @@
-fixed some map markers not having tedxtures
+fixed bomb knocback
