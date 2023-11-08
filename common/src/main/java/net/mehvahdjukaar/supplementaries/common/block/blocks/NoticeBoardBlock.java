@@ -139,11 +139,12 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
         super.neighborChanged(state, world, pos, pBlock, pFromPos, pIsMoving);
         boolean powered = world.getBestNeighborSignal(pos) > 0;
         if(powered != state.getValue(POWERED)){
-            world.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
             //reacts to rising edge
             if(powered && world.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile){
                 tile.turnPage();
             }
+            world.setBlockAndUpdate(pos, state.setValue(POWERED, powered));
+
         }
     }
 

@@ -162,9 +162,9 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public void load(CompoundTag compound) {
-        super.load(compound);
         this.pageNumber = compound.getInt("PageNumber");
         this.textHolder.load(compound, level, worldPosition);
+        super.load(compound);
     }
 
     @Override
