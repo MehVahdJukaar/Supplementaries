@@ -67,7 +67,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
         if (firstSlotStack.is(ModRegistry.ANTIQUE_INK.get()) && !mapItemSavedData.locked && !AntiqueInkHelper.hasAntiqueInk(mapStack)) {
 
             ItemStack newMap = mapStack.copyWithCount(1);
-            WeatheredMap.setAntique(level, newMap, true);
+            WeatheredMap.setAntique(level, newMap, true, false);
             AntiqueInkHelper.setAntiqueInk(newMap, true);
 
             this.resultContainer.setItem(2, newMap);

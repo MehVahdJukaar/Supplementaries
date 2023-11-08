@@ -81,7 +81,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 if (lastLevelHack != null) {
-                    WeatheredMap.setAntique(lastLevelHack.get(), s, antique);
+                    WeatheredMap.setAntique(lastLevelHack.get(), s, antique, false);
                     AntiqueInkHelper.setAntiqueInk(s,true);
                 }
                 return s;

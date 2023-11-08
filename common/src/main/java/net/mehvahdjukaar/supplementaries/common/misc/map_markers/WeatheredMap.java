@@ -336,23 +336,34 @@ public class WeatheredMap {
         ANTIQUE_COLORS.put(MapColor.COLOR_BROWN, MapColor.TERRACOTTA_BROWN);
     }
 
-
     public static void setAntique(Level level, ItemStack stack, boolean on) {
+        setAntique(level, stack, on, false);
+    }
+
+    public static void setAntique(Level level, ItemStack stack, boolean on, boolean replaceOld) {
         MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
+        Integer mapId = createAntiqueMapData(mapitemsaveddata, level, on, replaceOld);
+        if (mapId != null) stack.getOrCreateTag().putInt("map", mapId);
+
+    }
+
+    public static Integer createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
-            MapItemSavedData newData = data.copy();
+            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.copy();
             WeatheredMapData instance = ANTIQUE_DATA_KEY.get(newData);
             var colorData = ColoredMapHandler.COLOR_DATA.get(newData);
             colorData.clear();
 
             instance.set(on);
             instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
-            int mapId = level.getFreeMapId();
-            String mapKey = MapItem.makeKey(mapId);
+            if (!replaceOld) {
+                int mapId = level.getFreeMapId();
+                String mapKey = MapItem.makeKey(mapId);
 
-            level.setMapData(mapKey, newData);
-            stack.getOrCreateTag().putInt("map", mapId);
+                level.setMapData(mapKey, newData);
+            }
         }
+        return null;
     }
 }
