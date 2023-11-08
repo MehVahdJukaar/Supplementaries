@@ -6,7 +6,7 @@
     {"id":"#minecraft:lanterns","required":false},
     {"id":"supplementaries:rope","required":false},
     {"id":"supplementaries:sack","required":false},
-    {"id":"supplementaries:hanging_flower_pot","required":false},
+    {"id":"amendments:hanging_flower_pot","required":false},
     {"id":"supplementaries:rope_chandelier","required":false},
     {"id":"supplementaries:rope_soul_chandelier","required":false},
     {"id":"farmersdelight:rope","required":false},
