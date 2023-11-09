@@ -1,14 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "candle_holder",
   "pattern": [
-    "1",
-    "2"
+    "NCN",
+    " N "
   ],
   "key": {
-    "1": {
+    "C": {
       "item": "minecraft:light_gray_candle"
     },
-    "2": {
+    "N": {
       "item": "minecraft:iron_ingot"
     }
   },
