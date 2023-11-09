@@ -119,9 +119,7 @@ public abstract class MapItemMixin {
         if (l != null) {
             Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l.getSecond()), Blocks.AIR);
             var c = ColoredMapHandler.getColorData(data);
-            if (c != null) {
-                c.markColored(x, z, block, level, l.getFirst(), data);
-            }
+            c.markColored(x, z, block, level, l.getFirst(), data);
         }
 
         return original;

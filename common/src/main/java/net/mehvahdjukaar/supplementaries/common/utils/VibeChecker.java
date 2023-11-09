@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -24,11 +22,7 @@ public class VibeChecker {
     }
 
     public static void checkVibe(Level level) {
-        try{
-            SoftFluidRegistry.getEmpty();
-        }catch (Exception e){
-            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?",e);
-        }
+        checkDatapackRegistry();
 
         //check sheets class
         if(PlatHelper.getPhysicalSide().isClient()) clientStuff();
@@ -53,6 +47,14 @@ public class VibeChecker {
         } catch (Exception e) {
             Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
             e.printStackTrace();
+        }
+    }
+
+    public static void checkDatapackRegistry() {
+        try{
+            SoftFluidRegistry.getEmpty();
+        }catch (Exception e){
+            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?",e);
         }
     }
 

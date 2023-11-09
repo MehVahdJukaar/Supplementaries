@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.items.CandyItem;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
@@ -15,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VillagerScareStuff;
-import net.mehvahdjukaar.supplementaries.reg.LootTablesInjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -34,7 +32,10 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.event.*;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -159,8 +160,6 @@ public class ServerEventsForge {
     }
 
 
-
-
     //TODO: add these on fabric
     //forge only
 
@@ -170,7 +169,7 @@ public class ServerEventsForge {
         if (event.phase == TickEvent.Phase.START) {
             if (event.side == LogicalSide.SERVER) {
                 ServerEvents.serverPlayerTick(event.player);
-            }else{
+            } else {
                 ServerEvents.clientPlayerTick(event.player);
             }
         }
@@ -217,9 +216,11 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onServerTick(TickEvent.LevelTickEvent event) {
         if (!flag) {
-            if (counter++ > 20) {
-                VibeChecker.checkVibe(event.level);
-                flag = true;
+            if (event.phase == TickEvent.Phase.START) {
+                if (counter++ > 20) {
+                    VibeChecker.checkVibe(event.level);
+                    flag = true;
+                }
             }
         }
     }
