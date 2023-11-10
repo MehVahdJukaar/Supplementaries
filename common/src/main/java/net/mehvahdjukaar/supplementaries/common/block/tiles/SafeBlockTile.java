@@ -120,6 +120,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
 
+    @Nullable
     @Override
     public String getPassword() {
         return password;

@@ -21,6 +21,7 @@ public interface IKeyLockable {
 
     void setPassword(String password);
 
+    @Nullable
     String getPassword();
 
     void clearPassword();
@@ -33,7 +34,8 @@ public interface IKeyLockable {
 
 
     default boolean shouldShowPassword() {
-        return this.getPassword().length() <= MAX_ITEM_NAME_LEN;
+        String password = this.getPassword();
+        return password != null && password.length() <= MAX_ITEM_NAME_LEN;
     }
 
     default void onKeyAssigned(Level level, BlockPos pos, Player player, String newKey) {
