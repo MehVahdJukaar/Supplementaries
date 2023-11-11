@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -165,7 +167,7 @@ public class ModVillagerTrades {
         }
         tag.putBoolean("Flicker", random.nextFloat() < 0.42f);
         tag.putBoolean("Trail", random.nextFloat() < 0.42f);
-        List<Integer> list = Lists.newArrayList();
+        IntList list = new IntArrayList();
         int colors = 0;
         do {
             list.add(VIBRANT_COLORS[random.nextInt(VIBRANT_COLORS.length)].getFireworkColor());
@@ -175,7 +177,7 @@ public class ModVillagerTrades {
 
 
         if (random.nextBoolean()) {
-            List<Integer> fadeList = Lists.newArrayList();
+            IntList fadeList = new IntArrayList();
             colors = 0;
             do {
                 fadeList.add(VIBRANT_COLORS[random.nextInt(VIBRANT_COLORS.length)].getFireworkColor());

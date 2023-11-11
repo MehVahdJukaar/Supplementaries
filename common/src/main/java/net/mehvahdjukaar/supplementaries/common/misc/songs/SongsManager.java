@@ -5,7 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.ints.Int2IntRBTreeMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
@@ -99,7 +104,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     @NotNull
     private static String selectRandomSong(RandomSource random) {
         Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
-        return song.map(WeightedEntry.Wrapper::getData).orElseGet(() ->"");
+        return song.map(WeightedEntry.Wrapper::getData).orElse("");
     }
 
     //called on server only
@@ -152,7 +157,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     //util to make songs from a map
-    private static final Map<Long, List<Integer>> RECORDING = new HashMap<>();
+    private static final Long2ObjectMap<IntList> RECORDING = new Long2ObjectOpenHashMap<>();
     private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
 
     private static boolean isRecording = false;
@@ -174,27 +179,27 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         }
 
         //sort and group notes and translate time
-        TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+        Int2IntRBTreeMap treeMap = new Int2IntRBTreeMap();
 
-        for (var e : RECORDING.entrySet()) {
+        for (var e : RECORDING.long2ObjectEntrySet()) {
             int notes = 0;
-            List<Integer> noteList = e.getValue();
+            IntList noteList = e.getValue();
             //can store max 4 notes in signed int
             for (int i = 0; i < Math.min(4, noteList.size()); i++) {
-                notes += noteList.get(i) * Math.pow(100, i);
+                notes += noteList.getInt(i) * Math.pow(100, i);
             }
-            treeMap.put((int) (e.getKey() - start), notes);
+            treeMap.put((int) (e.getLongKey() - start), notes);
         }
 
         int largestInterval = 1;
-        Set<Integer> intervals = new HashSet<>();
+        IntArraySet intervals = new IntArraySet();
 
         //put everything in one list
-        List<Integer> arrayList = new ArrayList<>();
+        IntList arrayList = new IntArrayList();
         int lastTime = 0;
-        for (var entry : treeMap.entrySet()) {
-            int note = entry.getValue();
-            int key = entry.getKey();
+        for (var entry : treeMap.int2IntEntrySet()) {
+            int note = entry.getIntValue();
+            int key = entry.getIntKey();
             int interval = -(key - lastTime);
             lastTime = key;
             if (interval != 0) {
@@ -211,7 +216,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         int GCD = 1;
         for (int div = largestInterval; div > 0; div--) {
             int d = div;
-            boolean match = intervals.stream().allMatch(j -> j % d == 0);
+            boolean match = intervals.intStream().allMatch(j -> j % d == 0);
             if (match) {
                 GCD = Math.abs(div);
                 break;
@@ -219,7 +224,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         }
 
         //simplify
-        List<Integer> finalNotes = new ArrayList<>();
+        IntList finalNotes = new IntArrayList();
 
         for (int i : arrayList) {
             if (i < 0) finalNotes.add((i / GCD));
@@ -253,7 +258,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     public static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
         if (WHITELIST.isEmpty() || WHITELIST.contains(instrument)) {
-            List<Integer> notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new ArrayList<>());
+            IntList notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new IntArrayList());
             notes.add(note);
         }
     }

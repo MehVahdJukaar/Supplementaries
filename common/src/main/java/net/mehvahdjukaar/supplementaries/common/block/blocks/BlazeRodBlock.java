@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,14 +34,14 @@ public class BlazeRodBlock extends StickBlock {
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         if (random.nextFloat() > 0.3) return;
-        ArrayList<Integer> list = new ArrayList<>();
+        IntList list = new IntArrayList();
         if (state.getValue(AXIS_Y)) list.add(0);
         if (state.getValue(AXIS_X)) list.add(1);
         if (state.getValue(AXIS_Z)) list.add(2);
         int s = list.size();
         if (s > 0) {
             ParticleOptions particle = state.getValue(WATERLOGGED) ? ParticleTypes.BUBBLE : ParticleTypes.SMOKE;
-            int c = list.get(random.nextInt(s));
+            int c = list.getInt(random.nextInt(s));
             double x, y, z;
             switch (c) {
                 default -> {

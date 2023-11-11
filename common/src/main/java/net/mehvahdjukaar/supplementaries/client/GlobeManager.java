@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -27,8 +28,8 @@ public class GlobeManager {
 
     private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
 
-    private static final HashMap<ResourceLocation, List<Integer>> DIMENSION_COLOR_MAP = new HashMap<>();
-    private static final List<Integer> SEPIA_COLORS = new ArrayList<>();
+    private static final HashMap<ResourceLocation, IntList> DIMENSION_COLOR_MAP = new HashMap<>();
+    private static final IntList SEPIA_COLORS = new IntArrayList();
 
     public static void refreshTextures() {
         Level world = Minecraft.getInstance().level;
@@ -99,10 +100,10 @@ public class GlobeManager {
         }
 
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
-            if (sepia) return SEPIA_COLORS.get(b);
-            var l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
+            if (sepia) return SEPIA_COLORS.getInt(b);
+            IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
             if(l != null){
-               return l.get(b);
+               return l.getInt(b);
             }
             return 1;
         }
@@ -127,7 +128,7 @@ public class GlobeManager {
                 SEPIA_COLORS.clear();
                 SEPIA_COLORS.addAll(l);
             } else {
-                DIMENSION_COLOR_MAP.put(new ResourceLocation(name.replace(".", ":")), l);
+                DIMENSION_COLOR_MAP.put(new ResourceLocation(name.replace(".", ":")), new IntArrayList(l));
             }
         }
         if(DIMENSION_COLOR_MAP.isEmpty()){
@@ -157,7 +158,7 @@ public class GlobeManager {
         public final ResourceLocation texture;
 
         private static final Map<String, Pair<Model, ResourceLocation>> nameCache = new HashMap<>();
-        private static final Map<String, Integer> idMap = new Object2IntArrayMap<>();
+        private static final Map<String,Integer> idMap = new HashMap<>();
         public static final List<ResourceLocation> textures = new ArrayList<>();
 
         public static void recomputeCache() {

@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -18,7 +19,7 @@ public class Song {
     public static final Codec<Song> CODEC = RecordCodecBuilder.<Song>create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(p -> p.name),
             Codec.intRange(1, 1000).optionalFieldOf("tempo", 1).forGetter(p -> p.tempo),
-            Codec.INT.listOf().fieldOf("notes").forGetter(p -> List.of(p.notes)),
+            Codec.INT.listOf().fieldOf("notes").forGetter(p -> Arrays.stream(p.notes).boxed().toList()),
             Codec.STRING.optionalFieldOf("credits", "").forGetter(p -> p.credits),
             Codec.intRange(0, 10000).optionalFieldOf("weight", 100).forGetter(p -> p.weight)
     ).apply(instance, Song::new)).comapFlatMap((s) -> {
@@ -35,7 +36,7 @@ public class Song {
 
     private final String name;
     private final int tempo;
-    private Integer[] notes;
+    private int[] notes;
     private final String credits;
     private final int weight;
 
@@ -44,7 +45,7 @@ public class Song {
     public Song(String name, int tempo, List<Integer> notes, String credits, int weight) {
         this.name = name;
         this.tempo = Math.max(1, tempo);
-        this.notes = notes.toArray(new Integer[0]);
+        this.notes = notes.stream().mapToInt(value -> value).toArray();
         this.credits = credits;
         this.weight = weight;
     }
@@ -55,7 +56,7 @@ public class Song {
 
     //makes it usable to be played
     private void processForPlaying() {
-        List<Integer> newNotes = new ArrayList<>();
+        IntArrayList newNotes = new IntArrayList();
         for (int i : notes) {
             if (i <= 0) {
                 int j = -Math.min(-1, i);
@@ -67,7 +68,7 @@ public class Song {
                 }
             } else newNotes.add(i);
         }
-        this.notes = newNotes.toArray(new Integer[0]);
+        this.notes = newNotes.elements();
     }
 
     public String getTranslationKey() {
@@ -78,7 +79,7 @@ public class Song {
         return Math.max(1, tempo);
     }
 
-    public Integer[] getNotes() {
+    public int[] getNotes() {
         return notes;
     }
 

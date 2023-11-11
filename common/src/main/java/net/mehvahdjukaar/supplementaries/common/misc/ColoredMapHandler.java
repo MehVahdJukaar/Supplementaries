@@ -384,7 +384,7 @@ public class ColoredMapHandler {
 
         @Environment(EnvType.CLIENT)
         public void processTexture(NativeImage texture, int startX, int startY,  byte[] colors) {
-            if (!ClientConfigs.Tweaks.COLORED_MAPS.get()) return;
+            if (!ClientConfigs.Tweaks.COLORED_MAPS.get() || data == null) return;
             boolean tg = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
             for (int x = 0; x < 128; ++x) {
                 for (int z = 0; z < 128; ++z) {

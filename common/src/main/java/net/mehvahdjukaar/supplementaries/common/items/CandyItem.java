@@ -1,5 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class CandyItem extends Item {
@@ -22,18 +24,14 @@ public class CandyItem extends Item {
     private static final int SUGAR_PER_CANDY = 10 * 20;
     private static final int EFFECT_THRESHOLD = 80 * 20;
 
-    private static final Map<UUID, Integer> SWEET_TOOTH_COUNTER = new HashMap<>();
+    private static final Object2IntMap<UUID> SWEET_TOOTH_COUNTER = PlatHelper.getPhysicalSide().isServer() ? new Object2IntOpenHashMap<>() : new Object2IntArrayMap<>();
 
     @ApiStatus.Internal
     public static void checkSweetTooth(Player entity) {
         UUID id = entity.getUUID();
-        Integer i = SWEET_TOOTH_COUNTER.get(id);
-        if (i != null) {
-            if (i <= 0) {
-                SWEET_TOOTH_COUNTER.remove(id);
-            } else {
-                SWEET_TOOTH_COUNTER.put(id, i - 1);
-            }
+        int newValue = SWEET_TOOTH_COUNTER.computeIntIfPresent(id, (k, i) -> i - 1);
+        if (newValue <= 0) {
+            SWEET_TOOTH_COUNTER.removeInt(id);
         }
     }
 
@@ -47,16 +45,14 @@ public class CandyItem extends Item {
         return super.finishUsingItem(stack, world, entity);
     }
 
-    //call for other candies from other mods
+    // call for other candies from other mods
     public static void increaseSweetTooth(Level world, LivingEntity entity, int amount) {
         if (!world.isClientSide && entity instanceof Player) {
             UUID id = entity.getUUID();
-            int i = SWEET_TOOTH_COUNTER.getOrDefault(id, 0);
-            i += amount;
+            int i = SWEET_TOOTH_COUNTER.mergeInt(id, amount, Integer::sum);
             if (i > EFFECT_THRESHOLD) {
                 entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 400));
             }
-            SWEET_TOOTH_COUNTER.put(id, i);
         }
     }
 }

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -20,8 +22,8 @@ import java.util.Map;
 public class TippedSpikesColor implements BlockColor, ItemColor {
 
     //not using concurrent hashmap cause its slow since its blocking. only one thread should access these anyways but we never know
-    private static final ThreadLocal<Map<Integer, Integer>> CACHED_COLORS_0 = ThreadLocal.withInitial(HashMap::new);
-    private static final ThreadLocal<Map<Integer, Integer>> CACHED_COLORS_1 = ThreadLocal.withInitial(HashMap::new);
+    private static final ThreadLocal<Int2IntMap> CACHED_COLORS_0 = ThreadLocal.withInitial(Int2IntOpenHashMap::new);
+    private static final ThreadLocal<Int2IntMap> CACHED_COLORS_1 = ThreadLocal.withInitial(Int2IntOpenHashMap::new);
 
     private static int getCachedColor(int base, int tint) {
         return switch (tint) {
@@ -69,7 +71,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
         hsl = ColorHelper.prettyfyColor(hsl.withHue(h));
         float s = hsl.saturation();
         //0.7,0.6
-        s = tint == 0 ? ((s * 0.81f)) : s * 0.74f;
+        s = tint == 0 ? (s * 0.81f) : s * 0.74f;
         return hsl.withSaturation(s).asRGB().toInt();
     }
 }

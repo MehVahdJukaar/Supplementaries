@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import mezz.jei.core.util.WeakList;
 import net.mehvahdjukaar.moonlight.api.misc.WeakHashSet;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -132,7 +135,7 @@ public class WaySignStructure extends Structure {
         if (y < structure.minY || y > structure.maxY) return Optional.empty();
         if (y > 105 || y < generator.getSeaLevel()) return Optional.empty();
 
-        List<Integer> list = new ArrayList<>();
+        IntList list = new IntArrayList();
         //I could remove this but it makes for nicer generation
         list.add(y);
         if (isPosNotValid(generator, x + 2, z + 2, list, levelHeightAccessor, randomState)) return Optional.empty();
@@ -140,8 +143,8 @@ public class WaySignStructure extends Structure {
         if (isPosNotValid(generator, x - 2, z + 2, list, levelHeightAccessor, randomState)) return Optional.empty();
         if (isPosNotValid(generator, x - 2, z - 2, list, levelHeightAccessor, randomState)) return Optional.empty();
 
-        TreeSet<Integer> set = new TreeSet<>(list);
-        if (set.last() - set.first() > 1) return Optional.empty();
+        IntRBTreeSet set = new IntRBTreeSet(list);
+        if (set.lastInt() - set.firstInt() > 1) return Optional.empty();
 
         int sum = 0;
         for (var v : list) sum += v;
@@ -149,7 +152,7 @@ public class WaySignStructure extends Structure {
         return Optional.of(new BlockPos(x, Math.round(sum / 5f) + 1, z));
     }
 
-    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, List<Integer> heightMap,
+    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, IntList heightMap,
                                          LevelHeightAccessor heightLimitView, RandomState randomState) {
         // Grab height of land. Will stop at first non-air block.
         int y = gen.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
