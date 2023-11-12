@@ -1,7 +1,6 @@
 {
-  "itemGroup.supplementaries.supplementaries": "锦致装饰",
+  "itemGroup.supplementaries": "锦致装饰",
   "block.supplementaries.faucet": "水龙头",
-  "block.supplementaries.wall_lantern": "壁灯",
   "block.supplementaries.planter": "种植盆",
   "block.supplementaries.bellows": "风箱",
   "block.supplementaries.wind_vane": "风向标",
@@ -59,10 +58,7 @@
   "block.supplementaries.soul_jar": "灵魂玻璃罐",
   "item.supplementaries.flute": "竹笛",
   "message.supplementaries.throwable_brick": "可投掷",
-  "message.supplementaries.wall_lantern": "可放置在墙上",
   "message.supplementaries.command.configs_reloaded": "配置已重载",
-  "block.supplementaries.copper_lantern": "铜灯笼",
-  
   "message.supplementaries.hourglass": "可放入任意砂类或粉末",
   "message.supplementaries.cage": "按住[Shift]放置",
   "gui.supplementaries.safe.name": "%1$s的%2$s",
@@ -73,17 +69,12 @@
   "message.supplementaries.sack": "随身携带挺吃力",
   "message.supplementaries.globe": "由流浪商人出售",
   "message.supplementaries.wind_vane": "对天气变化有反应",
-  "message.supplementaries.hanging_pot": "可悬挂",
-  "message.supplementaries.double_cake": "方块状态下可叠放",
-  "block.supplementaries.double_cake": "双层蛋糕",
   "message.supplementaries.safe.unbound": "未绑定",
   "block.supplementaries.gold_door": "金门",
   "block.supplementaries.gold_trapdoor": "金活板门",
   "block.supplementaries.crimson_lantern": "绯红灯笼",
   "message.supplementaries.blackboard": "涂蜡",
   "gui.supplementaries.blackboard.clear": "擦除",
-  "block.supplementaries.hanging_flower_pot": "悬挂的花盆",
-  "block.supplementaries.directional_cake": "定向的蛋糕",
   "block.supplementaries.rope": "绳索",
   "block.supplementaries.bamboo_spikes": "竹刺",
   "item.supplementaries.bamboo_spikes_tipped": "浸药竹刺",
@@ -340,7 +331,6 @@
   "effect.supplementaries.overencumbered.description": "阻止疾跑。等级越高，跳跃高度和行走速度越低。",
   "message.supplementaries.cage.fail": "只能捕获小型生物",
   "item.supplementaries.sign_post": "%s路标",
-  "block.supplementaries.hanging_sign": "%s挂牌",
   "block.supplementaries.sugar_cube": "糖块",
   "item.supplementaries.quiver": "箭袋",
   "message.supplementaries.quiver.tooltip": "%s [%s]",
@@ -447,7 +437,6 @@
   "supplementaries.display_source.fluid_amount": "流体含量",
   "create.display_source.fill_level.fluid_amount": "流体含量",
   
-  "block_type.supplementaries.hanging_sign": "挂牌",
   "block_type.supplementaries.sign_post": "路标",
   
 
