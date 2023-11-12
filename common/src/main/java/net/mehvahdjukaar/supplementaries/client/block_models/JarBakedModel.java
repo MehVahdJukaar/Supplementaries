@@ -18,6 +18,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -75,7 +76,9 @@ public class JarBakedModel implements CustomBakedModel {
             }
             if (!SINGLE_PASS) return quads;
         }
-        quads.addAll(jar.getQuads(state, side, rand));
+        if(renderType == RenderType.cutout()) {
+            quads.addAll(jar.getQuads(state, side, rand));
+        }
         return quads;
     }
 

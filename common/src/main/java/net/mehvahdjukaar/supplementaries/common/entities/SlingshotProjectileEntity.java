@@ -176,6 +176,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
+    //TODO: fix and add particles and stuff
     private boolean trySplashPotStuff() {
         if (this.getOwner() instanceof LivingEntity le) {
             Projectile ent = null;
@@ -188,7 +189,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 ent = p;
             } else if (item == Items.FIRE_CHARGE) {
                 var p = new SmallFireball(level, le, this.getX(), this.getY(), this.getZ());
+                p.setPos(this.getX(), this.getY(), this.getZ());
                 p.setItem(this.getItem());
+                ent = p;
             }else if( item instanceof SnowballItem){
                 var s = new Snowball(level, le);
                 s.setPos(this.getX(), this.getY(), this.getZ());
@@ -196,6 +199,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 ent = s;
             }else if(item instanceof BombItem bi){
                 var s = new BombEntity(level, le, bi.getType());
+                s.setPos(this.getX(), this.getY(), this.getZ());
+                s.setItem(this.getItem());
+                ent = s;
+            }else if(item instanceof EnderpearlItem){
+                var s = new ThrownEnderpearl(level, le);
                 s.setPos(this.getX(), this.getY(), this.getZ());
                 s.setItem(this.getItem());
                 ent = s;
@@ -289,6 +297,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
+    //TODO: trails for bombs
     @Override
     public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
         if (!this.isNoPhysics()) {

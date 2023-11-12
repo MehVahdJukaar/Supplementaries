@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.gui.screens.worldselection.WorldSelectionList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -21,10 +20,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -338,7 +335,7 @@ public class CommonConfigs {
             PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
                     .define("broken_by_sapling", true);
             FD_PLANTER = builder.comment("When Farmers Delight is on planter will also act like rich soil and use it in its recipe")
-                            .define("rich_soil_planter", true);
+                    .define("rich_soil_planter", true);
             builder.pop();
 
             builder.push("notice_board");
@@ -557,6 +554,8 @@ public class CommonConfigs {
                     .define("slide_on_fall", true);
             ROPE_OVERRIDE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
                     .define("rope_override", Supplementaries.res("rope"));
+            ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes")
+                    .define("horizontal_ropes", true);
             builder.pop();
 
             builder.push("jar");
@@ -703,6 +702,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ROPE_ENABLED;
         public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
         public static final Supplier<Boolean> ROPE_UNRESTRICTED;
+        public static final Supplier<Boolean> ROPE_HORIZONTAL;
         public static final Supplier<Boolean> ROPE_SLIDE;
 
         public static final Supplier<Boolean> URN_ENABLED;
@@ -830,6 +830,8 @@ public class CommonConfigs {
                     .define("allow_fire_charges", false);
             SLINGSHOT_SNOWBALL = builder.comment("Allows snowballs to be thrown by slingshots")
                     .define("allow_snowballs", false);
+            SLINGSHOT_ENDERPEARLS = builder.comment("Allows enderpearls to be thrown by slingshots")
+                    .define("allow_enderpearls", false);
             builder.pop();
 
             builder.push("antique_ink");
@@ -869,6 +871,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SLINGSHOT_BOMBS;
         public static final Supplier<Boolean> SLINGSHOT_FIRECHARGE;
         public static final Supplier<Boolean> SLINGSHOT_SNOWBALL;
+        public static final Supplier<Boolean> SLINGSHOT_ENDERPEARLS;
 
         public static final Supplier<Boolean> BOMB_ENABLED;
         public static final Supplier<Double> BOMB_RADIUS;

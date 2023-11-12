@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
@@ -132,6 +133,7 @@ public class ServerEvents {
         CapturedMobHandler.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
+        MapLightHandler.sendDataToClient(player);
     }
 
     @EventCalled

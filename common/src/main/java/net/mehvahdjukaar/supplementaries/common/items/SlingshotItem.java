@@ -91,6 +91,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     private static void shootProjectile(Level level, LivingEntity entity, InteractionHand hand, ItemStack stack, ItemStack projectileStack,
                                         float soundPitch, float power, float accuracy, float yaw) {
 
+        projectileStack.setCount(1);
         SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
@@ -175,17 +176,20 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
         return s -> {
             Item i = s.getItem();
             //no buckets
-            if(i instanceof ThrowablePotionItem &&  CommonConfigs.Tools.SLINGSHOT_POTIONS.get()){
-                return true;
+            if (i instanceof ThrowablePotionItem) {
+                return CommonConfigs.Tools.SLINGSHOT_POTIONS.get();
             }
-            if(i instanceof BombItem &&  CommonConfigs.Tools.SLINGSHOT_BOMBS.get()){
-                return true;
+            if (i instanceof BombItem) {
+                return CommonConfigs.Tools.SLINGSHOT_BOMBS.get();
             }
-            if(i instanceof SnowballItem &&  CommonConfigs.Tools.SLINGSHOT_SNOWBALL.get()){
-                return true;
+            if (i instanceof SnowballItem) {
+                return CommonConfigs.Tools.SLINGSHOT_SNOWBALL.get();
             }
-            if(i instanceof FireChargeItem &&  CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get()){
-                return true;
+            if (i instanceof EnderpearlItem) {
+                return CommonConfigs.Tools.SLINGSHOT_ENDERPEARLS.get();
+            }
+            if (i instanceof FireChargeItem) {
+                return CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get();
             }
             return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
                     i instanceof BlockItem ||

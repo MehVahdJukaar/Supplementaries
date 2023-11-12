@@ -6,11 +6,11 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class OpenConfigsPacket implements Message {
-    public OpenConfigsPacket(FriendlyByteBuf buffer) {
+public class ClientBoundOpenConfigsPacket implements Message {
+    public ClientBoundOpenConfigsPacket(FriendlyByteBuf buffer) {
     }
 
-    public OpenConfigsPacket() {
+    public ClientBoundOpenConfigsPacket() {
     }
 
 

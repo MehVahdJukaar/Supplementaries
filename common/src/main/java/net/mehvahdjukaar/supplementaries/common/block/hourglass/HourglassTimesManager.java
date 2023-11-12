@@ -24,7 +24,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
 
     public static final HourglassTimesManager RELOAD_INSTANCE = new HourglassTimesManager();
 
-    private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
+    private final Map<Item, HourglassTimeData> dustsMap = new IdentityHashMap<>();
     private final Set<HourglassTimeData> dusts = new HashSet<>();
 
     public HourglassTimesManager() {

@@ -28,13 +28,13 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class TrappedPresentBlock extends AbstractPresentBlock {
 
-    private static final Map<Item, IPresentItemBehavior> TRAPPED_PRESENT_INTERACTIONS_REGISTRY = Util.make(new Object2ObjectOpenHashMap<>(),
-            (map) -> map.defaultReturnValue(((source, stack) -> Optional.empty())));
+    private static final Map<Item, IPresentItemBehavior> TRAPPED_PRESENT_INTERACTIONS_REGISTRY =  new IdentityHashMap<>();
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
@@ -50,7 +50,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
     }
 
     public static IPresentItemBehavior getPresentBehavior(ItemStack pStack) {
-        return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.get(pStack.getItem());
+        return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.getOrDefault(pStack.getItem(), (source, stack) -> Optional.empty());
     }
 
     @Override

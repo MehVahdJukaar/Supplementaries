@@ -6,11 +6,11 @@ import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
-public class RequestConfigReloadPacket implements Message {
-    public RequestConfigReloadPacket(FriendlyByteBuf buffer) {
+public class ServerBoundRequestConfigReloadPacket implements Message {
+    public ServerBoundRequestConfigReloadPacket(FriendlyByteBuf buffer) {
     }
 
-    public RequestConfigReloadPacket() {
+    public ServerBoundRequestConfigReloadPacket() {
     }
 
     @Override

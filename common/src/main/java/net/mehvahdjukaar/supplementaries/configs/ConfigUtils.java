@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
-import net.mehvahdjukaar.supplementaries.common.network.RequestConfigReloadPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -19,7 +19,7 @@ public class ConfigUtils {
     //called on client. client -> server -..-> all clients
     public static void clientRequestServerConfigReload() {
         if (Minecraft.getInstance().getConnection() != null)
-            NetworkHandler.CHANNEL.sendToServer(new RequestConfigReloadPacket());
+            NetworkHandler.CHANNEL.sendToServer(new ServerBoundRequestConfigReloadPacket());
     }
 
 

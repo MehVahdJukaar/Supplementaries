@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -26,6 +27,7 @@ public abstract class MapTextureMixin {
             shift = At.Shift.BEFORE), method = "updateTexture")
     public void updateColoredTexture(CallbackInfo ci) {
         ColoredMapHandler.getColorData(this.data).processTexture(this.texture.getPixels(), 0, 0, this.data.colors);
+        MapLightHandler.getLightData(this.data).processTexture(this.texture.getPixels(), 0, 0, this.data.dimension);
     }
 
 

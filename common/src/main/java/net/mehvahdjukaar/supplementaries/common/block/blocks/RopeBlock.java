@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -142,7 +143,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             }
             if (flag) shapes.put(state, v);
         }
-        return ImmutableMap.copyOf(shapes);
+        return new Object2ObjectOpenHashMap<>(shapes);
     }
 
     @Override
@@ -165,6 +166,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
     public boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
+        if(dir.getAxis().isHorizontal() && !CommonConfigs.Functional.ROPE_HORIZONTAL.get())return false;
         BlockPos facingPos = currentPos.relative(dir);
         return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }

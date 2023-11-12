@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -23,12 +24,10 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
-import net.mehvahdjukaar.supplementaries.mixins.StrayMixin;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Stray;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,7 +58,7 @@ public class Supplementaries {
         CommonConfigs.init();
         PlatHelper.getPhysicalSide().ifClient(ClientConfigs::init);
 
-        NetworkHandler.registerMessages();
+        NetworkHandler.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
@@ -81,6 +80,7 @@ public class Supplementaries {
         SliceMapItem.init();
         WeatheredMap.init();
         ColoredMapHandler.init();
+        MapLightHandler.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
@@ -107,6 +107,7 @@ public class Supplementaries {
     //damage numbers mod
 //potion flask that works liqui quiver/big pot storage
     //group rally ping map aylas
+    //identity hasmap vs object2objecthasmap
     //quark pipes projectiles
     //villagers regen health and trades when sleeping. malus otherwise
     //enchantment durability bar
