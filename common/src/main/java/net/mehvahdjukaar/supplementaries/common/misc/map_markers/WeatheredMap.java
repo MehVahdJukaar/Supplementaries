@@ -11,6 +11,8 @@ import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -45,9 +47,18 @@ public class WeatheredMap {
     public static void init() {
     }
 
-    private static class WeatheredMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
+    public static WeatheredMapData getAntiqueData(MapItemSavedData data) {
+        return ANTIQUE_DATA_KEY.get(data);
+    }
+
+    public static class WeatheredMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
         private boolean antique = false;
 
+        public boolean isAntique() {
+            return antique;
+        }
+
+        @Override
         public void load(CompoundTag tag) {
             if (tag.contains(ANTIQUE_KEY)) {
                 antique = tag.getBoolean(ANTIQUE_KEY);
@@ -112,7 +123,8 @@ public class WeatheredMap {
             if (hasDepthLock) {
                 range = (int) (range * SliceMapItem.getRangeMultiplier());
             }
-            if (level.dimensionType().hasCeiling()) {
+            boolean hasCeiling = isHasCeiling(level, minHeight);
+            if (hasCeiling) {
                 range /= 2;
             }
 
@@ -146,7 +158,7 @@ public class WeatheredMap {
                                 int distanceFromLand = 8;
                                 HashMap<BlockPos, Boolean> isWaterMap = new HashMap<>();
 
-                                if (level.dimensionType().hasCeiling()) {
+                                if (hasCeiling) {
                                     int l3 = worldX + worldZ * 231871;
                                     l3 = l3 * l3 * 31287121 + l3 * 11;
                                     if ((l3 >> 20 & 1) == 0) {
@@ -282,6 +294,14 @@ public class WeatheredMap {
             return true;
         }
 
+        private static boolean isHasCeiling(Level level, int mapHeight) {
+            boolean original = level.dimensionType().hasCeiling();
+            if (original && mapHeight != Integer.MAX_VALUE && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
+                return false;
+            }
+            return original;
+        }
+
 
         public void set(boolean on) {
             this.antique = on;
@@ -351,9 +371,11 @@ public class WeatheredMap {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
             MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.copy();
-            WeatheredMapData instance = ANTIQUE_DATA_KEY.get(newData);
-            var colorData = ColoredMapHandler.COLOR_DATA.get(newData);
+            WeatheredMapData instance = getAntiqueData(newData);
+            var colorData = ColoredMapHandler.getColorData(newData);
             colorData.clear();
+            var lightData = MapLightHandler.getLightData(newData);
+            lightData.clear();
 
             instance.set(on);
             instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);

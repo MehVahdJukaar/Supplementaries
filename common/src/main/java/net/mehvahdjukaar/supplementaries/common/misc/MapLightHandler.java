@@ -244,6 +244,10 @@ public class MapLightHandler {
                 }
             }
         }
+
+        public void clear() {
+            data = null;
+        }
     }
 
     private static final Object2IntMap<ResourceKey<Level>> LIGHT_PER_WORLD = new Object2IntArrayMap<>();

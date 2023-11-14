@@ -13,8 +13,10 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -66,7 +68,6 @@ public abstract class MapItemMixin {
                                 @Share("heightLock") LocalIntRef height) {
         int mapHeight = SliceMapItem.getMapHeight(data);
         height.set(mapHeight);
-
         colorMap.set(CommonConfigs.Tweaks.TINTED_MAP.get() ? new HashMap<>() : null);
         lightMap.set(MapLightHandler.isActive() ? new HashMap<>() : null);
         if (mapHeight != Integer.MAX_VALUE) {

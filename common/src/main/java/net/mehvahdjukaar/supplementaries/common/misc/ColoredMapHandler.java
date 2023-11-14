@@ -328,9 +328,6 @@ public class ColoredMapHandler {
 
         public void markColored(int x, int z, Block block, Level level, BlockPos pos, MapItemSavedData data) {
             Block customColor = getCustomColor(block);
-            if(block == Blocks.BLUE_WOOL){
-                int aa = 1;
-            }
             if (customColor != null) {
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
