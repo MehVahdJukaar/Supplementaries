@@ -25,7 +25,8 @@ public class VibeChecker {
         checkDatapackRegistry();
 
         //check sheets class
-        if(PlatHelper.getPhysicalSide().isClient()) clientStuff();
+        if(PlatHelper   .getPhysicalSide().isClient()) clientStuff();
+        if(true)return;
         try {
             var m = new Spider(EntityType.SPIDER, level);
             var m2 = new Spider(EntityType.SPIDER, level);

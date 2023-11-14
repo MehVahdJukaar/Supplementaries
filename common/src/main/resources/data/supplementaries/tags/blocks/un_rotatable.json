@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     {"id":"minecraft:end_portal_frame","required":false},
+    {"id":"minecraft:command_block","required":false},
+    {"id":"minecraft:structure_block","required":false},
+    {"id":"minecraft:jigsaw_block","required":false},
     {"id":"fastpaintings:painting","required":false},
     {"id":"create:belt","required":false},
     {"id":"create:belt_connector","required":false},

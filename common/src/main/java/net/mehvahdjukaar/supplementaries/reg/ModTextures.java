@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -157,7 +158,7 @@ public class ModTextures {
 
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {
-        var map = new IdentityHashMap<BannerPattern, ResourceLocation>();
+        var map = new Object2ObjectOpenHashMap<BannerPattern, ResourceLocation>();
         for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
             map.put(pattern, Supplementaries.res("entity/banner/flags/" +
                     BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));

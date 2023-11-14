@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
@@ -24,7 +25,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
 
     public static final HourglassTimesManager RELOAD_INSTANCE = new HourglassTimesManager();
 
-    private final Map<Item, HourglassTimeData> dustsMap = new IdentityHashMap<>();
+    private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
     private final Set<HourglassTimeData> dusts = new HashSet<>();
 
     public HourglassTimesManager() {

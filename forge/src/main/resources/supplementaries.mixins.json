@@ -7,7 +7,8 @@
   "client": [
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
-    "CompatIFMapTextureMixin2"
+    "CompatIFMapTextureMixin2",
+    "CompatIFMapAtlasTextureMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",

@@ -15,6 +15,7 @@
     "BowMixin",
     "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
+    "CompatIFMapAtlasTextureMixin",
     "CropBlockMixin",
     "CrossbowMixin",
     "MobBucketItemAccessor",

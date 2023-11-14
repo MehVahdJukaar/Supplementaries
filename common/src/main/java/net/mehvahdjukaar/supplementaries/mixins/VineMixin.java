@@ -20,5 +20,6 @@ public abstract class VineMixin {
     private static void isAcceptableNeighbour(BlockGetter world, BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> info) {
         if (direction == Direction.DOWN && world.getBlockState(pos).is(ModTags.VINE_SUPPORT))
             info.setReturnValue(true);
+
     }
 }

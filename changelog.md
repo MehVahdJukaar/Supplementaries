@@ -1,1 +1,1 @@
-server crash hotfix
+fixed weathered map recipe

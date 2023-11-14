@@ -6,7 +6,7 @@
     },
     {
       "type": "forge:or",
-      "value": [
+      "values": [
         {
           "type": "forge:not",
           "value": {

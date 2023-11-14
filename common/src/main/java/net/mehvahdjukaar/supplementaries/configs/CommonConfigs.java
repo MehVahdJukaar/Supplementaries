@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import com.google.common.base.Suppliers;
+import fabric.net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
@@ -14,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -210,7 +212,6 @@ public class CommonConfigs {
             FAUCET_FILL_ENTITIES = builder.comment("Allows faucets to fill entities inventories")
                     .define("fill_entities_below", false);
             builder.pop();
-
 
             WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);

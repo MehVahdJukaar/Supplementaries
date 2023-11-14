@@ -362,6 +362,7 @@ public class WeatheredMap {
                 String mapKey = MapItem.makeKey(mapId);
 
                 level.setMapData(mapKey, newData);
+                return mapId;
             }
         }
         return null;
