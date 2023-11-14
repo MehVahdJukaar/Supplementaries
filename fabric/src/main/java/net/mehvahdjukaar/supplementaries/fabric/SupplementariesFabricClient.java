@@ -25,6 +25,7 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
     private static void fabricSetup() {
+        registerISTER(ModRegistry.DEPTH_METER_ITEM.get());
         registerISTER(ModRegistry.CAGE_ITEM.get());
         registerISTER(ModRegistry.JAR_ITEM.get());
         registerISTER(ModRegistry.BLACKBOARD_ITEM.get());

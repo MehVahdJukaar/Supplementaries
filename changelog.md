@@ -1,1 +1,1 @@
-fixed bomb knocback
+fixed altimeter model
