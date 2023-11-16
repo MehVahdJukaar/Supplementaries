@@ -99,7 +99,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     public void tick() {
         ++this.updateCounter;
         if (!isValid()) {
-            this.close();
+            this.onClose();
         }
     }
 
@@ -110,7 +110,8 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
 
     @Override
     public void onClose() {
-        this.close();
+        this.tile.setChanged();
+        super.onClose();
     }
 
     @Override
@@ -120,14 +121,10 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
                     this.tile.getBlockPos(), this.messages));
     }
 
-    private void close() {
-        this.tile.setChanged();
-        this.minecraft.setScreen(null);
-    }
 
     @Override
     protected void init() {
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.close())
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
 
         this.textInputUtil = new TextFieldHelper(

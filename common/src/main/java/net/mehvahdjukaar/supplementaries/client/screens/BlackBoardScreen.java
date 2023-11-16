@@ -35,7 +35,7 @@ public class BlackBoardScreen extends Screen {
     @Override
     public void tick() {
         if (!isValid()) {
-            this.close();
+            this.onClose();
         }
     }
 
@@ -46,7 +46,8 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.close();
+        this.tile.setChanged();
+        super.onClose();
     }
 
     @Override
@@ -59,11 +60,6 @@ public class BlackBoardScreen extends Screen {
             }
         }
         NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
-    }
-
-    private void close() {
-        this.tile.setChanged();
-        this.minecraft.setScreen(null);
     }
 
     //dynamic refreshTextures for client
@@ -103,7 +99,7 @@ public class BlackBoardScreen extends Screen {
         this.addRenderableWidget(Button.builder(CLEAR, b -> this.clear())
                 .bounds(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20).build());
 
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.close())
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .bounds(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20).build());
     }
 

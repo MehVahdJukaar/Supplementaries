@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,10 +20,13 @@ public abstract class CrossbowMixin {
     private static void shrinkQuiverArrow(LivingEntity shooter, ItemStack crossbowStack,
                                           ItemStack ammoStack, boolean hasAmmo, boolean isCreative,
                                           CallbackInfoReturnable<Boolean> cir) {
-        var q = QuiverItem.getQuiver(shooter);
-        if (!q.isEmpty()) {
-            var data = QuiverItem.getQuiverData(q);
-            if (data != null) data.consumeArrow();
+        //Very hacky. Consume if the arrow isnt from inventory
+        if(!((Player) shooter).getInventory().hasAnyMatching(i->i==ammoStack)) {
+            var q = QuiverItem.getQuiver(shooter);
+            if (!q.isEmpty()) {
+                var data = QuiverItem.getQuiverData(q);
+                if (data != null) data.consumeArrow();
+            }
         }
     }
 }
