@@ -1,1 +1,1 @@
-fixed altimeter model
+fixed crash with altieter renderer
