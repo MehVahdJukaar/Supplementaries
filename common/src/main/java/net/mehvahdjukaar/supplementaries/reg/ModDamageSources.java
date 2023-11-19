@@ -18,6 +18,8 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class ModDamageSources {
 
     private static final ResourceKey<DamageType> SPIKE_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE,
@@ -29,37 +31,28 @@ public class ModDamageSources {
     private static final ResourceKey<DamageType> PLAYER_BOMB_EXPLOSION = ResourceKey.create(Registries.DAMAGE_TYPE,
             Supplementaries.res("bomb_explosion"));
 
-    private static DamageSource spikeDamage;
-    private static DamageSource bottlingDamage;
-    private static DamageSource bombExplosion;
-    private static DamageSource playerBombExplosion;
+    private static final DataObjectReference<DamageType> spike = new DataObjectReference<>(SPIKE_DAMAGE.location(), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> bottling = new DataObjectReference<>(BOTTLING_DAMAGE.location(), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> bombExplosion = new DataObjectReference<>(BOMB_EXPLOSION.location(), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> playerBombExplosion = new DataObjectReference<>(PLAYER_BOMB_EXPLOSION.location(), Registries.DAMAGE_TYPE);
 
-    private static DataObjectReference<DamageType> spike = new DataObjectReference<>(SPIKE_DAMAGE.location(), Registries.DAMAGE_TYPE);
-
-    public static void reload(RegistryAccess registryAccess) {
-        var reg = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);
-        spikeDamage = new DamageSource(reg.getHolderOrThrow(SPIKE_DAMAGE));
-        bottlingDamage = new DamageSource(reg.getHolderOrThrow(BOTTLING_DAMAGE));
-        bombExplosion = new DamageSource(reg.getHolderOrThrow(BOMB_EXPLOSION));
-        playerBombExplosion = new DamageSource(reg.getHolderOrThrow(PLAYER_BOMB_EXPLOSION));
-    }
     //these are data defined now
 
     public static DamageSource spikePlayer(Player player) {
-        return new SpikePlayerDamageSource(spikeDamage.typeHolder(), player);
+        return new SpikePlayerDamageSource(spike.getHolder(), player);
     }
 
     public static DamageSource spike() {
-        return spikeDamage;
+        return new DamageSource(spike.getHolder());
     }
 
     public static DamageSource bottling() {
-        return bottlingDamage;
+        return new DamageSource(bottling.getHolder());
     }
 
 
     public static DamageSource bombExplosion(@Nullable Entity entity, @Nullable Entity entity2) {
-        return new DamageSource(entity2 != null && entity != null ? playerBombExplosion.typeHolder() : bombExplosion.typeHolder(), entity, entity2);
+        return new DamageSource(entity2 != null && entity != null ? playerBombExplosion.getHolder() : bombExplosion.getHolder(), entity, entity2);
     }
 
     public static class SpikePlayerDamageSource extends DamageSource {

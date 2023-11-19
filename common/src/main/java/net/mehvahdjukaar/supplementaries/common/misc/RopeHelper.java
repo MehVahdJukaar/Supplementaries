@@ -166,8 +166,9 @@ public class RopeHelper {
                     state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
                 }
                 if (fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)) {
-                    state = Blocks.LAVA_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
+                    state = Blocks.LAVA_CAULDRON.defaultBlockState();
                 }
+                //TODO: amendmnts here
             }
 
 

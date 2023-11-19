@@ -52,7 +52,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
 
         ClientLevel level = Minecraft.getInstance().level;
-        ResourceKey<Level> dimension = level.dimension();
+        ResourceKey<Level> dimension = level == null ? Level.OVERWORLD : level.dimension();
 
 
         var pair = MODEL_CACHE.getOrDefault(dimension, MODEL_CACHE.get(Level.OVERWORLD));
@@ -70,9 +70,9 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         poseStack.popPose();
     }
 
-    private static double calculateDepthIndex(ClientLevel level, int textureH) {
-        int min = level.getMinBuildHeight();
-        int max = level.getMaxBuildHeight();
+    private static double calculateDepthIndex(@Nullable ClientLevel level, int textureH) {
+        int min = level == null ? -64 : level.getMinBuildHeight();
+        int max = level == null ? 312 : level.getMaxBuildHeight();
 
         LocalPlayer player = Minecraft.getInstance().player;
         double depth = player == null ? 64 : player.position().y;

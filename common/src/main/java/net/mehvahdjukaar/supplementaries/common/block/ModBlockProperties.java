@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -239,29 +239,50 @@ public class ModBlockProperties {
             return this.name;
         }
 
+        public static Pair<Topping, Item> fromFluidItem(Item item) {
+            var s = SoftFluidRegistry.fromItem(item);
+            if (s.isEmpty()) return null;
+            var containers = s.getContainerList();
+            var cat = containers.getCategoryFromFilled(item);
+            if (cat.isEmpty() || cat.get().getAmount() != 1) return null;
+            Topping t = fromFluid(s);
+            if(t != NONE){
+                return Pair.of(t, cat.get().getEmptyContainer());
+            }
+            return null;
+        }
+
         public static Topping fromFluid(SoftFluid s) {
-            if (s == BuiltInSoftFluids.HONEY.get()) return HONEY;
+            if (s.isEmpty()) return NONE;
+            if (s == BuiltInSoftFluids.HONEY.get()) {
+                return HONEY;
+            }
             String name = Utils.getID(s).getPath();
-            if (name.contains("jam")) return JAM;
-            if (name.equals("chocolate")) return CHOCOLATE;
-            var containers = s.getFilledContainer(Items.GLASS_BOTTLE);
-            if (containers.isPresent() && containers.get().builtInRegistryHolder().is(ModTags.SYRUP)) return SYRUP;
+            if (name.contains("jam")) {
+                return JAM;
+            }
+            if (name.equals("chocolate")) {
+                return CHOCOLATE;
+            }
+            if (name.equals("syrup")) {
+                return SYRUP;
+            }
             return NONE;
         }
 
-        public static Topping fromItem(ItemStack stack) {
+        //topping and empty item
+        public static Pair<Topping, Item> fromItem(ItemStack stack) {
             Item item = stack.getItem();
-            var eqSF = SoftFluidRegistry.fromItem(item);
-            var ff = fromFluid(eqSF);
-            if (ff != NONE) return ff;
-            if (stack.is(Items.SWEET_BERRIES)) return JAM;
-            if (stack.is(ModTags.SYRUP)) return Topping.SYRUP;
-            if (item instanceof HoneyBottleItem) return Topping.HONEY;
+            var ff = fromFluidItem(item);
+            if (ff != null) return ff;
+            if (stack.is(Items.SWEET_BERRIES)) return Pair.of(JAM, null);
+            if (stack.is(ModTags.SYRUP)) return Pair.of(SYRUP, null);
+            if (item instanceof HoneyBottleItem) return Pair.of(HONEY, null);
             var tag = BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS);
             if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
-                return Topping.CHOCOLATE;
+                return Pair.of(CHOCOLATE, null);
             }
-            return Topping.NONE;
+            return Pair.of(NONE, null);
         }
     }
 

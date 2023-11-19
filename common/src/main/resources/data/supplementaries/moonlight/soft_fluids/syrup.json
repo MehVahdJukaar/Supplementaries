@@ -7,10 +7,18 @@
       ],
       "empty": "minecraft:glass_bottle",
       "capacity": 1
+    },
+    {
+      "filled": [
+        "create_central_kitchen:syrup_bucket"
+      ],
+      "empty": "minecraft:bucket",
+      "capacity": 4
     }
   ],
   "equivalent_fluids": [
-    "thermal:syrup"
+    "thermal:syrup",
+    "create_central_kitchen:syrup"
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {

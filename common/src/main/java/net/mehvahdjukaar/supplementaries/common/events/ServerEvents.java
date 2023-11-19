@@ -141,7 +141,6 @@ public class ServerEvents {
         ModSetup.tagDependantSetup(registryAccess);
 
         if(!client) {
-            ModDamageSources.reload(registryAccess);
             WaySignStructure.recomputeValidStructureCache(registryAccess);
 
             try {

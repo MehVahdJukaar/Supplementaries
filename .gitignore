@@ -19,3 +19,4 @@ classes/
 .vscode
 .settings
 *.launch
+/forge/mods/flywheel-forge-1.20.1-0.6.10-7.jar

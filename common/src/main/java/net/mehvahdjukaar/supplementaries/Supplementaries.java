@@ -105,6 +105,9 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
     //damage numbers mod
+    //steal from quark backpack
+    //quark bubble hollow log and grates
+    
 //potion flask that works liqui quiver/big pot storage
     //group rally ping map aylas
     //identity hasmap vs object2objecthasmap

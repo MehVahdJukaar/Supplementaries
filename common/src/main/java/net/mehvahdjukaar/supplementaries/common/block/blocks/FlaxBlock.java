@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -166,13 +167,16 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+        Preconditions.checkArgument( state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
         InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
             if (ev != null) return ev;
             else {
                 BlockState below = world.getBlockState(pos.below());
-                return this.use(below, world, pos.below(), player, hand, rayTraceResult);
+                if (below.is(this)) {
+                    return this.use(below, world, pos.below(), player, hand, rayTraceResult);
+                }
             }
         }
         return old;
