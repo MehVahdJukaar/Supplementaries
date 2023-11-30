@@ -5,6 +5,8 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.core.BlockPos;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.SectionPos;
@@ -40,8 +42,9 @@ public class StructureLocator {
     public static LocatedStruct findNearestRandomMapFeature(
             ServerLevel level, @NotNull HolderSet<Structure> targets, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated) {
+        boolean rand = CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS_RANDOM.get();
         var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
-                newlyGenerated, 1, false);
+                newlyGenerated, 1, rand, !rand);
         if (!found.isEmpty()) return found.get(0);
         return null;
     }
@@ -52,13 +55,15 @@ public class StructureLocator {
 
         var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey).orElse(null);
         if (targets == null) return List.of();
-        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated, requiredCount, selectRandom);
+        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated, requiredCount,
+                selectRandom, false);
     }
 
 
     public static List<LocatedStruct> findNearestMapFeatures(
             ServerLevel level, HolderSet<Structure> taggedStructures, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount,
+            boolean selectRandom, boolean exitEarly) {
 
         List<LocatedStruct> foundStructures = new ArrayList<>();
 
@@ -75,6 +80,10 @@ public class StructureLocator {
         if (selectRandom) {
             Holder<Structure> selected = selectedTargets.get(level.random.nextInt(selectedTargets.size()));
             selectedTargets = List.of(selected);
+            Supplementaries.LOGGER.info("Searching for structure {}", selected.unwrapKey().get());
+        } else {
+            selectedTargets = new ArrayList<>(selectedTargets);
+            Collections.shuffle(selectedTargets);
         }
 
         //structures that can generate
@@ -182,7 +191,7 @@ public class StructureLocator {
         foundStructures.sort(Comparator.comparingDouble(f -> pos.distSqr(f.pos)));
         //returns only needed elements
         if (foundStructures.size() >= requiredCount) {
-            return Lists.partition(foundStructures, requiredCount).get(0);
+            foundStructures = Lists.partition(foundStructures, requiredCount).get(0);
         }
         //add references to selected ones
         if (newlyGenerated) {
