@@ -955,6 +955,8 @@ public class CommonConfigs {
             RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
                             "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)")
                     .define("random_adventurer_maps", true);
+            RANDOM_ADVENTURER_MAPS_RANDOM = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
+                    .define("random_adventurer_maps_select_random_structure", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
             DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
@@ -1034,6 +1036,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BOTTLE_XP;
         public static final Supplier<Integer> BOTTLING_COST;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
+        public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS_RANDOM;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
