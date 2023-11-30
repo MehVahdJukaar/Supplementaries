@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -21,6 +22,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -179,4 +181,14 @@ public class ClientReceivers {
             }
         });
     }
+
+    public static void handleSyncQuiverPacket(SyncSkellyQuiverPacket message) {
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.entityID);
+            if (e instanceof IQuiverEntity qe) {
+                qe.supplementaries$setQuiver(message.on ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
+            }
+        });
+    }
+
 }

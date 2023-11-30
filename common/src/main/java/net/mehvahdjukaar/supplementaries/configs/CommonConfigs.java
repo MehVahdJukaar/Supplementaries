@@ -431,6 +431,7 @@ public class CommonConfigs {
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
+            HAT_STAND_ENABLED = feature(builder, ModConstants.HAT_STAND_NAME);
             //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -535,6 +536,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
 
+        public static final Supplier<Boolean> HAT_STAND_ENABLED;
+
     }
 
 
@@ -636,7 +639,11 @@ public class CommonConfigs {
             builder.push("soap");
             SOAP_ENABLED = feature(builder);
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
-                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower"));
+                    .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower",
+                            "mna:chimerite_crystal", "botania:floating_flower", ",minecraft:mushroom", "botania:mushroom",
+                            "botania:tall_mystical_flower", "botania:petal_block", "morered:network_cable",
+                            "xycraft_world:glowing_shiny_aurey_block","xycraft_world:shiny_aurey_block","xycraft_world:rgb_lamp",
+                            "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
             builder.pop();
 
             builder.push("present");

@@ -5,6 +5,7 @@ public final class ModConstants {
 
     public static final String DISPENSER_MINECART_NAME = "dispenser_minecart";
     public static final String RED_MERCHANT_NAME = "red_merchant";
+    public static final String HAT_STAND_NAME = "hat_stand";
     public static final String FALLING_URN_NAME = "falling_urn";
     public static final String FALLING_ASH_NAME = "falling_ash";
     public static final String FALLING_LANTERN_NAME = "falling_lantern";

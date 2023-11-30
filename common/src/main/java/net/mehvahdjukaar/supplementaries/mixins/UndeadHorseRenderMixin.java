@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IConvertableHorse;
 import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,6 +17,6 @@ public abstract class UndeadHorseRenderMixin extends AbstractHorseRenderer<Abstr
 
     @Override
     public boolean isShaking(AbstractHorse horse) {
-        return super.isShaking(horse) || (horse instanceof ICustomDataHolder dataHolder && dataHolder.getVariable());
+        return super.isShaking(horse) || (horse instanceof IConvertableHorse dataHolder && dataHolder.supp$isConverting());
     }
 }

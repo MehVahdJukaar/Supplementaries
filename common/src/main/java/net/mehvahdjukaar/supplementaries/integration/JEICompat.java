@@ -41,11 +41,8 @@ public class JEICompat implements IModPlugin {
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
     }
 
-    public static class SpikesSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
-        public static final SpikesSubtypeInterpreter INSTANCE = new SpikesSubtypeInterpreter();
-
-        private SpikesSubtypeInterpreter() {
-        }
+    public  enum SpikesSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+        INSTANCE;
 
         public String apply(ItemStack itemStack, UidContext uidContext) {
 

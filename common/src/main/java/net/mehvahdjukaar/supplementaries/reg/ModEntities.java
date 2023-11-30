@@ -7,10 +7,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.decoration.ArmorStand;
 
 import java.util.function.Supplier;
 
@@ -25,6 +23,7 @@ public class ModEntities {
     @EventCalled
     public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
         event.register(ModEntities.RED_MERCHANT.get(), Mob.createMobAttributes());
+        event.register(ModEntities.HAT_STAND.get(), LivingEntity.createLivingAttributes());
     }
 
     //entities
@@ -35,6 +34,10 @@ public class ModEntities {
     public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
             EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
                     .sized(0.98F, 0.7F).clientTrackingRange(8));
+
+    //hat stand
+    public static final Supplier<EntityType<HatStandEntity>> HAT_STAND = regEntity(HAT_STAND_NAME,
+            HatStandEntity::new, MobCategory.MISC, 0.5F, 0.75f, 10, false, 3);
 
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,

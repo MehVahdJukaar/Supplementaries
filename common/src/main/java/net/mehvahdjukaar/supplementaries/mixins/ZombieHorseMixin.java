@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IConvertableHorse;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -29,17 +29,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @OptionalMixin(value = "com.github.alexthe668.domesticationinnovation.DomesticationMod", classLoaded = false)
 @Mixin(ZombieHorse.class)
-public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomDataHolder {
+public abstract class ZombieHorseMixin extends AbstractHorse implements IConvertableHorse {
 
     @Unique
     private static final int CONV_TIME = 4600;
-
-    public boolean getVariable() {
-        return this.isConverting();
-    }
-
-    public void setVariable(boolean val) {
-    }
 
     @Unique
     private int supplementaries$conversionTime = -1;
@@ -55,7 +48,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     //called server side. needs syncing with entity event
 
     public void startConverting() {
-        if (!this.isConverting()) {
+        if (!this.supp$isConverting()) {
             this.supplementaries$conversionTime = CONV_TIME;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, CONV_TIME, 2));
@@ -74,7 +67,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
         this.supplementaries$conversionTime = compoundNBT.getInt("ConversionTime");
     }
 
-    public boolean isConverting() {
+    public boolean supp$isConverting() {
         return this.supplementaries$conversionTime > 0;
     }
 
@@ -136,7 +129,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements ICustomD
     public void tick() {
         super.tick();
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
-            if (this.isConverting()) {
+            if (this.supp$isConverting()) {
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime == 0) {

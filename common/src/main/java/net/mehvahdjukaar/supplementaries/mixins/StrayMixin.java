@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
@@ -25,20 +24,8 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     @Unique
     private float supplementaries$quiverDropChance = 0.6f;
 
-    //for just used to sync this to client
-    @Unique
-    private static final EntityDataAccessor<Boolean> HAS_QUIVER =
-            SynchedEntityData.defineId(Stray.class, EntityDataSerializers.BOOLEAN);
-
     protected StrayMixin(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
-    }
-
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(HAS_QUIVER, false);
     }
 
     @Override
@@ -77,17 +64,13 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     }
 
     @Override
-    public boolean supplementaries$hasQuiver() {
-        if (this.level() != null && this.level().isClientSide) {
-            return this.getEntityData().get(HAS_QUIVER);
-        }
-        return IQuiverEntity.super.supplementaries$hasQuiver();
-    }
-
-    @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
-        this.getEntityData().set(HAS_QUIVER, !quiver.isEmpty());
+        if(!level().isClientSide){
+            //only needed when entity is alraedy spawned
+            NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+                    new SyncSkellyQuiverPacket(this));
+        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.block.ICustomDataHolder;
+import net.mehvahdjukaar.supplementaries.common.block.IConvertableHorse;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -30,14 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.jetbrains.annotations.Nullable;
 
 @Mixin(SkeletonHorse.class)
-public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomDataHolder {
-
-    public boolean getVariable() {
-        return this.isConverting();
-    }
-
-    public void setVariable(boolean val) {
-    }
+public abstract class SkellyHorseMixin extends AbstractHorse implements IConvertableHorse {
 
     @Unique
     private int supplementaries$fleshCount = 0;
@@ -97,10 +90,11 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
         }
     }
 
-    private boolean isConverting() {
+    public boolean supp$isConverting() {
         return this.supplementaries$conversionTime > 0;
     }
 
+    @Unique
     private void doZombieConversion() {
 
         float yBodyRot = this.yBodyRot;
@@ -161,7 +155,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements ICustomD
     public void tick() {
         super.tick();
         if (!this.level().isClientSide && this.isAlive() && !this.isNoAi()) {
-            if (this.isConverting()) {
+            if (this.supp$isConverting()) {
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime <= 0 && ForgeHelper.canLivingConvert(this, EntityType.ZOMBIE_HORSE, (timer) -> this.supplementaries$conversionTime = timer)) {

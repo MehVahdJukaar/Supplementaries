@@ -173,6 +173,7 @@ dependencies {
     modCompileOnly("curse.maven:breezy-690628:4788101")
     modCompileOnly("curse.maven:geckolib-388172:4064451")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
+    modImplementation("curse.maven:jade-324717:4801177")
 
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")

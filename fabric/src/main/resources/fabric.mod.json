@@ -32,6 +32,9 @@
     ],
     "emi": [
       "net.mehvahdjukaar.supplementaries.integration.fabric.EMICompat"
+    ],
+    "jade": [
+      "net.mehvahdjukaar.supplementaries.integration.JadeCompat"
     ]
   },
   "mixins": [

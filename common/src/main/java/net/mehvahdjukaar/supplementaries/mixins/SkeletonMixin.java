@@ -1,19 +1,14 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.moonlight.core.mixins.MapItemDataPacketMixin;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
-import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,18 +27,8 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
     @Unique
     private float supplementaries$quiverDropChance = 0.6f;
 
-    //for just used to sync this to client
-    @Unique
-    private static final EntityDataAccessor<Boolean> HAS_QUIVER =
-            SynchedEntityData.defineId(Skeleton.class, EntityDataSerializers.BOOLEAN);
-
     protected SkeletonMixin(EntityType<? extends AbstractSkeleton> entityType, Level level) {
         super(entityType, level);
-    }
-
-    @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    protected void defineSynchedData(CallbackInfo ci) {
-        this.getEntityData().define(HAS_QUIVER, false);
     }
 
     @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
@@ -80,17 +65,13 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
     }
 
     @Override
-    public boolean supplementaries$hasQuiver() {
-        if (this.level() != null && this.level().isClientSide) {
-            return this.getEntityData().get(HAS_QUIVER);
-        }
-        return IQuiverEntity.super.supplementaries$hasQuiver();
-    }
-
-    @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
-        this.getEntityData().set(HAS_QUIVER, !quiver.isEmpty());
+        if(!level().isClientSide){
+            //only needed when entity is alraedy spawned
+            NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+                    new SyncSkellyQuiverPacket(this));
+        }
     }
 
     @Override

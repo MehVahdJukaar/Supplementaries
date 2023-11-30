@@ -25,8 +25,8 @@ public class VibeChecker {
         checkDatapackRegistry();
 
         //check sheets class
-        if(PlatHelper   .getPhysicalSide().isClient()) clientStuff();
-        if(true)return;
+        if (PlatHelper.getPhysicalSide().isClient()) clientStuff();
+        if (true) return;
         try {
             var m = new Spider(EntityType.SPIDER, level);
             var m2 = new Spider(EntityType.SPIDER, level);
@@ -52,10 +52,11 @@ public class VibeChecker {
     }
 
     public static void checkDatapackRegistry() {
-        try{
+        try {
             SoftFluidRegistry.getEmpty();
-        }catch (Exception e){
-            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?",e);
+        } catch (Exception e) {
+            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?" +
+                    "Note that this could be caused by Paper or similar servers. Know that those are NOT meant to be used with mods", e);
         }
     }
 

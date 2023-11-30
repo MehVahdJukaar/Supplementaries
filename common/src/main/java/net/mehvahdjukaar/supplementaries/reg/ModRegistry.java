@@ -1111,4 +1111,7 @@ public class ModRegistry {
             new AshenBasaltBlock(BlockBehaviour.Properties.copy(Blocks.BASALT))
     );
 
+    //hat stand
+    public static final Supplier<Item> HAT_STAND = regItem(HAT_STAND_NAME, () -> new HatStandItem(new Item.Properties()));
+
 }

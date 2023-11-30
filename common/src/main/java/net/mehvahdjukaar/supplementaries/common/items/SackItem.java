@@ -50,7 +50,6 @@ public class SackItem extends BlockItem {
         if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player &&
                 !player.isCreative() && !entityIn.isSpectator() && stack.getTagElement("BlockEntityTag") != null) {
             //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
-
             //keep refreshing for better accuracy
             float amount;
             amount = ItemsUtil.getEncumbermentFromInventory(stack, player);

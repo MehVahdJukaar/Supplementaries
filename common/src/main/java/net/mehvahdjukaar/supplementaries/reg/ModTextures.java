@@ -61,6 +61,7 @@ public class ModTextures {
     public static final ResourceLocation ORANGE_MERCHANT = Supplementaries.res("textures/entity/misc/orange_merchant.png");
     public static final ResourceLocation RED_MERCHANT_CHRISTMAS = Supplementaries.res("textures/entity/misc/christmas_merchant.png");
     public static final ResourceLocation STATUE = Supplementaries.res("textures/entity/statue.png");
+    public static final ResourceLocation HAT_STAND = Supplementaries.res("textures/entity/hat_stand.png");
 
     public static final ResourceLocation FIREFLY_TEXTURE = Supplementaries.res("textures/entity/firefly.png");
     public static final ResourceLocation BELL_ROPE_TEXTURE = Supplementaries.res("textures/entity/bell_rope.png");

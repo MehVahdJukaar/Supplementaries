@@ -9,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ChunkPos;
@@ -88,7 +87,7 @@ public class StructureLocator {
                 reachableTargetsMap.computeIfAbsent(structureplacement, (placement) -> new ObjectArraySet<>()).add(holder);
             }
         }
-
+        if (reachableTargetsMap.isEmpty()) return foundStructures;
 
         List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>> list = new ArrayList<>(reachableTargetsMap.size());
 
@@ -186,7 +185,7 @@ public class StructureLocator {
             return Lists.partition(foundStructures, requiredCount).get(0);
         }
         //add references to selected ones
-        if(newlyGenerated) {
+        if (newlyGenerated) {
             for (var s : foundStructures) {
                 if (s.start != null && s.start.canBeReferenced()) structuremanager.addReference(s.start);
             }
@@ -232,7 +231,7 @@ public class StructureLocator {
                 if (!skipKnown && structurecheckresult == StructureCheckResult.START_PRESENT) {
                     //for not new chunk the ones without start are grabbed too?
                     foundStructures.add(new LocatedStruct(placement.getLocatePos(chunkpos), holder, null));
-                }else {
+                } else {
                     ChunkAccess chunkaccess = level.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
                     StructureStart structurestart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkaccess), holder.value(), chunkaccess);
                     if (structurestart != null && structurestart.isValid() &&
@@ -298,8 +297,8 @@ public class StructureLocator {
         }
     }
 
-    public record LocatedStruct(BlockPos pos, Holder<Structure> structure,@Nullable StructureStart start){
-        public LocatedStruct(Pair<BlockPos, Holder<Structure>>pair){
+    public record LocatedStruct(BlockPos pos, Holder<Structure> structure, @Nullable StructureStart start) {
+        public LocatedStruct(Pair<BlockPos, Holder<Structure>> pair) {
             this(pair.getFirst(), pair.getSecond(), null);
         }
     }

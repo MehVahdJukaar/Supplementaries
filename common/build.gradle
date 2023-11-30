@@ -32,6 +32,7 @@ dependencies {
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
+    modCompileOnly("curse.maven:jade-324717:4801177")
 
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")

@@ -34,6 +34,7 @@ public class NetworkHandler {
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestConfigReloadPacket.class, ServerBoundRequestConfigReloadPacket::new)
 
+            .register(NetworkDir.BOTH, SyncSkellyQuiverPacket.class, SyncSkellyQuiverPacket::new)
             .register(NetworkDir.BOTH, PicklePacket.class, PicklePacket::new)
 
 
