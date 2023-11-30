@@ -15,13 +15,13 @@ body:
       options:
         - label: "Always check you are using the latest version of the mods and its dependencies"
           required: true
-        - label: "Remove known problematic rendering mods such as Optifine, Sodium and others"
+        - label: "Remove known problematic rendering mods such as Optifine, Sodium and others. Do NOT report issues related to said mods"
           required: true
         - label: "If you are unsure which mod is the culprit.\nDisable half your mods at time until you isolate the culprit"
           required: true
         - label: "If you have a crash ALWAYS post LATEST.LOG below"
           required: true
-        - label: "Do NOT report an issue related to Indium/Sodium/Optifine or other rendering mods unless you have contacted them first"
+        - label: "If the issue is about behaviors be sure to consult the WIKI first"
           required: true
 
   - type: dropdown
