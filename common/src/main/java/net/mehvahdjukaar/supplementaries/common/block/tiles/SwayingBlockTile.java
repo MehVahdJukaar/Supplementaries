@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
+import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
@@ -100,11 +100,11 @@ public abstract class SwayingBlockTile extends BlockEntity implements IExtraMode
         }
 
         if (tile.shouldRenderFancy()) {
-            tile.animation.tick(pLevel, pPos, pState);
+            tile.animation.tick(pState.getValue(WaterBlock.WATERLOGGED));
         }
     }
 
     //rotation axis rotate 90 deg
-    public abstract Vector3f getRotationAxis(BlockState state);
+    public abstract Vector3f getRotationAxis();
 
 }

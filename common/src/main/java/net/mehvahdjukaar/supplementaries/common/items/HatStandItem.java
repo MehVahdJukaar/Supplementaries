@@ -35,31 +35,37 @@ public class HatStandItem extends Item {
             return InteractionResult.FAIL;
         } else {
             Level level = context.getLevel();
-            BlockPlaceContext blockPlaceContext = new BlockPlaceContext(context);
-            BlockPos blockPos = blockPlaceContext.getClickedPos();
-            ItemStack itemStack = context.getItemInHand();
-            Vec3 vec3 = Vec3.atBottomCenterOf(blockPos);
-            EntityType<HatStandEntity> type = ModEntities.HAT_STAND.get();
-            AABB aABB = type.getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
-            if (level.noCollision(null, aABB) && level.getEntities(null, aABB).isEmpty()) {
-                if (level instanceof ServerLevel serverLevel) {
-                    Consumer<HatStandEntity> consumer = EntityType.createDefaultStackConfig(serverLevel, itemStack, context.getPlayer());
-                    HatStandEntity armorStand = type.create(serverLevel, itemStack.getTag(), consumer, blockPos, MobSpawnType.SPAWN_EGG, false, false);
-                    if (armorStand == null) {
-                        return InteractionResult.FAIL;
+            BlockPlaceContext placeContext = new BlockPlaceContext(context);
+            BlockPos blockpos = placeContext.getClickedPos();
+            BlockPos above = blockpos.above();
+            if (placeContext.canPlace() && level.getBlockState(above).canBeReplaced(placeContext)) {
+                var type = ModEntities.HAT_STAND.get();
+                Vec3 vec3 = Vec3.atBottomCenterOf(blockpos);
+                AABB aABB = type.getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
+                if (level.noCollision(null, aABB) && level.getEntities(null, aABB).isEmpty()) {
+                    ItemStack itemstack = context.getItemInHand();
+                    if (level instanceof ServerLevel serverLevel) {
+                        level.removeBlock(blockpos, false);
+                        level.removeBlock(above, false);
+                        Consumer<HatStandEntity> consumer = EntityType.createDefaultStackConfig(serverLevel, itemstack, context.getPlayer());
+                        HatStandEntity dummy = type.create(serverLevel, itemstack.getTag(), consumer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
+                        if (dummy == null) {
+                            return InteractionResult.FAIL;
+                        }
+                        float rotation = Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 11.25) / 22.5F) * 22.5F;
+                        dummy.moveTo(vec3.x, vec3.y, vec3.z, rotation, 0.0F);
+
+                        level.addFreshEntity(dummy);
+                        level.playSound(null, dummy.getX(), dummy.getY(), dummy.getZ(), SoundEvents.ARMOR_STAND_PLACE,
+                                SoundSource.BLOCKS, 0.75F, 0.8F);
+                        dummy.gameEvent(GameEvent.ENTITY_PLACE, context.getPlayer());
                     }
-
-                    float f = Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
-                    armorStand.moveTo(armorStand.getX(), armorStand.getY(), armorStand.getZ(), f, 0.0F);
-                    serverLevel.addFreshEntityWithPassengers(armorStand);
-                    level.playSound(null, armorStand.getX(), armorStand.getY(), armorStand.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
-                    armorStand.gameEvent(GameEvent.ENTITY_PLACE, context.getPlayer());
+                    itemstack.shrink(1);
+                    return InteractionResult.SUCCESS;
                 }
-
-                itemStack.shrink(1);
-                return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.FAIL;
+
         }
     }
 }

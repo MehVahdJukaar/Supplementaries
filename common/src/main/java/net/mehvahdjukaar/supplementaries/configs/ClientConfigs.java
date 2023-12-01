@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -108,7 +108,7 @@ public class ClientConfigs {
             DEPTH_METER_DIMENSIONS = builder.comment("Allows depth meter to have unique textures per each dimension. Add more dimensions IDs and a matching texture in the correct path replacing ':' with '_'")
                     .defineObjectList("extra_dimension_textures", () -> List.of(Level.NETHER.location(), Level.END.location()), ResourceLocation.CODEC);
             DEPTH_METER_STEP_MULT = builder.comment("Increasing this to be more than 1 will result in delth meter display image to be shown in float amounts instead of pixel perfect ones")
-                            .define("texture_precision_multiplier", 1, 1, 10);
+                    .define("texture_precision_multiplier", 1, 1, 10);
             builder.pop();
 
             builder.push("quiver");
@@ -280,6 +280,8 @@ public class ClientConfigs {
         public static final Supplier<Boolean> ENHANCED_HANGING_SIGNS;
         public static final Supplier<PendulumAnimation.Config> HANGING_SIGN_CONFIG;
 
+        public static final Supplier<PendulumAnimation.Config> HAT_STAND_CONFIG;
+
         public static final Supplier<Boolean> FAST_LANTERNS;
         public static final Supplier<PendulumAnimation.Config> WALL_LANTERN_CONFIG;
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
@@ -399,6 +401,12 @@ public class ClientConfigs {
                             "Note that this option only affect lanterns close by as the one far away render as fast by default")
                     .define("fast_signs", false);
 
+            builder.pop();
+
+            builder.push("hat_stand");
+            HAT_STAND_CONFIG = builder.defineObject("swing_physics",
+                    () -> new PendulumAnimation.Config(0, 55, 1.625f, 1.4f, true, 1f, 15),
+                    PendulumAnimation.Config.CODEC);
             builder.pop();
 
             builder.push("turn_table");

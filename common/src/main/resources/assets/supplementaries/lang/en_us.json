@@ -439,6 +439,9 @@
   "item.supplementaries.slice_map": "Slice Map",
   "filled_map.sliced.tooltip": "Slice: %d",
   "message.supplementaries.death_marker": "Last Death",
+  "entity.supplementaries.hat_stand": "Hat Stand",
+  "item.supplementaries.hat_stand": "Hat Stand",
+  "config.jade.plugin_supplementaries.hat_stand": "Hat Stand",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",

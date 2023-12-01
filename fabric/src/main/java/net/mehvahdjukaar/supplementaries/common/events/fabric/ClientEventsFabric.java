@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
@@ -27,6 +28,8 @@ import java.util.List;
 public class ClientEventsFabric {
 
     public static void init() {
+        ClientEntityEvents.ENTITY_LOAD.register(ClientEvents::onEntityLoad);
+
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
             if (CompatHandler.CLOTH_CONFIG) {

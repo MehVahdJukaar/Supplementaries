@@ -37,7 +37,7 @@ public class ModEntities {
 
     //hat stand
     public static final Supplier<EntityType<HatStandEntity>> HAT_STAND = regEntity(HAT_STAND_NAME,
-            HatStandEntity::new, MobCategory.MISC, 0.5F, 0.75f, 10, false, 3);
+            HatStandEntity::new, MobCategory.MISC, 10/16f, 0.75f, 10, false, 3);
 
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,

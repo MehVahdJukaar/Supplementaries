@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
+import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
@@ -8,6 +12,8 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,6 +35,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -46,16 +53,31 @@ public class HatStandEntity extends LivingEntity {
      */
     public long lastHit;
     private Rotations headPose;
+    public final SwingAnimation animation;
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
         this.headPose = DEFAULT_HEAD_POSE;
         this.setMaxUpStep(0.0F);
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            animation = new PendulumAnimation(
+                   ClientConfigs.Blocks.HAT_STAND_CONFIG, this::getRotationAxis);
+        } else {
+            animation = null;
+        }
     }
 
-    public HatStandEntity(Level level, double d, double e, double f) {
-        this(ModEntities.HAT_STAND.get(), level);
-        this.setPos(d, e, f);
+    private Vector3f getRotationAxis() {
+        return new Vector3f(0,1,0);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return PlatHelper.getEntitySpawnPacket(this);
+    }
+
+    @Override
+    public void aiStep() {
     }
 
     @Override
@@ -113,8 +135,12 @@ public class HatStandEntity extends LivingEntity {
         if (!stack.isEmpty())
             compound.put("Helmet", stack.save(new CompoundTag()));
         compound.putBoolean("Invisible", this.isInvisible());
-        compound.putBoolean("NoBasePlate", this.isNoBasePlate());
-        compound.put("Pose", this.writePose());
+
+        ListTag compoundTag = new ListTag();
+        if (!DEFAULT_HEAD_POSE.equals(this.headPose)) {
+            compoundTag = this.headPose.save();
+        }
+        compound.put("HeadPose", compoundTag);
     }
 
     @Override
@@ -124,21 +150,8 @@ public class HatStandEntity extends LivingEntity {
             this.helmet.set(0, ItemStack.of(compound.getCompound("Helmet")));
         }
         this.setInvisible(compound.getBoolean("Invisible"));
-        this.setNoBasePlate(compound.getBoolean("NoBasePlate"));
-        this.readPose(compound.getCompound("Pose"));
-    }
-
-    private void readPose(CompoundTag compound) {
-        ListTag listTag = compound.getList("Head", 5);
+        ListTag listTag = compound.getList("HeadPose", 5);
         this.setHeadPose(listTag.isEmpty() ? DEFAULT_HEAD_POSE : new Rotations(listTag));
-    }
-
-    private CompoundTag writePose() {
-        CompoundTag compoundTag = new CompoundTag();
-        if (!DEFAULT_HEAD_POSE.equals(this.headPose)) {
-            compoundTag.put("Head", this.headPose.save());
-        }
-        return compoundTag;
     }
 
     @Override
@@ -158,9 +171,18 @@ public class HatStandEntity extends LivingEntity {
     public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (!itemStack.is(Items.NAME_TAG)) {
+            boolean isClientSide = player.level().isClientSide;
+            if(itemStack.isEmpty() && player.isSecondaryUseActive()){
+                if(isClientSide){
+                    //TODO: cap impulse
+                    //animation.hit(vec, 1);
+                        animation.addImpulse(1);
+                }
+                return InteractionResult.sidedSuccess(isClientSide);
+            }
             if (player.isSpectator()) {
                 return InteractionResult.SUCCESS;
-            } else if (player.level().isClientSide) {
+            } else if (isClientSide) {
                 return InteractionResult.CONSUME;
             } else {
                 if (itemStack.isEmpty()) {
@@ -287,7 +309,10 @@ public class HatStandEntity extends LivingEntity {
 
     private void showBreakingParticles() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()), this.getX(), this.getY(0.6666666666666666), this.getZ(), 10, (double) (this.getBbWidth() / 4.0F), (double) (this.getBbHeight() / 4.0F), (double) (this.getBbWidth() / 4.0F), 0.05);
+            serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_PLANKS.defaultBlockState()), this.getX(),
+                    this.getY(0.6666666666666666), this.getZ(), 10,
+                    this.getBbWidth() / 4.0F, this.getBbHeight() / 4.0F,
+                    this.getBbWidth() / 4.0F, 0.05);
         }
     }
 
@@ -304,7 +329,7 @@ public class HatStandEntity extends LivingEntity {
     }
 
     private void brokenByPlayer(DamageSource damageSource) {
-        ItemStack itemStack = new ItemStack(Items.ARMOR_STAND);
+        ItemStack itemStack = new ItemStack(ModRegistry.HAT_STAND.get());
         if (this.hasCustomName()) {
             itemStack.setHoverName(this.getCustomName());
         }
@@ -338,19 +363,21 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height * (this.isBaby() ? 0.5F : 0.9F);
+        return dimensions.height * (this.isBaby() ? 0.5F : 0.7F);
     }
 
     @Override
-    public void setYBodyRot(float yBodyRot) {
-        this.yBodyRotO = this.yRotO = yBodyRot;
-        this.yHeadRotO = this.yHeadRot = yBodyRot;
+    public void setYBodyRot(float pOffset) {
+        float r = this.getYRot();
+        this.yRotO = r;
+        this.yBodyRotO = this.yBodyRot = r;
     }
 
     @Override
-    public void setYHeadRot(float yHeadRot) {
-        this.yBodyRotO = this.yRotO = yHeadRot;
-        this.yHeadRotO = this.yHeadRot = yHeadRot;
+    public void setYHeadRot(float pRotation) {
+        float r = this.getYRot();
+        this.yRotO = r;
+        this.yHeadRotO = this.yHeadRot = r;
     }
 
     @Override
@@ -359,6 +386,10 @@ public class HatStandEntity extends LivingEntity {
         Rotations rotations = this.entityData.get(DATA_HEAD_POSE);
         if (!this.headPose.equals(rotations)) {
             this.setHeadPose(rotations);
+        }
+        if(this.level().isClientSide) {
+            this.animation.tick(!level().getFluidState(getOnPos()).isEmpty());
+
         }
     }
 
@@ -382,24 +413,6 @@ public class HatStandEntity extends LivingEntity {
     @Override
     public boolean ignoreExplosion() {
         return this.isInvisible();
-    }
-
-    public void setNoBasePlate(boolean noBasePlate) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit((Byte) this.entityData.get(DATA_CLIENT_FLAGS), 8, noBasePlate));
-    }
-
-    public boolean isNoBasePlate() {
-        return (this.entityData.get(DATA_CLIENT_FLAGS) & 8) != 0;
-    }
-
-    private byte setBit(byte oldBit, int offset, boolean value) {
-        if (value) {
-            oldBit = (byte) (oldBit | offset);
-        } else {
-            oldBit = (byte) (oldBit & ~offset);
-        }
-
-        return oldBit;
     }
 
     public void setHeadPose(Rotations headPose) {

@@ -1,1 +1,1 @@
-removed synce entity data from skeletons and strays
+added hat stand

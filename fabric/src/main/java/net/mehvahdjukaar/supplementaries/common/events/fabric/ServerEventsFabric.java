@@ -50,7 +50,7 @@ public class ServerEventsFabric {
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(ServerEvents::onDataSyncToPlayer);
         CommonLifecycleEvents.TAGS_LOADED.register(ServerEvents::onCommonTagUpdate);
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
-        ClientEntityEvents.ENTITY_LOAD.register(ClientEvents::onEntityLoad);
+
         if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
                   GenerationStep.Decoration.UNDERGROUND_DECORATION,

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    " 0 "
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:planks"
+    },
+    "0": {
+      "item": "minecraft:smooth_stone_slab"
+    }
+  },
+  "result": {
+    "item": "supplementaries:hat_stand"
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hat_stand"
+    }
+  ]
+}

@@ -89,6 +89,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static final ModelLayerLocation HAT_STAND_MODEL = loc("hat_stand");
+    public static final ModelLayerLocation HAT_STAND_MODEL_ARMOR = loc("hat_stand_armor");
     public static final ModelLayerLocation SKULL_CANDLE_OVERLAY = loc("skull_candle");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
@@ -470,6 +471,7 @@ public class ClientRegistry {
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(SKULL_CANDLE_OVERLAY, SkullCandleOverlayModel::createMesh);
         event.register(HAT_STAND_MODEL, HatStandModel::createMesh);
+        event.register(HAT_STAND_MODEL_ARMOR, HatStandModel::createArmorMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);

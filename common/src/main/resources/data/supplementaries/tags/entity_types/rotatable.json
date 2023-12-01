@@ -9,6 +9,10 @@
       "id": "minecraft:armor_stand",
       "required": true
     },
+    {
+      "id": "supplementaries:hat_stand",
+      "required": true
+    },
 	{
       "id": "xercapaint:easel",
       "required": false

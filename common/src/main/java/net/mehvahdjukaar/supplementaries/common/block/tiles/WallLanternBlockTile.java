@@ -47,8 +47,8 @@ public class WallLanternBlockTile extends SwayingBlockTile implements IBlockHold
     }
 
     @Override
-    public Vector3f getRotationAxis(BlockState state) {
-        return state.getValue(WallLanternBlock.FACING).step();
+    public Vector3f getRotationAxis() {
+        return getBlockState().getValue(WallLanternBlock.FACING).step();
     }
 
     @Override

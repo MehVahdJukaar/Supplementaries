@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class HangingSignBlockEntityMixin extends BlockEntity implements IExtendedHangingSign {
 
     @Unique
-    private final HangingSignTileExtension supplementaries$extension = new HangingSignTileExtension(this.getBlockState());;
+    private final HangingSignTileExtension supplementaries$extension = new HangingSignTileExtension(this);;
 
     protected HangingSignBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);

@@ -10,6 +10,8 @@
     {"id":"fastpaintings:painting","required":false},
     {"id":"create:belt","required":false},
     {"id":"create:belt_connector","required":false},
-    {"id":"create:track","required":false}
+    {"id":"create:track","required":false},
+    {"id":"blue_skies:bag_of_spoils","required":false},
+    {"id":"securitycraft:projector","required":false}
   ]
 }

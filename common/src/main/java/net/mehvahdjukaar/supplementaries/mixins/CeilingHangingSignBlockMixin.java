@@ -5,8 +5,10 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.BlockAt
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -53,7 +55,11 @@ public abstract class CeilingHangingSignBlockMixin extends Block implements Enti
         super.entityInside(state, level, pos, entity);
         if (level.isClientSide && ClientConfigs.Blocks.ENHANCED_HANGING_SIGNS.get() &&
                 level.getBlockEntity(pos) instanceof IExtendedHangingSign tile && tile.getExtension().canSwing()) {
-            tile.getExtension().animation.hitByEntity(entity, state, pos);
+            if(tile.getExtension().animation.hitByEntity(entity)){
+                //TODO: fix this doesnt work because this only works client side
+                Player player = entity instanceof Player p ? p : null;
+                entity.level().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
+            }
         }
     }
 

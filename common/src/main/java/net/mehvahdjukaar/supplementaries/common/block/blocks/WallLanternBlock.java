@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -227,7 +228,11 @@ public class WallLanternBlock extends WaterBlock implements EntityBlock {
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         super.entityInside(state, level, pos, entity);
         if (level.isClientSide && !ClientConfigs.Blocks.FAST_LANTERNS.get() && level.getBlockEntity(pos) instanceof WallLanternBlockTile tile) {
-            tile.animation.hitByEntity(entity, state, pos);
+            if (tile.animation.hitByEntity(entity)) {
+                //TODO: fix this doesnt work because this only works client side
+                Player player = entity instanceof Player p ? p : null;
+                entity.level().playSound(player, pos, state.getSoundType().getHitSound(), SoundSource.BLOCKS, 0.75f, 1.5f);
+            }
         }
     }
 

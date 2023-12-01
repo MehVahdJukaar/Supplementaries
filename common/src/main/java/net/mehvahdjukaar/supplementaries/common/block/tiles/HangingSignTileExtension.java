@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
+import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.PendulumAnimation;
-import net.mehvahdjukaar.supplementaries.common.block.SwingAnimation;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CeilingHangingSignBlock;
 import net.minecraft.world.level.block.WallHangingSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +25,7 @@ import org.joml.Vector3f;
 @Deprecated(forRemoval = true)
 public class HangingSignTileExtension {
 
+    private final BlockEntity parent;
     @Nullable
     private ModBlockProperties.PostType leftAttachment = null;
 
@@ -35,7 +38,7 @@ public class HangingSignTileExtension {
 
     public final SwingAnimation animation;
 
-    public HangingSignTileExtension(BlockState state) {
+    public HangingSignTileExtension(BlockEntity blockEntity) {
         super();
         //cheaty. will create on dedicated client on both server and client this as configs are loaded there
         if (PlatHelper.getPhysicalSide().isClient()) {
@@ -43,7 +46,8 @@ public class HangingSignTileExtension {
         } else {
             animation = null;
         }
-        isCeiling = state.getBlock() instanceof CeilingHangingSignBlock;
+        isCeiling = blockEntity.getBlockState().getBlock() instanceof CeilingHangingSignBlock;
+        this.parent = blockEntity;
 
     }
 
@@ -51,11 +55,12 @@ public class HangingSignTileExtension {
         if (!canSwing) {
             animation.reset();
         } else {
-            animation.tick(level, pos, state);
+            animation.tick(state.getValue(WaterBlock.WATERLOGGED));
         }
     }
 
-    private Vector3f getRotationAxis(BlockState state) {
+    private Vector3f getRotationAxis() {
+        BlockState state = parent.getBlockState();
         return state.hasProperty(WallHangingSignBlock.FACING) ?
                 state.getValue(WallHangingSignBlock.FACING).getClockWise().step() :
                 new Vector3f(0, 0, 1).rotateY(Mth.DEG_TO_RAD *
