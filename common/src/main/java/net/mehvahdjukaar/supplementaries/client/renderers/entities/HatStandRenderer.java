@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.Vec3;
 
 public class HatStandRenderer extends LivingEntityRenderer<HatStandEntity, HatStandModel> {
 
@@ -44,6 +45,12 @@ public class HatStandRenderer extends LivingEntityRenderer<HatStandEntity, HatSt
             matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f / 1.5F * 3.1415927F) * 3.0F));
         }
 
+    }
+
+    @Override
+    public Vec3 getRenderOffset(HatStandEntity entity, float partialTicks) {
+        if(entity.isNoBasePlate())return new Vec3(0,-1/16f,0);
+        return super.getRenderOffset(entity, partialTicks);
     }
 
     @Override

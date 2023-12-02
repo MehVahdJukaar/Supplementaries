@@ -1,2 +1,2 @@
-record command now works with non noteblock played note sounds too
-added 3 new flute songs. go find them
+improved head stand and related bug fixes
+added some newposes for some item models when put on head

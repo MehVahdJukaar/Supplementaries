@@ -47,32 +47,36 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> {
 
     @Override
     public void prepareMobModel(HatStandEntity entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        this.basePlate.visible = !entity.isNoBasePlate();
 
-        this.head.xRot = Mth.DEG_TO_RAD * entity.getHeadPose().getX();
+        float xAngle = Mth.DEG_TO_RAD * entity.getHeadPose().getX();
         this.head.yRot = Mth.DEG_TO_RAD * entity.getHeadPose().getY();
-        this.head.zRot = Mth.DEG_TO_RAD * entity.getHeadPose().getZ();
+        float zAngle = Mth.DEG_TO_RAD * entity.getHeadPose().getZ();
         this.hat.copyFrom(this.head);
-        this.head.zRot = 0;//20+ageInTicks/20;
         this.basePlate.xRot = 0.0F;
         this.basePlate.yRot = Mth.DEG_TO_RAD * -Mth.rotLerp(partialTick, entity.yRotO, entity.getYRot());
         this.basePlate.zRot = 0.0F;
 
 
-        float zAngle = entity.animation.getAngle(partialTick) * Mth.DEG_TO_RAD;
+        zAngle += entity.animation.getAngle(partialTick) * Mth.DEG_TO_RAD;
 
         this.head.setPos(0.0F, 20.0F, 0.0F);
-        this.rotateModelZ(this.head, 0, 23, 0, zAngle);
+        //so we rotate below neck
+        this.rotateModel(this.head, 0, 23, 0, xAngle, zAngle);
     }
 
     //don't touch. it just works. dummmmmy code
-    public void rotateModelZ(ModelPart model, float nrx, float nry, float nrz, float angle) {
+    public void rotateModel(ModelPart model, float nrx, float nry, float nrz, float xAngle, float zAngle) {
         Vec3 oldRot = new Vec3(model.x, model.y, model.z);
         Vec3 actualRot = new Vec3(nrx, nry, nrz);
 
-        Vec3 newRot = actualRot.add(oldRot.subtract(actualRot).zRot(-angle));
+        Vec3 newRot = actualRot.add(oldRot.subtract(actualRot)
+                .xRot(-xAngle)
+                .zRot(-zAngle));
 
         model.setPos((float) newRot.x(), (float) newRot.y(), (float) newRot.z());
-        model.zRot = angle;
+        model.xRot = xAngle;
+        model.zRot = zAngle;
     }
 
 

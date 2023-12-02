@@ -254,7 +254,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             BlockPos facingPos = mutable.setWithOffset(pos, direction);
             BlockState sideState = world.getBlockState(facingPos);
             Block b = sideState.getBlock();
-            if (b instanceof RopeBlock) {
+            if (b instanceof RopeBlock && CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
                 i = Math.min(i, sideState.getValue(DISTANCE) + 1);
                 if (i == 1) {
                     break;

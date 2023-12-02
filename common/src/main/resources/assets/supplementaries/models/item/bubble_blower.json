@@ -4,6 +4,9 @@
 	"textures": {
 		"layer0": "supplementaries:item/bubble_blower"
 	},
+	"overrides": [
+		{"predicate": {"supplementaries:using": 1}, "model": "supplementaries:item/bubble_blower_using"}
+	],
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [0, -90, 55],
@@ -24,14 +27,9 @@
 			"rotation": [0, 90, -25],
 			"translation": [1.13, 3.2, 1.13],
 			"scale": [0.68, 0.68, 0.68]
+		},
+		"head": {
+			"translation": [-5.75, -2.5, -6.75]
 		}
-	},
-	  "overrides": [
-    {
-      "predicate": {
-        "supplementaries:using": 1
-      },
-      "model": "supplementaries:item/bubble_blower_using"
-    }
-  ]
+	}
 }

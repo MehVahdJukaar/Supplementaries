@@ -20,5 +20,10 @@
 				"down": {"uv": [0, 0, 4, 16], "rotation": 270, "texture": "#0", "cullface": "down"}
 			}
 		}
-	]
+	],
+	"display": {
+		"head": {
+			"translation": [0, 0, -12]
+		}
+	}
 }

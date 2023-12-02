@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -24,6 +25,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -41,7 +43,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class HatStandEntity extends LivingEntity {
-    public static final int WOBBLE_TIME = 5;
     private static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0F, 0.0F, 0.0F);
     public static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.BYTE);
     public static final EntityDataAccessor<Rotations> DATA_HEAD_POSE = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.ROTATIONS);
@@ -131,6 +132,7 @@ public class HatStandEntity extends LivingEntity {
         if (!stack.isEmpty())
             compound.put("Helmet", stack.save(new CompoundTag()));
         compound.putBoolean("Invisible", this.isInvisible());
+        compound.putBoolean("NoBasePlate", this.isNoBasePlate());
 
         ListTag compoundTag = new ListTag();
         if (!DEFAULT_HEAD_POSE.equals(this.headPose)) {
@@ -146,6 +148,8 @@ public class HatStandEntity extends LivingEntity {
             this.helmet.set(0, ItemStack.of(compound.getCompound("Helmet")));
         }
         this.setInvisible(compound.getBoolean("Invisible"));
+        this.setNoBasePlate(compound.getBoolean("NoBasePlate"));
+
         ListTag listTag = compound.getList("HeadPose", 5);
         this.setHeadPose(listTag.isEmpty() ? DEFAULT_HEAD_POSE : new Rotations(listTag));
     }
@@ -243,12 +247,11 @@ public class HatStandEntity extends LivingEntity {
         if (!this.level().isClientSide && !this.isRemoved()) {
 
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                this.kill();
+                this.dismantle(source);
                 return false;
             } else if (!this.isInvulnerableTo(source) && !this.invisible) {
                 if (source.is(DamageTypeTags.IS_EXPLOSION)) {
-                    this.brokenByAnything(source);
-                    this.kill();
+                    this.dismantle(source);
                     return false;
                 } else if (source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
                     if (this.isOnFire()) {
@@ -275,9 +278,7 @@ public class HatStandEntity extends LivingEntity {
                             }
                         }
                         if (source.isCreativePlayer()) {
-                            this.playBrokenSound();
-                            this.showBreakingParticles();
-                            this.kill();
+                            this.dismantle(null);
                             return isPierceArrow;
                         } else {
                             long l = this.level().getGameTime();
@@ -286,9 +287,7 @@ public class HatStandEntity extends LivingEntity {
                                 this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                                 this.lastHit = l;
                             } else {
-                                this.brokenByPlayer(source);
-                                this.showBreakingParticles();
-                                this.kill();
+                                this.dismantle(source);
                             }
                             return true;
                         }
@@ -335,34 +334,14 @@ public class HatStandEntity extends LivingEntity {
         float f = this.getHealth();
         f -= amount;
         if (f <= 0.5F) {
-            this.brokenByAnything(damageSource);
-            this.kill();
+            this.dismantle(damageSource);
         } else {
             this.setHealth(f);
             this.gameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getEntity());
         }
     }
 
-    private void brokenByPlayer(DamageSource damageSource) {
-        Block.popResource(this.level(), this.blockPosition(), getPickResult());
-        this.brokenByAnything(damageSource);
-    }
 
-    private void brokenByAnything(DamageSource damageSource) {
-        this.playBrokenSound();
-        this.dropAllDeathLoot(damageSource);
-
-        ItemStack itemStack;
-        itemStack = this.helmet.get(0);
-        if (!itemStack.isEmpty()) {
-            Block.popResource(this.level(), this.blockPosition().above(), itemStack);
-            this.helmet.set(0, ItemStack.EMPTY);
-        }
-    }
-
-    private void playBrokenSound() {
-        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_BREAK, this.getSoundSource(), 1.0F, 1.0F);
-    }
 
     @Override
     protected float tickHeadTurn(float yRot, float animStep) {
@@ -397,9 +376,17 @@ public class HatStandEntity extends LivingEntity {
         if (!this.headPose.equals(rotations)) {
             this.setHeadPose(rotations);
         }
-        if (this.level().isClientSide) {
-            this.animation.tick(!level().getFluidState(getOnPos()).isEmpty());
-
+        Level level = this.level();
+        if (level.isClientSide) {
+            this.animation.tick(!level.getFluidState(getOnPos()).isEmpty());
+        }else {
+            BlockPos onPos = this.getOnPos();
+            //check if on stable ground. used for automation
+            if (level.getGameTime() % 20L == 0L) {
+                if (level.isEmptyBlock(onPos)) {
+                    this.dismantle(level.damageSources().generic());
+                }
+            }
         }
     }
 
@@ -414,10 +401,59 @@ public class HatStandEntity extends LivingEntity {
         super.setInvisible(invisible);
     }
 
-    @Override
-    public void kill() {
+    public void setNoBasePlate(boolean noBasePlate) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 8, noBasePlate));
+    }
+
+    public boolean isNoBasePlate() {
+        return (this.entityData.get(DATA_CLIENT_FLAGS) & 8) != 0;
+    }
+
+    private byte setBit(byte oldBit, int offset, boolean value) {
+        if (value) {
+            oldBit = (byte)(oldBit | offset);
+        } else {
+            oldBit = (byte)(oldBit & ~offset);
+        }
+
+        return oldBit;
+    }
+
+    public void dismantle(@Nullable DamageSource source){
+
+        if(source != null) this.dropAllDeathLoot(source);
+
+        this.showBreakingParticles();
+        this.playBrokenSound();
+
         this.remove(Entity.RemovalReason.KILLED);
         this.gameEvent(GameEvent.ENTITY_DIE);
+    }
+
+    @Override
+    protected void dropAllDeathLoot(DamageSource damageSource) {
+        super.dropAllDeathLoot(damageSource);
+        this.spawnAtLocation(this.getPickResult(), 1);
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        ItemStack itemStack;
+        itemStack = this.helmet.get(0);
+        if (!itemStack.isEmpty()) {
+            this.spawnAtLocation(itemStack, 1);
+            this.helmet.set(0, ItemStack.EMPTY);
+        }
+    }
+
+    private void playBrokenSound() {
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_BREAK, this.getSoundSource(), 1.0F, 1.0F);
+    }
+
+    @Override
+    public void kill() {
+        dismantle(level().damageSources().generic());
     }
 
     @Override
