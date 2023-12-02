@@ -4,7 +4,10 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -14,6 +17,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterShadersEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -23,11 +28,29 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SupplementariesForgeClient {
 
-    @SubscribeEvent
-    public static void init(final FMLClientSetupEvent event) {
-        //  event.enqueueWork(ClientRegistry::setup);
+    private static boolean hasOptifine;
+    private static boolean firstScreenShown;
 
+    @SubscribeEvent
+    public static void setup(final FMLClientSetupEvent event) {
         crashIfOptifineHasNukedForge();
+
+        MinecraftForge.EVENT_BUS.addListener(SupplementariesForgeClient::handleDrawScreenEventPost);
+        try {
+            Class.forName("net.optifine.Config");
+            hasOptifine = true;
+        } catch (ClassNotFoundException e) {
+            hasOptifine = false;
+        }
+    }
+
+    public static void handleDrawScreenEventPost(ScreenEvent.Init.Post event) {
+        if (!firstScreenShown && event.getScreen() instanceof TitleScreen) {
+            if (hasOptifine && !ClientConfigs.General.NO_OPTIFINE_WARN.get()) {
+                Minecraft.getInstance().setScreen(new OptifrickScreen(event.getScreen()));
+            }
+            firstScreenShown = true;
+        }
     }
 
 

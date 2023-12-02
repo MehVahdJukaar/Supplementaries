@@ -177,6 +177,7 @@ public class ClientConfigs {
 
     public static class General {
 
+
         private static void init() {
         }
 
@@ -184,6 +185,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+        public static final Supplier<Boolean> NO_OPTIFINE_WARN;
 
         public static final Supplier<Double> TEST1;
         public static final Supplier<Double> TEST2;
@@ -194,6 +196,7 @@ public class ClientConfigs {
 
             builder.comment("General settings")
                     .push("general");
+            NO_OPTIFINE_WARN = builder.define("no_optifine_warn_screen",false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.CONFIGURED);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")

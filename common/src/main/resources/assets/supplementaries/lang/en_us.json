@@ -453,6 +453,12 @@
   "block_type.supplementaries.sign_post": "Sign Post",
 
 
+
+  "gui.supplementaries.optifine.message": "Before proceeding, please note that Optifine is known to cause issues and crashes.\n\n The mod is not suited for the modded environment and has had many instances of terrible compatibility even with Forge itself.\n\n Moreover, in terms of performance, way better and extremely more performant alterantives exist such as Modern fix, Embeddium as well as Oculus for shaders. \n\nWhether you play modded or vanilla, you should always use the mods listed here below instead.",
+  "gui.supplementaries.optifine.suggestions": "Here's a selection of mods that we recommend using instead.",
+  "gui.supplementaries.optifine.title": "WARNING: OPTIFINE DETECTED",
+  "gui.supplementaries.optifine.turn_off": "Don't show this again",
+
   "wood_type.domum_ornamentum.cactus": "Green Cactus",
   "wood_type.domum_ornamentum.cactus_extra": "Cactus",
   "wood_type.twilightforest.dark": "Darkwood",
