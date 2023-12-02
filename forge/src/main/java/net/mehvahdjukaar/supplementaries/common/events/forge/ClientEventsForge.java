@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
-import cpw.mods.jarhandling.impl.Jar;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
@@ -13,18 +11,17 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRen
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
+import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -34,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -68,7 +66,7 @@ public class ClientEventsForge {
             var renderer = event.getSkin(skinType);
             if (renderer != null) {
                 renderer.addLayer(new QuiverLayer(renderer, false));
-                RenderLayerParent model =  renderer;
+                RenderLayerParent model = renderer;
                 renderer.addLayer(new JarredHeadLayer<>(model, event.getEntityModels()));
             }
         }
@@ -163,6 +161,10 @@ public class ClientEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onSoundPlay(SoundEvent.SoundSourceEvent event) {
+        SongsManager.recordNoteFromSound(event.getSound(), event.getName());
+    }
 
     @SubscribeEvent
     public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
@@ -175,8 +177,8 @@ public class ClientEventsForge {
     }
 
 
-    public static void onPackReload(TextureStitchEvent.Post event){
-        if(event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+    public static void onPackReload(TextureStitchEvent.Post event) {
+        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
             AltimeterItemRenderer.onReload();
         }
     }

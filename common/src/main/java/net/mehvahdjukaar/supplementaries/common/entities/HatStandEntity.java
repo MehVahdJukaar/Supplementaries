@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -27,6 +26,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -61,23 +61,19 @@ public class HatStandEntity extends LivingEntity {
         this.setMaxUpStep(0.0F);
         if (PlatHelper.getPhysicalSide().isClient()) {
             animation = new PendulumAnimation(
-                   ClientConfigs.Blocks.HAT_STAND_CONFIG, this::getRotationAxis);
+                    ClientConfigs.Blocks.HAT_STAND_CONFIG, this::getRotationAxis);
         } else {
             animation = null;
         }
     }
 
     private Vector3f getRotationAxis() {
-        return new Vector3f(0,1,0);
+        return this.getViewVector(0).toVector3f();
     }
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return PlatHelper.getEntitySpawnPacket(this);
-    }
-
-    @Override
-    public void aiStep() {
     }
 
     @Override
@@ -159,12 +155,27 @@ public class HatStandEntity extends LivingEntity {
         return false;
     }
 
+
+    @Override
+    public void aiStep() {
+        Level level = this.level();
+        if (level.isClientSide) {
+            List<Entity> list = level.getEntities(this, this.getBoundingBox());
+            for (var e : list) {
+                if (animation.hitByEntity(e)) {
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     protected void doPush(Entity entity) {
     }
 
     @Override
     protected void pushEntities() {
+        super.pushEntities();
     }
 
     @Override
@@ -172,11 +183,11 @@ public class HatStandEntity extends LivingEntity {
         ItemStack itemStack = player.getItemInHand(hand);
         if (!itemStack.is(Items.NAME_TAG)) {
             boolean isClientSide = player.level().isClientSide;
-            if(itemStack.isEmpty() && player.isSecondaryUseActive()){
-                if(isClientSide){
-                    //TODO: cap impulse
+            if (player.isSecondaryUseActive()) {
+                if (isClientSide) {
                     //animation.hit(vec, 1);
-                        animation.addImpulse(1);
+                    animation.addImpulse(0.001f);
+                    animation.addPositiveImpulse(1.2f);
                 }
                 return InteractionResult.sidedSuccess(isClientSide);
             }
@@ -226,7 +237,11 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        if(this.level().isClientSide && source.getDirectEntity() instanceof Projectile){
+            animation.hitByEntity(source.getDirectEntity());
+        }
         if (!this.level().isClientSide && !this.isRemoved()) {
+
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 this.kill();
                 return false;
@@ -329,12 +344,7 @@ public class HatStandEntity extends LivingEntity {
     }
 
     private void brokenByPlayer(DamageSource damageSource) {
-        ItemStack itemStack = new ItemStack(ModRegistry.HAT_STAND.get());
-        if (this.hasCustomName()) {
-            itemStack.setHoverName(this.getCustomName());
-        }
-
-        Block.popResource(this.level(), this.blockPosition(), itemStack);
+        Block.popResource(this.level(), this.blockPosition(), getPickResult());
         this.brokenByAnything(damageSource);
     }
 
@@ -387,7 +397,7 @@ public class HatStandEntity extends LivingEntity {
         if (!this.headPose.equals(rotations)) {
             this.setHeadPose(rotations);
         }
-        if(this.level().isClientSide) {
+        if (this.level().isClientSide) {
             this.animation.tick(!level().getFluidState(getOnPos()).isEmpty());
 
         }
@@ -474,7 +484,11 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public ItemStack getPickResult() {
-        return new ItemStack(ModRegistry.HAT_STAND.get());
+        ItemStack itemStack = new ItemStack(ModRegistry.HAT_STAND.get());
+        if (this.hasCustomName()) {
+            itemStack.setHoverName(this.getCustomName());
+        }
+        return itemStack;
     }
 
     @Override

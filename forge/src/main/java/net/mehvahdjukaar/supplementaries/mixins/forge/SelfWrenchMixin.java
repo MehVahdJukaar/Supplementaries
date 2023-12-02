@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -43,10 +44,10 @@ public abstract class SelfWrenchMixin extends Item {
             stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
             return true;
 
-        } else if (entity instanceof ArmorStand armorStand) {
-            this.interactLivingEntity(stack, player, armorStand, InteractionHand.MAIN_HAND);
-
-            return true;
+        } else if (entity instanceof LivingEntity armorStand) {
+           if( this.interactLivingEntity(stack, player, armorStand, InteractionHand.MAIN_HAND).consumesAction()){
+               return true;
+           }
         }
         return super.onLeftClickEntity(stack, player, entity);
     }

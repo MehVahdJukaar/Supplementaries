@@ -11,17 +11,24 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.core.fake_player.FPClientAccess;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.util.random.WeightedEntry;
@@ -56,6 +63,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     public SongsManager() {
         super(GSON, "flute_songs");
     }
+
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
@@ -255,6 +263,26 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
             recordNote(level, state.getValue(NoteBlock.NOTE) + 1, state.getValue(NoteBlock.INSTRUMENT));
         }
     }
+
+
+    public static void recordNoteFromSound(SoundInstance sound, String name) {
+        if(isRecording && name.startsWith("block.note_block")) {
+            try {
+                String[] parts = name.split("\\.");
+                String result = parts[parts.length - 1];
+
+                NoteBlockInstrument inst = NoteBlockInstrument.valueOf(result.toUpperCase(Locale.ROOT));
+                float pitch = sound.getPitch();
+                int note = (int) Math.round (12 * (Math.log(pitch) / Math.log(2)) + 12);
+                if (sound.getSource() == SoundSource.RECORDS) {
+                    recordNote(Minecraft.getInstance().getCameraEntity().level(), note, inst);
+                }
+            }catch (Exception ignored){
+                int aa = 1;
+            }
+        }
+    }
+
 
     public static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
         if (WHITELIST.isEmpty() || WHITELIST.contains(instrument)) {

@@ -518,7 +518,6 @@ public class ModCreativeTabs {
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 
-
         after(e, Items.ARMOR_STAND, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.HAT_STAND_NAME,
                 ModRegistry.HAT_STAND);

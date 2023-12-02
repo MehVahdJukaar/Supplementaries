@@ -215,6 +215,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+        public static final Supplier<Boolean> NO_OPTIFINE_WARN;
 
         public static final Supplier<Double> TEST1;
         public static final Supplier<Double> TEST2;
@@ -225,6 +226,8 @@ public class ClientConfigs {
 
             builder.comment("General settings")
                     .push("general");
+            NO_OPTIFINE_WARN = builder.comment("Disables Optifine warn screen")
+                    .define("no_optifine_warn_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.CONFIGURED);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
@@ -405,7 +408,7 @@ public class ClientConfigs {
 
             builder.push("hat_stand");
             HAT_STAND_CONFIG = builder.defineObject("swing_physics",
-                    () -> new PendulumAnimation.Config(0, 55, 1.625f, 1.4f, true, 1f, 15),
+                    () -> new PendulumAnimation.Config(0, 55, 1.625f, 1.5f, true, 1.5f, 15),
                     PendulumAnimation.Config.CODEC);
             builder.pop();
 
