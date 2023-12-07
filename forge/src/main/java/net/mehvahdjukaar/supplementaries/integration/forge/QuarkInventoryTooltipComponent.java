@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +19,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import vazkii.quark.content.client.module.ChestSearchingModule;
-import vazkii.quark.content.client.tooltip.ShulkerBoxTooltips;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.client.module.ChestSearchingModule;
+import org.violetmoon.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
 
@@ -34,6 +34,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
     private final int[] dimensions;
     private final int size;
     private final boolean locked;
+    protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
     public QuarkInventoryTooltipComponent(InventoryTooltip tooltip) {
         this.tag = tooltip.tag();
@@ -76,7 +77,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
 
                 int color = -1;
 
-                ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(mc, pose, currentX, tooltipY, dimensions[0], dimensions[1], color);
+                ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(graphics, mc, pose, currentX, tooltipY, dimensions[0], dimensions[1], color);
 
                 for (int i = 0; i < size; i++) {
                     ItemStack itemstack = capability.getStackInSlot(i);
@@ -89,7 +90,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
                         graphics.renderItemDecorations(mc.font, itemstack, xp, yp);
                     }
 
-                    if (!ChestSearchingModule.namesMatch(itemstack)) {
+                    if (!module.namesMatch(itemstack)) {
                         RenderSystem.disableDepthTest();
                         graphics.fill(xp, yp, xp + 16, yp + 16, 0xAA000000);
                     }

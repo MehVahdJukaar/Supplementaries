@@ -40,10 +40,11 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
+import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
+import org.violetmoon.zeta.Zeta;
 import vazkii.arl.util.ItemNBTHelper;
-import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.tools.item.PathfindersQuillItem;
-import vazkii.quark.content.tools.module.PathfinderMapsModule;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,7 +63,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     protected static final String TAG_WAITING = "waiting";
 
     public CartographersQuillItem() {
-        super(ModuleLoader.INSTANCE.getModuleInstance(PathfinderMapsModule.class),
+        super(Quark.ZETA.modules.get(PathfinderMapsModule.class),
                 new Properties().stacksTo(1));
         QuarkCompatImpl.removeStuffFromARLHack();
     }
@@ -80,12 +81,12 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     @Override
-    protected String getFailedMessage() {
+    protected String getFailMessage() {
         return "message.supplementaries.quill_failed";
     }
 
     @Override
-    protected String getFinishedMessage() {
+    protected String getSuccessMessage() {
         return "message.supplementaries.quill_finished";
     }
 

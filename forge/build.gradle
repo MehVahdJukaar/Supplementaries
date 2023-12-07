@@ -147,9 +147,10 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:4581099")
 
     modCompileOnly("curse.maven:autoreglib-250363:4100299")
-    modCompileOnly("curse.maven:quark-oddities-301051:3575623")
+    //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     //modImplementation("curse.maven:quark-243121:4463411")
-    modCompileOnly("curse.maven:quark-243121:4551115")
+    modImplementation("org.violetmoon.quark:Quark-4.0-alpha-419")
+    //modCompileOnly("curse.maven:quark-243121:4551115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")

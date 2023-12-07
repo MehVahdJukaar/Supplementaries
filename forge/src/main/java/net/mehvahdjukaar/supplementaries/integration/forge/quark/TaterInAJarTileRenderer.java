@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.integration.forge.quark;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
-import vazkii.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
+import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
+import org.violetmoon.quark.addons.oddities.client.render.be.TinyPotatoRenderer;
 
 public class TaterInAJarTileRenderer extends TinyPotatoRenderer {
     public TaterInAJarTileRenderer(BlockEntityRendererProvider.Context ctx) {

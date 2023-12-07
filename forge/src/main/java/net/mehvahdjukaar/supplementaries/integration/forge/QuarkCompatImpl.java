@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -43,6 +44,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -51,27 +53,40 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
+import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
+import org.violetmoon.quark.addons.oddities.item.BackpackItem;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.content.automation.module.JukeboxAutomationModule;
+import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
+import org.violetmoon.quark.content.building.block.StoolBlock;
+import org.violetmoon.quark.content.building.block.WoodPostBlock;
+import org.violetmoon.quark.content.building.module.VerticalSlabsModule;
+import org.violetmoon.quark.content.client.module.UsesForCursesModule;
+import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
+import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;
+import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
+import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
+import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
+import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.capability.ZetaCapabilityManager;
+import org.violetmoon.zeta.config.IZetaConfigInternals;
+import org.violetmoon.zeta.config.SectionDefinition;
+import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.network.ZetaNetworkHandler;
+import org.violetmoon.zeta.registry.BrewingRegistry;
+import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
+import org.violetmoon.zeta.registry.PottedPlantRegistry;
+import org.violetmoon.zeta.registry.ZetaRegistry;
+import org.violetmoon.zeta.util.RaytracingUtil;
+import org.violetmoon.zetaimplforge.ForgeZeta;
+import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
 import vazkii.arl.util.ItemNBTHelper;
 import vazkii.arl.util.RegistryHelper;
-import vazkii.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
-import vazkii.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
-import vazkii.quark.addons.oddities.item.BackpackItem;
-import vazkii.quark.api.event.GatherAdvancementModifiersEvent;
-import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.automation.module.JukeboxAutomationModule;
-import vazkii.quark.content.automation.module.PistonsMoveTileEntitiesModule;
-import vazkii.quark.content.building.block.StoolBlock;
-import vazkii.quark.content.building.block.WoodPostBlock;
-import vazkii.quark.content.building.module.VerticalSlabsModule;
-import vazkii.quark.content.client.module.UsesForCursesModule;
-import vazkii.quark.content.management.module.ExpandedItemInteractionsModule;
-import vazkii.quark.content.tools.item.SlimeInABucketItem;
-import vazkii.quark.content.tools.module.SlimeInABucketModule;
-import vazkii.quark.content.tweaks.module.DoubleDoorOpeningModule;
-import vazkii.quark.content.tweaks.module.EnhancedLaddersModule;
-import vazkii.quark.content.tweaks.module.MoreBannerLayersModule;
-import vazkii.quark.content.tweaks.module.MoreNoteBlockSoundsModule;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -128,11 +143,11 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isFastSlideModuleEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(EnhancedLaddersModule.class) && EnhancedLaddersModule.allowSliding;
+        return Quark.ZETA.modules.isEnabled(EnhancedLaddersModule.class) && EnhancedLaddersModule.allowSliding;
     }
 
     public static boolean isDoubleDoorEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(DoubleDoorOpeningModule.class);
+        return  Quark.ZETA.modules.isEnabled(DoubleDoorOpeningModule.class);
     }
 
     public static boolean canMoveBlockEntity(BlockState state) {
@@ -155,7 +170,7 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isVerticalSlabEnabled() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(VerticalSlabsModule.class);
+        return  Quark.ZETA.modules.isEnabled(VerticalSlabsModule.class);
     }
 
     public static boolean shouldHideOverlay(ItemStack stack) {
@@ -209,7 +224,7 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isJukeboxModuleOn() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(JukeboxAutomationModule.class);
+        return  Quark.ZETA.modules.isEnabled(JukeboxAutomationModule.class);
     }
 
     public static InteractionResult tryCaptureTater(JarItem item, UseOnContext context) {
@@ -243,7 +258,7 @@ public class QuarkCompatImpl {
     }
 
     public static ItemStack getSlimeBucket(Entity entity) {
-        if (ModuleLoader.INSTANCE.isModuleEnabled(SlimeInABucketModule.class)) {
+        if ( Quark.ZETA.modules.isEnabled(SlimeInABucketModule.class)) {
             if (entity.getType() == EntityType.SLIME && ((Slime) entity).getSize() == 1 && entity.isAlive()) {
                 ItemStack outStack = new ItemStack(SlimeInABucketModule.slime_in_a_bucket);
                 CompoundTag cmp = entity.serializeNBT();
@@ -255,7 +270,7 @@ public class QuarkCompatImpl {
     }
 
     public static boolean isShulkerDropInOn() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ExpandedItemInteractionsModule.class)
+        return  Quark.ZETA.modules.isEnabled(ExpandedItemInteractionsModule.class)
                 && ExpandedItemInteractionsModule.enableShulkerBoxInteraction;
     }
 

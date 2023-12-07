@@ -16,9 +16,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import vazkii.quark.addons.oddities.module.MatrixEnchantingModule;
-import vazkii.quark.addons.oddities.util.Influence;
-import vazkii.quark.api.IEnchantmentInfluencer;
+import org.violetmoon.quark.addons.oddities.module.MatrixEnchantingModule;
+import org.violetmoon.quark.addons.oddities.util.Influence;
+import org.violetmoon.quark.api.IEnchantmentInfluencer;
 
 import java.util.List;
 

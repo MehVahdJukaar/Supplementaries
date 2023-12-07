@@ -20,7 +20,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
-import vazkii.quark.content.building.block.VerticalSlabBlock;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -26,11 +26,11 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Lazy;
+import org.violetmoon.quark.api.event.UsageTickerEvent;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.handler.GeneralConfig;
+import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import vazkii.arl.util.ItemNBTHelper;
-import vazkii.quark.api.event.UsageTickerEvent;
-import vazkii.quark.base.handler.GeneralConfig;
-import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.content.client.module.ImprovedTooltipsModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class QuarkClientCompatImpl {
     }
 
     public static boolean canRenderQuarkTooltip() {
-        return ModuleLoader.INSTANCE.isModuleEnabled(ImprovedTooltipsModule.class)
+        return Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class)
                 && ImprovedTooltipsModule.shulkerTooltips &&
                 (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
     }
