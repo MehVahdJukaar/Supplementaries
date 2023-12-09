@@ -53,9 +53,6 @@ public class LootTablesInjects {
             LOOT_INJECTS.add(LootTablesInjects::tryInjectSpikes);
     }
 
-    public static void injectLootTables(ResourceLocation name, Consumer<LootPool.Builder> builder) {
-
-    }
 
     private enum TableType {
         OTHER,

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.quark;
+package net.mehvahdjukaar.supplementaries.integration.quark;
 
 import com.google.common.base.Stopwatch;
 import com.mojang.datafixers.util.Either;
@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
-import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
@@ -23,6 +23,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ChunkPos;
@@ -40,11 +41,8 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
-import org.violetmoon.quark.content.tools.module.PathfinderMapsModule;
-import org.violetmoon.zeta.Zeta;
-import vazkii.arl.util.ItemNBTHelper;
+import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,9 +61,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     protected static final String TAG_WAITING = "waiting";
 
     public CartographersQuillItem() {
-        super(Quark.ZETA.modules.get(PathfinderMapsModule.class),
-                new Properties().stacksTo(1));
-        QuarkCompatImpl.removeStuffFromARLHack();
+        super(null, new Item.Properties().stacksTo(1));
     }
 
     private static Thread mainThread;
@@ -74,8 +70,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
         var tag = stack.getTag();
         if (tag != null) {
-            if (ItemNBTHelper.getBoolean(stack, TAG_IS_SEARCHING, false))
-                comps.add(getSearchingComponent().withStyle(ChatFormatting.BLUE));
+            if (ItemNBTHelper.getBoolean(stack, PathfindersQuillItem.TAG_IS_SEARCHING, false))
+                comps.add(PathfindersQuillItem.getSearchingComponent().withStyle(ChatFormatting.BLUE));
         } else
             comps.add(Component.translatable("message.supplementaries.cartographers_quill").withStyle(ChatFormatting.GRAY));
     }
@@ -157,7 +153,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
             return ret;
         } else {
             ItemStack dummy = stack.copy();
-            EXECUTORS.submit(() -> {
+            PathfindersQuillItem.EXECUTORS.submit(() -> {
                 COMPUTING.add(key);
                 RESULTS.put(key, this.searchIterative(target, dummy, level, player, Integer.MAX_VALUE));
                 COMPUTING.remove(key);
@@ -188,14 +184,14 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     private BlockPos getOrCreateStartPos(CompoundTag tag, Player player) {
-        if (tag.contains(TAG_SOURCE_X) && tag.contains(TAG_SOURCE_Z)) {
-            int sourceX = tag.getInt(TAG_SOURCE_X);
-            int sourceZ = tag.getInt(TAG_SOURCE_Z);
+        if (tag.contains(PathfindersQuillItem.TAG_SOURCE_X) && tag.contains(PathfindersQuillItem.TAG_SOURCE_Z)) {
+            int sourceX = tag.getInt(PathfindersQuillItem.TAG_SOURCE_X);
+            int sourceZ = tag.getInt(PathfindersQuillItem.TAG_SOURCE_Z);
             return new BlockPos(sourceX, 64, sourceZ);
         } else {
             var pos = player.blockPosition();
-            tag.putInt(TAG_SOURCE_X, pos.getX());
-            tag.putInt(TAG_SOURCE_Z, pos.getZ());
+            tag.putInt(PathfindersQuillItem.TAG_SOURCE_X, pos.getX());
+            tag.putInt(PathfindersQuillItem.TAG_SOURCE_Z, pos.getZ());
             return pos;
         }
     }
@@ -216,8 +212,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     private int getColor(CompoundTag tag) {
-        if (tag.contains(TAG_COLOR)) {
-            return tag.getInt(TAG_COLOR);
+        if (tag.contains(PathfindersQuillItem.TAG_COLOR)) {
+            return tag.getInt(PathfindersQuillItem.TAG_COLOR);
         }
         return 0;
     }
@@ -393,7 +389,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
                 }
 
                 if (!state.waiting) {
-                    EXECUTORS.submit(() -> {
+                    PathfindersQuillItem.EXECUTORS.submit(() -> {
                         COMPUTING_CHUNKPOS.add(chunkPos);
                         //this is where all the expensiveness of this comes from
                         chunkCache.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_STARTS, true);
@@ -456,7 +452,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
             t.putString(TAG_NAME, name);
         }
         if (color != 0) {
-            t.putInt(TAG_COLOR, color);
+            t.putInt(PathfindersQuillItem.TAG_COLOR, color);
         }
         return stack;
     }
@@ -464,8 +460,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     public static int getItemColor(ItemStack stack, int layer) {
         if (layer == 0) return -1;
         CompoundTag compoundTag = stack.getTag();
-        if (compoundTag != null && compoundTag.contains(TAG_COLOR)) {
-            int i = compoundTag.getInt(TAG_COLOR);
+        if (compoundTag != null && compoundTag.contains(PathfindersQuillItem.TAG_COLOR)) {
+            int i = compoundTag.getInt(PathfindersQuillItem.TAG_COLOR);
             return -16777216 | i & 16777215;
         } else {
             return 0;
@@ -473,7 +469,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     public static ItemStack forStructure(ServerLevel level, @Nullable HolderSet<Structure> tag) {
-        ItemStack stack = QuarkCompatImpl.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
+        ItemStack stack = QuarkCompat.CARTOGRAPHERS_QUILL.get().getDefaultInstance();
         if (tag != null) {
             //adventurer ones are always random
             String target = selectRandomTarget(level, tag);
@@ -523,8 +519,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
         public void save(CompoundTag tag) {
             tag.putInt(TAG_RADIUS, radius);
-            tag.putInt(TAG_POS_X, x);
-            tag.putInt(TAG_POS_Z, z);
+            tag.putInt(PathfindersQuillItem.TAG_POS_X, x);
+            tag.putInt(PathfindersQuillItem.TAG_POS_Z, z);
             tag.putInt(TAG_POS_INDEX, placementInd);
             tag.putBoolean(TAG_WAITING, waiting);
         }
@@ -536,12 +532,12 @@ public class CartographersQuillItem extends PathfindersQuillItem {
                 radius = tag.getInt(TAG_RADIUS);
             }
             int x = 0;
-            if (tag.contains(TAG_POS_X)) {
-                x = tag.getInt(TAG_POS_X);
+            if (tag.contains(PathfindersQuillItem.TAG_POS_X)) {
+                x = tag.getInt(PathfindersQuillItem.TAG_POS_X);
             }
             int z = 0;
-            if (tag.contains(TAG_POS_Z)) {
-                z = tag.getInt(TAG_POS_Z);
+            if (tag.contains(PathfindersQuillItem.TAG_POS_Z)) {
+                z = tag.getInt(PathfindersQuillItem.TAG_POS_Z);
             }
             int index = 0;
             if (tag.contains(TAG_POS_INDEX)) {

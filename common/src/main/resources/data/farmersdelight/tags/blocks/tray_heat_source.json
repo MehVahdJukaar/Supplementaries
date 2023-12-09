@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:blaze_rod_block","required":false}
+  ]
+}

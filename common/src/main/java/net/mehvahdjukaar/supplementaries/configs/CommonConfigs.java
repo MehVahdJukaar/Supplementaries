@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import com.google.common.base.Suppliers;
-import fabric.net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
@@ -10,16 +13,18 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LightableLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -642,8 +647,16 @@ public class CommonConfigs {
                     .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower",
                             "mna:chimerite_crystal", "botania:floating_flower", ",minecraft:mushroom", "botania:mushroom",
                             "botania:tall_mystical_flower", "botania:petal_block", "morered:network_cable",
-                            "xycraft_world:glowing_shiny_aurey_block","xycraft_world:shiny_aurey_block","xycraft_world:rgb_lamp",
+                            "xycraft_world:glowing_shiny_aurey_block", "xycraft_world:shiny_aurey_block", "xycraft_world:rgb_lamp",
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
+            SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
+                    .defineObject("special_blocks", () -> Map.of(
+                                    BlockPredicate.create("sticky_piston"), new ResourceLocation("piston"),
+                                    BlockPredicate.create("quark:dirty_glass"), new ResourceLocation("glass"),
+                                    BlockPredicate.create("quark:dirty_glass_pane"), new ResourceLocation("glass_pane"),
+                                    BlockPredicate.create("#alexscaves:cave_paintings"), new ResourceLocation("alexscaves:smooth_limestone")
+                            ),
+                            Codec.unboundedMap(BlockPredicate.CODEC, ResourceLocation.CODEC));
             builder.pop();
 
             builder.push("present");
@@ -706,6 +719,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> SOAP_ENABLED;
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
+        public static final Supplier<Map<BlockPredicate, ResourceLocation>> SOAP_SPECIAL;
 
         public static final Supplier<Boolean> ROPE_ENABLED;
         public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
@@ -732,7 +746,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
-
     }
 
 

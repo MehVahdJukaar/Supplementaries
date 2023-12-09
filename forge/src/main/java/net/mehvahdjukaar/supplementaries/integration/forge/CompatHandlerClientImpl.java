@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
+import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigSelectScreen;
 
 public class CompatHandlerClientImpl {
@@ -13,7 +14,7 @@ public class CompatHandlerClientImpl {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }
         if (CompatHandler.QUARK) {
-            QuarkClientCompatImpl.setupClient();
+            QuarkClientCompat.setupClient();
         }
 
         if(CompatHandler.CREATE){
@@ -26,7 +27,7 @@ public class CompatHandlerClientImpl {
 
     public static void init() {
         if (CompatHandler.QUARK) {
-            QuarkClientCompatImpl.initClient();
+            QuarkClientCompat.initClient();
         }
     }
 

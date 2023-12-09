@@ -35,6 +35,8 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
+    @Nullable
+    @Contract
     @ExpectPlatform
     public static BlockState getUnoxidised(Level level, BlockPos pos, BlockState state) {
         throw new AssertionError();

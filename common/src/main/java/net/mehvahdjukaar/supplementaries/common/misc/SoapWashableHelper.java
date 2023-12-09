@@ -4,13 +4,11 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -42,10 +40,10 @@ public class SoapWashableHelper {
     }
 
     private static boolean tryCleaningSign(Level level, BlockPos pos, BlockState state) {
-        if(state.getBlock() instanceof SignBlock){
-            if(level.getBlockEntity( pos) instanceof SignBlockEntity te && te.isWaxed()){
+        if (state.getBlock() instanceof SignBlock) {
+            if (level.getBlockEntity(pos) instanceof SignBlockEntity te && te.isWaxed()) {
                 te.setWaxed(false);
-                if(!level.isClientSide){
+                if (!level.isClientSide) {
                     te.setChanged();
                     level.sendBlockUpdated(pos, state, state, 3);
                 }
@@ -58,10 +56,14 @@ public class SoapWashableHelper {
     private static boolean tryUnoxidise(Level level, BlockPos pos, BlockState state) {
         Block b = state.getBlock();
         BlockState toPlace = null;
-        if (b == Blocks.STICKY_PISTON) {
-            toPlace = Blocks.PISTON.withPropertiesOf(state);
-        } else {
-            SuppPlatformStuff.getUnoxidised(level, pos, state);
+        for (var e : CommonConfigs.Functional.SOAP_SPECIAL.get().entrySet()) {
+            if (e.getKey().test(state)) {
+                toPlace = BuiltInRegistries.BLOCK.getOptional(e.getValue()).map(s -> s.withPropertiesOf(state)).orElse(null);
+                break;
+            }
+        }
+        if (toPlace == null) {
+            toPlace = SuppPlatformStuff.getUnoxidised(level, pos, state);
         }
         //vanilla
         if (toPlace == null) {

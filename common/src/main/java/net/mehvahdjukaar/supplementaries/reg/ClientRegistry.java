@@ -436,7 +436,6 @@ public class ClientRegistry {
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);
         event.register(SherdTooltip.class, SherdTooltipComponent::new);
-        if (CompatHandler.QUARK) QuarkClientCompat.registerTooltipComponent(event);
     }
 
     @EventCalled

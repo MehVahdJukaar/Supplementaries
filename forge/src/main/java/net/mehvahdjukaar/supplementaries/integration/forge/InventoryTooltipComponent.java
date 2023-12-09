@@ -23,7 +23,7 @@ import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
 import org.violetmoon.quark.content.client.tooltip.ShulkerBoxTooltips;
 
-public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
+public class InventoryTooltipComponent implements ClientTooltipComponent {
 
     private static final int CORNER = 5;
     private static final int BUFFER = 1;
@@ -36,7 +36,7 @@ public class QuarkInventoryTooltipComponent implements ClientTooltipComponent {
     private final boolean locked;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
-    public QuarkInventoryTooltipComponent(InventoryTooltip tooltip) {
+    public InventoryTooltipComponent(InventoryTooltip tooltip) {
         this.tag = tooltip.tag();
         this.item = tooltip.item();
         this.dimensions = SackContainerMenu.getRatio(tooltip.size());

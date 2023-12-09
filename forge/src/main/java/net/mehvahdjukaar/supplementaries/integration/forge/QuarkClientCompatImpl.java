@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
+import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
@@ -8,11 +9,10 @@ import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
-import net.mehvahdjukaar.supplementaries.integration.forge.quark.TaterInAJarTileRenderer;
+import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,56 +25,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.Lazy;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.handler.GeneralConfig;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
-import vazkii.arl.util.ItemNBTHelper;
+import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class QuarkClientCompatImpl {
 
     public static void initClient() {
-        ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompatImpl::registerEntityRenderers);
+        ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::quiverUsageTicker);
-    }
-
-    private static void registerEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
-        event.register(QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
-    }
-
-    public static void setupClient() {
-        ClientHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
-    }
-
-    public static boolean shouldHaveButtonOnRight() {
-        return !(GeneralConfig.qButtonOnRight && GeneralConfig.enableQButton);
-    }
-
-    public static boolean canRenderBlackboardTooltip() {
-        return canRenderQuarkTooltip();
-    }
-
-    public static boolean canRenderQuarkTooltip() {
-        return Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class)
-                && ImprovedTooltipsModule.shulkerTooltips &&
-                (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
+        ClientHelper.addTooltipComponentRegistration(QuarkClientCompatImpl::registerTooltipComponent);
     }
 
     public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
-        event.register(InventoryTooltip.class, QuarkInventoryTooltipComponent::new);
+        event.register(InventoryTooltip.class, InventoryTooltipComponent::new);
     }
 
+    private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));
 
-    private static final Lazy<SafeBlockTile> DUMMY_SAFE_TILE = Lazy.of(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));
 
     public static void onItemTooltipEvent(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
-        if (canRenderQuarkTooltip()) {
+        if (QuarkClientCompat.canRenderQuarkTooltip()) {
             Item item = stack.getItem();
             if (item instanceof SafeItem || item instanceof SackItem) {
                 CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", false);
@@ -103,7 +80,6 @@ public class QuarkClientCompatImpl {
             }
         }
     }
-
 
 
     public static void quiverUsageTicker(UsageTickerEvent.GetCount event) {
@@ -136,8 +112,6 @@ public class QuarkClientCompatImpl {
             }
         }
     }
-
-
 
 
 }

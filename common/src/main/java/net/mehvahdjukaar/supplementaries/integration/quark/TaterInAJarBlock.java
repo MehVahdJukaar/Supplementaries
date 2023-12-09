@@ -1,9 +1,9 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.quark;
+package net.mehvahdjukaar.supplementaries.integration.quark;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.forge.QuarkCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -48,11 +48,11 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
     private static final VoxelShape SHAPE = JarBlock.SHAPE;
 
     public TaterInAJarBlock() {
-        super(QuarkCompatImpl.MODULE);
+        super(null);
     }
 
     @Override
-    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+    public SoundType getSoundType(BlockState state) {
         return ModSounds.JAR;
     }
 
@@ -63,8 +63,8 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation direction) {
-        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, direction.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     @NotNull
@@ -85,7 +85,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
             tile.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
             if (world instanceof ServerLevel serverLevel) {
                 AABB box = SHAPE.bounds();
-                serverLevel.sendParticles(ParticleTypes.ANGRY_VILLAGER, (double) pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), (double) pos.getY() + box.maxY - 1, (double) pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0.0D, 0.0D, 0.0D, 0.0D);
+                serverLevel.sendParticles(ParticleTypes.ANGRY_VILLAGER, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), (double) pos.getY() + box.maxY - 1, (double) pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
         }
         return InteractionResult.SUCCESS;
@@ -101,7 +101,6 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
         return Collections.singletonList(stack);
     }
 
-    @NotNull
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Level level = ctx.getLevel();
@@ -122,7 +121,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
+        return Utils.getTicker(pBlockEntityType, QuarkCompat.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
     }
 
 
@@ -133,8 +132,9 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
             this.angry = true;
         }
 
+        @Override
         public BlockEntityType<Tile> getType() {
-            return QuarkCompatImpl.TATER_IN_A_JAR_TILE.get();
+            return QuarkCompat.TATER_IN_A_JAR_TILE.get();
         }
     }
 }

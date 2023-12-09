@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:tipped_arrow"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+
+  ],
+  "result": {
+    "item": "minecraft:arrow",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ]
+}

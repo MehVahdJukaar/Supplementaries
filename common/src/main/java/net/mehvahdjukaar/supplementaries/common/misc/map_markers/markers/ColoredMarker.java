@@ -22,16 +22,16 @@ public abstract class ColoredMarker extends MapBlockMarker<ColoredDecoration> {
         super(type);
     }
 
-    protected ColoredMarker(MapDecorationType<?,?> type, BlockPos pos, DyeColor color, @Nullable Component name) {
-        super(ModMapMarkers.FLAG_DECORATION_TYPE);
+    protected ColoredMarker(MapDecorationType<ColoredDecoration,?> type, BlockPos pos, DyeColor color, @Nullable Component name) {
+        this(type);
         this.color = color;
         this.setName(name);
         this.setPos(pos);
     }
 
     @Override
-    public CompoundTag saveToNBT(CompoundTag compound) {
-        super.saveToNBT(compound);
+    public CompoundTag saveToNBT() {
+        var compound = super.saveToNBT();
         compound.putString("Color", this.color.getName());
         return compound;
     }
