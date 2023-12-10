@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.common.block.present.IPresentItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

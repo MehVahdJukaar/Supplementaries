@@ -22,10 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChangeOverTimeBlock;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.WetSpongeBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,6 +30,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.raphimc.immediatelyfastapi.ImmediatelyFastApi;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -230,7 +228,7 @@ public class BellowsBlockTile extends BlockEntity {
             this.tickFurnaces(pos, state, level, te);
         }
         //maybe lower chance
-        else if (state instanceof ChangeOverTimeBlock && level instanceof ServerLevel serverLevel) {
+        else if (state.getBlock() instanceof ChangeOverTimeBlock && level instanceof ServerLevel serverLevel) {
             state.randomTick(serverLevel, pos, level.random);
         }
     }

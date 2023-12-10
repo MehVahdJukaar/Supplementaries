@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
-import net.mehvahdjukaar.moonlight.core.misc.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

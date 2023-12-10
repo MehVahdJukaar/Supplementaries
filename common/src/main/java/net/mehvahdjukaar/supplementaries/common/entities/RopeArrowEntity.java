@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
 import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;

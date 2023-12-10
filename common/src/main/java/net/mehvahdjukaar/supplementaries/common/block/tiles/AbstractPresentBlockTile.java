@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;

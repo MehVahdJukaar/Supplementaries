@@ -12,17 +12,11 @@ import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsMa
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.FireworkRocketItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.FireworkStarRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.ArrayList;

@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.function.Supplier;
-
 public class DoubleCakePlacement extends AdditionalItemPlacement {
 
     public DoubleCakePlacement(Block placeable) {

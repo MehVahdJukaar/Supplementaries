@@ -4,12 +4,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.IronGolem;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import org.jetbrains.annotations.NotNull;
 
 @Mixin(IronGolemRenderer.class)
 public abstract class IronGolemRendererMixin {

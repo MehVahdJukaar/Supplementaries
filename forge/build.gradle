@@ -153,18 +153,18 @@ dependencies {
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")
-    modCompileOnly("curse.maven:waystones-245755:3835119")
+    modImplementation("curse.maven:waystones-245755:4749833")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
-    modCompileOnly("curse.maven:balm-531761:3881348")
+    modImplementation("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:3941638")
-    modCompileOnly("curse.maven:map-atlases-forge-519759:4777281")
+    modImplementation("curse.maven:map-atlases-forge-519759:4902239")
     modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")
     modCompileOnly("curse.maven:terrablender-563928:4590487")
@@ -181,12 +181,10 @@ dependencies {
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-caves-924854:4806837")
     //modImplementation("curse.maven:citadel-331936:4786380")
-    //modCompileOnly("curse.maven:immediatelyfast-686911:4776117")
+    modImplementation("curse.maven:immediatelyfast-686911:4937545")
 
-    modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
+    //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
-
-   // modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
 }

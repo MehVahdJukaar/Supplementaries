@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.base.Suppliers;
-import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;

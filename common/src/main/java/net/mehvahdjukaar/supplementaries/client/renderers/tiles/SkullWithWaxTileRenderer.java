@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallCandleSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EnhancedSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -21,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
 
 public abstract class SkullWithWaxTileRenderer<T extends EnhancedSkullBlockTile> implements BlockEntityRenderer<T> {

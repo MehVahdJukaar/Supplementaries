@@ -5,11 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class CompatHandler {
 
     public static final boolean AMENDMENTS = isLoaded("amendments");
-    public static final boolean QUARK = isLoaded("quark");
+    public static final boolean QUARK = !PlatHelper.isDev() && isLoaded("quark");
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");

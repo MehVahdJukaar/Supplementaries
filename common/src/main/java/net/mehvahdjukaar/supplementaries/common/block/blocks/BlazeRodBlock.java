@@ -13,8 +13,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-
 public class BlazeRodBlock extends StickBlock {
 
     public BlazeRodBlock(Properties properties) {

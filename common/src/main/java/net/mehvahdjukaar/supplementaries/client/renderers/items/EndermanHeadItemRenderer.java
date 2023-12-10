@@ -6,10 +6,8 @@ import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.EndermanSkullBlockTileRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 
 import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.EndermanSkullBlockTileRenderer.EYES;
 import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.EndermanSkullBlockTileRenderer.TEXTURE;

@@ -13,8 +13,6 @@ import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.commands.SummonCommand;
 import net.minecraft.world.entity.EntityType;
 
 public class AddCageMobCommand implements Command<CommandSourceStack> {

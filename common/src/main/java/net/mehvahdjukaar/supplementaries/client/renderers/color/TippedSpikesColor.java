@@ -14,10 +14,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TippedSpikesColor implements BlockColor, ItemColor {
 

@@ -68,6 +68,7 @@ public class ModTags {
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
     public static final TagKey<Item> OVERENCUMBERING = itemTag("overencumbering");
     public static final TagKey<Item> SOAP_BLACKLIST = itemTag("soap_blacklist");
+    public static final TagKey<Item> QUIVER_BLACKLIST = itemTag("quiver_blacklist");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");

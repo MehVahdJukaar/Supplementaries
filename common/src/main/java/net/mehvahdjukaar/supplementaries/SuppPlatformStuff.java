@@ -15,10 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mixins;
-import org.spongepowered.asm.mixin.throwables.MixinApplyError;
-import org.spongepowered.tools.obfuscation.MixinObfuscationProcessorInjection;
 
 
 public class SuppPlatformStuff {

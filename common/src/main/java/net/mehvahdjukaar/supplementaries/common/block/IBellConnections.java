@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
-import net.mehvahdjukaar.supplementaries.common.worldgen.MineshaftElevatorPiece;
 import net.minecraft.util.StringRepresentable;
 
 @Deprecated(forRemoval = true)

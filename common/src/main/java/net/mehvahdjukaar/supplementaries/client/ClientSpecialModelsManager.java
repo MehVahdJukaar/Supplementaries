@@ -2,12 +2,10 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.WallLanternBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -17,11 +15,9 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.HashSet;
 import java.util.IdentityHashMap;

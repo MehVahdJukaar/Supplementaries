@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import org.joml.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;

@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -252,7 +253,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         List<ItemStack> getContentView();
 
         default boolean canAcceptItem(ItemStack toInsert) {
-            return toInsert.getItem() instanceof ArrowItem;
+            return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
         }
 
         default ItemStack getSelected() {

@@ -6,9 +6,7 @@
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
     "BlockEntityRendererDispatcherMixin",
-    "ChatMixin",
-    "CompatIFMapTextureMixin2",
-    "CompatIFMapAtlasTextureMixin"
+    "ChatMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",

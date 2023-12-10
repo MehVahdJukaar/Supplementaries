@@ -2,10 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.*;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
@@ -42,7 +40,6 @@ import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BooleanSupplier;
 
 
 public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeBoardBlockTile> {
