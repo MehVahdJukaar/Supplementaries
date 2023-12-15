@@ -1,24 +1,12 @@
 {
   "targets": [
-    "swap",
-    "previous"
+    "swap"
   ],
   "passes": [
     {
       "name": "flare",
       "intarget": "minecraft:main",
-      "outtarget": "swap",
-      "auxtargets": [
-        {
-          "name": "PrevSampler",
-          "id": "previous"
-        }
-      ]
-    },
-    {
-      "name": "blit",
-      "intarget": "swap",
-      "outtarget": "previous"
+      "outtarget": "swap"
     },
     {
       "name": "blit",

@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -83,7 +84,13 @@ public class ClientEvents {
 
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
-            String newShader = EFFECTS_PER_ITEM.get(stack.getItem());
+            Item item = stack.getItem();
+            String newShader = EFFECTS_PER_ITEM.get(item);
+            if (newShader == null && CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get()) {
+                if (p.getHealth() < 5) {
+                    newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
+                }
+            }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
             } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {
@@ -108,6 +115,7 @@ public class ClientEvents {
         map.put(Items.WITHER_SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
         map.put(Items.ZOMBIE_HEAD, "minecraft:shaders/post/desaturate.json");
         map.put(Items.DRAGON_HEAD, ClientRegistry.FLARE_SHADER.toString());
+        map.put(ModRegistry.CAGE_ITEM.get(), ClientRegistry.RAGE_SHADER.toString());
         map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
 
         return map;

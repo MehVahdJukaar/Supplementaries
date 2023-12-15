@@ -8,8 +8,7 @@
   "fragment": "supplementaries:black_and_white",
   "attributes": [ "Position" ],
   "samplers": [
-    { "name": "DiffuseSampler" },
-    { "name": "PrevSampler" }
+    { "name": "DiffuseSampler" }
   ],
   "uniforms": [
     { "name": "ProjMat",  "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },

@@ -410,6 +410,12 @@ public class CommonConfigs {
             ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
+            builder.push("hat_stand");
+            HAT_STAND_ENABLED = feature(builder);
+            HAT_STAND_UNRESTRICTED = builder.comment("Allow all items to go on hat stand")
+                            .define("unrestricted", false);
+            builder.pop();
+
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -431,7 +437,6 @@ public class CommonConfigs {
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
-            HAT_STAND_ENABLED = feature(builder, ModConstants.HAT_STAND_NAME);
             //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -537,6 +542,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
 
         public static final Supplier<Boolean> HAT_STAND_ENABLED;
+        public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;
 
     }
 

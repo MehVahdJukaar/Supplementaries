@@ -20,6 +20,8 @@ public class CompatHandler {
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");
+    public static final boolean GOATED = isLoaded("goated");
+    public static final boolean IMMEDIATELY_FAST = isLoaded("immediatelyfast");
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean OREGANIZED = isLoaded("oreganized");
     public static final boolean CREATE = isLoaded("create");

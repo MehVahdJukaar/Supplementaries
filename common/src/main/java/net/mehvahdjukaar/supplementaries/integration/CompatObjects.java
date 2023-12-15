@@ -54,6 +54,8 @@ public class CompatObjects {
 
     public static final Supplier<Item> TOME = makeCompatObject("quark:ancient_tome", BuiltInRegistries.ITEM);
 
+    public static final Supplier<Item> BARBARIC_HELMET = makeCompatObject("goated:barbaric_helmet", BuiltInRegistries.ITEM);
+
     public static final Supplier<Block> RICH_SOIL = makeCompatObject("farmersdelight:rich_soil", BuiltInRegistries.BLOCK);
     public static final Supplier<Block> TOMATOES = makeCompatObject("farmersdelight:tomatoes", BuiltInRegistries.BLOCK);
 

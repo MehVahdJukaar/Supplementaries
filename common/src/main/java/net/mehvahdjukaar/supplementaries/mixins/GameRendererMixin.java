@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +27,9 @@ public abstract class GameRendererMixin {
         }else if(entity instanceof AbstractSkeleton){
             this.loadEffect(ClientRegistry.BLACK_AND_WHITE_SHADER);
         }else if(entity instanceof Zombie){
-            this.loadEffect(new ResourceLocation("shaders/post/desaturate.json"));
+            this.loadEffect(ClientRegistry.VANILLA_DESATURATE);
+        }else if(entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL){
+            this.loadEffect(ClientRegistry.RAGE_SHADER);
         }
     }
 }

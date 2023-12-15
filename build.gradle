@@ -158,8 +158,8 @@ allprojects {
             url = 'https://maven.neoforged.net'
         }
 
-        repositories {
-            maven { url "https://api.modrinth.com/maven" }
+        maven {
+            url = "https://api.modrinth.com/maven"
         }
     }
 

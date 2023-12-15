@@ -77,9 +77,11 @@ import java.util.stream.Collectors;
 
 public class ClientRegistry {
 
+    public static final ResourceLocation RAGE_SHADER = Supplementaries.res("shaders/post/rage.json");
+    public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
-
+    public static final ResourceLocation VANILLA_DESATURATE = new ResourceLocation("shaders/post/desaturate.json");
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");

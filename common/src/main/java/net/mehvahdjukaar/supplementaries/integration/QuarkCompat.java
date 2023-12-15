@@ -47,7 +47,6 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.content.automation.module.JukeboxAutomationModule;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.block.StoolBlock;
 import org.violetmoon.quark.content.building.block.WoodPostBlock;
@@ -184,10 +183,6 @@ public class QuarkCompat {
         if (tileTag != null && tile.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(new ResourceLocation(tileTag.getString("id"))))
             tile.load(tileTag);
         return tile;
-    }
-
-    public static boolean isJukeboxModuleOn() {
-        return Quark.ZETA.modules.isEnabled(JukeboxAutomationModule.class);
     }
 
     public static InteractionResult tryCaptureTater(JarItem item, UseOnContext context) {

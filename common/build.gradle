@@ -33,11 +33,12 @@ dependencies {
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
     modCompileOnly("curse.maven:jade-324717:4801177")
-    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-419")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
 
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
-    modImplementation("curse.maven:immediatelyfast-686911:4937545")
+    //modImplementation("curse.maven:immediatelyfast-686911:4937545")
+    modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge") // Get latest version from releases
 
 }
 

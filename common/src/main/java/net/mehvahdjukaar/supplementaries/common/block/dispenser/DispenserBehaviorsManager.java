@@ -53,9 +53,7 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
             DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
 
-            if (CompatHandler.QUARK && QuarkCompat.isJukeboxModuleOn()) {
-                DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
-            }
+            DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {

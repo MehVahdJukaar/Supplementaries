@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.MapRenderer;
@@ -33,6 +35,7 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
+        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
         graphics.blit(ModTextures.NOTICE_BOARD_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
@@ -58,6 +61,7 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
             );
             poseStack.popPose();
         }
+        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 
     @Override

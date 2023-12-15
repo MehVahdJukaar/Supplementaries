@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -64,7 +66,7 @@ public class BlackBoardScreen extends Screen {
 
     //dynamic refreshTextures for client
     public void setPixel(int x, int y, boolean on) {
-        this.tile.setPixel(x,y,(byte) (on ? 1 : 0));
+        this.tile.setPixel(x, y, (byte) (on ? 1 : 0));
     }
 
     //calls drag for other buttons
@@ -81,7 +83,7 @@ public class BlackBoardScreen extends Screen {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 setPixel(xx, yy, false);
-                this.buttons[xx][yy].setColor( (byte) 0);
+                this.buttons[xx][yy].setColor((byte) 0);
             }
         }
     }
@@ -92,7 +94,7 @@ public class BlackBoardScreen extends Screen {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
                 this.addRenderableWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].setColor(this.tile.getPixel(xx,yy));
+                this.buttons[xx][yy].setColor(this.tile.getPixel(xx, yy));
             }
         }
 
@@ -105,10 +107,10 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
         Lighting.setupForFlatItems();
         this.renderBackground(graphics);
-        graphics.drawCenteredString( this.font, this.title, this.width / 2, 40, 16777215);
-
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
         graphics.pose().pushPose();
 
@@ -128,6 +130,7 @@ public class BlackBoardScreen extends Screen {
 
         Lighting.setupFor3DItems();
         super.render(graphics, mouseX, mouseY, partialTicks);
+        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 }
 

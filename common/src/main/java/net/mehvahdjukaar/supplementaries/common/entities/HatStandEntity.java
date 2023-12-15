@@ -3,7 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -205,6 +208,9 @@ public class HatStandEntity extends LivingEntity {
                     }
                 } else {
                     EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(itemStack);
+                    if(CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()){
+                        equipmentSlot = EquipmentSlot.HEAD;
+                    }
                     if (equipmentSlot != EquipmentSlot.HEAD) {
                         return InteractionResult.FAIL;
                     }
