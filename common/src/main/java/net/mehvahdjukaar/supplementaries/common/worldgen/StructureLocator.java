@@ -84,6 +84,8 @@ public class StructureLocator {
         } else {
             selectedTargets = new ArrayList<>(selectedTargets);
             Collections.shuffle(selectedTargets);
+            Supplementaries.LOGGER.info("Searching for closest structure among {}",
+                    Arrays.toString( selectedTargets.stream().map(e->e.unwrapKey().get()).toArray()));
         }
 
         //structures that can generate

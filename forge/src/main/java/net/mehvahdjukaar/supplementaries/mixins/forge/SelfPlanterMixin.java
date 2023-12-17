@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(PlanterBlock.class)
 public abstract class SelfPlanterMixin extends Block {
 
-    public SelfPlanterMixin(Properties arg) {
+    protected SelfPlanterMixin(Properties arg) {
         super(arg);
     }
 

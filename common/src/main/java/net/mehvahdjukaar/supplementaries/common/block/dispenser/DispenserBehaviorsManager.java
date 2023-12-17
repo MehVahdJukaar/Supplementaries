@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
@@ -52,8 +54,7 @@ public class DispenserBehaviorsManager {
 
         if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
             DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
-
-            DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
+           // DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {

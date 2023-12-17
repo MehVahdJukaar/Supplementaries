@@ -36,8 +36,7 @@ public class HatStandItem extends Item {
             Level level = context.getLevel();
             BlockPlaceContext placeContext = new BlockPlaceContext(context);
             BlockPos blockpos = placeContext.getClickedPos();
-            BlockPos above = blockpos.above();
-            if (placeContext.canPlace() && level.getBlockState(above).canBeReplaced(placeContext)) {
+            if (placeContext.canPlace()) {
                 var type = ModEntities.HAT_STAND.get();
                 Vec3 vec3 = Vec3.atBottomCenterOf(blockpos);
                 AABB aABB = type.getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
@@ -45,7 +44,6 @@ public class HatStandItem extends Item {
                     ItemStack itemstack = context.getItemInHand();
                     if (level instanceof ServerLevel serverLevel) {
                         level.removeBlock(blockpos, false);
-                        level.removeBlock(above, false);
                         Consumer<HatStandEntity> consumer = EntityType.createDefaultStackConfig(serverLevel, itemstack, context.getPlayer());
                         HatStandEntity dummy = type.create(serverLevel, itemstack.getTag(), consumer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
                         if (dummy == null) {

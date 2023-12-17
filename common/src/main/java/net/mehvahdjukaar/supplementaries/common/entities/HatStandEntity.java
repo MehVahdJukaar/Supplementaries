@@ -56,6 +56,8 @@ public class HatStandEntity extends LivingEntity {
     public long lastHit;
     private Rotations headPose;
     public final SwingAnimation animation;
+    public final AnimationState skibidiAnimation;
+
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
@@ -64,8 +66,10 @@ public class HatStandEntity extends LivingEntity {
         if (PlatHelper.getPhysicalSide().isClient()) {
             animation = new PendulumAnimation(
                     ClientConfigs.Blocks.HAT_STAND_CONFIG, this::getRotationAxis);
+            skibidiAnimation = new AnimationState();
         } else {
             animation = null;
+            skibidiAnimation = null;
         }
     }
 
@@ -163,8 +167,10 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public void aiStep() {
+        super.aiStep();
         Level level = this.level();
         if (level.isClientSide) {
+            if(!skibidiAnimation.isStarted() || this.tickCount % 60 == 0)skibidiAnimation.start(this.tickCount);
             List<Entity> list = level.getEntities(this, this.getBoundingBox());
             for (var e : list) {
                 if (animation.hitByEntity(e)) {

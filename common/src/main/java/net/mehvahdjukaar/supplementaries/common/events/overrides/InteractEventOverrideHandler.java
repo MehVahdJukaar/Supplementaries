@@ -71,8 +71,16 @@ public class InteractEventOverrideHandler {
         }
 
         if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-                AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(((BlockItem)b).getBlock()),
-                        i->i instanceof BlockItem bi && WallLanternBlock.isValidBlock(bi.getBlock()) );
+            AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(((BlockItem) b).getBlock()),
+                    i -> {
+                        if (i instanceof BlockItem bi) {
+                            Block b = bi.getBlock();
+                            if (b == null)
+                                throw new AssertionError("Some mod managed to create a block item with null block. WTF. Block: " + bi);
+                            return WallLanternBlock.isValidBlock(b);
+                        }
+                        return false;
+                    });
 
         }
 

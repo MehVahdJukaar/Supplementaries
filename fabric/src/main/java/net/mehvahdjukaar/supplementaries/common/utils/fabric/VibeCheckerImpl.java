@@ -30,6 +30,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.ServerPacksSource;
 import org.joml.Vector3f;
 
 import java.io.*;
@@ -136,7 +137,6 @@ public class VibeCheckerImpl {
     public static void vibeCheckModels() {
 
         try {
-
             DummySprite textureAtlasSprite = DummySprite.INSTANCE;
 
             BakedQuadBuilder b = BakedQuadBuilder.create(textureAtlasSprite);

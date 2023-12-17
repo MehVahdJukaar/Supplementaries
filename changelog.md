@@ -1,1 +1,1 @@
-fixed mod shaders not working anymore
+fixed random map location firing for non supplementaries custom maps

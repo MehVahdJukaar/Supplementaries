@@ -110,6 +110,8 @@ public class Supplementaries {
     //Fix doormat highlight text box
     //steal from quark backpack
     //quark bubble hollow log and grates
+    //skibidi hat
+    //blackboard gui to add color
     
 //potion flask that works liqui quiver/big pot storage
     //group rally ping map aylas
