@@ -213,7 +213,7 @@ public class Credits implements Serializable {
     private static final class Supporter {
 
         private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                        UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
+                        UUIDUtil.STRING_CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
                         Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
                         Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe))
                 .apply(i, Supporter::new));
@@ -234,7 +234,7 @@ public class Credits implements Serializable {
             try {
                 Component name = player.getName();
                 if(true) {
-                    URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
+                   // URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
                 }
             } catch (Exception e) {
                 int aa = 1;
