@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -34,7 +32,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +57,8 @@ public class HatStandEntity extends LivingEntity {
     public final SwingAnimation animation;
     public final AnimationState skibidiAnimation;
 
+    private final int tickOffset;
+
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
@@ -71,6 +72,7 @@ public class HatStandEntity extends LivingEntity {
             animation = null;
             skibidiAnimation = null;
         }
+        tickOffset = level.random.nextInt(100);
     }
 
     private Vector3f getRotationAxis() {
@@ -170,12 +172,28 @@ public class HatStandEntity extends LivingEntity {
         super.aiStep();
         Level level = this.level();
         if (level.isClientSide) {
-            if(!skibidiAnimation.isStarted() || this.tickCount % 60 == 0)skibidiAnimation.start(this.tickCount);
+
             List<Entity> list = level.getEntities(this, this.getBoundingBox());
             for (var e : list) {
                 if (animation.hitByEntity(e)) {
                     break;
                 }
+            }
+        } else {
+            if ((this.tickCount + tickOffset) % 100 == 0) {
+                var pose = getPose();
+                if (pose == Pose.STANDING) {
+                    if (random.nextFloat() < 0.3f) {
+                        BlockState state = this.getFeetBlockState();
+                        Block block = state.getBlock();
+                        if (block instanceof AbstractCauldronBlock || block instanceof ComposterBlock) {
+                            //skibidi tall
+                            this.setPose(Pose.SPIN_ATTACK);
+                        } else if (block instanceof HopperBlock) {
+                            this.setPose(Pose.SNIFFING);
+                        }
+                    }
+                } else setPose(Pose.STANDING);
             }
         }
     }
@@ -214,7 +232,7 @@ public class HatStandEntity extends LivingEntity {
                     }
                 } else {
                     EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(itemStack);
-                    if(CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()){
+                    if (CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()) {
                         equipmentSlot = EquipmentSlot.HEAD;
                     }
                     if (equipmentSlot != EquipmentSlot.HEAD) {
@@ -251,7 +269,7 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(this.level().isClientSide && source.getDirectEntity() instanceof Projectile){
+        if (this.level().isClientSide && source.getDirectEntity() instanceof Projectile) {
             animation.hitByEntity(source.getDirectEntity());
         }
         if (!this.level().isClientSide && !this.isRemoved()) {
@@ -352,7 +370,6 @@ public class HatStandEntity extends LivingEntity {
     }
 
 
-
     @Override
     protected float tickHeadTurn(float yRot, float animStep) {
         this.yBodyRotO = this.yRotO;
@@ -389,7 +406,7 @@ public class HatStandEntity extends LivingEntity {
         Level level = this.level();
         if (level.isClientSide) {
             this.animation.tick(!level.getFluidState(getOnPos()).isEmpty());
-        }else {
+        } else {
             BlockPos onPos = this.getOnPos();
             //check if on stable ground. used for automation
             if (level.getGameTime() % 20L == 0L) {
@@ -421,17 +438,17 @@ public class HatStandEntity extends LivingEntity {
 
     private byte setBit(byte oldBit, int offset, boolean value) {
         if (value) {
-            oldBit = (byte)(oldBit | offset);
+            oldBit = (byte) (oldBit | offset);
         } else {
-            oldBit = (byte)(oldBit & ~offset);
+            oldBit = (byte) (oldBit & ~offset);
         }
 
         return oldBit;
     }
 
-    public void dismantle(@Nullable DamageSource source){
+    public void dismantle(@Nullable DamageSource source) {
 
-        if(source != null) this.dropAllDeathLoot(source);
+        if (source != null) this.dropAllDeathLoot(source);
 
         this.showBreakingParticles();
         this.playBrokenSound();
@@ -519,6 +536,14 @@ public class HatStandEntity extends LivingEntity {
         if (DATA_CLIENT_FLAGS.equals(key)) {
             this.refreshDimensions();
             this.blocksBuilding = true;
+        }
+        if (DATA_POSE.equals(key)) {
+            Pose pose = this.getPose();
+            if (pose == Pose.SNIFFING || pose == Pose.SPIN_ATTACK) {
+                this.skibidiAnimation.start(this.tickCount);
+            } else {
+                this.skibidiAnimation.stop();
+            }
         }
         super.onSyncedDataUpdated(key);
     }

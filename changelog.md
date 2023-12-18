@@ -1,1 +1,2 @@
-fixed random map location firing for non supplementaries custom maps
+Fixed cave urns not spawning frequently enough
+Added skibidi toilet
