@@ -2,24 +2,17 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.models;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.core.misc.CaveFilter;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
-import net.minecraft.client.model.FrogModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.animal.frog.Frog;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -96,36 +89,27 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
     @Override
     public void setupAnim(HatStandEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         Pose pose = entity.getPose();
-        if(pose != Pose.STANDING) {
-            neckJoint.resetPose();
-            dummyHead.resetPose();
+        if (pose != Pose.STANDING) {
+
             GenericAnimationStuff.animate(this, entity.skibidiAnimation, SKIBIDI, ageInTicks, 1);
 
-
-
-            neckJoint.y += 23f;
-
-            dummyHead.y += pose ==Pose.SPIN_ATTACK ? 0 : 10;
-
-
+            dummyHead.y += pose == Pose.SPIN_ATTACK ? 0 : 9;
             dummyHead.visible = false;
-
-            //dummyHead.setRotation(0, 0, 0);
-
-            // distance between 2 pivots
-            Vector4f newPivot = new Vector4f(dummyHead.x, dummyHead.y, dummyHead.z, 1);
-
-            PoseStack poseStack = new PoseStack();
-
-            translateAndRotate(neckJoint, poseStack);
-            poseStack.last().pose().transform(newPivot);
-            var in = head.getInitialPose();
-            head.offsetPos(new Vector3f(newPivot.x - in.x, newPivot.y - in.y, newPivot.z - in.z));
-            head.setRotation(neckJoint.xRot + dummyHead.xRot,
-                    neckJoint.yRot + dummyHead.yRot, neckJoint.zRot + dummyHead.zRot);
-
-            neck.yScale = (-dummyHead.y) / 3;
         }
+
+        // distance between 2 pivots
+        Vector4f newPivot = new Vector4f(dummyHead.x, dummyHead.y, dummyHead.z, 1);
+
+        PoseStack poseStack = new PoseStack();
+
+        translateAndRotate(neckJoint, poseStack);
+        poseStack.last().pose().transform(newPivot);
+        var in = head.getInitialPose();
+        head.offsetPos(new Vector3f(newPivot.x - in.x, newPivot.y - in.y, newPivot.z - in.z));
+        head.setRotation(neckJoint.xRot + dummyHead.xRot,
+                neckJoint.yRot + dummyHead.yRot, neckJoint.zRot + dummyHead.zRot);
+
+        neck.yScale = (-dummyHead.y) / 3;
     }
 
 
@@ -148,9 +132,12 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
 
         head.resetPose();
         neck.resetPose();
+        neckJoint.resetPose();
+        dummyHead.resetPose();
+        neckJoint.y += 23f;
 
         neckJoint.zRot += zAngle;
-        neckJoint.xRot += xAngle ;
+        neckJoint.xRot += xAngle;
 
 
     }
@@ -171,8 +158,6 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
     protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.head, this.basePlate, this.neckJoint);
     }
-
-
 
 
     private static final AnimationDefinition SKIBIDI = AnimationDefinition.Builder.withLength(5.208343f)

@@ -77,7 +77,7 @@ public class ClientEvents {
         isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.is(ModRegistry.ROPE.get()) && !state.getValue(RopeBlock.UP) &&
                 (p.getY() + 500) % 1 >= RopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
 
-        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
+        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get() && !p.isSpectator()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
             String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
@@ -93,7 +93,7 @@ public class ClientEvents {
             }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
-            } else if (newShader == null && EFFECTS_PER_ITEM.containsValue(current)) {
+            } else if (newShader == null && (EFFECTS_PER_ITEM.containsValue(current) || (CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get()))) {
                 renderer.shutdownEffect();
             }
         }
