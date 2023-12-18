@@ -169,6 +169,8 @@ public class ClientRegistry {
         ClientPlatformHelper.registerRenderType(ModRegistry.CRANK.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.JAR.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.FAUCET.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GLOBE.get(), RenderType.cutout());
+        ClientPlatformHelper.registerRenderType(ModRegistry.GLOBE_SEPIA.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.SIGN_POST.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.WALL_LANTERN.get(), RenderType.cutout());
         ClientPlatformHelper.registerRenderType(ModRegistry.BELLOWS.get(), RenderType.cutout());
