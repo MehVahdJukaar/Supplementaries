@@ -121,18 +121,18 @@ public class QuiverItemImpl {
         public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
                 if (onlyOnExisting) {
-                    int countToAdd = toInsert.getCount();
-                    for (int i = 0; i < this.getSlots() && countToAdd > 0; i++) {
+                    int finalCount = toInsert.getCount();
+                    for (int i = 0; i < this.getSlots() && finalCount > 0; i++) {
                         ItemStack s = this.getStackInSlot(i);
                         if (ItemStack.isSameItemSameTags(s, toInsert)) {
-                            int newCount = Math.min(s.getMaxStackSize(), s.getCount() + countToAdd);
+                            int newCount = Math.min(s.getMaxStackSize(), s.getCount() + finalCount);
                             int increment = newCount - s.getCount();
-                            countToAdd -= increment;
+                            finalCount -= increment;
                             s.grow(increment);
                             this.onContentsChanged(i);
                         }
                     }
-                    toInsert.setCount(countToAdd);
+                    toInsert.setCount(finalCount);
                     return toInsert;
                 } else {
                     return ItemHandlerHelper.insertItem(this, toInsert, false);
