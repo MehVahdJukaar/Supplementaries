@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.supplementaries.common.Credits;
 import net.mehvahdjukaar.supplementaries.compat.CompatHandler;
-import net.mehvahdjukaar.supplementaries.compat.customvillagertrades.CVTHandler;
 import net.mehvahdjukaar.supplementaries.configs.ConfigHandler;
 import net.mehvahdjukaar.supplementaries.datagen.RecipeCondition;
 import net.mehvahdjukaar.supplementaries.events.ServerEvents;
@@ -148,9 +147,6 @@ public class Supplementaries {
         bus.addListener(ModSetup::init);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> bus.addListener(ClientSetup::init));
-
-
-       if(CompatHandler.customvillagertrades) CVTHandler.initialize();
 
     }
 
