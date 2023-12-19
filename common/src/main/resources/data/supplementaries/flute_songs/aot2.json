@@ -1,6 +1,7 @@
 {
-  "name": "aot2",
+  "name": "attack on titan",
   "tempo": 4,
+  "weight": 0,
   "notes": [
     0,
     30820,
@@ -89,6 +90,5 @@
     -2,
     11115
   ],
-  "credits": "recorded in-game",
-  "sped_up_ticks": 0
+  "credits": "Candy Craft"
 }

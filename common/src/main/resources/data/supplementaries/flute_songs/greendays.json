@@ -1,6 +1,7 @@
 {
-  "name": "greendays",
+  "name": "green days",
   "tempo": 4,
+  "weight": 1,
   "notes": [
     0,
     12,
@@ -65,6 +66,5 @@
     -1,
     12
   ],
-  "credits": "recorded in-game",
-  "sped_up_ticks": 0
+  "credits": "Candy Craft"
 }

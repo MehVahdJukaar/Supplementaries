@@ -1,6 +1,7 @@
 {
   "name": "illuminati",
   "tempo": 4,
+  "weight": 1,
   "notes": [
     0,
     404,
@@ -131,5 +132,5 @@
     -3,
     18
   ],
-  "credits": "recorded in-game"
+  "credits": "Candy Craft"
 }

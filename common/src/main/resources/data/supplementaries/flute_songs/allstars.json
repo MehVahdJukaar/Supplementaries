@@ -1,6 +1,7 @@
 {
-  "name": "allstars",
+  "name": "all stars",
   "tempo": 2,
+  "weight": 1,
   "notes": [
     0,
     17,
@@ -89,6 +90,6 @@
     -3,
     10
   ],
-  "credits": "recorded in-game",
+  "credits": "Candy Craft",
   "sped_up_ticks": 1
 }

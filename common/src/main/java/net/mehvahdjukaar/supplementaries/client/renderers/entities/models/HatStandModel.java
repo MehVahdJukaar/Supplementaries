@@ -91,7 +91,7 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         Pose pose = entity.getPose();
         if (pose != Pose.STANDING) {
 
-            GenericAnimationStuff.animate(this, entity.skibidiAnimation, SKIBIDI, ageInTicks, 1);
+            GenericAnimationStuff.animate(this, entity.skibidiAnimation, SKIBIDI, ageInTicks, 1.24f);
 
             dummyHead.y += pose == Pose.SPIN_ATTACK ? 0 : 9;
             dummyHead.visible = false;
@@ -127,7 +127,7 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         float zAngle = Mth.DEG_TO_RAD * entity.getHeadPose().getZ();
         this.hat.copyFrom(this.head);
 
-        zAngle += entity.animation.getAngle(partialTick) * Mth.DEG_TO_RAD;
+        zAngle += entity.swingAnimation.getAngle(partialTick) * Mth.DEG_TO_RAD;
 
 
         head.resetPose();

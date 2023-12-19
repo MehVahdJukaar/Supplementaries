@@ -1,6 +1,7 @@
 {
-  "name": "recorded-869489",
+  "name": "naruto",
   "tempo": 4,
+  "weight": 2,
   "notes": [
     0,
     11,
@@ -77,6 +78,5 @@
     -2,
     11
   ],
-  "credits": "",
-  "sped_up_ticks": 0
+  "credits": "Candy Craft"
 }

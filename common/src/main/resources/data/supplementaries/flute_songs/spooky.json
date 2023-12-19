@@ -1,6 +1,7 @@
 {
   "name": "spooky",
   "tempo": 2,
+  "weight": 1,
   "notes": [
     0,
     13,
@@ -57,5 +58,5 @@
     -3,
     606
   ],
-  "credits": "recorded in-game"
+  "credits": "Candy Craft"
 }

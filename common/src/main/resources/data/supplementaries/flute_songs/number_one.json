@@ -1,6 +1,7 @@
 {
-  "name": "numberone",
+  "name": "we are number one",
   "tempo": 2,
+  "weight": 1,
   "notes": [
     0,
     12,
@@ -49,5 +50,5 @@
     -4,
     19
   ],
-  "credits": ""
+  "credits": "Candy Craft"
 }

@@ -1,6 +1,7 @@
 {
   "name": "mozart",
   "tempo": 2,
+  "weight": 1,
   "notes": [
     0,
     9,
@@ -69,6 +70,5 @@
     -2,
     14
   ],
-  "credits": "recorded in-game",
-  "sped_up_ticks": 0
+  "credits": "Candy Craft"
 }

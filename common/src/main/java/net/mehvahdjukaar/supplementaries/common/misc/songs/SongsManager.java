@@ -9,10 +9,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntRBTreeMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
@@ -81,7 +80,8 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     private static void addSong(Song song) {
         SONGS.put(song.getName(), song);
-        SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), song.getWeight()));
+        int weight = song.getWeight();
+        if(weight > 0) SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), weight));
     }
 
     public static void acceptClientSongs(List<Song> songs) {
@@ -145,8 +145,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     //server controls everything here
-    public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song,
-                                   long timeSinceStarted) {
+    public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song, long timeSinceStarted) {
         boolean played = false;
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
@@ -156,19 +155,25 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
                 played = true;
             }
+
+            if(timeSinceStarted == 53 && song.getName().equals("skibidi")){
+                HatStandEntity.youAreSoSkibidi(entity);
+            }
         }
         return played;
     }
 
     //util to make songs from a map
-    private static final Long2ObjectMap<IntList> RECORDING = new Long2ObjectOpenHashMap<>();
+    private static final Map<Long,List<Integer>> RECORDING = new HashMap<>();
     private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
 
     private static boolean isRecording = false;
+    private static Source soundSource = Source.NOTE_BLOCKS;
 
-    public static void startRecording(NoteBlockInstrument[] whitelist) {
+    public static void startRecording(Source source,  NoteBlockInstrument[] whitelist) {
         RECORDING.clear();
         isRecording = true;
+        soundSource = source;
         WHITELIST.clear();
         WHITELIST.addAll(List.of(whitelist));
     }
@@ -185,14 +190,14 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         //sort and group notes and translate time
         Int2IntRBTreeMap treeMap = new Int2IntRBTreeMap();
 
-        for (var e : RECORDING.long2ObjectEntrySet()) {
+        for (var e : RECORDING.entrySet()) {
             int notes = 0;
-            IntList noteList = e.getValue();
+            var noteList = e.getValue();
             //can store max 4 notes in signed int
             for (int i = 0; i < Math.min(4, noteList.size()); i++) {
-                notes += noteList.getInt(i) * Math.pow(100, i);
+                notes += noteList.get(i) * Math.pow(100, i);
             }
-            treeMap.put((int) (e.getLongKey() - start), notes);
+            treeMap.put((int) (e.getKey() - start), notes);
         }
 
         int largestInterval = 1;
@@ -253,8 +258,8 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         return song.getTranslationKey();
     }
 
-    public static void recordNote(LevelAccessor levelAccessor, BlockPos pos) {
-        if (levelAccessor instanceof Level level && isRecording) {
+    public static void recordNoteFromNoteBlock(LevelAccessor levelAccessor, BlockPos pos) {
+        if (isRecording && soundSource == Source.NOTE_BLOCKS && levelAccessor instanceof Level level) {
             BlockState state = level.getBlockState(pos);
             recordNote(level, state.getValue(NoteBlock.NOTE) + 1, state.getValue(NoteBlock.INSTRUMENT));
         }
@@ -262,7 +267,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
 
     public static void recordNoteFromSound(SoundInstance sound, String name) {
-        if(isRecording && name.startsWith("block.note_block")) {
+        if(isRecording && name.startsWith("block.note_block") && soundSource == Source.SOUND_EVENTS) {
             try {
                 String[] parts = name.split("\\.");
                 String result = parts[parts.length - 1];
@@ -280,9 +285,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
 
-    public static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
+    private static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
         if (WHITELIST.isEmpty() || WHITELIST.contains(instrument)) {
-            IntList notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new IntArrayList());
+            List<Integer> notes = RECORDING.computeIfAbsent(level.getGameTime(), t -> new ArrayList<>());
             notes.add(note);
         }
     }
@@ -304,5 +309,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public enum Source {
+        NOTE_BLOCKS, SOUND_EVENTS
     }
 }
