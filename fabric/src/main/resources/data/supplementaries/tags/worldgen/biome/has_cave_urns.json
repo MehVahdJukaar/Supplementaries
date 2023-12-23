@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:key"
+    "#minecraft:is_overworld"
   ]
 }

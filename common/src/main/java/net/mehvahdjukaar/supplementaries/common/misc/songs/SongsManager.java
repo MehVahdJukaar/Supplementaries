@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
@@ -46,6 +47,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     private static final Map<String, Song> SONGS = new LinkedHashMap<>();
     private static final List<WeightedEntry.Wrapper<String>> SONG_WEIGHTED_LIST = new ArrayList<>();
+    private static final List<String> CAROLS = List.of("carol of the bells", "merry xmas", "jingle bells");
 
     //randomly selected currently playing songs
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
@@ -81,7 +83,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     private static void addSong(Song song) {
         SONGS.put(song.getName(), song);
         int weight = song.getWeight();
-        if(weight > 0) SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), weight));
+        if (weight > 0) SONG_WEIGHTED_LIST.add(WeightedEntry.wrap(song.getName(), weight));
     }
 
     public static void acceptClientSongs(List<Song> songs) {
@@ -91,7 +93,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        NetworkHandler.CHANNEL.sendToClientPlayer(player,new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
+        NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
     }
 
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
@@ -107,6 +109,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     @NotNull
     private static String selectRandomSong(RandomSource random) {
+        if (MiscUtils.FESTIVITY.isChristmas() && random.nextFloat() > 0.8) {
+            return CAROLS.get(random.nextInt(CAROLS.size()));
+        }
         Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
         return song.map(WeightedEntry.Wrapper::getData).orElse("");
     }
@@ -156,21 +161,21 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                 played = true;
             }
 
-            if(timeSinceStarted == 53 && song.getName().equals("skibidi")){
-                HatStandEntity.youAreSoSkibidi(entity);
+            if (timeSinceStarted == 53 && song.getName().equals("skibidi")) {
+                HatStandEntity.makeSkibidiInArea(entity);
             }
         }
         return played;
     }
 
     //util to make songs from a map
-    private static final Map<Long,List<Integer>> RECORDING = new HashMap<>();
+    private static final Map<Long, List<Integer>> RECORDING = new HashMap<>();
     private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
 
     private static boolean isRecording = false;
     private static Source soundSource = Source.NOTE_BLOCKS;
 
-    public static void startRecording(Source source,  NoteBlockInstrument[] whitelist) {
+    public static void startRecording(Source source, NoteBlockInstrument[] whitelist) {
         RECORDING.clear();
         isRecording = true;
         soundSource = source;
@@ -267,18 +272,18 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
 
     public static void recordNoteFromSound(SoundInstance sound, String name) {
-        if(isRecording && name.startsWith("block.note_block") && soundSource == Source.SOUND_EVENTS) {
+        if (isRecording && name.startsWith("block.note_block") && soundSource == Source.SOUND_EVENTS) {
             try {
                 String[] parts = name.split("\\.");
                 String result = parts[parts.length - 1];
 
                 NoteBlockInstrument inst = NoteBlockInstrument.valueOf(result.toUpperCase(Locale.ROOT));
                 float pitch = sound.getPitch();
-                int note = (int) Math.round (12 * (Math.log(pitch) / Math.log(2)) + 12);
+                int note = (int) Math.round(12 * (Math.log(pitch) / Math.log(2)) + 12);
                 if (sound.getSource() == SoundSource.RECORDS) {
                     recordNote(Minecraft.getInstance().getCameraEntity().level(), note, inst);
                 }
-            }catch (Exception ignored){
+            } catch (Exception ignored) {
                 int aa = 1;
             }
         }

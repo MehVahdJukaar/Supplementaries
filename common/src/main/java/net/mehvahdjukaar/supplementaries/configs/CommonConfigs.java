@@ -42,6 +42,10 @@ public class CommonConfigs {
 
     private static final WeakReference<ConfigBuilder> builderReference;
 
+
+    private static final Supplier<Boolean> TRUE = ()->true;
+    private static final Supplier<Boolean> FALSE = ()->false;
+
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
 
@@ -181,6 +185,7 @@ public class CommonConfigs {
 
             builder.push("enderman_head");
             ENDERMAN_HEAD_ENABLED = feature(builder);
+            ENDERMAN_HEAD_DROP = builder.define("drop_head", true);
             ENDERMAN_HEAD_INCREMENT = builder.comment("Time to increase 1 power level when being looked at")
                     .define("ticks_to_increase_power", 15, 0, 10000);
             ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE = builder.comment("do enderman heads work when looked from any side?")
@@ -245,6 +250,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> LAUNCHER_HEIGHT;
 
         public static final Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_DROP;
         public static final Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
         public static final Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
 
@@ -357,12 +363,12 @@ public class CommonConfigs {
             ASH_ENABLED = feature(builder);
             ASH_BURN = builder.comment("Burnable blocks will have a chance to create ash layers when burned")
                     .define("ash_from_fire", true);
-            ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? () -> false :
+            ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Burning mobs will drop ash when they die")
                             .define("ash_from_burning_mobs", true);
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
-            BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
+            BASALT_ASH_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
             //TODO REMOVE
             ///BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
             //       .define("attempts_per_patch", 36, 1, 1000);
@@ -393,7 +399,7 @@ public class CommonConfigs {
             builder.push("sign_post");
             SIGN_POST_ENABLED = feature(builder);
             builder.push("way_sign");
-            WAY_SIGN_ENABLED = feature(builder.comment("Entirely disables them from spawning"));
+            WAY_SIGN_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : feature(builder.comment("Entirely disables them from spawning"));
             WAY_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
             builder.pop();
@@ -635,7 +641,7 @@ public class CommonConfigs {
             URN_ENABLED = feature(builder);
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01f, 0, 1);
-            URN_PILE_ENABLED = builder.worldReload().define("cave_urns", true);
+            URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE :  builder.worldReload().define("cave_urns", true);
             //URN_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
             //        .define("attempts_per_patch", 4, 1, 100);
             //URN_PER_CHUNK = builder.worldReload().comment("Spawn attempts per chunk. Increases spawn frequency")
@@ -668,7 +674,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
-            WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
+            WILD_FLAX_ENABLED =  PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("wild_flax", true);
             FLAX_TRADES_WANDERING = builder.comment("How many trades to give to wandering trader")
                     .define("wandering_trader_trades", 2, 0, 10);
             FLAX_TRADES_FARMER = builder.comment("How many trades to give to farmers")
@@ -1110,7 +1116,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("bad_luck_tweaks");
-            BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? () -> false :
+            BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Hit a void cat, get the unluck")
                             .define("cat_unluck", true);
             BAD_LUCK_LIGHTNING = builder.comment("If you have unluck you are more likely to get hit by a lighting")
@@ -1192,7 +1198,7 @@ public class CommonConfigs {
                     .gameRestart()
                     .define("dispensers", true);
 
-            JAR_TAB = PlatHelper.getPlatform().isFabric() ? () -> false : builder.gameRestart().comment("Creates a creative tab full of filled jars")
+            JAR_TAB = PlatHelper.getPlatform().isFabric() ? FALSE : builder.gameRestart().comment("Creates a creative tab full of filled jars")
                     .define("jar_tab", false);
 
             DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
@@ -1262,4 +1268,5 @@ public class CommonConfigs {
             Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
         }
     }
+
 }

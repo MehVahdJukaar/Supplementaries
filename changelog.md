@@ -1,2 +1,2 @@
-Added 10 new flute songs (unrelated to skibidi toilet)
-fixed fabric worldgen configs not working
+fixed some mod compat issues with quiver
+added 3 christmas flute songs (thanks to Artkek)

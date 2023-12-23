@@ -65,7 +65,7 @@ public interface IKeyLockable {
     static String getKeyPassword(ItemStack key) {
         if (key.getItem() instanceof KeyItem k) {
             return k.getPassword(key);
-        } else if (key.is(ModTags.KEY)) {
+        } else if (key.is(ModTags.KEYS)) {
             //default get name behavior
             return ModRegistry.KEY_ITEM.get().getPassword(key);
         }

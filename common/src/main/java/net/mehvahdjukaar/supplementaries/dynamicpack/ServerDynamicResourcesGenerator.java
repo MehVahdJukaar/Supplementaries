@@ -88,48 +88,50 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             addSignPostRecipes(manager);
         }
 
-        //fabric has it done another way
-        //way signs tag
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-            if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+        //fabric has it done another way beucase it needs tag before this...
+        if(PlatHelper.getPlatform().isForge()) {
+            //way signs tag
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
+                if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //cave urns tag
+            //cave urns tag
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-            if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //wild flax tag
+            //wild flax tag
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
-            if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
-        }
 
-        //ash
+            //ash
 
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
 
-            if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                builder.add(Biomes.BASALT_DELTAS.location());
-                builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
+                if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
+                    builder.add(Biomes.BASALT_DELTAS.location());
+                    builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
+                }
+                dynamicPack.addTag(builder, Registries.BIOME);
             }
-            dynamicPack.addTag(builder, Registries.BIOME);
         }
 
         genAllRecipesAdv(Supplementaries.MOD_ID);

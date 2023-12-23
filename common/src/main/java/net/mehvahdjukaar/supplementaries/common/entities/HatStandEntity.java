@@ -522,7 +522,7 @@ public class HatStandEntity extends LivingEntity {
             this.refreshDimensions();
             this.blocksBuilding = true;
         }
-        if (DATA_POSE.equals(key)) {
+        if (DATA_POSE.equals(key) && level().isClientSide) {
             Pose pose = this.getPose();
             if (pose == Pose.SNIFFING || pose == Pose.SPIN_ATTACK) {
                 this.skibidiAnimation.start(this.tickCount);
@@ -558,15 +558,22 @@ public class HatStandEntity extends LivingEntity {
         Block block = state.getBlock();
         if (block instanceof AbstractCauldronBlock || block instanceof ComposterBlock) {
             //skibidi tall
-            this.setPose(Pose.SPIN_ATTACK);
-            skibidiCounter = 20*5;
+            setSkibidi(true,true);
         } else if (block instanceof HopperBlock) {
-            this.setPose(Pose.SNIFFING);
-            skibidiCounter = 20*5;
+           setSkibidi(true, false);
         }
     }
 
-    public static void youAreSoSkibidi(LivingEntity player) {
+    public void setSkibidi(boolean skibidi, boolean tall) {
+        if(skibidi) {
+            this.setPose(tall ? Pose.SPIN_ATTACK : Pose.SNIFFING);
+            skibidiCounter = 20 * 5;
+        }else{
+            this.setPose(Pose.STANDING);
+        }
+    }
+
+    public static void makeSkibidiInArea(LivingEntity player) {
         Level level = player.level();
         var toilets = level.getEntitiesOfClass(HatStandEntity.class, new AABB(player.getOnPos()).inflate(10));
         toilets.forEach(HatStandEntity::updateSkibidiStatus);

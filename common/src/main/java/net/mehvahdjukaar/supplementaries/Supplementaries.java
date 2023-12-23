@@ -112,7 +112,8 @@ public class Supplementaries {
     //quark bubble hollow log and grates
     //skibidi hat
     //blackboard gui to add color
-    
+
+    //hat + present jack in the box anim
 //potion flask that works liqui quiver/big pot storage
     //group rally ping map aylas
     //identity hasmap vs object2objecthasmap

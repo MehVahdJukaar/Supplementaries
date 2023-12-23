@@ -70,7 +70,7 @@ public class MiscUtils {
             if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
             if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
             if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
-            if (month == Calendar.DECEMBER && date >= 23) return CHRISTMAS;
+            if (month == Calendar.DECEMBER && date >= 20) return CHRISTMAS;
             if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
             if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
             return NONE;

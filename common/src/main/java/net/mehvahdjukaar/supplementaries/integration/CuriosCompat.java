@@ -17,7 +17,7 @@ public class CuriosCompat {
 
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
         List<SlotResult> found = CuriosApi.getCuriosHelper().findCurios(player, i ->
-                i.is(ModTags.KEY) || i.getItem() instanceof KeyItem);
+                i.is(ModTags.KEYS) || i.getItem() instanceof KeyItem);
         if (found.isEmpty()) return KeyLockableTile.KeyStatus.NO_KEY;
         for (var slot : found) {
             ItemStack stack = slot.stack();

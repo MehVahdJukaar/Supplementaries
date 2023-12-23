@@ -51,7 +51,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         //clear ownership with tripwire
         boolean cleared = false;
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
-            if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEY)) &&
+            if ((item == Items.TRIPWIRE_HOOK || stack.is(ModTags.KEYS)) &&
                     (this.isOwnedBy(player) || (this.isNotOwnedBy(player) && player.isCreative()))) {
                 cleared = true;
             }

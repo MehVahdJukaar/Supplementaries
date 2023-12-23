@@ -22,7 +22,7 @@ public class TrinketsCompat {
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
             List<Tuple<SlotReference, ItemStack>> found = trinket.getEquipped(i ->
-                    i.is(ModTags.KEY) || i.getItem() instanceof KeyItem);
+                    i.is(ModTags.KEYS) || i.getItem() instanceof KeyItem);
             if (found.isEmpty()) return KeyLockableTile.KeyStatus.NO_KEY;
             for (var slot : found) {
                 ItemStack stack = slot.getB();

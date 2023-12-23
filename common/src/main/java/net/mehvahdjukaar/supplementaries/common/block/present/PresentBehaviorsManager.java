@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.present;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -16,7 +18,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -57,6 +62,8 @@ public class PresentBehaviorsManager {
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), BOMB_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), BOMB_BEHAVIOR);
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), BOMB_BEHAVIOR);
+
+        TrappedPresentBlock.registerBehavior(ModRegistry.HAT_STAND.get(), SKIBIDI_BEHAVIOR);
     }
 
     //projectiles, fireworks, tnt, spawn eggs
@@ -80,6 +87,29 @@ public class PresentBehaviorsManager {
         }
         return Optional.empty();
     };
+
+    private static final IPresentItemBehavior SKIBIDI_BEHAVIOR = (source, stack) -> {
+
+        //todo FAKE PLAYER BEHAVIOR
+        // ALSO FIX HEAD PLACEMENT ON SLABS
+        EntityType<HatStandEntity> type = ModEntities.HAT_STAND.get();
+        try {
+            ServerLevel level = source.getLevel();
+
+            BlockPos pos = source.getPos();
+            HatStandEntity e = spawnMob(type, level, source, stack);
+            if (e != null) {
+                stack.shrink(1);
+                level.gameEvent(null,GameEvent.ENTITY_PLACE, pos);
+                e.setSkibidi(true, false);
+                return Optional.of(stack);
+            }
+        } catch (Exception exception) {
+            Supplementaries.LOGGER.error("Error while dispensing spawn egg from trapped present at {}", source.getPos(), exception);
+        }
+        return Optional.empty();
+    };
+
 
 
     private static final IPresentItemBehavior TNT_BEHAVIOR = (source, stack) -> {
@@ -130,16 +160,16 @@ public class PresentBehaviorsManager {
 
 
     @Nullable
-    private static Entity spawnMob(EntityType<?> entityType, ServerLevel serverLevel, BlockSource source, @Nullable ItemStack stack) {
+    private static<T extends Entity> T spawnMob(EntityType<T> entityType, ServerLevel serverLevel, BlockSource source, @Nullable ItemStack stack) {
         BlockPos pos = source.getPos();
         CompoundTag tag = stack == null ? null : stack.getTag();
         Component component = stack != null && stack.hasCustomHoverName() ? stack.getHoverName() : null;
 
 
-        Entity entity = entityType.create(serverLevel);
+        T entity = entityType.create(serverLevel);
         if (entity != null) {
 
-            if (component != null && entity instanceof LivingEntity) {
+            if (component != null) {
                 entity.setCustomName(component);
             }
 
@@ -163,6 +193,7 @@ public class PresentBehaviorsManager {
         }
         return entity;
     }
+
 
     private static final AbstractProjectileBehavior SPLASH_POTION_BEHAVIOR = new AbstractProjectileBehavior() {
 

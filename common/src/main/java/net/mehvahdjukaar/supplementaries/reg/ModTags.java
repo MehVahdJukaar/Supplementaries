@@ -62,7 +62,7 @@ public class ModTags {
     public static final Map<DyeColor, TagKey<Item>> BLACKBOARD_TAGS = Arrays.stream(DyeColor.values())
             .collect(Collectors.toUnmodifiableMap(d -> d, d -> itemTag("blackboard_" + d.getName())));
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");
-    public static final TagKey<Item> KEY = itemTag("key");
+    public static final TagKey<Item> KEYS = itemTag("keys");
     public static final TagKey<Item> STATUE_SWORDS = itemTag("statue_swords");
     public static final TagKey<Item> STATUE_TOOLS = itemTag("statue_tools");
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
