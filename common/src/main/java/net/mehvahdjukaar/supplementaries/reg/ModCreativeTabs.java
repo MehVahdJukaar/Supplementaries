@@ -145,10 +145,6 @@ public class ModCreativeTabs {
 
 
         before(e, Items.COMPOSTER, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.TURN_TABLE_NAME,
-                ModRegistry.TURN_TABLE);
-
-        before(e, Items.COMPOSTER, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.PULLEY_BLOCK_NAME,
                 ModRegistry.PULLEY_BLOCK);
 

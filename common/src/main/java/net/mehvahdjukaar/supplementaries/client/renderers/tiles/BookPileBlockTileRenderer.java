@@ -11,12 +11,12 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.VisualBook;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -127,14 +127,17 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
 
-        renderer.renderModel(poseStack.last(),
-                builder,
-                null,
-                ClientHelper.getModel(Minecraft.getInstance().getModelManager(),
-                        ClientRegistry.BOOK_MODELS.get().get(b.getType())),
-                1.0F, 1.0F, 1.0F,
-                light, overlay);
-
+        BakedModel model = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), b.getType().modelPath());
+        if(model != null) {
+            renderer.renderModel(poseStack.last(),
+                    builder,
+                    null,
+                    model,
+                    1.0F, 1.0F, 1.0F,
+                    light, overlay);
+        }else{
+            int error = 0;
+        }
         poseStack.popPose();
     }
 

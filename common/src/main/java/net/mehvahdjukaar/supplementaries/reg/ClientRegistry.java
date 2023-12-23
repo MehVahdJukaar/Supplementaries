@@ -28,7 +28,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
@@ -69,7 +68,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -116,15 +114,10 @@ public class ClientRegistry {
                     w -> Supplementaries.res("block/sign_posts/" + w.getVariantId("sign_post"))))
     );
 
-    public static final Supplier<Map<BookType, ResourceLocation>> BOOK_MODELS = Suppliers.memoize(() ->{
-        Map<BookType, ResourceLocation> map = new HashMap<>();
-        for (BookType type : PlaceableBookManager.getAll()) {
-            map.put(type, Supplementaries.res("block/books/book_" + type.name()));
-        }
-        return map;
-    });
-
-    public static KeyMapping QUIVER_KEYBIND = null;
+    public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
+            InputConstants.Type.KEYSYM,
+            InputConstants.getKey("key.keyboard.v").getValue(),
+            "supplementaries.gui.controls");
 
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
@@ -297,10 +290,6 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerKeyBinds(ClientHelper.KeyBindEvent event) {
-        QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
-                InputConstants.Type.KEYSYM,
-                InputConstants.getKey("key.keyboard.v").getValue(),
-                "supplementaries.gui.controls");
         event.register(QUIVER_KEYBIND);
     }
 
@@ -388,8 +377,8 @@ public class ClientRegistry {
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
-        BOOK_MODELS.get().values().forEach(event::register);
         SIGN_POST_MODELS.get().values().forEach(event::register);
+        PlaceableBookManager.getAll().forEach(b -> event.register(b.modelPath()));
         ClientSpecialModelsManager.registerSpecialModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);

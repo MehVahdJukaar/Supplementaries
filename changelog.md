@@ -1,3 +1,3 @@
-- changed sconce model
-- tweaked placeable books colors a bit
-- fixed book piles not working properly with loot tables
+made some colored map code more resiliant
+improved book pile code, possibly fixing an issue
+removed turn table from functional tab

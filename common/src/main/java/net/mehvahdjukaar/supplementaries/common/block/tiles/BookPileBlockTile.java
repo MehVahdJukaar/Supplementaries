@@ -208,6 +208,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         public BookType getType() {
             return type;
         }
+
     }
 
     public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",

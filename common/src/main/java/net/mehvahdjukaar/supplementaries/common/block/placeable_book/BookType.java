@@ -5,7 +5,9 @@ import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSVColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
@@ -18,6 +20,7 @@ public final class BookType {
     private final float hue;
     private final float hueShift;
     private final boolean hasGlint;
+    private final ResourceLocation modelPath;
 
     public BookType(String name, int rgb, float angle, boolean hasGlint) {
         var col = new RGBColor(rgb).asHSV();
@@ -28,6 +31,7 @@ public final class BookType {
         this.hue = col.hue();
         this.hueShift = hueShift;
         this.hasGlint = hasGlint;
+        this.modelPath = Supplementaries.res("block/books/book_" + name);
     }
 
     //this could be redone
@@ -82,5 +86,9 @@ public final class BookType {
 
     public boolean hasGlint() {
         return hasGlint;
+    }
+
+    public ResourceLocation modelPath() {
+        return modelPath;
     }
 }
