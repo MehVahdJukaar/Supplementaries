@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.HashMap;
@@ -30,22 +30,19 @@ public class RemapHandler {
 
     @SubscribeEvent
     public static void onRemapBlocks(MissingMappingsEvent event) {
-        for (var v : event.getMappings(ForgeRegistries.BLOCKS.getRegistryKey(), Supplementaries.MOD_ID)) {
+        remapAll(event, BuiltInRegistries.BLOCK);
+        remapAll(event, BuiltInRegistries.ITEM);
+    }
+
+
+    private static <T> void remapAll(MissingMappingsEvent event, DefaultedRegistry<T> block) {
+        for (var v : event.getMappings(block.key(), Supplementaries.MOD_ID)) {
             String rem = REMAP.get(v.getKey().toString());
             if (rem != null) {
-                var b = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(rem));
+                var b = block.getOptional(new ResourceLocation(rem));
                 b.ifPresent(v::remap);
             } else v.ignore();
         }
-        for (var v : event.getMappings(ForgeRegistries.ITEMS.getRegistryKey(), Supplementaries.MOD_ID)) {
-            String rem = REMAP.get(v.getKey().toString());
-            if (rem != null) {
-                var b = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(rem));
-                b.ifPresent(v::remap);
-            } else v.ignore();
-        }
-
-
     }
 
 

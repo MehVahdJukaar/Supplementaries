@@ -758,6 +758,7 @@ public class ModRegistry {
     //fodder
     public static final Supplier<Block> FODDER = regWithItem(FODDER_NAME, () -> new FodderBlock(
             BlockBehaviour.Properties.copy(Blocks.MOSS_BLOCK)
+                    .pushReaction(PushReaction.NORMAL)
     ));
 
     //flax block
