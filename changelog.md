@@ -1,2 +1,3 @@
-fixed some mod compat issues with quiver
-added 3 christmas flute songs (thanks to Artkek)
+fodder can be pushed,
+hat stand textures
+fixed quiver trinket slot
