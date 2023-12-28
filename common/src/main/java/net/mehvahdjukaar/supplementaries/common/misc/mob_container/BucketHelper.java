@@ -134,10 +134,8 @@ public class BucketHelper {
     }
 
     private static void associateMobToBucketIfAbsent(EntityType<?> entity, Item item) {
-        if (!BUCKET_TO_MOB_MAP.containsKey(item)) {
-            if (!BUCKET_TO_MOB_MAP.inverse().containsKey(entity)) {
-                BUCKET_TO_MOB_MAP.putIfAbsent(item, entity);
-            }
+        if (!BUCKET_TO_MOB_MAP.inverse().containsKey(entity)) {
+            BUCKET_TO_MOB_MAP.putIfAbsent(item, entity);
         }
     }
 
