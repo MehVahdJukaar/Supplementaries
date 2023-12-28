@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
@@ -131,10 +133,13 @@ public class WeatheredMap {
                             int worldX = (mapX / scale + pixelX - 64) * scale;
                             int worldZ = (mapZ / scale + pixelZ - 64) * scale;
                             Multiset<MapColor> multiset = LinkedHashMultiset.create();
-                            LevelChunk levelchunk = level.getChunkAt(new BlockPos(worldX, 0, worldZ));
 
-                            if (!levelchunk.isEmpty()) {
-                                ChunkPos chunkpos = levelchunk.getPos();
+                            int pChunkX = SectionPos.blockToSectionCoord(worldX);
+                            int pChunkZ = SectionPos.blockToSectionCoord(worldZ);
+                            var levelChunk = level.getChunk(pChunkX, pChunkZ, ChunkStatus.FULL, false);
+
+                            if (levelChunk instanceof LevelChunk lc && !lc.isEmpty()) {
+                                ChunkPos chunkpos = levelChunk.getPos();
                                 int chunkCoordX = worldX & 15;
                                 int chunkCoordZ = worldZ & 15;
 
@@ -179,7 +184,7 @@ public class WeatheredMap {
                                     for (int scaleOffsetX = 0; scaleOffsetX < scale; ++scaleOffsetX) {
                                         for (int scaleOffsetZ = 0; scaleOffsetZ < scale; ++scaleOffsetZ) {
                                             int cY = Math.min(minHeight,
-                                                    levelchunk.getHeight(Heightmap.Types.WORLD_SURFACE, scaleOffsetX + chunkCoordX, scaleOffsetZ + chunkCoordZ) + 1);
+                                                    levelChunk.getHeight(Heightmap.Types.WORLD_SURFACE, scaleOffsetX + chunkCoordX, scaleOffsetZ + chunkCoordZ) + 1);
                                             BlockState blockState;
                                             MapColor newColor = null;
 
@@ -193,7 +198,7 @@ public class WeatheredMap {
                                                 do {
                                                     --cY;
                                                     mutable1.set(chunkpos.getMinBlockX() + scaleOffsetX + chunkCoordX, cY, chunkpos.getMinBlockZ() + scaleOffsetZ + chunkCoordZ);
-                                                    blockState = levelchunk.getBlockState(mutable1);
+                                                    blockState = levelChunk.getBlockState(mutable1);
                                                     temp = blockState.getMapColor(level, mutable1);
                                                     if (temp != MapColor.NONE && temp != MapColor.WATER && blockState.getCollisionShape(level, mutable1).isEmpty()) {
                                                         newColor = MapColor.GRASS;
@@ -210,7 +215,7 @@ public class WeatheredMap {
                                             maxY += (double) cY / (double) (scale * scale);
 
                                             if (cY >= minHeight) {
-                                                newColor = SliceMapItem.getCutoffColor(mutable1, levelchunk);
+                                                newColor = SliceMapItem.getCutoffColor(mutable1, levelChunk);
                                             }
 
                                             multiset.add(newColor);
