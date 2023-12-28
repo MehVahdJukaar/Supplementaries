@@ -23,8 +23,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 
 //this is still a mess
@@ -41,7 +41,7 @@ public class BucketHelper {
         } else if (bucket instanceof MobBucketItem bucketItem) {
             EntityType<?> en = SuppPlatformStuff.getFishType(bucketItem);
             if (en != null) {
-                BUCKET_TO_MOB_MAP.putIfAbsent(bucket, en);
+                associateMobToBucketIfAbsent( en, bucketItem);
                 return en;
             }
         }
