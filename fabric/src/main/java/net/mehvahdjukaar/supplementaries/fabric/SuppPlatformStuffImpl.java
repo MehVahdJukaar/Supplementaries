@@ -1,32 +1,27 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
-import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
+import net.mehvahdjukaar.supplementaries.api.fabric.RedMerchantTradesEvent;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
-import net.minecraft.client.gui.components.AbstractSliderButton;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SuppPlatformStuffImpl {
 
@@ -63,6 +58,12 @@ public class SuppPlatformStuffImpl {
 
     public static float getDownfall(Biome biome) {
         return ((BiomeAccessor)(Object)biome).getClimateSettings().downfall();
+    }
+
+    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(VillagerTrades.ItemListing[] listings) {
+        var trades = new ArrayList<>(Arrays.stream(listings).toList());
+        RedMerchantTradesEvent.MODIFY_TRADES.invoker().accept(trades);
+        return trades.toArray(VillagerTrades.ItemListing[]::new);
     }
 
 }

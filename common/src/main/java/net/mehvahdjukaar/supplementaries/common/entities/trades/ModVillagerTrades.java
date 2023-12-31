@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -33,13 +34,16 @@ public class ModVillagerTrades {
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
 
-    //don't call too early. Lazily initialized
-    private static final Supplier<VillagerTrades.ItemListing[]> RED_MERCHANT_TRADES =
-            Suppliers.memoize(ModVillagerTrades::makeRedMerchantTrades);
-
-    private static final Supplier<VillagerTrades.ItemListing[]> CHRISTMAS_SALES = Suppliers.memoize(() ->
-            Arrays.stream(RED_MERCHANT_TRADES.get()).map(WrappedListing::new)
-                    .toList().toArray(new VillagerTrades.ItemListing[0]));
+    //Don't call too early. Lazily initialized
+    private static final Supplier<VillagerTrades.ItemListing[]> RED_MERCHANT_TRADES = Suppliers.memoize(() -> {
+                VillagerTrades.ItemListing[] listings = ModVillagerTrades.makeRedMerchantTrades();
+                if (MiscUtils.FESTIVITY.isChristmas()) {
+                    listings = Arrays.stream(listings).map(WrappedListing::new)
+                            .toList().toArray(new VillagerTrades.ItemListing[0]);
+                }
+                return SuppPlatformStuff.fireRedMerchantTradesEvent(listings);
+            }
+    );
 
     private static VillagerTrades.ItemListing[] makeRedMerchantTrades() {
         List<VillagerTrades.ItemListing> trades = new ArrayList<>();
@@ -76,9 +80,6 @@ public class ModVillagerTrades {
 
 
     public static VillagerTrades.ItemListing[] getRedMerchantTrades() {
-        if (MiscUtils.FESTIVITY.isChristmas()) {
-            return CHRISTMAS_SALES.get();
-        }
         return RED_MERCHANT_TRADES.get();
     }
 

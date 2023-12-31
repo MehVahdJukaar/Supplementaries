@@ -43,9 +43,9 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
-    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
-    modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")

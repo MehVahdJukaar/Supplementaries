@@ -161,6 +161,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> DEATH_CHAT;
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
+        public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
         public static final Supplier<Double> BRIGHTEN_SIGN_TEXT_COLOR;
 
 
@@ -197,11 +198,15 @@ public class ClientConfigs {
                     .define("send_chat_on_death", true);
             BRIGHTEN_SIGN_TEXT_COLOR = builder.comment("A scalar multiplier that will be applied to sign text making it brighter, supposedly more legible")
                     .define("sign_text_color_multiplier", 1.2f, 0, 5);
+            builder.push("colored_maps");
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
                     .define("tinted_blocks_on_maps", true);
             TALL_GRASS_COLOR_CHANGE = builder.comment("Colors tall grass same color as grass")
                     .define("tall_grass_color", true);
+            ACCURATE_COLORED_MAPS = builder.comment("Makes colored maps a bit more accurate. Might affect performance")
+                            .define("accurate_colors", false);
+            builder.pop();
             builder.pop();
         }
     }

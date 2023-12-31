@@ -9,10 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -32,6 +30,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+//this is a mess and should extend AbstractMinecartContainer
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
 
     private static final BlockState BLOCK_STATE = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.UP);
@@ -161,7 +160,33 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         return this.dispenser.createMenu(pContainerId, pInventory, pPlayer);
     }
 
+
     //------end-container-stuff------
+
+    //------abstract-container-minecart-stuff-----
+    @Override
+    public void remove(Entity.RemovalReason reason) {
+        if (!this.level().isClientSide && reason.shouldDestroy()) {
+            Containers.dropContents(this.level(), this, this);
+        }
+
+        super.remove(reason);
+    }
+
+    @Override
+    protected void applyNaturalSlowdown() {
+        float f = 0.98F;
+        int i = 15 - AbstractContainerMenu.getRedstoneSignalFromContainer(this);
+        f += i * 0.001F;
+
+        if (this.isInWater()) {
+            f *= 0.95F;
+        }
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.0, f));
+    }
+
+
+    //-------end------
 
     @Override
     public SlotAccess getSlot(final int pSlot) {

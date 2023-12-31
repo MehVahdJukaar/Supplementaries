@@ -17,6 +17,7 @@
     "FriendlyByteBufMixin",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",
+    "SelfDispenserMinecraftMixin",
     "SelfFrameMixin",
     "SelfGunpowderMixin",
     "SelfPlanterMixin",

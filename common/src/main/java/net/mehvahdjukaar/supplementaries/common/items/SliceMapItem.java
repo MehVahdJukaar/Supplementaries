@@ -103,14 +103,15 @@ public class SliceMapItem extends EmptyMapItem {
         return CommonConfigs.Tools.SLICE_MAP_RANGE.get();
     }
 
+    private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
+
     public static boolean canPlayerSee(int targetY, Entity entity) {
         Level level = entity.level();
         int py = entity.getBlockY();
-        RandomSource rand = level.getRandom();
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
         int spread = 3;
-        p.set(entity.blockPosition().offset(rand.nextInt(spread) - rand.nextInt(spread),
-                0, rand.nextInt(spread) - rand.nextInt(spread)));
+        p.set(entity.blockPosition().offset(RAND.nextInt(spread) - RAND.nextInt(spread),
+                0, RAND.nextInt(spread) - RAND.nextInt(spread)));
 
         int direction = Integer.compare(targetY, py);
 

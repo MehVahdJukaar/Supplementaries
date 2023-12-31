@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
@@ -100,6 +102,7 @@ public class WeatheredMap {
             return new SimpleDirtyCounter();
         }
 
+        // true if it should cancel the normal update
         @Override
         public boolean onItemUpdate(MapItemSavedData data, Entity entity) {
             if (!antique) return false;
@@ -129,7 +132,7 @@ public class WeatheredMap {
             }
 
             MapItemSavedData.HoldingPlayer player = data.getHoldingPlayer((Player) entity);
-            ++player.step;
+
             boolean hasChangedAColorThisZ = false;
 
 
@@ -142,13 +145,18 @@ public class WeatheredMap {
                         if (pixelX >= 0 && pixelZ >= -1 && pixelX < 128 && pixelZ < 128) {
                             int offsetX = pixelX - playerX;
                             int offsetZ = pixelZ - playerZ;
-                            boolean outRadius = offsetX * offsetX + offsetZ * offsetZ > (range - 2) * (range - 2);
+                            int dist = offsetX * offsetX + offsetZ * offsetZ;
+                            boolean maxRadius = dist > range * range;
+                            if (maxRadius) continue;
+
+                            boolean innerRadius = dist > (range - 2) * (range - 2);
                             int worldX = (mapX / scale + pixelX - 64) * scale;
                             int worldZ = (mapZ / scale + pixelZ - 64) * scale;
                             Multiset<MapColor> multiset = LinkedHashMultiset.create();
-                            LevelChunk levelchunk = level.getChunkAt(new BlockPos(worldX, 0, worldZ));
+                            var levelchunk = level.getChunk(SectionPos.blockToSectionCoord(worldX), SectionPos.blockToSectionCoord(worldZ),
+                                    ChunkStatus.FULL, false);
 
-                            if (!levelchunk.isEmpty()) {
+                            if (levelchunk instanceof LevelChunk lc && !lc.isEmpty()) {
                                 ChunkPos chunkpos = levelchunk.getPos();
                                 int chunkCoordX = worldX & 15;
                                 int chunkCoordZ = worldZ & 15;
@@ -283,7 +291,7 @@ public class WeatheredMap {
                                 somethingY = maxY;
 
 
-                                if (pixelZ >= 0 && offsetX * offsetX + offsetZ * offsetZ < range * range && (!outRadius || (pixelX + pixelZ & 1) != 0)) {
+                                if (pixelZ >= 0 && (!innerRadius || (pixelX + pixelZ & 1) != 0)) {
                                     hasChangedAColorThisZ |= data.updateColor(pixelX, pixelZ, (byte) (mc.id * 4 + relativeShade));
                                 }
                             }
@@ -291,6 +299,8 @@ public class WeatheredMap {
                     }
                 }
             }
+
+            ++player.step;
             return true;
         }
 

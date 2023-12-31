@@ -39,7 +39,9 @@ public class ModCreativeTabs {
     private static final Set<Item> HIDDEN_ITEMS = new HashSet<>();
     private static final List<ItemStack> NON_HIDDEN_ITEMS = new ArrayList<>();
 
-    public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
+
+    //my dude you are doing conditional registration here
+    public static final RegSupplier<CreativeModeTab> MOD_TAB =  !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
