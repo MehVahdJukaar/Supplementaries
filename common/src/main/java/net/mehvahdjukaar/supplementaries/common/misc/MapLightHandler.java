@@ -216,13 +216,12 @@ public class MapLightHandler {
         @Environment(EnvType.CLIENT)
         public void processTexture(NativeImage texture, int startX, int startY, ResourceKey<Level> levelKey) {
             if (lightMap == null) return;
-
+            int minL = LIGHT_PER_WORLD.getOrDefault(levelKey, 0);
             for (int x = 0; x < 128; ++x) {
                 for (int z = 0; z < 128; ++z) {
                     int light = getEntry(x, z);
                     //  if (light == 0) continue;
 
-                    int minL = LIGHT_PER_WORLD.getOrDefault(levelKey, 0);
                     int skyDarkness = light & 0b1111; // Extract the lower 4 bits
                     int blockLight = Math.max(minL, (light >> 4) & 0b1111); // Extract the higher 4 bits
 

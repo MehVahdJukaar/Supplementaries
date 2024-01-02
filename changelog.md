@@ -1,4 +1,4 @@
-fixed dispenser minecart not dropping their content
-added api for red merchant trades
-improved colored map performance by adding a color cache. Colors wil be less accurate but theres a config to turn them like they were
-made slice map update thread safe
+greatly improved performance of colored and light maps update
+added cyrillic antiquable ink font. Also added some common accented characters
+added toki pona translation
+haunted harvest corn can fit in flower boxes

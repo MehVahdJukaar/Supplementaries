@@ -15,7 +15,6 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -92,7 +91,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
             if (CommonConfigs.Building.GOBLET_DRINK.get()) {
                 boolean b = this.fluidHolder.tryDrinkUpFluid(player, this.level);
                 if (b && player instanceof ServerPlayer serverPlayer) {
-                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries:nether/goblet"));
+                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(Supplementaries.res("nether/goblet"));
                     if (advancement != null) {
                         if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
                             serverPlayer.getAdvancements().award(advancement, "unlock");

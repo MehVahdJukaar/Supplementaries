@@ -309,7 +309,7 @@ public class MobContainer {
             entity.getVehicle().ejectPassengers();
         }
         if (entity instanceof Mob mob && !(mob instanceof Allay)) {
-            mob.setPersistenceRequired();
+            if(entity instanceof Bucketable) mob.setPersistenceRequired();
         }
         if (entity instanceof Bucketable bucketable) {
             bucketable.setFromBucket(true);

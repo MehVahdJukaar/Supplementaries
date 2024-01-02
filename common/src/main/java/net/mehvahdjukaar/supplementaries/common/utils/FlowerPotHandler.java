@@ -82,6 +82,9 @@ public class FlowerPotHandler {
         if (CompatHandler.SNOWYSPIRIT) {
             toAdd.add("snowyspirit:ginger_flower");
         }
+        if (CompatHandler.HAUNTEDHARVEST) {
+            toAdd.add("hauntedharvest:kernels");
+        }
 
         if (CompatHandler.QUARK) {
             Item[] items = new Item[]{

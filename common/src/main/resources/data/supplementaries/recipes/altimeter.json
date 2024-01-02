@@ -1,13 +1,6 @@
 {
   "conditions": [
     {
-      "type": "forge:not",
-      "value": {
-        "modid": "spelunkery",
-        "type": "forge:mod_loaded"
-      }
-    },
-    {
       "type": "supplementaries:flag",
       "flag": "altimeter"
     }

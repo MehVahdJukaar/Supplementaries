@@ -35,7 +35,6 @@ public class HatStandRenderer extends LivingEntityRenderer<HatStandEntity, HatSt
         if (f < 5.0F) {
             matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f / 1.5F * 3.1415927F) * 3.0F));
         }
-
     }
 
     @Override

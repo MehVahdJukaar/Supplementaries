@@ -104,13 +104,13 @@ public class Supplementaries {
 
 
     //yes this is where I write crap. deal with it XD
+    //flute pacifier
     //damage numbers mod
     //more IF compat (map stuff, markers with internals)
     //more flywheel stuff
     //Fix doormat highlight text box
     //steal from quark backpack
     //quark bubble hollow log and grates
-    //skibidi hat
     //blackboard gui to add color
 
     //hat + present jack in the box anim

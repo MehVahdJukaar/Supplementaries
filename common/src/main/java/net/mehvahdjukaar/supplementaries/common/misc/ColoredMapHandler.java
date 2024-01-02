@@ -41,10 +41,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ColoredMapHandler {
@@ -136,16 +133,15 @@ public class ColoredMapHandler {
         public static final String MIN_X = "min_x";
         public static final String MAX_X = "max_x";
         public static final String MIN_Z = "min_z";
-        private static final Map<Pair<Pair<Block, ResourceLocation>, MapColor.Brightness>, Integer> COLOR_CACHE = new Object2IntOpenHashMap<>();
-
-        private static boolean accurateConfig;
-
+        private static final Map<Pair<Pair<Block, ResourceLocation>, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
+        private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
 
         private byte[][] data = null;
         private final List<ResourceLocation> biomesIndexes = new ArrayList<>();
         private final List<Block> blockIndexes = new ArrayList<>();
 
         //client local values
+
         private int lastMinDirtyX = 0;
         private int lastMinDirtyZ = 0;
         private int lastMaxDirtyX = 0;
@@ -171,6 +167,11 @@ public class ColoredMapHandler {
                 return Pair.of(blockIndexes.get(bi), biomesIndexes.get(bli));
             }
             return null;
+        }
+
+        private byte getIndex(int x, int z) {
+            if (data == null || data[x] == null) return 0;
+            return data[x][z];
         }
 
         private void addEntry(MapItemSavedData md, int x, int z, Pair<Block, ResourceLocation> res) {
@@ -399,45 +400,62 @@ public class ColoredMapHandler {
         @Environment(EnvType.CLIENT)
         public void processTexture(NativeImage texture, int startX, int startY, byte[] colors) {
             if (!ClientConfigs.Tweaks.COLORED_MAPS.get() || data == null) return;
-            boolean tg = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
-            accurateConfig = ClientConfigs.Tweaks.ACCURATE_COLORED_MAPS.get();
-
+            boolean tallGrass = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
+            boolean accurateConfig = ClientConfigs.Tweaks.ACCURATE_COLORED_MAPS.get();
+            // with this, we also prevent repeated map cache achess
+            if (!accurateConfig) Arrays.fill(IND2COLOR_BUFFER, 0);
             BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+
             for (int x = 0; x < 128; ++x) {
                 for (int z = 0; z < 128; ++z) {
-                    Pair<Block, ResourceLocation> e = getEntry(x, z);
-                    this.lastEntryHack = e;
+                    byte index = getIndex(x, z);
+                    //exit early
+                    if (index == 0) continue;
 
-                    if (e == null) continue;
-                    Block block = e.getFirst();
-                    int processedTint = -1;
-
+                    int newTint = -1;
                     int k = x + z * 128;
                     byte packedId = colors[k];
-                    if (accurateConfig) {
-                        BlockPos pos = new BlockPos(x, 64, z); //this is bad. don't want to send extra data tho
-                        int tint = blockColors.getColor(block.defaultBlockState(),
-                                this, pos, 0);
-                        if (tint != -1) {
-                            processedTint = postProcessTint(colors, tg, packedId, block, tint);
+                    int brightnessInd = packedId & 3;
+                    //exit early if we already know the color of this index
+                    if (!accurateConfig) {
+                        int alreadyKnownColor = IND2COLOR_BUFFER[index + brightnessInd * 256];
+                        if (alreadyKnownColor != 0) newTint = alreadyKnownColor;
+                    }
+                    //else compute it
+                    if (newTint == -1) {
+                        Pair<Block, ResourceLocation> e = getEntry(x, z);
+                        this.lastEntryHack = e;
+
+                        if (e == null) continue;
+                        Block block = e.getFirst();
+
+
+                        if (accurateConfig) {
+                            BlockPos pos = new BlockPos(x, 64, z); //this is bad. don't want to send extra data tho
+                            int tint = blockColors.getColor(block.defaultBlockState(),
+                                    this, pos, 0);
+                            if (tint != -1) {
+                                newTint = postProcessTint(tallGrass, packedId, block, tint);
+                            }
+                        } else {
+                            newTint = GLOBAL_COLOR_CACHE.computeIfAbsent(Pair.of(e, brightnessInd), n -> {
+                                BlockPos pos = new BlockPos(0, 64, 0);
+                                int tint = blockColors.getColor(block.defaultBlockState(), this, pos, 0);
+                                return postProcessTint(tallGrass, packedId, block, tint);
+                            });
+                            //cache for this cycle
+                            IND2COLOR_BUFFER[index + brightnessInd * 256] = newTint;
                         }
-                    } else {
-                        var brightness = MapColor.Brightness.byId(packedId & 3);
-                        processedTint = COLOR_CACHE.computeIfAbsent(Pair.of(e, brightness), n -> {
-                            BlockPos pos = new BlockPos(0, 64, 0);
-                            int tint = blockColors.getColor(block.defaultBlockState(), this, pos, 0);
-                            return postProcessTint(colors, tg, packedId, block, tint);
-                        });
                     }
 
-                    if (processedTint != -1) {
-                        texture.setPixelRGBA(startX + x, startY + z, processedTint);
+                    if (newTint != -1) {
+                        texture.setPixelRGBA(startX + x, startY + z, newTint);
                     }
                 }
             }
         }
 
-        private static int postProcessTint(byte[] colors, boolean tg, byte packedId, Block block, int tint) {
+        private static int postProcessTint(boolean tg, byte packedId, Block block, int tint) {
 
             float lumIncrease = 1.3f;
             MapColor mapColor = MapColor.byId((packedId & 255) >> 2);

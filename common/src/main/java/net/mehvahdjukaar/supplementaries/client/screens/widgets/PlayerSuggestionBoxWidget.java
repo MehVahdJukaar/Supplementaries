@@ -219,6 +219,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             RenderSystem.enableBlend();
             graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.disableBlend();
+            RenderSystem.setShaderColor(1,1,1,1);
         }
     }
 }
