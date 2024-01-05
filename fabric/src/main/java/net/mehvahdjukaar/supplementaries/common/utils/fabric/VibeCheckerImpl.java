@@ -5,32 +5,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
-import forge.net.raphimc.immediatelyfast.ImmediatelyFast;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
 import net.mehvahdjukaar.supplementaries.client.block_models.WallLanternBakedModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BookPileBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
-import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
-import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.repository.ServerPacksSource;
 import org.joml.Vector3f;
 
 import java.io.*;
@@ -42,16 +31,12 @@ public class VibeCheckerImpl {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void checkVibe() {
-        crashIfFabricRenderingAPIHasBeenNuked();
+        //crashIfFabricRenderingAPIHasBeenNuked();
         // I've got a better idea
-        //fixSodiumDeps();
-        unfixSodiumDeps();
+        fixSodiumDeps();
+        //time is up, 2 years and counting
+        // unfixSodiumDeps();
         if(PlatHelper.getPhysicalSide().isClient()) vibeCheckModels();
-
-        if(PlatHelper.isModLoaded("immediatelyfast")){
-            Supplementaries.LOGGER.warn("Immediately fast was detected. Colored maps and map texture mipmap will not work unless you turn map changes off in IF configs");
-        }
-
     }
 
     private static void unfixSodiumDeps() {

@@ -2,27 +2,21 @@ package net.mehvahdjukaar.supplementaries.integration.fabric;
 
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigListScreen;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.TextAndImageButton;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 
 public class ModConfigSelectScreen extends FabricConfigListScreen {
 
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
-                Component.literal("\u00A76Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
+                Component.literal("§6Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
                 parent, ClientConfigs.SPEC, CommonConfigs.SPEC);
     }
 

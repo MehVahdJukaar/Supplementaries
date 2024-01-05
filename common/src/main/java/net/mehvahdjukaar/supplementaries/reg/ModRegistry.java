@@ -306,6 +306,7 @@ public class ModRegistry {
     //globe
     public static final Supplier<Block> GLOBE = regBlock(GLOBE_NAME, () -> new GlobeBlock(
             BlockBehaviour.Properties.of()
+                    .noOcclusion()
                     .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .sound(SoundType.METAL)
                     .strength(2, 4)

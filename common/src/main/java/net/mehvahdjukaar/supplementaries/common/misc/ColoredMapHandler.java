@@ -33,6 +33,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -61,22 +62,22 @@ public class ColoredMapHandler {
 
     //null if no color to be sent
     @Nullable
-    public static Block getCustomColor(Block state) {
-        Holder.Reference<Block> blockReference = state.builtInRegistryHolder();
+    public static Block getCustomColor(Block block) {
+        Holder.Reference<Block> blockReference = block.builtInRegistryHolder();
         if (blockReference.is(ModTags.NOT_TINTED_ON_MAPS)) return null;
         //packs similar colored blocks so we stay in the 16 blocks limit
         if (blockReference.is(ModTags.TINTED_ON_MAPS_GC)) {
-            if (state instanceof BushBlock) return Blocks.GRASS;
+            if (block instanceof BushBlock) return Blocks.GRASS;
             return Blocks.GRASS_BLOCK;
         }
-        if (blockReference.is(ModTags.TINTED_ON_MAPS_FC)) {
+        if (blockReference.is(ModTags.TINTED_ON_MAPS_FC) || block instanceof LeavesBlock) {
             return Blocks.OAK_LEAVES;
         }
         if (blockReference.is(ModTags.TINTED_ON_MAPS_WC)) {
             return Blocks.WATER;
         }
         if (blockReference.is(ModTags.TINTED_ON_MAPS_GENERIC)) {
-            return state;
+            return block;
         }
         return null;
     }
@@ -169,9 +170,9 @@ public class ColoredMapHandler {
             return null;
         }
 
-        private byte getIndex(int x, int z) {
+        private int getIndex(int x, int z) {
             if (data == null || data[x] == null) return 0;
-            return data[x][z];
+            return Byte.toUnsignedInt(data[x][z]);
         }
 
         private void addEntry(MapItemSavedData md, int x, int z, Pair<Block, ResourceLocation> res) {
@@ -408,7 +409,7 @@ public class ColoredMapHandler {
 
             for (int x = 0; x < 128; ++x) {
                 for (int z = 0; z < 128; ++z) {
-                    byte index = getIndex(x, z);
+                    int index = getIndex(x, z);
                     //exit early
                     if (index == 0) continue;
 
