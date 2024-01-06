@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -152,6 +153,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
     //only client
 
+    //TODO: refactor pls
     public static class VisualBook {
         private final float angle;
         private final @Nullable BookColor color;
@@ -165,7 +167,11 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             Item item = stack.getItem();
             this.angle = (float) (rand.nextInt(32) * Math.PI / 16);
 
-            if (item instanceof BookItem) {
+            if( item == CompatObjects.GENE_BOOK){
+                this.isEnchanted = false;
+                this.color = BookColor.GENE;
+            }
+            else if (item instanceof BookItem) {
                 if (lastColor == null) {
                     this.color = colors.get(rand.nextInt(colors.size()));
                 } else {
@@ -242,7 +248,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         AND_QUILL("and_quill", 0, 1),
         WRITTEN("written", 0, 1),
         TOME("tome", 0, 1),
-        TATTERED("tattered", 0, 1);
+        TATTERED("tattered", 0, 1),
+        GENE("gene", 0, 1);
 
         private final String name;
         private final float hue;

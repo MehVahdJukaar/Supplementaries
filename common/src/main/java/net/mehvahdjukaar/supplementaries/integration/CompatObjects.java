@@ -53,6 +53,7 @@ public class CompatObjects {
     public static final Supplier<Block> SUGAR_WATER = makeCompatObject("the_bumblezone:sugar_water_block", BuiltInRegistries.BLOCK);
 
     public static final Supplier<Item> TOME = makeCompatObject("quark:ancient_tome", BuiltInRegistries.ITEM);
+    public static final Supplier<Item> GENE_BOOK = makeCompatObject("horse_colors:gene_book", BuiltInRegistries.ITEM);
 
     public static final Supplier<Item> BARBARIC_HELMET = makeCompatObject("goated:barbaric_helmet", BuiltInRegistries.ITEM);
 

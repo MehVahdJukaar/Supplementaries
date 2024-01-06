@@ -68,6 +68,8 @@ public class InteractEventOverrideHandler {
         if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
             AdditionalItemPlacementsAPI.register(
                     () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.TOME);
+            AdditionalItemPlacementsAPI.register(
+                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.GENE_BOOK);
         }
 
         if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {

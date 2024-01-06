@@ -1,1 +1,3 @@
-hotfix for recent index out of bount issue
+added some mod compat stuff with placed books
+fixed wall lanterns attachment model
+fixed globe occlusion shape

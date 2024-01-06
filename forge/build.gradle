@@ -164,7 +164,7 @@ dependencies {
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
-    modCompileOnly("curse.maven:decorative-blocks-362528:3941638")
+    modImplementation("curse.maven:decorative-blocks-362528:5010279")
     modImplementation("curse.maven:map-atlases-forge-519759:4902239")
     modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")

@@ -8,7 +8,7 @@
 	"elements": [
 		{
 			"from": [7, 13, 6],
-			"to": [9, 15, 18],
+			"to": [9, 15, 17],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13.75, 8.25]},
 			"faces": {
 				"north": {"uv": [14, 2, 16, 4], "texture": "#1"},
@@ -45,6 +45,7 @@
 			"name": "group",
 			"origin": [16, 8, 8],
 			"color": 0,
+			"nbt": "{}",
 			"children": [0, 1]
 		},
 		2
