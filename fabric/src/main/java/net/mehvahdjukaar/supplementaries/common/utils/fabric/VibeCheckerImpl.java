@@ -33,10 +33,10 @@ public class VibeCheckerImpl {
     public static void checkVibe() {
         //crashIfFabricRenderingAPIHasBeenNuked();
         // I've got a better idea
-        fixSodiumDeps();
-        //time is up, 2 years and counting
-        // unfixSodiumDeps();
-        if(PlatHelper.getPhysicalSide().isClient()) vibeCheckModels();
+        //time is up, 2 years and counting and endless reports
+        if (PlatHelper.isModLoaded("indium")) unfixSodiumDeps();
+        else fixSodiumDeps();
+        if (PlatHelper.getPhysicalSide().isClient()) vibeCheckModels();
     }
 
     private static void unfixSodiumDeps() {

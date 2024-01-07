@@ -99,6 +99,9 @@ public class Supplementaries {
 
     //yes this is where I write crap. deal with it XD
     //flute pacifier
+    // brush remove 1 layer ash or snow
+    // brush works on blackboards
+    // airpods portable jukebox mod
     //damage numbers mod
     //more IF compat (map stuff, markers with internals)
     //more flywheel stuff

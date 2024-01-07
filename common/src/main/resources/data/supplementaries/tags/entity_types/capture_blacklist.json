@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"alexsmobs:centipede","required":false},
+    {"id":"alexsmobs:bone_serpent","required":false},
+    {"id":"alexsmobs:void_worm","required":false},
+    {"id":"alexsmobs:anaconda","required":false},
+    {"id":"alexsmobs:murmur","required":false}
+  ]
+}
+

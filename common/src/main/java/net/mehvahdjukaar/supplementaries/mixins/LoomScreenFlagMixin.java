@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
@@ -26,7 +28,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -49,17 +50,17 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
         super(loomMenu, inventory, component);
     }
 
-    @Redirect(method = "containerChanged",
+    @WrapOperation(method = "containerChanged",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;",
                     ordinal = 0))
-    public Item containerChanged(ItemStack stack) {
-        Item i = stack.getItem();
+    public Item containerChanged(ItemStack instance, Operation<Item> original) {
+        Item i = instance.getItem();
         if (i instanceof FlagItem fi) {
             //hax
-            i = BannerBlock.byColor(fi.getColor()).asItem();
+            return BannerBlock.byColor(fi.getColor()).asItem();
         }
-        return i;
+        return original.call(instance);
     }
 
 

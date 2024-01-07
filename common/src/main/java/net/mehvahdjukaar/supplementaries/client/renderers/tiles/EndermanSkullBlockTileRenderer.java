@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -23,17 +22,16 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
     public static final ResourceLocation EYES = new ResourceLocation("textures/entity/enderman/enderman_eyes.png");
 
     @Nullable
-    public static EndermanSkullModel model = null;
+    public static EndermanSkullModel MODEL = null;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        model = !CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() ? null :
-                new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
+        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
     }
 
     @Override
     public void render(EndermanSkullBlockTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
-        var m = model;
+        var m = MODEL;
         if (m == null) return;
         float f = blockEntity.getMouthAnimation(partialTick);
 

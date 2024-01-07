@@ -25,7 +25,7 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType,
                              PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlayIn) {
         float f = 0;
-        var model = EndermanSkullBlockTileRenderer.model;
+        var model = EndermanSkullBlockTileRenderer.MODEL;
         if (model == null) return;
         float rot = 180;
         RenderType renderType = RenderType.entityCutoutNoCull(TEXTURE);

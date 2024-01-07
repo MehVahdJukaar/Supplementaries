@@ -155,7 +155,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     }
 
     public boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
-        if(dir.getAxis().isHorizontal() && !CommonConfigs.Functional.ROPE_HORIZONTAL.get())return false;
+        if (dir.getAxis().isHorizontal() && !CommonConfigs.Functional.ROPE_HORIZONTAL.get()) return false;
         BlockPos facingPos = currentPos.relative(dir);
         return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }
@@ -239,16 +239,18 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             return 0;
         }
 
-        for (Direction direction : Direction.Plane.HORIZONTAL) {
-            BlockPos facingPos = mutable.setWithOffset(pos, direction);
-            BlockState sideState = world.getBlockState(facingPos);
-            Block b = sideState.getBlock();
-            if (b instanceof RopeBlock && CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
-                i = Math.min(i, sideState.getValue(DISTANCE) + 1);
-                if (i == 1) {
-                    break;
-                }
-            } else if (shouldConnectToFace(this.defaultBlockState(), sideState, facingPos, direction, world)) i = 0;
+        if(CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                BlockPos facingPos = mutable.setWithOffset(pos, direction);
+                BlockState sideState = world.getBlockState(facingPos);
+                Block b = sideState.getBlock();
+                if (b instanceof RopeBlock) {
+                    i = Math.min(i, sideState.getValue(DISTANCE) + 1);
+                    if (i == 1) {
+                        break;
+                    }
+                } else if (shouldConnectToFace(this.defaultBlockState(), sideState, facingPos, direction, world)) i = 0;
+            }
         }
 
         return i;
@@ -272,7 +274,11 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                 for (var d2 : Direction.Plane.HORIZONTAL) {
                     BlockPos fp = pos.relative(d2);
                     if (BaseFireBlock.canBePlacedAt(level, fp, d2.getOpposite())) {
-                        level.setBlockAndUpdate(fp, BaseFireBlock.getState(level, fp).setValue(FireBlock.AGE, 14));
+                        BlockState fireState = BaseFireBlock.getState(level, fp);
+                        if (fireState.hasProperty(FireBlock.AGE)) {
+                            fireState = fireState.setValue(FireBlock.AGE, 14);
+                        }
+                        level.setBlockAndUpdate(fp, fireState);
                         level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2 + level.random.nextInt(1));
                     }
                 }
@@ -346,7 +352,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                     state = state.setValue(DOWN, true);
                     world.setBlock(pos, state, 0);
                 }
-                if (RopeHelper. addRopeDown(pos.below(), world, player, handIn, this)) {
+                if (RopeHelper.addRopeDown(pos.below(), world, player, handIn, this)) {
                     SoundType soundtype = state.getSoundType();
                     world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
@@ -391,7 +397,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         }
         return InteractionResult.PASS;
     }
-
 
 
     @Override

@@ -1,3 +1,3 @@
-added some mod compat stuff with placed books
-fixed wall lanterns attachment model
-fixed globe occlusion shape
+fixed crash with ropes and soul fire
+fixed horizontal ropes config not working correctly
+fixed an issue with flags and loom
