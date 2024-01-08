@@ -5,12 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -214,9 +213,15 @@ public class Credits implements Serializable {
     //don't convert to record, gson doesn't like them
     @SuppressWarnings("all")
     private static final class Supporter {
-
+       private static final Codec<UUID> STRING_CODEC = Codec.STRING.comapFlatMap((string) -> {
+            try {
+                return DataResult.success(UUID.fromString(string), Lifecycle.stable());
+            } catch (IllegalArgumentException var2) {
+                return DataResult.error("Invalid UUID " + string + ": " + var2.getMessage());
+            }
+        }, UUID::toString);
         private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                        UUIDUtil.CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
+                        STRING_CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
                         Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
                         Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe))
                 .apply(i, Supporter::new));
