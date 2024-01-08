@@ -58,7 +58,7 @@ public class HatStandEntity extends LivingEntity {
     public final AnimationState skibidiAnimation;
 
     private final int tickOffset;
-    private  int skibidiCounter = 0;
+    private  int skibidiAnimDur = 0;
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
@@ -181,8 +181,8 @@ public class HatStandEntity extends LivingEntity {
                 }
             }
         } else {
-            if(skibidiCounter != 0){
-                skibidiCounter--;
+            if(skibidiAnimDur != 0){
+                skibidiAnimDur--;
             }
             else if ((this.tickCount + tickOffset) % 100 == 0) {
                 var pose = getPose();
@@ -567,7 +567,7 @@ public class HatStandEntity extends LivingEntity {
     public void setSkibidi(boolean skibidi, boolean tall) {
         if(skibidi) {
             this.setPose(tall ? Pose.SPIN_ATTACK : Pose.SNIFFING);
-            skibidiCounter = 20 * 5;
+            skibidiAnimDur = 20 * 10;
         }else{
             this.setPose(Pose.STANDING);
         }

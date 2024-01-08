@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
@@ -213,9 +214,8 @@ public class Credits implements Serializable {
     private static final class Supporter {
 
         private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                        UUIDUtil.STRING_CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
-                        Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
-                        Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe))
+                        StrOpt.of(UUIDUtil.STRING_CODEC, "uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
+                        StrOpt.of(Codec.BOOL, "has_statue", false).forGetter(p -> p.has_statue), StrOpt.of(Codec.BOOL, "has_globe", false).forGetter(p -> p.has_globe))
                 .apply(i, Supporter::new));
 
         private final @Nullable UUID uuid;
@@ -233,8 +233,8 @@ public class Credits implements Serializable {
         Thread thread = new Thread(() -> {
             try {
                 Component name = player.getName();
-                if(true) {
-                   // URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
+                if (true) {
+                    // URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
                 }
             } catch (Exception e) {
                 int aa = 1;

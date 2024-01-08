@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import net.mehvahdjukaar.moonlight.api.misc.WeakHashSet;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
 import net.minecraft.core.BlockPos;
@@ -36,7 +37,7 @@ public class WaySignStructure extends Structure {
     public static final Codec<WaySignStructure> CODEC = RecordCodecBuilder.<WaySignStructure>mapCodec(instance ->
             instance.group(WaySignStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                    ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                    StrOpt.of(ResourceLocation.CODEC, "start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
                     Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY)
             ).apply(instance, WaySignStructure::new)).codec();
@@ -97,7 +98,6 @@ public class WaySignStructure extends Structure {
     }
 
 
-
     /**
      * gets spawning position or empty if not suitable
      */
@@ -112,8 +112,8 @@ public class WaySignStructure extends Structure {
 
         boolean hasVillages = false;
 
-        for(var v : VALID_BIOMES) {
-            if(biomes.contains(v)) {
+        for (var v : VALID_BIOMES) {
+            if (biomes.contains(v)) {
                 hasVillages = true;
                 break;
             }
@@ -182,13 +182,13 @@ public class WaySignStructure extends Structure {
 
     private static final Set<Holder<Biome>> VALID_BIOMES = new WeakHashSet<>();
 
-    public static void recomputeValidStructureCache(RegistryAccess access){
-        for(var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.WAY_SIGN_DESTINATIONS)){
+    public static void recomputeValidStructureCache(RegistryAccess access) {
+        for (var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.WAY_SIGN_DESTINATIONS)) {
             VALID_BIOMES.addAll(s.value().biomes().stream().toList());
         }
     }
 
-    public static void clearCache(){
+    public static void clearCache() {
         VALID_BIOMES.clear();
     }
 

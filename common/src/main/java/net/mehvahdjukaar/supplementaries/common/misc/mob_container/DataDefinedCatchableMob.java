@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
@@ -32,14 +33,14 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
             ResourceLocation.CODEC.listOf().fieldOf("owners").forGetter(p -> p.owners),
             Codec.FLOAT.fieldOf("width_increment").forGetter(p -> p.widthIncrement),
             Codec.FLOAT.fieldOf("height_increment").forGetter(p -> p.heightIncrement),
-            Codec.intRange(0, 15).optionalFieldOf("light_level", 0).forGetter(p -> p.lightLevel),
-            CaptureSettings.CODEC.optionalFieldOf("allowed_in").forGetter(p -> p.captureSettings),
-            Codec.INT.optionalFieldOf("fish_index", 0).forGetter(p -> p.fishIndex),
-            BuiltinAnimation.Type.CODEC.optionalFieldOf("animation", BuiltinAnimation.Type.NONE)
+            StrOpt.of(Codec.intRange(0, 15), "light_level", 0).forGetter(p -> p.lightLevel),
+            StrOpt.of(CaptureSettings.CODEC, "allowed_in").forGetter(p -> p.captureSettings),
+            StrOpt.of(Codec.INT, "fish_index", 0).forGetter(p -> p.fishIndex),
+            StrOpt.of(BuiltinAnimation.Type.CODEC, "animation", BuiltinAnimation.Type.NONE)
                     .forGetter(b -> b.builtinAnimation),
-            TickMode.CODEC.optionalFieldOf("tick_mode", TickMode.NONE).forGetter(p -> p.tickMode),
-            ResourceLocation.CODEC.optionalFieldOf("force_fluid").forGetter(p -> p.forceFluidID),
-            LootParam.CODEC.optionalFieldOf("loot").forGetter(p -> p.loot)
+            StrOpt.of(TickMode.CODEC, "tick_mode", TickMode.NONE).forGetter(p -> p.tickMode),
+            StrOpt.of(ResourceLocation.CODEC, "force_fluid").forGetter(p -> p.forceFluidID),
+            StrOpt.of(LootParam.CODEC, "loot").forGetter(p -> p.loot)
     ).apply(instance, DataDefinedCatchableMob::new));
 
     private final List<ResourceLocation> owners;
@@ -100,7 +101,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
     @Override
     public Optional<SoftFluid> shouldRenderWithFluid() {
-        if(this.forceFluid==null){
+        if (this.forceFluid == null) {
             this.forceFluid = forceFluidID.flatMap(SoftFluidRegistry::getOptional);
         }
         return this.forceFluid;
@@ -141,8 +142,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
     protected record CatchMode(boolean on, boolean onlyBaby) {
         private static final Codec<CatchMode> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.BOOL.fieldOf("allow").forGetter(CatchMode::on),
-                Codec.BOOL.optionalFieldOf("only_baby", false).forGetter(CatchMode::onlyBaby)
+                Codec.BOOL.fieldOf("allow").forGetter(CatchMode::on), StrOpt.of(Codec.BOOL, "only_baby", false).forGetter(CatchMode::onlyBaby)
         ).apply(instance, CatchMode::new));
     }
 
@@ -161,7 +161,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
                         .withOptionalParameter(LootContextParams.THIS_ENTITY, entity);
 
                 var l = lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT));
-                for (var o : l){
+                for (var o : l) {
                     entity.spawnAtLocation(o);
                 }
                 //ItemsUtil.addToInventory(serverLevel, pos.below(), );

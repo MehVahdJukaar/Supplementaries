@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.minecraft.util.Mth;
 
 import java.util.Arrays;
@@ -17,10 +18,10 @@ public class Song {
 
     public static final Codec<Song> CODEC = RecordCodecBuilder.<Song>create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(p -> p.name),
-            Codec.intRange(1, 1000).optionalFieldOf("tempo", 1).forGetter(p -> p.tempo),
+            StrOpt.of(Codec.intRange(1, 1000), "tempo", 1).forGetter(p -> p.tempo),
             Codec.INT.listOf().fieldOf("notes").forGetter(p -> Arrays.stream(p.notes).boxed().toList()),
-            Codec.STRING.optionalFieldOf("credits", "").forGetter(p -> p.credits),
-            Codec.intRange(0, 10000).optionalFieldOf("weight", 100).forGetter(p -> p.weight)
+            StrOpt.of(Codec.STRING, "credits", "").forGetter(p -> p.credits),
+            StrOpt.of(Codec.intRange(0, 10000), "weight", 100).forGetter(p -> p.weight)
     ).apply(instance, Song::new)).comapFlatMap((s) -> {
         if (s.notes.length == 0)
             return DataResult.error(() -> "Song note list cant be empty");

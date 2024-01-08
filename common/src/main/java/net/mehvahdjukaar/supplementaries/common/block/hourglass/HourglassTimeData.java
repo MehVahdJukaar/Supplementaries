@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.hourglass;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -30,17 +31,17 @@ public class HourglassTimeData {
     public static final Codec<HourglassTimeData> REGISTRY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(p -> p.dusts),
             ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
-            Codec.intRange(0, 15).optionalFieldOf("light_level", 0).forGetter(p -> p.light),
-            ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(p -> p.texture),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("ordering", 0).forGetter(p -> p.ordering)
+            StrOpt.of(Codec.intRange(0, 15), "light_level", 0).forGetter(p -> p.light),
+            StrOpt.of(ResourceLocation.CODEC, "texture").forGetter(p -> p.texture),
+            StrOpt.of(ExtraCodecs.POSITIVE_INT, "ordering", 0).forGetter(p -> p.ordering)
     ).apply(instance, HourglassTimeData::new));
 
     public static final Codec<HourglassTimeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.listOf().fieldOf("items").forGetter(p -> p.dusts.stream().map(h -> h.unwrapKey().get().location()).toList()),
             ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
-            Codec.intRange(0, 15).optionalFieldOf("light_level", 0).forGetter(p -> p.light),
-            ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(p -> p.texture),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("ordering", 0).forGetter(p -> p.ordering)
+            StrOpt.of(Codec.intRange(0, 15), "light_level", 0).forGetter(p -> p.light),
+            StrOpt.of(ResourceLocation.CODEC, "texture").forGetter(p -> p.texture),
+            StrOpt.of(ExtraCodecs.POSITIVE_INT, "ordering", 0).forGetter(p -> p.ordering)
     ).apply(instance, HourglassTimeData::createSafe));
 
     private static HourglassTimeData createSafe(List<ResourceLocation> dusts, int dur, int light, Optional<ResourceLocation> texture, int order) {

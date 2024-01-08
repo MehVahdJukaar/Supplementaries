@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +19,7 @@ public record DataItemInteraction(RuleTest target, ItemStack stack,
     public static final Codec<DataItemInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RuleTest.CODEC.fieldOf("target").forGetter(DataItemInteraction::target),
             ItemStack.CODEC.fieldOf("item").forGetter(DataItemInteraction::stack),
-            BlockState.CODEC.optionalFieldOf("replace_with").forGetter(DataItemInteraction::output)
+            StrOpt.of(BlockState.CODEC, "replace_with").forGetter(DataItemInteraction::output)
     ).apply(instance, DataItemInteraction::new));
 
     @Override

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.StrOpt;
 import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;
@@ -99,7 +100,7 @@ public class BasaltAshFeature extends Feature<Config> {
                 ExtraCodecs.NON_NEGATIVE_INT.fieldOf("y_spread").orElse(3).forGetter(Config::ySpread),
                 RuleTest.CODEC.fieldOf("target_predicate").forGetter(Config::target),
                 BlockStateProvider.CODEC.fieldOf("top_block").forGetter(Config::ash),
-                BlockState.CODEC.optionalFieldOf("below_block").forGetter(Config::belowAsh)
+                StrOpt.of(BlockState.CODEC, "below_block").forGetter(Config::belowAsh)
         ).apply(instance, Config::new));
     }
 }
