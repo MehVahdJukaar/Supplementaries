@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.misc;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
@@ -14,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -39,9 +40,7 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ColoredMapHandler {
@@ -130,15 +129,27 @@ public class ColoredMapHandler {
 
     }
 
-    public static class ColorData implements CustomMapData<Counter>, BlockAndTintGetter {
+    public static class ColorData implements CustomMapData<ColoredMapHandler.Counter>, BlockAndTintGetter {
 
         public static final int BIOME_SIZE = 4;
         public static final String MIN_X = "min_x";
         public static final String MAX_X = "max_x";
         public static final String MIN_Z = "min_z";
+        private static final Map<Pair<Pair<Block, ResourceLocation>, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
+        private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
+
         private byte[][] data = null;
         private final List<ResourceLocation> biomesIndexes = new ArrayList<>();
         private final List<Block> blockIndexes = new ArrayList<>();
+
+        //client local values
+
+        private int lastMinDirtyX = 0;
+        private int lastMinDirtyZ = 0;
+        private int lastMaxDirtyX = 0;
+        private int lastMaxDirtyZ = 0;
+        private Pair<Block, ResourceLocation> lastEntryHack;
+
 
         @Nullable
         private Pair<Block, ResourceLocation> getEntry(int x, int z) {
@@ -155,12 +166,14 @@ public class ColoredMapHandler {
                 if (bi >= blockIndexes.size() || bli >= biomesIndexes.size()) {
                     return null; //error
                 }
-                if (bi < 0 || bli < 0) {
-                    return null; //error
-                }
                 return Pair.of(blockIndexes.get(bi), biomesIndexes.get(bli));
             }
             return null;
+        }
+
+        private int getIndex(int x, int z) {
+            if (data == null || data[x] == null) return 0;
+            return Byte.toUnsignedInt(data[x][z]);
         }
 
         private void addEntry(MapItemSavedData md, int x, int z, Pair<Block, ResourceLocation> res) {
@@ -207,18 +220,27 @@ public class ColoredMapHandler {
 
         @Override
         public void load(CompoundTag tag) {
+            this.lastMinDirtyX = 0;
+            this.lastMinDirtyZ = 0;
+            this.lastMaxDirtyX = 0;
+            this.lastMaxDirtyZ = 0;
             if (tag.contains("positions")) {
                 CompoundTag t = tag.getCompound("positions");
 
                 int minX = 0;
                 if (t.contains(MIN_X)) minX = t.getInt(MIN_X);
+                this.lastMinDirtyX = minX;
                 int maxX = 127;
                 if (t.contains(MAX_X)) maxX = t.getInt(MAX_X);
+                this.lastMaxDirtyX = maxX;
                 int minZ = 0;
                 if (t.contains(MIN_Z)) minZ = t.getInt(MIN_Z);
+                this.lastMinDirtyZ = minZ;
 
                 for (int x = minX; x <= maxX; x++) {
                     byte[] rowData = t.getByteArray("pos_" + x);
+                    this.lastMaxDirtyZ = minZ + rowData.length;
+
                     if (data == null) {
                         data = new byte[128][];
                     }
@@ -299,7 +321,7 @@ public class ColoredMapHandler {
         }
 
         @Override
-        public void saveToUpdateTag(CompoundTag tag, Counter dc) {
+        public void saveToUpdateTag(CompoundTag tag, ColoredMapHandler.Counter dc) {
             this.savePatch(tag, dc.minDirtyX, dc.maxDirtyX, dc.minDirtyZ, dc.maxDirtyZ,
                     dc.posDirty, dc.blockDirty, dc.biomesDirty);
         }
@@ -337,9 +359,9 @@ public class ColoredMapHandler {
                 }
             } else {
                 //remove unneded stufff
-                if (this.data != null && this.data[x] != null && this.data[x][z] == 0) {
+                if (this.data != null && this.data[x] != null && this.data[x][z] != 0) {
                     this.data[x][z] = 0;
-                    this.setDirty(data, d -> d.markDirty(x, z, false, false));
+                    this.setDirty(data, counter -> counter.markDirty(x, z, false, false));
                     for (var b : this.data[x]) {
                         if (b != 0) return;
                     }
@@ -378,49 +400,89 @@ public class ColoredMapHandler {
 
 
         @Environment(EnvType.CLIENT)
-        public void processTexture(DynamicTexture texture, byte[] colors) {
-            if (!ClientConfigs.Tweaks.COLORED_MAPS.get()  || data == null) return;
-            boolean tg = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
+        public void processTexture(NativeImage texture, int startX, int startY, byte[] colors) {
+            if (!ClientConfigs.Tweaks.COLORED_MAPS.get() || data == null) return;
+            boolean tallGrass = ClientConfigs.Tweaks.TALL_GRASS_COLOR_CHANGE.get();
+            boolean accurateConfig = ClientConfigs.Tweaks.ACCURATE_COLORED_MAPS.get();
+            // with this, we also prevent repeated map cache achess
+            if (!accurateConfig) Arrays.fill(IND2COLOR_BUFFER, 0);
+            BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+
             for (int x = 0; x < 128; ++x) {
                 for (int z = 0; z < 128; ++z) {
-                    var e = getEntry(x, z);
-                    if (e == null) continue;
-                    Block block = e.getFirst();
-                    BlockPos pos = new BlockPos(x, 64, z); //this is bad. dont want to send extra data tho
-                    BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-                    int tint = blockColors.getColor(block.defaultBlockState(),
-                            this, pos, 0);
-                    if (tint != -1) {
-                        int k = x + z * 128;
-                        byte packedId = colors[k];
+                    int index = getIndex(x, z);
+                    //exit early
+                    if (index == 0) continue;
 
-                        float lumIncrease = 1.3f;
-                        MaterialColor mapColor = MaterialColor.byId((packedId & 255) >> 2);
-                        if (mapColor == MaterialColor.WATER) {
-                            lumIncrease = 2f;
-                        }
-                    /*
-                    else if(mapColor == MapColor.PLANT){
-                        if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
-                             packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
-                        }
-                    }*/
-                        else if (mapColor == MaterialColor.PLANT && block instanceof BushBlock && tg) {
-                            packedId = MaterialColor.GRASS.getPackedId(MaterialColor.Brightness.byId(packedId & 3));
-                        }
-                        int color = MaterialColor.getColorFromPackedId(packedId);
+                    int newTint = -1;
+                    int k = x + z * 128;
+                    byte packedId = colors[k];
+                    int brightnessInd = packedId & 3;
+                    //exit early if we already know the color of this index
+                    if (!accurateConfig) {
+                        int alreadyKnownColor = IND2COLOR_BUFFER[index + brightnessInd * 256];
+                        if (alreadyKnownColor != 0) newTint = alreadyKnownColor;
+                    }
+                    //else compute it
+                    if (newTint == -1) {
+                        Pair<Block, ResourceLocation> e = getEntry(x, z);
+                        this.lastEntryHack = e;
 
-                        tint = swapFormat(tint);
-                        RGBColor tintColor = new RGBColor(tint);
-                        LABColor c = new RGBColor(color).asLAB();
-                        RGBColor gray = c.multiply(null, lumIncrease, 0, 0, 1).asRGB();
-                        var grayscaled = gray
-                                .multiply(null, tintColor.red(), tintColor.green(), tintColor.blue(), 1)
-                                .asHSL().multiply(null, 1, 1.3f, 1, 1).asRGB().toInt();
-                        texture.getPixels().setPixelRGBA(x, z, grayscaled);
+                        if (e == null) continue;
+                        Block block = e.getFirst();
+
+
+                        if (accurateConfig) {
+                            BlockPos pos = new BlockPos(x, 64, z); //this is bad. don't want to send extra data tho
+                            int tint = blockColors.getColor(block.defaultBlockState(),
+                                    this, pos, 0);
+                            if (tint != -1) {
+                                newTint = postProcessTint(tallGrass, packedId, block, tint);
+                            }
+                        } else {
+                            newTint = GLOBAL_COLOR_CACHE.computeIfAbsent(Pair.of(e, brightnessInd), n -> {
+                                BlockPos pos = new BlockPos(0, 64, 0);
+                                int tint = blockColors.getColor(block.defaultBlockState(), this, pos, 0);
+                                return postProcessTint(tallGrass, packedId, block, tint);
+                            });
+                            //cache for this cycle
+                            IND2COLOR_BUFFER[index + brightnessInd * 256] = newTint;
+                        }
+                    }
+
+                    if (newTint != -1) {
+                        texture.setPixelRGBA(startX + x, startY + z, newTint);
                     }
                 }
             }
+        }
+
+        private static int postProcessTint(boolean tg, byte packedId, Block block, int tint) {
+
+            float lumIncrease = 1.3f;
+            MaterialColor mapColor = MaterialColor.byId((packedId & 255) >> 2);
+            if (mapColor == MaterialColor.WATER) {
+                lumIncrease = 2f;
+            }
+        /*
+        else if(mapColor == MapColor.PLANT){
+            if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
+                 packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+            }
+        }*/
+            else if (mapColor == MaterialColor.PLANT && block instanceof BushBlock && tg) {
+                packedId = MaterialColor.GRASS.getPackedId(MaterialColor.Brightness.byId(packedId & 3));
+            }
+            int color = MaterialColor.getColorFromPackedId(packedId);
+
+            tint = swapFormat(tint);
+            RGBColor tintColor = new RGBColor(tint);
+            LABColor c = new RGBColor(color).asLAB();
+            RGBColor gray = c.multiply(null,lumIncrease, 0, 0, 1).asRGB();
+            var grayscaled = gray
+                    .multiply(null,tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+                    .asHSL().multiply(null,1, 1.3f, 1, 1).asRGB().toInt();
+            return grayscaled;
         }
 
         @Override
@@ -435,17 +497,22 @@ public class ColoredMapHandler {
 
         @Override
         public int getBlockTint(BlockPos pos, ColorResolver colorResolver) {
-
             int x = pos.getX();
             int z = pos.getZ();
-            var biome = this.getEntry(x, z);
-            if (biome != null) {
-                Biome b = Utils.hackyGetRegistryAccess().registry(Registry.BIOME_REGISTRY).get().get(biome.getSecond());
+            if (lastEntryHack != null) {
+                Biome b = Utils.hackyGetRegistryAccess().registry(Registry.BIOME_REGISTRY).get().get(lastEntryHack.getSecond());
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
+                //used for position blend. not color blend. used for stuff like swamp
                 pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
                 return colorResolver.getColor(b, pos.getX() + 0.5, pos.getZ() + 0.5);
             }
             return 0;
+        }
+
+        public void clear() {
+            data = null;
+            biomesIndexes.clear();
+            blockIndexes.clear();
         }
     }
 

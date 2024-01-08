@@ -7,14 +7,11 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -141,6 +138,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
+        public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
 
         static{
             ConfigBuilder builder = builderReference.get();
@@ -166,11 +164,15 @@ public class ClientConfigs {
                     .define("paintings_tooltip", true);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
+            builder.push("tinted_maps");
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
-                    .define("tinted_blocks_on_maps", true);
+                    .define("enabled", true);
             TALL_GRASS_COLOR_CHANGE = builder.comment("Colors tall grass same color as grass")
                     .define("tall_grass_color", true);
+            ACCURATE_COLORED_MAPS = builder.comment("Disable color caching. Can affect map update time")
+                    .define("accurate_colors", false);
+            builder.pop();
             builder.pop();
         }
     }

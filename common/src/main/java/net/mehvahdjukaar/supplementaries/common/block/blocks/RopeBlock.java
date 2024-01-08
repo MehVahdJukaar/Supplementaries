@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -60,8 +59,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -282,7 +281,11 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                 for (var d2 : Direction.Plane.HORIZONTAL) {
                     BlockPos fp = pos.relative(d2);
                     if (BaseFireBlock.canBePlacedAt(level, fp, d2.getOpposite())) {
-                        level.setBlockAndUpdate(fp, BaseFireBlock.getState(level, fp).setValue(FireBlock.AGE, 14));
+                        BlockState fireState = BaseFireBlock.getState(level, fp);
+                        if (fireState.hasProperty(FireBlock.AGE)) {
+                            fireState = fireState.setValue(FireBlock.AGE, 14);
+                        }
+                        level.setBlockAndUpdate(fp, fireState);
                         level.scheduleTick(pos.relative(dir), Blocks.FIRE, 2 + level.random.nextInt(1));
                     }
                 }

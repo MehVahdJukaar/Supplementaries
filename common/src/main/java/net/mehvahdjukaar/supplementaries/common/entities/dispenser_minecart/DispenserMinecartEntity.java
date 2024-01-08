@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -8,12 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -52,6 +48,27 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     public DispenserMinecartEntity(EntityType<DispenserMinecartEntity> entityType, Level level) {
         super(entityType, level);
         this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, BLOCK_STATE, this);
+    }
+
+    @Override
+    public void remove(Entity.RemovalReason reason) {
+        if (!this.level.isClientSide && reason.shouldDestroy()) {
+            Containers.dropContents(this.level, this, this);
+        }
+
+        super.remove(reason);
+    }
+
+    @Override
+    protected void applyNaturalSlowdown() {
+        float f = 0.98F;
+        int i = 15 - AbstractContainerMenu.getRedstoneSignalFromContainer(this);
+        f += i * 0.001F;
+
+        if (this.isInWater()) {
+            f *= 0.95F;
+        }
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.0, f));
     }
 
     @Override
