@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
-import fabric.net.raphimc.immediatelyfast.feature.map_atlas_generation.MapAtlasTexture;
 import net.mehvahdjukaar.moonlight.core.MoonlightClient;
+import net.raphimc.immediatelyfast.feature.map_atlas_generation.MapAtlasTexture;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;

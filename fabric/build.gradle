@@ -53,7 +53,7 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4754432")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${rootProject.moonlight_version}")
 
-    modImplementation("curse.maven:immediatelyfast-686911:4776117")
+    modImplementation("curse.maven:immediatelyfast-686911:4937544")
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 

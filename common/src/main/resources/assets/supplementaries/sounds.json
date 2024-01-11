@@ -60,7 +60,8 @@
       "supplementaries:block/sack_break_1",
       "supplementaries:block/sack_break_2",
       "supplementaries:block/sack_break_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.break"
   },
   "block.sack.place": {
     "sounds": [
@@ -68,7 +69,8 @@
       "supplementaries:block/sack_place_1",
       "supplementaries:block/sack_place_2",
       "supplementaries:block/sack_place_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.place"
   },
   "block.sack.open": {
     "sounds": [
@@ -82,7 +84,8 @@
       "supplementaries:block/rope_break_1",
       "supplementaries:block/rope_break_2",
       "supplementaries:block/rope_break_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.break"
   },
   "block.rope.place": {
     "sounds": [
@@ -90,7 +93,8 @@
       "supplementaries:block/rope_place_1",
       "supplementaries:block/rope_place_2",
       "supplementaries:block/rope_place_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.place"
   },
   "block.bubble_block.break": {
     "sounds": [
@@ -122,7 +126,8 @@
       "supplementaries:block/present_place_1",
       "supplementaries:block/present_place_2",
       "supplementaries:block/present_place_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.place"
   },
   "block.present.break": {
     "sounds": [
@@ -130,7 +135,8 @@
       "supplementaries:block/present_break_2",
       "supplementaries:block/present_break_3",
       "supplementaries:block/present_break_0"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.break"
   },
   "block.present.open": {
     "subtitle": "subtitle.supplementaries.present.open",
@@ -156,7 +162,8 @@
       "supplementaries:block/jar_place_1",
       "supplementaries:block/jar_place_2",
       "supplementaries:block/jar_place_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.place"
   },
   "block.jar.break": {
     "sounds": [
@@ -164,7 +171,8 @@
       "supplementaries:block/jar_break_1",
       "supplementaries:block/jar_break_2",
       "supplementaries:block/jar_break_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.break"
   },
   "block.jar.cookie": {
     "subtitle": "subtitle.supplementaries.jar.cookie",
@@ -238,7 +246,8 @@
       "supplementaries:block/rope_step_1",
       "supplementaries:block/rope_step_2",
       "supplementaries:block/rope_step_3"
-    ]
+    ],
+    "subtitle": "subtitles.block.generic.hit"
   },
   "block.rotate": {
     "subtitle": "subtitle.supplementaries.rotate_block",
