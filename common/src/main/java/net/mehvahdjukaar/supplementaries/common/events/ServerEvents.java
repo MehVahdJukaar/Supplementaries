@@ -46,6 +46,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +63,10 @@ public class ServerEvents {
             BlockPos pos = event.getPos();
             level.removeBlock(pos, false);
             if (BaseFireBlock.canBePlacedAt((Level) level, pos, Direction.DOWN)) {
-                event.setFinalState(BaseFireBlock.getState(level, pos).setValue(FireBlock.AGE, 8));
+                BlockState state = BaseFireBlock.getState(level, pos);
+                if (state.hasProperty(FireBlock.AGE)) {
+                    event.setFinalState(state.setValue(FireBlock.AGE, 8));
+                }
                 level.scheduleTick(pos, Blocks.FIRE, 2 + ((Level) level).random.nextInt(1));
             }//TODO: make faster
         } else AshLayerBlock.tryConvertToAsh(event);
@@ -117,8 +121,8 @@ public class ServerEvents {
                     return InteractionResult.SUCCESS;
                 }
             }
-        }else if(item == ModRegistry.SOAP.get()){
-            if(SoapItem.interactWithEntity(stack, player, entity, hand)){
+        } else if (item == ModRegistry.SOAP.get()) {
+            if (SoapItem.interactWithEntity(stack, player, entity, hand)) {
                 return InteractionResult.SUCCESS;
             }
         }
@@ -138,12 +142,12 @@ public class ServerEvents {
     public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
         ModSetup.tagDependantSetup(registryAccess);
 
-        if(!client) {
+        if (!client) {
             WaySignStructure.recomputeValidStructureCache(registryAccess);
 
             try {
                 SoftFluidRegistry.getRegistry(registryAccess).get(SoftFluidRegistry.EMPTY_ID);
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }
         }
@@ -176,7 +180,7 @@ public class ServerEvents {
 
     @EventCalled
     public static void clientPlayerTick(Player player) {
-        if(player instanceof IQuiverEntity){
+        if (player instanceof IQuiverEntity) {
 
         }
     }
@@ -192,7 +196,7 @@ public class ServerEvents {
                         itemEntity.getOwner().equals(player.getUUID()))
         ) {
             ItemStack old = stack.copy();
-            if (takeArrow(itemEntity, player, stack)){
+            if (takeArrow(itemEntity, player, stack)) {
                 SuppPlatformStuff.onItemPickup(player, itemEntity, old);
                 player.onItemPickup(itemEntity);
                 player.awardStat(Stats.ITEM_PICKED_UP.get(stack.getItem()), old.getCount() - stack.getCount());
@@ -204,7 +208,7 @@ public class ServerEvents {
 
     @EventCalled
     public static boolean onArrowPickup(AbstractArrow arrow, Player player, Supplier<ItemStack> pickup) {
-        if (CommonConfigs.Tools.QUIVER_PICKUP.get()){
+        if (CommonConfigs.Tools.QUIVER_PICKUP.get()) {
             ItemStack stack = pickup.get();
             return takeArrow(arrow, player, stack);
         }

@@ -1123,6 +1123,11 @@ public class CommonConfigs {
                     .define("lightning_unluck", true);
             builder.pop();
 
+            builder.push("item_lore");
+            ITEM_LORE = feature(builder
+                    .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag"));
+            builder.pop();
+
             builder.pop();
         }
 
@@ -1179,6 +1184,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SCARE_VILLAGERS;
         public static final Supplier<Boolean> BAD_LUCK_CAT;
         public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
+        public static final Supplier<Boolean> ITEM_LORE;
 
     }
 

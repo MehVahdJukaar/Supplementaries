@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -272,8 +272,9 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
-        tooltip.add((Component.translatable("message.supplementaries.candle_holder")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
+        tooltip.add((Component.translatable("message.supplementaries.candle_holder"))
+                .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Nullable

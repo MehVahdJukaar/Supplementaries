@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -113,7 +113,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag == null) {
-            if (!ClientConfigs.General.TOOLTIP_HINTS.get() || !flagIn.isAdvanced()) return;
+            if (!MiscUtils.showsHints(worldIn, flagIn)) return;
             tooltip.add(Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         } else {
             if (compoundTag.contains("LootTable", 8)) {

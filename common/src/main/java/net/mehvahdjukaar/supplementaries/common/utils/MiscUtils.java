@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -18,6 +20,13 @@ import java.util.function.Supplier;
 
 public class MiscUtils {
 
+
+    public static boolean showsHints(BlockGetter worldIn, TooltipFlag flagIn) {
+        if (worldIn instanceof Level l && l.isClientSide) {
+            return ClientConfigs.General.TOOLTIP_HINTS.get();
+        }
+        return false;
+    }
 
     public enum Festivity {
         NONE,

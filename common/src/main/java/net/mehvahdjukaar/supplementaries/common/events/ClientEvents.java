@@ -47,7 +47,7 @@ public class ClientEvents {
 
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
-        if (ClientConfigs.General.TOOLTIP_HINTS.get() && tooltipFlag.isAdvanced()) {
+        if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
             InteractEventOverrideHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
         }
 

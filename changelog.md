@@ -1,2 +1,2 @@
-fixed IF compat on fabric
-fixed hat stand spawn packet causing issues on fabric
+made items tooltips functions server safe
+fixed some mising models for book piles

@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
@@ -255,7 +255,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                 tooltip.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
-        if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
+        if (MiscUtils.showsHints(worldIn, flagIn)) {
             this.addPlacementTooltip(tooltip);
         }
     }

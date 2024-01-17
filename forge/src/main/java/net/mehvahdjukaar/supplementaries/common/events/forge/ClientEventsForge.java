@@ -88,7 +88,7 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void itemTooltip(ItemTooltipEvent event) {
         if (event.getEntity() != null) {
-            ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
+                ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
         }
     }
 
