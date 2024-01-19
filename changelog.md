@@ -1,2 +1,2 @@
-made items tooltips functions server safe
-fixed some mising models for book piles
+made double cakes class a bit more resiliant to mixins randomly adding blockstates to normal cake block. I could have done that too but thats terrible for compatibiliry...
+added fabric waystones integration 

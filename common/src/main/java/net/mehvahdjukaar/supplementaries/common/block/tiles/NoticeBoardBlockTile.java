@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
@@ -36,12 +35,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay, ITextHolderProvider {
 
@@ -223,11 +220,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return textHolder.hasAntiqueInk();
     }
 
-
-    public TextUtil.RenderProperties computeRenderProperties(int frontLight, Vector3f normal, BooleanSupplier isNear) {
-        return textHolder.computeRenderProperties(frontLight, normal, isNear);
-    }
-
     public float getFontScale() {
         return this.fontScale;
     }
@@ -240,7 +232,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.cachedPageLines = l;
     }
 
-    public List<FormattedCharSequence> getRendererLines() {
+    public List<FormattedCharSequence> getCachedLines() {
         return this.cachedPageLines;
     }
 

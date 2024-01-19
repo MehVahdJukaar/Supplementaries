@@ -2,7 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.client.util.*;
+import net.mehvahdjukaar.moonlight.api.client.util.LOD;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -78,7 +82,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             float yaw = -dir.toYRot();
             Vec3 cameraPos = camera.getPosition();
             BlockPos pos = tile.getBlockPos();
-            if (LOD.isOutOfFocus(cameraPos, pos, yaw)) return;
+            if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 0)) return;
 
             int frontLight = this.getFrontLight(level, pos, dir);
 
@@ -136,7 +140,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             poseStack.translate(0, 0.5, 0.008);
 
             if (MiscUtils.FESTIVITY.isAprilsFool()) {
-                float d0 = ColorUtil.getShading(dir.step());
+                float d0 = ColorUtils.getShading(dir.step());
                 TextUtils.renderBeeMovie(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;
@@ -144,28 +148,18 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
             String bookName = tile.getItem(0).getHoverName().getString().toLowerCase(Locale.ROOT);
             if (bookName.equals("credits")) {
-                float d0 = ColorUtil.getShading(dir.step());
+                float d0 = ColorUtils.getShading(dir.step());
                 TextUtils.renderCredits(poseStack, buffer, frontLight, font, d0);
                 poseStack.popPose();
                 return;
             }
-            var textProperties = tile.computeRenderProperties(frontLight, dir.step(), lod::isVeryNear);
+            var textProperties = tile.getTextHolder()
+                    .computeRenderProperties(frontLight, dir.step(), lod::isVeryNear);
 
             if (tile.needsVisualUpdate()) {
-                float paperWidth = 1 - (2 * PAPER_X_MARGIN);
-                float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
-                var text = TextUtil.parseText(page);
-                if(text instanceof MutableComponent mc){
-                    text = mc.setStyle(textProperties.style());
-                }else{
-                    text = Component.literal(page).setStyle(textProperties.style());
-                }
-                var p = TextUtil.fitLinesToBox(font,
-                        text, paperWidth, paperHeight);
-                tile.setFontScale(p.getSecond());
-                tile.setCachedPageLines(p.getFirst());
+                updateAndCacheLines(font, tile, page, textProperties);
             }
-            List<FormattedCharSequence> rendererLines = tile.getRendererLines();
+            List<FormattedCharSequence> rendererLines = tile.getCachedLines();
 
             float scale = tile.getFontScale();
             poseStack.scale(scale, -scale, scale);
@@ -226,6 +220,21 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, buffer, frontLight, overlay, model);
         }
 
+    }
+
+    private static void updateAndCacheLines(Font font, NoticeBoardBlockTile tile, String page, TextUtil.RenderProperties textProperties) {
+        float paperWidth = 1 - (2 * PAPER_X_MARGIN);
+        float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
+        var text = TextUtil.parseText(page);
+        if(text instanceof MutableComponent mc){
+            text = mc.setStyle(textProperties.style());
+        }else{
+            text = Component.literal(page).setStyle(textProperties.style());
+        }
+        var p = TextUtil.fitLinesToBox(font,
+                text, paperWidth, paperHeight);
+        tile.setFontScale(p.getSecond());
+        tile.setCachedPageLines(p.getFirst());
     }
 
 }

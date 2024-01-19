@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
 
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class SuppAdditionalPlacement extends AdditionalItemPlacement {
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
+        if (MiscUtils.showsPlaceableHints(pLevel, pIsAdvanced)) {
             pTooltipComponents.add(Component.translatable("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         }
     }

@@ -12,6 +12,10 @@
     {"id":"create:belt_connector","required":false},
     {"id":"create:track","required":false},
     {"id":"blue_skies:bag_of_spoils","required":false},
-    {"id":"securitycraft:projector","required":false}
+    {"id":"securitycraft:projector","required":false},
+    {"id":"chipped:tinkering_table","required":false},
+    {"id":"chipped:mason_table","required":false},
+    {"id":"chipped:carpenters_table","required":false},
+    {"id":"chipped:loom_table","required":false}
   ]
 }

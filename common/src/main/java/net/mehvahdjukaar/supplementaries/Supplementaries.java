@@ -101,6 +101,7 @@ public class Supplementaries {
     //flute pacifier
     // emi world interaction (ash)
     // raycon mod
+    // bellows blow ash out of ash block and IW ash one too
     // brush remove 1 layer ash or snow
     // brush works on blackboards
     // airpods portable jukebox mod

@@ -49,6 +49,7 @@ import java.util.function.BooleanSupplier;
 
 import static net.minecraft.world.level.block.entity.SignBlockEntity.createCommandSourceStack;
 
+//TODO: move to ML
 public class TextHolder implements IAntiqueTextProvider {
 
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();

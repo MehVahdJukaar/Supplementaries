@@ -78,6 +78,7 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
         this.type = type;
     }
 
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
@@ -165,7 +166,8 @@ public class DirectionalCakeBlock extends CakeBlock implements SimpleWaterlogged
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, BITES, WATERLOGGED);
+        super.createBlockStateDefinition(builder);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override

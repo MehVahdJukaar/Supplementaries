@@ -57,7 +57,7 @@ public class CompatHandler {
     public static final boolean BOTANIA = isLoaded("botania");
     public static final boolean MAPATLAS = isLoaded("map_atlases");
     public static final boolean SUPPSQUARED = isLoaded("suppsquared");
-    public static final boolean WAYSTONES = isLoaded("waystones");
+    public static final boolean WAYSTONES = PlatHelper.getPlatform().isForge() ? isLoaded("waystones") : isLoaded("fwaystones");
     public static final boolean OVERWEIGHT_FARMING = isLoaded("overweight_farming");
     public static final boolean SNOWYSPIRIT = isLoaded("snowyspirit");
     public static final boolean HAUNTEDHARVEST = isLoaded("hauntedharvest");
