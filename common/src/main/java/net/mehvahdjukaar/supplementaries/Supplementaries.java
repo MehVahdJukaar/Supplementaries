@@ -101,6 +101,9 @@ public class Supplementaries {
     //flute pacifier
     // emi world interaction (ash)
     // raycon mod
+    // quiver holds fireworks
+    // FD pan flip anim
+    //rope arrow inplace recipe
     // bellows blow ash out of ash block and IW ash one too
     // brush remove 1 layer ash or snow
     // brush works on blackboards

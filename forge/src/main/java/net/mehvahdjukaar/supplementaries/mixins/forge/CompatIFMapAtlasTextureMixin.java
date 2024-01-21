@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.moonlight.core.MoonlightClient;
 import net.raphimc.immediatelyfast.feature.map_atlas_generation.MapAtlasTexture;

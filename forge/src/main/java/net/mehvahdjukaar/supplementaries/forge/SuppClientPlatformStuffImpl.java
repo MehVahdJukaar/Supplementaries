@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.horse.Horse;
 
 public class SuppClientPlatformStuffImpl {
     public static RenderType staticNoise(ResourceLocation location) {
@@ -19,8 +18,6 @@ public class SuppClientPlatformStuffImpl {
 
     public static ISlider createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
                                        double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
-        Horse e;
-        e.getBreedOffspring()
         return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
 

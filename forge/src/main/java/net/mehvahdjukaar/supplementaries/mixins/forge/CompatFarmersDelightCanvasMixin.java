@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HangingSignRendererExtension;
@@ -19,19 +18,21 @@ import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import vectorwing.farmersdelight.client.renderer.HangingCanvasSignRenderer;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 
-@OptionalMixin("vectorwing.farmersdelight.client.renderer.HangingCanvasSignRenderer")
-@Mixin(targets = "vectorwing.farmersdelight.client.renderer.HangingCanvasSignRenderer")
+@Pseudo
+@Mixin(HangingCanvasSignRenderer.class)
 public abstract class CompatFarmersDelightCanvasMixin extends SignRenderer {
 
     @Unique

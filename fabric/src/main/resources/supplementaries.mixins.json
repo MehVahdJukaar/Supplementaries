@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
+    "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
     "MC263524FixMixin",
     "MouseScrollMixin",
@@ -15,7 +16,6 @@
     "BowMixin",
     "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
-    "CompatIFMapAtlasTextureMixin",
     "CropBlockMixin",
     "CrossbowMixin",
     "MobBucketItemAccessor",

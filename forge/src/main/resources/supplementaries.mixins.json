@@ -6,12 +6,14 @@
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
     "BlockEntityRendererDispatcherMixin",
-    "ChatMixin"
+    "ChatMixin",
+    "CompatFarmersDelightCanvasMixin",
+    "CompatFarmersDelightSignMixin",
+    "CompatIFMapAtlasTextureMixin",
+    "CompatIFMapTextureMixin2"
   ],
   "mixins": [
     "ChunkHolderMixin",
-    "CompatFarmersDelightCanvasMixin",
-    "CompatFarmersDelightSignMixin",
     "CompatFarmersDelightTomatoMixin",
     "CompatQuarkSelfCandleSkullMixin",
     "FriendlyByteBufMixin",

@@ -1,11 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.google.common.base.Suppliers;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.misc.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -15,7 +19,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
@@ -27,9 +35,28 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
-public class ModVillagerTrades {
+public class ModVillagerTrades extends SimpleJsonResourceReloadListener {
+
+    public ModVillagerTrades() {
+        super(new Gson(), "red_merchant_trades");
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+
+        List<VillagerTrades.ItemListing> trades = new ArrayList<>();
+        for (var e : jsons.entrySet()) {
+            var j = e.getValue();
+            var id = e.getKey();
+            VillagerTrades.ItemListing trade = ModItemListing.CODEC.decode(JsonOps.INSTANCE, j)
+                    .getOrThrow(false, errorMsg -> Supplementaries.LOGGER.warn("Failed to parse red merchant trade with id {} - error: {}",
+                            id, errorMsg)).getFirst();
+            trades.add(trade);
+        }
+    }
 
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
@@ -82,6 +109,7 @@ public class ModVillagerTrades {
     public static VillagerTrades.ItemListing[] getRedMerchantTrades() {
         return RED_MERCHANT_TRADES.get();
     }
+
 
     private record WrappedListing(VillagerTrades.ItemListing original) implements VillagerTrades.ItemListing {
 

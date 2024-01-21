@@ -60,6 +60,7 @@ import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
 import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
+import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
@@ -124,6 +125,12 @@ public class QuarkCompat {
 
     public static boolean canMoveBlockEntity(BlockState state) {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+    }
+
+    @PlayEvent
+    public static void test(ZRecipeCrawl zRecipeCrawl){
+        int aa = 1;
+
     }
 
     @ExpectPlatform

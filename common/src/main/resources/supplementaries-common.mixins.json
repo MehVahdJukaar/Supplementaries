@@ -59,8 +59,6 @@
     "BookViewScreenMixin",
     "CartographyTableScreenMixin",
     "ClientLevelMixin",
-    "CompatIFMapAtlasTextureMixin",
-    "CompatIFMapTextureMixin2",
     "FontRendererMixin",
     "GameRendererMixin",
     "HangingSignRendererMixin",
@@ -78,7 +76,9 @@
     "RemotePlayerMixin",
     "SignRendererMixin",
     "UndeadHorseRenderMixin",
-    "WrittenBookAccessMixin"
+    "WrittenBookAccessMixin",
+    "forge.CompatIFMapAtlasTextureMixin",
+    "forge.CompatIFMapTextureMixin2"
   ],
   "injectors": {
     "defaultRequire": 1
