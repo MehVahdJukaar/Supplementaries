@@ -1,0 +1,18 @@
+{
+  "global_conditions": [
+    {
+      "flag": "rope",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "max_trades": 10,
+  "xp": 1,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 1
+  },
+  "offer": {
+    "id": "supplementaries:rope",
+    "Count": 4
+  }
+}

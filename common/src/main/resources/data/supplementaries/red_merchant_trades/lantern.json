@@ -1,0 +1,21 @@
+{
+  "global_conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "modid": "suppsquared",
+        "type": "forge:mod_loaded"
+      }
+    }
+  ],
+  "max_trades": 12,
+  "xp": 1,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 1
+  },
+  "offer": {
+    "id": "minecraft:lantern",
+    "Count": 1
+  }
+}

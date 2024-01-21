@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.supplementaries.StrOpt;
+import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.supplementaries.StrOpt;
+import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;

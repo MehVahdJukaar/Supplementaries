@@ -1,0 +1,22 @@
+{
+  "global_conditions": [
+    {
+      "flag": "bomb",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "max_trades": 3,
+  "xp": 1,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 40
+  },
+  "price_secondary": {
+    "id": "supplementaries:bomb",
+    "Count": 1
+  },
+  "offer": {
+    "id": "supplementaries:bomb_blue",
+    "Count": 1
+  }
+}

@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class SuppPlatformStuffImpl {
 
@@ -60,8 +60,8 @@ public class SuppPlatformStuffImpl {
         return ((BiomeAccessor)(Object)biome).getClimateSettings().downfall();
     }
 
-    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(VillagerTrades.ItemListing[] listings) {
-        var trades = new ArrayList<>(Arrays.stream(listings).toList());
+    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
+        var trades = new ArrayList<>(listings);
         RedMerchantTradesEvent.MODIFY_TRADES.invoker().accept(trades);
         return trades.toArray(VillagerTrades.ItemListing[]::new);
     }

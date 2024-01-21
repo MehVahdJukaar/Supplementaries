@@ -1,0 +1,12 @@
+{
+  "max_trades": 8,
+  "xp": 1,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 4
+  },
+  "offer": {
+    "id": "minecraft:tnt",
+    "Count": 1
+  }
+}

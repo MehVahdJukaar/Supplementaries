@@ -30,7 +30,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class SuppPlatformStuffImpl {
 
@@ -96,8 +96,8 @@ public class SuppPlatformStuffImpl {
         return biome.getModifiedClimateSettings().downfall();
     }
 
-    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(VillagerTrades.ItemListing[] listings) {
-        RedMerchantTradesEvent event = new RedMerchantTradesEvent(new ArrayList<>(Arrays.stream(listings).toList()));
+    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
+        RedMerchantTradesEvent event = new RedMerchantTradesEvent(new ArrayList<>(listings));
         MinecraftForge.EVENT_BUS.post(event);
         return event.getTrades().toArray(VillagerTrades.ItemListing[]::new);
     }

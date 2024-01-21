@@ -1,0 +1,22 @@
+{
+  "global_conditions": [
+    {
+      "flag": "bomb",
+      "type": "supplementaries:flag"
+    },
+    {
+      "modid": "oreganized",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "max_trades": 8,
+  "xp": 1,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 4
+  },
+  "offer": {
+    "id": "supplementaries:bomb_spiky",
+    "Count": 1
+  }
+}

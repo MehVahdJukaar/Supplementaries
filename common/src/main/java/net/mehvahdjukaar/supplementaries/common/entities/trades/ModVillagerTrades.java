@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
-import com.google.common.base.Suppliers;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
@@ -13,8 +12,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -27,18 +24,23 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class ModVillagerTrades extends SimpleJsonResourceReloadListener {
+
+    public static final ModVillagerTrades INSTANCE = new ModVillagerTrades();
+
+    //Don't call too early. Lazily initialized
+    private VillagerTrades.ItemListing[] redMerchantTrades = null;
 
     public ModVillagerTrades() {
         super(new Gson(), "red_merchant_trades");
@@ -48,66 +50,34 @@ public class ModVillagerTrades extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
 
         List<VillagerTrades.ItemListing> trades = new ArrayList<>();
+        boolean christmas = MiscUtils.FESTIVITY.isChristmas();
         for (var e : jsons.entrySet()) {
             var j = e.getValue();
             var id = e.getKey();
             VillagerTrades.ItemListing trade = ModItemListing.CODEC.decode(JsonOps.INSTANCE, j)
                     .getOrThrow(false, errorMsg -> Supplementaries.LOGGER.warn("Failed to parse red merchant trade with id {} - error: {}",
                             id, errorMsg)).getFirst();
+
+            if (christmas) trade = new WrappedListing(trade);
             trades.add(trade);
         }
+
+        trades.sort((o1, o2) -> {
+            if (o1 instanceof ModItemListing ml && o2 instanceof ModItemListing ml2) {
+                return Integer.compare(ml.price().getCount(), ml2.price().getCount());
+            }
+            return 0;
+        });
+
+        redMerchantTrades = SuppPlatformStuff.fireRedMerchantTradesEvent(trades);
     }
 
     private static final float BUY = 0.05f;
     private static final float SELL = 0.2f;
 
-    //Don't call too early. Lazily initialized
-    private static final Supplier<VillagerTrades.ItemListing[]> RED_MERCHANT_TRADES = Suppliers.memoize(() -> {
-                VillagerTrades.ItemListing[] listings = ModVillagerTrades.makeRedMerchantTrades();
-                if (MiscUtils.FESTIVITY.isChristmas()) {
-                    listings = Arrays.stream(listings).map(WrappedListing::new)
-                            .toList().toArray(new VillagerTrades.ItemListing[0]);
-                }
-                return SuppPlatformStuff.fireRedMerchantTradesEvent(listings);
-            }
-    );
 
-    private static VillagerTrades.ItemListing[] makeRedMerchantTrades() {
-        List<VillagerTrades.ItemListing> trades = new ArrayList<>();
-
-        if (CommonConfigs.Functional.ROPE_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.ROPE.get(), 4, 1, 10));
-        }
-        trades.add(itemForEmeraldTrade(Items.GUNPOWDER, 2, 1, 8));
-        var lantern = CompatObjects.COPPER_LANTERN.get() == null ? Blocks.LANTERN : CompatObjects.COPPER_LANTERN.get();
-        trades.add(itemForEmeraldTrade(lantern, 1, 1, 12));
-
-        if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_ITEM.get(), 1, 4, 8));
-            if (CompatHandler.OREGANIZED) {
-                trades.add(itemForEmeraldTrade(ModRegistry.BOMB_SPIKY_ITEM.get(), 1, 4, 8));
-            }
-        }
-        trades.add(new StarForEmeraldTrade(2, 8));
-        trades.add(new RocketForEmeraldTrade(3, 1, 3, 8));
-        trades.add(itemForEmeraldTrade(Items.TNT, 1, 4, 8));
-
-        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-            Item i = ModRegistry.ROPE_ARROW_ITEM.get();
-            ItemStack stack = new ItemStack(i);
-            stack.setDamageValue(Math.max(0, stack.getMaxDamage() - 16));
-            trades.add(itemForEmeraldTrade(stack, 4, 6));
-        }
-        if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
-            trades.add(itemForEmeraldTrade(ModRegistry.BOMB_BLUE_ITEM.get(), 1, ModRegistry.BOMB_ITEM.get(), 1, 40, 3));
-
-        }
-        return trades.toArray(new VillagerTrades.ItemListing[0]);
-    }
-
-
-    public static VillagerTrades.ItemListing[] getRedMerchantTrades() {
-        return RED_MERCHANT_TRADES.get();
+    public VillagerTrades.ItemListing[] getRedMerchantTrades() {
+        return redMerchantTrades;
     }
 
 
@@ -220,6 +190,10 @@ public class ModVillagerTrades extends SimpleJsonResourceReloadListener {
 
     //runs on init since we need to be early enough to register stuff to forge busses
     public static void init() {
+
+        ModItemListing.registerSpecial(Supplementaries.res("star_for_emerald"), new StarForEmeraldTrade(2, 8));
+        ModItemListing.registerSpecial(Supplementaries.res("rocket_for_emerald"), new RocketForEmeraldTrade(3, 1, 3, 8));
+
 
         RegHelper.registerWanderingTraderTrades(2, listings -> {
             if (!CommonConfigs.SPEC.isLoaded()) {

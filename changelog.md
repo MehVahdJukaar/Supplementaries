@@ -1,2 +1,2 @@
-made double cakes class a bit more resiliant to mixins randomly adding blockstates to normal cake block. I could have done that too but thats terrible for compatibiliry...
-added fabric waystones integration 
+red merchant trades are noe entirely data driven
+fixed some server side mixin issues

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.hourglass;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.supplementaries.StrOpt;
+import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;

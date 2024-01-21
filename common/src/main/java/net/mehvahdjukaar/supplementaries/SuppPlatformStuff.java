@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 
 public class SuppPlatformStuff {
 
@@ -66,7 +68,7 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static  VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(VillagerTrades.ItemListing[] listings) {
+    public static  VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
         throw new ArrayStoreException();
     }
 }
