@@ -182,6 +182,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             this.isOnline = true;
         }
 
+        //offline?
         public SimplePlayerEntry(UUID id, String lastName) {
             GameProfile profile = new GameProfile(id, lastName);
             this.skinGetter = () -> StatueBlockTileRenderer.getPlayerSkin(this.profile);
@@ -190,7 +191,8 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
                 synchronized (this) {
                     this.profile = profile;
                 }
-                SkullBlockEntity.updateGameprofile(this.profile, (gameProfile) -> this.profile = gameProfile);
+                SkullBlockEntity.updateGameprofile(this.profile,
+                        (gameProfile) -> this.profile = gameProfile);
             }
             this.isOnline = false;
         }

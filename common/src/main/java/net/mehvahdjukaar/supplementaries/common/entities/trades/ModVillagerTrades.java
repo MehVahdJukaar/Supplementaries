@@ -32,6 +32,7 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -62,12 +63,7 @@ public class ModVillagerTrades extends SimpleJsonResourceReloadListener {
             trades.add(trade);
         }
 
-        trades.sort((o1, o2) -> {
-            if (o1 instanceof ModItemListing ml && o2 instanceof ModItemListing ml2) {
-                return Integer.compare(ml.price().getCount(), ml2.price().getCount());
-            }
-            return 0;
-        });
+        Collections.shuffle(trades);
 
         redMerchantTrades = SuppPlatformStuff.fireRedMerchantTradesEvent(trades);
     }

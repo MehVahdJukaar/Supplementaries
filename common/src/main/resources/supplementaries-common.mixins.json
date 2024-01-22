@@ -76,9 +76,7 @@
     "RemotePlayerMixin",
     "SignRendererMixin",
     "UndeadHorseRenderMixin",
-    "WrittenBookAccessMixin",
-    "forge.CompatIFMapAtlasTextureMixin",
-    "forge.CompatIFMapTextureMixin2"
+    "WrittenBookAccessMixin"
   ],
   "injectors": {
     "defaultRequire": 1

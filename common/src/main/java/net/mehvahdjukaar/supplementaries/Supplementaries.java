@@ -102,6 +102,8 @@ public class Supplementaries {
     //flute pacifier
     // emi world interaction (ash)
     // raycon mod
+    //more trades to villagers (planter)
+    //villager that fishes. shepard that shears
     // quiver holds fireworks
     // FD pan flip anim
     //rope arrow inplace recipe
