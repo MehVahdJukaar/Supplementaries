@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge.create;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
-import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.minecraft.client.resources.sounds.MinecartSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,7 +26,6 @@ public class PresentRecipientAttribute implements ItemAttribute {
         String name = readRecipient(itemStack);
         List<ItemAttribute> atts = new ArrayList<>();
         if(name.length() > 0) {
-            if 
             atts.add(new PresentRecipientAttribute(name));
         }
         return atts;
@@ -55,7 +51,7 @@ public class PresentRecipientAttribute implements ItemAttribute {
         return new PresentRecipientAttribute(compoundTag.getString("Recipient"));
 
     }
-    private String readRecipient(ItemStack stack) {
+    private String readRecipient(ItemStack itemStack) {
         String name;
         if (itemStack.getItem() instanceof PresentItem) {
             var t = itemStack.getTagElement("block_entity_tag");
