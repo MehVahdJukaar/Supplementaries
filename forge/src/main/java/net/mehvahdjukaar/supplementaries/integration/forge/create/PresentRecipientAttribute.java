@@ -9,13 +9,11 @@ import net.minecraft.client.resources.sounds.MinecartSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PresentRecipientAttribute implements ItemAttribute {
-
-    public static final PresentRecipientAttribute EMPTY = new PresentRecipientAttribute(PresentBlockTile.PUBLIC_KEY);
-
-    private final String recipient;
+    String recipient;
 
     public PresentRecipientAttribute(String recipient) {
         this.recipient = recipient;
@@ -23,21 +21,18 @@ public class PresentRecipientAttribute implements ItemAttribute {
 
     @Override
     public boolean appliesTo(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof PresentItem) {
-            var t = itemStack.getTagElement("block_entity_tag");
-            if (t != null) return t.contains("Recipient");
-        }
-        return false;
+        return readRecipient(itemStack).equals(recipient);
     }
 
     @Override
     public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        var t = itemStack.getTagElement("block_entity_tag");
-        if (t != null) {
-            var v = t.getString("Recipient");
-            if (!v.isEmpty()) return List.of(new PresentRecipientAttribute(v));
+        String name = readRecipient(itemStack);
+        List<ItemAttribute> atts = new ArrayList<>();
+        if(name.length() > 0) {
+            if 
+            atts.add(new PresentRecipientAttribute(name));
         }
-        return List.of();
+        return atts;
     }
 
     @Override
@@ -57,7 +52,21 @@ public class PresentRecipientAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundTag compoundTag) {
-        return compoundTag.contains("Recipient") ? new PresentRecipientAttribute(compoundTag.getString("Recipient")) : EMPTY;
+        return new PresentRecipientAttribute(compoundTag.getString("Recipient"));
 
+    }
+    private String readRecipient(ItemStack stack) {
+        String name;
+        if (itemStack.getItem() instanceof PresentItem) {
+            var t = itemStack.getTagElement("block_entity_tag");
+            if (t != null){
+                name = t.getString("Recipient");
+                if (name != PresentBlockTile.PUBLIC_KEY)
+                {
+                    return name;
+                }
+            }
+        }
+        return "";
     }
 }
