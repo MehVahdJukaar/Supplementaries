@@ -1,18 +1,19 @@
 {
   "global_conditions": [
     {
-      "flag": "bomb",
+      "flag": "flax",
       "type": "supplementaries:flag"
     }
   ],
-  "max_trades": 6,
-  "xp": 1,
+  "type": "simple",
+  "max_trades": 8,
   "price": {
     "id": "minecraft:emerald",
     "Count": 6
   },
   "offer": {
-    "id": "supplementaries:spiky_bomb",
+    "id": "supplementaries:flax_seeds",
     "Count": 1
-  }
+  },
+  "level": 1
 }

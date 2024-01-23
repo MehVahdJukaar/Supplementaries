@@ -1,0 +1,14 @@
+{
+  "structure": "minecraft:village", //only this is needed, rest is optional
+  "color": "0xff00ffff",
+  "map_name": "aaaa",
+  "level": 1,
+  "price_min": 7,
+  "price_max": 13,
+  "price": "minecraft:emerald"
+  "price_secondary": {
+    "id": "minecraft:compass",
+    "Count": 1
+  },
+  "map_marker": "supplementaries:nether_portal"
+}

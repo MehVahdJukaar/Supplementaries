@@ -1,0 +1,13 @@
+{
+  "type": "supplementaries:random_firework",
+  "max_trades": 12,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 2
+  },
+  "price_secondary": {
+    "id": "minecraft:paper",
+    "Count": 1
+  },
+  "amount": 3
+}

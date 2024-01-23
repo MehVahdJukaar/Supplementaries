@@ -1,9 +1,0 @@
-{
-  "structure": "minecraft:village", //only this is needed, rest is optional
-  "color": "0xff00ffff",
-  "mapName": "aaaa",
-  "villagerLevel": 1,
-  "minPrice": 7,
-  "maxPrice": 13,
-  "mapMarker": "supplementaries:nether_portal"
-}

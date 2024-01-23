@@ -43,8 +43,8 @@ public class CommonConfigs {
     private static final WeakReference<ConfigBuilder> builderReference;
 
 
-    private static final Supplier<Boolean> TRUE = ()->true;
-    private static final Supplier<Boolean> FALSE = ()->false;
+    private static final Supplier<Boolean> TRUE = () -> true;
+    private static final Supplier<Boolean> FALSE = () -> false;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
@@ -392,8 +392,6 @@ public class CommonConfigs {
             builder.push("globe");
             GLOBE_ENABLED = feature(builder);
             GLOBE_SEPIA = feature(builder, "sepia_globe");
-            GLOBE_TRADES = builder.comment("How many globe trades to give to the wandering trader. This will effectively increase the chance of him having a globe trader. Increase this if you have other mods that add stuff to that trader")
-                    .define("wandering_trader_trades", 2, 0, 50);
             builder.pop();
 
             builder.push("sign_post");
@@ -413,13 +411,12 @@ public class CommonConfigs {
 
             builder.push("ash_bricks");
             ASH_BRICKS_ENABLED = feature(builder);
-            ASH_BRICK_TRADES = builder.define("mason_trades", true);
             builder.pop();
 
             builder.push("hat_stand");
             HAT_STAND_ENABLED = feature(builder);
             HAT_STAND_UNRESTRICTED = builder.comment("Allow all items to go on hat stand")
-                            .define("unrestricted", false);
+                    .define("unrestricted", false);
             builder.pop();
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
@@ -489,7 +486,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> GLOBE_ENABLED;
         public static final Supplier<Boolean> GLOBE_SEPIA;
-        public static final Supplier<Integer> GLOBE_TRADES;
 
         public static final Supplier<Boolean> PEDESTAL_ENABLED;
         public static final Supplier<Integer> CRYSTAL_ENCHANTING;
@@ -503,7 +499,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
 
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
-        public static final Supplier<Boolean> ASH_BRICK_TRADES;
 
         public static final Supplier<Boolean> SCONCE_ENABLED;
 
@@ -641,7 +636,7 @@ public class CommonConfigs {
             URN_ENABLED = feature(builder);
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01f, 0, 1);
-            URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE :  builder.worldReload().define("cave_urns", true);
+            URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("cave_urns", true);
             //URN_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
             //        .define("attempts_per_patch", 4, 1, 100);
             //URN_PER_CHUNK = builder.worldReload().comment("Spawn attempts per chunk. Increases spawn frequency")
@@ -674,11 +669,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
-            WILD_FLAX_ENABLED =  PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("wild_flax", true);
-            FLAX_TRADES_WANDERING = builder.comment("How many trades to give to wandering trader")
-                    .define("wandering_trader_trades", 2, 0, 10);
-            FLAX_TRADES_FARMER = builder.comment("How many trades to give to farmers")
-                    .define("farmer_trades", 1, 0, 10);
+            WILD_FLAX_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("wild_flax", true);
             //FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
             //        .define("rarity", 6, 1, 100);
             //FLAX_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
@@ -742,8 +733,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> FLAX_ENABLED;
         public static final Supplier<Boolean> WILD_FLAX_ENABLED;
-        public static final Supplier<Integer> FLAX_TRADES_WANDERING;
-        public static final Supplier<Integer> FLAX_TRADES_FARMER;
         public static final Supplier<Integer> FLAX_PATCH_TRIES = null;
         public static final Supplier<Integer> FLAX_AVERAGE_EVERY = null;
 
@@ -864,7 +853,6 @@ public class CommonConfigs {
 
             builder.push("antique_ink");
             ANTIQUE_INK_ENABLED = feature(builder);
-            ANTIQUE_INK_TRADES = builder.define("cartographer_trades", true);
             builder.pop();
             CANDY_ENABLED = feature(builder, ModConstants.CANDY_NAME);
             STASIS_ENABLED = feature(builder, ModConstants.STASIS_NAME);
@@ -917,7 +905,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
 
         public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
-        public static final Supplier<Boolean> ANTIQUE_INK_TRADES;
 
         public static final Supplier<Boolean> CANDY_ENABLED;
 
@@ -1064,17 +1051,11 @@ public class CommonConfigs {
                         .define("quill_adventurer_maps", true);
                 REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
-                QUILL_TRADE_PRICE_MULT = builder.comment("These maps will roll a difference structure every time. Increase their price to balance them")
-                        .define("map_trade_price_multiplier", 2d, 1, 10);
-                QUILL_MAX_TRADES = builder.comment("These maps will roll a difference structure every time. Decrease their max trades to balance them")
-                        .define("map_trade_max_trades", 2, 1, 12);
                 QUILL_MIN_SEARCH_RADIUS = builder.comment("Miminum search radius for quill. Used to incrase the radius of vanilla searches. For reference buried treasures are at 50 and locate is at 100 chunks")
                         .define("min_search_radius", 75, 10, 600);
             } else {
                 QUARK_QUILL = () -> false;
                 REPLACE_VANILLA_MAPS = () -> false;
-                QUILL_MAX_TRADES = () -> 1;
-                QUILL_TRADE_PRICE_MULT = () -> 1d;
                 QUILL_MIN_SEARCH_RADIUS = () -> 50;
             }
             TINTED_MAP = builder.comment("Makes blocks tagged as 'tinted_on_map' use their tint color. This allows for accurate biome colors for water and grass as well as other custom block that use any tint")
@@ -1159,8 +1140,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
-        public static final Supplier<Double> QUILL_TRADE_PRICE_MULT;
-        public static final Supplier<Integer> QUILL_MAX_TRADES;
         public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> TINTED_MAP;
@@ -1257,6 +1236,7 @@ public class CommonConfigs {
             case ModConstants.CHECKER_SLAB_NAME -> Building.CHECKERBOARD_ENABLED.get();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
             case "ash_from_burning" -> Building.ASH_ENABLED.get() && Building.ASH_FROM_MOBS.get();
+            case "adventurer_maps" -> Tweaks.RANDOM_ADVENTURER_MAPS.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();

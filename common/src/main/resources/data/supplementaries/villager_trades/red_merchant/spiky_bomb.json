@@ -9,8 +9,8 @@
       "type": "forge:mod_loaded"
     }
   ],
-  "max_trades": 8,
-  "xp": 1,
+  "type": "simple",
+  "max_trades": 3,
   "price": {
     "id": "minecraft:emerald",
     "Count": 4

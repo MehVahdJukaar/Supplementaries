@@ -5,8 +5,9 @@
       "type": "supplementaries:flag"
     }
   ],
+  "type": "simple",
   "max_trades": 3,
-  "xp": 1,
+  "price_multiplier": 0.2,
   "price": {
     "id": "minecraft:emerald",
     "Count": 40

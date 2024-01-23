@@ -1,0 +1,19 @@
+{
+  "global_conditions": [
+    {
+      "flag": "globe",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "simple",
+  "max_trades": 3,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 10
+  },
+  "offer": {
+    "id": "supplementaries:globe",
+    "Count": 1
+  },
+  "level": 1
+}

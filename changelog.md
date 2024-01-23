@@ -1,1 +1,1 @@
-upsies mixin 
+All mod custom added trades use Moonlight new data driven trade system. You can add your own aswell to any villager

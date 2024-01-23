@@ -21,6 +21,7 @@ public class SoapClearRecipe extends CustomRecipe {
         super(resourceLocation, category);
     }
 
+    @Override
     public boolean matches(CraftingContainer craftingContainer, Level level) {
         int i = 0;
         int j = 0;
@@ -32,7 +33,7 @@ public class SoapClearRecipe extends CustomRecipe {
                 boolean d = (BlocksColorAPI.getColor(item) != null &&
                         !itemstack.is(ModTags.SOAP_BLACKLIST) &&
                         !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
-                if (d || item instanceof DyeableLeatherItem) {
+                if (d || item instanceof DyeableLeatherItem || hasTrim(item)) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {
@@ -48,6 +49,11 @@ public class SoapClearRecipe extends CustomRecipe {
         }
 
         return i == 1 && j == 1;
+    }
+
+    //TODO: add this and JEI view of it
+    private boolean hasTrim(Item item) {
+        return false;
     }
 
     @Override

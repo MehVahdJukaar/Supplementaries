@@ -1,18 +1,18 @@
 {
   "global_conditions": [
     {
-      "modid": "suppsquared",
-      "type": "forge:mod_loaded"
+      "flag": "bomb",
+      "type": "supplementaries:flag"
     }
   ],
+  "type": "simple",
   "max_trades": 12,
-  "xp": 1,
   "price": {
     "id": "minecraft:emerald",
-    "Count": 1
+    "Count": 2
   },
   "offer": {
-    "id": "suppsquared:copper_lantern",
+    "id": "supplementaries:bomb",
     "Count": 1
   }
 }

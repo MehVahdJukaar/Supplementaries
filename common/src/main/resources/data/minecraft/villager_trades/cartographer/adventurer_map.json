@@ -1,0 +1,19 @@
+{
+  "global_conditions": [
+    {
+      "flag": "adventurer_maps",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "supplementaries:adventurer_map",
+  "price_multiplier": 0.2,
+  "item": "minecraft:emerald",
+  "max_trades": 2,
+  "price_min": 6,
+  "price_max": 11,
+  "price_secondary": {
+    "id": "minecraft:compass",
+    "Count": 1
+  },
+  "level": 2
+}

@@ -1,0 +1,20 @@
+{
+  "global_conditions": [
+    {
+      "flag": "antique_ink",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "simple",
+  "max_trades": 12,
+  "price_multiplier": 0.2,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 8
+  },
+  "offer": {
+    "id": "supplementaries:antique_ink",
+    "Count": 1
+  },
+  "level": 5
+}

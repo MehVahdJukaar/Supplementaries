@@ -1,0 +1,19 @@
+{
+  "global_conditions": [
+    {
+      "flag": "ash",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "simple",
+  "max_trades": 16,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 1
+  },
+  "offer": {
+    "id": "supplementaries:ash_brick",
+    "Count": 10
+  },
+  "level": 1
+}

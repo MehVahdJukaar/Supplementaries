@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
-import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
@@ -81,9 +80,7 @@ public class Supplementaries {
         PlatHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
         PlatHelper.addServerReloadListener(HourglassTimesManager.RELOAD_INSTANCE, res("hourglass_data"));
         PlatHelper.addServerReloadListener(FaucetBehaviorsManager.RELOAD_INSTANCE, res("faucet_interactions"));
-        PlatHelper.addServerReloadListener(AdventurerMapsHandler.RELOAD_INSTANCE, res("structure_maps"));
         PlatHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
-        PlatHelper.addServerReloadListener(ModVillagerTrades.INSTANCE, res("red_merchant_trades"));
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
@@ -104,6 +101,7 @@ public class Supplementaries {
     // raycon mod
     //more trades to villagers (planter)
     //villager that fishes. shepard that shears
+    //soap washes trims
     // quiver holds fireworks
     // FD pan flip anim
     //rope arrow inplace recipe

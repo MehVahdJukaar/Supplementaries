@@ -8,8 +8,8 @@
       }
     }
   ],
+  "type": "simple",
   "max_trades": 12,
-  "xp": 1,
   "price": {
     "id": "minecraft:emerald",
     "Count": 1
