@@ -50,9 +50,9 @@ public abstract class TreasureMapForEmeraldsMixin {
                 ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, this.destination,
                         100, true, 2, this.destinationType, null, 0);
                 map.setHoverName(Component.translatable(this.displayName));
-                int uses = CommonConfigs.Tweaks.QUILL_MAX_TRADES.get();
+                int uses = 2;
                 int xp = (int) ((this.villagerXp * this.maxUses) / (float) uses);
-                int cost = (int) (this.emeraldCost * CommonConfigs.Tweaks.QUILL_TRADE_PRICE_MULT.get());
+                int cost = (int) (this.emeraldCost * 1);
                 cir.setReturnValue(new MerchantOffer(new ItemStack(Items.EMERALD, cost),
                         new ItemStack(Items.COMPASS), map, uses, xp, 0.2F));
             }
