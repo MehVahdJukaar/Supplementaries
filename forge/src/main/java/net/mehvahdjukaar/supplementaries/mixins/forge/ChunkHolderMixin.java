@@ -25,12 +25,13 @@ public abstract class ChunkHolderMixin {
     private static void sendBlockEntityCaps(BlockEntity te, CallbackInfoReturnable<?> cir) {
 
         if (te != null && te.getLevel() instanceof ServerLevel serverLevel) {
-            var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-            if (cap.isPresent()) {
+            
                 MinecraftServer server = serverLevel.getServer();
                 BlockPos pos = te.getBlockPos();
 
                 server.tell(new TickTask(server.getTickCount(), () -> {
+                    var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+   
                     cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
@@ -38,7 +39,7 @@ public abstract class ChunkHolderMixin {
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
                     });
                 }));
-            }
+            
         }
 
 
