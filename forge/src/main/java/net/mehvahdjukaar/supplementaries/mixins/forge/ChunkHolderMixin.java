@@ -8,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.datafix.fixes.BlockEntityIdFix;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,22 +24,21 @@ public abstract class ChunkHolderMixin {
     private static void sendBlockEntityCaps(BlockEntity te, CallbackInfoReturnable<?> cir) {
 
         if (te != null && te.getLevel() instanceof ServerLevel serverLevel) {
-            var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-            if (cap.isPresent()) {
-                MinecraftServer server = serverLevel.getServer();
-                BlockPos pos = te.getBlockPos();
+            MinecraftServer server = serverLevel.getServer();
+            BlockPos pos = te.getBlockPos();
 
-                server.tell(new TickTask(server.getTickCount(), () -> {
+            server.tell(new TickTask(server.getTickCount(), () -> {
+                var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+                if (cap.isPresent()) {
+
                     cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
                                 NetworkHandler.CHANNEL.sendToClientPlayer(p,
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
                     });
-                }));
-            }
+                }
+            }));
         }
-
-
     }
 }

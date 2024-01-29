@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +17,8 @@ public abstract class WrittenBookAccessMixin implements IAntiqueTextProvider {
     private boolean supplementaries$antiqueInk;
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void checkAntiqueInk(ItemStack itemStack, CallbackInfo ci){
-        this.supplementaries$antiqueInk = AntiqueInkHelper.hasAntiqueInk(itemStack);
+    public void supp$checkAntiqueInk(ItemStack itemStack, CallbackInfo ci){
+        this.supplementaries$antiqueInk = AntiqueInkItem.hasAntiqueInk(itemStack);
     }
 
     @Override

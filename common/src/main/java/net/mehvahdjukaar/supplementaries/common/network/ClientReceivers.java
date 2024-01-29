@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -144,7 +144,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             BlockEntity tile = l.getBlockEntity(message.pos);
             if (tile != null) {
-                AntiqueInkHelper.setAntiqueInk(tile, message.ink);
+                AntiqueInkItem.setAntiqueInk(tile, message.ink);
             }
         });
     }

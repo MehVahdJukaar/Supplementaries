@@ -31,7 +31,7 @@
       "net.mehvahdjukaar.supplementaries.integration.JEICompat"
     ],
     "emi": [
-      "net.mehvahdjukaar.supplementaries.integration.fabric.EMICompat"
+      "net.mehvahdjukaar.supplementaries.integration.EMICompat"
     ],
     "jade": [
       "net.mehvahdjukaar.supplementaries.integration.JadeCompat"

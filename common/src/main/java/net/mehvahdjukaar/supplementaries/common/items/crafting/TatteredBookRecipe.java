@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
@@ -64,7 +64,7 @@ public class TatteredBookRecipe extends CustomRecipe {
             if (isValidBook(stack)) {
                 ItemStack s = stack.copy();
                 s.setCount(1);
-                AntiqueInkHelper.setAntiqueInk(s, antique);
+                AntiqueInkItem.setAntiqueInk(s, antique);
 
                 return s;
             }

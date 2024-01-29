@@ -35,7 +35,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerP
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -216,7 +216,7 @@ public class ClientRegistry {
         ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));
 
-        ClampedItemPropertyFunction antiqueProp = (itemStack, clientLevel, livingEntity, i) -> AntiqueInkHelper.hasAntiqueInk(itemStack) ? 1 : 0;
+        ClampedItemPropertyFunction antiqueProp = (itemStack, clientLevel, livingEntity, i) -> AntiqueInkItem.hasAntiqueInk(itemStack) ? 1 : 0;
         ItemProperties.register(Items.WRITTEN_BOOK, Supplementaries.res("antique_ink"), antiqueProp);
         ItemProperties.register(Items.FILLED_MAP, Supplementaries.res("antique_ink"), antiqueProp);
 
@@ -445,7 +445,7 @@ public class ClientRegistry {
         event.register(new BrewingStandColor(), Blocks.BREWING_STAND);
         event.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
                 ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(), ModRegistry.WALL_LANTERN.get(),
-                ModRegistry.ROPE_KNOT.get());
+                ModRegistry.ROPE_KNOT.get(), ModRegistry.HANGING_FLOWER_POT.get());
         event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());

@@ -14,7 +14,7 @@ import net.mehvahdjukaar.supplementaries.client.SpriteCoordinateUnExpander;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -186,7 +186,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 this.isEnchanted = false;
             } else if (BookPileBlock.isWrittenBook(item)) {
                 if (item instanceof WrittenBookItem) {
-                    this.color = AntiqueInkHelper.hasAntiqueInk(stack) ? BookColor.TATTERED : BookColor.WRITTEN;
+                    this.color = AntiqueInkItem.hasAntiqueInk(stack) ? BookColor.TATTERED : BookColor.WRITTEN;
                 } else this.color = BookColor.AND_QUILL;
                 this.isEnchanted = false;
             } else {

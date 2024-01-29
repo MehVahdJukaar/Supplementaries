@@ -6,10 +6,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -40,7 +39,7 @@ public class CapabilityHandler {
     }
 
     public static void attachBlockEntityCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (AntiqueInkHelper.isEnabled() && (event.getObject() instanceof SignBlockEntity ||
+        if (AntiqueInkItem.isEnabled() && (event.getObject() instanceof SignBlockEntity ||
                 event.getObject() instanceof HangingSignBlockEntity)) {
             event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProvider());
         }

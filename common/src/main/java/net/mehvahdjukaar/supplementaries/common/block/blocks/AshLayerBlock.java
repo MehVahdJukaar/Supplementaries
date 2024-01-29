@@ -202,7 +202,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     //thanks mojang
-    public static final ThreadLocal<Boolean> RECURSION_HACK = ThreadLocal.withInitial(()->false);
+    public static final ThreadLocal<Boolean> RECURSION_HACK = ThreadLocal.withInitial(() -> false);
 
     @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext useContext) {
@@ -233,6 +233,9 @@ public class AshLayerBlock extends FallingBlock {
             BlockState state = event.getState();
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();
+
+            //IW stuff
+            if (event.getFinalState() != null) return;
 
             Item i = state.getBlock().asItem();
             int count = PlatHelper.getBurnTime(i.getDefaultInstance()) / 100;

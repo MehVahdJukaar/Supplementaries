@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -17,24 +17,27 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.WritableBookItem;
-import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 
-public class AntiqueInkHelper {
+public class AntiqueInkItem extends Item implements SignApplicator {
+    public AntiqueInkItem(Properties properties) {
+        super(properties);
+    }
 
-    private AntiqueInkHelper() {
+    @Override
+    public boolean tryApplyToSign(Level level, SignBlockEntity signBlockEntity, boolean front, Player player) {
+        return toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, true);
     }
 
     public static boolean isEnabled() {
         return PlatHelper.getPlatform().isForge() && CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get();
     }
 
-    public static boolean toggleAntiqueInkOnSigns(Level world, Player player, ItemStack stack,
-                                                  boolean newState, BlockPos pos, BlockEntity tile) {
+
+    public static boolean toggleAntiqueInkOnSigns(Level world, Player player, BlockPos pos, BlockEntity tile, boolean newState) {
         var cap = SuppPlatformStuff.getForgeCap(tile, IAntiqueTextProvider.class);
 
         boolean success = false;
@@ -55,7 +58,6 @@ public class AntiqueInkHelper {
             } else {
                 world.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
-            if (!player.isCreative()) stack.shrink(1);
             return true;
         }
         return false;

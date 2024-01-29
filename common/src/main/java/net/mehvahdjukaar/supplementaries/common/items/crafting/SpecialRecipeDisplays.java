@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -38,7 +38,7 @@ public class SpecialRecipeDisplays {
 
         ItemStack antique = new ItemStack(Items.FILLED_MAP);
         antique.setHoverName(Component.translatable("filled_map.antique"));
-        AntiqueInkHelper.setAntiqueInk(antique, true);
+        AntiqueInkItem.setAntiqueInk(antique, true);
 
         Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
 
@@ -57,7 +57,7 @@ public class SpecialRecipeDisplays {
 
         ItemStack stack = new ItemStack(Items.FILLED_MAP);
         stack.setHoverName(Component.translatable("filled_map.antique"));
-        AntiqueInkHelper.setAntiqueInk(stack, true);
+        AntiqueInkItem.setAntiqueInk(stack, true);
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));
@@ -75,7 +75,7 @@ public class SpecialRecipeDisplays {
         String group = "supplementaries.antique_book";
 
         ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
-        AntiqueInkHelper.setAntiqueInk(stack, true);
+        AntiqueInkItem.setAntiqueInk(stack, true);
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.WRITTEN_BOOK));

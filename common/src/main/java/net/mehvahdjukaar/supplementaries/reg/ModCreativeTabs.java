@@ -367,6 +367,11 @@ public class ModCreativeTabs {
                 ModConstants.BOMB_NAME,
                 ModRegistry.BOMB_ITEM, ModRegistry.BOMB_BLUE_ITEM);
 
+        afterML(e, ModRegistry.BOMB_BLUE_ITEM.get(), CreativeModeTabs.COMBAT,
+                "oreganized",
+                ModConstants.BOMB_NAME,
+                ModRegistry.BOMB_SPIKY_ITEM);
+
         before(e, Items.BOW, CreativeModeTabs.COMBAT,
                 ModConstants.QUIVER_NAME,
                 ModRegistry.QUIVER_ITEM);
@@ -512,6 +517,10 @@ public class ModCreativeTabs {
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 
+        afterML(e, "quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.IRON_GATE_NAME,
+                ModRegistry.IRON_GATE);
+
         before(e, Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.SOAP_NAME,
                 ModRegistry.SOAP_BLOCK);
@@ -575,6 +584,16 @@ public class ModCreativeTabs {
                                 ResourceKey<CreativeModeTab> tab, String key, String modLoaded,
                                 Supplier<?>... items) {
         if (PlatHelper.isModLoaded(modLoaded)) {
+            after(event, target, tab, key, items);
+        }
+    }
+
+    private static void afterML(RegHelper.ItemToTabEvent event, String modTarget,
+                                ResourceKey<CreativeModeTab> tab, String key,
+                                Supplier<?>... items) {
+        ResourceLocation id = new ResourceLocation( modTarget);
+        Item target = BuiltInRegistries.ITEM.getOptional(id).orElse(null);
+        if (target != null) {
             after(event, target, tab, key, items);
         }
     }

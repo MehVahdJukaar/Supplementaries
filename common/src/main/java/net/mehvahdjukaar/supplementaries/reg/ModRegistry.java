@@ -127,7 +127,7 @@ public class ModRegistry {
     public static final Supplier<Item> CANDY_ITEM = regItem(CANDY_NAME, () -> new CandyItem(new Item.Properties()));
 
     //antique ink
-    public static final Supplier<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new AntiqueInkItem(new Item.Properties()));
 
     //wrench
     public static final Supplier<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem(new Item.Properties()

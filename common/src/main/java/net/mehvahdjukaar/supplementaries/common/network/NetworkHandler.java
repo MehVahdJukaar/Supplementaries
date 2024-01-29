@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 public class NetworkHandler {
 
     public static final ChannelHandler CHANNEL = ChannelHandler.builder(Supplementaries.MOD_ID)
+            .version(2)
 
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncGlobeDataPacket.class, ClientBoundSyncGlobeDataPacket::new)

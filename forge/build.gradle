@@ -135,7 +135,7 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4915903")
-    modCompileOnly("curse.maven:farmers-delight-398521:4679319")
+    modImplementation("curse.maven:farmers-delight-398521:5051242")
 
     modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     modRuntimeOnly("curse.maven:spark-361579:4738952")
@@ -150,7 +150,7 @@ dependencies {
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     //modImplementation("curse.maven:quark-243121:4463411")
-    modImplementation("org.violetmoon.quark:Quark-4.0-alpha-420")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
     //modCompileOnly("curse.maven:quark-243121:4551115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
@@ -177,7 +177,7 @@ dependencies {
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
-
+    modImplementation("curse.maven:emi-580555:5032425")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")

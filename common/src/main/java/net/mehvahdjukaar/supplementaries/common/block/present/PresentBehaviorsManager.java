@@ -101,7 +101,7 @@ public class PresentBehaviorsManager {
             if (e != null) {
                 stack.shrink(1);
                 level.gameEvent(null,GameEvent.ENTITY_PLACE, pos);
-                e.setSkibidi(true, false);
+                e.setSkibidi(true, false, null);
                 return Optional.of(stack);
             }
         } catch (Exception exception) {

@@ -6,6 +6,7 @@
     {"id":"minecraft:pitcher_pod","required":false},
     {"id":"minecraft:big_dripleaf","required":false},
     {"id":"#forge:mushrooms","required":false},
+    {"id":"#c:mushrooms","required":false},
     {"id":"#forge:bushes","required":false},
     {"id":"#pokecube:berries","required":false},
     {"id":"bamboo_blocks:bamboo_torch","required":false},

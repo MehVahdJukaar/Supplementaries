@@ -29,6 +29,7 @@
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
     "HangingSignBlockEntityMixin",
+    "InkSackMixin",
     "IronBarsBlockMixin",
     "LanternBlockPlacementMixin",
     "LivingEntityMixin",

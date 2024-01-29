@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PresentRecipientAttribute implements ItemAttribute {
+    public static final PresentRecipientAttribute EMPTY = new PresentRecipientAttribute(PresentBlockTile.PUBLIC_KEY);
+
     String recipient;
 
     public PresentRecipientAttribute(String recipient) {

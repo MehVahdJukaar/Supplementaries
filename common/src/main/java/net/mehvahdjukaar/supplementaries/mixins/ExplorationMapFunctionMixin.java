@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.phys.Vec3;
@@ -38,10 +37,6 @@ public abstract class ExplorationMapFunctionMixin implements IExplorationFunctio
     @Shadow
     @Final
     byte zoom;
-
-    @Shadow
-    @Final
-    MapDecoration.Type mapDecoration;
 
     @Shadow
     @Final

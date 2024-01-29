@@ -12,6 +12,8 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -19,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,11 +42,13 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 
 public class HatStandEntity extends LivingEntity {
     private static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0F, 0.0F, 0.0F);
     public static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.BYTE);
     public static final EntityDataAccessor<Rotations> DATA_HEAD_POSE = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.ROTATIONS);
+    public static final EntityDataAccessor<OptionalInt> FACING_TARGET = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
 
     private final NonNullList<ItemStack> helmet = NonNullList.withSize(1, ItemStack.EMPTY);
     private boolean invisible;
@@ -51,12 +56,20 @@ public class HatStandEntity extends LivingEntity {
      * After punching the stand, the cooldown before you can punch it again without breaking it.
      */
     public long lastHit;
+    private boolean slotsDisabled = false;
+
     private Rotations headPose;
     public final SwingAnimation swingAnimation;
     public final AnimationState skibidiAnimation;
-
     private final int tickOffset;
-    private  int skibidiAnimDur = 0;
+    private int skibidiAnimDur = 0;
+
+    @Nullable
+    private Float originalYRot = null;
+    @Nullable
+    private Entity target = null;
+
+    public Vec3 jumpScareAngles = Vec3.ZERO;
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
@@ -71,6 +84,14 @@ public class HatStandEntity extends LivingEntity {
             skibidiAnimation = null;
         }
         tickOffset = level.random.nextInt(100);
+        this.originalYRot = null;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        //so rotation is set immediately
+        if (PlatHelper.getPlatform().isForge()) return PlatHelper.getEntitySpawnPacket(this);
+        return super.getAddEntityPacket();
     }
 
     private Vector3f getRotationAxis() {
@@ -90,6 +111,7 @@ public class HatStandEntity extends LivingEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_CLIENT_FLAGS, (byte) 0);
+        this.entityData.define(FACING_TARGET, OptionalInt.empty());
         this.entityData.define(DATA_HEAD_POSE, DEFAULT_HEAD_POSE);
     }
 
@@ -133,7 +155,7 @@ public class HatStandEntity extends LivingEntity {
             compound.put("Helmet", stack.save(new CompoundTag()));
         compound.putBoolean("Invisible", this.isInvisible());
         compound.putBoolean("NoBasePlate", this.isNoBasePlate());
-
+        compound.putBoolean("DisabledSlots", this.slotsDisabled);
         ListTag compoundTag = new ListTag();
         if (!DEFAULT_HEAD_POSE.equals(this.headPose)) {
             compoundTag = this.headPose.save();
@@ -149,7 +171,7 @@ public class HatStandEntity extends LivingEntity {
         }
         this.setInvisible(compound.getBoolean("Invisible"));
         this.setNoBasePlate(compound.getBoolean("NoBasePlate"));
-
+        this.slotsDisabled = compound.getBoolean("DisabledSlots");
         ListTag listTag = compound.getList("HeadPose", 5);
         this.setHeadPose(listTag.isEmpty() ? DEFAULT_HEAD_POSE : new Rotations(listTag));
     }
@@ -158,7 +180,6 @@ public class HatStandEntity extends LivingEntity {
     public boolean isPushable() {
         return false;
     }
-
 
     @Override
     public void aiStep() {
@@ -173,17 +194,34 @@ public class HatStandEntity extends LivingEntity {
                     break;
                 }
             }
-        } else {
-            if(skibidiAnimDur != 0){
-                skibidiAnimDur--;
+            float currentRot = this.getYRot();
+            if (target != null && skibidiAnimation.isStarted()) {
+                Vec3 distanceVec = target.position().subtract(this.position())
+                        .normalize();
+                float targetYRot = distanceVec.toVector3f().angleSigned(new Vector3f(1, 0, 0), new Vector3f(0, 1, 0))
+                        * Mth.RAD_TO_DEG - 90;
+
+                float difference = Mth.degreesDifference(currentRot, targetYRot);
+                this.setYRot(Mth.lerp(0.5f, currentRot, currentRot + difference));
+            } else {
+                if (originalYRot != null && currentRot != originalYRot) {
+                    this.setYRot(originalYRot); //reset after skibidi
+                    originalYRot = null;
+                }
             }
-            else if ((this.tickCount + tickOffset) % 100 == 0) {
-                var pose = getPose();
-                if (pose == Pose.STANDING) {
-                    if (random.nextFloat() < 0.2f) {
-                        updateSkibidiStatus();
-                    }
-                } else setPose(Pose.STANDING);
+
+        } else {
+            if (skibidiAnimDur != 0) {
+                skibidiAnimDur--;
+                if (skibidiAnimDur == 0) {
+                    this.getEntityData().set(FACING_TARGET, OptionalInt.empty());
+                    setPose(Pose.STANDING);
+                }
+            } else if (getPose() == Pose.STANDING && (this.tickCount + tickOffset) % 100 == 0) {
+                //random skibidi
+                if (random.nextFloat() < 0.2f) {
+                    setSkibidiIfInCauldron(null);
+                }
             }
         }
     }
@@ -215,21 +253,23 @@ public class HatStandEntity extends LivingEntity {
             } else if (isClientSide) {
                 return InteractionResult.CONSUME;
             } else {
-                if (itemStack.isEmpty()) {
-                    EquipmentSlot targetSlot = EquipmentSlot.HEAD;
-                    if (this.hasItemInSlot(targetSlot) && this.swapItem(player, targetSlot, itemStack, hand)) {
-                        return InteractionResult.SUCCESS;
-                    }
-                } else {
-                    EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(itemStack);
-                    if (CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()) {
-                        equipmentSlot = EquipmentSlot.HEAD;
-                    }
-                    if (equipmentSlot != EquipmentSlot.HEAD) {
-                        return InteractionResult.FAIL;
-                    }
-                    if (this.swapItem(player, equipmentSlot, itemStack, hand)) {
-                        return InteractionResult.SUCCESS;
+                if (!slotsDisabled) {
+                    if (itemStack.isEmpty()) {
+                        EquipmentSlot targetSlot = EquipmentSlot.HEAD;
+                        if (this.hasItemInSlot(targetSlot) && this.swapItem(player, targetSlot, itemStack, hand)) {
+                            return InteractionResult.SUCCESS;
+                        }
+                    } else {
+                        EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(itemStack);
+                        if (CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()) {
+                            equipmentSlot = EquipmentSlot.HEAD;
+                        }
+                        if (equipmentSlot != EquipmentSlot.HEAD) {
+                            return InteractionResult.FAIL;
+                        }
+                        if (this.swapItem(player, equipmentSlot, itemStack, hand)) {
+                            return InteractionResult.SUCCESS;
+                        }
                     }
                 }
                 return InteractionResult.PASS;
@@ -523,6 +563,13 @@ public class HatStandEntity extends LivingEntity {
                 this.skibidiAnimation.stop();
             }
         }
+        if (FACING_TARGET.equals(key) && level().isClientSide) {
+            OptionalInt o = this.getEntityData().get(FACING_TARGET);
+            if (o.isPresent()) {
+                this.target = level().getEntity(o.getAsInt());
+                this.originalYRot = this.getYRot();
+            } else this.target = null;
+        }
         super.onSyncedDataUpdated(key);
     }
 
@@ -545,23 +592,27 @@ public class HatStandEntity extends LivingEntity {
         return !this.isInvisible();
     }
 
-
-    private void updateSkibidiStatus() {
+    private void setSkibidiIfInCauldron(@Nullable LivingEntity target) {
         BlockState state = this.getFeetBlockState();
         Block block = state.getBlock();
         if (block instanceof AbstractCauldronBlock || block instanceof ComposterBlock) {
             //skibidi tall
-            setSkibidi(true,true);
+            setSkibidi(true, true, target);
         } else if (block instanceof HopperBlock) {
-           setSkibidi(true, false);
+            setSkibidi(true, false, target);
         }
     }
 
-    public void setSkibidi(boolean skibidi, boolean tall) {
-        if(skibidi) {
+    public void setSkibidi(boolean skibidi, boolean tall, @Nullable LivingEntity playerTarget) {
+        OptionalInt opt;
+        if (playerTarget != null) {
+            opt = OptionalInt.of(playerTarget.getId());
+        } else opt = OptionalInt.empty();
+        this.entityData.set(FACING_TARGET, opt);
+        if (skibidi) {
             this.setPose(tall ? Pose.SPIN_ATTACK : Pose.SNIFFING);
-            skibidiAnimDur = 20 * 10;
-        }else{
+            skibidiAnimDur = 20 * 8;
+        } else {
             this.setPose(Pose.STANDING);
         }
     }
@@ -569,7 +620,7 @@ public class HatStandEntity extends LivingEntity {
     public static void makeSkibidiInArea(LivingEntity player) {
         Level level = player.level();
         var toilets = level.getEntitiesOfClass(HatStandEntity.class, new AABB(player.getOnPos()).inflate(10));
-        toilets.forEach(HatStandEntity::updateSkibidiStatus);
+        toilets.forEach(h -> h.setSkibidiIfInCauldron(player));
     }
 
 

@@ -88,21 +88,26 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         Pose pose = entity.getPose();
         if (pose != Pose.STANDING) {
 
-            GenericAnimationStuff.animate(this, entity.skibidiAnimation, SkibidiAnimations.FLUSH, ageInTicks, 1.24f);
+            GenericAnimationStuff.animate(this, entity.skibidiAnimation, SkibidiAnimations.DEFAULT, ageInTicks, 1.24f);
 
             dummyHead.y += pose == Pose.SPIN_ATTACK ? 0 : 9;
+
             dummyHead.visible = false;
         }
-
+        //dummyHead.y = magnitured;
         // distance between 2 pivots
         Vector4f newPivot = new Vector4f(dummyHead.x, dummyHead.y, dummyHead.z, 1);
 
         PoseStack poseStack = new PoseStack();
+     //   Vec3 distanceVec = Minecraft.getInstance().player.position().subtract(entity.position()).normalize();
+      //  float targetYRot = distanceVec.toVector3f().angleSigned(new Vector3f(1, 0, 0), new Vector3f(0, 1, 0));
+     //   float targetXRot = distanceVec.toVector3f().angleSigned(new Vector3f(0, 1, 0), new Vector3f(1, 0, 0));
 
         translateAndRotate(neckJoint, poseStack);
         poseStack.last().pose().transform(newPivot);
         var in = head.getInitialPose();
         head.offsetPos(new Vector3f(newPivot.x - in.x, newPivot.y - in.y, newPivot.z - in.z));
+
         head.setRotation(neckJoint.xRot + dummyHead.xRot,
                 neckJoint.yRot + dummyHead.yRot, neckJoint.zRot + dummyHead.zRot);
 

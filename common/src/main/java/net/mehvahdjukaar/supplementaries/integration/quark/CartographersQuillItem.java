@@ -87,6 +87,11 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     @Override
+    protected String getRetryMessage() {
+        return "message.supplementaries.quill_retry";
+    }
+
+    @Override
     public int getIterations() {
         return 500;//PathfinderMapsModule.pathfindersQuillSpeed;
     }

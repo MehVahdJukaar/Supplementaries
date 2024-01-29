@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -82,7 +82,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
                 s.setCount(1);
                 if (lastLevelHack != null) {
                     WeatheredMap.setAntique(lastLevelHack.get(), s, antique, false);
-                    AntiqueInkHelper.setAntiqueInk(s,true);
+                    AntiqueInkItem.setAntiqueInk(s,true);
                 }
                 return s;
             }
