@@ -1,1 +1,2 @@
-other backported fixes (pls for use 1.20 tho)
+fixed a rope dupe
+workaround for a possile ftb chunk issue
