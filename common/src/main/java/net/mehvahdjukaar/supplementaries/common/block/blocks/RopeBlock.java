@@ -7,13 +7,11 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -239,7 +237,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             return 0;
         }
 
-        if(CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
+        if (CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
             for (Direction direction : Direction.Plane.HORIZONTAL) {
                 BlockPos facingPos = mutable.setWithOffset(pos, direction);
                 BlockState sideState = world.getBlockState(facingPos);
@@ -325,16 +323,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         if (b instanceof RopeBlock) {
             return findConnectedPulley(world, pos.above(), player, it + 1, rot);
         } else if (b instanceof PulleyBlock pulley && it != 0) {
-            if (world.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
-                if (tile.isEmpty() && !player.isShiftKeyDown()) {
-                    tile.setDisplayedItem(new ItemStack(ModRegistry.ROPE.get()));
-                    boolean ret = pulley.windPulley(state, pos, world, rot, null);
-                    tile.getDisplayedItem().shrink(1);
-                    return ret;
-                } else {
-                    return pulley.windPulley(state, pos, world, rot, null);
-                }
-            }
+            return pulley.windPulley(state, pos, world, rot, null);
         }
         return false;
     }

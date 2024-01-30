@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkItem;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;

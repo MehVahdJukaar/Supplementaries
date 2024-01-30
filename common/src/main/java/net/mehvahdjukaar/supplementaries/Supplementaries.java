@@ -94,13 +94,14 @@ public class Supplementaries {
 
     }
 
-
     //yes this is where I write crap. deal with it XD
     //flute pacifier
     //zombie villagers spawn away from center. biome spawn
     //fletching table quiver fill
     // emi world interaction (ash)
     // raycon mod
+    //death marke off map
+    //fisherman fish
     //middle click flower box stuff
     //more trades to villagers (planter)
     //villager that fishes. shepard that shears

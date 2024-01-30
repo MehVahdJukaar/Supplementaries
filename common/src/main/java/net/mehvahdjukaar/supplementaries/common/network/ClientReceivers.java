@@ -6,8 +6,8 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestion
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
-import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;

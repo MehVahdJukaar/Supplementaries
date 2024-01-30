@@ -304,8 +304,13 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
-        //unused we are have a container instead
+    public void openScreen(Level level, BlockPos blockPos, Player player) {
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
+
+        //unused
     }
 
     @Override
