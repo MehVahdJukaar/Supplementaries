@@ -62,7 +62,7 @@ public class StructureLocator {
 
         List<LocatedStruct> foundStructures = new ArrayList<>();
 
-        if (!level.getServer().getWorldData().worldGenSettings().generateStructures()) {
+        if (!level.getServer().getWorldData().worldGenSettings().generateStructures() || taggedStructures.size() == 0) {
             return foundStructures;
         }
 

@@ -153,9 +153,12 @@ public class AdventurerMapsHandler extends SimpleJsonResourceReloadListener {
             return ItemStack.EMPTY;
 
         if (targets == null) {
-            targets = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY).getTag(ModTags.ADVENTURE_MAP_DESTINATIONS)
+            targets = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_REGISTRY)
+                    .getTag(ModTags.ADVENTURE_MAP_DESTINATIONS)
                     .orElse(null);
-            if (targets == null) targets = HolderSet.direct();
+            if (targets == null){
+                targets = HolderSet.direct();
+            }
         }
 
         var found = StructureLocator.findNearestRandomMapFeature(
