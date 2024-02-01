@@ -80,7 +80,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             else if (itemstack.getItem().canFitInsideContainerItems()) {
                 IQuiverData data = getQuiverData(quiver);
                 if (data != null) {
-                    var taken = pSlot.safeTake(itemstack.getCount(), 64, pPlayer);
+                    var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackCount(), pPlayer);
                     ItemStack remaining = data.tryAdding(taken);
                     if (!remaining.equals(taken)) {
                         this.playInsertSound(pPlayer);

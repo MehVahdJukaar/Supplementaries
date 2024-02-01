@@ -21,18 +21,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ChunkHolderMixin {
 
 
-
     @Inject(method = "create(Lnet/minecraft/world/level/block/entity/BlockEntity;)Lnet/minecraft/network/protocol/game/ClientboundLevelChunkPacketData$BlockEntityInfo;",
             at = @At("HEAD"))
     private static void sendBlockEntityCaps(BlockEntity te, CallbackInfoReturnable cir) {
 
-        if(te != null && te.getLevel() instanceof ServerLevel serverLevel) {
-            var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-            if (cap.isPresent()) {
-                MinecraftServer server = serverLevel.getServer();
-                BlockPos pos = te.getBlockPos();
+        if (te != null && te.getLevel() instanceof ServerLevel serverLevel) {
+            MinecraftServer server = serverLevel.getServer();
+            BlockPos pos = te.getBlockPos();
 
-                server.tell(new TickTask(server.getTickCount() , () -> {
+            server.tell(new TickTask(server.getTickCount(), () -> {
+                var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+                if (cap.isPresent()) {
+
                     var c = cap.orElse(null);
                     if (c != null) {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
@@ -40,10 +40,8 @@ public abstract class ChunkHolderMixin {
                                 NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with((() -> p)),
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
                     }
-                }));
-            }
+                }
+            }));
         }
-
-
     }
 }
