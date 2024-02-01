@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     {"id":"spelunkery:salt_lamp","required":false},
-    {"id":"galosphere:chandelier","required":false}
+    {"id":"galosphere:chandelier","required":false},
+    {"id":"#beautify:hanging_pots","required":false}
   ]
 }

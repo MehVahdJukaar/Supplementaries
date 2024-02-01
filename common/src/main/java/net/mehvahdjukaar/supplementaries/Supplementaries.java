@@ -94,21 +94,21 @@ public class Supplementaries {
 
     }
 
-    //yes this is where I write crap. deal with it XD
-    //flute pacifier
-    //zombie villagers spawn away from center. biome spawn
-    //fletching table quiver fill
+    // yes this is where I write crap. deal with it XD
+    // flute pacifier
+    // zombie villagers spawn away from center. biome spawn
+    // fletching table quiver fill
     // emi world interaction (ash)
     // raycon mod
-    //death marke off map
-    //fisherman fish
-    //middle click flower box stuff
-    //more trades to villagers (planter)
-    //villager that fishes. shepard that shears
-    //soap washes trims
+    // death marke off map
+    // fisherman fish
+    // middle click flower box stuff
+    // more trades to villagers (planter)
+    // villager that fishes. shepard that shears
+    // soap washes trims
     // quiver holds fireworks
     // FD pan flip anim
-    //rope arrow inplace recipe
+    // rope arrow inplace recipe
     // bellows blow ash out of ash block and IW ash one too
     // brush remove 1 layer ash or snow
     // brush works on blackboards
