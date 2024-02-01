@@ -67,15 +67,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
-
-        //hanging signs
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("hanging_signs"));
-            //loot table
-            //tag
-            dynamicPack.addTag(builder, Registries.BLOCK);
-            dynamicPack.addTag(builder, Registries.ITEM);
-        }
         //sing posts
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
@@ -89,7 +80,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         }
 
         //fabric has it done another way beucase it needs tag before this...
-        if(PlatHelper.getPlatform().isForge()) {
+        if (PlatHelper.getPlatform().isForge()) {
             //way signs tag
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);

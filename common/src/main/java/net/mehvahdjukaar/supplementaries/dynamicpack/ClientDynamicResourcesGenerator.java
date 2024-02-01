@@ -60,6 +60,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
 
+
+
         //need this here for reasons I forgot
         ClientSpecialModelsManager.refreshModels(manager);
         GlobeManager.refreshColorsAndTextures(manager);

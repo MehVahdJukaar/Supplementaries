@@ -74,9 +74,9 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         if (!pLevel.isClientSide) {
             int p;
             if (dir == Direction.DOWN) {
-                p = (int) ((1 - tile.progress) * 15f);
+                p = 1 + (int) ((1 - tile.progress) * 14f);
             } else {
-                p = (int) ((tile.progress) * 15f);
+                p = 1 + (int) ((tile.progress) * 14f);
             }
             if (p != tile.power) {
                 tile.power = p;
