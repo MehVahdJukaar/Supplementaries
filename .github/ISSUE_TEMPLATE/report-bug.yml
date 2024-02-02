@@ -1,5 +1,5 @@
 name: Report Bug
-description: Every Compat got a bug? Report it.
+description: "Found a bug? Report it."
 title: "[🐞]: "
 labels: "bug"
 body:
@@ -54,6 +54,6 @@ body:
     attributes:
       label: "Issue Detail"
       description: "A clear and concise description of what the bug is."
-      placeholder: "ATTENTION: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs \nTIP: If applicable, add screenshots to help explain your problem.\nTIP: You can drag latest.log file in here."
+      placeholder: "ATTENTION: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs \nTIP: If applicable, add screenshots to help explain your problem.\nTIP: You can drag the latest.log file in here."
     validations:
         required: true
