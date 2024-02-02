@@ -51,6 +51,9 @@ body:
     attributes:
       label: Moonlight Lib Version
       description: The current version of Moonlight Lib
+      placeholder: ex. moonlight-1.20-2.9.7-forge
+    validations:
+      required: true
 
   - type: textarea
     id: issue-details
