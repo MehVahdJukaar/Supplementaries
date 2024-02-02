@@ -1,5 +1,5 @@
-name: "Report Bug"
-description: "Found a bug? Report it."
+name: Report Bug
+description: Found a bug? Report it.
 title: "[🐞]: "
 labels: "bug"
 body:
@@ -8,13 +8,19 @@ body:
       value: |
         BUG
 
-- type: checkboxes
-  id: pre-report-bug
-  attributes:
-    label: "Before Continuing:"
-    options:
-      - label: "Always check you are using the latest version of these mods and their dependencies"
-        required: true
+  - type: checkboxes
+    id: pre-report-bug
+    attributes:
+      label: "Before Continuing:"
+      options:
+        - label: "Always check you are using the latest version of the mods and its dependencies"
+          required: true
+        - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others. The issue persists."
+          required: true
+        - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
+          required: true
+        - label: "Confirm that there is no existing issue with a similar description submitted in the list of issues."
+          required: true
 
   - type: dropdown
     id: version
@@ -30,12 +36,12 @@ body:
       default: 0
     validations:
       required: true
-      
+
   - type: input
     id: supplementaries
     attributes:
-      label: EveryCompat Version
-      description: The current version of EveryCompat
+      label: Supplementaries Version
+      description: The current version of supplementaries
       placeholder: ex. supplementaries-1.20-2.7.33
     validations:
       required: true
@@ -45,15 +51,12 @@ body:
     attributes:
       label: Moonlight Lib Version
       description: The current version of Moonlight Lib
-      placeholder: ex. moonlight-1.20-2.8.46-forge
-    validations:
-      required: true
 
   - type: textarea
     id: issue-details
     attributes:
       label: "Issue Detail"
       description: "A clear and concise description of what the bug is."
-      placeholder: "ATTENTION: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs \nTIP: If applicable, add screenshots to help explain your problem.\nTIP: You can drag the latest.log file in here."
+      placeholder: "TIP: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs. \nTIP: If applicable, add screenshots to help explain your problem."
     validations:
         required: true
