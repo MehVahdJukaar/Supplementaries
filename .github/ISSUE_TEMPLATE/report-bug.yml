@@ -30,6 +30,24 @@ body:
       default: 0
     validations:
       required: true
+      
+  - type: input
+    id: supplementaries
+    attributes:
+      label: EveryCompat Version
+      description: The current version of EveryCompat
+      placeholder: ex. supplementaries-1.20-2.7.33
+    validations:
+      required: true
+     
+  - type: input
+    id: moonlight
+    attributes:
+      label: Moonlight Lib Version
+      description: The current version of Moonlight Lib
+      placeholder: ex. moonlight-1.20-2.8.46-forge
+    validations:
+      required: true
 
   - type: textarea
     id: issue-details
