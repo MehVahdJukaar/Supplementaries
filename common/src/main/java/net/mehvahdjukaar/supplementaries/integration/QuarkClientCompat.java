@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarTileRender
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.handler.GeneralConfig;
+import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
 public class QuarkClientCompat {
@@ -25,7 +25,7 @@ public class QuarkClientCompat {
     }
 
     public static boolean shouldHaveButtonOnRight() {
-        return !(GeneralConfig.qButtonOnRight && GeneralConfig.enableQButton);
+        return !(QuarkGeneralConfig.qButtonOnRight && QuarkGeneralConfig.enableQButton);
     }
 
     public static boolean canRenderBlackboardTooltip() {

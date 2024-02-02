@@ -1,1 +1,1 @@
-fixed a rope dupe with ropes and pulleys
+updated to work with newest quark

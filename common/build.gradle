@@ -34,7 +34,8 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:4581099")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:emi-580555:5032425")
-    modCompileOnly("org.violetmoon.quark:Quark-4.0-alpha-420")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-433")
+    modCompileOnly("org.violetmoon.zeta:Zeta-1.0-12")
 
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")

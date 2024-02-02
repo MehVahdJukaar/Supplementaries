@@ -92,7 +92,6 @@ public class CompatHandler {
     }
 
     public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
-        if (QUARK) QuarkCompat.addItemsToTabs(event);
     }
 
 

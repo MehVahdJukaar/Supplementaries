@@ -70,6 +70,10 @@ public class StructureLocator {
         if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return foundStructures;
         }
+        if(taggedStructures.size() == 0){
+            Supplementaries.LOGGER.error("Found empty target structures for structure map. Its likely some mod broke some vanilla tag. Check your logs!");
+            return foundStructures;
+        }
 
         List<Holder<Structure>> selectedTargets = taggedStructures.stream().toList();
 

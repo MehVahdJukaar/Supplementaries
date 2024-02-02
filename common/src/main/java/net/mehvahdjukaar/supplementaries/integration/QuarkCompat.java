@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
@@ -34,12 +33,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
@@ -49,8 +46,6 @@ import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.block.StoolBlock;
-import org.violetmoon.quark.content.building.block.WoodPostBlock;
-import org.violetmoon.quark.content.building.module.VerticalSlabsModule;
 import org.violetmoon.quark.content.client.module.UsesForCursesModule;
 import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
 import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;
@@ -58,9 +53,8 @@ import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
 import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
 import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
-import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
-import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
@@ -86,9 +80,11 @@ public class QuarkCompat {
     }
 
     public static void init() {
+        //hackerinos
+        Quark.ZETA.loadBus.subscribe(QuarkCompat.class);
     }
 
-    @PlayEvent
+    @LoadEvent
     public static void gatherAdvModifiersEvent(ZGatherAdvancementModifiers event) {
         if (CommonConfigs.Tools.CANDY_ENABLED.get()) {
             event.register(event.createBalancedDietMod(Set.of(ModRegistry.CANDY_ITEM.get())));
@@ -101,18 +97,6 @@ public class QuarkCompat {
         if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
             event.register(event.createASeedyPlaceMod(Set.of(ModRegistry.FLAX.get())));
         }
-    }
-    //this should have been implemented in the post block updateShape method
-    public static @Nullable BlockState updateWoodPostShape(BlockState post, Direction facing, BlockState facingState) {
-        if (post.getBlock() instanceof WoodPostBlock) {
-            Direction.Axis axis = post.getValue(WoodPostBlock.AXIS);
-            if (facing.getAxis() != axis) {
-                boolean chain = (facingState.getBlock() instanceof ChainBlock &&
-                        facingState.getValue(BlockStateProperties.AXIS) == facing.getAxis());
-                return post.setValue(WoodPostBlock.CHAINED[facing.ordinal()], chain);
-            }
-        }
-        return null;
     }
 
     public static boolean isFastSlideModuleEnabled() {
@@ -127,19 +111,9 @@ public class QuarkCompat {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 
-    @PlayEvent
-    public static void test(ZRecipeCrawl zRecipeCrawl){
-        int aa = 1;
-
-    }
-
     @ExpectPlatform
     public static float getEncumbermentFromBackpack(ItemStack stack) {
         throw new AssertionError();
-    }
-
-    public static boolean isVerticalSlabEnabled() {
-        return Quark.ZETA.modules.isEnabled(VerticalSlabsModule.class);
     }
 
     public static boolean shouldHideOverlay(ItemStack stack) {
@@ -267,6 +241,4 @@ public class QuarkCompat {
         return CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom, destinationType, name, color);
     }
 
-    public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {
-    }
 }

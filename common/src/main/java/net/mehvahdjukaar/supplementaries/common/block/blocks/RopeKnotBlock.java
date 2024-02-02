@@ -4,8 +4,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -63,9 +61,6 @@ public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnect
 
             BlockState newHeld = null;
 
-            if (CompatHandler.QUARK) {
-                newHeld = QuarkCompat.updateWoodPostShape(oldHeld, facing, facingState);
-            }
             if (newHeld == null) {
                 newHeld = oldHeld.updateShape(facing, facingState, world, currentPos, facingPos);
             }

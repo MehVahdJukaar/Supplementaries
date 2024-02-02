@@ -1,19 +1,11 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.IItemHandler;
 import org.violetmoon.quark.addons.oddities.item.BackpackItem;
-import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
-import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
-
-import java.util.Set;
 
 public class QuarkCompatImpl {
 
@@ -31,5 +23,8 @@ public class QuarkCompatImpl {
             }
         }
         return j;
+    }
+
+    public static void init() {
     }
 }
