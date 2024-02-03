@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@OptionalMixin(value = "fabric.net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture")
+@OptionalMixin(value = "net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture")
 @Mixin(value = MapRenderer.MapInstance.class, priority = 1500)
 public class CompatIFMapTextureMixin2 {
 
@@ -24,7 +24,7 @@ public class CompatIFMapTextureMixin2 {
     private MapItemSavedData data;
 
     @TargetHandler(
-            mixin = "fabric.net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture",
+            mixin = "net.raphimc.immediatelyfast.injection.mixins.map_atlas_generation.MixinMapRenderer_MapTexture",
             name = "updateAtlasTexture"
     )
     @WrapOperation(method = "@MixinSquared:Handler",
