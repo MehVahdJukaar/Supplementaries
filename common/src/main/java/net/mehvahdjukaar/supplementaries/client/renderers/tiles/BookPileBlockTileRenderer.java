@@ -42,7 +42,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     public void render(BookPileBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int light,
                        int overlay) {
         BlockState state = tile.getBlockState();
-        renderBookPile(tile.horizontal, tile.books, matrixStack, v -> v.getBuilder(bufferIn), light, overlay, state);
+        renderBookPile(tile.horizontal, tile.booksVisuals, matrixStack, v -> v.getBuilder(bufferIn), light, overlay, state);
     }
 
     public static void renderBookPile(boolean horizontal, BooksList books, PoseStack matrixStack,

@@ -39,7 +39,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     private float enchantPower = 0;
 
     //client only
-    public final BooksList books = new BooksList();
+    public final BooksList booksVisuals = new BooksList();
     public static final ModelDataKey<BooksList> BOOKS_KEY = ModBlockProperties.BOOKS_KEY;
 
     public BookPileBlockTile(BlockPos pos, BlockState state) {
@@ -54,21 +54,21 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(BOOKS_KEY, books)
+                .with(BOOKS_KEY, booksVisuals)
                 .build();
     }
 
     private static final RandomSource rand = RandomSource.create();
 
-    private void makeRandomBook(int i) {
+    private void displayRandomColoredBooks(int i) {
         for (int j = 0; j < i; j++) {
             Item it;
             int r = rand.nextInt(10);
-            if (r < 3) it = Items.ENCHANTED_BOOK;
-            else if (r < 4) it = Items.WRITABLE_BOOK;
+            if (r < 2) it = Items.ENCHANTED_BOOK;
+            else if (r < 3) it = Items.WRITABLE_BOOK;
             else it = Items.BOOK;
-            ArrayList<BookType> col = PlaceableBookManager.getByItem(Items.BOOK.getDefaultInstance());
-            books.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
+            ArrayList<BookType> col = PlaceableBookManager.getByItem(it.getDefaultInstance());
+            booksVisuals.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
                     col, null));
         }
     }
@@ -92,7 +92,14 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void updateTileOnInventoryChanged() {
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if (b == 0) this.level.removeBlock(this.worldPosition, false);
+            if (b == 0){
+                if(this.lootTable == null) {
+                    this.level.removeBlock(this.worldPosition, false);
+                }else{
+                    //loot table mode
+                    return;
+                }
+            }
             else {
                 //shifts books. Assumes at most one has been removed
                 consolidateBookPile();
@@ -124,7 +131,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
     @Override
     public void updateClientVisualsOnLoad() {
-        this.books.clear();
+        this.booksVisuals.clear();
         List<BookType> colors = new ArrayList<>();
         for (var v : ClientConfigs.Tweaks.BOOK_COLORS.get()) {
             BookType byName = PlaceableBookManager.getByName(v);
@@ -133,12 +140,12 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         for (int index = 0; index < 4; index++) {
             ItemStack stack = this.getItem(index);
             if (stack.isEmpty()) break;
-            BookType last = index == 0 ? null : this.books.get(index - 1).type;
-            this.books.add(index, new VisualBook(stack, this.worldPosition, index, colors, last));
+            BookType last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
+            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index, colors, last));
         }
 
-        if (books.isEmpty()) {
-            makeRandomBook(this.getBlockState().getValue(BookPileBlock.BOOKS));
+        if (booksVisuals.isEmpty()) {
+            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS));
         }
     }
 

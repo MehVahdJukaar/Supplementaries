@@ -1,5 +1,3 @@
-- added config to move s button
-- reworked placeable book system internals
-- fixed a compat issue with curse loot function
-- fixed wall enderman head not giving changing power signal
-- structure maps can jsons can now accept tags as well as direct reference to the structure or even structure lists
+- changed sconce model
+- tweaked placeable books colors a bit
+- fixed book piles not working properly with loot tables
