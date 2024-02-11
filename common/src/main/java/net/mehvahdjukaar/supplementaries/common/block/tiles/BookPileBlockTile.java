@@ -10,7 +10,6 @@ import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
-import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.mehvahdjukaar.supplementaries.common.misc.AntiqueInkHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -28,10 +27,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -55,7 +53,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
     private static final RandomSource rand = RandomSource.create();
 
     private void makeRandomBook(int i) {
-        for(int j = 0; j<i; j++) {
+        for (int j = 0; j < i; j++) {
             Item it;
             int r = rand.nextInt(10);
             if (r < 3) it = Items.ENCHANTED_BOOK;
@@ -83,8 +81,10 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public void updateTileOnInventoryChanged() {
         int nonEmptyBooks = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (nonEmptyBooks != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if(nonEmptyBooks == 0)this.level.removeBlock(this.worldPosition,false);
-            else {
+            if (nonEmptyBooks == 0) {
+                if (lootTable != null) return;
+                this.level.removeBlock(this.worldPosition, false);
+            } else {
                 //shifts books. Assumes at most one has been removed
                 consolidateBookPile();
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, nonEmptyBooks), 2);
@@ -105,9 +105,9 @@ public class BookPileBlockTile extends ItemDisplayTile {
         boolean prevEmpty = false;
         for (int i = 0; i < 4; i++) {
             var it = this.getItem(i);
-            if(it.isEmpty())prevEmpty = true;
-            else if(prevEmpty){
-                this.getItems().set(i-1, it);
+            if (it.isEmpty()) prevEmpty = true;
+            else if (prevEmpty) {
+                this.getItems().set(i - 1, it);
                 this.getItems().set(i, ItemStack.EMPTY);
             }
         }
@@ -126,7 +126,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
             this.books.add(i, new VisualBook(stack, this.worldPosition, i, colors, last));
         }
 
-        if(this.books.isEmpty()){
+        if (this.books.isEmpty()) {
             this.makeRandomBook(this.getBlockState().getValue(BookPileBlock.BOOKS));
         }
     }
@@ -217,7 +217,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
     public static final BookColor[] DEFAULT_RANDOM = {BookColor.BROWN, BookColor.ORANGE, BookColor.YELLOW, BookColor.RED,
             BookColor.DARK_GREEN, BookColor.LIME, BookColor.TEAL, BookColor.BLUE, BookColor.PURPLE};
 
-    public enum BookColor implements StringRepresentable{
+    public enum BookColor implements StringRepresentable {
         BROWN(DyeColor.BROWN, 1),
         WHITE(DyeColor.WHITE, 1),
         BLACK(DyeColor.BLACK, 1),

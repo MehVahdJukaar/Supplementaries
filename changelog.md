@@ -1,2 +1,1 @@
-fixed a rope dupe
-workaround for a possile ftb chunk issue
+fixed book piles not working with loot tables
