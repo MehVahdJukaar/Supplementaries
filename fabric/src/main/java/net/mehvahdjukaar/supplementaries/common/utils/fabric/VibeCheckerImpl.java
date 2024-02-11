@@ -42,6 +42,7 @@ public class VibeCheckerImpl {
 
     private static void unfixSodiumDeps() {
         JsonElement obj = null;
+        if(true)return; // so people can remove arbitrary incompats. This means that code below wont unfix past changes. Oh well just few had them
         var file = FabricLoader.getInstance().getConfigDir().resolve("fabric_loader_dependencies.json").toFile();
         if (file.exists() && file.isFile()) {
             try (FileInputStream fileInputStream = new FileInputStream(file);

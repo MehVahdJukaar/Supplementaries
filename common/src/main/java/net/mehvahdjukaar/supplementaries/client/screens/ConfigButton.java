@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
@@ -50,7 +51,8 @@ public class ConfigButton extends Button {
                     String name = b.getMessage().getString();
                     if (targets.contains(name)) {
                         int spacing = 4;
-                        GuiEventListener button = new ConfigButton(b.getX() + (isOnRight ? b.getWidth() + spacing : -20 - spacing), b.getY());
+                        GuiEventListener button = new ConfigButton(b.getX() + (isOnRight ? b.getWidth() + spacing : -20 - spacing),
+                                b.getY() + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get());
                         adder.accept(button);
                         return;
                     }

@@ -30,7 +30,6 @@ public abstract class ChunkHolderMixin {
             server.tell(new TickTask(server.getTickCount(), () -> {
                 var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
                 if (cap.isPresent()) {
-
                     cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->

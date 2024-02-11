@@ -28,7 +28,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -40,7 +41,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMa
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
-import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -69,7 +69,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -116,10 +116,10 @@ public class ClientRegistry {
                     w -> Supplementaries.res("block/sign_posts/" + w.getVariantId("sign_post"))))
     );
 
-    public static final Map<BookPileBlockTile.BookColor, ResourceLocation> BOOK_MODELS = Util.make(() -> {
-        Map<BookPileBlockTile.BookColor, ResourceLocation> map = new EnumMap<>(BookPileBlockTile.BookColor.class);
-        for (BookPileBlockTile.BookColor color : BookPileBlockTile.BookColor.values()) {
-            map.put(color, Supplementaries.res("block/books/book_" + color.getName()));
+    public static final Supplier<Map<BookType, ResourceLocation>> BOOK_MODELS = Suppliers.memoize(() ->{
+        Map<BookType, ResourceLocation> map = new HashMap<>();
+        for (BookType type : PlaceableBookManager.getAll()) {
+            map.put(type, Supplementaries.res("block/books/book_" + type.name()));
         }
         return map;
     });
@@ -388,7 +388,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
-        BOOK_MODELS.values().forEach(event::register);
+        BOOK_MODELS.get().values().forEach(event::register);
         SIGN_POST_MODELS.get().values().forEach(event::register);
         ClientSpecialModelsManager.registerSpecialModels(event);
         event.register(BLACKBOARD_FRAME);

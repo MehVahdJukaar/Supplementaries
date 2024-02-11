@@ -1,1 +1,5 @@
-updated to work with newest quark
+- added config to move s button
+- reworked placeable book system internals
+- fixed a compat issue with curse loot function
+- fixed wall enderman head not giving changing power signal
+- structure maps can jsons can now accept tags as well as direct reference to the structure or even structure lists

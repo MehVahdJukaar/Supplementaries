@@ -15,15 +15,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
 
 public class AdventurerMapsHandler {
 
@@ -34,12 +31,6 @@ public class AdventurerMapsHandler {
                                              int radius, boolean skipKnown,
                                              int zoom, @Nullable ResourceLocation mapMarker,
                                              @Nullable String name, int color) {
-        if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
-            var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
-                    radius, skipKnown, zoom, null, name, color);
-            item.setHoverName(Component.translatable(name));
-            return item;
-        }
 
         if (!serverLevel.getServer().getWorldData().worldGenOptions().generateStructures())
             return ItemStack.EMPTY;
@@ -47,8 +38,20 @@ public class AdventurerMapsHandler {
         if (targets == null) {
             targets = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(ModTags.ADVENTURE_MAP_DESTINATIONS)
                     .orElse(null);
-            if (targets == null) targets = HolderSet.direct();
         }
+
+        if (targets == null || targets.size() < 1) {
+            return ItemStack.EMPTY;
+        }
+
+
+        if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
+            var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
+                    radius, skipKnown, zoom, null, name, color);
+            item.setHoverName(Component.translatable(name));
+            return item;
+        }
+
 
         var found = StructureLocator.findNearestRandomMapFeature(
                 serverLevel, targets, pos, radius, skipKnown);
@@ -84,19 +87,10 @@ public class AdventurerMapsHandler {
     }
 
 
-    public static ItemStack createCustomMapForTrade(Level level, BlockPos pos, ResourceLocation structureName,
+    public static ItemStack createCustomMapForTrade(Level level, BlockPos pos, HolderSet<Structure> destinations,
                                                     @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
-
         if (level instanceof ServerLevel serverLevel) {
-            var destination = TagKey.create(Registries.STRUCTURE, structureName);
-            String name = mapName == null ?
-                    "filled_map." + structureName.getPath().toLowerCase(Locale.ROOT) : mapName;
-            var targets = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE)
-                    .getTag(destination).orElse(null);
-
-            if (targets != null) {
-                return createMapOrQuill(serverLevel, pos, targets, SEARCH_RADIUS, true,2, mapMarker, name, mapColor);
-            }
+            return createMapOrQuill(serverLevel, pos, destinations, SEARCH_RADIUS, true, 2, mapMarker, mapName, mapColor);
         }
         return ItemStack.EMPTY;
     }

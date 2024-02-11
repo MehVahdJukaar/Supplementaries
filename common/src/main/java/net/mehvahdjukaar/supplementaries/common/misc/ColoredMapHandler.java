@@ -478,10 +478,8 @@ public class ColoredMapHandler {
             RGBColor tintColor = new RGBColor(tint);
             LABColor c = new RGBColor(color).asLAB();
             RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
-            var grayscaled = gray
-                    .multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+            return gray.multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
                     .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
-            return grayscaled;
         }
 
         @Override
@@ -496,9 +494,12 @@ public class ColoredMapHandler {
 
         @Override
         public int getBlockTint(BlockPos pos, ColorResolver colorResolver) {
-            int x = pos.getX();
-            int z = pos.getZ();
             if (lastEntryHack != null) {
+                if (pos == null || colorResolver == null) {
+                    throw new IllegalStateException("Block position of Color resolvers were null. How? " + pos + colorResolver);
+                }
+                int x = pos.getX();
+                int z = pos.getZ();
                 Biome b = Utils.hackyGetRegistry(Registries.BIOME).get(lastEntryHack.getSecond());
                 boolean odd = x % 2 == 0 ^ z % 2 == 1;
                 //used for position blend. not color blend. used for stuff like swamp

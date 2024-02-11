@@ -152,7 +152,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CLOCK_CLICK;
         public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
-        public static final Supplier<List<BookPileBlockTile.BookColor>> BOOK_COLORS;
+        public static final Supplier<List<String>> BOOK_COLORS;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> SHERDS_TOOLTIPS;
@@ -183,7 +183,7 @@ public class ClientConfigs {
                             "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
             BOOK_COLORS = builder.comment("Placeable books random colors")
-                    .defineObjectList("placeable_books_random_colors", () -> BookPileBlockTile.DEFAULT_COLORS, BookPileBlockTile.BookColor.CODEC);
+                    .define("placeable_books_random_colors", BookPileBlockTile.DEFAULT_COLORS);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
             PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")
@@ -217,6 +217,7 @@ public class ClientConfigs {
         }
 
         public static final Supplier<Boolean> CONFIG_BUTTON;
+        public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
@@ -235,6 +236,8 @@ public class ClientConfigs {
                     .define("no_optifine_warn_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.CONFIGURED);
+            CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
+                    .define("config_button_y_offset", 0, -10000, 10000);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")

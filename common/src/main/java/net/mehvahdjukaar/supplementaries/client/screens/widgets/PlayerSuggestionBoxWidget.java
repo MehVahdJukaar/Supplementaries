@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -87,8 +88,11 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
     @Override
     public boolean keyPressed(int key, int alt, int ctrl) {
-        //fill in suggestion
-        if (key == 258 && this.canConsumeInput()) {
+        //disallow whitespaces
+        if (key == GLFW.GLFW_KEY_SPACE) return true;
+
+        //fill in a suggestion
+        if (key == GLFW.GLFW_KEY_TAB && this.canConsumeInput()) {
             if (!this.fullSuggestion.isEmpty()) {
                 this.setText(this.fullSuggestion);
                 this.moveCursorToEnd();
@@ -123,7 +127,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
         this.setSuggestion(suggestion);
     }
 
-    private void setSuggestion(String suggestion) {
+    private void setSuggestion(@Nullable String suggestion) {
         this.suggestion = suggestion;
     }
 
@@ -221,7 +225,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
             RenderSystem.enableBlend();
             graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 40.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1,1,1,1);
+            RenderSystem.setShaderColor(1, 1, 1, 1);
         }
     }
 }

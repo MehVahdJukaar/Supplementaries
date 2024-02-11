@@ -51,12 +51,17 @@ public class StructureLocator {
 
     public static List<LocatedStruct> findNearestMapFeatures(
             ServerLevel level, @NotNull TagKey<Structure> tagKey, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, boolean selectRandom) {
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, int maxSearches) {
 
-        var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey).orElse(null);
+        HolderSet<Structure> targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey).orElse(null);
         if (targets == null) return List.of();
+        if(targets.size() > maxSearches){
+            var list = new ArrayList<>(targets.stream().toList());
+            Collections.shuffle(list);
+            targets = HolderSet.direct(list.subList(0, maxSearches));
+        }
         return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated, requiredCount,
-                selectRandom, false);
+                false, false);
     }
 
 
@@ -70,7 +75,7 @@ public class StructureLocator {
         if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return foundStructures;
         }
-        if(taggedStructures.size() == 0){
+        if (taggedStructures.size() == 0) {
             Supplementaries.LOGGER.error("Found empty target structures for structure map. Its likely some mod broke some vanilla tag. Check your logs!");
             return foundStructures;
         }
@@ -84,12 +89,12 @@ public class StructureLocator {
         if (selectRandom) {
             Holder<Structure> selected = selectedTargets.get(level.random.nextInt(selectedTargets.size()));
             selectedTargets = List.of(selected);
-            Supplementaries.LOGGER.info("Searching for structure {}", selected.unwrapKey().get());
+            Supplementaries.LOGGER.info("Searching for structure {} from pos {}", selected.unwrapKey().get(), pos);
         } else {
             selectedTargets = new ArrayList<>(selectedTargets);
             Collections.shuffle(selectedTargets);
-            Supplementaries.LOGGER.info("Searching for closest structure among {}",
-                    Arrays.toString( selectedTargets.stream().map(e->e.unwrapKey().get()).toArray()));
+            Supplementaries.LOGGER.info("Searching for closest structure among {} from pos {}",
+                    Arrays.toString(selectedTargets.stream().map(e -> e.unwrapKey().get()).toArray()), pos);
         }
 
         //structures that can generate

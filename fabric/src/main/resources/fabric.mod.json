@@ -47,6 +47,7 @@
     "moonlight": ">=${required_moonlight_version}"
   },
   "suggests": {
-    "sleep_tight": "*"
+    "sleep_tight": "*",
+    "embeddium": "*"
   }
 }

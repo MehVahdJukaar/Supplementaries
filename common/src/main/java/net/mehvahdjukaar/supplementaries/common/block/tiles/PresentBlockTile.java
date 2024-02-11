@@ -57,11 +57,11 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     public void setSender(String sender) {
-        this.sender = sender;
+        this.sender = sender.trim();
     }
 
     public void setRecipient(String recipient) {
-        this.recipient = recipient;
+        this.recipient = recipient.trim();
     }
 
     public void setPublic() {

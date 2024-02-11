@@ -3,11 +3,11 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.util.AnimalFoodHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
@@ -48,6 +48,7 @@ public class ModSetup {
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
         CurseLootFunction.setup();
+        PlaceableBookManager.setup();
     }
 
     public static void setup() {
@@ -84,9 +85,9 @@ public class ModSetup {
     }
 
     private static void registerMobFoods() {
-        AnimalFoodHelper.addChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
-        AnimalFoodHelper.addHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
-        AnimalFoodHelper.addParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
+        RegHelper.registerChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
+        RegHelper.registerHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
+        RegHelper.registerParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
     }
 
     private static void registerFrameBlocks() {

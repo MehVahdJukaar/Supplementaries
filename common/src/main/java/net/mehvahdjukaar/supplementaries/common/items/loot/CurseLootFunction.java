@@ -53,7 +53,7 @@ public class CurseLootFunction extends LootItemConditionalFunction {
 
         RandomSource random = pContext.getRandom();
 
-        if (random.nextFloat() < chance && CURSES.stream().noneMatch(map::containsKey)) {
+        if (random.nextFloat() < chance && CURSES.stream().noneMatch(map::containsKey) && !CURSES.isEmpty()) {
 
             Enchantment e = CURSES.get(random.nextInt(CURSES.size()));
             map.put(e, 1);

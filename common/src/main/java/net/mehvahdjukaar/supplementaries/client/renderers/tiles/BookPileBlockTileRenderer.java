@@ -17,27 +17,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.EnumMap;
 import java.util.function.Function;
 
 public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBlockTile> {
 
     private static ModelBlockRenderer renderer;
-    private static final EnumMap<BookPileBlockTile.BookColor, BakedModel> MODELS = new EnumMap<>(BookPileBlockTile.BookColor.class);
 
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelManager manager = Minecraft.getInstance().getModelManager();
-        MODELS.clear();
-        for (var e : ClientRegistry.BOOK_MODELS.entrySet()) {
-            MODELS.put(e.getKey(), ClientHelper.getModel(manager, e.getValue()));
-        }
         renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
     }
 
@@ -129,7 +120,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
                                    int light, int overlay, VisualBook b, float xRot, float zRot) {
         VertexConsumer builder = vertexBuilder.apply(b);
-        if(builder == null)return;
+        if (builder == null) return;
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
         if (zRot != 0) poseStack.mulPose(Axis.ZP.rotation(zRot));
@@ -139,7 +130,8 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         renderer.renderModel(poseStack.last(),
                 builder,
                 null,
-                MODELS.get(b.getColor()),
+                ClientHelper.getModel(Minecraft.getInstance().getModelManager(),
+                        ClientRegistry.BOOK_MODELS.get().get(b.getType())),
                 1.0F, 1.0F, 1.0F,
                 light, overlay);
 

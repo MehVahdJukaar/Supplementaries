@@ -67,7 +67,7 @@ public class EndermanSkullWallBlock extends WallSkullBlock {
 
     @Override
     public int getSignal(BlockState blockState, @NotNull BlockGetter blockAccess, @NotNull BlockPos pos, @NotNull Direction side) {
-        return blockState.getValue(WATCHED) ? 15 : 0;
+        return blockState.getValue(POWER);
     }
 
     @Override
@@ -77,9 +77,9 @@ public class EndermanSkullWallBlock extends WallSkullBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if(state.getValue(WATCHED)) {
+        if (state.getValue(WATCHED)) {
             ParticleUtil.spawnParticleOnBlockShape(level, pos, ParticleTypes.PORTAL,
-                    UniformInt.of(1, 1+state.getValue(POWER)/2),
+                    UniformInt.of(1, 1 + state.getValue(POWER) / 2),
                     0.5f);
         }
     }

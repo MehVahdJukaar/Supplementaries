@@ -18,7 +18,7 @@ public class ColorHelper {
     }
 
     //caps saturation when it's outside the colorspace that has a shape of 2 cones, like that c function describes
-    public static float normalizeSaturation(float saturation, float lightness) {
+    public static float normalizeHSLSaturation(float saturation, float lightness) {
         float c = 1 - Math.abs((2 * lightness) - 1);
         return Math.min(saturation, c);
     }
@@ -66,7 +66,7 @@ public class ColorHelper {
         float l = hsl.lightness();
         //map one to one. no effect on its own (false...)
         //s = s + (float)((1-s)*ClientConfigs.general.TEST3.get());
-        s = normalizeSaturation(s, l);
+        s = normalizeHSLSaturation(s, l);
 
         //remove darker colors
         float minLightness = 0.47f;
