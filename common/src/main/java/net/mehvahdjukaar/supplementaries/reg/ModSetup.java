@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsMa
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
@@ -71,16 +70,15 @@ public class ModSetup {
             Supplementaries.LOGGER.info("Finished mod setup in: {} ms", list);
 
         } catch (Exception e) {
-            Supplementaries.LOGGER.error(e);
-            terminateWhenSetupFails();
+            terminateWhenSetupFails(e);
         }
     }
 
-    private static void terminateWhenSetupFails() {
+    private static void terminateWhenSetupFails(Exception e) {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
-                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
+                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors", e);
     }
 
     private static void registerFabricFlammable() {

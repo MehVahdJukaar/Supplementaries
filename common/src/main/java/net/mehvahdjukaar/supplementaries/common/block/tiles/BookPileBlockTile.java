@@ -85,7 +85,7 @@ public class BookPileBlockTile extends ItemDisplayTile {
                 if (lootTable != null) return;
                 this.level.removeBlock(this.worldPosition, false);
             } else {
-                //shifts books. Assumes at most one has been removed
+                //Shift books. Assumes at most one has been removed
                 consolidateBookPile();
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, nonEmptyBooks), 2);
             }
