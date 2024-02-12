@@ -106,7 +106,7 @@ public class ModSetup {
     //events on setup. fire on world load
     public static void tagDependantSetup(RegistryAccess registryAccess) {
         if (!firstTagLoad) {
-            //using this as a post setup event that can access tags
+            //using this as a post-setup event that can access tags
             Stopwatch watch = Stopwatch.createStarted();
             firstTagLoad = true;
             if (!hasFinishedSetup) {
@@ -123,10 +123,12 @@ public class ModSetup {
 
             //stuff that needs tags
             DispenserBehaviorsManager.registerBehaviors(registryAccess);
-            InteractEventOverrideHandler.registerOverrides();
 
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }
+        // this we can properly refresh every time
+        InteractEventOverrideHandler.setupOverrides();
+
     }
 
 }

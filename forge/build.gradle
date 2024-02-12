@@ -142,7 +142,8 @@ dependencies {
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
     modCompileOnly("curse.maven:jei-238222:3928388")
-    modCompileOnly("curse.maven:configured-457570:4462894")
+    modImplementation ("curse.maven:configured-457570:5096828")
+
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")

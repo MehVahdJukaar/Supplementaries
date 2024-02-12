@@ -88,7 +88,12 @@ public class InteractEventOverrideHandler {
 
     }
 
-    public static void registerOverrides() {
+    public static void setupOverrides() {
+        ITEM_USE_ON_BLOCK.clear();
+        ITEM_USE_ON_BLOCK_HP.clear();
+        ITEM_USE.clear();
+        BLOCK_USE.clear();
+
         //registers event stuff
         List<ItemUseOnBlockOverride> itemUseOnBlockHP = new ArrayList<>();
         List<ItemUseOnBlockOverride> itemUseOnBlock = new ArrayList<>();
