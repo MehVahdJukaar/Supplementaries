@@ -501,10 +501,12 @@ public class ColoredMapHandler {
                 int x = pos.getX();
                 int z = pos.getZ();
                 Biome b = Utils.hackyGetRegistry(Registries.BIOME).get(lastEntryHack.getSecond());
-                boolean odd = x % 2 == 0 ^ z % 2 == 1;
-                //used for position blend. not color blend. used for stuff like swamp
-                pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
-                return colorResolver.getColor(b, pos.getX() + 0.5, pos.getZ() + 0.5);
+                if (b != null) {
+                    boolean odd = x % 2 == 0 ^ z % 2 == 1;
+                    //used for position blend. not color blend. used for stuff like swamp
+                    pos = pos.offset((odd ? DITHERING : -DITHERING), 0, (odd ? DITHERING : -DITHERING));
+                    return colorResolver.getColor(b, pos.getX() + 0.5, pos.getZ() + 0.5);
+                }
             }
             return 0;
         }

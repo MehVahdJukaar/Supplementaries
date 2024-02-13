@@ -136,6 +136,7 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4915903")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
+    modImplementation("curse.maven:morecreativetabs-forge-fabric-581838:4633213")
 
     modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     modRuntimeOnly("curse.maven:spark-361579:4738952")
@@ -151,8 +152,8 @@ dependencies {
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     //modImplementation("curse.maven:quark-243121:4463411")
-    modImplementation("org.violetmoon.quark:Quark-4.0-433")
-    modImplementation("org.violetmoon.zeta:Zeta-1.0-12")
+    modCompileOnly("org.violetmoon.quark:Quark-4.0-433")
+    modCompileOnly("org.violetmoon.zeta:Zeta-1.0-12")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")

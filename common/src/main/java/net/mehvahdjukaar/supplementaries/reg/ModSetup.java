@@ -68,16 +68,15 @@ public class ModSetup {
             Supplementaries.LOGGER.info("Finished mod setup in: {} ms", list);
 
         } catch (Exception e) {
-            Supplementaries.LOGGER.error(e);
-            terminateWhenSetupFails();
+            terminateWhenSetupFails(e);
         }
     }
 
-    private static void terminateWhenSetupFails() {
+    private static void terminateWhenSetupFails(Exception e) {
         //if setup fails crash the game. idk why it doesn't do that on its own wtf
         throw new IllegalStateException("Mod setup has failed to complete (" + setupStage + ").\n" +
                 " This might be due to some mod incompatibility or outdated dependencies (check if everything is up to date).\n" +
-                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors");
+                " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors", e);
     }
 
     private static void registerFabricFlammable() {
@@ -86,7 +85,7 @@ public class ModSetup {
 
     private static void registerMobFoods() {
         RegHelper.registerChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
-        RegHelper.registerHorseFood(ModRegistry.FLAX_BLOCK.get(),ModRegistry.SUGAR_CUBE.get(),ModRegistry.FLAX_ITEM.get());
+        RegHelper.registerHorseFood(ModRegistry.FLAX_BLOCK.get(), ModRegistry.SUGAR_CUBE.get(), ModRegistry.FLAX_ITEM.get());
         RegHelper.registerParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
     }
 
@@ -116,9 +115,8 @@ public class ModSetup {
                     MOD_SETUP_WORK.get(setupStage).run();
                     Supplementaries.LOGGER.error("No error found. Weird");
                 } catch (Exception e) {
-                    Supplementaries.LOGGER.error(e);
+                    terminateWhenSetupFails(e);
                 }
-                terminateWhenSetupFails();
             }
 
             //stuff that needs tags
