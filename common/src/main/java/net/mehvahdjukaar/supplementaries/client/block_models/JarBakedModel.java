@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -59,18 +59,17 @@ public class JarBakedModel implements CustomBakedModel {
                 builder.setAutoDirection();
                 builder.lightEmission(fluid.getLuminosity());
                 builder.setTint(1);
-                var p = new PoseStack();
-                p.translate(0.5, yOffset, 0.5);
+                var poseStack = new PoseStack();
+                poseStack.translate(0.5, yOffset, 0.5);
                 try {
-                    builder.setAutoBuild(w -> {
-                        quads.add(w);
-                    });
+                    builder.setAutoBuild(quads::add);
                 } catch (Exception ignored) {
                 }
-                VertexUtils.addCube(builder, p, 0.5f - width / 2f, 0, width, height * amount,
-                        0, -1, 1);
+                VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
+                        height * amount,
+                        0, -1);
 
-                //VertexUtils.addQuad(builder, p, 0,0,1,1,1,1);
+                //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
             }
             if (!SINGLE_PASS) return quads;
         }

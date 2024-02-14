@@ -1,6 +1,0 @@
-{
-    "parent": "item/crossbow",
-    "textures": {
-        "layer0": "supplementaries:item/crossbow_amethyst_arrow"
-    }
-}

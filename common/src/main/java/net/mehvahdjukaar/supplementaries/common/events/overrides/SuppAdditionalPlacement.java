@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.additional_placements;
+package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;

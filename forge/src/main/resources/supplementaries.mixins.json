@@ -7,15 +7,12 @@
   "client": [
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
-    "CompatFarmersDelightCanvasMixin",
-    "CompatFarmersDelightSignMixin",
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2"
   ],
   "mixins": [
     "ChunkHolderMixin",
     "CompatFarmersDelightTomatoMixin",
-    "CompatQuarkSelfCandleSkullMixin",
     "FriendlyByteBufMixin",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",

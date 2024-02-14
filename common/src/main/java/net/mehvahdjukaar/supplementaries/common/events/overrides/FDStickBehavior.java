@@ -40,7 +40,7 @@ class FDStickBehavior implements BlockUseOverride {
         if (stack.getItem() == Items.STICK) {
             var tomato = FarmersDelightCompat.getStickTomato();
             if (tomato != null) {
-                return InteractEventOverrideHandler.replaceSimilarBlock(tomato,
+                return InteractEventsHandler.replaceSimilarBlock(tomato,
                         player, stack, pos, level, state, SoundType.WOOD, BlockStateProperties.AGE_3);
             }
         }

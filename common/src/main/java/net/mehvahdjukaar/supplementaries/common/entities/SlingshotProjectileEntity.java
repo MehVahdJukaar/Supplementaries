@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -153,11 +153,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             Item item = stack.getItem();
 
             //block override. mimic forge event that would have called these
-            InteractionResult overrideResult = InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
+            InteractionResult overrideResult = InteractEventsHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
             if (overrideResult.consumesAction()) {
                 success = true;
             } else {
-                overrideResult = InteractEventOverrideHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit);
+                overrideResult = InteractEventsHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit);
                 if (overrideResult.consumesAction()) success = true;
             }
 

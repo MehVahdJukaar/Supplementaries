@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsMana
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
@@ -68,7 +68,7 @@ public class Supplementaries {
         ModMapMarkers.init();
         ModCreativeTabs.init();
         LootTablesInjects.init();
-        InteractEventOverrideHandler.init();
+        InteractEventsHandler.init();
         SliceMapItem.init();
         WeatheredMap.init();
         ColoredMapHandler.init();

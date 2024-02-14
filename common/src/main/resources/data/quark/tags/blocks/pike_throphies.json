@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:enderman_head",
-    {"id":"supplementaries:skull_candle_soul","required":false},
-    "supplementaries:skull_candle",
-    "supplementaries:skull_pile"
+    "supplementaries:enderman_head"
   ]
 }

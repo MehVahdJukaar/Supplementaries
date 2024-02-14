@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -194,7 +194,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
                     i instanceof BlockItem ||
                     AdditionalItemPlacementsAPI.hasBehavior(i) ||
-                    InteractEventOverrideHandler.hasBlockPlacementAssociated(i);
+                    InteractEventsHandler.hasBlockPlacementAssociated(i);
         };
     }
 

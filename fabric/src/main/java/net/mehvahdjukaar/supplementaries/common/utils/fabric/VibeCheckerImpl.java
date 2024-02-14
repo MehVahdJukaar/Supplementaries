@@ -12,7 +12,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
-import net.mehvahdjukaar.supplementaries.client.block_models.WallLanternBakedModel;
+import net.mehvahdjukaar.supplementaries.client.block_models.BlackboardBakedModel;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -139,7 +139,7 @@ public class VibeCheckerImpl {
                     Direction.NORTH, l,
                     Direction.WEST, l,
                     Direction.EAST, l));
-            new WallLanternBakedModel(new SimpleBakedModel(l,
+            new BlackboardBakedModel(new SimpleBakedModel(l,
                     map,
                     false, false, false,
                     textureAtlasSprite,

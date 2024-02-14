@@ -8,7 +8,6 @@ public final class ModConstants {
     public static final String HAT_STAND_NAME = "hat_stand";
     public static final String FALLING_URN_NAME = "falling_urn";
     public static final String FALLING_ASH_NAME = "falling_ash";
-    public static final String FALLING_LANTERN_NAME = "falling_lantern";
     public static final String FALLING_SACK_NAME = "falling_sack";
     public static final String THROWABLE_BRICK_NAME = "brick_projectile";
     public static final String BOMB_NAME = "bomb";
@@ -29,10 +28,8 @@ public final class ModConstants {
     public static final String DEPTH_METER_NAME = "altimeter";
     public static final String SLICE_MAP_NAME = "slice_map";
 
-    public static final String HANGING_SIGN_NAME = "hanging_sign";
     public static final String SIGN_POST_NAME = "sign_post";
     public static final String FLAG_NAME = "flag";
-    public static final String CEILING_BANNER_NAME = "ceiling_banner";
     public static final String PRESENT_NAME = "present";
     public static final String TRAPPED_PRESENT_NAME = "trapped_present";
     public static final String PLANTER_NAME = "planter";
@@ -84,10 +81,6 @@ public final class ModConstants {
     public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor";
     public static final String IRON_GATE_NAME = "iron_gate";
     public static final String GOLD_GATE_NAME = "gold_gate";
-    public static final String WALL_LANTERN_NAME = "wall_lantern";
-    public static final String HANGING_FLOWER_POT_NAME = "hanging_flower_pot";
-    public static final String DOUBLE_CAKE_NAME = "double_cake";
-    public static final String DIRECTIONAL_CAKE_NAME = "directional_cake";
     public static final String CHECKER_BLOCK_NAME = "checker_block";
     public static final String CHECKER_SLAB_NAME = "checker_slab";
     public static final String PANCAKE_NAME = "pancake";
@@ -128,9 +121,6 @@ public final class ModConstants {
     public static final String ASH_BRICK_NAME = "ash_brick";
     public static final String SOAP_NAME = "soap";
     public static final String SOAP_BLOCK_NAME = "soap_block";
-    public static final String SKULL_PILE_NAME = "skull_pile";
-    public static final String SKULL_CANDLE_NAME = "skull_candle";
-    public static final String SKULL_CANDLE_SOUL_NAME = "skull_candle_soul";
     public static final String CANDLE_HOLDER_NAME = "candle_holder";
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";

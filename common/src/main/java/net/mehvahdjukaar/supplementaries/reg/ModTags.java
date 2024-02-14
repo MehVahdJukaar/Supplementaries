@@ -30,14 +30,11 @@ public class ModTags {
     public static final TagKey<Block> WATER_HOLDER = blockTag("water_holder");
     public static final TagKey<Block> FAUCET_CONNECTION_BLACKLIST = blockTag("faucet_connection_blacklist");
     public static final TagKey<Block> FAUCET_CONNECTION_WHITELIST = blockTag("faucet_connection_whitelist");
-    public static final TagKey<Block> VINE_SUPPORT = blockTag("vine_support");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
     public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable_recursive");
     public static final TagKey<Block> BRICK_BREAKABLE_POTS = blockTag("brick_breakable");
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
-    public static final TagKey<Block> WALL_LANTERNS_BLACKLIST = blockTag("wall_lanterns_blacklist");
-    public static final TagKey<Block> WALL_LANTERNS_WHITELIST = blockTag("wall_lanterns_whitelist");
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
     public static final TagKey<Block> LIGHTS_GUNPOWDER = blockTag("lights_gunpowder");
     public static final TagKey<Block> PREVENTS_OFFSET_ABOVE = blockTag("prevents_offset_above");

@@ -103,7 +103,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         //fluid stuff
         FluidState fluidState = level.getFluidState(pos.relative(state.getValue(FaucetBlock.FACING).getOpposite()));
         if (!fluidState.isEmpty() && fluidState.isSource()) {
-            var f = SoftFluidRegistry.fromForgeFluid(fluidState.getType());
+            var f = SoftFluidRegistry.fromVanillaFluid(fluidState.getType());
             if (f != null) { //just to be sure
                 this.tempFluidHolder.fill(f);
                 this.updateLight();

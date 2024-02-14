@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -48,7 +48,7 @@ public class ClientEvents {
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
         if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
-            InteractEventOverrideHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
+            InteractEventsHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
         }
 
         Item item = itemStack.getItem();
@@ -86,14 +86,13 @@ public class ClientEvents {
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
             Item item = stack.getItem();
             String newShader = EFFECTS_PER_ITEM.get(item);
-            if (newShader == null && CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get()) {
-                if (p.getHealth() < 5) {
-                    newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
-                }
+            if (newShader == null && shouldHaveGoatedEffect(p, item)) {
+                newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
             }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
-            } else if (newShader == null && (EFFECTS_PER_ITEM.containsValue(current) || (CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get()))) {
+            } else if (newShader == null && current != null && (EFFECTS_PER_ITEM.containsValue(current) ||
+                    (CompatHandler.GOATED && current.equals(ClientRegistry.BARBARIC_RAGE_SHADER)))) {
                 renderer.shutdownEffect();
             }
         }
@@ -106,6 +105,10 @@ public class ClientEvents {
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             ));
         }
+    }
+
+    private static boolean shouldHaveGoatedEffect(Player p, Item item) {
+        return CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get() && p.getHealth() < 5;
     }
 
     private static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {

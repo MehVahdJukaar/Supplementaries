@@ -54,7 +54,8 @@ public class ClientConfigs {
     }
 
     private static void onChange() {
-        signColorMult = (float) (double) Tweaks.BRIGHTEN_SIGN_TEXT_COLOR.get();
+        Double b = ModSharedVariables.getDouble("color_multiplier");
+        signColorMult = (float) (double) (b == null ? 1 : b);
     }
 
     private static float signColorMult = 1;
@@ -162,7 +163,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
-        public static final Supplier<Double> BRIGHTEN_SIGN_TEXT_COLOR;
 
 
         static {
@@ -196,8 +196,6 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
-            BRIGHTEN_SIGN_TEXT_COLOR = builder.comment("A scalar multiplier that will be applied to sign text making it brighter, supposedly more legible")
-                    .define("sign_text_color_multiplier", 1.2f, 0, 5);
             builder.push("colored_maps");
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
@@ -287,14 +285,8 @@ public class ClientConfigs {
 
         public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
 
-        public static final Supplier<Boolean> FAST_SIGNS;
-        public static final Supplier<Boolean> ENHANCED_HANGING_SIGNS;
-        public static final Supplier<PendulumAnimation.Config> HANGING_SIGN_CONFIG;
-
         public static final Supplier<PendulumAnimation.Config> HAT_STAND_CONFIG;
 
-        public static final Supplier<Boolean> FAST_LANTERNS;
-        public static final Supplier<PendulumAnimation.Config> WALL_LANTERN_CONFIG;
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
         public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
@@ -386,31 +378,6 @@ public class ClientConfigs {
 
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"));
-
-            builder.pop();
-
-            builder.push("wall_lantern");
-            FAST_LANTERNS = builder.comment("Makes wall lantern use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
-                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
-                    .define("fast_lanterns", false);
-
-            WALL_LANTERN_CONFIG = builder.defineObject("swing_physics",
-                    PendulumAnimation.Config::new,
-                    PendulumAnimation.Config.CODEC);
-            builder.pop();
-
-            builder.push("enhanced_hanging_sign");
-            ENHANCED_HANGING_SIGNS = builder.comment("Modifies vanilla hanging signs to make them like old Supplementaries ones")
-                    .define("enabled", true);
-
-            HANGING_SIGN_CONFIG = builder.defineObject("swing_physics",
-                    PendulumAnimation.Config::new,
-                    PendulumAnimation.Config.CODEC);
-
-            //remove
-            FAST_SIGNS = builder.comment("Makes supplementaries hanging signs use a simple block model instead of the animated tile entity renderer. This will make them render much faster but will also remove the animation" +
-                            "Note that this option only affect lanterns close by as the one far away render as fast by default")
-                    .define("fast_signs", false);
 
             builder.pop();
 

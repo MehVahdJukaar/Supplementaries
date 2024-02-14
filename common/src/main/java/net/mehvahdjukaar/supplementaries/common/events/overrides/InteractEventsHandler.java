@@ -1,16 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.WallLanternPlacement;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -24,7 +17,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -41,7 +36,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InteractEventOverrideHandler {
+public class InteractEventsHandler {
 
     //equivalent to Item.useOnBlock to the item itself (called before that though)
     //high priority
@@ -58,35 +53,11 @@ public class InteractEventOverrideHandler {
     }
 
     public static void init() {
-        //register placeable items
-        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            AdditionalItemPlacementsAPI.register(
-                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get()), () -> Items.WRITABLE_BOOK);
-            AdditionalItemPlacementsAPI.register(
-                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get()), () -> Items.WRITTEN_BOOK);
-        }
-        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
-            AdditionalItemPlacementsAPI.register(
-                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.TOME);
-            AdditionalItemPlacementsAPI.register(
-                    () -> new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get()), CompatObjects.GENE_BOOK);
-        }
 
-        if (CommonConfigs.Tweaks.WALL_LANTERN_PLACEMENT.get()) {
-            AdditionalItemPlacementsAPI.register((b) -> new WallLanternPlacement(((BlockItem) b).getBlock()),
-                    i -> {
-                        if (i instanceof BlockItem bi) {
-                            Block b = bi.getBlock();
-                            if (b == null)
-                                throw new AssertionError("Some mod managed to create a block item with null block. WTF. Block: " + bi);
-                            return WallLanternBlock.isValidBlock(b);
-                        }
-                        return false;
-                    });
-
-        }
 
     }
+
+
 
     public static void setupOverrides() {
         ITEM_USE_ON_BLOCK.clear();
@@ -100,8 +71,6 @@ public class InteractEventOverrideHandler {
         List<ItemUseOverride> itemUse = new ArrayList<>();
         List<BlockUseOverride> blockUse = new ArrayList<>();
 
-        blockUse.add(new DirectionalCakeConversionBehavior());
-        blockUse.add(new BellChainBehavior());
         blockUse.add(new FDStickBehavior());
 
         itemUse.add(new ThrowableBricksBehavior());
@@ -112,11 +81,8 @@ public class InteractEventOverrideHandler {
         itemUseOnBlockHP.add(new SoapBehavior());
         itemUseOnBlockHP.add(new DyeBehavior());
         itemUseOnBlockHP.add(new WrenchBehavior());
-        itemUseOnBlockHP.add(new SkullCandlesBehavior());
 
         //maybe move in mixin system (can't for cakes as block interaction has priority)
-        itemUseOnBlock.add(new SkullPileBehavior());
-        itemUseOnBlock.add(new DoubleCakeBehavior());
         itemUseOnBlock.add(new WrittenBookHackBehavior());
 
         itemUseOnBlock.add(new MapMarkerBehavior());
@@ -127,15 +93,6 @@ public class InteractEventOverrideHandler {
         for (Item i : BuiltInRegistries.ITEM) {
 
             //block items don't work here
-            /*
-            if (ServerConfigs.cached.SKULL_CANDLES) {
-                if (i.builtInRegistryHolder().is(ItemTags.CANDLES) &&
-                        i.getRegistryName().getNamespace().equals("minecraft")) {
-                    ((IExtendedItem) i).addAdditionalBehavior(new SkullCandlesPlacement());
-                    continue;
-                }
-            }*/
-
 
             for (ItemUseOnBlockOverride b : itemUseOnBlock) {
                 if (b.appliesToItem(i)) {

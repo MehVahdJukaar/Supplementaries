@@ -11,24 +11,21 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CeilingBannerBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.DoubleCakeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
-import net.mehvahdjukaar.supplementaries.common.items.additional_placements.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry;
-import net.mehvahdjukaar.supplementaries.common.misc.CakeRegistry.CakeType;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,36 +44,38 @@ import java.util.function.Supplier;
 public class RegUtils {
 
     public static void initDynamicRegistry() {
-        BlockSetAPI.registerBlockSetDefinition(CakeRegistry.INSTANCE);
-        BlockSetAPI.addDynamicBlockRegistration(RegUtils::registerDoubleCakes, CakeType.class);
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
-        BlockSetAPI.addDynamicBlockRegistration(RegUtils::dummy, WoodType.class);
+        AdditionalItemPlacementsAPI.addRegistration(RegUtils::registerPlacements);
     }
 
-    //TODO: 1.20 remove
-    private static void dummy(Registrator<Block> blockRegistrator, Collection<WoodType> ts) {
-        int aa = 1;
-    }
-
-    /**
-     * Registers a placeable item for a modded item with the given string
-     */
-    public static <T extends Block> RegSupplier<T> regPlaceableItem(
-            String name, Supplier<T> sup,
-            String itemLocation, Supplier<Boolean> config) {
-        Supplier<Item> itemSupp = () -> BuiltInRegistries.ITEM.get(new ResourceLocation(itemLocation));
-        return regPlaceableItem(name, sup, itemSupp, config);
-    }
-
-    public static <T extends Block> RegSupplier<T> regPlaceableItem(
-            String name, Supplier<T> blockFactory,
-            Supplier<? extends Item> itemSupplier, Supplier<Boolean> config) {
-        var block = regBlock(name, blockFactory);
-        if (config.get()) {
-            AdditionalItemPlacementsAPI.register(
-                    () -> new SuppAdditionalPlacement(block.get()), itemSupplier);
+    private static void registerPlacements(AdditionalItemPlacementsAPI.Event event) {
+        //register placeable items
+        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
+            SuppAdditionalPlacement horizontalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get());
+            event.register(Items.BOOK, horizontalPlacement);
+            event.register(Items.WRITABLE_BOOK, horizontalPlacement);
+            event.register(Items.WRITTEN_BOOK, horizontalPlacement);
         }
-        return block;
+        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
+            SuppAdditionalPlacement verticalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get());
+            event.register(Items.ENCHANTED_BOOK, verticalPlacement);
+            Item tome = CompatObjects.TOME.get();
+            if (tome != null) event.register(tome, verticalPlacement);
+            Item gene = CompatObjects.GENE_BOOK.get();
+            if (gene != null) event.register(gene, verticalPlacement);
+        }
+
+        event.registerSimple(ModRegistry.PANCAKE_ITEM.get(), ModRegistry.PANCAKE.get());
+
+        if (CommonConfigs.Tweaks.PLACEABLE_STICKS.get()) {
+            event.register(Items.STICK, new SuppAdditionalPlacement(ModRegistry.STICK_BLOCK.get()));
+        }
+        if (CommonConfigs.Tweaks.PLACEABLE_RODS.get()) {
+            event.register(Items.BLAZE_ROD, new SuppAdditionalPlacement(ModRegistry.BLAZE_ROD_BLOCK.get()));
+        }
+        if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
+            event.register(Items.GUNPOWDER, new SuppAdditionalPlacement(ModRegistry.GUNPOWDER_BLOCK.get()));
+        }
     }
 
     public static <T extends Item> Supplier<T> regItem(String name, Supplier<T> sup) {
@@ -165,25 +164,6 @@ public class RegUtils {
         return map;
     }
 
-    //ceiling banners
-    public static Map<DyeColor, Supplier<Block>> registerCeilingBanners(String baseName) {
-        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
-        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
-            String name = baseName + "_" + color.getName();
-            map.put(color, regPlaceableItem(name, () -> new CeilingBannerBlock(color,
-                            BlockBehaviour.Properties.of()
-                                    .ignitedByLava()
-                                    .forceSolidOn()
-                                    .mapColor(color.getMapColor())
-                                    .strength(1.0F)
-                                    .noCollission()
-                                    .sound(SoundType.WOOD)
-                    ), color.getName() + "_banner", CommonConfigs.Tweaks.CEILING_BANNERS
-            ));
-        }
-        return map;
-    }
-
     //presents
     public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
@@ -224,17 +204,4 @@ public class RegUtils {
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }
     }
-
-
-    private static void registerDoubleCakes(Registrator<Block> event, Collection<CakeType> cakeTypes) {
-        for (CakeType type : cakeTypes) {
-
-            ResourceLocation id = Supplementaries.res(type.getVariantId("double"));
-            DoubleCakeBlock block = new DoubleCakeBlock(type);
-            type.addChild("double_cake", block);
-            event.register(id, block);
-            ModRegistry.DOUBLE_CAKES.put(type, block);
-        }
-    }
-
 }

@@ -7,8 +7,8 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -124,11 +124,14 @@ public class BlockUtil {
         //horizontal facing blocks -easy
         if (dir.getAxis() == Direction.Axis.Y) {
 
-            if (block == Blocks.CAKE) {
-                int bites = state.getValue(CakeBlock.BITES);
-                if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
-                        ModRegistry.DIRECTIONAL_CAKE.get().defaultBlockState()
-                                .setValue(CakeBlock.BITES, bites), world, targetPos, rot));
+            if (block == Blocks.CAKE ) {
+                var dc = CompatObjects.DIRECTIONAL_CAKE.get();
+                if (dc != null) {
+                    int bites = state.getValue(CakeBlock.BITES);
+                    if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
+                            dc.defaultBlockState()
+                                    .setValue(CakeBlock.BITES, bites), world, targetPos, rot));
+                }
             }
 
             BlockState rotated = ForgeHelper.rotateBlock(state, world, targetPos, rot);

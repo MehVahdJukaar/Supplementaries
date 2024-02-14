@@ -4,16 +4,17 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WallLanternBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlockGeneratorBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,8 +26,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -39,6 +42,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -397,15 +401,16 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     }
 
                     //wall lanterns
-                    if ( rand.nextFloat() < r.wallLanternChance) {
+                    Block wl = CompatObjects.WALL_LANTERN.get();
+
+                    if (wl != null && rand.nextFloat() < r.wallLanternChance) {
                         topState = rand.nextFloat() < r.trapdoorChance ? c.trapdoor : AIR;
 
-                        WallLanternBlock wl = ModRegistry.WALL_LANTERN.get();
-                        wl.placeOn(c.lanternDown, pos.below(), dir, level);
+                        placeWallLantern(c.lanternDown, level, dir, wl, pos.below());
 
                         //double
                         if (doubleSided) {
-                            wl.placeOn(c.lanternDown, pos.below(), dir.getOpposite(), level);
+                            placeWallLantern(c.lanternDown, level, dir.getOpposite(), wl, pos.below());
                         }
 
                     } else {
@@ -474,4 +479,12 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         }
     }
 
+    private static void placeWallLantern(BlockState lanternState, ServerLevel level, Direction dir, Block wallLantern, BlockPos pos) {
+        BlockState state = wallLantern.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND,
+                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir, pos, false)));
+        if (state != null) level.setBlockAndUpdate(pos, state);
+        if (level.getBlockEntity(pos) instanceof IBlockHolder tt) {
+            tt.setHeldBlock(lanternState);
+        }
+    }
 }

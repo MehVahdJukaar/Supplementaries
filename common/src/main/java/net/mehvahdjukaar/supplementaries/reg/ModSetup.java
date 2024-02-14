@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehavio
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -125,7 +125,7 @@ public class ModSetup {
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }
         // this we can properly refresh every time
-        InteractEventOverrideHandler.setupOverrides();
+        InteractEventsHandler.setupOverrides();
 
     }
 

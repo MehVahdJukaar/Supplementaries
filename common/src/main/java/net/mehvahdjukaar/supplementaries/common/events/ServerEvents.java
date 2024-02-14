@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventOverrideHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
@@ -76,7 +76,7 @@ public class ServerEvents {
     @EventCalled
     public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.isSpectator()) { //is this check even needed?
-            return InteractEventOverrideHandler.onItemUsedOnBlock(player, level,
+            return InteractEventsHandler.onItemUsedOnBlock(player, level,
                     player.getItemInHand(hand), hand, hitResult);
         }
         return InteractionResult.PASS;
@@ -85,7 +85,7 @@ public class ServerEvents {
     @EventCalled
     public static InteractionResult onRightClickBlockHP(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.isSpectator()) {
-            return InteractEventOverrideHandler.onItemUsedOnBlockHP(player, level,
+            return InteractEventsHandler.onItemUsedOnBlockHP(player, level,
                     player.getItemInHand(hand), hand, hitResult);
         }
         return InteractionResult.PASS;
@@ -95,7 +95,7 @@ public class ServerEvents {
     public static InteractionResultHolder<ItemStack> onUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!player.isSpectator()) {
-            return InteractEventOverrideHandler.onItemUse(player, level, hand, stack);
+            return InteractEventsHandler.onItemUse(player, level, hand, stack);
         }
         return InteractionResultHolder.pass(stack);
     }

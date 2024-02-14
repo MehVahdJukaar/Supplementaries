@@ -7,9 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -36,10 +34,6 @@ public class FarmersDelightCompat {
                 .randomTicks(), CompatObjects.RICH_SOIL);
     }
 
-    @ExpectPlatform
-    public static InteractionResult onCakeInteract(BlockState state, BlockPos pos, Level level, ItemStack itemstack) {
-        throw new AssertionError();
-    }
 
     @Nullable
     @ExpectPlatform

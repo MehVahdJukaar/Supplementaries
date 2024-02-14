@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.block_models;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.ColorUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.renderer.RenderType;
@@ -41,7 +41,7 @@ public class FaucetBakedModel implements CustomBakedModel {
             if (fluid != null && !fluid.isEmpty()) {
                 var l = liquid.getQuads(state, side, rand);
                 if (!l.isEmpty()) {
-                    int color = ColorUtil.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
+                    int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
                     int col2 = (color & 0x00FFFFFF) | (40 << 24);
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
 

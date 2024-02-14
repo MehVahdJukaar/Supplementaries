@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
@@ -37,14 +36,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -52,7 +49,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class RopeBlock extends WaterBlock implements IRopeConnection {
 
@@ -295,27 +291,6 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 100; //chance to get consumed
     }
 
-    public static boolean findAndRingBell(Level world, BlockPos pos, Player player, int it, Predicate<BlockState> predicate) {
-
-        if (it > CommonConfigs.Tweaks.BELL_CHAIN_LENGTH.get()) return false;
-        BlockState state = world.getBlockState(pos);
-        Block b = state.getBlock();
-        if (predicate.test(state)) {
-            return findAndRingBell(world, pos.above(), player, it + 1, predicate);
-        } else if (b instanceof BellBlock bellBlock && it != 0) {
-            Direction d = state.getValue(BellBlock.FACING);
-            var att = state.getValue(BellBlock.ATTACHMENT);
-            if (att == BellAttachType.SINGLE_WALL || att == BellAttachType.DOUBLE_WALL ||
-                    !Utils.getID(b).getNamespace().equals("create")) {
-                d = d.getClockWise();
-            }
-            BlockHitResult hit = new BlockHitResult(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5),
-                    d, pos, true);
-            return bellBlock.onHit(world, state, hit, player, true);
-        }
-        return false;
-    }
-
     private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
         if (it > 64) return false;
         BlockState state = world.getBlockState(pos);
@@ -353,9 +328,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             return InteractionResult.PASS;
         } else if (stack.isEmpty()) {
             if (state.getValue(UP)) {
-                if (CommonConfigs.Tweaks.BELL_CHAIN.get() && findAndRingBell(world, pos, player, 0, s -> s.getBlock() == this))
-                    return InteractionResult.sidedSuccess(world.isClientSide);
-                else if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
+                 if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }
