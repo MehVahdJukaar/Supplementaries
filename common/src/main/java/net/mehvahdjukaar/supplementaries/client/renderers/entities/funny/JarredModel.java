@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -73,7 +74,7 @@ public class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
     @Override
     public void translateToHand(HumanoidArm handSide, PoseStack matrixStack) {
         matrixStack.translate(0, 0.8, -0.5);
-        matrixStack.mulPose(Axis.XP.rotationDegrees(90));
+        matrixStack.mulPose(RotHlpr.X90);
         matrixStack.scale(0.5f, 0.5f, 0.5f);
         ModelPart arm = this.getArm(handSide);
 

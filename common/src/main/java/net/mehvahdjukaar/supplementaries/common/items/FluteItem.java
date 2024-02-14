@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
@@ -322,14 +323,14 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
                 CustomHeadLayer.translateToHead(poseStack, false);
 
                 poseStack.translate(0, -4.25 / 16f, -8.5 / 16f);
-                if (leftHand) poseStack.mulPose(Axis.XP.rotationDegrees(-90));
+                if (leftHand) poseStack.mulPose(RotHlpr.XN90);
 
                 transform = ItemDisplayContext.HEAD;
             } else {
                 //default rendering
                 parentModel.translateToHand(humanoidArm, poseStack);
-                poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-                poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+                poseStack.mulPose(RotHlpr.XN90);
+                poseStack.mulPose(RotHlpr.Y180);
 
                 poseStack.translate((leftHand ? -1 : 1) / 16.0F, 0.125D, -0.625D);
 

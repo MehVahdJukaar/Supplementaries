@@ -35,7 +35,7 @@ public class SyncSkellyQuiverPacket implements Message {
         if (context.getDirection() == NetworkDir.PLAY_TO_SERVER) {
             //relay actual status to client
             Entity e = context.getSender().level().getEntity(entityID);
-            if (e instanceof AbstractSkeleton q && e instanceof IQuiverEntity) {
+            if (e instanceof AbstractSkeleton q && e instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver()) {
                 NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntity(e, new SyncSkellyQuiverPacket(q));
             }
         } else ClientReceivers.handleSyncQuiverPacket(this);

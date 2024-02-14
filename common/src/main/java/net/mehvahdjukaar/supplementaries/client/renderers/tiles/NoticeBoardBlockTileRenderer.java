@@ -200,7 +200,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
         Material pattern = tile.getCachedPattern();
         if (pattern != null) {
-            VertexConsumer builder = pattern.buffer(buffer, RenderType::entityTranslucent);
+            VertexConsumer builder = pattern.buffer(buffer, RenderType::entityNoOutline);
             int i =  tile.getDyeColor().getTextColor();
             float scale = 0.5f;//so its more similar to text. idk why its needed
             int b = (int) (scale* (FastColor.ARGB32.blue(i)));
