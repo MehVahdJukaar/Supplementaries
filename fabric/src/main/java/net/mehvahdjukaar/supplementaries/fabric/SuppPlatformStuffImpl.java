@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.api.fabric.RedMerchantTradesEvent;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
@@ -66,4 +68,11 @@ public class SuppPlatformStuffImpl {
         return trades.toArray(VillagerTrades.ItemListing[]::new);
     }
 
+    public static void disableAMWarn() {
+        ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(false);
+    }
+
+    public static void disableOFWarn() {
+        ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(false);
+    }
 }

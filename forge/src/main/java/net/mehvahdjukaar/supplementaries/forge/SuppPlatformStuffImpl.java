@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.api.forge.RedMerchantTradesEvent;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -102,4 +104,11 @@ public class SuppPlatformStuffImpl {
         return event.getTrades().toArray(VillagerTrades.ItemListing[]::new);
     }
 
+    public static void disableAMWarn() {
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(false);
+    }
+
+    public static void disableOFWarn() {
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(false);
+    }
 }

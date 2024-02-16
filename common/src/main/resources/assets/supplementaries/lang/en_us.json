@@ -425,7 +425,12 @@
   "gui.supplementaries.optifine.message": "Before proceeding, please note that Optifine is known to cause issues and crashes.\n\n The mod is not suited for the modded environment and has had many instances of terrible compatibility even with Forge itself.\n\n Moreover, in terms of performance, way better and extremely more performant alterantives exist such as Modern fix, Embeddium as well as Oculus for shaders. \n\nWhether you play modded or vanilla, you should always use the mods listed here below instead.",
   "gui.supplementaries.optifine.suggestions": "Here's a selection of mods that we recommend using instead.",
   "gui.supplementaries.optifine.title": "WARNING: OPTIFINE DETECTED",
-  "gui.supplementaries.optifine.turn_off": "Don't show this again",
+
+  "gui.supplementaries.amendments.message": "As of update 2.8.0 some of Supplementaries features in the Tweaks section were moved to a dedicated mod, Amendments.\n\n The mod are meant to function separately but if you wish to keep your existing blocks from your existing worlds you must install Amendments mod.\n\n The features moved are the following: WALL LANTERNS, SKULL CANDLES, CEILING POTS, CEILING BANNERS and SKULL PILES. \n\nNote that if you do proceed without all those existing blocks will be LOST.",
+  "gui.supplementaries.amendments.suggestions": "You can get the mod HERE",
+  "gui.supplementaries.amendments.title": "Warning: Amendments is not installed",
+
+  "gui.supplementaries.welcome_screen.turn_off": "Don't show this again",
 
   "block_type.supplementaries.hanging_sign": "Hanging Sign",
   "block_type.supplementaries.sign_post": "Sign Post",

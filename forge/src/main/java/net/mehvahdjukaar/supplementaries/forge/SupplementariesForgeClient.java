@@ -3,10 +3,9 @@ package net.mehvahdjukaar.supplementaries.forge;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -25,9 +24,7 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SupplementariesForgeClient {
 
-
     private static boolean hasOptifine;
-    private static boolean hasWarnScreen;
     private static boolean firstScreenShown;
 
     @SubscribeEvent
@@ -36,23 +33,15 @@ public class SupplementariesForgeClient {
         VibeChecker.checkVibe();
 
         MinecraftForge.EVENT_BUS.addListener(SupplementariesForgeClient::handleDrawScreenEventPost);
-        try {
-            Class.forName("net.optifine.Config");
-            hasOptifine = true;
-        } catch (ClassNotFoundException e) {
-            hasOptifine = false;
-        }
+
     }
 
     public static void handleDrawScreenEventPost(ScreenEvent.Init.Post event) {
         if (!firstScreenShown && event.getScreen() instanceof TitleScreen) {
-            if (hasOptifine && !ClientConfigs.General.NO_OPTIFINE_WARN.get()) {
-                Minecraft.getInstance().setScreen(new OptifrickScreen(event.getScreen()));
-            }
+                ClientEvents.onDrawScreen(event.getScreen());
             firstScreenShown = true;
         }
     }
-
 
     private static ShaderInstance staticNoiseShader;
 

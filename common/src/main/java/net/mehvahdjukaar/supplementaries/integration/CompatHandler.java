@@ -13,6 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.BooleanSupplier;
+
 public class CompatHandler {
 
     public static final boolean AMENDMENTS = isLoaded("amendments");
@@ -70,7 +72,14 @@ public class CompatHandler {
     public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
     public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
-
+    public static final boolean OPTIFINE = ((BooleanSupplier) () -> {
+        try {
+            Class.forName("net.optifine.Config");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }).getAsBoolean();
 
     private static boolean isLoaded(String name) {
         return PlatHelper.isModLoaded(name);

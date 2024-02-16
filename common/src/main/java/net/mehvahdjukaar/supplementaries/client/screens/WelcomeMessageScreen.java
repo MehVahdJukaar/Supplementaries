@@ -1,36 +1,42 @@
-package net.mehvahdjukaar.supplementaries.forge;
+package net.mehvahdjukaar.supplementaries.client.screens;
 
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.*;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
 // Credits to Twilight Forest
-public class OptifrickScreen extends Screen {
+public class WelcomeMessageScreen extends Screen {
     private final Screen lastScreen;
-    private int ticksUntilEnable = 200;
+    private final Component text;
+    private final Component url;
+    private final Runnable onTurnOff;
+    private int ticksUntilEnable;
     private MultiLineLabel message;
     private MultiLineLabel suggestions;
-    private static final Component text = Component.translatable("gui.supplementaries.optifine.message");
 
-    private static final MutableComponent url = Component.translatable("gui.supplementaries.optifine.suggestions")
-            .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/TheUsefulLists/UsefulMods")));
     private Button exitButton;
     private Button disaleButton;
 
-    public OptifrickScreen(Screen screen) {
-        super(Component.translatable("gui.supplementaries.optifine.title")
-                .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD));
+    public WelcomeMessageScreen(Screen screen, int ticksUntilEnable,
+                                Component title, Component text, Component url,
+                                Runnable onTurnOff) {
+        super(title);
         this.message = MultiLineLabel.EMPTY;
         this.suggestions = MultiLineLabel.EMPTY;
         this.lastScreen = screen;
+        this.ticksUntilEnable = ticksUntilEnable;
+        this.text = text;
+        this.url = url;
+        this.onTurnOff = onTurnOff;
     }
 
     @Override
@@ -47,9 +53,9 @@ public class OptifrickScreen extends Screen {
         this.exitButton.active = false;
 
         this.disaleButton = this.addRenderableWidget(Button.builder(
-                Component.translatable("gui.supplementaries.optifine.turn_off"), (pressed) -> {
+                Component.translatable("gui.supplementaries.welcome_screen.turn_off"), (pressed) -> {
             Minecraft.getInstance().setScreen(this.lastScreen);
-            ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
+            onTurnOff.run();
         }).bounds(this.width / 2 - 155, this.height * 5 / 6, 150, 20).build());
         this.disaleButton.active = false;
 
@@ -104,4 +110,35 @@ public class OptifrickScreen extends Screen {
         int right = this.width / 2 + wid / 2;
         return xPos >= left && xPos <= right ? Minecraft.getInstance().font.getSplitter().componentStyleAtWidth(url, xPos - left) : null;
     }
+
+
+
+    // static stuff
+
+    private static final Component OF_TEXT = Component.translatable("gui.supplementaries.optifine.message");
+
+    private static final Component OF_URL = Component.translatable("gui.supplementaries.optifine.suggestions")
+            .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://optifine.alternatives.lambdaurora.dev/")));
+
+    private static final Component OF_TITLE = Component.translatable("gui.supplementaries.optifine.title")
+            .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD);
+
+    public static WelcomeMessageScreen createOptifine(Screen screen) {
+        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT, OF_URL, SuppPlatformStuff::disableOFWarn);
+    }
+
+    private static final Component AM_TEXT = Component.translatable("gui.supplementaries.amendments.message");
+
+    private static final Component AM_URL = Component.translatable("gui.supplementaries.amendments.suggestions")
+            .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).applyFormat(ChatFormatting.UNDERLINE)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
+
+    private static final Component AM_TITLE = Component.translatable("gui.supplementaries.amendments.title")
+            .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+
+    public static WelcomeMessageScreen createAmendments(Screen screen) {
+        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT, OF_URL, SuppPlatformStuff::disableAMWarn);
+    }
+
 }

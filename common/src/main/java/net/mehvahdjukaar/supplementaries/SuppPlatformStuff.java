@@ -71,4 +71,14 @@ public class SuppPlatformStuff {
     public static  VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
         throw new ArrayStoreException();
     }
+
+    @ExpectPlatform
+    public static void disableAMWarn() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void disableOFWarn() {
+        throw new AssertionError();
+    }
 }

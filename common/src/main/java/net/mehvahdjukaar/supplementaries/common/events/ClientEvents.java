@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
+import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
@@ -65,6 +66,18 @@ public class ClientEvents {
         if (ClientConfigs.General.CONFIG_BUTTON.get()) {
             ConfigButton.setupConfigButton(screen, listeners, adder);
         }
+    }
+
+    @EventCalled
+    public static void onDrawScreen(Screen screen) {
+        Screen newScreen = screen;
+        if (CompatHandler.OPTIFINE && !ClientConfigs.General.NO_OPTIFINE_WARN.get()) {
+            newScreen = WelcomeMessageScreen.createOptifine(newScreen);
+        }
+        if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
+            newScreen = WelcomeMessageScreen.createAmendments(newScreen);
+        }
+        if (newScreen != screen) Minecraft.getInstance().setScreen(newScreen);
     }
 
     @EventCalled
@@ -137,4 +150,6 @@ public class ClientEvents {
             NetworkHandler.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
         }
     }
+
+
 }
