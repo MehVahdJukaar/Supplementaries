@@ -54,7 +54,9 @@ public class ClientConfigs {
     }
 
     private static void onChange() {
-        Double b = ModSharedVariables.getDouble("color_multiplier");
+        //TODO!!
+        Double b = 1.2;
+       // Double b = ModSharedVariables.getDouble("color_multiplier");
         signColorMult = (float) (double) (b == null ? 1 : b);
     }
 

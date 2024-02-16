@@ -207,6 +207,8 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         //needed for when it drops from falling block since it has a block entity
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
+            // Idk, why needed, got a crash report for it
+            if (!tile.hasLevel()) tile.setLevel(builder.getLevel());
             List<ItemStack> l = super.getDrops(state, builder); //if it's not treasure
             for (int i = 0; i < tile.getContainerSize(); ++i) {
                 l.add(tile.getItem(i));

@@ -8,13 +8,11 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.StringRepresentable;
@@ -22,8 +20,6 @@ import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
@@ -62,7 +58,6 @@ public class ModBlockProperties {
     public static final IntegerProperty LIGHT_LEVEL_5_15 = IntegerProperty.create("light_level", 5, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
     public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
-    public static final IntegerProperty OPENING_PROGRESS = IntegerProperty.create("opening_progress", 0, 2);
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
     public static final IntegerProperty ROTATION_4 = IntegerProperty.create("rotation", 0, 4);
     public static final IntegerProperty HONEY_LEVEL_POT = IntegerProperty.create("honey_level", 0, 4);
@@ -73,8 +68,6 @@ public class ModBlockProperties {
     public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding", Winding.class);
     public static final EnumProperty<PostType> POST_TYPE = EnumProperty.create("type", PostType.class);
     public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape", RakeDirection.class);
-    public static final EnumProperty<SignAttachment> SIGN_ATTACHMENT = EnumProperty.create("sign_attachment", SignAttachment.class);
-    public static final EnumProperty<BlockAttachment> BLOCK_ATTACHMENT = EnumProperty.create("attachment", BlockAttachment.class);
     public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
 
@@ -108,7 +101,7 @@ public class ModBlockProperties {
         PostType(String name, int width) {
             this.name = name;
             this.width = width;
-            this.offset = (8 - width / 2) / 16f;
+            this.offset = (8 - width / 2f) / 16f;
         }
 
         public int getWidth() {
@@ -170,58 +163,6 @@ public class ModBlockProperties {
             return type;
         }
 
-    }
-
-    //for wall lanterns
-    public enum BlockAttachment implements StringRepresentable {
-        BLOCK("block"),
-        BEAM("beam"),
-        WALL("wall"),
-        PALISADE("palisade"),
-        POST("post"),
-        STICK("stick");
-
-        private final String name;
-
-        BlockAttachment(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return this.name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        @Nullable
-        public static BlockAttachment get(BlockState state, BlockPos pos, LevelReader level, Direction facing) {
-            if (state.isFaceSturdy(level, pos, facing)) return BLOCK;
-            PostType postType = PostType.get(state, true);
-            if (postType == null) {
-                //case for sticks
-                if ((state.getBlock() instanceof StickBlock &&
-                        (facing.getAxis() == Direction.Axis.X ?
-                                !state.getValue(StickBlock.AXIS_X) :
-                                !state.getValue(StickBlock.AXIS_Z))) ||
-                        (state.getBlock() instanceof EndRodBlock &&
-                                state.getValue(EndRodBlock.FACING).getAxis() == Direction.Axis.Y)) return STICK;
-                return null;
-            }
-            return switch (postType) {
-                case BEAM -> BEAM;
-                case WALL -> WALL;
-                case PALISADE -> PALISADE;
-                case POST -> POST;
-            };
-        }
     }
 
     public enum Topping implements StringRepresentable {
@@ -384,89 +325,6 @@ public class ModBlockProperties {
         }
     }
 
-
-    public enum SignAttachment implements StringRepresentable {
-        CEILING("ceiling"),
-        BLOCK_BLOCK(BlockAttachment.BLOCK, BlockAttachment.BLOCK),
-        BLOCK_BEAM(BlockAttachment.BLOCK, BlockAttachment.BEAM),
-        BLOCK_WALL(BlockAttachment.BLOCK, BlockAttachment.WALL),
-        BLOCK_PALISADE(BlockAttachment.BLOCK, BlockAttachment.PALISADE),
-        BLOCK_POST(BlockAttachment.BLOCK, BlockAttachment.POST),
-
-
-        BEAM_BLOCK(BlockAttachment.BEAM, BlockAttachment.BLOCK),
-        BEAM_BEAM(BlockAttachment.BEAM, BlockAttachment.BEAM),
-        BEAM_WALL(BlockAttachment.BEAM, BlockAttachment.WALL),
-        BEAM_PALISADE(BlockAttachment.BEAM, BlockAttachment.PALISADE),
-        BEAM_POST(BlockAttachment.BEAM, BlockAttachment.POST),
-
-
-        WALL_BLOCK(BlockAttachment.WALL, BlockAttachment.BLOCK),
-        WALL_BEAM(BlockAttachment.WALL, BlockAttachment.BEAM),
-        WALL_WALL(BlockAttachment.WALL, BlockAttachment.WALL),
-        WALL_PALISADE(BlockAttachment.WALL, BlockAttachment.PALISADE),
-        WALL_POST(BlockAttachment.WALL, BlockAttachment.POST),
-
-
-        PALISADE_BLOCK(BlockAttachment.PALISADE, BlockAttachment.BLOCK),
-        PALISADE_BEAM(BlockAttachment.PALISADE, BlockAttachment.BEAM),
-        PALISADE_WALL(BlockAttachment.PALISADE, BlockAttachment.WALL),
-        PALISADE_PALISADE(BlockAttachment.PALISADE, BlockAttachment.PALISADE),
-        PALISADE_POST(BlockAttachment.PALISADE, BlockAttachment.POST),
-
-
-        POST_BLOCK(BlockAttachment.POST, BlockAttachment.BLOCK),
-        POST_BEAM(BlockAttachment.POST, BlockAttachment.BEAM),
-        POST_WALL(BlockAttachment.POST, BlockAttachment.WALL),
-        POST_PALISADE(BlockAttachment.POST, BlockAttachment.PALISADE),
-        POST_POST(BlockAttachment.POST, BlockAttachment.POST),
-
-        STICK_BLOCK(BlockAttachment.STICK, BlockAttachment.BLOCK),
-        STICK_BEAM(BlockAttachment.STICK, BlockAttachment.BEAM),
-        STICK_WALL(BlockAttachment.STICK, BlockAttachment.WALL),
-        STICK_PALISADE(BlockAttachment.STICK, BlockAttachment.PALISADE),
-        STICK_POST(BlockAttachment.STICK, BlockAttachment.POST),
-        STICK_STICK(BlockAttachment.STICK, BlockAttachment.STICK),
-
-        BLOCK_STICK(BlockAttachment.BLOCK, BlockAttachment.STICK),
-        BEAM_STICK(BlockAttachment.BEAM, BlockAttachment.STICK),
-        WALL_STICK(BlockAttachment.WALL, BlockAttachment.STICK),
-        PALISADE_STICK(BlockAttachment.PALISADE, BlockAttachment.STICK),
-        POST_STICK(BlockAttachment.POST, BlockAttachment.STICK);
-
-        public final BlockAttachment left;
-        public final BlockAttachment right;
-        private final String name;
-
-        SignAttachment(BlockAttachment left, BlockAttachment right) {
-            this.name = left.name + "_" + right.name;
-            this.left = left;
-            this.right = right;
-        }
-
-        SignAttachment(String name) {
-            this.name = name;
-            this.left = BlockAttachment.BLOCK;
-            this.right = BlockAttachment.BLOCK;
-        }
-
-        @Override
-        public String toString() {
-            return this.name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public SignAttachment withAttachment(boolean left, @Nullable BlockAttachment attachment) {
-            if (attachment == null) attachment = BlockAttachment.BLOCK;
-            String s = left ? attachment.name + "_" + this.right : this.left + "_" + attachment.name;
-            return SignAttachment.valueOf(s.toUpperCase(Locale.ROOT));
-        }
-
-    }
 
 
     public enum DisplayStatus implements StringRepresentable {
