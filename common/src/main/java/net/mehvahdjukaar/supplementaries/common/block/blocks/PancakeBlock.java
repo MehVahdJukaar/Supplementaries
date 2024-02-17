@@ -2,14 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Topping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -155,8 +154,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluid f, CompoundTag nbt, int amount) {
-        Topping topping = Topping.fromFluid(f);
+    public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
+        Topping topping = Topping.fromFluid(fluid.getFluid().value());
         if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
             world.setBlock(pos, state.setValue(TOPPING, topping), 2);
             world.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);

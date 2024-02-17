@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
+import net.mehvahdjukaar.moonlight.api.ModSharedVariables;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
@@ -54,10 +55,8 @@ public class ClientConfigs {
     }
 
     private static void onChange() {
-        //TODO!!
-        Double b = 1.2;
-       // Double b = ModSharedVariables.getDouble("color_multiplier");
-        signColorMult = (float) (double) (b == null ? 1 : b);
+        Double b = ModSharedVariables.getDouble("color_multiplier");
+        signColorMult = (float) (b == null ? 1 : b);
     }
 
     private static float signColorMult = 1;
@@ -70,6 +69,7 @@ public class ClientConfigs {
     public static class Items {
 
         private static void init() {
+
         }
 
         public static final Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;

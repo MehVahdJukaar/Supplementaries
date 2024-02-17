@@ -7,8 +7,6 @@ import net.mehvahdjukaar.moonlight.api.client.model.CustomGeometry;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomModelLoader;
 import net.minecraft.util.GsonHelper;
 
-import static net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader.parseModel;
-
 public class JarModelLoader implements CustomModelLoader {
 
     @Override
@@ -18,7 +16,7 @@ public class JarModelLoader implements CustomModelLoader {
         float height = GsonHelper.getAsFloat(json, "liquid_max_height") / 16f;
         float y0 = GsonHelper.getAsFloat(json, "liquid_y_offset") / 16f;
         return (modelBaker, spriteGetter, transform, location) -> {
-            var g = parseModel(model, modelBaker, spriteGetter, transform, location);
+            var g = CustomModelLoader.parseModel(model, modelBaker, spriteGetter, transform, location);
             return new JarBakedModel(g, width, height, y0, transform);
         };
     }

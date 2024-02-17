@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
@@ -15,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -23,6 +21,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
@@ -122,9 +121,9 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
             if (compoundTag.contains("FluidHolder")) {
                 CompoundTag com = compoundTag.getCompound("FluidHolder");
-                SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
+                var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
                 int count = com.getInt("Count");
-                if (!s.isEmpty() && count > 0) {
+                if (holder != null && !holder.value().isEmpty() && count > 0) {
 
                     CompoundTag nbt = null;
                     String add = "";
@@ -137,7 +136,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
                     }
 
                     tooltip.add(Component.translatable("message.supplementaries.fluid_tooltip",
-                            Component.translatable(s.getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
+                            Component.translatable(holder.value().getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
                     if (nbt != null) {
                         PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
@@ -174,19 +173,6 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
                 }
             }
         }
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null) {
-            if (tag.contains("FluidHolder")) {
-                CompoundTag com = tag.getCompound("FluidHolder");
-                SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
-                if (s == ModSoftFluids.DIRT.get()) return Rarity.RARE;
-            }
-        }
-        return super.getRarity(stack);
     }
 
     //nonsense jar drinking here

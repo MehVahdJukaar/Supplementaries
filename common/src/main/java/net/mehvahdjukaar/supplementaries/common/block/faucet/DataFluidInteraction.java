@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
@@ -31,10 +32,9 @@ public record DataFluidInteraction(RuleTest target, ResourceLocation softFluid, 
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state,
                                       FaucetBlockTile.FillAction fillAction) {
         if (target.test(state, level.random)) {
-            var fluid = SoftFluidRegistry.getOptional(softFluid);
+            var fluid = SoftFluidRegistry.getOptionalHolder(softFluid);
             if (fluid.isPresent()) {
-                faucetTank.fill(fluid.get());
-                faucetTank.setCount(amount);
+                faucetTank.setFluid(new SoftFluidStack(fluid.get(), amount));
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     output.ifPresent(s -> level.setBlock(pos, s, 3));

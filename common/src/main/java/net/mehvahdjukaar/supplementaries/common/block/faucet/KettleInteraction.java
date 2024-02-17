@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.FarmersRespriteCompat;
@@ -22,7 +21,7 @@ class KettleInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
             int waterLevel = state.getValue(p);
             if (waterLevel > 0) {
 
-                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.get());
+                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.getHolder());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, state.setValue(p,
@@ -39,8 +38,7 @@ class KettleInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         if (FarmersRespriteCompat.isKettle(state)) {
-            SoftFluid softFluid = faucetTank.getFluid();
-            if (softFluid == BuiltInSoftFluids.WATER.get()) {
+            if (faucetTank.getFluid().is(BuiltInSoftFluids.WATER.get())) {
                 var p = FarmersRespriteCompat.getWaterLevel();
                 int levels = state.getValue(p);
                 if (levels < 3) {

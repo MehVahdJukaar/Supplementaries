@@ -40,7 +40,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     @Override
     public ExtraModelData getExtraModelData() {
             return ExtraModelData.builder()
-                .with(FLUID_ID, getSoftFluidTank().getFluid())
+                .with(FLUID_ID, getSoftFluidTank().getFluidValue())
                 .build();
     }
 
@@ -60,7 +60,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         if (this.level == null) return;
         //TODO: only call after you finished updating your tile so others can react properly (faucets)
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock());
-        int light = this.fluidHolder.getFluid().getLuminosity();
+        int light = this.fluidHolder.getFluidValue().getLuminosity();
         if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }

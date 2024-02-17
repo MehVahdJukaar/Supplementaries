@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -45,9 +46,10 @@ public class JarItemRenderer extends CageItemRenderer {
                     VertexUtils.renderFish(builder1, poseStack, 0, 0, fishTexture, light);
                     poseStack.popPose();
                 }
-                if (com.contains("Fluid")) {
-                    SoftFluid s = SoftFluidRegistry.get(com.getString("Fluid"));
-                    if (s != null) {
+                if (com.contains("id")) {
+                    var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
+                    if (holder != null) {
+                        var s = holder.value();
                         renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
                                 poseStack, buffer, light, overlay);
                     }
@@ -59,8 +61,9 @@ public class JarItemRenderer extends CageItemRenderer {
             int count = com.getInt("Count");
             if (count != 0) {
                 int color = com.getInt("CachedColor");
-                SoftFluid fluid = SoftFluidRegistry.get(com.getString("Fluid"));
-                if (fluid != null && !fluid.isEmpty() && count > 0) {
+                var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
+                if (holder != null && count > 0) {
+                    SoftFluid fluid = holder.value();
                     renderFluid(getHeight(count, 1), color, 0, fluid.getStillTexture(),
                             poseStack, buffer, light, overlay);
                 }
@@ -71,10 +74,10 @@ public class JarItemRenderer extends CageItemRenderer {
             AtomicInteger i = new AtomicInteger();
             RAND.setSeed(420);
 
-            JarBlockTileRenderer.renderCookies(poseStack, buffer, RAND, light, overlay, () ->{
-                        int j = i.getAndIncrement();
-                        return j < items.size() ? ItemStack.of(items.getCompound(j)) : ItemStack.EMPTY;
-                    });
+            JarBlockTileRenderer.renderCookies(poseStack, buffer, RAND, light, overlay, () -> {
+                int j = i.getAndIncrement();
+                return j < items.size() ? ItemStack.of(items.getCompound(j)) : ItemStack.EMPTY;
+            });
         }
     }
 

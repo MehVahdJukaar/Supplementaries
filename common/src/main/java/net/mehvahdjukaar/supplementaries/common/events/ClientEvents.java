@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
@@ -10,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -18,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -50,6 +53,12 @@ public class ClientEvents {
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
         if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
             InteractEventsHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
+        }
+
+        if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
+            if (AdditionalItemPlacementsAPI.getBehavior(itemStack.getItem()) instanceof SuppAdditionalPlacement) {
+                components.add(Component.translatable("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            }
         }
 
         Item item = itemStack.getItem();

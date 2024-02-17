@@ -267,7 +267,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         BlackBoardScreen.open(this);
     }
 
-
     @Override
     public void setWaxed(boolean b) {
         this.waxed = b;

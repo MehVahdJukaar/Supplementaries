@@ -556,7 +556,10 @@ public class CommonConfigs {
             builder.push("functional");
 
             builder.push("rope");
-            ROPE_ENABLED = feature(builder);
+            ROPE_ENABLED = () -> true;
+            var funny = feature(builder.comment("So you came here to disable supp rope not because they are bad but because they are the easiest to disable, despite them doing all the stuff other ropes can do. Well too bad, this config doesnt do anything. Learn how to use datapacks to disable stuff, like its normally done"));
+            FEATURE_TOGGLES.put("rope", () -> true);
+
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                     .define("block_side_attachment", true);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")

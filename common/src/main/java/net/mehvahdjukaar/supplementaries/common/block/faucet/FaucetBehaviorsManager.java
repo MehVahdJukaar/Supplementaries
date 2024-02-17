@@ -7,12 +7,14 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile.FillAction;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -21,6 +23,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -101,18 +104,16 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     }
 
 
-    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid) {
-        tempFluidHolder.fill(softFluid);
-        tempFluidHolder.setCount(2);
+    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
+        prepareToTransferBottle(tempFluidHolder, softFluid, null);
     }
 
-    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid, CompoundTag tag) {
-        tempFluidHolder.fill(softFluid, tag);
-        tempFluidHolder.setCount(2);
+    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid, @Nullable CompoundTag tag) {
+        tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 2, tag));
     }
 
-    static void prepareToTransferBucket(SoftFluidTank tempFluidHolder, SoftFluid softFluid) {
-        tempFluidHolder.fill(softFluid);
+    static void prepareToTransferBucket(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
+        tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 4));
     }
 
 }

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
@@ -66,14 +67,14 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             color = tempFluidHolder.getFlowingTint(level, worldPosition);
         }
         return ExtraModelData.builder()
-                .with(FLUID, tempFluidHolder.getFluid())
+                .with(FLUID, tempFluidHolder.getFluidValue())
                 .with(FLUID_COLOR, color)
                 .build();
     }
 
     public void updateLight() {
         if (this.level == null) return;
-        int light = this.tempFluidHolder.getFluid().getLuminosity();
+        int light = this.tempFluidHolder.getFluidValue().getLuminosity();
         if (light != 0) light = (int) Mth.clamp(light / 2f, 1, 7);
         if (light != this.getBlockState().getValue(FaucetBlock.LIGHT_LEVEL)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FaucetBlock.LIGHT_LEVEL, light), 2);
@@ -105,7 +106,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         if (!fluidState.isEmpty() && fluidState.isSource()) {
             var f = SoftFluidRegistry.fromVanillaFluid(fluidState.getType());
             if (f != null) { //just to be sure
-                this.tempFluidHolder.fill(f);
+                this.tempFluidHolder.setFluid(new SoftFluidStack(f));
                 this.updateLight();
                 return true;
             } else {
@@ -189,8 +190,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     //sf->ff/sf
     @SuppressWarnings("ConstantConditions")
     private boolean tryFillingBlockBelow() {
-        SoftFluid softFluid = this.tempFluidHolder.getFluid();
-        if (softFluid.isEmpty()) return false;
+        if (this.tempFluidHolder.isEmpty()) return false;
 
         BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);

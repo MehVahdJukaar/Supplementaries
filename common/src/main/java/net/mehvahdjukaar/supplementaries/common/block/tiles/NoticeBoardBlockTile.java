@@ -303,6 +303,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return textHolder;
     }
 
+    // why is this here? TODO: remove
     @Override
     public void openScreen(Level level, BlockPos blockPos, Player player) {
     }

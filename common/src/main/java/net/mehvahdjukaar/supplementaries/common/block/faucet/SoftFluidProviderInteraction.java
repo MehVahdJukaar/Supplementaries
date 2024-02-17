@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
@@ -40,11 +41,11 @@ class SoftFluidProviderInteraction implements
                                                   BlockState state,
                                                   @Nullable FaucetBlockTile.FillAction fillAction, Object backBlock) {
         if (backBlock instanceof ISoftFluidProvider provider) {
-            var stack = provider.getProvidedFluid(level, state, pos);
-            prepareToTransferBottle(faucetTank, stack.getFirst(), stack.getSecond());
+            SoftFluidStack stack = provider.getProvidedFluid(level, state, pos);
+            prepareToTransferBottle(faucetTank, stack.getFluid(), stack.getTag());
             if (fillAction == null) return InteractionResult.CONSUME;
             if (fillAction.tryExecute()) {
-                provider.consumeProvidedFluid(level, state, pos, faucetTank.getFluid(), faucetTank.getNbt(), 1);
+                provider.consumeProvidedFluid(level, state, pos, faucetTank.getFluid().copyWithCount(1));
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.CONSUME;
@@ -65,7 +66,7 @@ class SoftFluidProviderInteraction implements
 
     public InteractionResult tryFillGeneric(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state, Object object) {
         if (object instanceof ISoftFluidConsumer consumer) {
-            return consumer.tryAcceptingFluid(level, state, pos, faucetTank.getFluid(), faucetTank.getNbt(), 1)
+            return consumer.tryAcceptingFluid(level, state, pos, faucetTank.getFluid().copyWithCount(1))
                     ? InteractionResult.SUCCESS : InteractionResult.FAIL;
         }
         return InteractionResult.PASS;

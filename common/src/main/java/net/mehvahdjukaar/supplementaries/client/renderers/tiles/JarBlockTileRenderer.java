@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
@@ -114,9 +115,11 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
         }
         //render fluid
-        if (!USE_MODEL && !tile.fluidHolder.isEmpty()) {
-            renderFluid(tile.fluidHolder.getHeight(1), tile.fluidHolder.getTintColor(tile.getLevel(), tile.getBlockPos()),
-                    tile.fluidHolder.getFluid().getLuminosity(), tile.fluidHolder.getFluid().getStillTexture(),
+        SoftFluidTank tank = tile.fluidHolder;
+        if (!USE_MODEL && !tank.isEmpty()) {
+            SoftFluid fluid = tank.getFluidValue();
+            renderFluid(tank.getHeight(1), tank.getTintColor(tile.getLevel(), tile.getBlockPos()),
+                    fluid.getLuminosity(), fluid.getStillTexture(),
                     poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }

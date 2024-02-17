@@ -28,13 +28,6 @@ public class MiscUtils {
         return false;
     }
 
-    public static boolean showsPlaceableHints(BlockGetter worldIn, TooltipFlag flagIn) {
-        if (worldIn instanceof Level l && l.isClientSide) {
-            return ClientConfigs.General.PLACEABLE_TOOLTIP.get();
-        }
-        return false;
-    }
-
     public enum Festivity {
         NONE,
         HALLOWEEN,

@@ -22,7 +22,7 @@ class BeehiveInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
 
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             if (state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.HONEY.get());
+                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.HONEY.getHolder());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 0), 3);
@@ -37,7 +37,7 @@ class BeehiveInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         var fluid = faucetTank.getFluid();
-        if (fluid == BuiltInSoftFluids.HONEY.get() && state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
+        if (fluid.is(BuiltInSoftFluids.HONEY.get()) && state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             int h = state.getValue(BlockStateProperties.LEVEL_HONEY);
             if (h == 0) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);

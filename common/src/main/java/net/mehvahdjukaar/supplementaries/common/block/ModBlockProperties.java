@@ -184,8 +184,9 @@ public class ModBlockProperties {
         }
 
         public static Pair<Topping, Item> fromFluidItem(Item item) {
-            var s = SoftFluidRegistry.fromItem(item);
-            if (s.isEmpty()) return null;
+            var holder = SoftFluidRegistry.fromItem(item);
+            if (holder == null) return null;
+            SoftFluid s = holder.value();
             var containers = s.getContainerList();
             var cat = containers.getCategoryFromFilled(item);
             if (cat.isEmpty() || cat.get().getAmount() != 1) return null;

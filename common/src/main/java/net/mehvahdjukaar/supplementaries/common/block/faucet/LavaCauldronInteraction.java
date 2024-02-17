@@ -17,7 +17,7 @@ class LavaCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget 
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
                                       BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
         if (state.is(Blocks.LAVA_CAULDRON)) {
-            prepareToTransferBucket(faucetTank, BuiltInSoftFluids.LAVA.get());
+            prepareToTransferBucket(faucetTank, BuiltInSoftFluids.LAVA.getHolder());
             if (fillAction == null) return InteractionResult.SUCCESS;
             if (fillAction.tryExecute()) {
                 level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
@@ -36,8 +36,8 @@ class LavaCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget 
 
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        if (state.is(Blocks.CAULDRON) && faucetTank.getFluid() == BuiltInSoftFluids.LAVA.get()) {
-            if (faucetTank.getCount() == 5) {
+        if (state.is(Blocks.CAULDRON) && faucetTank.getFluid().is(BuiltInSoftFluids.LAVA.get())) {
+            if (faucetTank.getFluidCount() == 5) {
                 level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);
                 return InteractionResult.SUCCESS;
             }

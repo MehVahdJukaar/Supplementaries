@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -28,7 +28,7 @@ class WaterCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget
                     return InspirationCompat.doCauldronStuff(level.getBlockEntity(pos), faucetTank, fillAction);
                 }
 
-                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.get());
+                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.getHolder());
                 if (fillAction == null) return InteractionResult.SUCCESS;
                 if (fillAction.tryExecute()) {
                     if (waterLevel > 1) {
@@ -46,10 +46,10 @@ class WaterCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget
     @Override
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof AbstractCauldronBlock) {
-            SoftFluid softFluid = faucetTank.getFluid();
+            SoftFluidStack softFluid = faucetTank.getFluid();
             if (CompatHandler.INSPIRATIONS) {
                 return InspirationCompat.tryAddFluid(level.getBlockEntity(pos), faucetTank);
-            } else if (softFluid == BuiltInSoftFluids.WATER.get()) {
+            } else if (softFluid.is(BuiltInSoftFluids.WATER.get())) {
                 if (state.is(Blocks.WATER_CAULDRON)) {
                     int levels = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
                     if (levels < 3) {

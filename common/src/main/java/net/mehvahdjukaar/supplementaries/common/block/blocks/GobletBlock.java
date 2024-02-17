@@ -92,12 +92,12 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         if (0.05 > random.nextFloat()) {
             if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
-                SoftFluidTank holder = tile.getSoftFluidTank();
-                if (holder.getFluid() == BuiltInSoftFluids.POTION.get()) {
-                    int i = holder.getTintColor(world, pos);
-                    double d0 = (double) (i >> 16 & 255) / 255.0D;
-                    double d1 = (double) (i >> 8 & 255) / 255.0D;
-                    double d2 = (double) (i & 255) / 255.0D;
+                SoftFluidTank tank = tile.getSoftFluidTank();
+                if (tank.getFluid().is(BuiltInSoftFluids.POTION.get())) {
+                    int i = tank.getTintColor(world, pos);
+                    double d0 = (i >> 16 & 255) / 255.0D;
+                    double d1 = (i >> 8 & 255) / 255.0D;
+                    double d2 = (i & 255) / 255.0D;
 
                     world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.3125 + random.nextFloat() * 0.375, pos.getY() + 0.5625, pos.getZ() + 0.3125 + random.nextFloat() * 0.375, d0, d1, d2);
                 }

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,11 +23,15 @@ class BrewingStandInteraction implements
         if (tile instanceof BrewingStandBlockEntity brewingStand) {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);
-                if (faucetTank.tryDrainItem(stack, level, pos, true, false) != null) {
-                    ItemStack empty = faucetTank.tryDrainItem(stack, level, pos, false, false);
-                    faucetTank.setCount(2);
+                //simulate draining
+                InteractionResultHolder<ItemStack> result = faucetTank.drainItem(stack, level, pos, true, false);
+                if(result.getResult().consumesAction()) {
+                    ItemStack empty = result.getObject();
+                    faucetTank.getFluid().setCount(2); //replenish
                     if (fillAction == null) return InteractionResult.CONSUME;
                     if (fillAction.tryExecute()) {
+                        //actually empties
+                        faucetTank.drainItem(stack, level, pos, false, false);
                         brewingStand.setItem(i, empty.copy());//should never be null since we simulated
                         tile.setChanged();
                         return InteractionResult.SUCCESS;
@@ -43,9 +48,9 @@ class BrewingStandInteraction implements
         if (tile instanceof BrewingStandBlockEntity brewingStand) {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);
-                var result = faucetTank.tryFillingItem(stack.getItem(), level, pos, false, false);
-                if (result != null) {
-                    brewingStand.setItem(i, result.copy());
+                InteractionResultHolder<ItemStack> result = faucetTank.fillItem(stack, level, pos, false, false);
+                if (result.getResult().consumesAction()) {
+                    brewingStand.setItem(i, result.getObject().copy());
                     tile.setChanged();
                     //TODO: fix visual update
                     //BlockState s = tile.getBlockState();

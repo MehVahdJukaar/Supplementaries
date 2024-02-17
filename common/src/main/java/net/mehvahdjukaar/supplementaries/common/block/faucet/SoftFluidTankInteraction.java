@@ -20,11 +20,11 @@ class SoftFluidTankInteraction implements
                                       @Nullable FaucetBlockTile.FillAction fillAction) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
             SoftFluidTank fluidHolder = holder.getSoftFluidTank();
-            faucetTank.copy(fluidHolder);
-            faucetTank.setCount(2);
+            faucetTank.copyContent(fluidHolder);
+            faucetTank.getFluid().setCount(2);
             if (fillAction == null) return InteractionResult.CONSUME;
             if (fillAction.tryExecute()) {
-                fluidHolder.shrink(1);
+                fluidHolder.getFluid().shrink(1);
                 tile.setChanged();
                 return InteractionResult.SUCCESS;
             }
@@ -37,10 +37,10 @@ class SoftFluidTankInteraction implements
     public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile) {
         if (tile instanceof ISoftFluidTankProvider holder) {
             SoftFluidTank tank = holder.getSoftFluidTank();
-            boolean result = faucetTank.tryTransferFluid(tank, faucetTank.getCount() - 1);
+            boolean result = faucetTank.transferFluid(tank, faucetTank.getFluidCount() - 1);
             if (result) {
                 tile.setChanged();
-                faucetTank.fillCount();
+                faucetTank.getFluid().setCount(faucetTank.getCapacity());
                 return InteractionResult.SUCCESS;
             }
             return InteractionResult.FAIL;

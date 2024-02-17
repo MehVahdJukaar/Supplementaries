@@ -52,7 +52,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public ExtraModelData getExtraModelData() {
         return ExtraModelData.builder()
-                .with(FLUID, fluidHolder.getFluid())
+                .with(FLUID, fluidHolder.getFluidValue())
                 .with(FILL_LEVEL, fluidHolder.getHeight(1))
                 .build();
     }
@@ -60,7 +60,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     public void updateTileOnInventoryChanged() {
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
-        int light = this.fluidHolder.getFluid().getLuminosity();
+        int light = this.fluidHolder.getFluidValue().getLuminosity();
         if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2);
         }
