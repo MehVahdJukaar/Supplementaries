@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
@@ -54,7 +55,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     final Optional<ResourceLocation> forceFluidID;
     final Optional<LootParam> loot;
 
-    private Optional<SoftFluid> forceFluid = null;
+    private Optional<Holder<SoftFluid>> forceFluid = null;
 
     public DataDefinedCatchableMob(List<ResourceLocation> owners, float widthIncrement, float heightIncrement, int lightLevel,
                                    Optional<CaptureSettings> captureSettings,
@@ -100,9 +101,9 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     }
 
     @Override
-    public Optional<SoftFluid> shouldRenderWithFluid() {
+    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
         if (this.forceFluid == null) {
-            this.forceFluid = forceFluidID.flatMap(SoftFluidRegistry::getOptional);
+            this.forceFluid = forceFluidID.flatMap(SoftFluidRegistry::getOptionalHolder);
         }
         return this.forceFluid;
     }

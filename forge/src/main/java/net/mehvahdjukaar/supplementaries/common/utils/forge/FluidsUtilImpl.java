@@ -24,7 +24,7 @@ public class FluidsUtilImpl {
             //only works in 250 increment
             if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
             ((SoftFluidTankImpl) tempFluidHolder).copy(handlerBack);
-            tempFluidHolder.setCount(2);
+            tempFluidHolder.getFluid().setCount(2);
             if (fillAction == null) return true;
             if (fillAction.tryExecute()) {
                 handlerBack.drain(250, IFluidHandler.FluidAction.EXECUTE);
@@ -39,10 +39,11 @@ public class FluidsUtilImpl {
         boolean result;
         IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
         if (handlerDown != null) {
-            result = ((SoftFluidTankImpl) tempFluidHolder).tryTransferToFluidTank(handlerDown, tempFluidHolder.getCount() - 1);
+            result = ((SoftFluidTankImpl) tempFluidHolder).tryTransferToFluidTank(handlerDown, tempFluidHolder.getFluidCount() - 1);
             if (result) {
                 tileBelow.setChanged();
-                tempFluidHolder.fillCount();
+                tempFluidHolder.getFluid().setCount(5);
+                tempFluidHolder.capCapacity();
                 return true;
             }
         }

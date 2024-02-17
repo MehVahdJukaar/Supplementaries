@@ -6,7 +6,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -242,7 +244,8 @@ public class MobContainer {
         return null;
     }
 
-    public Optional<SoftFluid> shouldRenderWithFluid() {
+    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
+        JarBlockTile
         if (data == null || !this.isAquarium || this.mobProperties == null) return Optional.empty();
         return this.mobProperties.shouldRenderWithFluid();
     }

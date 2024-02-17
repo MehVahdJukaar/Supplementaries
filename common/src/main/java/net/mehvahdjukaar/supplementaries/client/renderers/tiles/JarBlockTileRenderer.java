@@ -95,7 +95,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
             var fluid = tile.mobContainer.shouldRenderWithFluid();
             if (fluid != null && fluid.isPresent()) {
-                if (fluid.get() == BuiltInSoftFluids.WATER.get()) {
+                if (fluid.get().is(BuiltInSoftFluids.WATER.getID())) {
                     //sand
                     poseStack.pushPose();
                     Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();
@@ -108,7 +108,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     poseStack.popPose();
                 }
                 poseStack.pushPose();
-                SoftFluid s = fluid.get();
+                SoftFluid s = fluid.get().value();
                 renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),
                         poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
                 poseStack.popPose();

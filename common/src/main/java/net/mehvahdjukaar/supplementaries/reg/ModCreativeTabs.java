@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -41,7 +41,7 @@ public class ModCreativeTabs {
 
 
     //my dude you are doing conditional registration here
-    public static final RegSupplier<CreativeModeTab> MOD_TAB =  !CommonConfigs.General.CREATIVE_TAB.get() ? null :
+    public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
@@ -587,7 +587,7 @@ public class ModCreativeTabs {
     private static void afterML(RegHelper.ItemToTabEvent event, String modTarget,
                                 ResourceKey<CreativeModeTab> tab, String key,
                                 Supplier<?>... items) {
-        ResourceLocation id = new ResourceLocation( modTarget);
+        ResourceLocation id = new ResourceLocation(modTarget);
         Item target = BuiltInRegistries.ITEM.getOptional(id).orElse(null);
         if (target != null) {
             after(event, target, tab, key, items);
@@ -667,12 +667,14 @@ public class ModCreativeTabs {
             }
         }
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
-            for (SoftFluid s : SoftFluidRegistry.getValues()) {
+            for (var h : SoftFluidRegistry.getHolders()) {
+                var s = h.value();
                 if (!PlatHelper.isModLoaded(s.getFromMod())) continue;
                 if (s == BuiltInSoftFluids.POTION.get() || s.isEmpty()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
-                fluidHolder.fill(s);
+                fluidHolder.setFluid(new SoftFluidStack(h, 100));
+                fluidHolder.capCapacity();
                 fluidHolder.save(com);
                 tryAddJar(items, com);
             }
@@ -680,7 +682,8 @@ public class ModCreativeTabs {
             for (ResourceLocation potion : BuiltInRegistries.POTION.keySet()) {
                 CompoundTag com = new CompoundTag();
                 com.putString("Potion", potion.toString());
-                fluidHolder.fill(BuiltInSoftFluids.POTION.get(), com);
+                fluidHolder.setFluid(new SoftFluidStack(BuiltInSoftFluids.POTION.getHolder(), 100, com));
+                fluidHolder.capCapacity();
                 CompoundTag com2 = new CompoundTag();
                 fluidHolder.save(com2);
                 tryAddJar(items, com2);

@@ -18,7 +18,7 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         if (context.sourceConfig().getInt("Mode") == 2) {
             if (context.getSourceBlockEntity() instanceof ISoftFluidTankProvider tp) {
-                return Components.literal(tp.getSoftFluidTank().getCount() + " mBtl");
+                return Components.literal(tp.getSoftFluidTank().getFluidCount() + " mBtl");
             }
         }
         return super.provideLine(context, stats);

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.api;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.animal.WaterAnimal;
@@ -11,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 /**
@@ -96,8 +96,7 @@ public interface ICatchableMob {
      *
      * @return should always render with water
      */
-    @NotNull
-    default Optional<SoftFluid> shouldRenderWithFluid() {
+    default Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
         return Optional.empty();
     }
 
