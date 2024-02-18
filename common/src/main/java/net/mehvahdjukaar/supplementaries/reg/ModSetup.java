@@ -127,9 +127,8 @@ public class ModSetup {
                     MOD_SETUP_WORK.get(setupStage).run();
                     Supplementaries.LOGGER.error("No error found. Weird");
                 } catch (Exception e) {
-                    Supplementaries.LOGGER.error(e);
+                    terminateWhenSetupFails(e);
                 }
-                terminateWhenSetupFails();
             }
 
             //stuff that needs tags

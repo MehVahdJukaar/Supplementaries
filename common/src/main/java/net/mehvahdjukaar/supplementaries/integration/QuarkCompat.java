@@ -6,10 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -19,7 +17,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Contract;
-
 import org.jetbrains.annotations.Nullable;
 
 public class QuarkCompat {
@@ -110,6 +107,7 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean tryRotateStool(Level level, BlockState state, BlockPos pos) {
         throw new AssertionError();

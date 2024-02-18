@@ -1,1 +1,1 @@
-fixed book piles not working with loot tables
+turn tables can now shuffle containers when rotating them horizontally. Thanks to genericb for the suggestion

@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -76,9 +77,21 @@ public class CrystalDisplayBlock extends WaterBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.updatePower(state, world, pos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+        super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
+        this.updatePower(state, level, pos);
+        Direction dir = state.getValue(FACING);
+        Direction side = dir.getClockWise();
+        BlockPos sidePos = pos.relative(side);
+        BlockState sideState = level.getBlockState(sidePos);
+        if (sideState.is(this) && sideState.getValue(FACING) == dir && level.getBestNeighborSignal(sidePos) == 0) {
+//TODO: finish
+        }
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     private void updatePower(BlockState state, Level world, BlockPos pos) {
