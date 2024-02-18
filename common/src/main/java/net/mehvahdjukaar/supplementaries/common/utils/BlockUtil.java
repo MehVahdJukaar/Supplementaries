@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
@@ -9,13 +10,17 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -83,25 +88,34 @@ public class BlockUtil {
 
     // can be called on both sides
     // returns the direction onto which the block was actually rotated
-    public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state, Vec3 hit) {
+    public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level level, BlockState state, Vec3 hit) {
+
+        // container shuffle stuff
+        if (CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
+                dir.getAxis() != Direction.Axis.Y && state.hasProperty(BarrelBlock.FACING)) {
+            if (state.getBlock() != ModRegistry.HOURGLASS.get() && level.getBlockEntity(targetPos) instanceof Container c) {
+                shuffleContainerContent(c, level);
+                //continue normally below
+            }
+        }
 
         //interface stuff
         if (state.getBlock() instanceof IRotatable rotatable) {
-            return rotatable.rotateOverAxis(state, world, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
+            return rotatable.rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
         }
-        Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, world, state);
+        Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, level, state);
         if (optional.isPresent()) {
             BlockState rotated = optional.get();
 
-            if (rotated.canSurvive(world, targetPos)) {
-                rotated = Block.updateFromNeighbourShapes(rotated, world, targetPos);
+            if (rotated.canSurvive(level, targetPos)) {
+                rotated = Block.updateFromNeighbourShapes(rotated, level, targetPos);
 
                 if (rotated != state) {
-                    if (world instanceof ServerLevel) {
-                        world.setBlock(targetPos, rotated, 11);
+                    if (level instanceof ServerLevel) {
+                        level.setBlock(targetPos, rotated, 11);
                         //also needs to call neighbor changed
                         //copied from rail. calls neighbor updated. we need both this and updatefromneighbor
-                        world.neighborChanged(rotated, targetPos, rotated.getBlock(), targetPos, false);
+                        level.neighborChanged(rotated, targetPos, rotated.getBlock(), targetPos, false);
                     }
                     return Optional.of(dir);
                 }
@@ -318,7 +332,21 @@ public class BlockUtil {
         if (CompatHandler.QUARK && QuarkCompat.tryRotateStool(level, state, pos)) {
             return Optional.of(face);
         }
+
         return Optional.empty();
+    }
+
+    private static void shuffleContainerContent(Container c, Level level) {
+        ObjectArrayList<ItemStack> content = ObjectArrayList.of();
+        for(int i = 0; i< c.getContainerSize(); i++){
+            content.add(c.removeItemNoUpdate(i));
+        }
+        Util.shuffle(content, level.random);
+
+        for(int i = 0; i< c.getContainerSize(); i++){
+            c.setItem(i, content.get(i));
+        }
+        c.setChanged();
     }
 
     public static Direction getConnectedBedDirection(BlockState bedState) {

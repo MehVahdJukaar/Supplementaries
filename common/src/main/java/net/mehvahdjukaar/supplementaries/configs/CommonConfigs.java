@@ -192,6 +192,8 @@ public class CommonConfigs {
 
             builder.push("turn_table");
             TURN_TABLE_ENABLED = feature(builder);
+            TURN_TABLE_SHUFFLE = builder.comment("Allows turn table (and wrenches) to shuffle inventories when they turn them horizontally")
+                    .define("shuffle_inventories", true);
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
             builder.pop();
@@ -202,11 +204,10 @@ public class CommonConfigs {
                     .define("mineshaft_elevator", 0.035, 0, 1);
             builder.pop();
 
-            builder.push("dispenser_minecart");
-            DISPENSER_MINECART_ENABLED = feature(builder);
-            DISPENSER_MINECART_FRONT = builder.comment("Dispenser minecarts will have their dispenser facing forward instead of up")
-                    .define("face_forward", false);
-            builder.pop();
+            builder.push("crystal_display");
+            CRYSTAL_DISPLAY_ENABLED = feature(builder);
+            CRYSTAL_DISPLAY_CARRY_OVER = builder.comment("Makes it so when a crystal display is receiving at 10 or more power and it has another display to its right, it will connect to it forming a 2 wide display. Disable to have more control over them")
+                            .define("display_carry_over", true);
 
             builder.push("faucet");
             FAUCET_ENABLED = feature(builder);
@@ -224,7 +225,7 @@ public class CommonConfigs {
             GOLD_DOOR_ENABLED = feature(builder, ModConstants.GOLD_DOOR_NAME);
             GOLD_TRAPDOOR_ENABLED = feature(builder, ModConstants.GOLD_TRAPDOOR_NAME);
             LOCK_BLOCK_ENABLED = feature(builder, ModConstants.LOCK_BLOCK_NAME);
-            CRYSTAL_DISPLAY_ENABLED = feature(builder, ModConstants.CRYSTAL_DISPLAY_NAME);
+            DISPENSER_MINECART_ENABLED = feature(builder, ModConstants.DISPENSER_MINECART_NAME);
             RELAYER_ENABLED = feature(builder, ModConstants.RELAYER_NAME);
 
             builder.pop();
@@ -254,6 +255,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> TURN_TABLE_ENABLED;
         public static final Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
+        public static final Supplier<Boolean> TURN_TABLE_SHUFFLE;
 
         public static final Supplier<Boolean> WIND_VANE_ENABLED;
 
@@ -281,6 +283,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> RELAYER_ENABLED;
 
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
+        public static final Supplier<Boolean> CRYSTAL_DISPLAY_CARRY_OVER;
 
         public static final Supplier<Boolean> PULLEY_ENABLED;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;
