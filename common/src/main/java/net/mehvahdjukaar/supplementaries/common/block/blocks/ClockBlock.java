@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -55,12 +56,23 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         int m = (int) (((time % 1000f) / 1000f) * 60);
         int h = time / 1000;
         String a = "";
+
+        String ob = "";
+        String br = "";
+        if (!world.dimensionType().natural()) {
+            time = world.random.nextInt(24000);
+            ob += ChatFormatting.OBFUSCATED;
+            br += ChatFormatting.RESET;
+        }
+
         if (!ClientConfigs.Blocks.CLOCK_24H.get()) {
             a = time < 12000 ? " AM" : " PM";
             h = h % 12;
             if (h == 0) h = 12;
         }
-        player.displayClientMessage(Component.literal(h + ":" + ((m < 10) ? "0" : "") + m + a), true);
+        String text = ob + h + br + ":" + ob + ((m < 10) ? "0" : "") + m + br + a;
+
+        player.displayClientMessage(Component.literal(text), true);
 
     }
 

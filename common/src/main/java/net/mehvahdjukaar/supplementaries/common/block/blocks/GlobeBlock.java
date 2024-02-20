@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -63,7 +64,13 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
-        player.displayClientMessage(Component.translatable("message.supplementaries.compass", pos.getX() ,pos.getZ()), true);
+        String x = String.valueOf(pos.getX());
+        String z = String.valueOf(pos.getZ());
+        if (!level.dimensionType().natural()) {
+            x = ChatFormatting.OBFUSCATED + x + ChatFormatting.RESET;
+            z = ChatFormatting.OBFUSCATED + z + ChatFormatting.RESET;
+        }
+        player.displayClientMessage(Component.translatable("message.supplementaries.compass", x, z), true);
     }
 
     @Override
@@ -123,7 +130,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 level.blockEvent(pos, state.getBlock(), 1, 0);
             } else {
-                if(ClientConfigs.Blocks.GLOBE_COORDINATES.get()) {
+                if (ClientConfigs.Blocks.GLOBE_COORDINATES.get()) {
                     displayCurrentCoordinates(level, player, pos);
                 }
             }

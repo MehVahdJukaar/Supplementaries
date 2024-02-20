@@ -79,7 +79,6 @@ public class InteractEventsHandler {
 
         itemUseOnBlockHP.add(new AntiqueInkBehavior());
         itemUseOnBlockHP.add(new SoapBehavior());
-        itemUseOnBlockHP.add(new DyeBehavior());
         itemUseOnBlockHP.add(new WrenchBehavior());
 
         //maybe move in mixin system (can't for cakes as block interaction has priority)

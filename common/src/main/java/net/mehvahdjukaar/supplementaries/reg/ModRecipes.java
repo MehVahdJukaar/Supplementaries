@@ -43,6 +43,6 @@ public class ModRecipes {
 
 
     private static <T extends CraftingRecipe> Supplier<RecipeSerializer<T>> reg(String name, SimpleCraftingRecipeSerializer.Factory<T> factory) {
-        return RegHelper.registerRecipeSerializer(Supplementaries.res(name), () -> new SimpleCraftingRecipeSerializer<>(factory));
+        return RegHelper.registerSpecialRecipe(Supplementaries.res(name), factory);
     }
 }

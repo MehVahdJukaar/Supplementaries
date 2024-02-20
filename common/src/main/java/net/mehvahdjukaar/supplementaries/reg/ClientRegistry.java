@@ -97,8 +97,6 @@ public class ClientRegistry {
     public static final ResourceLocation ALTIMETER_TEMPLATE = Supplementaries.res("item/altimeter_template");
     public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
 
-    public static final ResourceLocation BELL_ROPE = Supplementaries.res("block/bell_rope");
-    public static final ResourceLocation BELL_CHAIN = Supplementaries.res("block/bell_chain");
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
     public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
@@ -368,8 +366,6 @@ public class ClientRegistry {
         event.register(BLACKBOARD_FRAME);
         event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
-        event.register(BELL_ROPE);
-        event.register(BELL_CHAIN);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
 

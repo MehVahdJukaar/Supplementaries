@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -138,7 +140,7 @@ public class BlockUtil {
         //horizontal facing blocks -easy
         if (dir.getAxis() == Direction.Axis.Y) {
 
-            if (block == Blocks.CAKE ) {
+            if (block == Blocks.CAKE) {
                 var dc = CompatObjects.DIRECTIONAL_CAKE.get();
                 if (dc != null) {
                     int bites = state.getValue(CakeBlock.BITES);
@@ -206,6 +208,13 @@ public class BlockUtil {
         }
         if (state.hasProperty(TrapDoorBlock.HALF)) {
             return Optional.of(state.cycle(TrapDoorBlock.HALF));
+        }
+        if (CompatHandler.QUARK) {
+            WoodType type = WoodTypeRegistry.INSTANCE.getBlockTypeOf(block);
+            if (type != null && type.planks == block) {
+                var verticalPlanks = type.getBlockOfThis("quark:vertical_planks");
+                if (verticalPlanks != null) return Optional.of(verticalPlanks.defaultBlockState());
+            }
         }
         return Optional.empty();
     }
@@ -338,12 +347,12 @@ public class BlockUtil {
 
     private static void shuffleContainerContent(Container c, Level level) {
         ObjectArrayList<ItemStack> content = ObjectArrayList.of();
-        for(int i = 0; i< c.getContainerSize(); i++){
+        for (int i = 0; i < c.getContainerSize(); i++) {
             content.add(c.removeItemNoUpdate(i));
         }
         Util.shuffle(content, level.random);
 
-        for(int i = 0; i< c.getContainerSize(); i++){
+        for (int i = 0; i < c.getContainerSize(); i++) {
             c.setItem(i, content.get(i));
         }
         c.setChanged();
