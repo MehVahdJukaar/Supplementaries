@@ -426,7 +426,7 @@
   "gui.supplementaries.optifine.suggestions": "Here's a selection of mods that we recommend using instead.",
   "gui.supplementaries.optifine.title": "WARNING: OPTIFINE DETECTED",
 
-  "gui.supplementaries.amendments.message": "As of update 2.8.0 some of Supplementaries features in the Tweaks section were moved to a dedicated mod, Amendments.\n\n The mods are meant to function separately, but if you wish to keep all the already-existing old blocks you must install Amendments.\n\n The features moved are the following: WALL LANTERNS, SKULL CANDLES, CEILING POTS, CEILING BANNERS and SKULL PILES. \n\nNote that if you do proceed without all those existing blocks will be LOST.",
+  "gui.supplementaries.amendments.message": "As of update 2.8.0 some of Supplementaries features in the Tweaks section were moved to a dedicated mod, Amendments.\n\n The mods are meant to function separately, but if you wish to keep all the already-existing old blocks you must install Amendments.\n\n The features moved are the following: WALL LANTERNS, SKULL CANDLES, CEILING POTS, CEILING BANNERS and SKULL PILES. \n\nNote that if you proceed without it, all those existing blocks will be lost.",
   "gui.supplementaries.amendments.suggestions": "You can get the mod HERE",
   "gui.supplementaries.amendments.title": "Warning: Amendments is not installed",
 
