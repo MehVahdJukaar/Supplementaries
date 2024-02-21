@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -146,7 +147,7 @@ public class ServerEvents {
             WaySignStructure.recomputeValidStructureCache(registryAccess);
 
             try {
-                SoftFluidRegistry.getRegistry(registryAccess).get(SoftFluidRegistry.EMPTY_ID);
+                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.EMPTY.getID());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }

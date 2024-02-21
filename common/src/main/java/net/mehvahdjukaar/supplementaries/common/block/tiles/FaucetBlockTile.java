@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -104,9 +103,9 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         //fluid stuff
         FluidState fluidState = level.getFluidState(pos.relative(state.getValue(FaucetBlock.FACING).getOpposite()));
         if (!fluidState.isEmpty() && fluidState.isSource()) {
-            var f = SoftFluidRegistry.fromVanillaFluid(fluidState.getType());
+            var f = SoftFluidStack.fromFluid(fluidState.getType(), 1, null);
             if (f != null) { //just to be sure
-                this.tempFluidHolder.setFluid(new SoftFluidStack(f));
+                this.tempFluidHolder.setFluid(f);
                 this.updateLight();
                 return true;
             } else {
@@ -200,7 +199,9 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             if (res == InteractionResult.PASS) continue;
             if (res == InteractionResult.SUCCESS) return true;
             else if (res == InteractionResult.CONSUME) break;
-            else if (res == InteractionResult.FAIL) return false;
+            else if (res == InteractionResult.FAIL) {
+                return false;
+            }
         }
 
         BlockEntity tileBelow = level.getBlockEntity(below);
@@ -210,7 +211,9 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
                 if (res == InteractionResult.PASS) continue;
                 if (res == InteractionResult.SUCCESS) return true;
                 else if (res == InteractionResult.CONSUME) break;
-                else if (res == InteractionResult.FAIL) return false;
+                else if (res == InteractionResult.FAIL) {
+                    return false;
+                }
             }
         }
         return false;

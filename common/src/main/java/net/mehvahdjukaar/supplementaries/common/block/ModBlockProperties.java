@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -184,15 +184,14 @@ public class ModBlockProperties {
         }
 
         public static Pair<Topping, Item> fromFluidItem(Item item) {
-            var holder = SoftFluidRegistry.fromItem(item);
+            var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
             if (holder == null) return null;
-            SoftFluid s = holder.value();
-            var containers = s.getContainerList();
-            var cat = containers.getCategoryFromFilled(item);
-            if (cat.isEmpty() || cat.get().getAmount() != 1) return null;
+            SoftFluid s = holder.getFirst().getFluid().value();
+            var cat = holder.getSecond();
+            if (cat.isEmpty() || cat.getAmount() != 1) return null;
             Topping t = fromFluid(s);
             if(t != NONE){
-                return Pair.of(t, cat.get().getEmptyContainer());
+                return Pair.of(t, cat.getEmptyContainer());
             }
             return null;
         }
