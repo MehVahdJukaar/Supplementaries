@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -39,8 +39,8 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return false;
     }
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+
+    @ForgeOverride
     public boolean isRepairable(ItemStack stack) {
         return false;
     }
@@ -76,7 +76,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return false;
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -57,7 +57,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
         return true;
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
         return CommonConfigs.Building.ITEM_SHELF_LADDER.get();
     }
@@ -103,7 +103,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
 
 
     //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {

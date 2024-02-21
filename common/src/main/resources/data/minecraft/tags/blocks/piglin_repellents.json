@@ -3,8 +3,6 @@
   "values": [
     "supplementaries:sconce_soul",
     "supplementaries:sconce_wall_soul",
-    {"id":"supplementaries:candle_holder_soul","required":false},
-    {"id":"supplementaries:skull_candle_soul","required":false},
-    {"id":"supplementaries:skull_candle_soul_wall","required":false}
+    {"id":"supplementaries:candle_holder_soul","required":false}
   ]
 }

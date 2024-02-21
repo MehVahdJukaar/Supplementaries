@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -51,8 +51,7 @@ public class WrenchItem extends Item {
         this.defaultModifiers = builder.build();
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public float getDamage() {
         return this.attackDamage;
     }

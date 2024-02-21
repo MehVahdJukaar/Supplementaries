@@ -69,10 +69,10 @@ public class SuppPlatformStuffImpl {
     }
 
     public static void disableAMWarn() {
-        ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(false);
+        ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
 
     public static void disableOFWarn() {
-        ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(false);
+        ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
     }
 }

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
@@ -25,21 +25,18 @@ public class KeyItem extends Item {
         super(properties);
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment == Enchantments.VANISHING_CURSE;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         var l = EnchantedBookItem.getEnchantments(book);
         return l.size() == 1 && l.get(0) == Enchantments.VANISHING_CURSE;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return true;
     }

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
-import net.minecraft.client.model.geom.ModelLayers;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -25,7 +25,7 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
     public static EndermanSkullModel MODEL = null;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ModelLayers.ENDERMAN));
+        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD));
     }
 
     @Override

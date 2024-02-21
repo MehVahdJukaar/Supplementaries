@@ -48,6 +48,7 @@
   },
   "suggests": {
     "sleep_tight": "*",
-    "embeddium": "*"
+    "embeddium": "*",
+    "amendments": "*"
   }
 }

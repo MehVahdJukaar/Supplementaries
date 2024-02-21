@@ -101,7 +101,7 @@ public class ModRegistry {
 
     //rope arrow
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(new Item.Properties()
-            .defaultDurability(32)));
+            .defaultDurability(CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(new Item.Properties()

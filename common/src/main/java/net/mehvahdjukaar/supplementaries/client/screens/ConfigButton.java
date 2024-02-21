@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
@@ -25,8 +25,7 @@ public class ConfigButton extends Button {
         super(x, y, 20, 20, Component.literal("s"), ConfigButton::click, Button.DEFAULT_NARRATION);
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public int getFGColor() {
         return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
     }

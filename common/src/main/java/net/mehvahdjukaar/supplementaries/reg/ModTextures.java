@@ -1,26 +1,18 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 //Needed on both sides because...
 public class ModTextures {
@@ -139,25 +131,6 @@ public class ModTextures {
 
     public static final List<ResourceLocation> NOTICE_BOARD_SLOT_ICONS =
             List.of(MAP_ICON, BANNER_PATTERN_ICON, BOOK_ICON);
-
-
-    public static final Supplier<Map<Block, ResourceLocation>> SKULL_CANDLES_TEXTURES = Suppliers.memoize(() -> {
-        Map<Block, ResourceLocation> map = new LinkedHashMap<>();
-        //first key and default one too
-        map.put(Blocks.CANDLE, Supplementaries.res("textures/block/skull_candles/default.png"));
-        for (DyeColor color : DyeColor.values()) {
-            Block candle = BlocksColorAPI.getColoredBlock("candle", color);
-            map.put(candle, Supplementaries.res("textures/block/skull_candles/" + color.getName() + ".png"));
-        }
-        //worst case this becomes null
-        if (CompatObjects.SOUL_CANDLE.get() != null) {
-            map.put(CompatObjects.SOUL_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/soul.png"));
-        }
-        if (CompatObjects.SPECTACLE_CANDLE.get() != null) {
-            map.put(CompatObjects.SPECTACLE_CANDLE.get(), Supplementaries.res("textures/block/skull_candles/spectacle.png"));
-        }
-        return map;
-    });
 
 
     public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {

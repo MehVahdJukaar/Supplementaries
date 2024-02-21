@@ -138,7 +138,7 @@ public class WelcomeMessageScreen extends Screen {
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
 
     public static WelcomeMessageScreen createAmendments(Screen screen) {
-        return new WelcomeMessageScreen(screen, 200, AM_TITLE, AM_TEXT, AM_URL, SuppPlatformStuff::disableAMWarn);
+        return new WelcomeMessageScreen(screen, 150, AM_TITLE, AM_TEXT, AM_URL, SuppPlatformStuff::disableAMWarn);
     }
 
 }

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
@@ -58,9 +58,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
         }
     }
 
-
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
         if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             var sign = tile.getClickedSign(target.getLocation());
@@ -86,9 +84,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
         return super.getDrops(state, builder);
     }
 
-
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         return state;
     }

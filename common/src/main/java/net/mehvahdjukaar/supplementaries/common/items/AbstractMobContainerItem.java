@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -85,8 +85,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public void playReleaseSound(Level world, Vec3 v) {
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public int getMaxStackSize(ItemStack stack) {
         return this.isFull(stack) ? 1 : 64;
     }
@@ -106,7 +105,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }*/
 
     //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (this.isFull(stack)) return false;
         InteractionHand hand = player.getUsedItemHand();

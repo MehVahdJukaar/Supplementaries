@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.EndermanHeadItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -18,8 +18,7 @@ public class EndermanHeadItem extends StandingAndWallBlockItem implements ICusto
         super(block, block2, properties, Direction.DOWN);
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan endermanEntity) {
         return true;
     }

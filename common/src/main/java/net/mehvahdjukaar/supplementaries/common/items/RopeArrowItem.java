@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -28,32 +28,28 @@ public class RopeArrowItem extends ArrowItem {
         return new RopeArrowEntity(world, shooter, charges);
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public int getMaxDamage(ItemStack stack) {
         return CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get();
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isInfinite(ItemStack stack, ItemStack bow, Player player) {
         return false;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isRepairable(ItemStack stack) {
         return false;
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         return false;
     }
 
     @Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public int getBarWidth(ItemStack stack) {
         return Math.round(13.0F - stack.getDamageValue() * 13.0F / this.getMaxDamage(stack));
     }

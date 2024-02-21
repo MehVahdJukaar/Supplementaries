@@ -105,10 +105,10 @@ public class SuppPlatformStuffImpl {
     }
 
     public static void disableAMWarn() {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(false);
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
 
     public static void disableOFWarn() {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(false);
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
     }
 }

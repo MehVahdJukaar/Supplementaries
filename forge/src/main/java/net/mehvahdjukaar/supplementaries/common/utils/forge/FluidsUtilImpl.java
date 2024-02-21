@@ -39,7 +39,7 @@ public class FluidsUtilImpl {
         boolean result;
         IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
         if (handlerDown != null) {
-            result = ((SoftFluidTankImpl) tempFluidHolder).tryTransferToFluidTank(handlerDown, tempFluidHolder.getFluidCount() - 1);
+            result = ((SoftFluidTankImpl) tempFluidHolder).transferToFluidTank(handlerDown, tempFluidHolder.getFluidCount() - 1);
             if (result) {
                 tileBelow.setChanged();
                 tempFluidHolder.getFluid().setCount(5);

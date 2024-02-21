@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.items.BubbleBlowerItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -43,8 +43,7 @@ public class StasisEnchantment extends Enchantment {
         return CommonConfigs.stasisEnabled();
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean isAllowedOnBooks() {
         return CommonConfigs.stasisEnabled();
     }
@@ -65,8 +64,7 @@ public class StasisEnchantment extends Enchantment {
         return i instanceof SlingshotItem || i instanceof BubbleBlowerItem || super.canEnchant(stack);
     }
 
-    //@Override
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         Item i = stack.getItem();
         return i instanceof SlingshotItem || i instanceof BubbleBlowerItem;

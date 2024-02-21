@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
@@ -88,6 +89,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
+    public static final ModelLayerLocation ENDERMAN_HEAD = loc("enderman_head");
 
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
@@ -439,6 +441,7 @@ public class ClientRegistry {
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
+        event.register(ENDERMAN_HEAD, EndermanSkullModel::createMesh);
     }
 
 
