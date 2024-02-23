@@ -31,10 +31,7 @@ public class GlobeManager {
     private static final IntList SEPIA_COLORS = new IntArrayList();
 
     public static void refreshTextures() {
-        Level world = Minecraft.getInstance().level;
-        if (world != null) {
-            getTextureInstance(world, false).updateTexture(world);
-        }
+        TEXTURE_CACHE.clear();
     }
 
     public static RenderType getRenderType(Level world, boolean sepia) {
