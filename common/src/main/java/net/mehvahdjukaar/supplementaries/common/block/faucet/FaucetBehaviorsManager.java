@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -103,16 +104,21 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-
-    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
+    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
         prepareToTransferBottle(tempFluidHolder, softFluid, null);
     }
 
-    static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid, @Nullable CompoundTag tag) {
+    @Deprecated(forRemoval = true)
+    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid, @Nullable CompoundTag tag) {
+        tempFluidHolder.setFluid(new SoftFluidStack(
+                SoftFluidRegistry.getHolder(SoftFluidRegistry.hackyGetRegistry().getKey(softFluid)), 2, tag));
+    }
+
+    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid, @Nullable CompoundTag tag) {
         tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 2, tag));
     }
 
-    static void prepareToTransferBucket(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
+    public static void prepareToTransferBucket(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
         tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 4));
     }
 
