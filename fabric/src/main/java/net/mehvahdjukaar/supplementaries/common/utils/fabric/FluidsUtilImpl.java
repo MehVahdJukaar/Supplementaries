@@ -16,7 +16,7 @@ public class FluidsUtilImpl {
         return false;
     }
 
-    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid) {
+    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid, int minAmount) {
         return null;
     }
 

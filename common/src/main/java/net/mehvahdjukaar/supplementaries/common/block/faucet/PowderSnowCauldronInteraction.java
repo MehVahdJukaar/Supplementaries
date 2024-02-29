@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.state.BlockState;
 class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.POWDER_SNOW_CAULDRON)) {
-            return new SoftFluidStack(BuiltInSoftFluids.POWDERED_SNOW.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(BuiltInSoftFluids.POWDERED_SNOW.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -30,15 +30,15 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         int amount = fluid.getCount();
         if (state.is(Blocks.CAULDRON)) {
             if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW.get())) {
 
-                int am = Math.min(amount, 3);
+                int am = Math.min(minAmount, 3);
                 level.setBlockAndUpdate(pos, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
                         .setValue(LayeredCauldronBlock.LEVEL, am));
-                return am;
+                return minAmount;
             }
         }
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
@@ -48,10 +48,10 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
                 int am = Math.min(amount, space);
                 level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
                         state.getValue(LayeredCauldronBlock.LEVEL) + am));
-                return am;
+                return Math.max(minAmount, am);
             } else if (fluid.is(BuiltInSoftFluids.WATER.get())) {
                 level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.withPropertiesOf(state));
-                return 1;
+                return minAmount;
             }
             return 0;
         }

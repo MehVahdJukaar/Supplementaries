@@ -12,18 +12,18 @@ import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         if (tile instanceof BrewingStandBlockEntity brewingStand) {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);
                 //simulate draining
                 var opt = SoftFluidStack.fromItem(stack);
                 if (opt != null) {
-                    return opt.getFirst();
+                    return FluidOffer.of(opt.getFirst());
                 }
             }
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -43,7 +43,7 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid, int minAmount) {
         if (tile instanceof BrewingStandBlockEntity brewingStand) {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);

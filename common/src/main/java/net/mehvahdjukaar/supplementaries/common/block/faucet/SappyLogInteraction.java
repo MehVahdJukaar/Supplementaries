@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;
@@ -18,13 +17,13 @@ import java.util.Optional;
 class SappyLogInteraction implements FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         Block backBlock = state.getBlock();
 
         if (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get()) {
-            return new SoftFluidStack(ModSoftFluids.SAP.getHolder());
+            return FluidOffer.of(ModSoftFluids.SAP.getHolder());
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override

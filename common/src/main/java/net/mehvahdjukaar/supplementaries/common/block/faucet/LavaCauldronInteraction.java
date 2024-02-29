@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.state.BlockState;
 class LavaCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.LAVA_CAULDRON)) {
-            return new SoftFluidStack(BuiltInSoftFluids.LAVA.getHolder(), SoftFluid.BUCKET_COUNT);
+            return FluidOffer.of(BuiltInSoftFluids.LAVA.getHolder(), SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -25,7 +25,7 @@ class LavaCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlSt
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (state.is(Blocks.CAULDRON) && fluid.is(BuiltInSoftFluids.LAVA.get())
                 && fluid.getCount() >= SoftFluid.BUCKET_COUNT) {
             level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);

@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-            return new SoftFluidStack(BuiltInSoftFluids.HONEY.getHolder());
+            return FluidOffer.of(BuiltInSoftFluids.HONEY.getHolder());
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override

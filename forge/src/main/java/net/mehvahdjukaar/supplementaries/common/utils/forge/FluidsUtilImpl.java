@@ -28,16 +28,16 @@ public class FluidsUtilImpl {
         return false;
     }
 
-    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid) {
+    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid, int minAmount) {
         IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
         if (handlerDown != null) {
             var f = fluid.getVanillaFluid();
-            FluidStack stack = new FluidStack(f, fluid.getCount() * 250, fluid.getTag());
+            FluidStack stack = new FluidStack(f, 250 * minAmount, fluid.getTag());
             if (stack.isEmpty()) return null;
-            var filled = handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+            handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
             tileBelow.setChanged();
 
-            return filled;
+            return minAmount;
         }
         return null;
     }

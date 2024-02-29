@@ -11,8 +11,8 @@ class ForgeFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile 
 
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity source) {
-        return FluidsUtil.getFluidInTank(level, pos, dir, source);
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity source) {
+        return FluidOffer.of(FluidsUtil.getFluidInTank(level, pos, dir, source));
     }
 
     @Override
@@ -21,8 +21,8 @@ class ForgeFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile 
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockEntity target, SoftFluidStack fluid) {
-        return FluidsUtil.fillFluidTank(target, fluid);
+    public Integer fill(Level level, BlockPos pos, BlockEntity target, SoftFluidStack fluid, int minAmount) {
+        return FluidsUtil.fillFluidTank(target, fluid, minAmount);
     }
 }
 

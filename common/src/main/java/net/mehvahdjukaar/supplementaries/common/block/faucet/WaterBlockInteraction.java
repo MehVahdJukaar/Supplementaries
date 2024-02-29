@@ -11,11 +11,11 @@ import net.minecraft.world.level.material.Fluids;
 
 class WaterBlockInteraction implements FaucetSource.Fluid {
 
-
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, FluidState source) {
-        if (source.isEmpty() || !source.isSource()) return SoftFluidStack.empty();
-        return SoftFluidStack.fromFluid(source.getType(), SoftFluid.BUCKET_COUNT, null);
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, FluidState source) {
+        if (source.isEmpty() || !source.isSource()) return null;
+        return FluidOffer.of(SoftFluidStack.fromFluid(source.getType(), SoftFluid.BUCKET_COUNT, null),
+                SoftFluid.BUCKET_COUNT);
     }
 
     @Override

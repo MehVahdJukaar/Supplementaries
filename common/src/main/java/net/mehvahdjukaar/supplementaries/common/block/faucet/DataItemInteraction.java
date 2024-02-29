@@ -14,7 +14,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import java.util.Optional;
 
 public record DataItemInteraction(RuleTest target, ItemStack stack,
-                                  Optional<BlockState> output) implements IFaucetItemSource {
+                                  Optional<BlockState> output) implements FaucetItemSource {
 
     public static final Codec<DataItemInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RuleTest.CODEC.fieldOf("target").forGetter(DataItemInteraction::target),

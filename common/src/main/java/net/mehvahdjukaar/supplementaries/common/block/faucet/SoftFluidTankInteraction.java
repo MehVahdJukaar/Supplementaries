@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
-            return holder.getSoftFluidTank().getFluid().copy();
+            return FluidOffer.of(holder.getSoftFluidTank().getFluid().copy());
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -30,12 +30,12 @@ class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid, int minAmount) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
             SoftFluidTank tank = holder.getSoftFluidTank();
-            if(tank.addFluid(fluid.copyWithCount(1))){
+            if(tank.addFluid(fluid.copyWithCount(minAmount))){
                 tile.setChanged();
-                return 1;
+                return minAmount;
             }return 0;
         }
         return null;

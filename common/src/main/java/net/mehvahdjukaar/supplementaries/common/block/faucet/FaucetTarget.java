@@ -10,7 +10,7 @@ import net.minecraft.world.level.material.FluidState;
 public interface FaucetTarget<T> {
 
     // null for pass, non null for success, 0 for fail
-    Integer fill(Level level, BlockPos pos, T target, SoftFluidStack fluid);
+    Integer fill(Level level, BlockPos pos, T target, SoftFluidStack fluid, int minAmount);
 
     interface BlState extends FaucetTarget<BlockState> {
     }

@@ -11,11 +11,11 @@ import net.minecraft.world.level.block.state.BlockState;
 class SoftFluidProviderInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (state.getBlock() instanceof ISoftFluidProvider p) {
-            return p.getProvidedFluid(level, state, pos);
+            return FluidOffer.of(p.getProvidedFluid(level, state, pos));
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -26,9 +26,9 @@ class SoftFluidProviderInteraction implements FaucetTarget.BlState, FaucetSource
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (state.getBlock() instanceof ISoftFluidConsumer p) {
-            return p.tryAcceptingFluid(level, state, pos, fluid) ? fluid.getCount() : 0;
+            return p.tryAcceptingFluid(level, state, pos, fluid.copyWithCount(minAmount)) ? minAmount : 0;
         }
         return null;
     }

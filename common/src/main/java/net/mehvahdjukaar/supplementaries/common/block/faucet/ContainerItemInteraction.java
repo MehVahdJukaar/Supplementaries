@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ContainerItemInteraction implements IFaucetItemSource{
+public class ContainerItemInteraction implements FaucetItemSource {
     @Override
     public ItemStack tryExtractItem(Level level, BlockPos pos, BlockState state, Direction direction, @Nullable BlockEntity tile) {
         if(tile != null){

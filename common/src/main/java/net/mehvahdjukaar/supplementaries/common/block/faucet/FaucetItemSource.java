@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 //stuff that can be dropped. is not for fluids just items
-public interface IFaucetItemSource {
+public interface FaucetItemSource {
 
     ItemStack tryExtractItem(Level level, BlockPos pos, BlockState state, Direction direction, @Nullable BlockEntity tile);
 

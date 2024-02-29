@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,8 +13,9 @@ import net.minecraft.world.phys.Vec3;
 
 class XPDroppingInteraction implements FaucetTarget.BlState {
 
-    private void dropXP(Level level, BlockPos pos) {
-        int i = 3 + level.random.nextInt(5) + level.random.nextInt(5);
+    private void dropXP(Level level, BlockPos pos, int bottles) {
+        int i = Utils.getXPinaBottle(bottles, level.random);
+
         while (i > 0) {
             int xp = ExperienceOrb.getExperienceValue(i);
             i -= xp;
@@ -26,11 +28,11 @@ class XPDroppingInteraction implements FaucetTarget.BlState {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (state.isAir()) {
             if (fluid.is(BuiltInSoftFluids.XP.get())) {
-                this.dropXP(level, pos);
-                return 1;
+                this.dropXP(level, pos, minAmount);
+                return minAmount;
             }
         }
         return null;

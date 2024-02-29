@@ -8,21 +8,21 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
+public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -36,13 +36,15 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC = Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
+
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+    public void parse(Map<ResourceLocation, JsonElement> map, RegistryAccess registryAccess) {
+
         FaucetBlockTile.removeDataInteractions(dataInteractions);
         dataInteractions.clear();
-        jsons.forEach((key, json) -> {
+        map.forEach((key, json) -> {
             try {
-                var result = CODEC.parse(JsonOps.INSTANCE, json);
+                var result = CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json);
                 var d = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to fluid interaction: {}", e));
                 Object o;
                 var l = d.left();

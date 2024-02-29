@@ -13,11 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.getBlock() == CompatObjects.MILK_CAULDRON.get()) {
-            return new SoftFluidStack(BuiltInSoftFluids.MILK.getHolder(), SoftFluid.BUCKET_COUNT);
+            return FluidOffer.of(BuiltInSoftFluids.MILK.getHolder(), SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (state.is(Blocks.CAULDRON) && fluid.is(BuiltInSoftFluids.MILK.get())
                 && fluid.getCount() >= SoftFluid.BUCKET_COUNT) {
             var b = CompatObjects.MILK_CAULDRON.get();

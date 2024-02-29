@@ -4,14 +4,14 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetItemSource;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetSource;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetTarget;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.IFaucetItemSource;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -46,7 +46,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     private static final List<FaucetSource.BlState> BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetSource.Tile> TILE_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetSource.Fluid> FLUID_INTERACTIONS = new ArrayList<>();
-    private static final List<IFaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.BlState> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
 
@@ -62,15 +62,13 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     @Override
-    public ExtraModelData getExtraModelData() {
+    public void addExtraModelData(ExtraModelData.Builder builder) {
         int color = -1;
         if (level != null) {
             color = tempFluidHolder.getFlowingTint(level, worldPosition);
         }
-        return ExtraModelData.builder()
-                .with(FLUID, tempFluidHolder.getFluidValue())
-                .with(FLUID_COLOR, color)
-                .build();
+        builder.with(FLUID, tempFluidHolder.getFluidValue());
+        builder.with(FLUID_COLOR, color);
     }
 
     public void updateLight() {
@@ -154,10 +152,10 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     private <T, S extends FaucetSource<T>> Integer runInteractions(List<S> interactions, Level level, Direction dir,
                                                                    BlockPos pos, T source, boolean justVisual) {
         for (var inter : interactions) {
-            SoftFluidStack fluid = inter.getProvidedFluid(level, pos, dir, source);
-            if (fluid.isEmpty()) continue;
+            FluidOffer fluid = inter.getProvidedFluid(level, pos, dir, source);
+            if (fluid == null) continue;
             if (justVisual) {
-                this.tempFluidHolder.setFluid(fluid);
+                this.tempFluidHolder.setFluid(fluid.fluid());
                 return COOLDOWN_PER_BOTTLE;
             }
             Integer amountFilled = tryFillingBlockBelow(fluid);
@@ -171,19 +169,19 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     //sf->ff/sf
-    private Integer tryFillingBlockBelow(SoftFluidStack fluid) {
+    private Integer tryFillingBlockBelow(FluidOffer fluid) {
         BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);
 
         for (var bi : TARGET_BLOCK_INTERACTIONS) {
-            Integer res = bi.fill(level, below, belowState, fluid);
+            Integer res = bi.fill(level, below, belowState, fluid.fluid(), fluid.minAmount());
             if (res != null) return res;
         }
 
         BlockEntity tileBelow = level.getBlockEntity(below);
         if (tileBelow != null) {
             for (var bi : TARGET_TILE_INTERACTIONS) {
-                Integer res = bi.fill(level, below, tileBelow, fluid);
+                Integer res = bi.fill(level, below, tileBelow, fluid.fluid(), fluid.minAmount());
                 if (res != null) return res;
             }
         }
@@ -281,7 +279,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             TARGET_TILE_INTERACTIONS.add(tt);
             success = true;
         }
-        if (interaction instanceof IFaucetItemSource is) {
+        if (interaction instanceof FaucetItemSource is) {
             ITEM_INTERACTIONS.add(is);
             success = true;
         }
@@ -293,7 +291,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         for (var v : interactions) {
             if (v instanceof FaucetTarget fs) {
                 BLOCK_INTERACTIONS.remove(fs);
-            } else if (v instanceof IFaucetItemSource fs) {
+            } else if (v instanceof FaucetItemSource fs) {
                 ITEM_INTERACTIONS.remove(fs);
             }
         }

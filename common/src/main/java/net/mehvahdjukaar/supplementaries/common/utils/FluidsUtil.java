@@ -17,7 +17,7 @@ public class FluidsUtil {
     }
 
     @ExpectPlatform
-    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack tempFluidHolder) {
+    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluidStack, int minAmount) {
         throw new AssertionError();
     }
 

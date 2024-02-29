@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.state.BlockState;
 class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.WATER_CAULDRON)) {
-            return new SoftFluidStack(BuiltInSoftFluids.WATER.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(BuiltInSoftFluids.WATER.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -30,15 +30,14 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         int amount = fluid.getCount();
         if (state.is(Blocks.CAULDRON)) {
             if (fluid.is(BuiltInSoftFluids.WATER.get())) {
-
-                int am = Math.min(amount, 3);
+                int am = Math.min(minAmount, 3);
                 level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState()
                         .setValue(LayeredCauldronBlock.LEVEL, am));
-                return am;
+                return minAmount;
             }
         }
         if (state.is(Blocks.WATER_CAULDRON)) {
@@ -48,7 +47,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
                 int am = Math.min(amount, space);
                 level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
                         state.getValue(LayeredCauldronBlock.LEVEL) + am));
-                return am;
+                return Math.max(minAmount, am);
             }
             return 0;
         }

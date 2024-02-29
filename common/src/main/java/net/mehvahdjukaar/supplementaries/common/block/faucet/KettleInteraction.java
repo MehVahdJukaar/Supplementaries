@@ -11,15 +11,15 @@ import net.minecraft.world.level.block.state.BlockState;
 class KettleInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+    public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (FarmersRespriteCompat.isKettle(state)) {
             var p = FarmersRespriteCompat.getWaterLevel();
             int waterLevel = state.getValue(p);
             if (waterLevel > 0) {
-                return new SoftFluidStack(BuiltInSoftFluids.WATER.getHolder(), waterLevel);
+                return FluidOffer.of(BuiltInSoftFluids.WATER.getHolder(), waterLevel);
             }
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
     @Override
@@ -33,14 +33,14 @@ class KettleInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (FarmersRespriteCompat.isKettle(state)) {
             var p = FarmersRespriteCompat.getWaterLevel();
             int waterLevel = state.getValue(p);
             if (waterLevel == 3) return 0; //exit early
-            int newWater = Math.max(waterLevel + fluid.getCount(), 3);
+            int newWater = Math.max(waterLevel + minAmount, 3);
             level.setBlock(pos, state.setValue(p, newWater), 3);
-            return newWater - waterLevel;
+            return minAmount;
         }
         return null;
     }
