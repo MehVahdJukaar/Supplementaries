@@ -22,8 +22,10 @@ public class FluidsUtilImpl {
         //TODO: fix create fluid int bug
         if (handlerBack != null && !Utils.getID(backBlock).getPath().equals("fluid_interface")) {
             //only works in 250 increment
-            if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
-            ((SoftFluidTankImpl) tempFluidHolder).copy(handlerBack);
+            var stack = handlerBack.drain(1000, IFluidHandler.FluidAction.SIMULATE);
+            if (stack.getAmount() < 250) return false;
+            ((SoftFluidTankImpl) tempFluidHolder).setFluid(stack);
+            tempFluidHolder.capCapacity();
             tempFluidHolder.setCount(2);
             if (fillAction == null) return true;
             if (fillAction.tryExecute()) {
