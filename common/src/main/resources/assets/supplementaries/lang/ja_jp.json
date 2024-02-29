@@ -1,5 +1,5 @@
 {
-  "itemGroup.supplementaries": "Supplementaries",
+  "itemGroup.supplementaries": "小道具MOD",
   "block.supplementaries.faucet": "蛇口",
   "block.supplementaries.wall_lantern": "壁に付けられたランタン",
   "block.supplementaries.planter": "プランター",
@@ -396,7 +396,7 @@
 
   "item.supplementaries.pancake_disc": "パンケーキ",
 
-  "supplementaries.gui.controls": "Supplementaries",
+  "supplementaries.gui.controls": "小道具MOD",
   "supplementaries.keybind.quiver": "矢筒",
 
 
@@ -446,5 +446,9 @@
   "wood_type.twilightforest.trans": "変化の木",
   "wood_type.twilightforest.sorting": "分類の木",
   "leaves_type.twilightforest.dark": "ダークウッド",
-  "leaves_type.ulterlands.souldrained": "Petrified"
+  "leaves_type.ulterlands.souldrained": "石化",
+
+  "trinkets.slot.chest.quiver": "矢筒",
+  "trinkets.slot.legs.quiver": "矢筒",
+  "trinkets.slot.legs.key": "鍵"
 }
