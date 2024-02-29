@@ -69,12 +69,10 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     }
 
     @Override
-    public ExtraModelData getExtraModelData() {
-        return ExtraModelData.builder()
-                .with(FLOWER_0, flowerStates[0])
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        builder.with(FLOWER_0, flowerStates[0])
                 .with(FLOWER_1, flowerStates[1])
-                .with(FLOWER_2, flowerStates[2])
-                .build();
+                .with(FLOWER_2, flowerStates[2]);
     }
 
     @ForgeOverride

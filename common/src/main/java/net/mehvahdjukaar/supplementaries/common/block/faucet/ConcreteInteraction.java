@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 class ConcreteInteraction implements FaucetTarget.BlState {
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         //sugar is instance of concrete...
         if (fluid.is(BuiltInSoftFluids.WATER.get())) {
             if (state.getBlock() instanceof SugarBlock) {
@@ -20,7 +20,7 @@ class ConcreteInteraction implements FaucetTarget.BlState {
             }
             if (state.getBlock() instanceof ConcretePowderBlock cp) {
                 level.setBlock(pos, cp.concrete, 3);
-                return 1;
+                return minAmount;
             }
         }
         return null;

@@ -25,12 +25,12 @@ class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             if (fluid.is(BuiltInSoftFluids.HONEY.get()) && fluid.getCount() == 1 &&
                     state.getValue(BlockStateProperties.LEVEL_HONEY) == 0) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);
-                return 1;
+                return minAmount;
             }
             return 0;
         }

@@ -37,11 +37,10 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
         this.fluidHolder = SoftFluidTank.create(1);
     }
+
     @Override
-    public ExtraModelData getExtraModelData() {
-            return ExtraModelData.builder()
-                .with(FLUID_ID, getSoftFluidTank().getFluidValue())
-                .build();
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        builder.with(FLUID_ID, getSoftFluidTank().getFluidValue());
     }
 
     @Nullable

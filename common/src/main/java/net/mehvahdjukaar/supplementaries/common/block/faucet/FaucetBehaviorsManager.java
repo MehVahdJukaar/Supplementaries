@@ -70,7 +70,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         FaucetBlockTile.registerInteraction(new SoftFluidTankInteraction());
         FaucetBlockTile.registerInteraction(new ForgeFluidTankInteraction());
         FaucetBlockTile.registerInteraction(new BrewingStandInteraction());
-        FaucetBlockTile.registerInteraction(new WaterBlockInteraction());
+        FaucetBlockTile.registerInteraction(new LiquidBlockInteraction());
         FaucetBlockTile.registerInteraction(new SpongeInteraction());
         FaucetBlockTile.registerInteraction(new XPDroppingInteraction());
         FaucetBlockTile.registerInteraction(new ConcreteInteraction());

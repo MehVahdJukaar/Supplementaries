@@ -14,7 +14,9 @@ class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
-            return FluidOffer.of(holder.getSoftFluidTank().getFluid().copy());
+            SoftFluidStack fluid = holder.getSoftFluidTank().getFluid();
+            if (fluid.isEmpty()) return null;
+            return FluidOffer.of(fluid.copy());
         }
         return null;
     }
@@ -33,10 +35,11 @@ class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid, int minAmount) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
             SoftFluidTank tank = holder.getSoftFluidTank();
-            if(tank.addFluid(fluid.copyWithCount(minAmount))){
+            if (tank.addFluid(fluid.copyWithCount(minAmount))) {
                 tile.setChanged();
                 return minAmount;
-            }return 0;
+            }
+            return 0;
         }
         return null;
     }
