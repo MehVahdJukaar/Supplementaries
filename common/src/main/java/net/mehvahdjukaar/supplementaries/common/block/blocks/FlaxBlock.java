@@ -210,7 +210,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         if (newAge >= DOUBLE_AGE) {
             level.setBlock(pos.above(), getStateForAge(newAge).setValue(HALF, DoubleBlockHalf.UPPER), 2);
         }
-        level.setBlock(pos, getStateForAge(newAge), 2);
+        level.setBlock(pos, getStateForAge(newAge), 3);
     }
 
     @Override

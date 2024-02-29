@@ -50,7 +50,7 @@ public class FluidsUtilImpl {
     public static SoftFluidStack getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
         var opt = FluidUtil.getFluidHandler(level, pos, dir);
         if (opt.isPresent()) {
-            FluidStack fluidInTank = opt.resolve().get().getFluidInTank(0);
+            FluidStack fluidInTank = opt.resolve().get().drain(1000, IFluidHandler.FluidAction.SIMULATE);
             if (!fluidInTank.isEmpty()) {
                 if (!Utils.getID(source.getBlockState().getBlock()).getPath().equals("fluid_interface")) {
                     return SoftFluidTankImpl.convertForgeFluid(fluidInTank);
