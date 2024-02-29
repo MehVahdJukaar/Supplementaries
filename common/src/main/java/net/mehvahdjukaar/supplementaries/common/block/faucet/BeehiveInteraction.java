@@ -2,50 +2,39 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.Nullable;
 
-import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
-
-class BeehiveInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
+class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state,
-                                      @Nullable FaucetBlockTile.FillAction fillAction) {
-
-        if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
-            if (state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.HONEY.getHolder());
-                if (fillAction == null) return InteractionResult.SUCCESS;
-                if (fillAction.tryExecute()) {
-                    level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 0), 3);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-            return InteractionResult.FAIL;
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+        if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
+            return new SoftFluidStack(BuiltInSoftFluids.HONEY.getHolder());
         }
-        return InteractionResult.PASS;
+        return SoftFluidStack.empty();
     }
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        var fluid = faucetTank.getFluid();
-        if (fluid.is(BuiltInSoftFluids.HONEY.get()) && state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
-            int h = state.getValue(BlockStateProperties.LEVEL_HONEY);
-            if (h == 0) {
+    public void drain(Level level, BlockPos pos, Direction dir, BlockState source, int amount) {
+        level.setBlock(pos, source.setValue(BlockStateProperties.LEVEL_HONEY, 0), 3);
+    }
+
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+        if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
+            if (fluid.is(BuiltInSoftFluids.HONEY.get()) && fluid.getCount() == 1 &&
+                    state.getValue(BlockStateProperties.LEVEL_HONEY) == 0) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);
-                return InteractionResult.SUCCESS;
+                return 1;
             }
-            return InteractionResult.FAIL;
+            return 0;
         }
-        return InteractionResult.PASS;
+        return null;
     }
 }
 

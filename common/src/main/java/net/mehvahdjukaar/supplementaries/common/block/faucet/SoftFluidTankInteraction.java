@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 //consume to finish current group
 class SoftFluidTankInteraction implements
-        IFaucetTileSource, IFaucetTileTarget {
+        FaucetSource, IFaucetTileTarget {
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,

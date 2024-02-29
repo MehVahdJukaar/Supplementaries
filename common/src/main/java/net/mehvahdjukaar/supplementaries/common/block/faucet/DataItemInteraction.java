@@ -30,9 +30,4 @@ public record DataItemInteraction(RuleTest target, ItemStack stack,
         }
         return ItemStack.EMPTY;
     }
-
-    @Override
-    public int getTransferCooldown() {
-        return IFaucetItemSource.super.getTransferCooldown() * stack.getCount();
-    }
 }

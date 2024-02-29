@@ -9,7 +9,9 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.*;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetSource;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetTarget;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.IFaucetItemSource;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -20,7 +22,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,16 +43,16 @@ import java.util.function.Predicate;
 
 public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
-    private static final List<IFaucetBlockSource> BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<IFaucetTileSource> TILE_INTERACTIONS = new ArrayList<>();
-    private static final List<IFaucetFluidSource> FLUID_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetSource.BlState> BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetSource.Tile> TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetSource.Fluid> FLUID_INTERACTIONS = new ArrayList<>();
     private static final List<IFaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
-    private static final List<IFaucetBlockTarget> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<IFaucetTileTarget> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetTarget.BlState> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+
     public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
-
-    public static final int COOLDOWN = 20;
+    public static final int COOLDOWN_PER_BOTTLE = 20;
 
     private int transferCooldown = 0;
     public final SoftFluidTank tempFluidHolder = SoftFluidTank.create(5);
@@ -99,18 +101,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     //TODO: make it connect with pipes
     //returns true if it has water
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
-        //fluid stuff
-        FluidState fluidState = level.getFluidState(pos.relative(state.getValue(FaucetBlock.FACING).getOpposite()));
-        if (!fluidState.isEmpty() && fluidState.isSource()) {
-            var f = SoftFluidStack.fromFluid(fluidState.getType(), 1, null);
-            if (f != null) { //just to be sure
-                this.tempFluidHolder.setFluid(f);
-                this.updateLight();
-                return true;
-            } else {
-                int aa = 1;//error
-            }
-        }
         boolean r = this.tryExtract(level, pos, state, false) != 0;
         this.updateLight();
 
@@ -128,94 +118,72 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         this.tempFluidHolder.clear();
         if (backState.isAir()) return 0;
 
-        FillAction fillAction = doTransfer ? this::tryFillingBlockBelow : null;
-        for (var bi : BLOCK_INTERACTIONS) {
-            var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                    backState, fillAction);
-            if (res == InteractionResult.PASS) continue;
-            if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
-            else if (res == InteractionResult.CONSUME) break;
-            else if (res == InteractionResult.FAIL) return 0;
-        }
+        Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState);
+        if (filledAmount != null) return filledAmount;
 
-        //soft fluid holders
+        //tile interactions
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
-            for (var bi : TILE_INTERACTIONS) {
-                var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                        tileBack, dir, fillAction);
-                if (res == InteractionResult.PASS) continue;
-                if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
-                else if (res == InteractionResult.CONSUME) break;
-                else if (res == InteractionResult.FAIL) return 0;
-            }
-
-            if (!doTransfer) {
-                return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
-            }
+            filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack);
+            if (filledAmount != null) return filledAmount;
         }
-        if (!this.isConnectedBelow() && (
-                CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() || CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
+        if (!this.isConnectedBelow() &&
+                (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() ||
+                        CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
             for (var bi : ITEM_INTERACTIONS) {
                 ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
                 if (!removed.isEmpty()) {
                     if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed, dir)) {
-
+                        //TODO
                     } else if (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get()) {
                         drop(removed);
                     }
-                    return COOLDOWN;
+                    return COOLDOWN_PER_BOTTLE;
                 }
             }
         }
 
         FluidState fluidState = level.getFluidState(behind);
-        for (var bi : FLUID_INTERACTIONS) {
-            var res = bi.tryDrain(level, this.tempFluidHolder, behind,
-                    fluidState, fillAction);
-            if (res == InteractionResult.PASS) continue;
-            if (res == InteractionResult.SUCCESS) return bi.getTransferCooldown();
-            else if (res == InteractionResult.CONSUME) break;
-            else if (res == InteractionResult.FAIL) return 0;
-        }
-        if (!doTransfer) {
-            return !this.tempFluidHolder.isEmpty() ? COOLDOWN : 0;
-        }
+        filledAmount = runInteractions(FLUID_INTERACTIONS, level, dir, behind, fluidState);
+        if (filledAmount != null) return filledAmount;
 
         return 0;
     }
 
-    //sf->ff/sf
-    @SuppressWarnings("ConstantConditions")
-    private boolean tryFillingBlockBelow() {
-        if (this.tempFluidHolder.isEmpty()) return false;
+    // returns cooldown
+    @Nullable
+    private <T, S extends FaucetSource<T>> Integer runInteractions(List<S> interactions, Level level, Direction dir, BlockPos pos, T source) {
+        for (var inter : interactions) {
+            SoftFluidStack fluid = inter.getProvidedFluid(level, pos, dir, source);
+            if (fluid.isEmpty()) continue;
+            Integer amountFilled = tryFillingBlockBelow(fluid);
+            if (amountFilled != null) {
+                if (amountFilled == 0) return 0;
+                inter.drain(level, pos, dir, source, amountFilled);
+                return amountFilled * COOLDOWN_PER_BOTTLE;
+            }
+        }
+        return null;
+    }
 
+    //sf->ff/sf
+    private Integer tryFillingBlockBelow(SoftFluidStack fluid) {
         BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);
 
         for (var bi : TARGET_BLOCK_INTERACTIONS) {
-            var res = bi.tryFill(level, this.tempFluidHolder, below, belowState);
-            if (res == InteractionResult.PASS) continue;
-            if (res == InteractionResult.SUCCESS) return true;
-            else if (res == InteractionResult.CONSUME) break;
-            else if (res == InteractionResult.FAIL) {
-                return false;
-            }
+            Integer res = bi.fill(level, below, belowState, fluid);
+            if (res != null) return res;
         }
 
         BlockEntity tileBelow = level.getBlockEntity(below);
         if (tileBelow != null) {
             for (var bi : TARGET_TILE_INTERACTIONS) {
-                var res = bi.tryFill(level, this.tempFluidHolder, below, tileBelow);
-                if (res == InteractionResult.PASS) continue;
-                if (res == InteractionResult.SUCCESS) return true;
-                else if (res == InteractionResult.CONSUME) break;
-                else if (res == InteractionResult.FAIL) {
-                    return false;
-                }
+                Integer res = bi.fill(level, below, tileBelow, fluid);
+                if (res != null) return res;
             }
         }
-        return false;
+        return null;
     }
 
     //------end-fluids------
@@ -283,28 +251,29 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     @FunctionalInterface
     public interface FillAction {
-        boolean tryExecute();
+        // to fill a block below the max ampunt thatcould be transfered is given. return amount is the one actually accepted
+        int tryExecute(int maxAmount);
     }
 
     public static void registerInteraction(Object interaction) {
         boolean success = false;
-        if (interaction instanceof IFaucetBlockSource bs) {
+        if (interaction instanceof FaucetSource.BlState bs) {
             BLOCK_INTERACTIONS.add(bs);
             success = true;
         }
-        if (interaction instanceof IFaucetTileSource ts) {
+        if (interaction instanceof FaucetSource.Tile ts) {
             TILE_INTERACTIONS.add(ts);
             success = true;
         }
-        if (interaction instanceof IFaucetFluidSource bs) {
+        if (interaction instanceof FaucetSource.Fluid bs) {
             FLUID_INTERACTIONS.add(bs);
             success = true;
         }
-        if (interaction instanceof IFaucetBlockTarget tb) {
+        if (interaction instanceof FaucetTarget.BlState tb) {
             TARGET_BLOCK_INTERACTIONS.add(tb);
             success = true;
         }
-        if (interaction instanceof IFaucetTileTarget tt) {
+        if (interaction instanceof FaucetTarget.Tile tt) {
             TARGET_TILE_INTERACTIONS.add(tt);
             success = true;
         }
@@ -318,7 +287,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     public static <T> void removeDataInteractions(Collection<T> interactions) {
         for (var v : interactions) {
-            if (v instanceof IFaucetBlockSource fs) {
+            if (v instanceof FaucetTarget fs) {
                 BLOCK_INTERACTIONS.remove(fs);
             } else if (v instanceof IFaucetItemSource fs) {
                 ITEM_INTERACTIONS.remove(fs);

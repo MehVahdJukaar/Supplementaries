@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -13,9 +12,5 @@ import org.jetbrains.annotations.Nullable;
 public interface IFaucetItemSource {
 
     ItemStack tryExtractItem(Level level, BlockPos pos, BlockState state, Direction direction, @Nullable BlockEntity tile);
-
-    default int getTransferCooldown() {
-        return FaucetBlockTile.COOLDOWN;
-    }
 
 }

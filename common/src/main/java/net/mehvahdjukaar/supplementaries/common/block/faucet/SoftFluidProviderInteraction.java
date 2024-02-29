@@ -16,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
 import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
 
 class SoftFluidProviderInteraction implements
-        IFaucetBlockSource, IFaucetTileSource, IFaucetTileTarget, IFaucetBlockTarget {
+        FaucetTarget, FaucetSource, IFaucetTileTarget, IFaucetBlockTarget {
 
     @Override
     public int getTransferCooldown() {
-        return IFaucetBlockSource.super.getTransferCooldown();
+        return FaucetTarget.super.getTransferCooldown();
     }
 
     @Override

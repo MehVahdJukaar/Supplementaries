@@ -56,3 +56,10 @@ license = "ARR"
     ordering = "AFTER"
     side = "BOTH"
 
+[[dependencies.supplementaries]]
+    modId = "rubidium"
+    mandatory = false
+    versionRange = "[0.6.0,)"
+    ordering = "NONE"
+    side = "BOTH"
+

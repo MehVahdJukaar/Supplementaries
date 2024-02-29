@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBucket;
 
-class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
+class PowderSnowCauldronInteraction implements FaucetTarget, IFaucetBlockTarget {
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
@@ -35,7 +35,7 @@ class PowderSnowCauldronInteraction implements IFaucetBlockSource, IFaucetBlockT
 
     @Override
     public int getTransferCooldown() {
-        return IFaucetBlockSource.super.getTransferCooldown() * 4;
+        return FaucetTarget.super.getTransferCooldown() * 4;
     }
 
     @Override

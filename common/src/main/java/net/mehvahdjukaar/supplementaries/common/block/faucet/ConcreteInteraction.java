@@ -1,29 +1,28 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-class ConcreteInteraction implements IFaucetBlockTarget {
+class ConcreteInteraction implements FaucetTarget.BlState {
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
         //sugar is instance of concrete...
-        if (faucetTank.getFluid().is(BuiltInSoftFluids.WATER.get())) {
+        if (fluid.is(BuiltInSoftFluids.WATER.get())) {
             if (state.getBlock() instanceof SugarBlock) {
                 level.blockEvent(pos, state.getBlock(), 1, 0);
-                return InteractionResult.SUCCESS;
+                return 1;
             }
             if (state.getBlock() instanceof ConcretePowderBlock cp) {
                 level.setBlock(pos, cp.concrete, 3);
-                return InteractionResult.SUCCESS;
+                return 1;
             }
         }
-        return InteractionResult.PASS;
+        return null;
     }
 }

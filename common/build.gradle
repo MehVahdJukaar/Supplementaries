@@ -41,6 +41,7 @@ dependencies {
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
     //modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge") // Get latest version from releases
+    modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
 
 }
 

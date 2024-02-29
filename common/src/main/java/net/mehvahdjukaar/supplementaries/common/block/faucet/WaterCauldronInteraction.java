@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
 
-class WaterCauldronInteraction implements IFaucetBlockSource, IFaucetBlockTarget {
+class WaterCauldronInteraction implements FaucetTarget, IFaucetBlockTarget {
 
     @Override
     public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,

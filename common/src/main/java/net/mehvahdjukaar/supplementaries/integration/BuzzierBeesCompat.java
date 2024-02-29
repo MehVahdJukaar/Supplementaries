@@ -28,6 +28,6 @@ public class BuzzierBeesCompat {
 
     public static void setupClient() {
         SOUL_CANDLE_HOLDERS.forEach(b -> ClientHelper.registerRenderType(b.get(), RenderType.cutout()));
-
     }
+
 }

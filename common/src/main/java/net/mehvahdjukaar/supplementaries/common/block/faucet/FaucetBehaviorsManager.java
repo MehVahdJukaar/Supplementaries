@@ -7,23 +7,15 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile.FillAction;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -70,7 +62,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     public static void registerBehaviors() {
         FaucetBlockTile.registerInteraction(new SoftFluidProviderInteraction());
         FaucetBlockTile.registerInteraction(new WaterCauldronInteraction());
-        FaucetBlockTile.registerInteraction(new LavaCauldronInteraction());
+        FaucetBlockTile.registerInteraction(new CauldronInteractionInteraction());
         FaucetBlockTile.registerInteraction(new PowderSnowCauldronInteraction());
         FaucetBlockTile.registerInteraction(new BeehiveInteraction());
         FaucetBlockTile.registerInteraction(new SoftFluidTankInteraction());
@@ -82,44 +74,13 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         FaucetBlockTile.registerInteraction(new ConcreteInteraction());
         FaucetBlockTile.registerInteraction(new MudInteraction());
         FaucetBlockTile.registerInteraction(new ContainerItemInteraction());
-        if (CompatHandler.BUZZIER_BEES) FaucetBlockTile.registerInteraction(new HoneyPotInteraction());
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
     }
 
 
-    private static class MalumInteraction implements IFaucetBlockSource {
-
-        @Override
-        public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                          BlockPos pos, BlockState state, FillAction fillAction) {
-  /* else if (CompatHandler.malum && MalumPlugin.isSappyLog(backBlock)) {
-            this.prepareToTransferBottle(MalumPlugin.getSap(backBlock));
-            if (doTransfer && tryFillingBlockBelow(level, pos)) {
-                MalumPlugin.extractSap(level, backState, behind);
-                return true;
-            }
-        }*/
-            return InteractionResult.PASS;
-        }
-    }
-
-    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
-        prepareToTransferBottle(tempFluidHolder, softFluid, null);
-    }
-
     @Deprecated(forRemoval = true)
     public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid, @Nullable CompoundTag tag) {
-        tempFluidHolder.setFluid(new SoftFluidStack(
-                SoftFluidRegistry.getHolder(SoftFluidRegistry.hackyGetRegistry().getKey(softFluid)), 2, tag));
-    }
-
-    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid, @Nullable CompoundTag tag) {
-        tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 2, tag));
-    }
-
-    public static void prepareToTransferBucket(SoftFluidTank tempFluidHolder, Holder<SoftFluid> softFluid) {
-        tempFluidHolder.setFluid(new SoftFluidStack(softFluid, 4));
     }
 
 }

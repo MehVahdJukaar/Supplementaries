@@ -1,24 +1,23 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-class MudInteraction implements IFaucetBlockTarget {
-
+class MudInteraction implements FaucetTarget.BlState {
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
         if (state.is(Blocks.DIRT)) {
-            if (faucetTank.getFluid().is(BuiltInSoftFluids.WATER.get())) {
+            if (fluid.is(BuiltInSoftFluids.WATER.get())) {
                 level.setBlock(pos, Blocks.MUD.defaultBlockState(), 3);
-                return InteractionResult.SUCCESS;
+                return 1;
             }
+            return 0;
         }
-        return InteractionResult.PASS;
+        return null;
     }
 }

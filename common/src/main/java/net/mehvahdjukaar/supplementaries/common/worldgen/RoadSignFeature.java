@@ -282,7 +282,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
             //only 1 sing found/ 1 tile post. always to closest village. posts that are relatively close to a village will always have two.
             //posts in a village will point away
-            if (villages.size() == 1 || (r.doubleSignChance>rand.nextFloat() && villages.get(0).getFirst() > 192)) {
+            if (villages.size() == 1 || (r.doubleSignChance > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
                 dist1 = villages.get(0).getFirst();
                 village1 = villages.get(0).getSecond();
                 dist2 = dist1;
@@ -365,7 +365,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     }
                     stonePos = stonePos.offset(sideDir.getNormal());
                     level.setBlock(stonePos, c.stone, 2);
-                    if ( rand.nextFloat() < r.stoneLanternChance) {
+                    if (rand.nextFloat() < r.stoneLanternChance) {
                         level.setBlock(stonePos.above(), hasFirefly ? c.lanternDown : c.lanternDown, 3);
                         hasGroundLantern = true;
                     }
@@ -387,7 +387,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                     pos = pos.above(2);
 
                     BlockState light = hasFirefly ? c.lanternUp : c.lanternUp;
-                    if (rand.nextFloat()<r.candleHolderChance) {
+                    if (rand.nextFloat() < r.candleHolderChance) {
                         light = c.candleHolder
                                 .setValue(CandleHolderBlock.LIT, true)
                                 .setValue(CandleHolderBlock.FACE, AttachFace.CEILING);
@@ -480,8 +480,9 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
     }
 
     private static void placeWallLantern(BlockState lanternState, ServerLevel level, Direction dir, Block wallLantern, BlockPos pos) {
+        pos = pos.relative(dir);
         BlockState state = wallLantern.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND,
-                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir, pos, false)));
+                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir.getOpposite(), pos, false)));
         if (state != null) level.setBlockAndUpdate(pos, state);
         if (level.getBlockEntity(pos) instanceof IBlockHolder tt) {
             tt.setHeldBlock(lanternState);

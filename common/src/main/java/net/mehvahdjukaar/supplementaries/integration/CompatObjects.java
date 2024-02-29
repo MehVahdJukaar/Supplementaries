@@ -55,6 +55,8 @@ public class CompatObjects {
 
     public static final Supplier<Block> SUGAR_WATER = makeCompatObject("the_bumblezone:sugar_water_block", BuiltInRegistries.BLOCK);
 
+    public static final Supplier<Block> MILK_CAULDRON = makeCompatObject("rats:milk_cauldron", BuiltInRegistries.BLOCK);
+
     public static final Supplier<Item> TOME = makeCompatObject("quark:ancient_tome", BuiltInRegistries.ITEM);
     public static final Supplier<Item> GENE_BOOK = makeCompatObject("horse_colors:gene_book", BuiltInRegistries.ITEM);
 
@@ -74,10 +76,9 @@ public class CompatObjects {
     public static final Supplier<Enchantment> END_VEIL = makeCompatObject("betterend:end_veil", BuiltInRegistries.ENCHANTMENT);
 
 
-
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T> Supplier<@Nullable T>    makeCompatObject(String name, Registry<T> registry) {
+    private static <T> Supplier<@Nullable T> makeCompatObject(String name, Registry<T> registry) {
         return Suppliers.memoize(() -> registry.getOptional(new ResourceLocation(name)).orElse(null));
     }
 

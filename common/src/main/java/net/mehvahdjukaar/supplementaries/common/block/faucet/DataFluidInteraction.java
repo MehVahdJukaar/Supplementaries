@@ -4,12 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
@@ -18,8 +16,9 @@ import java.util.Optional;
 
 //Data defined fluid interaction
 public record DataFluidInteraction(RuleTest target, ResourceLocation softFluid, int amount,
-                                   Optional<BlockState> output) implements IFaucetBlockSource {
+                                   Optional<BlockState> output) implements FaucetSource.BlState {
 
+    //TODO: use softfluidstack codec
     public static final Codec<DataFluidInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RuleTest.CODEC.fieldOf("target").forGetter(DataFluidInteraction::target),
             ResourceLocation.CODEC.fieldOf("fluid").forGetter(DataFluidInteraction::softFluid),
@@ -29,25 +28,16 @@ public record DataFluidInteraction(RuleTest target, ResourceLocation softFluid, 
     ).apply(instance, DataFluidInteraction::new));
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state,
-                                      FaucetBlockTile.FillAction fillAction) {
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (target.test(state, level.random)) {
-            var fluid = SoftFluidRegistry.getOptionalHolder(softFluid);
-            if (fluid.isPresent()) {
-                faucetTank.setFluid(new SoftFluidStack(fluid.get(), amount));
-                if (fillAction == null) return InteractionResult.SUCCESS;
-                if (fillAction.tryExecute()) {
-                    output.ifPresent(s -> level.setBlock(pos, s, 3));
-                    return InteractionResult.SUCCESS;
-                }
-                return InteractionResult.FAIL;
-            }
+            return SoftFluidRegistry.getOptionalHolder(softFluid)
+                    .map(fluid -> new SoftFluidStack(fluid, amount)).orElse(null);
         }
         return null;
     }
 
     @Override
-    public int getTransferCooldown() {
-        return IFaucetBlockSource.super.getTransferCooldown() * amount;
+    public void drain(Level level, BlockPos pos, Direction dir, BlockState source, int amount) {
+        output.ifPresent(s -> level.setBlock(pos, s, 3));
     }
 }

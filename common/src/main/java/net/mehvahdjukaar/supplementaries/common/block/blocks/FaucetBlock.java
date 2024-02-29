@@ -135,7 +135,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     @ForgeOverride
     public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-        if (false && world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
+        if ( world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
             boolean water = tile.updateContainedFluidVisuals(level, pos, state);
             if (state.getValue(HAS_WATER) != water) {
                 level.setBlock(pos, state.setValue(HAS_WATER, water), 2);
