@@ -1,54 +1,62 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBucket;
-
-class PowderSnowCauldronInteraction implements FaucetTarget, IFaucetBlockTarget {
+class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+        if (source.is(Blocks.POWDER_SNOW_CAULDRON)) {
+            return new SoftFluidStack(BuiltInSoftFluids.POWDERED_SNOW.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
+        }
+        return SoftFluidStack.empty();
+    }
+
+    @Override
+    public void drain(Level level, BlockPos pos, Direction dir, BlockState source, int amount) {
+        int am = source.getValue(LayeredCauldronBlock.LEVEL) - amount;
+        if (am <= 0) {
+            level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+        } else {
+            level.setBlockAndUpdate(pos, source.setValue(LayeredCauldronBlock.LEVEL, am));
+        }
+    }
+
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+        int amount = fluid.getCount();
+        if (state.is(Blocks.CAULDRON)) {
+            if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW.get())) {
+
+                int am = Math.min(amount, 3);
+                level.setBlockAndUpdate(pos, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
+                        .setValue(LayeredCauldronBlock.LEVEL, am));
+                return am;
+            }
+        }
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
-            int waterLevel = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
-            if (waterLevel == 3) {
-                prepareToTransferBucket(faucetTank, BuiltInSoftFluids.POWDERED_SNOW.getHolder());
-                if (fillAction == null) return InteractionResult.SUCCESS;
-                if (fillAction.tryExecute()) {
-                    level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
-                    return InteractionResult.SUCCESS;
-                }
-                return InteractionResult.FAIL;
+            if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW.get()) &&
+                    state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
+                int space = 3 - state.getValue(LayeredCauldronBlock.LEVEL);
+                int am = Math.min(amount, space);
+                level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
+                        state.getValue(LayeredCauldronBlock.LEVEL) + am));
+                return am;
+            } else if (fluid.is(BuiltInSoftFluids.WATER.get())) {
+                level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.withPropertiesOf(state));
+                return 1;
             }
+            return 0;
         }
-        return InteractionResult.PASS;
+        return null;
     }
 
-    @Override
-    public int getTransferCooldown() {
-        return FaucetTarget.super.getTransferCooldown() * 4;
-    }
-
-    @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        if (state.is(Blocks.CAULDRON) && faucetTank.getFluid().is(BuiltInSoftFluids.POWDERED_SNOW.get())) {
-            if (faucetTank.getFluidCount() == 5) {
-                level.setBlock(pos, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
-                        .setValue(LayeredCauldronBlock.LEVEL, 3), 3);
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.FAIL;
-        }
-        return InteractionResult.PASS;
-    }
 }
 

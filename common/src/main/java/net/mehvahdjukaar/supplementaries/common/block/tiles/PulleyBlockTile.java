@@ -60,7 +60,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.pulley_block");
+        return Component.translatable("gui.supplementaries.pulley_block");
     }
 
     @Override

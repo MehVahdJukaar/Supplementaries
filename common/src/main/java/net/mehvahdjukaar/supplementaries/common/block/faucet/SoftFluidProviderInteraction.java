@@ -3,72 +3,33 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
-
-class SoftFluidProviderInteraction implements
-        FaucetTarget, FaucetSource, IFaucetTileTarget, IFaucetBlockTarget {
+class SoftFluidProviderInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public int getTransferCooldown() {
-        return FaucetTarget.super.getTransferCooldown();
-    }
-
-    @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state,
-                                      @Nullable FaucetBlockTile.FillAction fillAction) {
-        return drainGeneric(level, faucetTank, pos, state, fillAction, state.getBlock());
-    }
-
-    @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockEntity tile, Direction dir,
-                                      @Nullable FaucetBlockTile.FillAction fillAction) {
-        return drainGeneric(level, faucetTank, pos, tile.getBlockState(), fillAction, tile);
-    }
-
-    private static InteractionResult drainGeneric(Level level, SoftFluidTank faucetTank, BlockPos pos,
-                                                  BlockState state,
-                                                  @Nullable FaucetBlockTile.FillAction fillAction, Object backBlock) {
-        if (backBlock instanceof ISoftFluidProvider provider) {
-            SoftFluidStack stack = provider.getProvidedFluid(level, state, pos);
-            prepareToTransferBottle(faucetTank, stack.getFluid(), stack.getTag());
-            if (fillAction == null) return InteractionResult.CONSUME;
-            if (fillAction.tryExecute()) {
-                provider.consumeProvidedFluid(level, state, pos, faucetTank.getFluid().copyWithCount(1));
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.CONSUME;
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
+        if (state.getBlock() instanceof ISoftFluidProvider p) {
+            return p.getProvidedFluid(level, state, pos);
         }
-        return InteractionResult.PASS;
+        return SoftFluidStack.empty();
     }
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        return tryFillGeneric(level, faucetTank, pos, state, state.getBlock());
-    }
-
-
-    @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile) {
-        return tryFillGeneric(level, faucetTank, pos, tile.getBlockState(), tile);
-    }
-
-    public InteractionResult tryFillGeneric(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state, Object object) {
-        if (object instanceof ISoftFluidConsumer consumer) {
-            return consumer.tryAcceptingFluid(level, state, pos, faucetTank.getFluid().copyWithCount(1))
-                    ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+    public void drain(Level level, BlockPos pos, Direction dir, BlockState state, int amount) {
+        if (state.getBlock() instanceof ISoftFluidProvider p) {
+            p.consumeProvidedFluid(level, state, pos);
         }
-        return InteractionResult.PASS;
+    }
+
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+        if (state.getBlock() instanceof ISoftFluidConsumer p) {
+            return p.tryAcceptingFluid(level, state, pos, fluid) ? fluid.getCount() : 0;
+        }
+        return null;
     }
 }

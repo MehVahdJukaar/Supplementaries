@@ -63,7 +63,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.speaker_block");
+        return Component.translatable("gui.supplementaries.speaker_block");
     }
 
     public double getVolume() {

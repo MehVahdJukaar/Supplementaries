@@ -12,6 +12,8 @@ accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMeth
 
 accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 
+accessible field net/minecraft/world/level/block/AbstractCauldronBlock interactions Ljava/util/Map;
+
 #shulker menu
 accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/minecraft/world/Container;
 

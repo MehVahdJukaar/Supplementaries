@@ -2,67 +2,56 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.InspirationCompat;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import static net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager.prepareToTransferBottle;
-
-class WaterCauldronInteraction implements FaucetTarget, IFaucetBlockTarget {
+class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockState state, FaucetBlockTile.FillAction fillAction) {
-        if (state.is(Blocks.WATER_CAULDRON)) {
-            int waterLevel = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
-            if (waterLevel > 0) {
-                if (CompatHandler.INSPIRATIONS) {
-                    return InspirationCompat.doCauldronStuff(level.getBlockEntity(pos), faucetTank, fillAction);
-                }
-
-                prepareToTransferBottle(faucetTank, BuiltInSoftFluids.WATER.getHolder());
-                if (fillAction == null) return InteractionResult.SUCCESS;
-                if (fillAction.tryExecute()) {
-                    if (waterLevel > 1) {
-                        level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_CAULDRON,
-                                waterLevel - 1), 3);
-                    } else level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
-                    return InteractionResult.SUCCESS;
-                }
-            }
-            return InteractionResult.FAIL;
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
+        if (source.is(Blocks.WATER_CAULDRON)) {
+            return new SoftFluidStack(BuiltInSoftFluids.WATER.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
         }
-        return InteractionResult.PASS;
+        return SoftFluidStack.empty();
     }
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof AbstractCauldronBlock) {
-            SoftFluidStack softFluid = faucetTank.getFluid();
-            if (CompatHandler.INSPIRATIONS) {
-                return InspirationCompat.tryAddFluid(level.getBlockEntity(pos), faucetTank);
-            } else if (softFluid.is(BuiltInSoftFluids.WATER.get())) {
-                if (state.is(Blocks.WATER_CAULDRON)) {
-                    int levels = state.getValue(BlockStateProperties.LEVEL_CAULDRON);
-                    if (levels < 3) {
-                        level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_CAULDRON, levels + 1), 3);
-                        return InteractionResult.SUCCESS;
-                    }
-                    return InteractionResult.FAIL;
-                } else if (state.is(Blocks.CAULDRON)) {
-                    level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 1), 3);
-                    return InteractionResult.SUCCESS;
-                }
+    public void drain(Level level, BlockPos pos, Direction dir, BlockState source, int amount) {
+        int am = source.getValue(LayeredCauldronBlock.LEVEL) - amount;
+        if (am <= 0) {
+            level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
+        } else {
+            level.setBlockAndUpdate(pos, source.setValue(LayeredCauldronBlock.LEVEL, am));
+        }
+    }
+
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+        int amount = fluid.getCount();
+        if (state.is(Blocks.CAULDRON)) {
+            if (fluid.is(BuiltInSoftFluids.WATER.get())) {
+
+                int am = Math.min(amount, 3);
+                level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState()
+                        .setValue(LayeredCauldronBlock.LEVEL, am));
+                return am;
             }
         }
-        return InteractionResult.PASS;
+        if (state.is(Blocks.WATER_CAULDRON)) {
+            if (fluid.is(BuiltInSoftFluids.WATER.get()) &&
+                    state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
+                int space = 3 - state.getValue(LayeredCauldronBlock.LEVEL);
+                int am = Math.min(amount, space);
+                level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
+                        state.getValue(LayeredCauldronBlock.LEVEL) + am));
+                return am;
+            }
+            return 0;
+        }
+        return null;
     }
 }

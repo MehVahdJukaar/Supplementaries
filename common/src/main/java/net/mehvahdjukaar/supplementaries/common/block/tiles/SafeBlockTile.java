@@ -180,7 +180,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.supplementaries.safe");
+        return Component.translatable("gui.supplementaries.safe");
     }
 
     @Override

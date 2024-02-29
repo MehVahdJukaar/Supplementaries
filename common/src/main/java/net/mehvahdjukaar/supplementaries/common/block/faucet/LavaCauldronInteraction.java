@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-class CauldronInteractionInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
+class LavaCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
 
     @Override
     public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {

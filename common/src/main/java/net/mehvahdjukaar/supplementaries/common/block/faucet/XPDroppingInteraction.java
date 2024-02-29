@@ -2,30 +2,15 @@ package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-class XPDroppingInteraction implements IFaucetBlockTarget {
-
-    @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockState state) {
-        SoftFluidStack fluid = faucetTank.getFluid();
-        if (state.isAir()) {
-            if (fluid.is(BuiltInSoftFluids.XP.get())) {
-                this.dropXP(level, pos);
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.FAIL;
-        }
-        return InteractionResult.PASS;
-    }
+class XPDroppingInteraction implements FaucetTarget.BlState {
 
     private void dropXP(Level level, BlockPos pos) {
         int i = 3 + level.random.nextInt(5) + level.random.nextInt(5);
@@ -40,5 +25,15 @@ class XPDroppingInteraction implements IFaucetBlockTarget {
         level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
     }
 
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
+        if (state.isAir()) {
+            if (fluid.is(BuiltInSoftFluids.XP.get())) {
+                this.dropXP(level, pos);
+                return 1;
+            }
+        }
+        return null;
+    }
 }
 

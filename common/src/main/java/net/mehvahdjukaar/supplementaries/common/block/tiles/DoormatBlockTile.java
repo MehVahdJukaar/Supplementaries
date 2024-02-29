@@ -55,7 +55,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.supplementaries.doormat");
+        return Component.translatable("gui.supplementaries.doormat");
     }
 
     public Direction getDirection() {

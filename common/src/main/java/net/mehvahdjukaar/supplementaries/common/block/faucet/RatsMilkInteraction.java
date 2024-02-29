@@ -15,7 +15,7 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
     @Override
     public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.getBlock() == CompatObjects.MILK_CAULDRON.get()) {
-            return new SoftFluidStack(BuiltInSoftFluids.LAVA.getHolder(), SoftFluid.BUCKET_COUNT);
+            return new SoftFluidStack(BuiltInSoftFluids.MILK.getHolder(), SoftFluid.BUCKET_COUNT);
         }
         return SoftFluidStack.empty();
     }
@@ -27,10 +27,13 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
 
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid) {
-        if (state.is(Blocks.CAULDRON) && fluid.is(BuiltInSoftFluids.LAVA.get())
+        if (state.is(Blocks.CAULDRON) && fluid.is(BuiltInSoftFluids.MILK.get())
                 && fluid.getCount() >= SoftFluid.BUCKET_COUNT) {
-            level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), 3);
-            return SoftFluid.BUCKET_COUNT;
+            var b = CompatObjects.MILK_CAULDRON.get();
+            if (b != null) {
+                level.setBlock(pos, b.defaultBlockState(), 3);
+                return SoftFluid.BUCKET_COUNT;
+            }
         }
         return null;
     }

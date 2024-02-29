@@ -1,51 +1,44 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 //consume to finish current group
-class SoftFluidTankInteraction implements
-        FaucetSource, IFaucetTileTarget {
+class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
 
     @Override
-    public InteractionResult tryDrain(Level level, SoftFluidTank faucetTank,
-                                      BlockPos pos, BlockEntity tile, Direction dir,
-                                      @Nullable FaucetBlockTile.FillAction fillAction) {
+    public SoftFluidStack getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity tile) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
-            SoftFluidTank fluidHolder = holder.getSoftFluidTank();
-            faucetTank.copyContent(fluidHolder);
-            faucetTank.getFluid().setCount(2);
-            if (fillAction == null) return InteractionResult.CONSUME;
-            if (fillAction.tryExecute()) {
-                fluidHolder.getFluid().shrink(1);
-                tile.setChanged();
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.FAIL;
+            return holder.getSoftFluidTank().getFluid().copy();
         }
-        return InteractionResult.PASS;
+        return SoftFluidStack.empty();
     }
 
     @Override
-    public InteractionResult tryFill(Level level, SoftFluidTank faucetTank, BlockPos pos, BlockEntity tile) {
-        if (tile instanceof ISoftFluidTankProvider holder) {
-            SoftFluidTank tank = holder.getSoftFluidTank();
-            boolean result = faucetTank.transferFluid(tank, faucetTank.getFluidCount() - 1);
-            if (result) {
-                tile.setChanged();
-                faucetTank.getFluid().setCount(faucetTank.getCapacity());
-                return InteractionResult.SUCCESS;
-            }
-            return InteractionResult.FAIL;
+    public void drain(Level level, BlockPos pos, Direction dir, BlockEntity tile, int amount) {
+        if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
+            SoftFluidTank fluidHolder = holder.getSoftFluidTank();
+            int am = Math.min(amount, fluidHolder.getFluidCount());
+            fluidHolder.getFluid().shrink(am);
+            tile.setChanged();
         }
-        return InteractionResult.PASS;
+    }
+
+    @Override
+    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid) {
+        if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
+            SoftFluidTank tank = holder.getSoftFluidTank();
+            if(tank.addFluid(fluid.copyWithCount(1))){
+                tile.setChanged();
+                return 1;
+            }return 0;
+        }
+        return null;
     }
 }
 

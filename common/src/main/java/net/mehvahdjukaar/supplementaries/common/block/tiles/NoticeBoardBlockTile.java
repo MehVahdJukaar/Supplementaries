@@ -67,7 +67,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.notice_board");
+        return Component.translatable("gui.supplementaries.notice_board");
     }
 
     //refreshTextures blockState and plays sound. server side

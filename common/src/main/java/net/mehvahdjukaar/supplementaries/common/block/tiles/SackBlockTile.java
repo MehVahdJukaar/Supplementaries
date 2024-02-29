@@ -30,7 +30,7 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.sack");
+        return Component.translatable("gui.supplementaries.sack");
     }
 
     @Override

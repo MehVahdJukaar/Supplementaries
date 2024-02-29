@@ -83,7 +83,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
 
     @Override
     public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.pedestal");
+        return Component.translatable("gui.supplementaries.pedestal");
     }
 
     @Override

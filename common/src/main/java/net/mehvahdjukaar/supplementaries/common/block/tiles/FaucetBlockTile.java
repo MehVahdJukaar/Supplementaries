@@ -91,7 +91,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         if (tile.transferCooldown > 0) {
             tile.transferCooldown--;
         } else if (tile.isOpen()) {
-            int cooldown = tile.tryExtract(pLevel, pPos, pState, true);
+            int cooldown = tile.tryExtract(pLevel, pPos, pState, false);
             tile.transferCooldown += cooldown;
         }
     }
@@ -99,32 +99,31 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     //------fluids------
 
     //TODO: make it connect with pipes
-    //returns true if it has water
+    //returns true if it has water animation
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
-        boolean r = this.tryExtract(level, pos, state, false) != 0;
+        boolean r = this.tryExtract(level, pos, state, true) != 0;
         this.updateLight();
-
         requestModelReload();
-        return r;         //returns if it has a fluid
+        return r;
     }
 
     /**
      * @return 0 for fail, non 0 will be the transfer cooldown
      */
-    private int tryExtract(Level level, BlockPos pos, BlockState state, boolean doTransfer) {
+    private int tryExtract(Level level, BlockPos pos, BlockState state, boolean justVisual) {
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
         this.tempFluidHolder.clear();
         if (backState.isAir()) return 0;
 
-        Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState);
+        Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
 
         //tile interactions
         BlockEntity tileBack = level.getBlockEntity(behind);
         if (tileBack != null) {
-            filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack);
+            filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack, justVisual);
             if (filledAmount != null) return filledAmount;
         }
         if (!this.isConnectedBelow() &&
@@ -144,7 +143,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
 
         FluidState fluidState = level.getFluidState(behind);
-        filledAmount = runInteractions(FLUID_INTERACTIONS, level, dir, behind, fluidState);
+        filledAmount = runInteractions(FLUID_INTERACTIONS, level, dir, behind, fluidState, justVisual);
         if (filledAmount != null) return filledAmount;
 
         return 0;
@@ -152,10 +151,15 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     // returns cooldown
     @Nullable
-    private <T, S extends FaucetSource<T>> Integer runInteractions(List<S> interactions, Level level, Direction dir, BlockPos pos, T source) {
+    private <T, S extends FaucetSource<T>> Integer runInteractions(List<S> interactions, Level level, Direction dir,
+                                                                   BlockPos pos, T source, boolean justVisual) {
         for (var inter : interactions) {
             SoftFluidStack fluid = inter.getProvidedFluid(level, pos, dir, source);
             if (fluid.isEmpty()) continue;
+            if (justVisual) {
+                this.tempFluidHolder.setFluid(fluid);
+                return COOLDOWN_PER_BOTTLE;
+            }
             Integer amountFilled = tryFillingBlockBelow(fluid);
             if (amountFilled != null) {
                 if (amountFilled == 0) return 0;
