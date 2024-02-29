@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -161,7 +162,10 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         this.renderBackground(graphics);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        ResourceLocation presentGuiTexture = this.menu.getSlot(0).getItem().isEmpty() ?
+                ModTextures.PRESENT_EMPTY_GUI_TEXTURE :
+                ModTextures.PRESENT_GUI_TEXTURE;
+        graphics.blit(presentGuiTexture, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

@@ -1,5 +1,2 @@
-- rewrote all faucet interactions
-- added compat for rat milk cauldron
-- fixed dispenser minecart not dropping
-- addad new lapis bricks and checker blocks textures
-- added more translation lines
+- some fixes to recent faucet fluid changes
+- present has a new texture for when its slot is empty
