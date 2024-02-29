@@ -76,8 +76,10 @@ public class PlanterBlock extends WaterBlock {
         return (connect && !(b instanceof StemBlock) && !(b instanceof CropBlock));
     }
 
+
     @ForgeOverride
-    public boolean onTreeGrow(BlockState state, LevelReader level, BiConsumer<BlockPos, BlockState> placeFunction, RandomSource randomSource, BlockPos pos, TreeConfiguration config) {
+    public boolean onTreeGrow(BlockState state, LevelReader level, BiConsumer<BlockPos, BlockState> placeFunction,
+                              RandomSource randomSource, BlockPos pos, TreeConfiguration config) {
         if (CommonConfigs.Building.PLANTER_BREAKS.get()) {
             placeFunction.accept(pos, Blocks.ROOTED_DIRT.defaultBlockState());
 

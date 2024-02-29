@@ -49,6 +49,9 @@ public class ModTextures {
     public static final ResourceLocation GLOBE_SUN_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sun.png");
     public static final ResourceLocation GLOBE_SHEARED_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sheared.png");
     public static final ResourceLocation GLOBE_SHEARED_SEPIA_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sheared_sepia.png");
+    public static final ResourceLocation ENDERMAN_HEAD = Supplementaries.res("textures/entity/enderman_head.png");
+    public static final ResourceLocation ENDERMAN_HEAD_EYES = Supplementaries.res("textures/entity/enderman_head_eyes.png");
+
 
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
     public static final ResourceLocation RED_MERCHANT = Supplementaries.res("textures/entity/misc/red_merchant.png");

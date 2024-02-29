@@ -17,8 +17,9 @@ import javax.annotation.Nullable;
 
 @Mixin(DispenserMinecartEntity.class)
 public abstract class SelfDispenserMinecraftMixin extends Minecart implements Container {
+
     @Unique
-    private LazyOptional<?> itemHandler;
+    private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     protected SelfDispenserMinecraftMixin(EntityType<?> arg, Level arg2) {
         super(arg, arg2);

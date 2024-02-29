@@ -341,7 +341,7 @@ public class CommonConfigs {
             builder.push("planter");
             PLANTER_ENABLED = feature(builder);
             PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
-                    .define("broken_by_sapling", true);
+                    .define("broken_by_sapling", false);
             FD_PLANTER = builder.comment("When Farmers Delight is on planter will also act like rich soil and use it in its recipe")
                     .define("rich_soil_planter", true);
             builder.pop();
@@ -559,9 +559,9 @@ public class CommonConfigs {
             builder.push("functional");
 
             builder.push("rope");
-            ROPE_ENABLED = () -> true;
-            var funny = feature(builder.comment("So you came here to disable supp rope not because they are bad but because they are the easiest to disable, despite them doing all the stuff other ropes can do. Well too bad, this config doesnt do anything. Learn how to use datapacks to disable stuff, like its normally done"));
-            FEATURE_TOGGLES.put("rope", () -> true);
+            ROPE_ENABLED = TRUE;
+            var funny = feature(builder.comment("So you came here to disable supp rope not because they are bad but because they are the easiest to disable, despite them doing all the stuff other ropes can do. Well too bad, this config doesnt do anything :P. Learn how to use datapacks to disable stuff, like its normally done"));
+            FEATURE_TOGGLES.put("rope", TRUE);
 
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                     .define("block_side_attachment", true);

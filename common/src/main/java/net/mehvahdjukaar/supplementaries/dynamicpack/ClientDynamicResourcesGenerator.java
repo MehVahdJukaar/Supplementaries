@@ -60,6 +60,13 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         ColorHelper.refreshBubbleColors(manager);
 
 
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
+            try (var text = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman"));
+                 var eyeText = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman_eyes"))) {
+                dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head"), text, false);
+                dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
+            }catch (Exception ignored){}
+        }
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("crossbow"), e -> {
                 e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
@@ -211,7 +218,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
      * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
      */
     @Nullable
-    public static TextureImage recolorFromVanilla(ResourceManager manager, TextureImage vanillaTexture, ResourceLocation vanillaMask,
+    public static TextureImage recolorFromVanilla(ResourceManager manager, TextureImage
+            vanillaTexture, ResourceLocation vanillaMask,
                                                   ResourceLocation templateTexture) {
         try (TextureImage scribbleMask = TextureImage.open(manager, vanillaMask);
              TextureImage template = TextureImage.open(manager, templateTexture)) {

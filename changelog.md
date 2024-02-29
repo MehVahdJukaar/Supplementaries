@@ -1,1 +1,5 @@
-added back some methods for backwards compat
+- rewrote all faucet interactions
+- added compat for rat milk cauldron
+- fixed dispenser minecart not dropping
+- addad new lapis bricks and checker blocks textures
+- added more translation lines
