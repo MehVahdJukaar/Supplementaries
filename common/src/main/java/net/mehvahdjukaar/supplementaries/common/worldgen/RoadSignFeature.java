@@ -482,7 +482,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
     private static void placeWallLantern(BlockState lanternState, ServerLevel level, Direction dir, Block wallLantern, BlockPos pos) {
         pos = pos.relative(dir);
         BlockState state = wallLantern.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND,
-                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir.getOpposite(), pos, false)));
+                wallLantern.asItem().getDefaultInstance(), new BlockHitResult(pos.getCenter(), dir, pos, false)));
         if (state != null) level.setBlockAndUpdate(pos, state);
         if (level.getBlockEntity(pos) instanceof IBlockHolder tt) {
             tt.setHeldBlock(lanternState);

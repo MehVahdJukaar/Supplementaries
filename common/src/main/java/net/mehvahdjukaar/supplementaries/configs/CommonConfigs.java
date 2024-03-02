@@ -429,7 +429,6 @@ public class CommonConfigs {
             BLACKSTONE_TILE_ENABLED = feature(builder, ModConstants.BLACKSTONE_TILE_NAME);
             SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
-            SCONCE_GREEN_ENABLED = feature(builder, ModConstants.SCONCE_NAME_GREEN, ModConstants.SCONCE_NAME_GREEN, false);
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
             NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
             NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
@@ -502,8 +501,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
 
         public static final Supplier<Boolean> SCONCE_ENABLED;
-
-        public static final Supplier<Boolean> SCONCE_GREEN_ENABLED;
 
         public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
 
