@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "supplementaries:altimeter",
+      "required": false
+    },
+    {
+      "id": "spelunkery:depth_gauge",
+      "required": false
+    },
+    {
+      "id": "additional_additions:depth_meter",
+      "required": false
+    },
+    {
+      "id": "caverns_and_chasms:depth_gauge",
+      "required": false
+    }
+  ]
+}

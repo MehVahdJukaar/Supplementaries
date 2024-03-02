@@ -25,7 +25,6 @@ public class FluidsUtilImpl {
             var stack = handlerBack.drain(1000, IFluidHandler.FluidAction.SIMULATE);
             if (stack.getAmount() < 250) return false;
             ((SoftFluidTankImpl) tempFluidHolder).setFluid(stack);
-            tempFluidHolder.capCapacity();
             tempFluidHolder.setCount(2);
             if (fillAction == null) return true;
             if (fillAction.tryExecute()) {

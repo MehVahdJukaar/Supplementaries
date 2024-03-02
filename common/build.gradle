@@ -23,7 +23,9 @@ dependencies {
     modCompileOnly("curse.maven:roughly-enough-items-310111:4401136")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
 
-    modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
+    //modImplementation("curse.maven:selene-499980:4983974")
+
+    modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
 }
 
 publishing {

@@ -63,19 +63,23 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
     }
 
     private void shatter() {
-        BlockState state = this.getBlockState();
-        CompoundTag tag = this.blockData;
-        BlockEntity tile = null;
-        BlockPos pos = this.blockPosition();
-        if (tag != null && !tag.isEmpty()) {
-            tile = new UrnBlockTile(pos, state);
-            tile.load(tag);
-        }
-        Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);
+        try {
+            BlockState state = this.getBlockState();
+            CompoundTag tag = this.blockData;
+            BlockEntity tile = null;
+            BlockPos pos = this.blockPosition();
+            if (tag != null && !tag.isEmpty()) {
+                tile = new UrnBlockTile(pos, state);
+                tile.load(tag);
+            }
+            Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);
 
-        level.levelEvent(null, 2001, pos, Block.getId(state));
-        //todo: this needs to be called on client
-        UrnBlock.spawnExtraBrokenParticles(state, pos, level);
+            level.levelEvent(null, 2001, pos, Block.getId(state));
+            //todo: this needs to be called on client
+            UrnBlock.spawnExtraBrokenParticles(state, pos, level);
+        }catch (Exception e){
+
+        }
     }
 
     @Override

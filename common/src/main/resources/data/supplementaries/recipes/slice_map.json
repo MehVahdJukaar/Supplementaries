@@ -2,17 +2,13 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "altimeter"
-    },
-    {
-      "type": "supplementaries:flag",
       "flag": "slice_map"
     }
   ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "supplementaries:altimeter"
+      "tag": "supplementaries:altimeters"
     },
     {
       "item": "minecraft:map"
