@@ -85,6 +85,8 @@ accessible field net/minecraft/world/level/storage/loot/LootParams$Builder luck 
 #firework recipe for enderman head
 accessible field net/minecraft/world/item/crafting/FireworkStarRecipe SHAPE_BY_ITEM Ljava/util/Map;
 
+accessible field net/minecraft/server/level/ServerPlayer camera Lnet/minecraft/world/entity/Entity;
+
 #game renderer post process for skuls
 accessible field net/minecraft/client/renderer/GameRenderer postEffect Lnet/minecraft/client/renderer/PostChain;
 
