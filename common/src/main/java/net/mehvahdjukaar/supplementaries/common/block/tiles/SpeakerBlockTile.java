@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -146,7 +146,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Component component = Component.literal(s + this.message.getString()).withStyle(style);
             Component filtered = Component.literal(s + this.filteredMessage.getString()).withStyle(style);
 
-            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(server, pos,
+            ModNetwork.CHANNEL.sendToAllClientPlayersInRange(server, pos,
                     this.volume, new ClientBoundPlaySpeakerMessagePacket(component,filtered, this.mode));
 
         }

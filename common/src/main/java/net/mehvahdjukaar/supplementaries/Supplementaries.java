@@ -17,7 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -50,7 +50,7 @@ public class Supplementaries {
         CommonConfigs.init();
         PlatHelper.getPhysicalSide().ifClient(ClientConfigs::init);
 
-        NetworkHandler.init();
+        ModNetwork.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
@@ -91,6 +91,12 @@ public class Supplementaries {
             }
         }
 
+    }
+
+    public static void error() {
+        if(PlatHelper.isDev()) {
+            LOGGER.error("This should not happen");
+        }
     }
 
     // yes this is where I write crap. deal with it XD

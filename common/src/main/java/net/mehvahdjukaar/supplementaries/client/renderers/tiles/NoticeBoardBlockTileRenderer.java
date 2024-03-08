@@ -9,7 +9,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -123,7 +123,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             } else {
                 //request map data from server
                 Player player = Minecraft.getInstance().player;
-                NetworkHandler.CHANNEL.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
             }
             return;
         }

@@ -116,6 +116,7 @@ public final class ModConstants {
     public static final String GUNPOWDER_BLOCK_NAME = "gunpowder";
     public static final String BOOK_PILE_NAME = "book_pile";
     public static final String BOOK_PILE_H_NAME = "book_pile_horizontal";
+    public static final String CANNON_NAME = "cannon";
     public static final String URN_NAME = "urn";
     public static final String ASH_NAME = "ash";
     public static final String ASH_BRICK_NAME = "ash_brick";

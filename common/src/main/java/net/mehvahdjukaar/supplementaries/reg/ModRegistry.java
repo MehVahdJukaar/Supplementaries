@@ -948,6 +948,14 @@ public class ModRegistry {
             BOOK_PILE_NAME, () -> PlatHelper.newBlockEntityType(
                     BookPileBlockTile::new, BOOK_PILE.get(), BOOK_PILE_H.get()));
 
+    //cannon
+    public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
+            BlockBehaviour.Properties.copy(Blocks.ANVIL)));
+
+    public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
+            CANNON_NAME, () -> PlatHelper.newBlockEntityType(
+                    CannonBlockTile::new, CANNON.get()));
+
     //urn
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(
             BlockBehaviour.Properties.of()

@@ -88,14 +88,6 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(20));
 
-    public static final Supplier<EntityType<CannonCamera>> CANNON_CAMERA = regEntity("cannon_camera",
-            () -> EntityType.Builder.<CannonCamera>of(CannonCamera::new, MobCategory.MISC)
-                    .sized(0.0001F, 0.0001F)
-                    .clientTrackingRange(256)
-                    .updateInterval(20)
-            //.setShouldReceiveVelocityUpdates(true)
-    );
-
     //firefly
 
 //    public static final String FIREFLY_NAME = "firefly";

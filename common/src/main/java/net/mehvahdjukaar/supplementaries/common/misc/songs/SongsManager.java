@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -93,7 +93,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
+        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
     }
 
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
@@ -155,7 +155,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
             if (!notes.isEmpty() && notes.getInt(0) > 0) {
-                NetworkHandler.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+                ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
                 played = true;
@@ -256,7 +256,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         SONGS.put(name, song);
 
         if (!level.isClientSide) {
-            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
+            ModNetwork.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
         }
 
         RECORDING.clear();

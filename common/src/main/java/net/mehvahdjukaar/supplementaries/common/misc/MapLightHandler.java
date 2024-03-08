@@ -11,7 +11,7 @@ import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAmbientLightPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -273,7 +273,7 @@ public class MapLightHandler {
     @ApiStatus.Internal
     public static void sendDataToClient(ServerPlayer player) {
         if (enabled) {
-            NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
+            ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
         }
     }
 

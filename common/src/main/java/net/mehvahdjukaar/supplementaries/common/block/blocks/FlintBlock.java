@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -51,7 +51,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
     private void ignitePosition(Level level, BlockPos firePos, boolean isIronMoving) {
         //send particle packet
 
-        NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(level, firePos, 64,
+        ModNetwork.CHANNEL.sendToAllClientPlayersInRange(level, firePos, 64,
                 new ClientBoundParticlePacket(Vec3.atCenterOf(firePos),
                         ClientBoundParticlePacket.EventType.FLINT_BLOCK_IGNITE,
                         isIronMoving ? 1 : 0));

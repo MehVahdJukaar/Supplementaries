@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.globe;
 
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncGlobeDataPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,7 +47,7 @@ public class GlobeData extends SavedData {
     public void sendToClient(Level world) {
         this.setDirty();
         if (!world.isClientSide)
-            NetworkHandler.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncGlobeDataPacket(this));
+            ModNetwork.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncGlobeDataPacket(this));
     }
 
     //data received from network is stored here
@@ -76,7 +76,7 @@ public class GlobeData extends SavedData {
     public static void sendDataToClient(ServerPlayer player) {
         GlobeData data = GlobeData.get(player.level());
         if (data != null) {
-            NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
+            ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
         }
 
     }

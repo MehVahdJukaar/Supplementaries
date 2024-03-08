@@ -36,7 +36,7 @@ public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvi
     @Override
     protected Slot addSlot(Slot slot) {
         if (slot instanceof ShulkerBoxSlot) {
-            return super.addSlot(new DelegatingSlot((BaseContainerBlockEntity) container, slot.getContainerSlot(), slot.x, slot.y));
+            return super.addSlot(new DelegatingSlot((BaseContainerBlockEntity) container, slot.getContainerSlot(), slot.x, slot.y, this));
         } else {
             return super.addSlot(slot);
         }

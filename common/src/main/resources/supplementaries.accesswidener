@@ -85,7 +85,14 @@ accessible field net/minecraft/world/level/storage/loot/LootParams$Builder luck 
 #firework recipe for enderman head
 accessible field net/minecraft/world/item/crafting/FireworkStarRecipe SHAPE_BY_ITEM Ljava/util/Map;
 
+#camera stuff
 accessible field net/minecraft/server/level/ServerPlayer camera Lnet/minecraft/world/entity/Entity;
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+accessible method net/minecraft/client/Camera setRotation (FF)V
+accessible method net/minecraft/client/Camera move (DDD)V
+accessible method net/minecraft/client/Camera setPosition (Lnet/minecraft/world/phys/Vec3;)V
+accessible method net/minecraft/client/Camera getMaxZoom (D)D
+
 
 #game renderer post process for skuls
 accessible field net/minecraft/client/renderer/GameRenderer postEffect Lnet/minecraft/client/renderer/PostChain;

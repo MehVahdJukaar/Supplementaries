@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class AntiqueInkItem extends Item implements SignApplicator {
                 cap.setAntiqueInk(newState);
                 tile.setChanged();
                 if (world instanceof ServerLevel serverLevel) {
-                    NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 256,
+                    ModNetwork.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 256,
                             new ClientBoundSyncAntiqueInk(pos, newState));
                 }
                 success = true;

@@ -21,6 +21,7 @@
     "EvokerMixin",
     "ExplorationMapFunctionMixin",
     "ExplorationMapSerializerMixin",
+    "FallingBlockEntityMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
@@ -43,12 +44,14 @@
     "StrayMixin",
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
+    "TrackedEntityMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin"
   ],
   "client": [
     "BlockBehaviourPlanterMixin",
     "BookViewScreenMixin",
+    "CameraMixin",
     "CartographyTableScreenMixin",
     "ClientLevelMixin",
     "FontRendererMixin",

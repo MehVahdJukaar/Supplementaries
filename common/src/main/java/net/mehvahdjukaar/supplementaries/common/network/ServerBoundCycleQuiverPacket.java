@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,7 +51,7 @@ public class ServerBoundCycleQuiverPacket implements Message {
             stack = player.getUseItem();
         }
         if (stack.getItem() != ModRegistry.QUIVER_ITEM.get()) {
-            int aaa = 1; //should not happen
+            Supplementaries.error(); //should not happen
         } else {
             var data = QuiverItem.getQuiverData(stack);
             if (setSlot) {

@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.WeakReference;
-
 public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
 
     protected AbstractPresentBlockTile(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
@@ -84,18 +82,5 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
         return itemstack;
     }
 
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        var m = menu.get();
-        if (m != null) m.slotsChanged(this);
-    }
-
-    //hack
-    private WeakReference<AbstractContainerMenu> menu = new WeakReference<>(null);
-
-    public void addMenuCallbackOnChange(AbstractContainerMenu menu) {
-        if(this.level.isClientSide) this.menu = new WeakReference<>(menu);
-    }
 }
 

@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +68,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        NetworkHandler.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(RELOAD_INSTANCE.dusts));
+        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(RELOAD_INSTANCE.dusts));
     }
 
 }

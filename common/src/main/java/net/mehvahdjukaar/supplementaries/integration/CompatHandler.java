@@ -73,6 +73,7 @@ public class CompatHandler {
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
     public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
     public static final boolean OPTIFINE = ((BooleanSupplier) () -> {
+        if (!PlatHelper.getPhysicalSide().isClient()) return false;
         try {
             Class.forName("net.optifine.Config");
             return true;

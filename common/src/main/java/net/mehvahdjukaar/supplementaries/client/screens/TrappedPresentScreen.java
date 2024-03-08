@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
@@ -78,7 +78,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
 
         if (hasChanged) {
 
-            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
                     this.primed));
             this.tile.updateState(this.primed);
 

@@ -16,7 +16,10 @@ import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.HatStandRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
@@ -53,6 +56,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -89,7 +93,8 @@ public class ClientRegistry {
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
-    public static final ModelLayerLocation ENDERMAN_HEAD = loc("enderman_head");
+    public static final ModelLayerLocation ENDERMAN_HEAD_MODEL = loc("enderman_head");
+    public static final ModelLayerLocation CANNON_MODEL = loc("cannon");
 
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
@@ -192,6 +197,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.IRON_GATE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.CANNON.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
@@ -333,7 +339,8 @@ public class ClientRegistry {
         event.register(ModEntities.FALLING_URN.get(), FallingBlockRenderer::new);
         event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
         event.register(ModEntities.FALLING_SACK.get(), FallingBlockRenderer::new);
-        event.register(ModEntities.PEARL_MARKER.get(), PearlMarkerRenderer::new);
+        event.register(ModEntities.PEARL_MARKER.get(), NoopRenderer::new);
+        event.register(ModEntities.CANNON_CAMERA.get(), NoopRenderer::new);
     }
 
     @EventCalled
@@ -358,6 +365,7 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
+        event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
     }
 
     @EventCalled
@@ -441,7 +449,8 @@ public class ClientRegistry {
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
-        event.register(ENDERMAN_HEAD, EndermanSkullModel::createMesh);
+        event.register(ENDERMAN_HEAD_MODEL, EndermanSkullModel::createMesh);
+        event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
     }
 
 

@@ -41,9 +41,8 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
 
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
-        this.inventory.addMenuCallbackOnChange(this);
 
-        this.addSlot(new DelegatingSlot(this.inventory, 0, getSlotX(), getSlotY()));
+        this.addSlot(new DelegatingSlot(this.inventory, 0, getSlotX(), getSlotY(), this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
@@ -100,7 +99,7 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
-        if (!inventory.canHoldItems()) {
+        if (!inventory.canHoldItems() && !inventory.isRemoved()) {
             this.clearContainer(playerIn, this.inventory);
         }
     }

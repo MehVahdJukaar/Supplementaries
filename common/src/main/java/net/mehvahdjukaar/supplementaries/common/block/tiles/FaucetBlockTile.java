@@ -124,7 +124,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack, justVisual);
             if (filledAmount != null) return filledAmount;
         }
-        if (!this.isConnectedBelow() &&
+        if (!this.isConnectedBelow() && !justVisual &&
                 (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() ||
                         CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
             for (var bi : ITEM_INTERACTIONS) {

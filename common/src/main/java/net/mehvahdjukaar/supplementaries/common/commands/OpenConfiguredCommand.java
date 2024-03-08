@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundOpenConfigsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -24,7 +24,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
     public int run(CommandContext<CommandSourceStack> context) {
         if (CommonConfigs.SPEC.hasConfigScreen()) {
             if (context.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
-                NetworkHandler.CHANNEL.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
+                ModNetwork.CHANNEL.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
             }
         } else {
             context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.configs"), false);

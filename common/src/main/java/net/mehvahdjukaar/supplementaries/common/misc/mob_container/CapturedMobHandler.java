@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,7 +69,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     public static void sendDataToClient(ServerPlayer player) {
         Set<DataDefinedCatchableMob> set = new HashSet<>(CUSTOM_MOB_PROPERTIES.values());
-        NetworkHandler.CHANNEL.sendToClientPlayer(player,
+        ModNetwork.CHANNEL.sendToClientPlayer(player,
                 new ClientBoundSyncCapturedMobsPacket(set, moddedFishProperty));
     }
 

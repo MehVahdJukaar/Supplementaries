@@ -56,7 +56,7 @@ public class PicklePacket implements Message {
                 //broadcast to all players
                 for (ServerPlayer p : player.getServer().getPlayerList().getPlayers()) {
                     if (p != player) {
-                        NetworkHandler.CHANNEL.sendToClientPlayer(p, new PicklePacket(this.playerID, this.on, this.isJar));
+                        ModNetwork.CHANNEL.sendToClientPlayer(p, new PicklePacket(this.playerID, this.on, this.isJar));
                     }
                 }
             }

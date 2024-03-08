@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class SoapWashableHelper {
                 tryChangingColor(level, pos, state) ||
                 tryUnoxidise(level, pos, state)) {
             if (level instanceof ServerLevel serverLevel) {
-                NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 64,
+                ModNetwork.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 64,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.EventType.BUBBLE_CLEAN));
             }
             return true;

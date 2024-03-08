@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,12 +28,6 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         super(clientLevel, gameProfile);
     }
 
-
-    @Shadow
-    @Override
-    public abstract InteractionHand getUsedItemHand();
-
-
     @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)
     private void hasEnoughImpulseToStartSprinting(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && this.hasEffect(ModRegistry.OVERENCUMBERED.get())) {
@@ -41,28 +35,19 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         }
     }
 
-    //hack. this will be ugly. Prevents quiver from slowing down
-
-    @Inject(method = "aiStep",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z",
-                    shift = At.Shift.BEFORE),
-            require = 1)
-    private void cancelQuiverSlow(CallbackInfo ci, @Share("usingQuiver") LocalBooleanRef usingQuiver) {
-        usingQuiver.set(true);
-    }
-
-    @Inject(method = "isUsingItem",
-            at = @At("HEAD"), cancellable = true)
-    private void isUsingItem(CallbackInfoReturnable<Boolean> cir,@Share("usingQuiver") LocalBooleanRef usingQuiver) {
-        if (usingQuiver.get() && this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
-            cir.setReturnValue(false);
+    // prevents quiver slow
+    @ModifyExpressionValue(method = "aiStep",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
+    private boolean supplementaries$preventQuiverSlow(boolean original) {
+        if (this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
+            return false;
         }
+        return original;
     }
     @Unique
     private ItemStack supplementaries$quiver = ItemStack.EMPTY;
 
-    //this isn't optimal but still better than checking every render tick the whole inventory
+    // this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
@@ -80,5 +65,14 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
+    }
+
+    @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
+    public boolean supplementaries$preventMovementWhileOperatingCannon(Input instance, boolean bl, float f) {
+        if (CannonCameraController.isActive()) {
+            CannonCameraController.onInputUpdate(instance);
+            return false;
+        }
+        return true;
     }
 }

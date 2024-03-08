@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -188,7 +188,7 @@ public class PresentBehaviorsManager {
             }
             serverLevel.addFreshEntityWithPassengers(entity);
             //update client velocity
-            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange( serverLevel, pos,48,
+            ModNetwork.CHANNEL.sendToAllClientPlayersInRange( serverLevel, pos,48,
                     new ClientBoundSendKnockbackPacket(entity.getDeltaMovement(), entity.getId()));
         }
         return entity;

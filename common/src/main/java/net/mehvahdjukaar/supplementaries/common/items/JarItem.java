@@ -122,13 +122,13 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
             if (compoundTag.contains("FluidHolder")) {
                 CompoundTag com = compoundTag.getCompound("FluidHolder");
                 var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
-                int count = com.getInt("Count");
+                int count = com.getInt("count");
                 if (holder != null && !holder.value().isEmpty() && count > 0) {
 
                     CompoundTag nbt = null;
                     String add = "";
-                    if (com.contains("NBT")) {
-                        nbt = com.getCompound("NBT");
+                    if (com.contains("tag")) {
+                        nbt = com.getCompound("tag");
                         if (nbt.contains("Bottle")) {
                             String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
                             if (!bottle.equals("regular")) add = "_" + bottle;

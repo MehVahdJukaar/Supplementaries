@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ public interface ILevelEventRedirect {
 
     static boolean tryRedirect(ILevelEventRedirect serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
         if (pType == 2000) {
-            NetworkHandler.CHANNEL.sendToAllClientPlayersInRange((ServerLevel) serverLevel, pPos, 64,
+            ModNetwork.CHANNEL.sendToAllClientPlayersInRange((ServerLevel) serverLevel, pPos, 64,
                     new ClientBoundParticlePacket(vec3, ClientBoundParticlePacket.EventType.DISPENSER_MINECART));
             return true;
         }

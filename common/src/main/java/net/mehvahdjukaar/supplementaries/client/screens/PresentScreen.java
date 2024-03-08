@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBox
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -132,7 +132,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             String sender = Minecraft.getInstance().player.getName().getString();
             String recipient = this.recipient.getText();
             String description = this.descriptionBox.getText();
-            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
                     this.packed, recipient, sender, description));
             this.tile.updateState(this.packed, recipient, sender, description);
 

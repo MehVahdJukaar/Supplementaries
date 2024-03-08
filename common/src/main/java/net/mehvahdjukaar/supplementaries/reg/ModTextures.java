@@ -24,7 +24,6 @@ public class ModTextures {
     public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block_side");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
 
-    //blocks (to stitch)
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("block/bellows");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
@@ -33,6 +32,7 @@ public class ModTextures {
     public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("block/hourglass_blaze");
     public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("block/hourglass_gunpowder");
     public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("block/blackboard_grid");
+    public static final ResourceLocation CANNON_TEXTURE = Supplementaries.res("block/cannon");
 
 
     public static final ResourceLocation SUGAR = Supplementaries.res("block/sugar");

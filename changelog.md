@@ -1,2 +1,1 @@
-- some fixes to recent faucet fluid changes
-- present has a new texture for when its slot is empty
+fixed a dupe when using mods specifically made to dupe stuff

@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -114,7 +114,7 @@ public class ServerEventsForge {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             try {
-                NetworkHandler.CHANNEL.sendToClientPlayer(player,
+                ModNetwork.CHANNEL.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
             } catch (Exception exception) {
                 Supplementaries.LOGGER.warn("failed to send login message: " + exception);

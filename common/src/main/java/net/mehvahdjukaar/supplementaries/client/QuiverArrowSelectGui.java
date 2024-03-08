@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleQuiverPacket.Slot;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -30,7 +30,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     //behold states
     private static boolean usingItem;
-    private static double lastCumulativeMouseDx = 0;
+    private static double lastYRot = 0;
     private static boolean usingKey = false;
 
     public static boolean isActive() {
@@ -38,7 +38,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
     public static void setUsingItem(boolean on) {
-        if (on != usingItem) lastCumulativeMouseDx = 0;
+        if (on != usingItem) lastYRot = 0;
         usingItem = on;
     }
 
@@ -61,16 +61,13 @@ public abstract class QuiverArrowSelectGui extends Gui {
     }
 
 
-    public static void ohMouseMoved(double deltaX) {
-        double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
-        int oldI = (int) (lastCumulativeMouseDx * scale);
-        lastCumulativeMouseDx += deltaX;
-        int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
+    public static void onPlayerRotated(double yRotIncrease) {
+        int slotsMoved = (int) (yRotIncrease);
         if (slotsMoved != 0) {
             Player player = Minecraft.getInstance().player;
             if (player != null) {
                 Slot s = getQuiverSlot(player);
-                NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(slotsMoved, s));
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(slotsMoved, s));
             }
         }
     }
@@ -78,7 +75,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
     @EventCalled
     public static boolean onMouseScrolled(double scrollDelta) {
         Player player = Minecraft.getInstance().player;
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                 scrollDelta > 0 ? -1 : 1, getQuiverSlot(player)));
         return true;
     }
@@ -91,12 +88,12 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
             switch (key) {
                 case 263 -> { //left arrow;
-                    NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
+                    ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                             -1, getQuiverSlot(player)));
                     return true;
                 }
                 case 262 -> { //right arrow;
-                    NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
+                    ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                             1, getQuiverSlot(player)));
                     return true;
                 }
@@ -104,7 +101,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
             int number = key - 48;
             if (number >= 1 && number <= 9) {
                 if (number <= CommonConfigs.Tools.QUIVER_SLOTS.get()) {
-                    NetworkHandler.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
+                    ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
                             number - 1, getQuiverSlot(player), true));
                 }
                 //cancels all number keys to prevent switching items

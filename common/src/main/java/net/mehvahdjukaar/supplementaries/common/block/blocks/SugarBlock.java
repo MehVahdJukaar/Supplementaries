@@ -86,7 +86,7 @@ public class SugarBlock extends ConcretePowderBlock {
             if (direction != Direction.DOWN) {
                 mutableBlockPos.setWithOffset(pos, direction);
                 var s = level.getBlockState(mutableBlockPos);
-                if (isWater(s) && (direction == Direction.UP || s.getFluidState().isSource()) ) {
+                if (isWater(s) && (direction == Direction.UP || s.getFluidState().isSource())) {
                     count++;
                 }
                 if (count >= 2) return true;
@@ -101,6 +101,7 @@ public class SugarBlock extends ConcretePowderBlock {
         BlockState blockState = level.getBlockState(mutableBlockPos);
         if (isWater(blockState)) return true;
         for (Direction direction : Direction.values()) {
+            if (direction == Direction.DOWN) continue;
             mutableBlockPos.setWithOffset(pos, direction);
             blockState = level.getBlockState(mutableBlockPos);
             if (isWater(blockState) && !blockState.isFaceSturdy(level, pos, direction.getOpposite())) {

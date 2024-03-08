@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
@@ -12,7 +13,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -127,6 +128,8 @@ public class ClientEvents {
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             ));
         }
+
+        CannonCameraController.onClientTick(minecraft);
     }
 
     private static boolean shouldHaveGoatedEffect(Player p, Item item) {
@@ -156,7 +159,7 @@ public class ClientEvents {
     public static void onEntityLoad(Entity entity, Level clientLevel) {
         if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
             //ask server to send quiver data
-            NetworkHandler.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
+            ModNetwork.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
         }
     }
 

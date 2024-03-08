@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleRenderer;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -59,7 +59,7 @@ public class PicklePlayer {
                             Component.literal("I turned myself into a pickle!"), true);
                 }
                 PickleData.set(id, turnOn, jar);
-                NetworkHandler.CHANNEL.sendToServer(new PicklePacket(id, turnOn, jar));
+                ModNetwork.CHANNEL.sendToServer(new PicklePacket(id, turnOn, jar));
                 return true;
             }
         }

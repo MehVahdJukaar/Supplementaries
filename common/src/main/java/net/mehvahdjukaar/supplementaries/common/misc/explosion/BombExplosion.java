@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
@@ -227,7 +227,7 @@ public class BombExplosion extends Explosion {
 
         if (!level.isClientSide) {
             for (var e : this.getHitPlayers().entrySet()) {
-                NetworkHandler.CHANNEL.sendToClientPlayer((ServerPlayer) e.getKey(),
+                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) e.getKey(),
                         new ClientBoundSendKnockbackPacket(e.getValue(), e.getKey().getId()));
             }
         }

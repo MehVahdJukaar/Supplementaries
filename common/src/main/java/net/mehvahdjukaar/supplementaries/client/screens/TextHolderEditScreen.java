@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -116,7 +116,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     @Override
     public void removed() {
         // send new text to the server
-            NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
                     this.tile.getBlockPos(), this.messages));
     }
 

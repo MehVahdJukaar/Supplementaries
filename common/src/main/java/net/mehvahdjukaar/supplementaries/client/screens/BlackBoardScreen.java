@@ -4,7 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import com.mojang.blaze3d.platform.Lighting;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
@@ -61,7 +61,7 @@ public class BlackBoardScreen extends Screen {
                 pixels[xx][yy] = (this.buttons[xx][yy].getColor());
             }
         }
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
     }
 
     //dynamic refreshTextures for client

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
@@ -33,7 +33,7 @@ public abstract class ChunkHolderMixin {
                     cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
-                                NetworkHandler.CHANNEL.sendToClientPlayer(p,
+                                ModNetwork.CHANNEL.sendToClientPlayer(p,
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
                     });
                 }

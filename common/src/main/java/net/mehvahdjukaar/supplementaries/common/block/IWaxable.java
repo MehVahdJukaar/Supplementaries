@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +43,7 @@ public interface IWaxable {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
-                NetworkHandler.CHANNEL.sendToAllClientPlayersInRange(level, pos, 64,
+                ModNetwork.CHANNEL.sendToAllClientPlayersInRange(level, pos, 64,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.EventType.WAX_ON));
             }
 

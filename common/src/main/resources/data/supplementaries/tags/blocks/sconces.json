@@ -4,16 +4,15 @@
     {"id":"supplementaries:sconce","required":false},
     {"id":"supplementaries:sconce_wall","required":false},
     {"id":"supplementaries:sconce_soul","required":false},
-    {"id":"supplementaries:sconce_soul_wall","required":false},
+    {"id":"supplementaries:sconce_wall_soul","required":false},
     {"id":"supplementaries:sconce_green","required":false},
-    {"id":"supplementaries:sconce_green_wall","required":false},
+    {"id":"supplementaries:sconce_wall_green","required":false},
     {"id":"supplementaries:sconce_ender","required":false},
-    {"id":"supplementaries:sconce_ender_wall","required":false},
-    {"id":"supplementaries:sconce_soul","required":false},
-    {"id":"supplementaries:sconce_soul_wall","required":false},
+    {"id":"supplementaries:sconce_wall_ender","required":false},
     {"id":"supplementaries:sconce_nether_brass","required":false},
-    {"id":"supplementaries:sconce_nether_brass_wall","required":false},
-    {"id":"supplementaries:sconce_glow_wall","required":false},
-    {"id":"supplementaries:sconce_glow","required":false}
+    {"id":"supplementaries:sconce_wall_nether_brass","required":false},
+    {"id":"supplementaries:sconce_wall_glow","required":false},
+    {"id":"supplementaries:sconce_glow","required":false},
+    {"id":"supplementaries:sconce_lever","required":false}
   ]
 }

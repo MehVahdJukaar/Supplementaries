@@ -23,7 +23,7 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
     public static EndermanSkullModel MODEL = null;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD));
+        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL));
     }
 
     @Override

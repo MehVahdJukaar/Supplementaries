@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
-import net.mehvahdjukaar.supplementaries.common.network.NetworkHandler;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSelectMerchantTradePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
@@ -50,7 +50,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     private void postButtonClick() {
         (this.menu).setSelectionHint(this.shopItem);
         (this.menu).tryMoveItems(this.shopItem);
-        NetworkHandler.CHANNEL.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
     }
 
     @Override

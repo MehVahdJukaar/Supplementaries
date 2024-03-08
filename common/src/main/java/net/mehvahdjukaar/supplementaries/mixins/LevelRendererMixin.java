@@ -29,7 +29,7 @@ public abstract class LevelRendererMixin {
                     ordinal = 1
             )
     )
-    private void renderOutline(PoseStack matrixStack, float partialTicks, long finishNanoTime, boolean blockOutlines, Camera camera, GameRenderer renderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
+    private void supplementaries$renderSlingshotOutline(PoseStack matrixStack, float partialTicks, long finishNanoTime, boolean blockOutlines, Camera camera, GameRenderer renderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
         if (blockOutlines) SlingshotRendererHelper.renderBlockOutline(matrixStack, camera, this.minecraft);
     }
 

@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 
-public class NetworkHandler {
+public class ModNetwork {
 
     public static final ChannelHandler CHANNEL = ChannelHandler.builder(Supplementaries.MOD_ID)
             .version(2)
