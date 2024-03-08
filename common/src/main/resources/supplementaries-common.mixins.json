@@ -44,7 +44,6 @@
     "StrayMixin",
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
-    "TrackedEntityMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin"
   ],

@@ -166,7 +166,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
         public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors, @Nullable BookType lastColor) {
             this.stack = bookStack;
-            Random rand = new Random(pos.asLong());
+            Random rand = new Random(pos.below(2).asLong());
             for (int j = 0; j < index; j++) rand.nextInt();
             Item item = bookStack.getItem();
             this.yAngle = (float) (rand.nextInt(32) * Math.PI / 16);
@@ -212,7 +212,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",
-            "red", "dark_green", "lime", "teal", "blue", "purple");
+            "red", "green", "lime", "cyan", "blue", "purple");
 
     public record BooksList(List<VisualBook> books) {
         public BooksList() {

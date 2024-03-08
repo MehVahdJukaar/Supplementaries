@@ -32,7 +32,12 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     }
 
     @Override
-    public void render(CannonBlockTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
+    public boolean shouldRenderOffScreen(CannonBlockTile blockEntity) {
+        return true;
+    }
+
+    @Override
+    public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
 
@@ -49,8 +54,9 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         //write equation of sawtooth wave with same period as that sine wave
         float wave = (t % 1000) / 1000f;
 
-        this.legs.yRot = blockEntity.getYaw(partialTick) * Mth.DEG_TO_RAD;
-        this.pivot.xRot = blockEntity.getPitch(partialTick) * Mth.DEG_TO_RAD;
+        float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
+        this.legs.yRot = yawRad;
+        this.pivot.xRot = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
 
         float scale = Mth.sin((t % 200) / 200f * (float) Math.PI) * 0.01f + 1f + wave * 0.06f;
         head.xScale = scale;
@@ -59,12 +65,11 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         head.zScale = 1 - c;
         head.z = c * 5.675f;
 
-
         model.render(poseStack, builder, packedLight, packedOverlay);
 
         poseStack.popPose();
 
-        CannonCameraController.renderTrajectory(blockEntity, poseStack, bufferSource, packedLight, packedOverlay);
+        CannonCameraController.renderTrajectory(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, yawRad);
     }
 
 

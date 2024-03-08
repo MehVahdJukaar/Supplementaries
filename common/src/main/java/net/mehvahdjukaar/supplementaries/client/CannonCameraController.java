@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.Material;
@@ -20,8 +22,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 public class CannonCameraController {
@@ -61,7 +63,7 @@ public class CannonCameraController {
 
             camera.setRotation(180 + yaw, cameraPitch);
 
-            camera.move(-camera.getMaxZoom(4), 0, 0);
+            camera.move(-camera.getMaxZoom(4), 0, -1);
 
 
             // find hit result
@@ -73,9 +75,6 @@ public class CannonCameraController {
                     .clip(new ClipContext(start, endPos,
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
-            if (hitResult.getType() == BlockHitResult.Type.BLOCK) {
-                endPos = hitResult.getLocation();
-            }
             hit = hitResult;
         }
         return active;
@@ -109,7 +108,8 @@ public class CannonCameraController {
         if (mc.level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile) {
             tile.addRotation((float) yawIncrease * scale, (float) pitchIncrease * scale);
         }
-        cameraYaw += yawIncrease;
+        //TODO: fix these
+        cameraYaw += yawIncrease * scale;
         cameraPitch += pitchIncrease * scale;
         cameraPitch = Mth.clamp(cameraPitch, -90, 90);
     }
@@ -129,22 +129,53 @@ public class CannonCameraController {
     }
 
     public static void renderTrajectory(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
-                                        int packedLight, int packedOverlay) {
-        if (active && hit != null && blockEntity == cannon) {
+                                        int packedLight, int packedOverlay, float partialTicks,
+                                        float yaw) {
+        // if (!active || cannon != blockEntity) return;
+        if (hit != null) {
             Material material = ModMaterials.CANNON_TARGET_MATERIAL;
-            var builder = material.buffer(buffer, RenderType::entityCutout);
-            Level level = blockEntity.getLevel();
+            VertexConsumer builder = material.buffer(buffer, RenderType::entityCutout);
             BlockPos pos = blockEntity.getBlockPos();
-            int upLight = LevelRenderer.getLightColor(level, pos.above(2));
-            int lu = upLight & '\uffff';
-            int lv = upLight >> 16 & '\uffff';
+            int lu = LightTexture.FULL_BLOCK;
+            int lv = LightTexture.FULL_SKY;
 
             if (hit instanceof BlockHitResult bh) {
-                poseStack.pushPose();
                 Vec3 targetVector = hit.getLocation().subtract(pos.getCenter());
 
-                targetVector = new Vec3(targetVector.x + 0.5, targetVector.y + 0.5, targetVector.z + 0.5);
-                poseStack.translate(targetVector.x, targetVector.y + 0.01, targetVector.z);
+
+                //rotate so we can work in 2d
+                Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+
+                poseStack.pushPose();
+                poseStack.translate(0.5, 0.5, 0.5);
+
+                poseStack.mulPose(Axis.YP.rotation(-yaw));
+
+                VertexConsumer consumer = buffer.getBuffer(RenderType.lines());
+                Matrix4f matrix4f = poseStack.last().pose();
+                Matrix3f matrix3f = poseStack.last().normal();
+                consumer.vertex(matrix4f, 0, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
+                consumer.vertex(matrix4f, 0, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
+                consumer.vertex(matrix4f, 0.01f, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+                consumer.vertex(matrix4f, 0.01f, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+
+
+                // account for actual target
+                float gravity = 0.01f;
+                float drag = 0.96f;
+                float initialPow = 1f;
+                var trajectory = findBestAngle(0.01f, target, gravity, drag, initialPow);
+
+                renderLeash(gravity, drag, initialPow, trajectory.angle, trajectory.finalTime,
+                        partialTicks, poseStack, buffer, packedLight);
+
+                poseStack.popPose();
+
+
+                poseStack.pushPose();
+
+                Vec3 targetVec = new Vec3(0, trajectory.point.y, -trajectory.point.x).yRot(-yaw);
+                poseStack.translate(targetVec.x+0.5, targetVec.y + 0.5 + 0.01, targetVec.z+0.5);
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(90));
                 VertexUtil.addQuad(builder, poseStack, -2f, -2f, 2f, 2f, lu, lv);
@@ -158,24 +189,12 @@ public class CannonCameraController {
 
                 AABB bb = new AABB(distance1, distance1.add(1, 1, 1)).inflate(0.01);
                 LevelRenderer.renderLineBox(poseStack, lines, bb, 1.0F, 0, 0, 1.0F);
-                poseStack.popPose();
-
-                //rotate so we can work in 2d
-
-                poseStack.pushPose();
-
-                poseStack.mulPose(Axis.YP.rotation((float) (Mth.atan2(targetVector.y, targetVector.x))));
-                Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-
-                // account for actual target
-           //     var trajectory = findBestAngle(0.1f, target, 0.01f, 0.96f, 1f);
-
-                renderLeash(new Vec3(0, 0, 0), new Vec3(target.x, target.y, 0), 0, poseStack, buffer, packedLight);
 
                 poseStack.popPose();
             }
         }
     }
+
 
     /**
      * calculate the best angle to shoot a projectile at to hit a target, maximising distance to target point
@@ -187,35 +206,40 @@ public class CannonCameraController {
      * @param initialPow  initial velocity
      */
     public static TrajectoryResult findBestAngle(float step, Vec2 targetPoint, float gravity, float drag, float initialPow) {
+        float stopDistance = 0.01f;
         float targetSlope = targetPoint.y / targetPoint.x;
-        float start = (float) (Mth.RAD_TO_DEG * Math.atan(targetSlope)); //pitch
+        float start = (float) (Mth.RAD_TO_DEG * Mth.atan2(targetPoint.y, targetPoint.x)) + 0.01f; //pitch
         float end = 90;
 
-        Vec2 best = null;
-        double prevLen = 0;
+        Vec2 bestPoint = new Vec2(0, 0);
         float bestAngle = start;
+        float bestPointTime = 0;
         for (float angle = start; angle < end; angle += step) {
             float rad = angle * Mth.DEG_TO_RAD;
             float v0x = Mth.cos(rad) * initialPow;
             float v0y = Mth.sin(rad) * initialPow;
-            Vec2 v = findLineIntersection(targetSlope, gravity, drag, v0x, v0y);
+            var r = findLineIntersection(targetSlope, gravity, drag, v0x, v0y);
 
-            if (v != null) {
+            if (r != null) {
                 //TODO: exit early when we flip. infact replace with binary search
-                double len = Mth.lengthSquared(v.x, v.y);
-                if (len > prevLen) {
-                    prevLen = len;
-                    best = v;
-                    bestAngle = angle;
+
+                Vec2 landPoint = r.getFirst();
+                float distance = targetPoint.distanceToSqr(landPoint);
+                if (distance < targetPoint.distanceToSqr(bestPoint)) {
+
+                    bestPoint = landPoint;
+                    bestAngle = rad;
+                    bestPointTime = r.getSecond();
+                    if(distance<stopDistance)break;
                 }
             } else {
                 int error = 0;
             }
         }
-        return new TrajectoryResult(best, bestAngle);
+        return new TrajectoryResult(bestPoint, bestAngle, bestPointTime);
     }
 
-    private record TrajectoryResult(Vec2 point, float angle) {
+    private record TrajectoryResult(Vec2 point, float angle, float finalTime) {
     }
 
 
@@ -245,7 +269,7 @@ public class CannonCameraController {
      * @param V0y initial velocity
      * @return intersection point
      */
-    public static Vec2 findLineIntersection(float m, float g, float d, float V0x, float V0y) {
+    public static Pair<Vec2, Float> findLineIntersection(float m, float g, float d, float V0x, float V0y) {
         float slopeAt0 = V0y / V0x;
         if (slopeAt0 < m) {
             // no solution if line is steeper than projectile initial slope
@@ -263,18 +287,21 @@ public class CannonCameraController {
         float y1 = arcY(t1, g, d, V0y);
         float y2 = arcY(t2, g, d, V0y);
 
+        float xNew = 0;
+        float yNew = 0;
+        float tNew = 0;
         for (int iter = 0; iter < maxIterations; iter++) {
-            float tNew = t2 - ((y2 - m * x2) * (t2 - t1)) / ((y2 - y1) - m * (x2 - x1));
+            tNew = t2 - ((y2 - m * x2) * (t2 - t1)) / ((y2 - y1) - m * (x2 - x1));
 
-            float xNew = arcX(tNew, g, d, V0x);
-            float yNew = arcY(tNew, g, d, V0y);
+            xNew = arcX(tNew, g, d, V0x);
+            yNew = arcY(tNew, g, d, V0y);
 
             // Compute the error between the line and the point
             float error = yNew - m * xNew;
 
             // Check for convergence
             if (Math.abs(error) < tolerance) {
-                return new Vec2(xNew, yNew);
+                break;
             }
 
             // Update the values for the next iteration
@@ -285,9 +312,7 @@ public class CannonCameraController {
             y1 = y2;
             y2 = yNew;
         }
-        // return best approximation
-        // should also never occur
-        return new Vec2(x2, y2);
+        return Pair.of(new Vec2(xNew, yNew), tNew);
     }
 
 
@@ -316,7 +341,7 @@ public class CannonCameraController {
     public static float arcX(float t, float g, float d, float V0x) {
         double inLog = 1 / Math.log(d);
 
-        return (float) (inLog * (Math.pow(d, t) - 1) + V0x * t);
+        return (float) (V0x * inLog * (Math.pow(d, t) - 1));
     }
 
     /*
@@ -414,49 +439,55 @@ public class CannonCameraController {
         }
     }*/
 
+    private static void renderLeash(float gravity, float drag, float initialPow, float angle, float finalTime,
+                                    float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+        poseStack.pushPose();
 
-    private static void renderLeash(Vec3 startPos, Vec3 endPos, float partialTicks, PoseStack matrixStack,
-                                                MultiBufferSource buffer, int light) {
-        matrixStack.pushPose();
+        float scale = 1;
+        float size = 2.5f/16f * scale;
+        VertexConsumer consumer = buffer.getBuffer(ModRenderTypes.CANNON_TRAJECTORY);
+        Matrix4f matrix = poseStack.last().pose();
 
-        float px = (float) -endPos.x;
-        float py = (float) -endPos.y;
-        float pz = (float) -endPos.z;
-        matrixStack.translate(startPos.x, startPos.y, startPos.z);
+        float py = 0;
+        float px = 0;
+        int maxIter = (int) finalTime;
+        float d = 0;
+        int step = 4;
+        for (int t = step; t <= maxIter; t += step) {
 
-        float size = 0.025F;
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.leash());
-        Matrix4f matrix4f = matrixStack.last().pose();
-        float n = (Mth.invSqrt(px * px + pz * pz) * size / 2.0F);
-        float o = (pz * n);
-        float p = (px * n);
+            float textureStart = d % 1;
+            consumer.vertex(matrix, -size, py, px)
+                    .color(1, 1, 1, 1.0F)
+                    .uv(0, textureStart)
+                    .endVertex();
+            consumer.vertex(matrix, size, py, px)
+                    .color(1, 1, 1, 1.0F)
+                    .uv(5 / 16f, textureStart)
+                    .endVertex();
 
-        int maxSegments = 24;
-        for (int iterNumber = 0; iterNumber <= maxSegments; ++iterNumber) {
-            addVertexPair(vertexConsumer, matrix4f, px, py, pz, light, size, size, o, p, iterNumber / maxSegments, false);
+            float ny = arcY(t, gravity, drag, Mth.sin(angle) * initialPow);
+            float nx = -arcX(t, gravity, drag, Mth.cos(angle) * initialPow);
+
+            float dis = (float) (Mth.length(nx - px, ny - py))/scale;
+            float textEnd = textureStart + dis;
+
+            d+= dis;
+            py = ny;
+            px = nx;
+
+            consumer.vertex(matrix, size, py, px)
+                    .color(1, 1, 1, 1.0F)
+                    .uv(5 / 16f, textEnd)
+                    .endVertex();
+            consumer.vertex(matrix, -size, py, px)
+                    .color(1, 1, 1, 1.0F)
+                    .uv(0, textEnd)
+                    .endVertex();
+           // if(t>5)break;
         }
 
-        for (int iterNumber = maxSegments; iterNumber >= 0; --iterNumber) {
-            addVertexPair(vertexConsumer, matrix4f, px, py, pz, light, size, 0.0F, o, p, iterNumber / maxSegments, true);
-        }
-
-        matrixStack.popPose();
+        poseStack.popPose();
     }
 
-    private static void addVertexPair(VertexConsumer consumer, Matrix4f matrix, float px, float py, float pz,
-                                      int light, float m, float n, float o, float p,
-                                      int r, boolean flipped) {
-
-        int q = 1;
-        float v = q % 2 == (flipped ? 1 : 0) ? 0.7F : 1.0F;
-        float red = 0.5F * v;
-        float green = 0.4F * v;
-        float blue = 0.3F * v;
-        float z = px * r;
-        float aa = py > 0.0F ? py * r * r : py - py * (1.0F - r) * (1.0F - r);
-        float ab = pz * r;
-        consumer.vertex(matrix, z - o, aa + n, ab + p).color(red, green, blue, 1.0F).uv2(light).endVertex();
-        consumer.vertex(matrix, z + o, aa + m - n, ab - p).color(red, green, blue, 1.0F).uv2(light).endVertex();
-    }
 }
 

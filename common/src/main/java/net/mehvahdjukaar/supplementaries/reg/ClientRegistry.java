@@ -340,7 +340,6 @@ public class ClientRegistry {
         event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
         event.register(ModEntities.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModEntities.PEARL_MARKER.get(), NoopRenderer::new);
-        event.register(ModEntities.CANNON_CAMERA.get(), NoopRenderer::new);
     }
 
     @EventCalled

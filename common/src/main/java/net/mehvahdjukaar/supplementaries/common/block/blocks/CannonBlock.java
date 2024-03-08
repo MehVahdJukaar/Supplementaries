@@ -74,6 +74,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.getBlockEntity(pos) instanceof CannonBlockTile tile){
             tile.use(player, hand, hit);
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return super.use(state, level, pos, player, hand, hit);
     }
