@@ -37,6 +37,14 @@ public class CannonCameraController {
     private static float cameraYaw;
     private static float cameraPitch;
 
+    private static Trajectory trajectory;
+
+
+    // account for actual target
+    private static float gravity = 0.01f;
+    private static float drag = 0.96f;
+    private static float initialPow = 1f;
+
     public static void activateCannonCamera(BlockPos pos) {
         active = true;
         cannonPos = pos;
@@ -53,6 +61,7 @@ public class CannonCameraController {
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
         if (active && cannon != null) {
+            //do all setup here
             float yaw = cannon.getYaw(partialTick);
             float pitch = cannon.getPitch(partialTick);
 
@@ -76,6 +85,17 @@ public class CannonCameraController {
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
             hit = hitResult;
+
+
+
+
+            Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
+            //rotate so we can work in 2d
+            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+
+            trajectory = findBestAngle(0.01f, target, gravity, drag, initialPow);
+
+            cannon.setPitch(-trajectory.angle*Mth.RAD_TO_DEG);
         }
         return active;
     }
@@ -106,7 +126,7 @@ public class CannonCameraController {
         Minecraft mc = Minecraft.getInstance();
         float scale = 0.2f;
         if (mc.level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile) {
-            tile.addRotation((float) yawIncrease * scale, (float) pitchIncrease * scale);
+            tile.addRotation((float) yawIncrease * scale, 0);
         }
         //TODO: fix these
         cameraYaw += yawIncrease * scale;
@@ -160,11 +180,7 @@ public class CannonCameraController {
                 consumer.vertex(matrix4f, 0.01f, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
 
 
-                // account for actual target
-                float gravity = 0.01f;
-                float drag = 0.96f;
-                float initialPow = 1f;
-                var trajectory = findBestAngle(0.01f, target, gravity, drag, initialPow);
+
 
                 renderLeash(gravity, drag, initialPow, trajectory.angle, trajectory.finalTime,
                         partialTicks, poseStack, buffer, packedLight);
@@ -175,7 +191,7 @@ public class CannonCameraController {
                 poseStack.pushPose();
 
                 Vec3 targetVec = new Vec3(0, trajectory.point.y, -trajectory.point.x).yRot(-yaw);
-                poseStack.translate(targetVec.x+0.5, targetVec.y + 0.5 + 0.01, targetVec.z+0.5);
+                poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.01, targetVec.z + 0.5);
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(90));
                 VertexUtil.addQuad(builder, poseStack, -2f, -2f, 2f, 2f, lu, lv);
@@ -205,7 +221,7 @@ public class CannonCameraController {
      * @param drag        drag (v multiplier)
      * @param initialPow  initial velocity
      */
-    public static TrajectoryResult findBestAngle(float step, Vec2 targetPoint, float gravity, float drag, float initialPow) {
+    public static Trajectory findBestAngle(float step, Vec2 targetPoint, float gravity, float drag, float initialPow) {
         float stopDistance = 0.01f;
         float targetSlope = targetPoint.y / targetPoint.x;
         float start = (float) (Mth.RAD_TO_DEG * Mth.atan2(targetPoint.y, targetPoint.x)) + 0.01f; //pitch
@@ -230,16 +246,16 @@ public class CannonCameraController {
                     bestPoint = landPoint;
                     bestAngle = rad;
                     bestPointTime = r.getSecond();
-                    if(distance<stopDistance)break;
+                    if (distance < stopDistance) break;
                 }
             } else {
                 int error = 0;
             }
         }
-        return new TrajectoryResult(bestPoint, bestAngle, bestPointTime);
+        return new Trajectory(bestPoint, bestAngle, bestPointTime);
     }
 
-    private record TrajectoryResult(Vec2 point, float angle, float finalTime) {
+    private record Trajectory(Vec2 point, float angle, float finalTime) {
     }
 
 
@@ -444,16 +460,15 @@ public class CannonCameraController {
         poseStack.pushPose();
 
         float scale = 1;
-        float size = 2.5f/16f * scale;
+        float size = 2.5f / 16f * scale;
         VertexConsumer consumer = buffer.getBuffer(ModRenderTypes.CANNON_TRAJECTORY);
         Matrix4f matrix = poseStack.last().pose();
 
         float py = 0;
         float px = 0;
-        int maxIter = (int) finalTime;
-        float d = 0;
-        int step = 4;
-        for (int t = step; t <= maxIter; t += step) {
+        float d = -(System.currentTimeMillis() % 1000) / 1000f;
+        float step = finalTime / (int) finalTime;
+        for (float t = step; t <= finalTime + step; t += step) {
 
             float textureStart = d % 1;
             consumer.vertex(matrix, -size, py, px)
@@ -468,10 +483,10 @@ public class CannonCameraController {
             float ny = arcY(t, gravity, drag, Mth.sin(angle) * initialPow);
             float nx = -arcX(t, gravity, drag, Mth.cos(angle) * initialPow);
 
-            float dis = (float) (Mth.length(nx - px, ny - py))/scale;
+            float dis = (float) (Mth.length(nx - px, ny - py)) / scale;
             float textEnd = textureStart + dis;
 
-            d+= dis;
+            d += dis;
             py = ny;
             px = nx;
 
@@ -483,7 +498,7 @@ public class CannonCameraController {
                     .color(1, 1, 1, 1.0F)
                     .uv(0, textEnd)
                     .endVertex();
-           // if(t>5)break;
+            // if(t>5)break;
         }
 
         poseStack.popPose();

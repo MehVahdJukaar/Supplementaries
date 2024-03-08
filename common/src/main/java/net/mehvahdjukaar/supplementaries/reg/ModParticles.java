@@ -33,6 +33,7 @@ public class ModParticles {
     public static final Supplier<SimpleParticleType> ASH_PARTICLE = reg("ash");
     public static final Supplier<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = reg("bubble_block");
     public static final Supplier<SimpleParticleType> SUGAR_PARTICLE = reg("sugar");
+    public static final Supplier<SimpleParticleType> CANNON_FIRE_PARTICLE = reg("cannon_fire");
 
 
     private static Supplier<SimpleParticleType> reg(String string) {

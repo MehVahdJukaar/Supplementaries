@@ -311,6 +311,7 @@ public class ClientRegistry {
         event.register(ModParticles.ASH_PARTICLE.get(), AshParticleFactory::new);
         event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
         event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
+        event.register(ModParticles.CANNON_FIRE_PARTICLE.get(), CannonFireParticle.Factory::new);
     }
 
     private static class AshParticleFactory extends SnowflakeParticle.Provider {

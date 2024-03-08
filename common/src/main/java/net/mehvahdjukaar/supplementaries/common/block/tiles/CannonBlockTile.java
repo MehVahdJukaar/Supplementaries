@@ -65,6 +65,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.pitch = Mth.clamp(this.pitch, -80, 0);
     }
 
+    public void setPitch(float angle) {
+        this.pitch = angle;
+    }
+
     @Override
     protected Component getDefaultName() {
         return Component.translatable("gui.supplementaries.cannon");
@@ -110,4 +114,5 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             } else CannonCameraController.activateCannonCamera(worldPosition);
         }
     }
+
 }
