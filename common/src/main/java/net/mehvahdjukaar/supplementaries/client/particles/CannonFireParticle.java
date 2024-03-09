@@ -1,76 +1,126 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class CannonFireParticle extends TextureSheetParticle {
-    private final SpriteSet spriteSet;
+    private final SpriteSet ringSprites;
+    private final SpriteSet boomSprites;
     private final double yaw;
     private final double pitch;
 
-    private CannonFireParticle(ClientLevel world, double x, double y, double z, double pitch, double yaw, SpriteSet sprites) {
+    private TextureAtlasSprite boomSprite;
+
+    private CannonFireParticle(ClientLevel world, double x, double y, double z, double pitch, double yaw,
+                               SpriteSet ringSprites, SpriteSet boomSprites) {
         super(world, x, y, z, 0, 0, 0);
         this.setParticleSpeed(0, 0, 0);
         this.pitch = pitch;
         this.yaw = yaw;
-        this.spriteSet = sprites;
+        this.ringSprites = ringSprites;
+        this.boomSprites = boomSprites;
         this.lifetime = 5;
         this.hasPhysics = false;
+        this.quadSize = 1.25f;
 
-        this.setSpriteFromAge(spriteSet);
+        this.setSpriteFromAge(ringSprites);
     }
 
     @Override
     public void tick() {
         super.tick();
-        setSpriteFromAge(spriteSet);
+        setSpriteFromAge(ringSprites);
+    }
+
+    @Override
+    public void setSpriteFromAge(SpriteSet sprite) {
+        if (!this.removed) {
+            // fixes vanilla off by one making last sprite appear for just for 1 frame
+            this.setSprite(sprite.get(this.age, this.lifetime ));
+            this.boomSprite = boomSprites.get(age, lifetime );
+        }
     }
 
     @Override
     public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
         Vec3 vec3 = renderInfo.getPosition();
-        float f = (float) (Mth.lerp((double) partialTicks, this.xo, this.x) - vec3.x());
-        float g = (float) (Mth.lerp((double) partialTicks, this.yo, this.y) - vec3.y());
-        float h = (float) (Mth.lerp((double) partialTicks, this.zo, this.z) - vec3.z());
-        Quaternionf quaternionf;
-        if (this.roll == 0.0F) {
-            quaternionf = renderInfo.rotation();
-        } else {
-            quaternionf = new Quaternionf(renderInfo.rotation());
-            quaternionf.rotateZ(Mth.lerp(partialTicks, this.oRoll, this.roll));
+        float px = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vec3.x());
+        float py = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vec3.y());
+        float pz = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vec3.z());
+        Quaternionf quaternionf = new Quaternionf();
+        quaternionf.rotateY((float) yaw);
+        quaternionf.rotateX((float) pitch);
+
+        float scale = this.getQuadSize(partialTicks);
+
+        Matrix4f mat = new Matrix4f();
+        mat.translate(px, py, pz);
+        mat.scale(scale, scale, scale);
+        mat.rotate(quaternionf);
+
+        float u0 = this.getU0();
+        float u1 = this.getU1();
+        float v0 = this.getV0();
+        float v1 = this.getV1();
+        int light = this.getLightColor(partialTicks);
+
+        drawDoubleQuad(buffer, mat, 1, 0, u0, u1, v0, v1, light);
+
+        mat.translate(0, 0, -0.25f);
+        mat.rotate(RotHlpr.YN90);
+
+        float U0 = boomSprite.getU0();
+        float U1 = boomSprite.getU1();
+        float V0 = boomSprite.getV0();
+        float V1 = boomSprite.getV1();
+
+        int i = Math.min(4, (age / lifetime) * 4 + 1);
+
+        float d = i / 16f;
+        float s = 0.25f;
+
+
+        for (int j = 0; j < 4; j++) {
+            mat.rotate(RotHlpr.X90);
+
+            drawDoubleQuad(buffer, mat, s, d, U0, U1, V0, V1, light);
         }
+    }
 
-        Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float i = this.getQuadSize(partialTicks);
+    private void drawDoubleQuad(VertexConsumer buffer, Matrix4f mat, float w, float o, float u0, float u1, float v0,
+                                float v1, int light) {
+        buffer.vertex(mat, -w, -w, o).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, -w, w, o).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, w, w, o).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, w, -w, o).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
 
-        for (int j = 0; j < 4; ++j) {
-            Vector3f vector3f = vector3fs[j];
-            vector3f.rotate(quaternionf);
-            vector3f.mul(i);
-            vector3f.add(f, g, h);
-        }
-
-        float k = this.getU0();
-        float l = this.getU1();
-        float m = this.getV0();
-        float n = this.getV1();
-        int o = this.getLightColor(partialTicks);
-        buffer.vertex((double) vector3fs[0].x(), (double) vector3fs[0].y(), (double) vector3fs[0].z()).uv(l, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        buffer.vertex((double) vector3fs[1].x(), (double) vector3fs[1].y(), (double) vector3fs[1].z()).uv(l, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        buffer.vertex((double) vector3fs[2].x(), (double) vector3fs[2].y(), (double) vector3fs[2].z()).uv(k, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        buffer.vertex((double) vector3fs[3].x(), (double) vector3fs[3].y(), (double) vector3fs[3].z()).uv(k, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-
+        buffer.vertex(mat, -w, -w, o).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, -w, w, o).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, w, w, o).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, w, -w, o).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
     }
 
     @Override
     public int getLightColor(float partialTick) {
+        if(true)return LightTexture.FULL_BRIGHT;
         float f = ((float) this.age + partialTick) / (float) this.lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
         int i = super.getLightColor(partialTick);
@@ -86,20 +136,46 @@ public class CannonFireParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet sprite;
+        private final SpriteSet sprites;
+        private final Supplier<SpriteSet> sprites2 = Suppliers.memoize(() -> {
+            TextureAtlas atlas = ((TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES));
+            return new SimpleSpriteSet(List.of(
+                    atlas.getSprite(Supplementaries.res("cannon_bang_00")),
+                    atlas.getSprite(Supplementaries.res("cannon_bang_01")),
+                    atlas.getSprite(Supplementaries.res("cannon_bang_02")),
+                    atlas.getSprite(Supplementaries.res("cannon_bang_03")),
+                    atlas.getSprite(Supplementaries.res("cannon_bang_04")),
+                    atlas.getSprite(Supplementaries.res("empty"))));
+        });
 
         public Factory(SpriteSet spriteSet) {
-            this.sprite = spriteSet;
+            this.sprites = spriteSet;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z,
                                        double pitch, double yaw, double zSpeed) {
-            return new CannonFireParticle(worldIn, x, y, z, pitch, yaw, sprite);
+            Vec3 offset = Vec3.directionFromRotation((float) pitch * Mth.RAD_TO_DEG, -(float) yaw * Mth.RAD_TO_DEG);
+            offset = offset.scale(-6.6 / 16f);
+
+
+            return new CannonFireParticle(worldIn, x + offset.x, y + offset.y, z + offset.z, pitch, yaw,
+                    sprites, sprites2.get());
+        }
+    }
+
+    record SimpleSpriteSet(List<TextureAtlasSprite> sprites) implements SpriteSet {
+
+        public TextureAtlasSprite get(int age, int lifetime) {
+            return this.sprites.get((this.sprites.size() - 1) * age / lifetime);
+        }
+
+        public TextureAtlasSprite get(RandomSource random) {
+            return this.sprites.get(random.nextInt(this.sprites.size()));
         }
     }
 

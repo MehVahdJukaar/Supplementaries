@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import com.google.common.base.Stopwatch;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -60,6 +61,8 @@ public class CannonCameraController {
 
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
+        gravity = 0.03f;
+        drag = 0.99F;
         if (active && cannon != null) {
             //do all setup here
             float yaw = cannon.getYaw(partialTick);
@@ -87,15 +90,19 @@ public class CannonCameraController {
             hit = hitResult;
 
 
-
-
             Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
             //rotate so we can work in 2d
             Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
 
+            Stopwatch watch = Stopwatch.createStarted();
             trajectory = findBestAngle(0.01f, target, gravity, drag, initialPow);
+            long l = watch.elapsed().getNano();
+            watch.reset();
+            watch.start();
+            var tr2 = findBestAngle(target, gravity, drag, initialPow, 0.1f, 20);
+            long l2 = watch.elapsed().getNano();
 
-            cannon.setPitch(-trajectory.angle*Mth.RAD_TO_DEG);
+            cannon.setPitch(-trajectory.angle * Mth.RAD_TO_DEG);
         }
         return active;
     }
@@ -153,8 +160,8 @@ public class CannonCameraController {
                                         float yaw) {
         // if (!active || cannon != blockEntity) return;
         if (hit != null) {
-            Material material = ModMaterials.CANNON_TARGET_MATERIAL;
-            VertexConsumer builder = material.buffer(buffer, RenderType::entityCutout);
+            Material circleMaterial = ModMaterials.CANNON_TARGET_MATERIAL;
+            VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
             BlockPos pos = blockEntity.getBlockPos();
             int lu = LightTexture.FULL_BLOCK;
             int lv = LightTexture.FULL_SKY;
@@ -180,21 +187,22 @@ public class CannonCameraController {
                 consumer.vertex(matrix4f, 0.01f, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
 
 
+                boolean miss = hit.getType() != HitResult.Type.BLOCK && trajectory.miss;
 
-
-                renderLeash(gravity, drag, initialPow, trajectory.angle, trajectory.finalTime,
+                renderArrows(gravity, drag, initialPow, trajectory.angle, trajectory.finalTime, miss,
                         partialTicks, poseStack, buffer, packedLight);
 
                 poseStack.popPose();
 
 
+                if (miss) return;
                 poseStack.pushPose();
 
                 Vec3 targetVec = new Vec3(0, trajectory.point.y, -trajectory.point.x).yRot(-yaw);
                 poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.01, targetVec.z + 0.5);
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(90));
-                VertexUtil.addQuad(builder, poseStack, -2f, -2f, 2f, 2f, lu, lv);
+                VertexUtil.addQuad(circleBuilder, poseStack, -2f, -2f, 2f, 2f, lu, lv);
                 poseStack.popPose();
 
 
@@ -222,6 +230,7 @@ public class CannonCameraController {
      * @param initialPow  initial velocity
      */
     public static Trajectory findBestAngle(float step, Vec2 targetPoint, float gravity, float drag, float initialPow) {
+        boolean exitEarly = true; //whether to grab first or second result. this doesnt work tho
         float stopDistance = 0.01f;
         float targetSlope = targetPoint.y / targetPoint.x;
         float start = (float) (Mth.RAD_TO_DEG * Mth.atan2(targetPoint.y, targetPoint.x)) + 0.01f; //pitch
@@ -230,6 +239,7 @@ public class CannonCameraController {
         Vec2 bestPoint = new Vec2(0, 0);
         float bestAngle = start;
         float bestPointTime = 0;
+        boolean miss = true;
         for (float angle = start; angle < end; angle += step) {
             float rad = angle * Mth.DEG_TO_RAD;
             float v0x = Mth.cos(rad) * initialPow;
@@ -246,16 +256,88 @@ public class CannonCameraController {
                     bestPoint = landPoint;
                     bestAngle = rad;
                     bestPointTime = r.getSecond();
-                    if (distance < stopDistance) break;
+                    if (distance < stopDistance) {
+                        miss = false;
+                        if (exitEarly) break;
+                    }
                 }
             } else {
                 int error = 0;
             }
         }
-        return new Trajectory(bestPoint, bestAngle, bestPointTime);
+        return new Trajectory(bestPoint, bestAngle, bestPointTime, miss);
     }
 
-    private record Trajectory(Vec2 point, float angle, float finalTime) {
+    /**
+     * Calculate the best angle to shoot a projectile at to hit a target, maximizing the distance to the target point.
+     * Uses Secant method
+     *
+     * @param targetPoint   Target point
+     * @param gravity       Gravity
+     * @param drag          Drag (v multiplier)
+     * @param initialPow    Initial velocity
+     * @param tolerance     Tolerance for stopping the secant method
+     * @param maxIterations Maximum number of iterations for the secant method
+     * @return Trajectory object containing the best point, angle, time, and miss flag
+     */
+    public static Trajectory findBestAngle(Vec2 targetPoint, float gravity, float drag, float initialPow,
+                                           float tolerance, int maxIterations) {
+        float targetSlope = targetPoint.y / targetPoint.x;
+        float startAngle = (float) (Math.atan2(targetPoint.y, targetPoint.x)) + 0.01f;
+        float endAngle = (float) Math.PI / 2; // Maximum angle (90 degrees)
+
+        // Initial guesses for the secant method
+        float angle1 = startAngle;
+        float angle2 = endAngle;
+
+        // Initialize variables to store the best result
+        Vec2 bestPoint = new Vec2(0, 0);
+        float bestAngle = startAngle;
+        float bestPointTime = 0;
+        boolean miss = true;
+
+        // Perform secant method iterations
+        for (int i = 0; i < maxIterations; i++) {
+            // Calculate the velocities for the two angles
+            float v0x1 = (float) (Math.cos(angle1) * initialPow);
+            float v0y1 = (float) (Math.sin(angle1) * initialPow);
+            float v0x2 = (float) (Math.cos(angle2) * initialPow);
+            float v0y2 = (float) (Math.sin(angle2) * initialPow);
+
+            // Calculate the intersection points for the two angles
+            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1);
+            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2);
+
+            // Calculate distances from the target for the intersection points
+            float distance1 = r1 != null ? targetPoint.distanceToSqr(r1.getFirst()) : Float.MAX_VALUE;
+            float distance2 = r2 != null ? targetPoint.distanceToSqr(r2.getFirst()) : Float.MAX_VALUE;
+
+            // Update the best result if a closer point is found
+            if (distance1 < distance2) {
+                bestPoint = r1.getFirst();
+                bestAngle = angle1;
+                bestPointTime = r1.getSecond();
+                angle2 = angle1;
+                angle1 -= tolerance; // Move angle1 closer to the best angle
+            } else {
+                bestPoint = r2.getFirst();
+                bestAngle = angle2;
+                bestPointTime = r2.getSecond();
+                angle1 = angle2;
+                angle2 += tolerance; // Move angle2 closer to the best angle
+            }
+
+            // Check if the distance is below the tolerance
+            if (Math.abs(distance1 - distance2) < tolerance) {
+                miss = false;
+                break; // Stop iterating if the difference in distances is below the tolerance
+            }
+        }
+
+        return new Trajectory(bestPoint, bestAngle, bestPointTime, miss);
+    }
+
+    private record Trajectory(Vec2 point, float angle, float finalTime, boolean miss) {
     }
 
 
@@ -455,8 +537,9 @@ public class CannonCameraController {
         }
     }*/
 
-    private static void renderLeash(float gravity, float drag, float initialPow, float angle, float finalTime,
-                                    float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
+    private static void renderArrows(float gravity, float drag, float initialPow, float angle, float finalTime,
+                                     boolean miss,
+                                     float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         poseStack.pushPose();
 
         float scale = 1;
@@ -468,7 +551,8 @@ public class CannonCameraController {
         float px = 0;
         float d = -(System.currentTimeMillis() % 1000) / 1000f;
         float step = finalTime / (int) finalTime;
-        for (float t = step; t <= finalTime + step; t += step) {
+        float maxT = finalTime + (miss ? 0 : step);
+        for (float t = step; t < maxT; t += step) {
 
             float textureStart = d % 1;
             consumer.vertex(matrix, -size, py, px)
@@ -490,15 +574,15 @@ public class CannonCameraController {
             py = ny;
             px = nx;
 
+            int alpha = (t + step >= maxT) ? 0 : 1;
             consumer.vertex(matrix, size, py, px)
-                    .color(1, 1, 1, 1.0F)
+                    .color(1f, 1f, 1f, alpha)
                     .uv(5 / 16f, textEnd)
                     .endVertex();
             consumer.vertex(matrix, -size, py, px)
-                    .color(1, 1, 1, 1.0F)
+                    .color(1f, 1f, 1f, alpha)
                     .uv(0, textEnd)
                     .endVertex();
-            // if(t>5)break;
         }
 
         poseStack.popPose();

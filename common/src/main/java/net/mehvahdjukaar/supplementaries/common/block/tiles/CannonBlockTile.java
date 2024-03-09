@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,11 +12,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class CannonBlockTile extends OpeneableContainerBlockEntity {
@@ -26,6 +29,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float prevYaw = 0;
     private float explosionTimer = 0;
     private float firePower = 0;
+
+    private float projectileDrag = 0.99f;
 
     private boolean controlledByPlayer = true;
 
@@ -104,6 +109,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
         t.prevYaw = t.yaw;
         t.prevPitch = t.pitch;
+
+
+        if ((level.getGameTime() % 60) == 0) {
+            if (level.isClientSide) {
+                level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.6125, pos.getZ() + 0.5,
+                        -t.pitch * Mth.DEG_TO_RAD, -t.yaw * Mth.DEG_TO_RAD, 0);
+            }else{
+                Snowball snowball = new Snowball(level, pos.getX() + 0.5, pos.getY() + 1.4, pos.getZ() + 0.5);
+                Vec3 facing = Vec3.directionFromRotation(-t.pitch, -t.yaw);
+                snowball.shoot(facing.x, facing.y, facing.z, -1f, 0);
+                level.addFreshEntity(snowball);
+            }
+        }
     }
 
 

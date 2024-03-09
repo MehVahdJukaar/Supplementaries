@@ -17,10 +17,10 @@ public class FluidsUtilImpl {
 
     public static boolean extractFluidFromTank(BlockEntity tileBack, Direction dir, int amount) {
         IFluidHandler handlerBack = tileBack.getCapability(ForgeCapabilities.FLUID_HANDLER, dir).orElse(null);
-        //TODO: fix create fluid int bug
         if (handlerBack != null) {
             //only works in 250 increment
-            if (handlerBack.getFluidInTank(0).getAmount() < 250) return false;
+            if (handlerBack.drain(250 * amount, IFluidHandler.FluidAction.SIMULATE).getAmount() != 250 * amount)
+                return false;
             handlerBack.drain(250 * amount, IFluidHandler.FluidAction.EXECUTE);
             tileBack.setChanged();
             return true;

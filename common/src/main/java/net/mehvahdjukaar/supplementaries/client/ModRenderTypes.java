@@ -18,6 +18,7 @@ public class ModRenderTypes extends RenderType {
                     .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
                     .setTextureState(new RenderStateShard.TextureStateShard(ModTextures.CANNON_TRAJECTORY, false, false))
                     .setCullState(NO_CULL)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false));
 
