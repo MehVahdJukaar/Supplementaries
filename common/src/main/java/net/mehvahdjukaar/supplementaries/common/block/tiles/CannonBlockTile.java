@@ -74,6 +74,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.pitch = angle;
     }
 
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
     @Override
     protected Component getDefaultName() {
         return Component.translatable("gui.supplementaries.cannon");
