@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -69,7 +69,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         poseStack.popPose();
 
-        CannonCameraController.renderTrajectory(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, yawRad);
+        CannonController.renderTrajectory(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, yawRad);
     }
 
 

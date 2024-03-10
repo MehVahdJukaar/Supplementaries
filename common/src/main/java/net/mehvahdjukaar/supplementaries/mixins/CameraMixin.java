@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -16,7 +16,7 @@ public abstract class CameraMixin {
             shift = At.Shift.BEFORE, ordinal = 0), cancellable = true)
     public void supplementaries$setupCannonCamera(BlockGetter level, Entity entity, boolean detached,
                                                   boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
-        if (CannonCameraController.setupCamera((Camera) (Object) this,
+        if (CannonController.setupCamera((Camera) (Object) this,
                 level, entity, detached, thirdPersonReverse, partialTick)) {
             ci.cancel();
         }

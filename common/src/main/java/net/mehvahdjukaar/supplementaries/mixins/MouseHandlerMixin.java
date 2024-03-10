@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,10 +23,10 @@ public abstract class MouseHandlerMixin {
     )
     protected boolean onMoveMouse(LocalPlayer instance, double yRot, double xRot) {
         if (QuiverArrowSelectGui.isActive() && ClientConfigs.Items.QUIVER_MOUSE_MOVEMENT.get()) {
-            QuiverArrowSelectGui.onPlayerRotated(yRot);
+            QuiverArrowSelectGui.onPlayerRotated( yRot);
         }
-        else if(CannonCameraController.isActive()){
-            CannonCameraController.onPlayerRotated(yRot, xRot);
+        else if(CannonController.isActive()){
+            CannonController.onPlayerRotated(yRot, xRot);
             return false;
         }
         return true;

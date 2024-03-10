@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -69,8 +69,8 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
 
     @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
     public boolean supplementaries$preventMovementWhileOperatingCannon(Input instance, boolean bl, float f) {
-        if (CannonCameraController.isActive()) {
-            CannonCameraController.onInputUpdate(instance);
+        if (CannonController.isActive()) {
+            CannonController.onInputUpdate(instance);
             return false;
         }
         return true;

@@ -31,7 +31,7 @@ public class JEICompat implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
-        if (!CompatHandler.REI) {
+        if (!CompatHandler.REI && !CompatHandler.EMI) {
             SpecialRecipeDisplays.registerCraftingRecipes(r -> registry.addRecipes(RecipeTypes.CRAFTING, r));
         }
     }

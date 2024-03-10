@@ -352,7 +352,7 @@ public class BlockUtil {
         }
         Util.shuffle(content, level.random);
 
-        for (int i = 0; i < c.getContainerSize(); i++) {
+        for (int i = 0; i < content.size(); i++) {
             c.setItem(i, content.get(i));
         }
         c.setChanged();

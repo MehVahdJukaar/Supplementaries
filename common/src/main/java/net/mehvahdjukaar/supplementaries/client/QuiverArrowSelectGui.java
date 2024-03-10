@@ -30,25 +30,23 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     //behold states
     private static boolean usingItem;
-    private static double lastYRot = 0;
-    private static boolean usingKey = false;
+    private static boolean usingKeyAndHasItem = false;
 
     public static boolean isActive() {
-        return usingItem || usingKey;
+        return usingItem || usingKeyAndHasItem;
     }
 
     public static void setUsingItem(boolean on) {
-        if (on != usingItem) lastYRot = 0;
         usingItem = on;
     }
 
     public static boolean isUsingKey() {
-        return usingKey;
+        return usingKeyAndHasItem;
     }
 
     public static void setUsingKeybind(boolean on) {
         //if (on != usingItem) lastCumulativeMouseDx = 0;
-        usingKey = on;
+        usingKeyAndHasItem = on && (Minecraft.getInstance().player instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver());
     }
 
     protected final ItemRenderer itemRenderer;
@@ -182,11 +180,11 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
     @NotNull
     private static Slot getQuiverSlot(Player player) {
-        return usingKey ? Slot.INVENTORY : (player.getUsedItemHand() == InteractionHand.MAIN_HAND ? Slot.MAIN_HAND : Slot.OFF_HAND);
+        return usingKeyAndHasItem ? Slot.INVENTORY : (player.getUsedItemHand() == InteractionHand.MAIN_HAND ? Slot.MAIN_HAND : Slot.OFF_HAND);
     }
 
     private static ItemStack getCurrentlyUsedQuiver(Player player) {
-        if (usingKey) {
+        if (usingKeyAndHasItem) {
             return ((IQuiverEntity) player).supplementaries$getQuiver();
         }
         return player.getUseItem();

@@ -21,6 +21,7 @@ public class CompatHandler {
     public static final boolean QUARK = isLoaded("quark");
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
+    public static final boolean EMI = isLoaded("emi");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");
     public static final boolean GOATED = isLoaded("goated");
     public static final boolean IMMEDIATELY_FAST = isLoaded("immediatelyfast");

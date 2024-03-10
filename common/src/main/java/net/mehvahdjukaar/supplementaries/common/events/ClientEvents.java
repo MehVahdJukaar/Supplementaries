@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
@@ -93,7 +93,9 @@ public class ClientEvents {
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
         if (minecraft.isPaused() || minecraft.level == null) return;
+
         CapturedMobCache.tickCrystal();
+
         Player p = minecraft.player;
         if (p == null) return;
         BlockState state = p.getFeetBlockState();
@@ -129,7 +131,7 @@ public class ClientEvents {
             ));
         }
 
-        CannonCameraController.onClientTick(minecraft);
+        CannonController.onClientTick(minecraft);
     }
 
     private static boolean shouldHaveGoatedEffect(Player p, Item item) {

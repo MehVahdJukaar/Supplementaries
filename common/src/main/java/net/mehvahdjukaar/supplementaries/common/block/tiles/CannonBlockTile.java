@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -119,10 +119,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             if (level.isClientSide) {
                 level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.6125, pos.getZ() + 0.5,
                         -t.pitch * Mth.DEG_TO_RAD, -t.yaw * Mth.DEG_TO_RAD, 0);
-            }else{
-                Snowball snowball = new Snowball(level, pos.getX() + 0.5, pos.getY() + 1.4, pos.getZ() + 0.5);
-                Vec3 facing = Vec3.directionFromRotation(-t.pitch, -t.yaw);
-                snowball.shoot(facing.x, facing.y, facing.z, -1f, 0);
+            } else {
+                Vec3 facing = Vec3.directionFromRotation(-t.pitch, t.yaw).scale(0.01);
+                Snowball snowball = new Snowball(level, pos.getX() + 0.5 - facing.x,
+                        pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
+
+                snowball.shoot(facing.x, facing.y, facing.z, -0.98f, 0);
                 level.addFreshEntity(snowball);
             }
         }
@@ -133,7 +135,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (!player.isSecondaryUseActive()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
-            } else CannonCameraController.activateCannonCamera(worldPosition);
+            } else CannonController.activateCannonCamera(worldPosition);
         }
     }
 

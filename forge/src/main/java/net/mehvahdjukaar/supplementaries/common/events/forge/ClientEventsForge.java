@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.CannonCameraController;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
@@ -127,8 +127,8 @@ public class ClientEventsForge {
             }
         }
 
-        if(CannonCameraController.isActive()){
-            CannonCameraController.onKeyPressed(event.getKey(), event.getAction(), event.getModifiers());
+        if(CannonController.isActive()){
+            CannonController.onKeyPressed(event.getKey(), event.getAction(), event.getModifiers());
             //event.setCanceled(true);
         }
     }
@@ -196,16 +196,16 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-        if (CannonCameraController.isActive()) {
+        if (CannonController.isActive()) {
             event.setCanceled(true);
             event.setSwingHand(false);
-            CannonCameraController.onMouseClicked(event.isAttack());
+            CannonController.onMouseClicked(event.isAttack());
         }
     }
 
     @SubscribeEvent
     public static void renderHandEvent(RenderHandEvent event) {
-        if (CannonCameraController.isActive())
+        if (CannonController.isActive())
             event.setCanceled(true);
     }
 }

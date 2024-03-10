@@ -1,1 +1,4 @@
-fixed a dupe when using mods specifically made to dupe stuff
+- fixed faucet fluid dupe
+- fixed blackboard item renderer
+- improved quiver logic to use mouse sensitivity
+- 

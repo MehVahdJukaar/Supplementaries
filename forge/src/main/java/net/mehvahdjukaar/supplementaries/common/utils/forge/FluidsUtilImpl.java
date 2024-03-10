@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidStackImpl;
 import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidTankImpl;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -30,14 +32,15 @@ public class FluidsUtilImpl {
 
     public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid, int minAmount) {
         IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
-        if (handlerDown != null) {
+        if (handlerDown != null && fluid instanceof SoftFluidStackImpl impl) {
             var f = fluid.getVanillaFluid();
-            FluidStack stack = new FluidStack(f, 250 * minAmount, fluid.getTag());
+            FluidStack stack = impl.toForgeFluid();
+            stack.setAmount(250 * minAmount);
             if (stack.isEmpty()) return null;
-            handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+            int filled = handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
             tileBelow.setChanged();
 
-            return minAmount;
+            return Mth.ceil(filled / 250f);
         }
         return null;
     }

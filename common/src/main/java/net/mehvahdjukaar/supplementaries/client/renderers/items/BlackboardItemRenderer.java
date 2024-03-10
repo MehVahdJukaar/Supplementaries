@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
@@ -28,8 +27,6 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0,0,-0.34375);
 
-        //Minecraft.getInstance().getBlockRenderer().renderSingleBlock(STATE, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-
         var blockRenderer = Minecraft.getInstance().getBlockRenderer();
         var model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(),
                 ClientRegistry.BLACKBOARD_FRAME);
@@ -47,8 +44,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
 
-        matrixStackIn.mulPose(RotHlpr.Y180);
-        matrixStackIn.translate(-1, 0, -0.6875);
+        matrixStackIn.translate(0, 0, 0.6875);
         VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
 
         matrixStackIn.popPose();
