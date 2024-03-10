@@ -419,8 +419,12 @@
   "message.supplementaries.death_marker": "Last Death",
   "entity.supplementaries.hat_stand": "Hat Stand",
   "item.supplementaries.hat_stand": "Hat Stand",
-  "config.jade.plugin_supplementaries.hat_stand": "Hat Stand",
 
+  "block.supplementaries.cannon": "Cannon",
+  "gui.supplementaries.cannon": "Cannon",
+  "item.supplementaries.cannonball": "Cannonball",
+
+  "config.jade.plugin_supplementaries.hat_stand": "Hat Stand",
 
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.world_position": "World Position",
@@ -428,8 +432,7 @@
   "supplementaries.display_source.time_of_day": "Time of Day",
   "supplementaries.display_source.fluid_amount": "Fluid Amount",
   "create.display_source.fill_level.fluid_amount": "Fluid Amount",
-  "supplementaries.block.cannon": "Cannon",
-  "supplementaries.block.cannonball": "Cannonball",
+
 
   "gui.supplementaries.optifine.message": "Before proceeding, please note that Optifine is known to cause issues and crashes.\n\n The mod is not suited for the modded environment and has had many instances of terrible compatibility even with Forge itself.\n\n Moreover, in terms of performance, way better and extremely more performant alterantives exist such as Modern fix, Embeddium as well as Oculus for shaders. \n\nWhether you play modded or vanilla, you should always use the mods listed here below instead.",
   "gui.supplementaries.optifine.suggestions": "Here's a selection of mods that we recommend using instead.",

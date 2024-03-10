@@ -27,10 +27,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
-import static net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectory.*;
+import static net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectory.findBestTrajectory;
 
 public class CannonController {
 
@@ -43,15 +44,11 @@ public class CannonController {
 
     private static float cameraYaw;
     private static float cameraPitch;
+    private static boolean anglesChanged;
     private static boolean preferShootingDown = true;
 
+    @Nullable
     private static CannonTrajectory trajectory;
-
-
-    // account for actual target
-    private static float gravity = 0.01f;
-    private static float drag = 0.96f;
-    private static float initialPow = 1f;
 
     public static void activateCannonCamera(BlockPos pos) {
         active = true;
@@ -78,8 +75,7 @@ public class CannonController {
 
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
-        gravity = 0.03f;
-        drag = 0.99F;
+
         if (active && cannon != null) {
             //do all setup here
             float yaw = cannon.getYaw(partialTick);
@@ -110,14 +106,31 @@ public class CannonController {
             Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
             //rotate so we can work in 2d
             Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+            target = target.add(target.normalized().scale(0.05f));
 
+            trajectory = findBestTrajectory(target,
+                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), preferShootingDown);
 
-            trajectory = findBestTrajectory(target, gravity, drag, initialPow, 0.01f, preferShootingDown);
-
-            cannon.setPitch(-trajectory.angle() * Mth.RAD_TO_DEG);
+            if (trajectory != null) {
+                cannon.setPitch(-trajectory.angle() * Mth.RAD_TO_DEG);
+            }
         }
         return active;
     }
+
+    public static void onPlayerRotated(double yawIncrease, double pitchIncrease) {
+        if (active && cannon != null) {
+            Minecraft mc = Minecraft.getInstance();
+            float scale = 0.2f;
+            cannon.addRotation((float) yawIncrease * scale, 0);
+            //TODO: fix these
+            cameraYaw += yawIncrease * scale;
+            cameraPitch += pitchIncrease * scale;
+            cameraPitch = Mth.clamp(cameraPitch, -90, 90);
+            anglesChanged = true;
+        }
+    }
+
 
     public static void onKeyPressed(int key, int action, int modifiers) {
         if (Minecraft.getInstance().options.keyShift.matches(key, action)) {
@@ -125,6 +138,7 @@ public class CannonController {
         }
         if (action == 0 && Minecraft.getInstance().options.keyJump.matches(key, action)) {
             preferShootingDown = !preferShootingDown;
+            anglesChanged = true;
         }
     }
 
@@ -150,73 +164,58 @@ public class CannonController {
         }
     }
 
-    public static void onPlayerRotated(double yawIncrease, double pitchIncrease) {
-        Minecraft mc = Minecraft.getInstance();
-        float scale = 0.2f;
-        if (mc.level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile) {
-            tile.addRotation((float) yawIncrease * scale, 0);
-        }
-        //TODO: fix these
-        cameraYaw += yawIncrease * scale;
-        cameraPitch += pitchIncrease * scale;
-        cameraPitch = Mth.clamp(cameraPitch, -90, 90);
-    }
-
 
     public static void onClientTick(Minecraft mc) {
-        if (active) {
-            ClientLevel level = mc.level;
-            if (level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile) {
-                cannon = tile;
+        if (!active) return;
+        ClientLevel level = mc.level;
+        if (level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile && !tile.isRemoved()) {
+            cannon = tile;
 
-                //TODO: optimize, dont send it didnt change
+            if (anglesChanged) {
+                anglesChanged = false;
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonRotationPacket(
                         cannon.getYaw(0), cannon.getPitch(0), cannonPos));
-            } else {
-                turnOff();
             }
+        } else {
+            turnOff();
         }
     }
 
     public static void renderTrajectory(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
                                         int packedLight, int packedOverlay, float partialTicks,
                                         float yaw) {
-        // if (!active || cannon != blockEntity) return;
-        if (hit != null) {
+        //if (!active || cannon != blockEntity) return;
+        if (hit != null && trajectory != null && !blockEntity.getProjectile().isEmpty()) {
 
-            BlockPos pos = blockEntity.getBlockPos();
-
-            if (hit instanceof BlockHitResult bh) {
-
-                Minecraft mc = Minecraft.getInstance();
-                boolean debug = !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
+            BlockPos cannonPos = blockEntity.getBlockPos();
 
 
-                poseStack.pushPose();
-
-                //rotate so we can work in 2d
-                Vec3 targetVector = hit.getLocation().subtract(pos.getCenter());
-                Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-
-                poseStack.translate(0.5, 0.5, 0.5);
-                poseStack.mulPose(Axis.YP.rotation(-yaw));
-
-                if (debug) renderTargetLine(poseStack, buffer, target);
-
-                boolean missedBlock = hit.getType() != HitResult.Type.BLOCK && trajectory.miss();
-
-                renderArrows(poseStack, buffer, partialTicks,
-                        gravity, drag, initialPow, trajectory.angle(), trajectory.finalTime(), missedBlock);
-
-                poseStack.popPose();
+            Minecraft mc = Minecraft.getInstance();
+            boolean debug = !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
 
 
-                if (!missedBlock) {
-                    renderTargetCircle(poseStack, buffer, yaw);
+            poseStack.pushPose();
 
-                    if (debug) renderTargetBlock(poseStack, buffer, pos, bh);
-                }
-            }
+            //rotate so we can work in 2d
+            Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
+            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(Axis.YP.rotation(-yaw));
+
+            if (debug) renderTargetLine(poseStack, buffer, target);
+
+            boolean hitAir = mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
+
+            renderArrows(poseStack, buffer, partialTicks,
+                    trajectory, hitAir);
+
+            poseStack.popPose();
+
+
+            if (!hitAir) renderTargetCircle(poseStack, buffer, yaw);
+
+            if (debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
         }
     }
 
@@ -240,7 +239,7 @@ public class CannonController {
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
         Vec3 targetVec = new Vec3(0, trajectory.point().y, -trajectory.point().x).yRot(-yaw);
-        poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.01, targetVec.z + 0.5);
+        poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.05, targetVec.z + 0.5);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;
@@ -260,11 +259,9 @@ public class CannonController {
     }
 
 
-    private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks,
-                                     float gravity, float drag, float initialPow, float angle,
-                                     double doubleFinalTime, boolean miss) {
+    private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks, CannonTrajectory trajectory, boolean hitAir) {
 
-        float finalTime = (float) doubleFinalTime;
+        float finalTime = (float) trajectory.finalTime();
         if (finalTime > 100000) {
             Supplementaries.error();
             return;
@@ -281,7 +278,7 @@ public class CannonController {
         float px = 0;
         float d = -(System.currentTimeMillis() % 1000) / 1000f;
         float step = finalTime / (int) finalTime;
-        float maxT = finalTime + (miss ? 0 : step);
+        float maxT = finalTime + (hitAir ? 0 : step);
         for (float t = step; t < maxT; t += step) {
 
             float textureStart = d % 1;
@@ -294,8 +291,8 @@ public class CannonController {
                     .uv(5 / 16f, textureStart)
                     .endVertex();
 
-            double ny = arcY(t, gravity, drag, Mth.sin(angle) * initialPow);
-            double nx = -arcX(t, gravity, drag, Mth.cos(angle) * initialPow);
+            double ny = trajectory.getY(t);
+            double nx = -trajectory.getX(t);
 
             float dis = (float) (Mth.length(nx - px, ny - py)) / scale;
             float textEnd = textureStart + dis;

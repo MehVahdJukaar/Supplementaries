@@ -3,29 +3,47 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolean miss) {
+public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolean miss,
+                               float gravity, float drag, float v0x, float v0y) {
 
+    public static CannonTrajectory of(Vec2 point, float angle, double finalTime, boolean miss, float gravity, float drag, float pow) {
+        return new CannonTrajectory(point, angle, finalTime, miss, gravity, drag, (float) (Math.cos(angle) * pow), (float) (Math.sin(angle) * pow));
+    }
 
-    public static CannonTrajectory findBestTrajectory(Vec2 targetPoint, float gravity, float drag, float initialPow, float tolerance,
+    @Nullable
+    public static CannonTrajectory findBestTrajectory(Vec2 targetPoint, float gravity, float drag, float initialPow,
                                                       boolean preferShootingDown) {
+
+        if (initialPow == 0) return null;
+        float tolerance = 0.001f;
+
         float start = (float) (Math.atan2(targetPoint.y, targetPoint.x)) + 0.01f; // Initial angle
         float end = (float) Math.PI / 2; // Maximum angle (90 degrees)
 
         Vec2 farAway = targetPoint.scale(1000);
         // calculate trajectory that gives max distance = global maxima. 2 roots we need are either to its right or left angle wise
-        CannonTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway, gravity, drag, initialPow, tolerance, start, end);
+        CannonTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway, gravity, drag, initialPow,
+                0.01f,
+                tolerance, start, end);
         float peakAngle = furthestTrajectory.angle();
 
         // that function has 2 solutions. we need to reduce the angles we search, so we converge on the first one
         // we can do this by using as max angle the angle that yields the highest distance (global maxima of the distance function)
         CannonTrajectory solution;
         if (preferShootingDown) {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow, tolerance, start, peakAngle);
+            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+                    0.001f,
+                    tolerance, start, peakAngle);
         } else {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow, tolerance, peakAngle, end);
+            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+                    0.001f,
+                    tolerance, peakAngle, end);
         }
         return solution;
     }
@@ -39,7 +57,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @param drag        drag (v multiplier)
      * @param initialPow  initial velocity
      */
-    private static CannonTrajectory findBestTrajectoryBruteForce(float step, Vec2 targetPoint, float gravity, float drag, float initialPow) {
+    private static CannonTrajectory findBestTrajectoryBruteForce(float step, Vec2 targetPoint, float gravity,
+                                                                 float drag, float initialPow) {
         boolean exitEarly = true; //whether to grab first or second result. this doesnt work tho
         float stopDistance = 0.01f;
         float targetSlope = targetPoint.y / targetPoint.x;
@@ -49,15 +68,19 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         Vec2 bestPoint = new Vec2(0, 0);
         float bestAngle = start;
         double bestPointTime = 0;
+        float bestV0x = 0;
+        float bestV0y = 0;
+
         boolean miss = true;
+
+
         for (float angle = start; angle < end; angle += step) {
             float rad = angle * Mth.DEG_TO_RAD;
             float v0x = Mth.cos(rad) * initialPow;
             float v0y = Mth.sin(rad) * initialPow;
-            var r = findLineIntersection(targetSlope, gravity, drag, v0x, v0y);
+            var r = findLineIntersection(targetSlope, gravity, drag, v0x, v0y, stopDistance);
 
             if (r != null) {
-                //TODO: exit early when we flip. infact replace with binary search
 
                 Vec2 landPoint = r.getFirst();
                 float landDist = targetPoint.distanceToSqr(landPoint);
@@ -67,16 +90,20 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                     bestPoint = landPoint;
                     bestAngle = rad;
                     bestPointTime = r.getSecond();
+                    bestV0x = v0x;
+                    bestV0y = v0y;
                     if (landDist < stopDistance) {
                         miss = false;
+                        bestPoint = targetPoint;
                         if (exitEarly) break;
                     }
+
                 }
             } else {
                 Supplementaries.error();
             }
         }
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss);
+        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
 
@@ -93,7 +120,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @return Trajectory object containing the best point, angle, time, and miss flag
      */
     public static CannonTrajectory findBestTrajectorySecant(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                                       float tolerance, int maxIterations) {
+                                                            float tolerance, int maxIterations) {
         float targetSlope = targetPoint.y / targetPoint.x;
         float startAngle = (float) (Math.atan2(targetPoint.y, targetPoint.x)) + 0.01f;
         float endAngle = (float) Math.PI / 2; // Maximum angle (90 degrees)
@@ -106,6 +133,9 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         Vec2 bestPoint = new Vec2(0, 0);
         float bestAngle = startAngle;
         double bestPointTime = 0;
+        float bestV0x = 0;
+        float bestV0y = 0;
+
         boolean miss = true;
 
         float bestDistance = Float.MAX_VALUE;
@@ -120,8 +150,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
             float v0y2 = (float) (Math.sin(angle2) * initialPow);
 
             // Calculate the intersection points for the two angles
-            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1);
-            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2);
+            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1, tolerance);
+            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2, tolerance);
 
             // Calculate distances from the target for the intersection points
             float distance1 = r1 != null ? targetPoint.distanceToSqr(r1.getFirst()) : Float.MAX_VALUE;
@@ -132,6 +162,9 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestPoint = r1.getFirst();
                 bestAngle = angle1;
                 bestPointTime = r1.getSecond();
+                bestV0x = v0x1;
+                bestV0y = v0y1;
+
                 angle2 = angle1;
                 angle1 -= tolerance; // Move angle1 closer to the best angle
                 distToTarget = distance1;
@@ -139,6 +172,9 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestPoint = r2.getFirst();
                 bestAngle = angle2;
                 bestPointTime = r2.getSecond();
+                bestV0x = v0x2;
+                bestV0y = v0y2;
+
                 angle1 = angle2;
                 angle2 += tolerance; // Move angle2 closer to the best angle
                 distToTarget = distance2;
@@ -154,11 +190,12 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
             // Check if we hit precisely where we aimed for
             if (distToTarget < tolerance) {
                 miss = false;
+                bestPoint = targetPoint;
                 break; // Stop iterating if the difference in distances is below the tolerance
             }
         }
 
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss);
+        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
 
@@ -173,7 +210,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @param tolerance   Tolerance for stopping the search
      * @return Trajectory object containing the best point, angle, time, and miss flag
      */
-    private static CannonTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow, float tolerance,
+    private static CannonTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow,
+                                                                    float angleTolerance, float tolerance,
                                                                     float start, float end) {
         float targetSlope = targetPoint.y / targetPoint.x;
 
@@ -184,6 +222,10 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         Vec2 bestPoint = new Vec2(0, 0);
         float bestAngle = start;
         double bestPointTime = 0;
+        float bestV0x = 0;
+        float bestV0y = 0;
+
+
         boolean miss = true;
 
         // Define the search interval
@@ -196,7 +238,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
 
         // Perform golden-section search iterations
         int iterNumber = 0;
-        while (Math.abs(endAngle - startAngle) > tolerance) {
+        while (Math.abs(endAngle - startAngle) > angleTolerance) {
 
             iterNumber++;
             // Calculate the velocities for the two intermediate angles
@@ -206,8 +248,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
             float v0y2 = (float) (Math.sin(midAngle2) * initialPow);
 
             // Find the intersection points for the two intermediate angles
-            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1);
-            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2);
+            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1, tolerance);
+            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2, tolerance);
 
             // Calculate distances from the target for the intersection points
             float distance1 = r1 != null ? targetPoint.distanceToSqr(r1.getFirst()) : Float.MAX_VALUE;
@@ -217,6 +259,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 Supplementaries.error();
             }
 
+
             float lastBestDist = targetPoint.distanceToSqr(bestPoint);
 
 
@@ -225,6 +268,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestPoint = r1.getFirst();
                 bestAngle = midAngle1;
                 bestPointTime = r1.getSecond();
+                bestV0x = v0x1;
+                bestV0y = v0y1;
 
                 if (distance1 > lastBestDist && iterNumber != 1) {
                     Supplementaries.error();
@@ -236,6 +281,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestPoint = r2.getFirst();
                 bestAngle = midAngle2;
                 bestPointTime = r2.getSecond();
+                bestV0x = v0x2;
+                bestV0y = v0y2;
 
                 if (distance2 > lastBestDist && iterNumber != 1) {
                     Supplementaries.error();
@@ -245,20 +292,24 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 midAngle1 = midAngle2;
                 midAngle2 = endAngle - goldenRatio * (endAngle - startAngle);
             }
+            if (endAngle < startAngle) {
+                Supplementaries.error();
+            }
 
             // Update the best result if a closer point is found
-
-            //if (lastBestDist < tolerance) {
-            //  miss = false;
-            // break; // Stop iterating if the difference in distances is below the tolerance
-            // }
+            // has to be bigger than line search tolerance otherwise we wont find a solution
+            if (lastBestDist < (tolerance * 10)) {
+                bestPoint = targetPoint;
+                miss = false;
+                break; // Stop iterating if the difference in distances is below the tolerance
+            }
         }
 
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss);
+        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
-    public static Pair<Vec2, Double> findLineIntersection(float m, float g, float d, float V0x, float V0y) {
-        return findLineIntersectionBisection(m, g, d, V0x, V0y);
+    public static Pair<Vec2, Double> findLineIntersection(float m, float g, float d, float V0x, float V0y, float precision) {
+        return findLineIntersectionBisection(m, g, d, V0x, V0y, precision);
     }
 
     /**
@@ -335,18 +386,19 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * Bisection (binary search) method.
      * Slower but doesn't fail with steep functions due to double limit
      */
-    private static Pair<Vec2, Double> findLineIntersectionBisection(float m, float g, float d, float V0x, float V0y) {
+    private static Pair<Vec2, Double> findLineIntersectionBisection(float m, float g, float d, float V0x, float V0y,
+                                                                    float precision) {
         float slopeAt0 = V0y / V0x;
         if (slopeAt0 < m) {
+            Supplementaries.error();
             return null;
         }
-        double low = 2;//getPeakTime(g, d, V0y); // Initial lower bound for binary search
+        double low = 0;//getPeakTime(g, d, V0y); // Initial lower bound for binary search
         double high = 1000; // Initial upper bound for binary search
-        float precision = 0.01f; // Precision for terminating the search
 
         // Perform binary search
         int iter = 0;
-        int maxIter = 1000;
+        int maxIter = 50;
         while (iter++ < maxIter) {
             double midTime = (low + high) / 2.0; // Calculate midpoint
 
@@ -365,7 +417,23 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
             }
         }
 
+        Supplementaries.error();
         return null;// (low + high) / 2.0f; // Return the approximate value of t at the intersection
+    }
+
+
+    private static void projectileEquation() {
+        // pos = pos + velocity
+
+        // velocity = velocity*0.99
+
+
+        // velocity = velocity + Vec3(0, -0.05, 0)
+
+        // d = 0.99
+        // g = 0.05
+        // vely = d^t - g*(d^t-1)/(d-1)
+        // y = (1-g/d-1)*1/ln(d)*d^t+t*g/(d-1)
     }
 
     /**
@@ -396,18 +464,17 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         return (V0x * inLog * (Math.pow(d, t) - 1));
     }
 
-    private static void projectileEquation() {
-        // pos = pos + velocity
-
-        // velocity = velocity*0.99
-
-
-        // velocity = velocity + Vec3(0, -0.05, 0)
-
-        // d = 0.99
-        // g = 0.05
-        // vely = d^t - g*(d^t-1)/(d-1)
-        // y = (1-g/d-1)*1/ln(d)*d^t+t*g/(d-1)
+    public double getX(double t) {
+        return arcX(t, this.gravity, this.drag, this.v0x);
     }
 
+    public double getY(double t) {
+        return arcY(t, this.gravity, this.drag, this.v0y);
+    }
+
+    public BlockPos getHitPos(BlockPos cannonPos, float yaw) {
+        Vec2 v = this.point;
+        Vec3 localPos = new Vec3(0, v.y - 1, -v.x).yRot(-yaw);
+        return BlockPos.containing(cannonPos.getCenter().add(localPos));
+    }
 }

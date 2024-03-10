@@ -37,7 +37,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         this.yaw = yaw;
         this.ringSprites = ringSprites;
         this.boomSprites = boomSprites;
-        this.lifetime = 5;
+        this.lifetime = 50;
         this.hasPhysics = false;
         this.quadSize = 1.25f;
 
@@ -54,8 +54,8 @@ public class CannonFireParticle extends TextureSheetParticle {
     public void setSpriteFromAge(SpriteSet sprite) {
         if (!this.removed) {
             // fixes vanilla off by one making last sprite appear for just for 1 frame
-            this.setSprite(sprite.get(this.age, this.lifetime ));
-            this.boomSprite = boomSprites.get(age, lifetime );
+            this.setSprite(sprite.get(this.age, this.lifetime));
+            this.boomSprite = boomSprites.get(age, lifetime);
         }
     }
 
@@ -92,7 +92,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         float V0 = boomSprite.getV0();
         float V1 = boomSprite.getV1();
 
-        int i = Math.min(4, (age / lifetime) * 4 + 1);
+        int i = (int) Math.min(4, ((float)age / (lifetime)) * 5 )+1;
 
         float d = i / 16f;
         float s = 0.25f;
@@ -107,20 +107,24 @@ public class CannonFireParticle extends TextureSheetParticle {
 
     private void drawDoubleQuad(VertexConsumer buffer, Matrix4f mat, float w, float o, float u0, float u1, float v0,
                                 float v1, int light) {
-        buffer.vertex(mat, -w, -w, o).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
-        buffer.vertex(mat, -w, w, o).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
-        buffer.vertex(mat, w, w, o).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
-        buffer.vertex(mat, w, -w, o).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
 
         buffer.vertex(mat, -w, -w, o).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
         buffer.vertex(mat, -w, w, o).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
         buffer.vertex(mat, w, w, o).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
         buffer.vertex(mat, w, -w, o).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+
+
+        // Second quad (mirrored)
+        buffer.vertex(mat, w, -w, o).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, w, w, o).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, -w, w, o).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        buffer.vertex(mat, -w, -w, o).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+
     }
 
     @Override
     public int getLightColor(float partialTick) {
-        if(true)return LightTexture.FULL_BRIGHT;
+        if (true) return LightTexture.FULL_BRIGHT;
         float f = ((float) this.age + partialTick) / (float) this.lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
         int i = super.getLightColor(partialTick);
@@ -160,10 +164,10 @@ public class CannonFireParticle extends TextureSheetParticle {
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z,
                                        double pitch, double yaw, double zSpeed) {
             Vec3 offset = Vec3.directionFromRotation((float) pitch * Mth.RAD_TO_DEG, -(float) yaw * Mth.RAD_TO_DEG);
-            offset = offset.scale(-6.6 / 16f);
+            offset = offset.scale(-6.501 / 16f);
 
 
-            return new CannonFireParticle(worldIn, x + offset.x, y + offset.y, z + offset.z, pitch, yaw,
+            return new CannonFireParticle(worldIn, x + offset.x, y + offset.y+1/16f, z + offset.z, pitch, yaw,
                     sprites, sprites2.get());
         }
     }

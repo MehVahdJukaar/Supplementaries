@@ -7,8 +7,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -104,10 +104,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Projectile){
-            return Shapes.empty();
+        if(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity){
+            return super.getCollisionShape(state, level, pos, context);
         }
-        return super.getCollisionShape(state, level, pos, context);
+        return Shapes.empty();
     }
 
     @Override
