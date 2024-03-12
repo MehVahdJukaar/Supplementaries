@@ -38,6 +38,8 @@ public class ModMaterials {
     public static final Material CANNON_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.CANNON_TEXTURE);
     public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/books/book_enchanted"));
     public static final Material CANNON_TARGET_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/cannon_target"));
+    public static final Material WIND_VANE_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Supplementaries.res("block/wind_vane"));
+    public static final Material BUNTING_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Supplementaries.res("block/buntings/bunting"));
 
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BannerPattern, Material>();

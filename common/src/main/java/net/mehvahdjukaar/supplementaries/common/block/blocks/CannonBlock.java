@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
+import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -21,13 +24,16 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class CannonBlock extends DirectionalBlock implements EntityBlock , ILightable {
+import java.util.Optional;
+
+public class CannonBlock extends DirectionalBlock implements EntityBlock , ILightable, IRotatable {
 
     protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
 
@@ -114,4 +120,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
+
+    @Override
+    public Optional<BlockState> getRotatedState(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, Rotation rotation, Direction direction, @Nullable Vec3 vec3) {
+        //TODO: figure out rotation stuff
+        return Optional.empty();
+    }
+
+
 }

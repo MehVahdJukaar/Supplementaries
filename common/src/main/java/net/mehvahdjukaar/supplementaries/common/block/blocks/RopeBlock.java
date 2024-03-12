@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -55,15 +54,12 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
     //TODO: make solid when player is not colliding
     public static final VoxelShape COLLISION_SHAPE = Block.box(0, 0, 0, 16, 13, 16);
 
-    private static Map<BlockState, VoxelShape> SHAPES_MAP;
-
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
     public static final BooleanProperty WEST = BlockStateProperties.WEST;
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final IntegerProperty DISTANCE = BlockStateProperties.STABILITY_DISTANCE;
     public static final BooleanProperty KNOT = ModBlockProperties.KNOT;
 
     public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (directions) -> {
@@ -75,12 +71,15 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         directions.put(Direction.DOWN, DOWN);
     });
 
+    private final Map<BlockState, VoxelShape> shapes;
+
     public RopeBlock(Properties properties) {
         super(properties);
-        SHAPES_MAP = this.makeShapes();
+
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(UP, true).setValue(DOWN, true).setValue(KNOT, false).setValue(DISTANCE, 7).setValue(WATERLOGGED, false)
+                .setValue(UP, true).setValue(DOWN, true).setValue(KNOT, false).setValue(WATERLOGGED, false)
                 .setValue(NORTH, false).setValue(SOUTH, false).setValue(EAST, false).setValue(WEST, false));
+        shapes = this.makeShapes();
     }
 
     @Override
@@ -90,10 +89,9 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return SHAPES_MAP.getOrDefault(state.setValue(DISTANCE, 0).setValue(WATERLOGGED, false), Shapes.block());
+        return shapes.getOrDefault(state.setValue(WATERLOGGED, false), Shapes.block());
     }
 
-    //oh boy 32k shapes. 2k by removing water and distance lol
     protected Map<BlockState, VoxelShape> makeShapes() {
         Map<BlockState, VoxelShape> shapes = new HashMap<>();
 
@@ -106,7 +104,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         VoxelShape knot = Block.box(6, 9, 6, 10, 13, 10);
 
         for (BlockState state : this.stateDefinition.getPossibleStates()) {
-            if (state.getValue(WATERLOGGED) || state.getValue(DISTANCE) != 0) continue;
+            if (state.getValue(WATERLOGGED)) continue;
             VoxelShape v = Shapes.empty();
             if (state.getValue(KNOT)) v = Shapes.or(knot);
             if (state.getValue(DOWN)) v = Shapes.or(v, down);
@@ -131,7 +129,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, WATERLOGGED, DISTANCE, KNOT);
+        builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, WATERLOGGED, KNOT);
     }
 
     @ForgeOverride
@@ -188,7 +186,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
         }
 
         state = state.setValue(WATERLOGGED, hasWater);
-        state = state.setValue(KNOT, hasMiddleKnot(state)).setValue(DISTANCE, this.getDistance(world, pos));
+        state = state.setValue(KNOT, hasMiddleKnot(state));
         return state;
     }
 
@@ -218,19 +216,16 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-        return (this.getDistance(worldIn, pos) < 7);
+        return this.isConnected(worldIn, pos);
     }
 
-    protected int getDistance(LevelReader world, BlockPos pos) {
+    protected boolean isConnected(LevelReader world, BlockPos pos) {
         BlockPos.MutableBlockPos mutable = pos.mutable().move(Direction.UP);
-        BlockState blockstate = world.getBlockState(mutable);
-        int i = 7;
-        if (blockstate.is(this)) {
-            if (blockstate.getValue(DOWN) || !blockstate.getValue(UP)) {
-                i = blockstate.getValue(DISTANCE);
-            }
+        BlockState upstate = world.getBlockState(mutable);
+        if (upstate.is(this)) {
+            return true;
         } else if (IRopeConnection.isSupportingCeiling(mutable, world)) {
-            return 0;
+            return true;
         }
 
         if (CommonConfigs.Functional.ROPE_HORIZONTAL.get()) {
@@ -239,27 +234,21 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
                 BlockState sideState = world.getBlockState(facingPos);
                 Block b = sideState.getBlock();
                 if (b instanceof RopeBlock) {
-                    i = Math.min(i, sideState.getValue(DISTANCE) + 1);
-                    if (i == 1) {
-                        break;
-                    }
-                } else if (shouldConnectToFace(this.defaultBlockState(), sideState, facingPos, direction, world)) i = 0;
+                    return true;
+                } else if (shouldConnectToFace(this.defaultBlockState(), sideState, facingPos, direction, world))
+                    return true;
             }
         }
-
-        return i;
+        return false;
     }
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
-        int i = this.getDistance(level, pos);
-        BlockState blockstate = state.setValue(DISTANCE, i);
-        if (i == 7) {
+        if (!this.isConnected(level, pos)) {
             level.destroyBlock(pos, true);
             return;
-        } else if (state != blockstate) {
-            level.setBlock(pos, blockstate, 3);
         }
+
         //fire up around me
         for (var dir : Direction.values()) {
             if (dir == Direction.UP) continue;
@@ -328,7 +317,7 @@ public class RopeBlock extends WaterBlock implements IRopeConnection {
             return InteractionResult.PASS;
         } else if (stack.isEmpty()) {
             if (state.getValue(UP)) {
-                 if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
+                if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
                     return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }

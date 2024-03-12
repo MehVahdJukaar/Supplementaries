@@ -37,7 +37,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         this.yaw = yaw;
         this.ringSprites = ringSprites;
         this.boomSprites = boomSprites;
-        this.lifetime = 50;
+        this.lifetime = 5;
         this.hasPhysics = false;
         this.quadSize = 1.25f;
 

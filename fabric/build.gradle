@@ -58,6 +58,7 @@ dependencies {
     modImplementation("curse.maven:immediatelyfast-686911:4937544")
     modImplementation("org.uiutils:uiutils")
     //modImplementation("curse.maven:spectrum-556967:5080474")
+    modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
 

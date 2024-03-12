@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
@@ -6,11 +6,11 @@ import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStat
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySource {
 
@@ -43,7 +43,7 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
         return "fluid_amount";
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
         super.initConfigurationWidgets(context, builder, isFirstLine);
         if (!isFirstLine) {

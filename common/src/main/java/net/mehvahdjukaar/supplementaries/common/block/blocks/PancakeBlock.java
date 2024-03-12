@@ -155,7 +155,7 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
 
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
-        Topping topping = Topping.fromFluid(fluid.getFluid().value());
+        Topping topping = Topping.fromFluid(fluid.fluid());
         if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
             world.setBlock(pos, state.setValue(TOPPING, topping), 2);
             world.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);

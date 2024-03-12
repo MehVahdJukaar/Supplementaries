@@ -224,7 +224,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     //only client
     public int getTileParticleColor(BlockPos pos, Level world) {
         if (world.getBlockEntity(pos) instanceof FaucetBlockTile te)
-            return te.tempFluidHolder.getParticleColor(world, pos);
+            return te.tempFluidHolder.getCachedParticleColor(world, pos);
         return 0x423cf7;
     }
 

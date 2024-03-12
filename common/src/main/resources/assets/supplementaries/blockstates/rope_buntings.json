@@ -1,0 +1,25 @@
+{
+    "multipart": [
+        {   "when":  { "knot": true},
+            "apply": { "model": "supplementaries:block/rope_knot" }
+        },
+        {   "when": { "north": true },
+            "apply": { "model": "supplementaries:block/rope_connection"}
+        },
+        {   "when": { "east": true },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 90}
+        },
+        {   "when": { "south": true },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 180}
+        },
+        {   "when": { "west": true },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 270}
+        },
+        {   "when": { "up": true },
+            "apply": { "model": "supplementaries:block/rope_up"}
+        },
+        {   "when": { "down": true },
+            "apply": { "model": "supplementaries:block/rope_down"}
+        }
+    ]
+}

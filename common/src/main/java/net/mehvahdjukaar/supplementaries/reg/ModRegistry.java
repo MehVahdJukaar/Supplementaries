@@ -376,6 +376,15 @@ public class ModRegistry {
             ROPE_KNOT_NAME, () -> PlatHelper.newBlockEntityType(
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
+    //cannon
+    public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
+    public static final Supplier<Block> BUNTING_BLOCK = regBlock("rope_buntings", () -> new BuntingBlock(
+            BlockBehaviour.Properties.copy(ROPE.get())));
+
+    public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
+            "rope_buntings", () -> PlatHelper.newBlockEntityType(
+                    BuntingBlockTile::new, BUNTING_BLOCK.get()));
+
     //spikes
     public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
             BlockBehaviour.Properties.of()
@@ -779,12 +788,12 @@ public class ModRegistry {
     //blaze rod
     //TODO: blaze sound
     public static final Supplier<Block> BLAZE_ROD_BLOCK = regBlock(BLAZE_ROD_NAME, () -> new BlazeRodBlock(
-                    BlockBehaviour.Properties.of()
-                            .mapColor(MapColor.COLOR_YELLOW)
-                            .strength(0.25F, 0F)
-                            .lightLevel(state -> 12)
-                            .emissiveRendering((p, w, s) -> true)
-                            .sound(SoundType.GILDED_BLACKSTONE))
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_YELLOW)
+                    .strength(0.25F, 0F)
+                    .lightLevel(state -> 12)
+                    .emissiveRendering((p, w, s) -> true)
+                    .sound(SoundType.GILDED_BLACKSTONE))
     );
 
     //daub
@@ -930,19 +939,19 @@ public class ModRegistry {
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regBlock(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-                    BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
+            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regBlock(BOOK_PILE_NAME, () -> new BookPileBlock(
-                    BlockBehaviour.Properties.of()
-                            .noOcclusion()
-                            .mapColor(MapColor.NONE)
-                            .strength(0.5F)
-                            .sound(ModSounds.BOOKS)));
+            BlockBehaviour.Properties.of()
+                    .noOcclusion()
+                    .mapColor(MapColor.NONE)
+                    .strength(0.5F)
+                    .sound(ModSounds.BOOKS)));
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE_H = regBlock(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
-                    BlockBehaviour.Properties.copy(BOOK_PILE.get())));
+            BlockBehaviour.Properties.copy(BOOK_PILE.get())));
 
     public static final Supplier<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = regTile(
             BOOK_PILE_NAME, () -> PlatHelper.newBlockEntityType(

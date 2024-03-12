@@ -118,7 +118,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         SoftFluidTank tank = tile.fluidHolder;
         if (!USE_MODEL && !tank.isEmpty()) {
             SoftFluid fluid = tank.getFluidValue();
-            renderFluid(tank.getHeight(1), tank.getTintColor(tile.getLevel(), tile.getBlockPos()),
+            renderFluid(tank.getHeight(1), tank.getCachedStillColor(tile.getLevel(), tile.getBlockPos()),
                     fluid.getLuminosity(), fluid.getStillTexture(),
                     poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }

@@ -52,10 +52,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     @Override
-    public ExtraModelData getExtraModelData() {
-        return ExtraModelData.builder()
-                .with(BOOKS_KEY, booksVisuals)
-                .build();
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        builder.with(BOOKS_KEY, booksVisuals);
     }
 
     private static final RandomSource rand = RandomSource.create();

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigSelectScreen;
@@ -18,7 +19,7 @@ public class CompatHandlerClientImpl {
         }
 
         if(CompatHandler.CREATE){
-            CreateCompatImpl.setupClient();
+            CreateCompat.setupClient();
         }
         if(CompatHandler.FLYWHEEL){
             FlywheelCompat.setupClient();

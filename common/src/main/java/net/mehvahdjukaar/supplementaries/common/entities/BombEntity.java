@@ -114,7 +114,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     private void spawnBreakParticles() {
         for (int i = 0; i < 8; ++i) {
-            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModRegistry.BOMB_ITEM.get())), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM,
+                    new ItemStack(ModRegistry.BOMB_ITEM.get())),
+                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
 
@@ -138,7 +140,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
                 this.discard();
             }
-            case 68 -> level().addParticle(ParticleTypes.FLASH, this.getX(), this.getY() + 1, this.getZ(), 0, 0, 0);
+            case 68 -> level().addParticle(ParticleTypes.SONIC_BOOM, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
             case 67 -> {
                 RandomSource random = level().getRandom();
                 for (int i = 0; i < 10; ++i) {
@@ -150,13 +152,18 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     private void spawnParticleInASphere(ParticleOptions type, int amount, float speed) {
-        double d = (Math.PI * 2) / amount;
-        for (float d22 = 0; d22 < (Math.PI * 2D); d22 += d) {
-            Vec3 v = new Vec3(speed, 0, 0);
-            v = v.yRot(d22 + random.nextFloat() * 0.3f);
-            v = v.zRot((float) ((random.nextFloat()) * Math.PI));
-            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ(), v.x, v.y, v.z);
-            //this.level.addParticle(ParticleTypes.SPIT, x, y, z, Math.cos(d22) * -10.0D, 0.0D, Math.sin(d22) * -10.0D);
+        double inclinationIncrement = Math.PI / amount; // Angle between each latitude line
+        double azimuthIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
+
+        for (int i = 0; i < amount; i++) {
+            double inclination = Math.acos(1 - (2 * (i + 0.5) / amount)); // Angle from the pole
+            double azimuth = azimuthIncrement * i; // Rotation around the axis
+
+            double x = speed * Math.sin(inclination) * Math.cos(azimuth);
+            double y = speed * Math.sin(inclination) * Math.sin(azimuth);
+            double z = speed * Math.cos(inclination);
+
+            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ()+z,x,y,z);
         }
     }
 
@@ -167,27 +174,15 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public void tick() {
-
-        //if((this.tickCount-1)%6==0) {
-        //    this.playSound(ModSounds.GUNPOWDER_IGNITE.get(), 1.0f,
-        //            1.8f + level.getRandom().nextFloat() * 0.2f);
-        //}
-        Level level = level();
-        if (this.changeTimer > 0) {
-            this.changeTimer--;
-            level.addParticle(ParticleTypes.SMOKE, this.position().x, this.position().y + 0.5, this.position().z, 0.0D, 0.0D, 0.0D);
-        }
-
         if (this.active && this.isInWater() && this.type != BombType.BLUE) {
             this.turnOff();
         }
-
         super.tick();
     }
 
     @Override
     public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
-        if (this.active && !this.firstTick) {
+        if (this.active && this.tickCount>1) {
             double x = currentPos.x;
             double y = currentPos.y;
             double z = currentPos.z;
@@ -197,7 +192,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             int s = 4;
             for (int i = 0; i < s; ++i) {
                 double j = i / (double) s;
-                this.level().addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(), x + dx * j, 0.5 + y + dy * j, z + dz * j, 0, 0.02, 0);
+                this.level().addParticle(ParticleTypes.SMOKE,
+                        x - dx * j,
+                        0.25 + y - dy * j,
+                        z - dz * j,
+                        0, 0.02, 0);
             }
         }
     }
@@ -370,7 +369,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         public void spawnExtraParticles(BombEntity bomb) {
             switch (this) {
                 case BLUE -> {
-                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.6f);
+                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.4f);
                 }
                 case SPIKY -> {
                     //maybe use method above?

@@ -19,14 +19,14 @@ public record FluidOffer(SoftFluidStack fluid, int minAmount) {
     }
 
     public static FluidOffer of(Holder<SoftFluid> fluid, int amount, int minAmount) {
-        return of(new SoftFluidStack(fluid, amount), minAmount);
+        return of(SoftFluidStack.of(fluid, amount), minAmount);
     }
 
     public static FluidOffer of(Holder<SoftFluid> fluid, int amount) {
-        return of(new SoftFluidStack(fluid, amount), 1);
+        return of(SoftFluidStack.of(fluid, amount), 1);
     }
 
     public static FluidOffer of(Holder<SoftFluid> fluid) {
-        return of(new SoftFluidStack(fluid, 1), 1);
+        return of(SoftFluidStack.of(fluid, 1), 1);
     }
 }

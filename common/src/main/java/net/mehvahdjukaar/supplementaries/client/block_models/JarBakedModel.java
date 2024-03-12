@@ -51,7 +51,7 @@ public class JarBakedModel implements CustomBakedModel {
         List<BakedQuad> quads = new ArrayList<>();
         if (!SINGLE_PASS && renderType == RenderType.translucent()) {
             var fluid = data.get(ModBlockProperties.FLUID);
-            if (fluid != null && !fluid.isEmpty()) {
+            if (fluid != null && !fluid.isEmptyFluid()) {
                 float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
                 TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();

@@ -258,7 +258,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
                     BlockState chain;
                     if (maxY + 2 > MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Functional.ROPE_ENABLED.get()) {
-                        chain = ModRegistry.ROPE.get().defaultBlockState().setValue(RopeBlock.DISTANCE, 0)
+                        chain = ModRegistry.ROPE.get().defaultBlockState()
                                 .setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
                     } else chain = Blocks.CHAIN.defaultBlockState();
 
@@ -312,8 +312,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         if (rope == null) return null;
         BlockState ropeState = rope.defaultBlockState();
         if (rope instanceof RopeBlock) {
-            ropeState = ropeState.setValue(RopeBlock.UP, true)
-                    .setValue(RopeBlock.DISTANCE, 0).setValue(RopeBlock.DOWN, true);
+            ropeState = ropeState.setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
         }
         return ropeState;
     }

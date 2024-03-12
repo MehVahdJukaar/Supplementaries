@@ -66,16 +66,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
     }
 
-    //TODO: add fence mimic block
     @Override
-    public ExtraModelData getExtraModelData() {
-        return ExtraModelData.builder()
-                .with(FRAMED_KEY, this.framed)
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        super.addExtraModelData(builder);
+        builder.with(FRAMED_KEY, this.framed)
                 .with(SIGN_UP_KEY, this.signUp)
                 .with(SIGN_DOWN_KEY, this.signDown)
-                .with(SLIM_KEY, this.isSlim)
-                .with(MIMIC_KEY, this.getHeldBlock())
-                .build();
+                .with(SLIM_KEY, this.isSlim);
     }
 
     @Override

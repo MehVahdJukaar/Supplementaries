@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -8,12 +8,12 @@ import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ClockDisplaySource extends SingleLineDisplaySource {
     public static final MutableComponent EMPTY_TIME = Components.literal("--:--");
@@ -65,7 +65,7 @@ public class ClockDisplaySource extends SingleLineDisplaySource {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
         super.initConfigurationWidgets(context, builder, isFirstLine);
         if (!isFirstLine) {

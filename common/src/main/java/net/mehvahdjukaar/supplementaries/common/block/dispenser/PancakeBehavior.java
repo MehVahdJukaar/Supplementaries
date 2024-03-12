@@ -27,7 +27,7 @@ class PancakeBehavior extends DispenserHelper.AdditionalDispenserBehavior {
         BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof PancakeBlock block) {
-            if (block.tryAcceptingFluid(world, state, blockpos, new SoftFluidStack(BuiltInSoftFluids.HONEY.getHolder(), 1))) {
+            if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidStack.of(BuiltInSoftFluids.HONEY.getHolder(), 1))) {
                 return InteractionResultHolder.consume(new ItemStack(Items.GLASS_BOTTLE));
             }
             return InteractionResultHolder.fail(stack);

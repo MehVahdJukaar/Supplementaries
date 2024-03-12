@@ -10,7 +10,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 
 public class BombExplosionEmitterParticle extends NoRenderParticle {
-    private static final int MAXIMUM_TIME = 8;
+    private static final int MAXIMUM_TIME = 4;
 
     private final double radius;
 
@@ -21,11 +21,20 @@ public class BombExplosionEmitterParticle extends NoRenderParticle {
 
     @Override
     public void tick() {
-        for (int i = 0; i < 3 + (radius - 2) * 3; ++i) {
-            double d0 = this.x + (this.random.nextDouble() - this.random.nextDouble()) * radius;
-            double d1 = this.y + (this.random.nextDouble() - this.random.nextDouble()) * radius;
-            double d2 = this.z + (this.random.nextDouble() - this.random.nextDouble()) * radius;
-            this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2, (float) this.age / (float) MAXIMUM_TIME, 0.0D, 0.0D);
+        float amountMult = 0.6f;
+        // scale with area
+        for (int i = 0; i < (radius * radius * radius) * amountMult; ++i) {
+
+            double phi = Math.acos(2 * random.nextDouble() - 1);// Inverse of cumulative distribution function for uniform distribution in [0, π]
+            double theta = random.nextDouble() * 2 * Math.PI;
+
+            double r = (random.nextDouble() - random.nextDouble()) * radius * 1.3;
+
+            double d0 = this.x + r * Math.sin(phi) * Math.cos(theta);
+            double d1 = this.y + r * Math.sin(phi) * Math.sin(theta);
+            double d2 = this.z + r * Math.cos(phi);
+            this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), d0, d1, d2,
+                    (float) this.age / (float) MAXIMUM_TIME, 0.0D, 0.0D);
         }
 
         ++this.age;

@@ -95,6 +95,8 @@ public class ClientRegistry {
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     public static final ModelLayerLocation ENDERMAN_HEAD_MODEL = loc("enderman_head");
     public static final ModelLayerLocation CANNON_MODEL = loc("cannon");
+    public static final ModelLayerLocation WIND_VANE_MODEL = loc("wind_vane");
+    public static final ModelLayerLocation BUNTING_MODEL = loc("bunting");
 
     //special models locations
     public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
@@ -105,7 +107,6 @@ public class ClientRegistry {
     public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
 
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
-    public static final ResourceLocation WIND_VANE_BLOCK_MODEL = Supplementaries.res("block/wind_vane_up");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Supplier<Map<WoodType, ResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
@@ -366,6 +367,7 @@ public class ClientRegistry {
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
+        event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
     }
 
     @EventCalled
@@ -374,7 +376,6 @@ public class ClientRegistry {
         SIGN_POST_MODELS.get().values().forEach(event::register);
         PlaceableBookManager.getAll().forEach(b -> event.register(b.modelPath()));
         event.register(BLACKBOARD_FRAME);
-        event.register(WIND_VANE_BLOCK_MODEL);
         event.register(BOAT_MODEL);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
@@ -451,6 +452,8 @@ public class ClientRegistry {
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(ENDERMAN_HEAD_MODEL, EndermanSkullModel::createMesh);
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
+        event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
+        event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
     }
 
 

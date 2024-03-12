@@ -1,28 +1,31 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.content.trains.display.FlapDisplaySection;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
+import com.simibubi.create.foundation.utility.Components;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
+public class GlobeDisplaySource extends SingleLineDisplaySource {
+    public static final MutableComponent EMPTY = Components.literal("--,--");
 
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
-        if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
-            tile.updateText();
-            return Component.literal(tile.getText());
+        if (context.getSourceBlockEntity() instanceof GlobeBlockTile tile) {
+            BlockPos pos = context.getSourcePos();
+            return Component.literal("X: " + pos.getX() + ", Z: " + pos.getZ());
         } else {
-            return Component.empty();
+            return EMPTY;
         }
     }
 
     @Override
     protected boolean allowsLabeling(DisplayLinkContext context) {
-        return false;
+        return true;
     }
 
     @Override
@@ -37,6 +40,6 @@ public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
 
     @Override
     protected String getTranslationKey() {
-        return "notice_board";
+        return "world_position";
     }
 }

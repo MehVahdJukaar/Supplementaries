@@ -50,11 +50,9 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public ExtraModelData getExtraModelData() {
-        return ExtraModelData.builder()
-                .with(FLUID, fluidHolder.getFluidValue())
-                .with(FILL_LEVEL, fluidHolder.getHeight(1))
-                .build();
+    public void addExtraModelData(ExtraModelData.Builder builder) {
+        builder.with(FLUID, fluidHolder.getFluidValue())
+                .with(FILL_LEVEL, fluidHolder.getHeight(1));
     }
 
     @Override

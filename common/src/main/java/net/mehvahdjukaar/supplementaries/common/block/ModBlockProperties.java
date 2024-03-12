@@ -185,7 +185,7 @@ public class ModBlockProperties {
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
             if (holder == null) return null;
-            SoftFluid s = holder.getFirst().getFluid().value();
+            SoftFluid s = holder.getFirst().fluid();
             var cat = holder.getSecond();
             if (cat.isEmpty() || cat.getAmount() != 1) return null;
             Topping t = fromFluid(s);
@@ -196,7 +196,7 @@ public class ModBlockProperties {
         }
 
         public static Topping fromFluid(SoftFluid s) {
-            if (s.isEmpty()) return NONE;
+            if (s.isEmptyFluid()) return NONE;
             if (s == BuiltInSoftFluids.HONEY.get()) {
                 return HONEY;
             }

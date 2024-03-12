@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.forge.CreateCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +20,6 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
 
 public class BambooSpikesBehavior implements MovementBehaviour {
@@ -62,8 +61,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
             if (entity instanceof Player player && player.isCreative()) continue;
             if (entity instanceof AbstractMinecart)
                 for (Entity passenger : entity.getIndirectPassengers())
-                    if (passenger instanceof AbstractContraptionEntity ace
-                            && ace.getContraption() == context.contraption)
+                    if (CreateCompat. isContraption(context, passenger))
                         continue Entities;
             //attack entities
             if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
@@ -90,6 +88,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         }
     }
 
+
     private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
     private void doTileStuff(MovementContext context, @NotNull Level world, LivingEntity le) {
@@ -99,7 +98,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         if (!this.isOnCooldown(world, lastTicked)) {
             DUMMY.load(com);
             if (DUMMY.interactWithEntity(le, world)) {
-               CreateCompatImpl. changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
+               CreateCompat. changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
             }
             com = DUMMY.saveWithFullMetadata();
             lastTicked = world.getGameTime();

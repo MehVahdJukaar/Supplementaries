@@ -38,7 +38,7 @@ public class FaucetBakedModel implements CustomBakedModel {
         List<BakedQuad> quads = new ArrayList<>();
         if (SINGLE_PASS || renderType == RenderType.translucent()) {
             var fluid = data.get(ModBlockProperties.FLUID);
-            if (fluid != null && !fluid.isEmpty()) {
+            if (fluid != null && !fluid.isEmptyFluid()) {
                 var l = liquid.getQuads(state, side, rand);
                 if (!l.isEmpty()) {
                     int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);

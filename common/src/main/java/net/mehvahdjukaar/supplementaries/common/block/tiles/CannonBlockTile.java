@@ -1,19 +1,28 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector4f;
 
 import java.util.UUID;
 
@@ -74,7 +84,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public ItemStack getProjectile() {
-        if (true) return Items.ARROW.getDefaultInstance();
+        if (true) return ModRegistry.BOMB_ITEM.get().getDefaultInstance();
         return this.getItem(1);
     }
 
@@ -163,6 +173,11 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         }
     }
 
+    public void ignite(){
+        this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
+                1.8f + level.getRandom().nextFloat() * 0.2f);
+    }
+
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
         t.prevYaw = t.yaw;
         t.prevPitch = t.pitch;
@@ -172,6 +187,45 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             if (level.isClientSide) {
                 level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                         -t.pitch * Mth.DEG_TO_RAD, -t.yaw * Mth.DEG_TO_RAD, 0);
+
+                PoseStack poseStack = new PoseStack();
+                RandomSource ran = level.random;
+                poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1/16f, pos.getZ() + 0.5f);
+                poseStack.mulPose(Axis.YP.rotationDegrees(-t.yaw));
+                poseStack.mulPose(Axis.XP.rotationDegrees(-t.pitch));
+                poseStack.translate(0, 0,  -1.4);
+
+                Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+                int smokeCount = 16;
+                for (int i = 0; i < smokeCount; i += 1) {
+
+                    poseStack.pushPose();
+
+                    poseStack.mulPose(Axis.YP.rotationDegrees(90));
+
+                    poseStack.mulPose(Axis.XP.rotationDegrees(380f *i/ smokeCount));
+                    Vector4f dir = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
+                    level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
+                            p.x, p.y, p.z,
+                            dir.x, dir.y, dir.z);
+                    poseStack.popPose();
+
+                    poseStack.pushPose();
+
+                    dir = poseStack.last().pose().transform(new Vector4f(0, 0,- MthUtils.nextWeighted(ran,0.25f,1,0.06f), 0));
+
+                    float g = 0.5f;
+                    poseStack.translate(-g/2+ran.nextFloat()*g, -g/2+ran.nextFloat()*g, 0);
+
+                    Vector4f p2 = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+                    level.addParticle(ParticleTypes.SMOKE,
+                            p2.x, p2.y, p2.z,
+                            dir.x, dir.y, dir.z);
+                    poseStack.popPose();
+                }
+
             } else {
                 Vec3 facing = Vec3.directionFromRotation(-t.pitch, t.yaw).scale(0.01);
 
@@ -180,14 +234,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
                 Entity proj = getProjectileFromItemHack(level, projectile);
 
                 if (proj != null) {
+                    proj = new BombEntity(level, 0,0,0, ((BombItem) ModRegistry.BOMB_ITEM.get()).getType());
+
                     proj.setPos(pos.getX() + 0.5 - facing.x,
-                            pos.getY() + 0.5 - facing.y , pos.getZ() + 0.5 - facing.z);
+                            pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
+
                     if (proj instanceof Projectile arrow) {
                         arrow.shoot(facing.x, facing.y, facing.z, -0.98f, 0);
-                        CompoundTag tag = arrow.saveWithoutId(new CompoundTag());
-                        tag.remove("Owner");
-                        arrow.load(tag);
-                        level.addFreshEntity(arrow);
+                        arrow.cachedOwner = null;
+                        arrow.ownerUUID = null;
+                    //    level.addFreshEntity(arrow);
                     }
                 }
             }

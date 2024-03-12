@@ -11,7 +11,7 @@ public class BombSmokeParticle extends TextureSheetParticle {
         this.scale(3.0F);
         this.setSize(0.35F, 0.35F);
 
-        this.lifetime = this.random.nextInt(30) + 20;
+        this.lifetime = this.random.nextInt(14) + 16;
 
         this.gravity = 3.0E-6F;
         this.xd = motionX;
@@ -29,9 +29,9 @@ public class BombSmokeParticle extends TextureSheetParticle {
             this.zd += this.random.nextFloat() / 3500.0F * (this.random.nextBoolean() ? 1 : -1);
             this.yd -= this.gravity;
             this.move(this.xd, this.yd, this.zd);
-            if (this.age >= this.lifetime - 60 && this.alpha > 0.01F) {
-                this.alpha -= 0.015F;
-            }
+
+            this.alpha = (1 - this.age / (float) this.lifetime);
+
 
         } else {
             this.remove();

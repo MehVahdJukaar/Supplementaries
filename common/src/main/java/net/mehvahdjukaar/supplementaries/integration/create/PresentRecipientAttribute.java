@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;

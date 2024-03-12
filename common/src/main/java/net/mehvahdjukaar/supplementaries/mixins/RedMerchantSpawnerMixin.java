@@ -12,6 +12,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.npc.WanderingTraderSpawner;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -31,6 +32,8 @@ import java.util.Optional;
 
 @Mixin(WanderingTraderSpawner.class)
 public abstract class RedMerchantSpawnerMixin {
+
+    @Shadow protected abstract void tryToSpawnLlamaFor(ServerLevel serverLevel, WanderingTrader trader, int maxDistance);
 
     @Shadow
     @Final
@@ -62,8 +65,8 @@ public abstract class RedMerchantSpawnerMixin {
                 BlockPos blockpos = player.blockPosition();
 
                 //17.5 % max on hard ->1.75% (wandering trader maxes at 7.5%)
-                double mult = getRedMerchantSpawnMultiplier();
-                if (mult != 0 && this.calculateNormalizeDifficulty(world, blockpos) * mult > random.nextFloat() * 90) {
+                double mult = supplementaries$getRedMerchantSpawnMultiplier();
+                if (mult != 0 && this.supplementaries$calculateNormalizeDifficulty(world, blockpos) * mult > random.nextFloat() * 90) {
 
                     PoiManager poiManager = world.getPoiManager();
                     Optional<BlockPos> optional = poiManager.find((h) -> h.is(PoiTypes.MEETING),
@@ -91,11 +94,12 @@ public abstract class RedMerchantSpawnerMixin {
     }
 
     @Unique
-    private static double getRedMerchantSpawnMultiplier() {
+    private static double supplementaries$getRedMerchantSpawnMultiplier() {
         return CommonConfigs.getRedMerchantSpawnMultiplier();
     }
+
     @Unique
-    private float calculateNormalizeDifficulty(ServerLevel world, BlockPos pos) {
+    private float supplementaries$calculateNormalizeDifficulty(ServerLevel world, BlockPos pos) {
         float dragon = 1;
         EndDragonFight.Data dragonData = world.getServer().getWorldData().endDragonFightData();
 

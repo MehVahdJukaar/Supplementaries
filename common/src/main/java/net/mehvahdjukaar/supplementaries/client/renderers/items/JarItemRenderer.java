@@ -4,11 +4,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
@@ -58,15 +59,12 @@ public class JarItemRenderer extends CageItemRenderer {
         }
         if (tag.contains("FluidHolder")) {
             CompoundTag com = tag.getCompound("FluidHolder");
-            int count = com.getInt("Count");
+            SoftFluidStack fluidStack = SoftFluidStack.load(com);
+            int count = fluidStack.getCount();
             if (count != 0) {
-                int color = com.getInt("CachedColor");
-                var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
-                if (holder != null && count > 0) {
-                    SoftFluid fluid = holder.value();
-                    renderFluid(getHeight(count, 1), color, 0, fluid.getStillTexture(),
-                            poseStack, buffer, light, overlay);
-                }
+                int color = fluidStack.getFlowingColor(Minecraft.getInstance().level, null);
+                renderFluid(getHeight(count, 1), color, 0, fluidStack.fluid().getStillTexture(),
+                        poseStack, buffer, light, overlay);
             }
         }
         if (tag.contains("Items")) {
