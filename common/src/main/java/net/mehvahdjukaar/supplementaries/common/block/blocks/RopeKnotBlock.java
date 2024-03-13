@@ -47,7 +47,7 @@ public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnect
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        BlockState newState = state.setValue(AbstractRopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
+        BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
         if (world.getBlockEntity(currentPos) instanceof RopeKnotBlockTile tile) {
             BlockState oldHeld = tile.getHeldBlock();
 

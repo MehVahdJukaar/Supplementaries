@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +22,7 @@ public abstract class EntityMixin {
     @Inject(method = "playStepSound", at = @At("HEAD"), cancellable = true)
     private void playStepSound(BlockPos pPos, BlockState state, CallbackInfo ci) {
         //cancels for rope
-        if (state.is(ModRegistry.ROPE.get()) && (Entity) (Object) this instanceof LivingEntity le
+        if (state.is(ModTags.FAST_FALL_ROPES) && (Entity) (Object) this instanceof LivingEntity le
                 && le.onClimbable() && le.yya <= 0) {
             ci.cancel();
         } //TODO: check ash

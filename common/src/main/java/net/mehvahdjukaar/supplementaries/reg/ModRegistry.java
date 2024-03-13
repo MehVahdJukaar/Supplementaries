@@ -358,7 +358,7 @@ public class ModRegistry {
 
 
     //rope
-    public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new AbstractRopeBlock(
+    public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
             BlockBehaviour.Properties.copy(Blocks.BROWN_WOOL)
                     .sound(ModSounds.ROPE)
                     .strength(0.25f)

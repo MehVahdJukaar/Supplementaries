@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client;
 
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
@@ -33,7 +33,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
             if (player.onClimbable() && CommonConfigs.Functional.ROPE_SLIDE.get()) {
                 BlockState b = player.getFeetBlockState();
-                if (b.is(ModRegistry.ROPE.get())) {
+                if (b.is(ModTags.FAST_FALL_ROPES)) {
 
                     this.x = this.player.getX();
                     this.y = this.player.getY();

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
@@ -21,7 +21,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
@@ -121,14 +120,12 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
             if (compoundTag.contains("FluidHolder")) {
                 CompoundTag com = compoundTag.getCompound("FluidHolder");
-                var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
-                int count = com.getInt("count");
-                if (holder != null && !holder.value().isEmpty() && count > 0) {
-
+                SoftFluidStack fluid = SoftFluidStack.load(com);
+                if (!fluid.isEmpty()) {
                     CompoundTag nbt = null;
                     String add = "";
-                    if (com.contains("tag")) {
-                        nbt = com.getCompound("tag");
+                    if (fluid.hasTag()) {
+                        nbt = fluid.getTag();
                         if (nbt.contains("Bottle")) {
                             String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
                             if (!bottle.equals("regular")) add = "_" + bottle;
@@ -136,7 +133,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
                     }
 
                     tooltip.add(Component.translatable("message.supplementaries.fluid_tooltip",
-                            Component.translatable(holder.value().getTranslationKey() + add), count).withStyle(ChatFormatting.GRAY));
+                            Component.translatable(fluid.fluid().getTranslationKey() + add), fluid.getCount()).withStyle(ChatFormatting.GRAY));
                     if (nbt != null) {
                         PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
                         return;
