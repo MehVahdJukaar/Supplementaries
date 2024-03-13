@@ -218,6 +218,13 @@ public class CommonConfigs {
                     .define("fill_entities_below", false);
             builder.pop();
 
+            builder.push("crystal_display");
+            CRYSTAL_DISPLAY_ENABLED = feature(builder);
+            CRYSTAL_DISPLAY_CHAINED = builder.comment("Allows chaining 2 crystal displays, letting one power the other to its left IF its own power exceeds 10. " +
+                            "Given power will be its own divided by 10. Note that to work the decimal display must NOT have power directly behind it. Doing so will override the behavior to non chaining mode")
+                    .define("chaining", true);
+            builder.pop();
+
             WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
             CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
             ILLUMINATOR_ENABLED = feature(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME);
@@ -226,7 +233,6 @@ public class CommonConfigs {
             GOLD_DOOR_ENABLED = feature(builder, ModConstants.GOLD_DOOR_NAME);
             GOLD_TRAPDOOR_ENABLED = feature(builder, ModConstants.GOLD_TRAPDOOR_NAME);
             LOCK_BLOCK_ENABLED = feature(builder, ModConstants.LOCK_BLOCK_NAME);
-            CRYSTAL_DISPLAY_ENABLED = feature(builder, ModConstants.CRYSTAL_DISPLAY_NAME);
             RELAYER_ENABLED = feature(builder, ModConstants.RELAYER_NAME);
 
             builder.pop();
@@ -284,6 +290,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> RELAYER_ENABLED;
 
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
+        public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
 
         public static final Supplier<Boolean> PULLEY_ENABLED;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;

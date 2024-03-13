@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bunting"
+    }
+  ],
+  "group": "bunting",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:bunting"
+    },
+    {
+      "item": "orange_dye"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:bunting",
+    "count": 1,
+    "nbt": {
+      "Color": "orange"
+    }
+  }
+}

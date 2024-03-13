@@ -1,4 +1,8 @@
 - fixed faucet fluid dupe
 - fixed blackboard item renderer
 - improved quiver logic to use mouse sensitivity
-- 
+- improved bomb particle emission to be bigger, centered on a circle
+- bomb smoke particles were changed
+- fixed some issues with jars and goblet fluids
+- wind vane uses an entity model now with proper shading
+- crystal displays can be chained

@@ -10,9 +10,11 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -36,10 +38,13 @@ public class ModMaterials {
     public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
     public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
     public static final Material CANNON_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.CANNON_TEXTURE);
-    public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/books/book_enchanted"));
-    public static final Material CANNON_TARGET_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res( "block/cannon_target"));
+    public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/books/book_enchanted"));
+    public static final Material CANNON_TARGET_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/cannon_target"));
     public static final Material WIND_VANE_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Supplementaries.res("block/wind_vane"));
-    public static final Material BUNTING_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Supplementaries.res("block/buntings/bunting"));
+    public static final Map<DyeColor, Material> BUNTING_MATERIAL =
+            Arrays.stream(DyeColor.values()).collect(Collectors.toMap(Function.identity(),
+                    c -> new Material(TextureAtlas.LOCATION_BLOCKS,
+                            Supplementaries.res("block/buntings/bunting_" + c.getName()))));
 
     public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
         var map = new IdentityHashMap<BannerPattern, Material>();
@@ -49,19 +54,6 @@ public class ModMaterials {
         return map;
     });
 
-    public static final Material CANVAS_SIGH_MATERIAL = new Material(SIGN_SHEET, Supplementaries.res("entity/signs/hanging/farmersdelight/extension_canvas"));
-    public static final Supplier<Map<net.minecraft.world.level.block.state.properties.WoodType, Material>> HANGING_SIGN_EXTENSIONS =
-            Suppliers.memoize(() -> net.minecraft.world.level.block.state.properties.WoodType.values().collect(Collectors.toMap(
-                    Function.identity(),
-                    w -> {
-                        String str = w.name();
-                        if (str.contains(":")) {
-                            str = str.replace(":", "/extension_");
-                        } else str = "extension_" + str;
-                        return new Material(SIGN_SHEET, Supplementaries.res("entity/signs/hanging/" + str));
-                    },
-                    (v1, v2) -> v1,
-                    IdentityHashMap::new)));
 
     @Nullable
     public static Material getFlagMaterialForPatternItem(BannerPatternItem item) {

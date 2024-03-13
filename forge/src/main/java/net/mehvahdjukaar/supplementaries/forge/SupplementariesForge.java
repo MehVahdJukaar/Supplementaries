@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
-
 import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -43,7 +41,9 @@ public class SupplementariesForge {
             ClientRegistry.init();
             ClientEventsForge.init();
         });
+        ModFluids.init();
     }
+
 
     @SubscribeEvent
     public void registerCapabilities(RegisterCapabilitiesEvent event) {
