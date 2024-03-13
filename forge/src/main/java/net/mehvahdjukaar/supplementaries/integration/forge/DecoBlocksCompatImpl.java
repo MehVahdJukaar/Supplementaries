@@ -6,7 +6,7 @@ import lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.client.renderer.RenderType;
@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.util.Lazy;
@@ -148,7 +147,7 @@ public class DecoBlocksCompatImpl {
 
         @Override
         public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-            if (facing == Direction.UP && !(facingState.getBlock() instanceof RopeBlock)) {
+            if (facing == Direction.UP && !(facingState.getBlock() instanceof AbstractRopeBlock)) {
                 return defMimic.get();
             }
             return stateIn;

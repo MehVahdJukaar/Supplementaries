@@ -69,6 +69,10 @@ public class ModBlockProperties {
     public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape", RakeDirection.class);
     public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
+    public static final EnumProperty<Bunting> NORTH_BUNTING = EnumProperty.create("north", Bunting.class);
+    public static final EnumProperty<Bunting> SOUTH_BUNTING = EnumProperty.create("south", Bunting.class);
+    public static final EnumProperty<Bunting> WEST_BUNTING = EnumProperty.create("west", Bunting.class);
+    public static final EnumProperty<Bunting> EAST_BUNTING = EnumProperty.create("east", Bunting.class);
 
     //model properties
     public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC_KEY;
@@ -345,6 +349,28 @@ public class ModBlockProperties {
 
         public boolean hasItem() {
             return this == FULL;
+        }
+    }
+
+    public enum Bunting implements StringRepresentable {
+        NONE, ROPE, BUNTING;
+
+        @Override
+        public String toString() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.toString();
+        }
+
+        public boolean isConnected() {
+            return this != NONE;
+        }
+
+        public boolean hasBunting() {
+            return this == BUNTING;
         }
     }
 

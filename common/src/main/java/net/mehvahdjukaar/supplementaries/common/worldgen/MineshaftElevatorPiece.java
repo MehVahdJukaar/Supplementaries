@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -259,7 +259,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
                     BlockState chain;
                     if (maxY + 2 > MineshaftElevatorPiece.getRopeCutout() && CommonConfigs.Functional.ROPE_ENABLED.get()) {
                         chain = ModRegistry.ROPE.get().defaultBlockState()
-                                .setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
+                                .setValue(AbstractRopeBlock.UP, true).setValue(AbstractRopeBlock.DOWN, true);
                     } else chain = Blocks.CHAIN.defaultBlockState();
 
                     fillColumnBetween(level, chain, mutableBlockPos, maxY + 2, maxY + j);
@@ -311,8 +311,8 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         Block rope = CommonConfigs.getSelectedRope();
         if (rope == null) return null;
         BlockState ropeState = rope.defaultBlockState();
-        if (rope instanceof RopeBlock) {
-            ropeState = ropeState.setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
+        if (rope instanceof AbstractRopeBlock) {
+            ropeState = ropeState.setValue(AbstractRopeBlock.UP, true).setValue(AbstractRopeBlock.DOWN, true);
         }
         return ropeState;
     }

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +54,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
                 r = DOWN_SHAPE;
             } else {
                 BlockState rope = ModRegistry.ROPE.get().defaultBlockState()
-                        .setValue(RopeBlock.KNOT, false)
+                        .setValue(AbstractRopeBlock.KNOT, false)
                         .setValue(UP, up)
                         .setValue(DOWN, down)
                         .setValue(NORTH, state.getValue(NORTH))

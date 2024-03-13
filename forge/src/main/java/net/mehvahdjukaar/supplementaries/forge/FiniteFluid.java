@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2BooleanMap;
 import it.unimi.dsi.fastutil.shorts.Short2BooleanOpenHashMap;
@@ -27,14 +26,12 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fluids.FluidType;
 
 import java.util.Iterator;
 import java.util.Map;
 
 // copy paste from flowing fluid. once main logic is determined, redundant overrides can be removed
-public abstract class LumiseneFluid extends FlowingFluid {
+public abstract class FiniteFluid extends FlowingFluid {
     public static final BooleanProperty FALLING;
     public static final IntegerProperty LEVEL;
     private static final int CACHE_SIZE = 200;
@@ -42,15 +39,11 @@ public abstract class LumiseneFluid extends FlowingFluid {
     private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
 
     @Override
-    public FluidType getFluidType() {
-        return ModFluids.LUMISENE_TYPE.get();
-    }
-
-    @Override
     protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
         builder.add(FALLING);
     }
 
+    // flow direction. push force on entities
     @Override
     public Vec3 getFlow(BlockGetter blockReader, BlockPos pos, FluidState fluidState) {
         double d0 = 0.0;
@@ -124,30 +117,30 @@ public abstract class LumiseneFluid extends FlowingFluid {
 
     @Override
     protected void spread(Level level, BlockPos pos, FluidState state) {
-        if (!state.isEmpty()) {
-            BlockState blockstate = level.getBlockState(pos);
-            BlockPos blockpos = pos.below();
-            BlockState blockstate1 = level.getBlockState(blockpos);
-            FluidState fluidstate = this.getNewLiquid(level, blockpos, blockstate1);
-            if (this.canSpreadTo(level, pos, blockstate, Direction.DOWN, blockpos, blockstate1, level.getFluidState(blockpos), fluidstate.getType())) {
-                this.spreadTo(level, blockpos, blockstate1, Direction.DOWN, fluidstate);
-                if (this.sourceNeighborCount(level, pos) >= 3) {
-                    this.spreadToSides(level, pos, state, blockstate);
-                }
-            } else if (state.isSource() || !this.isWaterHole(level, fluidstate.getType(), pos, blockstate, blockpos, blockstate1)) {
-                this.spreadToSides(level, pos, state, blockstate);
+        if (state.isEmpty()) return;
+        BlockState myState = level.getBlockState(pos);
+        BlockPos belowPos = pos.below();
+        BlockState belowState = level.getBlockState(belowPos);
+        FluidState belowFluid = this.getNewLiquid(level, belowPos, belowState);
+        if (this.canSpreadTo(level, pos, myState, Direction.DOWN, belowPos, belowState,
+                level.getFluidState(belowPos), belowFluid.getType())) {
+            this.spreadTo(level, belowPos, belowState, Direction.DOWN, belowFluid);
+            if (this.sourceNeighborCount(level, pos) >= 3) {
+                this.spreadToSides(level, pos, state, myState);
             }
+        } else if (state.isSource() || !this.isWaterHole(level, belowFluid.getType(), pos, myState, belowPos, belowState)) {
+            this.spreadToSides(level, pos, state, myState);
         }
-
     }
 
+    // where the magic happens
     private void spreadToSides(Level level, BlockPos pos, FluidState fluidState, BlockState blockState) {
-        int i = fluidState.getAmount() - this.getDropOff(level);
+        int newAmount = fluidState.getAmount() - this.getDropOff(level);
         if (fluidState.getValue(FALLING)) {
-            i = 7;
+            newAmount = 7;
         }
 
-        if (i > 0) {
+        if (newAmount > 0) {
             Map<Direction, FluidState> map = this.getSpread(level, pos, blockState);
 
             for (Map.Entry<Direction, FluidState> directionFluidStateEntry : map.entrySet()) {
@@ -167,33 +160,21 @@ public abstract class LumiseneFluid extends FlowingFluid {
     @Override
     protected FluidState getNewLiquid(Level level, BlockPos pos, BlockState blockState) {
         int i = 0;
-        int j = 0;
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockPos facingPos = pos.relative(direction);
             BlockState facingState = level.getBlockState(facingPos);
             FluidState facingFluid = facingState.getFluidState();
             if (facingFluid.getType().isSame(this) && this.canPassThroughWall(direction, level, pos, blockState, facingPos, facingState)) {
-                if (facingFluid.isSource() && ForgeEventFactory.canCreateFluidSource(level, facingPos, facingState, facingFluid.canConvertToSource(level, facingPos))) {
-                    ++j;
-                }
-
                 i = Math.max(i, facingFluid.getAmount());
             }
         }
 
-        if (j >= 2) {
-            BlockState blockstate1 = level.getBlockState(pos.below());
-            FluidState fluidstate1 = blockstate1.getFluidState();
-            if (blockstate1.isSolid() || this.isSourceBlockOfThisType(fluidstate1)) {
-                return this.getSource(false);
-            }
-        }
-
-        BlockPos blockpos1 = pos.above();
-        BlockState blockstate2 = level.getBlockState(blockpos1);
-        FluidState fluidstate2 = blockstate2.getFluidState();
-        if (!fluidstate2.isEmpty() && fluidstate2.getType().isSame(this) && this.canPassThroughWall(Direction.UP, level, pos, blockState, blockpos1, blockstate2)) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        FluidState aboveFluid = aboveState.getFluidState();
+        if (!aboveFluid.isEmpty() && aboveFluid.getType().isSame(this) && this.canPassThroughWall(Direction.UP, level, pos, blockState, abovePos, aboveState)) {
+            //turn to source when aoove is source
             return this.getFlowing(8, true);
         } else {
             int k = i - this.getDropOff(level);
@@ -201,6 +182,7 @@ public abstract class LumiseneFluid extends FlowingFluid {
         }
     }
 
+    //no clue
     private boolean canPassThroughWall(Direction direction, BlockGetter level, BlockPos arg3, BlockState arg4, BlockPos arg5, BlockState arg6) {
         Object2ByteLinkedOpenHashMap object2bytelinkedopenhashmap;
         if (!arg4.getBlock().hasDynamicShape() && !arg6.getBlock().hasDynamicShape()) {
@@ -234,42 +216,22 @@ public abstract class LumiseneFluid extends FlowingFluid {
         return flag;
     }
 
-    @Override
+
     public abstract Fluid getFlowing();
 
-    @Override
     public FluidState getFlowing(int level, boolean falling) {
         return (this.getFlowing().defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
     }
 
-    @Override
-    public abstract Fluid getSource();
-
-    @Override
-    public FluidState getSource(boolean falling) {
-        return this.getSource().defaultFluidState().setValue(FALLING, falling);
-    }
-
-    @Override
-    public boolean canConvertToSource(FluidState state, Level level, BlockPos pos) {
-        return this.canConvertToSource(level);
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    protected abstract boolean canConvertToSource(Level arg);
 
     @Override
     protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction, FluidState fluidState) {
-        if (blockState.getBlock() instanceof LiquidBlockContainer) {
-            ((LiquidBlockContainer) blockState.getBlock()).placeLiquid(level, pos, blockState, fluidState);
+        if (blockState.getBlock() instanceof LiquidBlockContainer container) {
+            container.placeLiquid(level, pos, blockState, fluidState);
         } else {
             if (!blockState.isAir()) {
                 this.beforeDestroyingBlock(level, pos, blockState);
             }
-
             level.setBlock(pos, fluidState.createLegacyBlock(), 3);
         }
     }
@@ -283,19 +245,17 @@ public abstract class LumiseneFluid extends FlowingFluid {
         return (short) ((i + 128 & 255) << 8 | j + 128 & 255);
     }
 
-    protected int getSlopeDistance(LevelReader level, BlockPos arg2, int k, Direction direction, BlockState arg4, BlockPos arg5, Short2ObjectMap<Pair<BlockState, FluidState>> short2ObjectMap, Short2BooleanMap short2BooleanMap) {
+    protected int getSlopeDistance2(LevelReader level, BlockPos arg2, int k, Direction direction, BlockState arg4,
+                                    BlockPos arg5, Short2ObjectMap<BlockState> short2ObjectMap, Short2BooleanMap short2BooleanMap) {
         int i = 1000;
 
         for (Direction facingDir : Direction.Plane.HORIZONTAL) {
             if (direction != facingDir) {
                 BlockPos blockpos = arg2.relative(facingDir);
                 short short1 = getCacheKey(arg5, blockpos);
-                Pair<BlockState, FluidState> pair = short2ObjectMap.computeIfAbsent(short1, (s) -> {
-                    BlockState blockstate1 = level.getBlockState(blockpos);
-                    return Pair.of(blockstate1, blockstate1.getFluidState());
-                });
-                BlockState blockstate = pair.getFirst();
-                FluidState fluidstate = pair.getSecond();
+                BlockState blockstate = short2ObjectMap.computeIfAbsent(short1, (s) -> level.getBlockState(blockpos));
+                FluidState fluidstate = blockstate.getFluidState();
+
                 if (this.canPassThrough(level, this.getFlowing(), arg2, arg4, facingDir, blockpos, blockstate, fluidstate)) {
                     boolean flag = short2BooleanMap.computeIfAbsent(short1, (s) -> {
                         BlockPos blockpos1 = blockpos.below();
@@ -307,7 +267,7 @@ public abstract class LumiseneFluid extends FlowingFluid {
                     }
 
                     if (k < this.getSlopeFindDistance(level)) {
-                        int j = this.getSlopeDistance(level, blockpos, k + 1, direction.getOpposite(), blockstate, arg5, short2ObjectMap, short2BooleanMap);
+                        int j = this.getSlopeDistance2(level, blockpos, k + 1, direction.getOpposite(), blockstate, arg5, short2ObjectMap, short2BooleanMap);
                         if (j < i) {
                             i = j;
                         }
@@ -357,30 +317,29 @@ public abstract class LumiseneFluid extends FlowingFluid {
     protected Map<Direction, FluidState> getSpread(Level level, BlockPos pos, BlockState state) {
         int i = 1000;
         Map<Direction, FluidState> map = Maps.newEnumMap(Direction.class);
-        Short2ObjectMap<Pair<BlockState, FluidState>> short2objectmap = new Short2ObjectOpenHashMap();
+        Short2ObjectMap<BlockState> neighborBlocks = new Short2ObjectOpenHashMap<>();
         Short2BooleanMap short2booleanmap = new Short2BooleanOpenHashMap();
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
-            BlockPos blockpos = pos.relative(direction);
-            short short1 = getCacheKey(pos, blockpos);
-            Pair<BlockState, FluidState> pair = short2objectmap.computeIfAbsent(short1, (s) -> {
-                BlockState blockstate1 = level.getBlockState(blockpos);
-                return Pair.of(blockstate1, blockstate1.getFluidState());
-            });
-            BlockState blockstate = pair.getFirst();
-            FluidState fluidstate = pair.getSecond();
-            FluidState fluidstate1 = this.getNewLiquid(level, blockpos, blockstate);
-            if (this.canPassThrough(level, fluidstate1.getType(), pos, state, direction, blockpos, blockstate, fluidstate)) {
-                BlockPos blockpos1 = blockpos.below();
-                boolean flag = short2booleanmap.computeIfAbsent(short1, (s) -> {
-                    BlockState blockstate1 = level.getBlockState(blockpos1);
-                    return this.isWaterHole(level, this.getFlowing(), blockpos, blockstate, blockpos1, blockstate1);
+            BlockPos facingPos = pos.relative(direction);
+            short key = getCacheKey(pos, facingPos);
+
+            BlockState facingState = neighborBlocks.computeIfAbsent(key, (s) -> level.getBlockState(facingPos));
+            FluidState facingFluid = facingState.getFluidState();
+
+            FluidState newFacingFluid = this.getNewLiquid(level, facingPos, facingState);
+            if (this.canPassThrough(level, newFacingFluid.getType(), pos, state, direction, facingPos, facingState, facingFluid)) {
+                BlockPos belowFacingPos = facingPos.below();
+                boolean flag = short2booleanmap.computeIfAbsent(key, (s) -> {
+                    BlockState belowFacingState = level.getBlockState(belowFacingPos);
+                    return this.isWaterHole(level, this.getFlowing(), facingPos, facingState, belowFacingPos, belowFacingState);
                 });
                 int j;
                 if (flag) {
                     j = 0;
                 } else {
-                    j = this.getSlopeDistance(level, blockpos, 1, direction.getOpposite(), blockstate, pos, short2objectmap, short2booleanmap);
+                    j = this.getSlopeDistance2(level, facingPos, 1, direction.getOpposite(), facingState, pos,
+                            neighborBlocks, short2booleanmap);
                 }
 
                 if (j < i) {
@@ -388,7 +347,7 @@ public abstract class LumiseneFluid extends FlowingFluid {
                 }
 
                 if (j <= i) {
-                    map.put(direction, fluidstate1);
+                    map.put(direction, newFacingFluid);
                     i = j;
                 }
             }
@@ -416,9 +375,6 @@ public abstract class LumiseneFluid extends FlowingFluid {
         return toFluidState.canBeReplacedWith(level, toPos, fluid, direction) && this.canPassThroughWall(direction, level, fromPos, fromBlockState, toPos, toBlockState) && this.canHoldFluid(level, toPos, toBlockState, fluid);
     }
 
-    protected abstract int getDropOff(LevelReader level);
-
-
     @Override
     public void tick(Level level, BlockPos pos, FluidState state) {
         if (!state.isSource()) {
@@ -438,6 +394,8 @@ public abstract class LumiseneFluid extends FlowingFluid {
 
         this.spread(level, pos, state);
     }
+
+    public abstract int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate);
 
     private static boolean hasSameAbove(FluidState fluidState, BlockGetter level, BlockPos pos) {
         return fluidState.getType().isSame(level.getFluidState(pos.above()).getType());

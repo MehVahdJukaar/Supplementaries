@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import biomesoplenty.common.block.BloodFluid;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -48,8 +47,9 @@ public class ModFluids {
     public static final Supplier<LumiseneBlock> LUMISENE_BLOCK;
 
     static  {
-        FLOWING_LUMISENE = registerFluid(F.Flowing::new, "flowing_lumisene");
-        STILL_LUMISENE = registerFluid(BloodFluid.Source::new, "lumisene");
+        STILL_LUMISENE = RegHelper.registerFluid(Supplementaries.res("lumisene") , LumiseneFluid.Source::new);
+        FLOWING_LUMISENE = RegHelper.registerFluid(Supplementaries.res("flowing_lumisene") , LumiseneFluid.Flowing::new);
+
         LUMISENE_TYPE = registerFluidType(() -> new FluidType(FluidType.Properties.create()
                 .descriptionId("block.supplementaries.lumisene")
                 .fallDistanceModifier(0.0F)
@@ -103,9 +103,6 @@ public class ModFluids {
 
     }
 
-    public static <T extends Fluid> Supplier<T> registerFluid(Supplier<T> fluidSupplier, String name) {
-        return RegHelper.registerFluid(Supplementaries.res(name), fluidSupplier);
-    }
 
     public static Supplier<FluidType> registerFluidType(Supplier<FluidType> fluidSupplier, String name) {
         return RegHelper.register(Supplementaries.res( name), fluidSupplier,
@@ -115,8 +112,12 @@ public class ModFluids {
     public static void init() {
     }
 
-    public static class F extends LumiseneFluid{
+    public static class LumiseneFluid extends FiniteFluid {
 
+        @Override
+        public FluidType getFluidType() {
+            return ModFluids.LUMISENE_TYPE.get();
+        }
 
         @Override
         public Fluid getFlowing() {
@@ -147,6 +148,12 @@ public class ModFluids {
         protected int getDropOff(LevelReader level) {
             return 0;
         }
+
+        @Override
+        public int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate) {
+            return 0;
+        }
+
 
         @Override
         public Item getBucket() {
@@ -183,7 +190,7 @@ public class ModFluids {
             return 0;
         }
 
-        public static class Source extends F {
+        public static class Source extends LumiseneFluid {
             public Source() {
             }
 
@@ -196,7 +203,7 @@ public class ModFluids {
             }
         }
 
-        public static class Flowing extends F {
+        public static class Flowing extends LumiseneFluid {
             public Flowing() {
             }
 
