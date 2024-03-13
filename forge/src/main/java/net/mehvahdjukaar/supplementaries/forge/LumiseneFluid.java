@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.FluidType;
 import java.util.Iterator;
 import java.util.Map;
 
+// copy paste from flowing fluid. once main logic is determined, redundant overrides can be removed
 public abstract class LumiseneFluid extends FlowingFluid {
     public static final BooleanProperty FALLING;
     public static final IntegerProperty LEVEL;

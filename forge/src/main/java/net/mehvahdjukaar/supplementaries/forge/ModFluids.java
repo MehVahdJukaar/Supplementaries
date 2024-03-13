@@ -50,7 +50,15 @@ public class ModFluids {
     static  {
         FLOWING_LUMISENE = registerFluid(F.Flowing::new, "flowing_lumisene");
         STILL_LUMISENE = registerFluid(BloodFluid.Source::new, "lumisene");
-        LUMISENE_TYPE = registerFluidType(() -> new FluidType(FluidType.Properties.create().descriptionId("block.biomesoplenty.blood").fallDistanceModifier(0.0F).canExtinguish(true).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH).density(3000).viscosity(6000)) {
+        LUMISENE_TYPE = registerFluidType(() -> new FluidType(FluidType.Properties.create()
+                .descriptionId("block.supplementaries.lumisene")
+                .fallDistanceModifier(0.0F)
+                .canExtinguish(true)
+                .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+                .density(3000)
+                .viscosity(6000)) {
             public @Nullable BlockPathTypes getBlockPathType(FluidState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, boolean canFluidLog) {
                 return canFluidLog ? super.getBlockPathType(state, level, pos, mob, true) : null;
             }
