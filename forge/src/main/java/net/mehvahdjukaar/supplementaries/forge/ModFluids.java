@@ -21,11 +21,11 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -41,19 +41,19 @@ import org.joml.Vector3f;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static net.mehvahdjukaar.supplementaries.forge.FiniteLiquidBlock.MAX_LEVEL;
+
 public class ModFluids {
 
 
     // what a mess
     public static final Supplier<FluidType> LUMISENE_TYPE;
-    public static final Supplier<FlowingFluid> FLOWING_LUMISENE;
     public static final Supplier<FlowingFluid> STILL_LUMISENE;
-    public static final Supplier<LumiseneBlock> LUMISENE_BLOCK;
+    public static final Supplier<Block> LUMISENE_BLOCK;
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
 
     static {
-        STILL_LUMISENE = registerFluid(("lumisene"), LumiseneFluid.Source::new);
-        FLOWING_LUMISENE = registerFluid(("flowing_lumisene"), LumiseneFluid.Flowing::new);
+        STILL_LUMISENE = registerFluid(("lumisene"), LumiseneFluid::new);
 
         LUMISENE_TYPE = registerFluidType("lumisene", ()->new FluidType(FluidType.Properties.create()
                 .descriptionId("block.supplementaries.lumisene")
@@ -98,7 +98,7 @@ public class ModFluids {
             }});
 
         LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res("lumisene"),
-                () -> new LumiseneBlock(STILL_LUMISENE,
+                () -> new FiniteLiquidBlock(STILL_LUMISENE,
                         BlockBehaviour.Properties.of()
                                 .replaceable().pushReaction(PushReaction.DESTROY)
                                 .liquid().noCollission()
@@ -126,7 +126,10 @@ public class ModFluids {
     }
 
     public static class LumiseneFluid extends FiniteFluid {
-
+public LumiseneFluid() {
+        super();
+        this.registerDefaultState(this.stateDefinition.any().setValue(LEVEL, MAX_LEVEL));
+}
         @Override
         public FluidType getFluidType() {
             return ModFluids.LUMISENE_TYPE.get();
@@ -134,7 +137,7 @@ public class ModFluids {
 
         @Override
         public Fluid getFlowing() {
-            return FLOWING_LUMISENE.get();
+            return STILL_LUMISENE.get();
         }
 
         @Override
@@ -162,14 +165,10 @@ public class ModFluids {
             return 1;
         }
 
-        @Override
-        public int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate) {
-            return 20;
-        }
 
         @Override
         public boolean isSame(Fluid fluid) {
-            return fluid == STILL_LUMISENE.get() || fluid == FLOWING_LUMISENE.get();
+            return fluid == STILL_LUMISENE.get() ;
         }
 
         @Override
@@ -184,7 +183,12 @@ public class ModFluids {
 
         @Override
         public int getTickDelay(LevelReader level) {
-            return 1;
+            return 20;
+        }
+
+        @Override
+        public int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate) {
+            return 20;
         }
 
         @Override
@@ -194,8 +198,15 @@ public class ModFluids {
 
         @Override
         protected BlockState createLegacyBlock(FluidState state) {
-            return LUMISENE_BLOCK.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
+            return LUMISENE_BLOCK.get().defaultBlockState()
+                    .setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
         }
+
+        protected static int getLegacyLevel(FluidState state) {
+            int amount = state.getAmount();
+            return MAX_LEVEL-  Math.min(amount, MAX_LEVEL);
+        }
+
 
         @Override
         public boolean isSource(FluidState state) {
@@ -205,37 +216,6 @@ public class ModFluids {
         @Override
         public int getAmount(FluidState state) {
             return state.getValue(LEVEL);
-        }
-
-        public static class Source extends LumiseneFluid {
-            public Source() {
-            }
-
-            public int getAmount(FluidState state) {
-                return 8;
-            }
-
-            public boolean isSource(FluidState state) {
-                return true;
-            }
-        }
-
-        public static class Flowing extends LumiseneFluid {
-            public Flowing() {
-            }
-
-            protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
-                super.createFluidStateDefinition(builder);
-                builder.add(LEVEL);
-            }
-
-            public int getAmount(FluidState p_76480_) {
-                return (Integer) p_76480_.getValue(LEVEL);
-            }
-
-            public boolean isSource(FluidState p_76478_) {
-                return false;
-            }
         }
     }
 }
