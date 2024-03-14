@@ -2,25 +2,33 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -44,23 +52,25 @@ public class ModFluids {
 
 
     // what a mess
-    public static final Supplier<FluidType> LUMISENE_TYPE;
-    public static final Supplier<FiniteFluid> STILL_LUMISENE;
+    public static final Supplier<FluidType> LUMISENE_FLUID_TYPE;
+    public static final Supplier<FiniteFluid> LUMISENE_FLUID;
     public static final Supplier<Block> LUMISENE_BLOCK;
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
 
     static {
-        STILL_LUMISENE = registerFluid(("lumisene"), LumiseneFluid::new);
+        LUMISENE_FLUID = registerFluid(("lumisene"), LumiseneFluid::new);
 
-        LUMISENE_TYPE = registerFluidType("lumisene", () -> new FluidType(FluidType.Properties.create()
+        LUMISENE_FLUID_TYPE = registerFluidType("lumisene", () -> new FluidType(FluidType.Properties.create()
                 .descriptionId("block.supplementaries.lumisene")
-                .fallDistanceModifier(0.0F)
-                .canExtinguish(true)
+                .fallDistanceModifier(1)
+                .canExtinguish(false)
+                .motionScale(0)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
                 .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
                 .density(3000)
                 .viscosity(6000)) {
+
             public @Nullable BlockPathTypes getBlockPathType(FluidState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, boolean canFluidLog) {
                 return canFluidLog ? super.getBlockPathType(state, level, pos, mob, true) : null;
             }
@@ -91,20 +101,39 @@ public class ModFluids {
                         RenderSystem.setShaderFogStart(0.125F);
                         RenderSystem.setShaderFogEnd(1.5F);
                     }
+
+                    @Override
+                    public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                        int x = pos.getX();
+                        int y = pos.getZ();
+                        double frequency = 0.1;
+                        double phaseShift = 0.0;
+                        double amplitude = 127.0;
+                        double center = 128.0;
+                        int r = (int) (Math.sin(frequency * x + phaseShift) * amplitude + center);
+                        int g = (int) (Math.sin(frequency * y + phaseShift) * amplitude + center);
+                        int b = (int) (Math.sin(frequency * Math.sqrt(x * x + y * y) + phaseShift) * amplitude + center);
+
+                        return FastColor.ARGB32.color(255, r, g, b);
+                    }
                 });
             }
         });
 
         LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res("lumisene"),
-                () -> new FiniteLiquidBlock(STILL_LUMISENE,
+                () -> new FlammableLiquidBlock(LUMISENE_FLUID,
                         BlockBehaviour.Properties.of()
-                                .replaceable().pushReaction(PushReaction.DESTROY)
-                                .liquid().noCollission()
-                                .randomTicks().noLootTable()
-                                .sound(SoundType.EMPTY).strength(100.0F)));
+                                .replaceable()
+                                .pushReaction(PushReaction.DESTROY)
+                                .liquid()
+                                .noCollission()
+                                .randomTicks()
+                                .noLootTable()
+                                .sound(SoundType.EMPTY)
+                                .strength(100.0F)));
 
         LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),
-                () -> new BucketItem(STILL_LUMISENE, new Item.Properties()
+                () -> new FiniteFluidBucket(LUMISENE_FLUID, new Item.Properties()
                         .stacksTo(1)
                         .craftRemainder(Items.BUCKET)));
 
@@ -121,14 +150,18 @@ public class ModFluids {
     }
 
     public static void init() {
+        ClientHelper.addClientSetup(() -> {
+            ItemBlockRenderTypes.setRenderLayer(LUMISENE_BLOCK.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(LUMISENE_FLUID.get(), RenderType.translucent());
+        });
     }
 
     public static void messWithFluidH(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Float> cir) {
-      //  if(fluidState.isEmpty())cir.setReturnValue(1f);
+        //  if(fluidState.isEmpty())cir.setReturnValue(1f);
     }
 
     public static void messWithAvH(BlockAndTintGetter level, Fluid fluid, float g, float h, float i, BlockPos pos, CallbackInfoReturnable<Float> cir) {
-   // cir.setReturnValue(Math.max(i,Math.max(g,h)));
+        // cir.setReturnValue(Math.max(i,Math.max(g,h)));
     }
 
     public static class LumiseneFluid extends FiniteFluid {
@@ -139,43 +172,18 @@ public class ModFluids {
 
         @Override
         public FluidType getFluidType() {
-            return ModFluids.LUMISENE_TYPE.get();
-        }
-
-        @Override
-        public Fluid getFlowing() {
-            return STILL_LUMISENE.get();
-        }
-
-        @Override
-        public Fluid getSource() {
-            return STILL_LUMISENE.get();
-        }
-
-       // @Override
-        protected boolean canConvertToSource(Level arg) {
-            return false;
+            return ModFluids.LUMISENE_FLUID_TYPE.get();
         }
 
         @Override
         protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
-
+            BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+            Block.dropResources(state, level, pos, blockEntity);
         }
-
-        @Override
-        protected int getSlopeFindDistance(LevelReader level) {
-            return 4;
-        }
-
-       // @Override
-        protected int getDropOff(LevelReader level) {
-            return 1;
-        }
-
 
         @Override
         public boolean isSame(Fluid fluid) {
-            return fluid == STILL_LUMISENE.get();
+            return fluid == LUMISENE_FLUID.get();
         }
 
         @Override
@@ -185,17 +193,12 @@ public class ModFluids {
 
         @Override
         protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
-            return false;
+            return true;
         }
 
         @Override
         public int getTickDelay(LevelReader level) {
-            return 10;
-        }
-
-        @Override
-        public int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate) {
-            return 10;
+            return 5;
         }
 
         @Override
@@ -212,17 +215,6 @@ public class ModFluids {
         protected static int getLegacyLevel(FluidState state) {
             int amount = state.getAmount();
             return MAX_LEVEL - Math.min(amount, MAX_LEVEL);
-        }
-
-
-        @Override
-        public boolean isSource(FluidState state) {
-            return false;
-        }
-
-        @Override
-        public int getAmount(FluidState state) {
-            return state.getValue(LEVEL);
         }
     }
 }

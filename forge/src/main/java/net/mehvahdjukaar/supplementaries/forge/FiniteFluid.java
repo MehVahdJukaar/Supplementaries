@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.shorts.Short2BooleanMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -13,7 +11,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -25,14 +22,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.*;
-
-import static net.mehvahdjukaar.supplementaries.forge.FiniteLiquidBlock.MAX_LEVEL;
 
 // copy paste from flowing fluid. once main logic is determined, redundant overrides can be removed
 public abstract class FiniteFluid extends Fluid {
@@ -122,47 +116,21 @@ public abstract class FiniteFluid extends Fluid {
                 Direction dir = e.getKey();
                 BlockPos facingPos = pos.relative(dir);
                 BlockState s = level.getBlockState(facingPos);
-                FluidState fluidstate = getFlowing(oldAmount + 1, false);
+                FluidState fluidstate = makeState(oldAmount + 1, false);
                 this.spreadTo(level, facingPos, s, dir, fluidstate);
             }
 
 
-            FluidState myNewState = getFlowing(currentAmount - map.size(), false);
+            FluidState myNewState = makeState(currentAmount - map.size(), false);
             BlockState blockstate = myNewState.createLegacyBlock();
             level.setBlock(pos, blockstate, 2);
             level.updateNeighborsAt(pos, blockstate.getBlock());
         }
-
     }
 
-    // dummy overrides
-
-    // gets new fluid state for this position (supposedly it was already air). Used for flowing fluid expansion which we dont have
-    protected FluidState getNewLiquid(Level level, BlockPos pos, BlockState blockState) {
-        return Fluids.EMPTY.defaultFluidState();
+    public FluidState makeState(int level, boolean falling) {
+        return (this.defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
     }
-
-    protected Map<Direction, FluidState> getSpread(Level level, BlockPos pos, BlockState state) {
-        return Map.of();
-    }
-
-    protected int getSlopeDistance(LevelReader level, BlockPos arg2, int k, Direction direction, BlockState arg4, BlockPos arg5, Short2ObjectMap<Pair<BlockState, FluidState>> short2ObjectMap, Short2BooleanMap short2BooleanMap) {
-        return 1000;
-    }
-
-
-    public abstract Fluid getFlowing();
-
-    public FluidState getFlowing(int level, boolean falling) {
-        return (this.getFlowing().defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
-    }
-
-    public FluidState getSource(boolean falling) {
-        return this.getSource().defaultFluidState()
-                .setValue(LEVEL, MAX_LEVEL).setValue(FALLING, falling);
-    }
-
-    public abstract Fluid getSource();
 
     protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction, FluidState fluidState) {
         if (blockState.getBlock() instanceof LiquidBlockContainer container) {
@@ -182,12 +150,6 @@ public abstract class FiniteFluid extends Fluid {
         int j = arg2.getZ() - arg.getZ();
         return (short) ((i + 128 & 255) << 8 | j + 128 & 255);
     }
-
-    private boolean isSourceBlockOfThisType(FluidState state) {
-        return state.getType().isSame(this);// && state.isSource();
-    }
-
-    protected abstract int getSlopeFindDistance(LevelReader level);
 
     protected Map<Direction, Integer> getWantedSpreadDirections(Level level, BlockPos pos, BlockState state) {
         Map<Direction, Integer> list = new HashMap<>();
@@ -266,15 +228,9 @@ public abstract class FiniteFluid extends Fluid {
         this.spread(level, pos, state);
     }
 
-    public abstract int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate);
-
-    private static boolean hasSameAbove(FluidState fluidState, BlockGetter level, BlockPos pos) {
-        return fluidState.getType().isSame(level.getFluidState(pos.above()).getType());
-    }
-
     @Override
     public float getHeight(FluidState state, BlockGetter level, BlockPos pos) {
-        return hasSameAbove(state, level, pos) ? 1.0F : state.getOwnHeight();
+        return state.getOwnHeight();
     }
 
     @Override
@@ -282,13 +238,20 @@ public abstract class FiniteFluid extends Fluid {
         return (float) state.getAmount() / 14.0F;
     }
 
+    // needed for bucket pickup raytrace
     @Override
-    public abstract int getAmount(FluidState state);
+    public boolean isSource(FluidState state) {
+        return true;
+    }
+
+    @Override
+    public int getAmount(FluidState state) {
+        return state.getValue(LEVEL);
+    }
 
     @Override
     public VoxelShape getShape(FluidState state, BlockGetter level, BlockPos pos) {
-        return state.getAmount() == 14 && hasSameAbove(state, level, pos) ? Shapes.block() :
-                this.shapes.computeIfAbsent(state, (arg3) -> Shapes.box(0.0, 0.0, 0.0, 1.0,
+        return this.shapes.computeIfAbsent(state, (arg3) -> Shapes.box(0.0, 0.0, 0.0, 1.0,
                         arg3.getHeight(level, pos), 1.0));
     }
 
@@ -301,5 +264,9 @@ public abstract class FiniteFluid extends Fluid {
             map.defaultReturnValue((byte) 127);
             return map;
         });
+    }
+
+    public boolean shouldSlowDown(FluidState state) {
+        return state.getAmount() > 2;
     }
 }

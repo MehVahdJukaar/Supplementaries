@@ -15,6 +15,7 @@
     "ChunkHolderMixin",
     "CompatFarmersDelightTomatoMixin",
     "FriendlyByteBufMixin",
+    "LivingEntityMixin",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",
     "SelfDispenserMinecraftMixin",
