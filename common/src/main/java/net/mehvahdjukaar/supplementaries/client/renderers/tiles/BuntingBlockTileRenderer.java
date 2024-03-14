@@ -23,9 +23,13 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
 
 
     private final ModelPart model;
+    private final ModelPart flag;
+    private final ModelPart box;
 
     public BuntingBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.model = context.bakeLayer(ClientRegistry.BUNTING_MODEL);
+        this.flag = model.getChild("flag");
+        this.box = model.getChild("box");
     }
 
     @Override
@@ -54,7 +58,7 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
                         + partialTicks) / 100.0F;
 
                 int i = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
-                this.model.zRot = i * 0.01F * Mth.cos(6.2831855F * h) * 3.1415927F;
+                this.flag.zRot = 90* i * 0.01F * Mth.cos(6.2831855F * h) * 3.1415927F;
 
                 model.render(poseStack, ModMaterials.BUNTING_MATERIAL.get(color).buffer(bufferIn, RenderType::entityCutout),
                         combinedLightIn, combinedOverlayIn);
@@ -83,7 +87,7 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
 
          partdefinition.addOrReplaceChild("flag", CubeListBuilder.create()
                 .texOffs(0, 0).addBox(-3.5F, -7.0F, 0.0F, 7.0F, 10.0F, 0.0F, new CubeDeformation(0.0F)),
-                 PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+                 PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
        partdefinition.addOrReplaceChild("box", CubeListBuilder.create()
                 .texOffs(0, 12).addBox(-3.5F, -9.0F, -1.0F, 7.0F, 2.0F, 2.0F, new CubeDeformation(0.1F)),

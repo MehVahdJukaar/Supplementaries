@@ -10,14 +10,18 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,12 +49,13 @@ public class ModFluids {
     public static final Supplier<FlowingFluid> FLOWING_LUMISENE;
     public static final Supplier<FlowingFluid> STILL_LUMISENE;
     public static final Supplier<LumiseneBlock> LUMISENE_BLOCK;
+    public static final Supplier<BucketItem> LUMISENE_BUCKET;
 
-    static  {
-        STILL_LUMISENE = RegHelper.registerFluid(Supplementaries.res("lumisene") , LumiseneFluid.Source::new);
-        FLOWING_LUMISENE = RegHelper.registerFluid(Supplementaries.res("flowing_lumisene") , LumiseneFluid.Flowing::new);
+    static {
+        STILL_LUMISENE = registerFluid(("lumisene"), LumiseneFluid.Source::new);
+        FLOWING_LUMISENE = registerFluid(("flowing_lumisene"), LumiseneFluid.Flowing::new);
 
-        LUMISENE_TYPE = registerFluidType(() -> new FluidType(FluidType.Properties.create()
+        LUMISENE_TYPE = registerFluidType("lumisene", ()->new FluidType(FluidType.Properties.create()
                 .descriptionId("block.supplementaries.lumisene")
                 .fallDistanceModifier(0.0F)
                 .canExtinguish(true)
@@ -66,8 +71,8 @@ public class ModFluids {
             public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
                 consumer.accept(new IClientFluidTypeExtensions() {
                     private static final ResourceLocation UNDERWATER_TEXTURE = Supplementaries.res("textures/block/lumisene_underwater.png");
-                    private static final ResourceLocation STILL_TEXTURE = Supplementaries.res("block/lumisene_still");
-                    private static final ResourceLocation FLOWING_TEXTURE = Supplementaries.res("block/lumisene_flow");
+                    private static final ResourceLocation STILL_TEXTURE = new ResourceLocation("block/water_still");
+                    private static final ResourceLocation FLOWING_TEXTURE = new ResourceLocation("block/water_flow");
 
                     public ResourceLocation getStillTexture() {
                         return STILL_TEXTURE;
@@ -90,23 +95,31 @@ public class ModFluids {
                         RenderSystem.setShaderFogEnd(1.5F);
                     }
                 });
-            }
-        }, "lumisene");
+            }});
 
-     LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res("lumisene"),
-             ()-> new LumiseneBlock(STILL_LUMISENE,
-                     BlockBehaviour.Properties.of()
-                             .replaceable().pushReaction(PushReaction.DESTROY)
-                             .liquid().noCollission()
-                             .randomTicks().noLootTable()
-                             .sound(SoundType.EMPTY).strength(100.0F)));
+        LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res("lumisene"),
+                () -> new LumiseneBlock(STILL_LUMISENE,
+                        BlockBehaviour.Properties.of()
+                                .replaceable().pushReaction(PushReaction.DESTROY)
+                                .liquid().noCollission()
+                                .randomTicks().noLootTable()
+                                .sound(SoundType.EMPTY).strength(100.0F)));
+
+        LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),
+                () -> new BucketItem(STILL_LUMISENE, new Item.Properties()
+                        .stacksTo(1)
+                        .craftRemainder(Items.BUCKET)));
 
     }
 
 
-    public static Supplier<FluidType> registerFluidType(Supplier<FluidType> fluidSupplier, String name) {
-        return RegHelper.register(Supplementaries.res( name), fluidSupplier,
+    public static Supplier<FluidType> registerFluidType(String name,Supplier<FluidType> fluidSupplier) {
+        return RegHelper.register(Supplementaries.res(name), fluidSupplier,
                 ForgeRegistries.Keys.FLUID_TYPES);
+    }
+
+    public static <T extends Fluid> Supplier<T> registerFluid( String name, Supplier<T> fluidSupplier) {
+        return RegHelper.register(Supplementaries.res(name), fluidSupplier, Registries.FLUID);
     }
 
     public static void init() {
@@ -141,23 +154,27 @@ public class ModFluids {
 
         @Override
         protected int getSlopeFindDistance(LevelReader level) {
-            return 5;
+            return 4;
         }
 
         @Override
         protected int getDropOff(LevelReader level) {
-            return 0;
+            return 1;
         }
 
         @Override
         public int getSpreadDelay(Level level, BlockPos pos, FluidState state, FluidState fluidstate) {
-            return 0;
+            return 20;
         }
 
+        @Override
+        public boolean isSame(Fluid fluid) {
+            return fluid == STILL_LUMISENE.get() || fluid == FLOWING_LUMISENE.get();
+        }
 
         @Override
         public Item getBucket() {
-            return null;
+            return LUMISENE_BUCKET.get();
         }
 
         @Override
@@ -177,7 +194,7 @@ public class ModFluids {
 
         @Override
         protected BlockState createLegacyBlock(FluidState state) {
-            return null;
+            return LUMISENE_BLOCK.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
         }
 
         @Override
@@ -187,7 +204,7 @@ public class ModFluids {
 
         @Override
         public int getAmount(FluidState state) {
-            return 0;
+            return state.getValue(LEVEL);
         }
 
         public static class Source extends LumiseneFluid {
@@ -213,7 +230,7 @@ public class ModFluids {
             }
 
             public int getAmount(FluidState p_76480_) {
-                return (Integer)p_76480_.getValue(LEVEL);
+                return (Integer) p_76480_.getValue(LEVEL);
             }
 
             public boolean isSource(FluidState p_76478_) {

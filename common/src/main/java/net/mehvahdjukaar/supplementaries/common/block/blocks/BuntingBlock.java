@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -56,6 +57,12 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         super(properties);
     }
 
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
+    }
 
     protected Map<BlockState, VoxelShape> makeShapes() {
         Map<BlockState, VoxelShape> shapes = new HashMap<>();

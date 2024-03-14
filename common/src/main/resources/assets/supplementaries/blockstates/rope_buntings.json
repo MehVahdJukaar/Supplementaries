@@ -3,16 +3,28 @@
         {   "when":  { "knot": true},
             "apply": { "model": "supplementaries:block/rope_knot" }
         },
-        {   "when": { "north": true },
+        {   "when": { "north": "rope" },
             "apply": { "model": "supplementaries:block/rope_connection"}
         },
-        {   "when": { "east": true },
+        {   "when": { "east": "rope" },
             "apply": { "model": "supplementaries:block/rope_connection", "y": 90}
         },
-        {   "when": { "south": true },
+        {   "when": { "south": "rope" },
             "apply": { "model": "supplementaries:block/rope_connection", "y": 180}
         },
-        {   "when": { "west": true },
+        {   "when": { "west": "rope" },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 270}
+        },
+        {   "when": { "north": "bunting" },
+            "apply": { "model": "supplementaries:block/rope_connection"}
+        },
+        {   "when": { "east": "bunting" },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 90}
+        },
+        {   "when": { "south": "bunting" },
+            "apply": { "model": "supplementaries:block/rope_connection", "y": 180}
+        },
+        {   "when": { "west": "bunting" },
             "apply": { "model": "supplementaries:block/rope_connection", "y": 270}
         },
         {   "when": { "up": true },
