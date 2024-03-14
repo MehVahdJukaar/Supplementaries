@@ -79,8 +79,8 @@ public abstract class FiniteFluid extends FlowingFluid {
         BlockState belowState = level.getBlockState(belowPos);
         if (this.canSpreadTo(level, pos, myState, Direction.DOWN, belowPos, belowState,
                 level.getFluidState(belowPos), this)) {
-            this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        //    this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
+         //   level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         } else if (!this.isWaterHole(level, this, pos, myState, belowPos, belowState)) {
             this.spreadToSides(level, pos, state, myState);
         }
@@ -108,6 +108,9 @@ public abstract class FiniteFluid extends FlowingFluid {
         }
         currentAmount += extra;
         float average = currentAmount / ((float) nonZero);
+
+        int check = currentAmount;
+        int actual = 1;
         if (currentAmount > 1 && average > 1) {
 
             List<Direction> dirList = map.keySet().stream().toList();//.stream().filter(e -> e.getValue() == 0).map(Map.Entry::getKey).toList();
@@ -147,7 +150,11 @@ public abstract class FiniteFluid extends FlowingFluid {
                 //if (this.canSpreadTo(level, pos, blockState, direction, blockpos, s, level.getFluidState(blockpos), this)) {
                 FluidState fluidstate = getFlowing(newAmount, false);
                 this.spreadTo(level, blockpos, s, direction, fluidstate);
+                actual += newAmount;
                 //}
+            }
+            if(actual != check){
+                int aa = 0;
             }
         }
 

@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 // diff property means we need a diff class
-public class FiniteLiquidBlock  extends Block implements BucketPickup {
+public class FiniteLiquidBlock  extends LiquidBlock {
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     public static final int MAX_LEVEL = 13;
@@ -45,7 +45,7 @@ public class FiniteLiquidBlock  extends Block implements BucketPickup {
 
 
     public FiniteLiquidBlock(Supplier<? extends FlowingFluid> supplier, BlockBehaviour.Properties arg) {
-        super( arg);
+        super( supplier, arg);
         this.supplier =supplier;
         this.stateCache = Lists.newArrayList();
         this.registerDefaultState((this.stateDefinition.any()).setValue(LEVEL, 0));
@@ -87,11 +87,6 @@ public class FiniteLiquidBlock  extends Block implements BucketPickup {
         }
 
     }
-
-    private FlowingFluid getFluid() {
-        return supplier.get();
-    }
-
 
 
 
