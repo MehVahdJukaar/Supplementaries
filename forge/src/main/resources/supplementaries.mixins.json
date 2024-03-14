@@ -8,7 +8,8 @@
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
     "CompatIFMapAtlasTextureMixin",
-    "CompatIFMapTextureMixin2"
+    "CompatIFMapTextureMixin2",
+    "LiquidBlockRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",

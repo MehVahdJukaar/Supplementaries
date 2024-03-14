@@ -14,13 +14,15 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -28,15 +30,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.mehvahdjukaar.supplementaries.forge.FiniteLiquidBlock.MAX_LEVEL;
 
 // copy paste from flowing fluid. once main logic is determined, redundant overrides can be removed
-public abstract class FiniteFluid extends FlowingFluid {
+public abstract class FiniteFluid extends Fluid {
     public static final BooleanProperty FALLING = BlockStateProperties.FALLING;
     public static final IntegerProperty LEVEL = ModBlockProperties.FINITE_FLUID_LEVEL;
     private static final int CACHE_SIZE = 200;
@@ -54,24 +53,6 @@ public abstract class FiniteFluid extends FlowingFluid {
         return Vec3.ZERO;
     }
 
-    private boolean affectsFlow(FluidState state) {
-        return state.isEmpty() || state.getType().isSame(this);
-    }
-
-    @Override
-    protected boolean isSolidFace(BlockGetter level, BlockPos neighborPos, Direction side) {
-        BlockState blockstate = level.getBlockState(neighborPos);
-        FluidState fluidstate = level.getFluidState(neighborPos);
-        if (fluidstate.getType().isSame(this)) {
-            return false;
-        } else if (side == Direction.UP) {
-            return true;
-        } else {
-            return blockstate.getBlock() instanceof IceBlock ? false : blockstate.isFaceSturdy(level, neighborPos, side);
-        }
-    }
-
-    @Override
     protected void spread(Level level, BlockPos pos, FluidState state) {
         if (state.isEmpty()) return;
         BlockState myState = level.getBlockState(pos);
@@ -79,8 +60,8 @@ public abstract class FiniteFluid extends FlowingFluid {
         BlockState belowState = level.getBlockState(belowPos);
         if (this.canSpreadTo(level, pos, myState, Direction.DOWN, belowPos, belowState,
                 level.getFluidState(belowPos), this)) {
-        //    this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
-         //   level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
+               level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         } else if (!this.isWaterHole(level, this, pos, myState, belowPos, belowState)) {
             this.spreadToSides(level, pos, state, myState);
         }
@@ -98,64 +79,58 @@ public abstract class FiniteFluid extends FlowingFluid {
     private void spreadToSides(Level level, BlockPos pos, FluidState fluidState, BlockState blockState) {
         int currentAmount = fluidState.getAmount();
 
-        Map<Direction, Integer> map = this.getWantedSpreadDirections(level, pos, blockState);
-
-        int nonZero = 1;
-        int extra = 0;
-        for (var e : map.values()) {
-            extra += e;
-            if (e != 0) nonZero += 1;
-        }
-        currentAmount += extra;
-        float average = currentAmount / ((float) nonZero);
-
-        int check = currentAmount;
-        int actual = 1;
-        if (currentAmount > 1 && average > 1) {
-
-            List<Direction> dirList = map.keySet().stream().toList();//.stream().filter(e -> e.getValue() == 0).map(Map.Entry::getKey).toList();
-
-            int bins = dirList.size();
-            if (bins < 1) {
-                return;
+        //if(currentAmount<10)return;
+        if (currentAmount > 1) {
+            Map<Direction, Integer> map = this.getWantedSpreadDirections(level, pos, blockState);
+            //remove entries greater than amount. copilot pls
+            // Convert LinkedHashMap to a list of entries
+            List<Map.Entry<Direction, Integer>> entryList = new ArrayList<>(map.entrySet());
+            // Shuffle the list
+            Collections.shuffle(entryList);
+            map = new LinkedHashMap<>();
+            for(var e : entryList){
+                map.put(e.getKey(), e.getValue());
             }
 
-            currentAmount -= 1;
-            List<Integer> binCounts = new ArrayList<>();
+            int initialAmount = currentAmount;
+            map.values().removeIf(i -> i >= initialAmount);
 
-            int ballsPerBin = currentAmount / bins;
-            int remainder = currentAmount % bins;
 
-            for (int i = 0; i < bins; i++) {
-                if (i < remainder) {
-                    binCounts.add(ballsPerBin + 1);
-                } else {
-                    binCounts.add(ballsPerBin);
+            int r = 1;
+            while (currentAmount <= map.size()) {
+                int finalR = r;
+                r++;
+                var iter = map.entrySet().iterator();
+                while (iter.hasNext()) {
+                    var e = iter.next();
+                    if (e.getValue() > initialAmount - finalR) {
+                        iter.remove();
+                    }
+                    if (currentAmount > map.size()) {
+                        break;
+                    }
                 }
             }
 
-            FluidState myNewState = getFlowing(1, false);
-            BlockState blockstate = myNewState.createLegacyBlock();
-            level.setBlock(pos, blockstate, 2);
+            // only considers lower fill level
 
-            level.updateNeighborsAt(pos, blockstate.getBlock());
+
             int j = 0;
 
-            for (var direction : dirList) {
-                int newAmount = binCounts.get(j);
-                j++;
-                if (newAmount == 0) continue;//error
-                BlockPos blockpos = pos.relative(direction);
-                BlockState s = level.getBlockState(blockpos);
-                //if (this.canSpreadTo(level, pos, blockState, direction, blockpos, s, level.getFluidState(blockpos), this)) {
-                FluidState fluidstate = getFlowing(newAmount, false);
-                this.spreadTo(level, blockpos, s, direction, fluidstate);
-                actual += newAmount;
-                //}
+            for (var e : map.entrySet()) {
+                int oldAmount = e.getValue();
+                Direction dir = e.getKey();
+                BlockPos facingPos = pos.relative(dir);
+                BlockState s = level.getBlockState(facingPos);
+                FluidState fluidstate = getFlowing(oldAmount + 1, false);
+                this.spreadTo(level, facingPos, s, dir, fluidstate);
             }
-            if(actual != check){
-                int aa = 0;
-            }
+
+
+            FluidState myNewState = getFlowing(currentAmount - map.size(), false);
+            BlockState blockstate = myNewState.createLegacyBlock();
+            level.setBlock(pos, blockstate, 2);
+            level.updateNeighborsAt(pos, blockstate.getBlock());
         }
 
     }
@@ -163,17 +138,14 @@ public abstract class FiniteFluid extends FlowingFluid {
     // dummy overrides
 
     // gets new fluid state for this position (supposedly it was already air). Used for flowing fluid expansion which we dont have
-    @Override
     protected FluidState getNewLiquid(Level level, BlockPos pos, BlockState blockState) {
         return Fluids.EMPTY.defaultFluidState();
     }
 
-    @Override
     protected Map<Direction, FluidState> getSpread(Level level, BlockPos pos, BlockState state) {
         return Map.of();
     }
 
-    @Override
     protected int getSlopeDistance(LevelReader level, BlockPos arg2, int k, Direction direction, BlockState arg4, BlockPos arg5, Short2ObjectMap<Pair<BlockState, FluidState>> short2ObjectMap, Short2BooleanMap short2BooleanMap) {
         return 1000;
     }
@@ -181,18 +153,17 @@ public abstract class FiniteFluid extends FlowingFluid {
 
     public abstract Fluid getFlowing();
 
-    @Override
     public FluidState getFlowing(int level, boolean falling) {
         return (this.getFlowing().defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
     }
 
-    @Override
     public FluidState getSource(boolean falling) {
         return this.getSource().defaultFluidState()
                 .setValue(LEVEL, MAX_LEVEL).setValue(FALLING, falling);
     }
 
-    @Override
+    public abstract Fluid getSource();
+
     protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction, FluidState fluidState) {
         if (blockState.getBlock() instanceof LiquidBlockContainer container) {
             container.placeLiquid(level, pos, blockState, fluidState);
@@ -204,7 +175,6 @@ public abstract class FiniteFluid extends FlowingFluid {
         }
     }
 
-    @Override
     protected abstract void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
 
     private static short getCacheKey(BlockPos arg, BlockPos arg2) {

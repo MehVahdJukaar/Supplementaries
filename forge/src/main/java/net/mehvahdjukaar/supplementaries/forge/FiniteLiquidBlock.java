@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -33,22 +32,26 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 // diff property means we need a diff class
-public class FiniteLiquidBlock  extends LiquidBlock {
+public class FiniteLiquidBlock  extends Block implements BucketPickup {
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     public static final int MAX_LEVEL = 13;
     public static final IntegerProperty LEVEL = BlockStateProperties.LEVEL;
 
     private final List<FluidState> stateCache;
-    private final Supplier<? extends FlowingFluid> supplier;
+    private final Supplier<? extends FiniteFluid> supplier;
     private boolean fluidStateCacheInitialized = false;
 
 
-    public FiniteLiquidBlock(Supplier<? extends FlowingFluid> supplier, BlockBehaviour.Properties arg) {
-        super( supplier, arg);
+    public FiniteLiquidBlock(Supplier<? extends FiniteFluid> supplier, BlockBehaviour.Properties arg) {
+        super( arg);
         this.supplier =supplier;
         this.stateCache = Lists.newArrayList();
         this.registerDefaultState((this.stateDefinition.any()).setValue(LEVEL, 0));
+    }
+
+    public FiniteFluid getFluid() {
+        return supplier.get();
     }
 
     @Override
