@@ -3,13 +3,14 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.items.BombItem;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -25,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -48,7 +50,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float yaw = 0;
     private float prevYaw = 0;
     private float cooldown = 0;
-    private float firePower = 1;
+    private float firePower = 6;
 
     private float projectileDrag = 0;
     private float projectileGravity = 0f;
@@ -79,13 +81,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
+    public void setChanged() {
+        if (this.level != null) {
+            recalculateProjectileStats();
+        }
+    }
+
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public ItemStack getProjectile() {
-        if (true) return ModRegistry.BOMB_ITEM.get().getDefaultInstance();
-        return this.getItem(1);
+        return this.getItem(1).copyWithCount(1);
     }
 
     public ItemStack getFuel() {
@@ -101,7 +109,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public float getFirePower() {
-        return firePower;
+        return 1;
     }
 
     public float getYaw(float partialTicks) {
@@ -132,8 +140,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
-        return null;
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
+        return new CannonContainerMenu(id, player, this);
     }
 
     @Override
@@ -156,24 +164,29 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
-        return false;
+        return canPlaceItem((direction == null) || direction.getAxis().isHorizontal() ? 1 : 0, itemStack);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return false;
+        return true;
     }
 
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return new int[]{side.getAxis().isHorizontal() ? 1 : 0};
+    }
 
     public void use(Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!player.isSecondaryUseActive()) {
+        if (player.isSecondaryUseActive()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
             } else CannonController.activateCannonCamera(worldPosition);
-        }
+        } else if (player instanceof ServerPlayer sp) PlatHelper.openCustomMenu(sp, this, worldPosition);
+
     }
 
-    public void ignite(){
+    public void ignite() {
         this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
     }
@@ -190,64 +203,94 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
                 PoseStack poseStack = new PoseStack();
                 RandomSource ran = level.random;
-                poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1/16f, pos.getZ() + 0.5f);
+                poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
+
                 poseStack.mulPose(Axis.YP.rotationDegrees(-t.yaw));
                 poseStack.mulPose(Axis.XP.rotationDegrees(-t.pitch));
-                poseStack.translate(0, 0,  -1.4);
+                poseStack.translate(0, 0, -1.4);
 
-                Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+                t.spawnDustRing(poseStack);
 
-                int smokeCount = 16;
-                for (int i = 0; i < smokeCount; i += 1) {
-
-                    poseStack.pushPose();
-
-                    poseStack.mulPose(Axis.YP.rotationDegrees(90));
-
-                    poseStack.mulPose(Axis.XP.rotationDegrees(380f *i/ smokeCount));
-                    Vector4f dir = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
-                    level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
-                            p.x, p.y, p.z,
-                            dir.x, dir.y, dir.z);
-                    poseStack.popPose();
-
-                    poseStack.pushPose();
-
-                    dir = poseStack.last().pose().transform(new Vector4f(0, 0,- MthUtils.nextWeighted(ran,0.25f,1,0.06f), 0));
-
-                    float g = 0.5f;
-                    poseStack.translate(-g/2+ran.nextFloat()*g, -g/2+ran.nextFloat()*g, 0);
-
-                    Vector4f p2 = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
-
-                    level.addParticle(ParticleTypes.SMOKE,
-                            p2.x, p2.y, p2.z,
-                            dir.x, dir.y, dir.z);
-                    poseStack.popPose();
-                }
+                t.spawnSmokeTrail(poseStack, ran);
 
             } else {
-                Vec3 facing = Vec3.directionFromRotation(-t.pitch, t.yaw).scale(0.01);
-
-                ItemStack projectile = t.getProjectile();
-
-                Entity proj = getProjectileFromItemHack(level, projectile);
-
-                if (proj != null) {
-                    proj = new BombEntity(level, 0,0,0, ((BombItem) ModRegistry.BOMB_ITEM.get()).getType());
-
-                    proj.setPos(pos.getX() + 0.5 - facing.x,
-                            pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
-
-                    if (proj instanceof Projectile arrow) {
-                        arrow.shoot(facing.x, facing.y, facing.z, -0.98f, 0);
-                        arrow.cachedOwner = null;
-                        arrow.ownerUUID = null;
-                    //    level.addFreshEntity(arrow);
-                    }
-                }
+                t.shootProjectile(level, pos, t);
             }
         }
+    }
+
+    private boolean shootProjectile(Level level, BlockPos pos, CannonBlockTile t) {
+        Vec3 facing = Vec3.directionFromRotation(-t.pitch, t.yaw).scale(0.01);
+
+        ItemStack projectile = t.getProjectile();
+
+        Entity proj = getProjectileFromItemHack(level, projectile);
+
+        if (proj instanceof Projectile arrow) {
+            arrow.cachedOwner = null;
+            arrow.ownerUUID = null;
+            CompoundTag c = new CompoundTag();
+            arrow.save(c);
+            var opt = EntityType.create(c, level); // create new to reset level properly
+
+            if (opt.isPresent()) {
+                arrow = (Projectile) opt.get();
+                arrow.setPos(pos.getX() + 0.5 - facing.x,
+                        pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
+
+                float inaccuracy = 0;
+                float power = -0.98f * getFirePower();
+                arrow.shoot(facing.x, facing.y, facing.z, power, inaccuracy);
+
+                level.addFreshEntity(arrow);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void spawnSmokeTrail(PoseStack poseStack, RandomSource ran) {
+        int smokeCount = 20;
+        for (int i = 0; i < smokeCount; i += 1) {
+
+            poseStack.pushPose();
+
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
+
+            float aperture = 0.5f;
+            poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
+
+            Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+            level.addParticle(ParticleTypes.SMOKE,
+                    p.x, p.y, p.z,
+                    speed.x, speed.y, speed.z);
+            poseStack.popPose();
+        }
+    }
+
+    private void spawnDustRing(PoseStack poseStack) {
+        poseStack.pushPose();
+
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+        int dustCount = 16;
+        for (int i = 0; i < dustCount; i += 1) {
+
+            poseStack.pushPose();
+
+            poseStack.mulPose(Axis.YP.rotationDegrees(90));
+
+            poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
+            level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
+                    p.x, p.y, p.z,
+                    speed.x, speed.y, speed.z);
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
     }
 
 
@@ -255,13 +298,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, level);
         if (projectile.getItem() instanceof ArrowItem ai) {
             return ai.createArrow(level, projectile, fakePlayer);
-        } else {
-            ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
-            testLevel.setup();
-            fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
-            projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
-            return testLevel.projectile;
         }
+        ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
+        testLevel.setup();
+        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
+        projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
+        var p = testLevel.projectile;
+        if (p != null) return p;
+
+        return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
+
     }
 
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");

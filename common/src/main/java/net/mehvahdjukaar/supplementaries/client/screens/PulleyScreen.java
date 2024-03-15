@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
-import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -11,11 +11,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
-public class PulleyBlockScreen extends AbstractContainerScreen<PulleyBlockContainerMenu> {
+public class PulleyScreen extends AbstractContainerScreen<PulleyContainerMenu> {
 
     private final CyclingSlotBackground slotBG = new CyclingSlotBackground(0);
 
-    public PulleyBlockScreen(PulleyBlockContainerMenu container, Inventory inventory, Component text) {
+    public PulleyScreen(PulleyContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;

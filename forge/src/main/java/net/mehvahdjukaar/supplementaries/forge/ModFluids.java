@@ -81,8 +81,14 @@ public class ModFluids {
                     private static final ResourceLocation STILL_TEXTURE = new ResourceLocation("block/water_still");
                     private static final ResourceLocation FLOWING_TEXTURE = new ResourceLocation("block/water_flow");
 
-                    public ResourceLocation getStillTexture() {
+                    public ResourceLocation getStillTexture()
+                    {
                         return STILL_TEXTURE;
+                    }
+
+                    @Override
+                    public ResourceLocation getStillTexture(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                        return IClientFluidTypeExtensions.super.getStillTexture(state, getter, pos);
                     }
 
                     public ResourceLocation getFlowingTexture() {

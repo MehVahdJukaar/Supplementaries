@@ -30,6 +30,7 @@ import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFW;
 
 import static net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectory.findBestTrajectory;
 
@@ -93,7 +94,7 @@ public class CannonController {
 
             // find hit result
             Vec3 lookDir2 = Vec3.directionFromRotation(-cameraPitch, yaw);
-            float maxRange = 32;
+            float maxRange = 128;
             Vec3 endPos = start.add(lookDir2.scale(-maxRange));
 
             BlockHitResult hitResult = level
@@ -133,10 +134,10 @@ public class CannonController {
 
 
     public static void onKeyPressed(int key, int action, int modifiers) {
-        if (Minecraft.getInstance().options.keyShift.matches(key, action)) {
+        if (action == GLFW.GLFW_PRESS && Minecraft.getInstance().options.keyShift.matches(key, action)) {
             turnOff();
         }
-        if (action == 0 && Minecraft.getInstance().options.keyJump.matches(key, action)) {
+        if (action == GLFW.GLFW_PRESS && Minecraft.getInstance().options.keyJump.matches(key, action)) {
             preferShootingDown = !preferShootingDown;
             anglesChanged = true;
         }

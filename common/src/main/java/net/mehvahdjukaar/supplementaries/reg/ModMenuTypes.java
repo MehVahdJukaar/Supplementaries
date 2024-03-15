@@ -30,8 +30,11 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
             Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);
 
-    public static final Supplier<MenuType<PulleyBlockContainerMenu>> PULLEY_BLOCK = RegHelper.registerMenuType(
-            Supplementaries.res(PULLEY_BLOCK_NAME), PulleyBlockContainerMenu::new);
+    public static final Supplier<MenuType<PulleyContainerMenu>> PULLEY_BLOCK = RegHelper.registerMenuType(
+            Supplementaries.res(PULLEY_BLOCK_NAME), PulleyContainerMenu::new);
+
+    public static final Supplier<MenuType<CannonContainerMenu>> CANNON = RegHelper.registerMenuType(
+            Supplementaries.res(CANNON_NAME), CannonContainerMenu::new);
 
     public static final Supplier<MenuType<RedMerchantMenu>> RED_MERCHANT = RegHelper.registerMenuType(
             Supplementaries.res(RED_MERCHANT_NAME), RedMerchantMenu::new);

@@ -67,26 +67,26 @@ public class ModEntities {
     //brick
     public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1));
 
     //bomb
     public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
+                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(1));
 
     //rope arrow
     public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
-                    .updateInterval(20));
+                    .updateInterval(1));
 
     //slingshot projectile
     public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
-                    .updateInterval(20));
+                    .updateInterval(1));
 
     //firefly
 

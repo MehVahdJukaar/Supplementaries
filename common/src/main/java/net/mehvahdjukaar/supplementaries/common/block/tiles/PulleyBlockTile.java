@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
-import net.mehvahdjukaar.supplementaries.common.inventories.PulleyBlockContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.misc.RopeHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -65,7 +65,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PulleyBlockContainerMenu(id, player, this);
+        return new PulleyContainerMenu(id, player, this);
     }
 
     @Override

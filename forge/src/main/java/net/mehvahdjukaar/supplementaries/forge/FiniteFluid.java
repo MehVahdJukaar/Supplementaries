@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
-import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,8 +52,8 @@ public abstract class FiniteFluid extends Fluid {
         BlockState belowState = level.getBlockState(belowPos);
         if (this.canSpreadTo(level, pos, myState, Direction.DOWN, belowPos, belowState,
                 level.getFluidState(belowPos), this)) {
-                this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
-               level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         } else if (!this.isWaterHole(level, this, pos, myState, belowPos, belowState)) {
             this.spreadToSides(level, pos, state, myState);
         }
@@ -82,7 +80,7 @@ public abstract class FiniteFluid extends Fluid {
             // Shuffle the list
             Collections.shuffle(entryList);
             map = new LinkedHashMap<>();
-            for(var e : entryList){
+            for (var e : entryList) {
                 map.put(e.getKey(), e.getValue());
             }
 
@@ -145,21 +143,14 @@ public abstract class FiniteFluid extends Fluid {
 
     protected abstract void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
 
-    private static short getCacheKey(BlockPos arg, BlockPos arg2) {
-        int i = arg2.getX() - arg.getX();
-        int j = arg2.getZ() - arg.getZ();
-        return (short) ((i + 128 & 255) << 8 | j + 128 & 255);
-    }
 
     protected Map<Direction, Integer> getWantedSpreadDirections(Level level, BlockPos pos, BlockState state) {
         Map<Direction, Integer> list = new HashMap<>();
-        Short2ObjectMap<BlockState> neighborBlocks = new Short2ObjectOpenHashMap<>();
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockPos facingPos = pos.relative(direction);
-            short key = getCacheKey(pos, facingPos);
 
-            BlockState facingState = neighborBlocks.computeIfAbsent(key, (s) -> level.getBlockState(facingPos));
+            BlockState facingState = level.getBlockState(facingPos);
             FluidState facingFluid = facingState.getFluidState();
 
             if (this.canHoldFluid(level, facingPos, facingState, this)) {
@@ -252,7 +243,7 @@ public abstract class FiniteFluid extends Fluid {
     @Override
     public VoxelShape getShape(FluidState state, BlockGetter level, BlockPos pos) {
         return this.shapes.computeIfAbsent(state, (arg3) -> Shapes.box(0.0, 0.0, 0.0, 1.0,
-                        arg3.getHeight(level, pos), 1.0));
+                arg3.getHeight(level, pos), 1.0));
     }
 
     static {

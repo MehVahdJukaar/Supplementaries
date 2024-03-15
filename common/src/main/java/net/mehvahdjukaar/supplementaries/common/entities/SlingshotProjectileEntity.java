@@ -47,8 +47,9 @@ import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
     private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
-    //only client
-    private int clientSideReturnTridentTickCount;
+    protected int MAX_AGE = 700;
+
+    //these are used on both sides...need to be synced on creation. Could use only clientside tbh
     private float xRotInc;
     private float yRotInc;
     private float particleCooldown = 0;
@@ -63,11 +64,17 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     });
 
     public SlingshotProjectileEntity(LivingEntity thrower, Level world, ItemStack item, ItemStack throwerStack) {
-        super(ModEntities.SLINGSHOT_PROJECTILE.get(), thrower, world);
+        this(world, item, throwerStack);
+        setPos(thrower.getX(), thrower.getEyeY() - 0.1, thrower.getZ());
+        this.setOwner(thrower);
+    }
+
+    public SlingshotProjectileEntity(Level world, ItemStack item, ItemStack throwerStack) {
+        super(ModEntities.SLINGSHOT_PROJECTILE.get(), world);
+        this.maxAge = MAX_AGE;
         this.setItem(item);
         this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(throwerStack));
         this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
-        this.maxAge = 700;
 
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
@@ -81,7 +88,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     //client factory
     public SlingshotProjectileEntity(EntityType<SlingshotProjectileEntity> type, Level world) {
         super(type, world);
-        this.maxAge = 500;
+        this.maxAge = MAX_AGE;
     }
 
     @Override
@@ -191,17 +198,17 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 p.setPos(this.getX(), this.getY(), this.getZ());
                 p.setItem(this.getItem());
                 ent = p;
-            }else if( item instanceof SnowballItem){
+            } else if (item instanceof SnowballItem) {
                 var s = new Snowball(level, le);
                 s.setPos(this.getX(), this.getY(), this.getZ());
                 s.setItem(this.getItem());
                 ent = s;
-            }else if(item instanceof BombItem bi){
+            } else if (item instanceof BombItem bi) {
                 var s = new BombEntity(level, le, bi.getType());
                 s.setPos(this.getX(), this.getY(), this.getZ());
                 s.setItem(this.getItem());
                 ent = s;
-            }else if(item instanceof EnderpearlItem){
+            } else if (item instanceof EnderpearlItem) {
                 var s = new ThrownEnderpearl(level, le);
                 s.setPos(this.getX(), this.getY(), this.getZ());
                 s.setItem(this.getItem());
@@ -233,7 +240,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 double d0 = 0.05D * i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
 
-                ++this.clientSideReturnTridentTickCount;
+                //++this.clientSideReturnTridentTickCount;
             }
         }
         super.tick();

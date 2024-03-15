@@ -150,12 +150,13 @@ public class ClientRegistry {
         //overlay
         //SlimedGuiOverlay.register();
 
-        MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyBlockScreen::new);
+        MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
         MenuScreens.register(ModMenuTypes.SACK.get(), SackScreen::new);
         MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
         MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
+        MenuScreens.register(ModMenuTypes.CANNON.get(), CannonScreen::new);
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());

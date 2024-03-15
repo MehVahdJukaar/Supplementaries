@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 
-public class PulleyBlockContainerMenu extends AbstractContainerMenu implements IContainerProvider {
+public class PulleyContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
 
     @Override
@@ -22,15 +22,15 @@ public class PulleyBlockContainerMenu extends AbstractContainerMenu implements I
         return inventory;
     }
 
-    public PulleyBlockContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+    public PulleyContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id,playerInventory);
     }
 
-    public PulleyBlockContainerMenu(int id, Inventory playerInventory) {
+    public PulleyContainerMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(1));
     }
 
-    public PulleyBlockContainerMenu(int id, Inventory playerInventory, Container inventory) {
+    public PulleyContainerMenu(int id, Inventory playerInventory, Container inventory) {
         super(ModMenuTypes.PULLEY_BLOCK.get(), id);
         //tile inventory
         this.inventory = inventory;
