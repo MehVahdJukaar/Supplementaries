@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BucketItem;
@@ -81,8 +82,7 @@ public class ModFluids {
                     private static final ResourceLocation STILL_TEXTURE = new ResourceLocation("block/water_still");
                     private static final ResourceLocation FLOWING_TEXTURE = new ResourceLocation("block/water_flow");
 
-                    public ResourceLocation getStillTexture()
-                    {
+                    public ResourceLocation getStillTexture() {
                         return STILL_TEXTURE;
                     }
 
@@ -164,6 +164,12 @@ public class ModFluids {
 
     public static void messWithFluidH(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Float> cir) {
         //  if(fluidState.isEmpty())cir.setReturnValue(1f);
+        if (fluid.is(FluidTags.WATER) && fluid.isSame(fluidState.getType())) {
+            BlockState aboveState = level.getBlockState(pos.above());
+            if (aboveState.getFluidState().is(LUMISENE_FLUID.get())) {
+                cir.setReturnValue(1f);
+            }
+        }
     }
 
     public static void messWithAvH(BlockAndTintGetter level, Fluid fluid, float g, float h, float i, BlockPos pos, CallbackInfoReturnable<Float> cir) {

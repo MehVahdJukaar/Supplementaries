@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.core.misc.IExtendedItem;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
@@ -15,7 +15,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -59,23 +61,14 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     public boolean isAcceptedItem(Item i) {
-        return isEnchantedBook(i) || (CommonConfigs.Tweaks.MIXED_BOOKS.get() && isNormalBook(i));
-    }
-
-    public static boolean isEnchantedBook(Item i) {
-        return i == Items.ENCHANTED_BOOK || isQuarkTome(i);
-    }
-
-    public static boolean isNormalBook(Item i) {
-        return i.builtInRegistryHolder().is(ModTags.BOOKS) || (CommonConfigs.Tweaks.WRITTEN_BOOKS.get() && isWrittenBook(i));
-    }
-
-    public static boolean isWrittenBook(Item i) {
-        return i instanceof WrittenBookItem || i instanceof WritableBookItem;
-    }
-
-    public static boolean isQuarkTome(Item i) {
-        return CompatHandler.QUARK && CompatObjects.TOME.get() == i;
+        if (((IExtendedItem) i).moonlight$getAdditionalBehavior() instanceof SuppAdditionalPlacement sp) {
+            Block b = sp.getPlacedBlock();
+            if (CommonConfigs.Tweaks.MIXED_BOOKS.get()) {
+                return b == ModRegistry.BOOK_PILE.get() || b == ModRegistry.BOOK_PILE_H.get();
+            }
+            return b == this;
+        }
+        return false;
     }
 
     @Override
@@ -168,7 +161,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
-            if(player.getItemInHand(hand).isEmpty()) {
+            if (player.getItemInHand(hand).isEmpty()) {
                 return tile.interact(player, hand, getBookIndex(state, pos, hit.getLocation()));
             }
         }

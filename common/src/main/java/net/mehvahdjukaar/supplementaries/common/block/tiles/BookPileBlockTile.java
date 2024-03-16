@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -90,15 +91,14 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void updateTileOnInventoryChanged() {
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if (b == 0){
-                if(this.lootTable == null) {
+            if (b == 0) {
+                if (this.lootTable == null) {
                     this.level.removeBlock(this.worldPosition, false);
-                }else{
+                } else {
                     //loot table mode
                     return;
                 }
-            }
-            else {
+            } else {
                 //shifts books. Assumes at most one has been removed
                 consolidateBookPile();
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
@@ -106,12 +106,14 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         }
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
-            Item item = this.getItem(i).getItem();
-            if (BookPileBlock.isNormalBook(item)) this.enchantPower += CommonConfigs.Tweaks.BOOK_POWER.get() / 4f;
-            else if (BookPileBlock.isQuarkTome(item))
+            ItemStack itemStack = this.getItem(i);
+            if (itemStack.isEmpty()) continue;
+            Item item = itemStack.getItem();
+            if (CompatHandler.QUARK && CompatObjects.TOME.get() == item)
                 this.enchantPower += (CommonConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2;
-            else if (BookPileBlock.isEnchantedBook(item))
+            else if (item == Items.ENCHANTED_BOOK)
                 this.enchantPower += CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
+            else this.enchantPower += CommonConfigs.Tweaks.BOOK_POWER.get() / 4f;
         }
     }
 

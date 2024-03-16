@@ -59,11 +59,27 @@ public abstract class FiniteFluid extends Fluid {
         }
     }
 
-    private boolean isWaterHole(BlockGetter level, Fluid fluid, BlockPos arg3, BlockState arg4, BlockPos arg5, BlockState arg6) {
-        if (!this.canPassThroughWall(Direction.DOWN, level, arg3, arg4, arg5, arg6)) {
-            return false;
+    private boolean isWaterHole(BlockGetter level, Fluid fluid, BlockPos arg3, BlockState arg4, BlockPos arg5, BlockState state) {
+        return state.getFluidState().getType().isSame(this) ? true : this.canHoldFluid(level, arg5, state);
+    }
+    //remove
+    protected boolean canSpreadTo(BlockGetter level, BlockPos fromPos, BlockState fromBlockState, Direction direction, BlockPos toPos, BlockState toBlockState, FluidState toFluidState, Fluid fluid) {
+        return this.canHoldFluid(level, toPos, toBlockState);
+    }
+    private boolean canHoldFluid(BlockGetter level, BlockPos pos, BlockState state) {
+        FluidState fluidState = state.getFluidState();
+        if (!fluidState.isEmpty() &&  !fluidState.is(this)) return false;
+        Block block = state.getBlock();
+        if (block instanceof LiquidBlockContainer) {
+            return ((LiquidBlockContainer) block).canPlaceLiquid(level, pos, state, this);
+        } else if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && !state.is(Blocks.LADDER) && !state.is(Blocks.SUGAR_CANE) && !state.is(Blocks.BUBBLE_COLUMN)) {
+            if (!state.is(Blocks.NETHER_PORTAL) && !state.is(Blocks.END_PORTAL) && !state.is(Blocks.END_GATEWAY) && !state.is(Blocks.STRUCTURE_VOID)) {
+                return !state.blocksMotion();
+            } else {
+                return false;
+            }
         } else {
-            return arg6.getFluidState().getType().isSame(this) ? true : this.canHoldFluid(level, arg5, arg6, fluid);
+            return false;
         }
     }
 
@@ -153,7 +169,7 @@ public abstract class FiniteFluid extends Fluid {
             BlockState facingState = level.getBlockState(facingPos);
             FluidState facingFluid = facingState.getFluidState();
 
-            if (this.canHoldFluid(level, facingPos, facingState, this)) {
+            if (this.canHoldFluid(level, facingPos, facingState)) {
                 list.put(direction, facingFluid.getAmount());
             }
         }
@@ -161,58 +177,7 @@ public abstract class FiniteFluid extends Fluid {
         return list;
     }
 
-    private boolean canHoldFluid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
-        Block block = state.getBlock();
-        if (block instanceof LiquidBlockContainer) {
-            return ((LiquidBlockContainer) block).canPlaceLiquid(level, pos, state, fluid);
-        } else if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && !state.is(Blocks.LADDER) && !state.is(Blocks.SUGAR_CANE) && !state.is(Blocks.BUBBLE_COLUMN)) {
-            if (!state.is(Blocks.NETHER_PORTAL) && !state.is(Blocks.END_PORTAL) && !state.is(Blocks.END_GATEWAY) && !state.is(Blocks.STRUCTURE_VOID)) {
-                return !state.blocksMotion();
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 
-    //remove
-    protected boolean canSpreadTo(BlockGetter level, BlockPos fromPos, BlockState fromBlockState, Direction direction, BlockPos toPos, BlockState toBlockState, FluidState toFluidState, Fluid fluid) {
-        return toFluidState.canBeReplacedWith(level, toPos, fluid, direction) && this.canPassThroughWall(direction, level, fromPos, fromBlockState, toPos, toBlockState) && this.canHoldFluid(level, toPos, toBlockState, fluid);
-    }
-
-    private boolean canPassThroughWall(Direction direction, BlockGetter level, BlockPos arg3, BlockState arg4, BlockPos arg5, BlockState arg6) {
-        Object2ByteLinkedOpenHashMap object2bytelinkedopenhashmap;
-        if (!arg4.getBlock().hasDynamicShape() && !arg6.getBlock().hasDynamicShape()) {
-            object2bytelinkedopenhashmap = (Object2ByteLinkedOpenHashMap) OCCLUSION_CACHE.get();
-        } else {
-            object2bytelinkedopenhashmap = null;
-        }
-
-        Block.BlockStatePairKey block$blockstatepairkey;
-        if (object2bytelinkedopenhashmap != null) {
-            block$blockstatepairkey = new Block.BlockStatePairKey(arg4, arg6, direction);
-            byte b0 = object2bytelinkedopenhashmap.getAndMoveToFirst(block$blockstatepairkey);
-            if (b0 != 127) {
-                return b0 != 0;
-            }
-        } else {
-            block$blockstatepairkey = null;
-        }
-
-        VoxelShape voxelshape1 = arg4.getCollisionShape(level, arg3);
-        VoxelShape voxelshape = arg6.getCollisionShape(level, arg5);
-        boolean flag = !Shapes.mergedFaceOccludes(voxelshape1, voxelshape, direction);
-        if (object2bytelinkedopenhashmap != null) {
-            if (object2bytelinkedopenhashmap.size() == 200) {
-                object2bytelinkedopenhashmap.removeLastByte();
-            }
-
-            object2bytelinkedopenhashmap.putAndMoveToFirst(block$blockstatepairkey, (byte) (flag ? 1 : 0));
-        }
-
-        return flag;
-    }
 
     @Override
     public void tick(Level level, BlockPos pos, FluidState state) {

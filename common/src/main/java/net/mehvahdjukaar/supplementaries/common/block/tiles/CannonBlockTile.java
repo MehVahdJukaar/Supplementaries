@@ -49,7 +49,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float prevPitch = 0;
     private float yaw = 0;
     private float prevYaw = 0;
+
     private float cooldown = 0;
+    private float fire_timer = 0;
     private float firePower = 6;
 
     private float projectileDrag = 0;
@@ -64,7 +66,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.saveAdditional(tag);
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
-        tag.putFloat("explosion_timer", this.cooldown);
+        tag.putFloat("cooldown", this.cooldown);
+        tag.putFloat("fire_timer", this.cooldown);
         tag.putFloat("fire_power", this.firePower);
     }
 
@@ -73,7 +76,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.load(tag);
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
-        this.cooldown = tag.getFloat("explosion_timer");
+        this.cooldown = tag.getFloat("cooldown");
+        this.fire_timer = tag.getFloat("fire_timer");
         this.firePower = tag.getFloat("fire_power");
         if (level != null) {
             recalculateProjectileStats();
@@ -317,25 +321,18 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (projectile.isEmpty()) return;
 
         Entity proj = getProjectileFromItemHack(level, projectile);
-        if (proj != null) {
 
-            proj.setDeltaMovement(1, 0, 0);
-            proj.tick();
-            var newMovement = proj.getDeltaMovement();
-            this.projectileDrag = (float) newMovement.x;
-            this.projectileGravity = (float) -newMovement.y;
+        proj.setDeltaMovement(1, 0, 0);
+        proj.tick();
+        var newMovement = proj.getDeltaMovement();
+        this.projectileDrag = (float) newMovement.x;
+        this.projectileGravity = (float) -newMovement.y;
 
-            if (projectileDrag <= 0 || projectileGravity <= 0) {
-                this.projectileDrag = 0.99f;
-                this.projectileGravity = 0.03f;
-                Supplementaries.error();
-            }
-        } else {
-            //default gravity for non projectile items
-            this.projectileGravity = 0.03f;
+        if (projectileDrag <= 0 || projectileGravity <= 0) {
             this.projectileDrag = 0.99f;
+            this.projectileGravity = 0.03f;
+            Supplementaries.error();
         }
-
     }
 
     private static class ProjectileTestLevel extends DummyWorld {
@@ -349,7 +346,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         public void setup() {
             projectile = null;
         }
-
 
         @Override
         public boolean addFreshEntity(Entity entity) {
