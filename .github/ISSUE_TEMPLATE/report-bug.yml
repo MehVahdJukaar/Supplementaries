@@ -13,7 +13,9 @@ body:
     attributes:
       label: "Before Continuing:"
       options:
-        - label: "Always check you are using the latest version of the mods and its dependencies"
+        - label: "Check you are using the latest version of the mods and its dependencies"
+          required: true
+        - label: "Always include a latest.log if you are crashing"
           required: true
         - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others. The issue persists."
           required: true
