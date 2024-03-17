@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import com.google.common.collect.Maps;
-import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,13 +25,17 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.*;
 
-// copy paste from flowing fluid. once main logic is determined, redundant overrides can be removed
 public abstract class FiniteFluid extends Fluid {
+
     public static final BooleanProperty FALLING = BlockStateProperties.FALLING;
     public static final IntegerProperty LEVEL = ModBlockProperties.FINITE_FLUID_LEVEL;
-    private static final int CACHE_SIZE = 200;
-    private static final ThreadLocal<Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey>> OCCLUSION_CACHE;
     private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
+
+    public final int maxLayers;
+
+    public FiniteFluid(int maxLayers) {
+        this.maxLayers = maxLayers;
+    }
 
     @Override
     protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
@@ -45,43 +48,6 @@ public abstract class FiniteFluid extends Fluid {
         return Vec3.ZERO;
     }
 
-    protected void spread(Level level, BlockPos pos, FluidState state) {
-        if (state.isEmpty()) return;
-        BlockState myState = level.getBlockState(pos);
-        BlockPos belowPos = pos.below();
-        BlockState belowState = level.getBlockState(belowPos);
-        if (this.canSpreadTo(level, pos, myState, Direction.DOWN, belowPos, belowState,
-                level.getFluidState(belowPos), this)) {
-            this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-        } else if (!this.isWaterHole(level, this, pos, myState, belowPos, belowState)) {
-            this.spreadToSides(level, pos, state, myState);
-        }
-    }
-
-    private boolean isWaterHole(BlockGetter level, Fluid fluid, BlockPos arg3, BlockState arg4, BlockPos arg5, BlockState state) {
-        return state.getFluidState().getType().isSame(this) ? true : this.canHoldFluid(level, arg5, state);
-    }
-    //remove
-    protected boolean canSpreadTo(BlockGetter level, BlockPos fromPos, BlockState fromBlockState, Direction direction, BlockPos toPos, BlockState toBlockState, FluidState toFluidState, Fluid fluid) {
-        return this.canHoldFluid(level, toPos, toBlockState);
-    }
-    private boolean canHoldFluid(BlockGetter level, BlockPos pos, BlockState state) {
-        FluidState fluidState = state.getFluidState();
-        if (!fluidState.isEmpty() &&  !fluidState.is(this)) return false;
-        Block block = state.getBlock();
-        if (block instanceof LiquidBlockContainer) {
-            return ((LiquidBlockContainer) block).canPlaceLiquid(level, pos, state, this);
-        } else if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && !state.is(Blocks.LADDER) && !state.is(Blocks.SUGAR_CANE) && !state.is(Blocks.BUBBLE_COLUMN)) {
-            if (!state.is(Blocks.NETHER_PORTAL) && !state.is(Blocks.END_PORTAL) && !state.is(Blocks.END_GATEWAY) && !state.is(Blocks.STRUCTURE_VOID)) {
-                return !state.blocksMotion();
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 
     // where the magic happens
     private void spreadToSides(Level level, BlockPos pos, FluidState fluidState, BlockState blockState) {
@@ -122,9 +88,6 @@ public abstract class FiniteFluid extends Fluid {
 
             // only considers lower fill level
 
-
-            int j = 0;
-
             for (var e : map.entrySet()) {
                 int oldAmount = e.getValue();
                 Direction dir = e.getKey();
@@ -146,7 +109,8 @@ public abstract class FiniteFluid extends Fluid {
         return (this.defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
     }
 
-    protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction, FluidState fluidState) {
+    protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction,
+                            FluidState fluidState) {
         if (blockState.getBlock() instanceof LiquidBlockContainer container) {
             container.placeLiquid(level, pos, blockState, fluidState);
         } else {
@@ -178,20 +142,58 @@ public abstract class FiniteFluid extends Fluid {
     }
 
 
-
     @Override
     public void tick(Level level, BlockPos pos, FluidState state) {
-        this.spread(level, pos, state);
+        if (state.isEmpty()) return;
+        BlockState myState = level.getBlockState(pos);
+        BlockPos belowPos = pos.below();
+        BlockState belowState = level.getBlockState(belowPos);
+
+        FluidState belowFluid = belowState.getFluidState();
+        if (belowFluid.getType().isSame(this)) {
+            if (belowFluid.getAmount() < maxLayers) {
+                int belowMissing = maxLayers - belowFluid.getAmount();
+                int belowAddition = Math.min(belowMissing, state.getAmount());
+                int newAboveAmount = state.getAmount() - belowAddition;
+                level.setBlock(belowPos, belowFluid.setValue(LEVEL, belowFluid.getAmount() + belowAddition).createLegacyBlock(), 3);
+                if (newAboveAmount > 0) {
+                    level.setBlock(pos, state.setValue(LEVEL, newAboveAmount).createLegacyBlock(), 3);
+                } else level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            } else this.spreadToSides(level, pos, state, myState);
+        } else if (this.canHoldFluid(level, belowPos, belowState)) {
+            this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        } else {
+            this.spreadToSides(level, pos, state, myState);
+        }
     }
 
-    @Override
+    private boolean canHoldFluid(BlockGetter level, BlockPos pos, BlockState state) {
+        FluidState fluidState = state.getFluidState();
+        if (!fluidState.isEmpty() && !fluidState.is(this)) return false;
+        Block block = state.getBlock();
+        if (block instanceof LiquidBlockContainer lc) {
+            return lc.canPlaceLiquid(level, pos, state, this);
+        } else if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && !state.is(Blocks.LADDER) &&
+                !state.is(Blocks.SUGAR_CANE) && !state.is(Blocks.BUBBLE_COLUMN)) {
+            if (!state.is(Blocks.NETHER_PORTAL) && !state.is(Blocks.END_PORTAL) && !state.is(Blocks.END_GATEWAY) && !state.is(Blocks.STRUCTURE_VOID)) {
+                return !state.blocksMotion();
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasSameAbove(FluidState fluidState, BlockGetter level, BlockPos pos) {
+        return fluidState.getType().isSame(level.getFluidState(pos.above()).getType());
+    }
+
     public float getHeight(FluidState state, BlockGetter level, BlockPos pos) {
-        return state.getOwnHeight();
+        return hasSameAbove(state, level, pos) ? 1.0F : state.getOwnHeight();
     }
 
     @Override
     public float getOwnHeight(FluidState state) {
-        return (float) state.getAmount() / 14.0F;
+        return 14 / 16f * (float) state.getAmount() / (float) (maxLayers);
     }
 
     // needed for bucket pickup raytrace
@@ -211,16 +213,6 @@ public abstract class FiniteFluid extends Fluid {
                 arg3.getHeight(level, pos), 1.0));
     }
 
-    static {
-        OCCLUSION_CACHE = ThreadLocal.withInitial(() -> {
-            Object2ByteLinkedOpenHashMap<Block.BlockStatePairKey> map = new Object2ByteLinkedOpenHashMap<>(CACHE_SIZE) {
-                protected void rehash(int i) {
-                }
-            };
-            map.defaultReturnValue((byte) 127);
-            return map;
-        });
-    }
 
     public boolean shouldSlowDown(FluidState state) {
         return state.getAmount() > 2;

@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -215,7 +215,7 @@ public class FarmersDelightCompatImpl {
             if (facing.getAxis() == Direction.Axis.Y) {
                 return state;
             }
-            BlockState newState = state.setValue(AbstractRopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
+            BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, world));
             boolean hasKnot = newState.getValue(SOUTH) || newState.getValue(EAST) || newState.getValue(NORTH) || newState.getValue(WEST);
             newState = newState.setValue(KNOT, hasKnot);
 

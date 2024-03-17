@@ -16,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BucketItem;
@@ -164,7 +163,7 @@ public class ModFluids {
 
     public static void messWithFluidH(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Float> cir) {
         //  if(fluidState.isEmpty())cir.setReturnValue(1f);
-        if (fluid.is(FluidTags.WATER) && fluid.isSame(fluidState.getType())) {
+        if (fluid.isSame(fluidState.getType())) {
             BlockState aboveState = level.getBlockState(pos.above());
             if (aboveState.getFluidState().is(LUMISENE_FLUID.get())) {
                 cir.setReturnValue(1f);
@@ -178,7 +177,7 @@ public class ModFluids {
 
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
-            super();
+            super(MAX_LEVEL);
             this.registerDefaultState(this.stateDefinition.any().setValue(LEVEL, MAX_LEVEL));
         }
 
@@ -191,11 +190,6 @@ public class ModFluids {
         protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
             BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
             Block.dropResources(state, level, pos, blockEntity);
-        }
-
-        @Override
-        public boolean isSame(Fluid fluid) {
-            return fluid == LUMISENE_FLUID.get();
         }
 
         @Override
