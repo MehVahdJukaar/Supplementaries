@@ -57,6 +57,7 @@ public class Supplementaries {
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 
         ModSounds.init();
+        ModFluids.init();
         ModRegistry.init();
         ModRecipes.init();
         ModMenuTypes.init();

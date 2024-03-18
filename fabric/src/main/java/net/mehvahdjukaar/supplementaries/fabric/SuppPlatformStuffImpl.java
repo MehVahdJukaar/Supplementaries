@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
-import net.mehvahdjukaar.supplementaries.api.fabric.RedMerchantTradesEvent;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
@@ -11,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +20,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SuppPlatformStuffImpl {
 
@@ -63,12 +58,6 @@ public class SuppPlatformStuffImpl {
         return ((BiomeAccessor) (Object) biome).getClimateSettings().downfall();
     }
 
-    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
-        var trades = new ArrayList<>(listings);
-        RedMerchantTradesEvent.MODIFY_TRADES.invoker().accept(trades);
-        return trades.toArray(VillagerTrades.ItemListing[]::new);
-    }
-
     public static void disableAMWarn() {
         ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
@@ -78,4 +67,5 @@ public class SuppPlatformStuffImpl {
         ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
     }
+
 }

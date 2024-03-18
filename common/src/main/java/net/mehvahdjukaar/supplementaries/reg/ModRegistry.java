@@ -358,7 +358,7 @@ public class ModRegistry {
 
 
     //rope
-    public static final Supplier<Block> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
+    public static final Supplier<RopeBlock> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
             BlockBehaviour.Properties.copy(Blocks.BROWN_WOOL)
                     .sound(ModSounds.ROPE)
                     .strength(0.25f)
@@ -378,8 +378,8 @@ public class ModRegistry {
 
     //cannon
     public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
-    public static final Supplier<Block> BUNTING_BLOCK = regBlock("rope_buntings", () -> new BuntingBlock(
-            BlockBehaviour.Properties.copy(ROPE.get())));
+    public static final Supplier<BuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new BuntingBlock(
+            BlockBehaviour.Properties.copy(ROPE.get()).dropsLike(ROPE.get())));
 
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
             "rope_buntings", () -> PlatHelper.newBlockEntityType(

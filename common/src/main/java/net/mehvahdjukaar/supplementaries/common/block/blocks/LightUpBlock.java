@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -25,12 +26,14 @@ public abstract class LightUpBlock extends Block implements ILightable {
         super(properties);
     }
 
-    public boolean isLitUp(BlockState state) {
+    @Override
+    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
         return state.getValue(LIT);
     }
 
-    public BlockState toggleLitState(BlockState state, boolean lit) {
-        return state.setValue(LIT, lit);
+    @Override
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+        world.setBlock(pos, state.setValue(LIT, lit), 3);
     }
 
     @Override
@@ -55,7 +58,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState();
-        return toggleLitState(state, !flag);
+        return state.setValue(LIT, !flag);
     }
 
     @Override

@@ -1,17 +1,18 @@
-package net.mehvahdjukaar.supplementaries.forge;
+package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -24,6 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class FiniteFluid extends Fluid {
 
@@ -32,9 +34,19 @@ public abstract class FiniteFluid extends Fluid {
     private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
 
     public final int maxLayers;
+    private final Supplier<? extends BucketItem> bucket;
+    private final Supplier<? extends Block> block;
 
-    public FiniteFluid(int maxLayers) {
+    public FiniteFluid(int maxLayers, Supplier<? extends Block> block, Supplier<? extends BucketItem> bucket) {
         this.maxLayers = maxLayers;
+        this.block = block;
+        this.bucket = bucket;
+        this.registerDefaultState(this.stateDefinition.any().setValue(LEVEL, maxLayers));
+    }
+
+    @Override
+    public Item getBucket() {
+        return bucket.get();
     }
 
     @Override
@@ -106,7 +118,7 @@ public abstract class FiniteFluid extends Fluid {
     }
 
     public FluidState makeState(int level, boolean falling) {
-        return (this.defaultFluidState().setValue(LEVEL, level)).setValue(FALLING, falling);
+        return this.defaultFluidState().setValue(LEVEL, level).setValue(FALLING, falling);
     }
 
     protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction,
@@ -120,9 +132,6 @@ public abstract class FiniteFluid extends Fluid {
             level.setBlock(pos, fluidState.createLegacyBlock(), 3);
         }
     }
-
-    protected abstract void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
-
 
     protected Map<Direction, Integer> getWantedSpreadDirections(Level level, BlockPos pos, BlockState state) {
         Map<Direction, Integer> list = new HashMap<>();
@@ -149,18 +158,25 @@ public abstract class FiniteFluid extends Fluid {
         BlockPos belowPos = pos.below();
         BlockState belowState = level.getBlockState(belowPos);
 
+        // if it has this liquid below consolidate
         FluidState belowFluid = belowState.getFluidState();
         if (belowFluid.getType().isSame(this)) {
             if (belowFluid.getAmount() < maxLayers) {
                 int belowMissing = maxLayers - belowFluid.getAmount();
                 int belowAddition = Math.min(belowMissing, state.getAmount());
                 int newAboveAmount = state.getAmount() - belowAddition;
-                level.setBlock(belowPos, belowFluid.setValue(LEVEL, belowFluid.getAmount() + belowAddition).createLegacyBlock(), 3);
+                level.setBlockAndUpdate(belowPos, belowFluid.setValue(LEVEL, belowFluid.getAmount() + belowAddition)
+                        .createLegacyBlock());
                 if (newAboveAmount > 0) {
-                    level.setBlock(pos, state.setValue(LEVEL, newAboveAmount).createLegacyBlock(), 3);
-                } else level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    level.setBlockAndUpdate(pos, state.setValue(LEVEL, newAboveAmount).createLegacyBlock());
+                } else level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             } else this.spreadToSides(level, pos, state, myState);
-        } else if (this.canHoldFluid(level, belowPos, belowState)) {
+
+            return;
+        }
+
+        // if not
+        if (this.canHoldFluid(level, belowPos, belowState)) {
             this.spreadTo(level, belowPos, belowState, Direction.DOWN, state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         } else {
@@ -216,5 +232,36 @@ public abstract class FiniteFluid extends Fluid {
 
     public boolean shouldSlowDown(FluidState state) {
         return state.getAmount() > 2;
+    }
+
+    protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+        BlockEntity blockEntity = state.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+        Block.dropResources(state, level, pos, blockEntity);
+    }
+
+    @Override
+    protected boolean canBeReplacedWith(FluidState state, BlockGetter level, BlockPos pos, Fluid fluid, Direction direction) {
+        return true;
+    }
+
+    @Override
+    public int getTickDelay(LevelReader level) {
+        return 5;
+    }
+
+    @Override
+    protected float getExplosionResistance() {
+        return 0;
+    }
+
+    @Override
+    protected BlockState createLegacyBlock(FluidState state) {
+        return block.get().defaultBlockState()
+                .setValue(LiquidBlock.LEVEL, getLegacyLevel(state));
+    }
+
+    protected int getLegacyLevel(FluidState state) {
+        int amount = state.getAmount();
+        return maxLayers - Math.min(amount, maxLayers);
     }
 }

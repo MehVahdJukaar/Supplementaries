@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.supplementaries.api.forge.RedMerchantTradesEvent;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
@@ -11,7 +10,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -25,14 +23,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SuppPlatformStuffImpl {
 
@@ -98,12 +92,6 @@ public class SuppPlatformStuffImpl {
         return biome.getModifiedClimateSettings().downfall();
     }
 
-    public static VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
-        RedMerchantTradesEvent event = new RedMerchantTradesEvent(new ArrayList<>(listings));
-        MinecraftForge.EVENT_BUS.post(event);
-        return event.getTrades().toArray(VillagerTrades.ItemListing[]::new);
-    }
-
     public static void disableAMWarn() {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
@@ -111,4 +99,5 @@ public class SuppPlatformStuffImpl {
     public static void disableOFWarn() {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
     }
+
 }

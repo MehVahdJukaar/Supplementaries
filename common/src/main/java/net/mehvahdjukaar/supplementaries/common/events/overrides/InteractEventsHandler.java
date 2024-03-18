@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -56,7 +57,6 @@ public class InteractEventsHandler {
 
 
     }
-
 
 
     public static void setupOverrides() {
@@ -145,13 +145,14 @@ public class InteractEventsHandler {
                                                       InteractionHand hand, BlockHitResult hit) {
         Item item = stack.getItem();
 
+
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
+        BlockPos pos = hit.getBlockPos();
+
+        boolean canAlter = Utils.mayBuild(player, pos) && (!CompatHandler.FLAN || FlanCompat.canPlace(player, pos));
+
         if (override != null && override.isEnabled()) {
-            if (CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
-                return InteractionResult.PASS;
-            }
-            //TODO: merge
-            if (override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())) {
+            if (override.altersWorld() && !canAlter) {
                 return InteractionResult.PASS;
             }
             InteractionResult result = override.tryPerformingAction(level, player, hand, stack, hit);
@@ -161,17 +162,25 @@ public class InteractEventsHandler {
         }
         //block overrides behaviors (work for any item)
         if (!player.isShiftKeyDown()) {
-            BlockPos pos = hit.getBlockPos();
             BlockState state = level.getBlockState(pos);
 
             BlockUseOverride o = BLOCK_USE.get(state.getBlock());
             if (o != null && o.isEnabled()) {
-                if (CompatHandler.FLAN && o.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
+                if (o.altersWorld() && !canAlter) {
                     return InteractionResult.PASS;
                 }
                 return o.tryPerformingAction(state, pos, level, player, hand, stack, hit);
             }
         }
+
+        // lightable fluid hacks since fluids have no collision
+        if (canAlter) {
+            BlockState aboveState = level.getBlockState(pos.above());
+            if (aboveState.getFluidState().is(ModFluids.LUMISENE_FLUID.get())) {
+                aboveState.use(level, player, hand, hit);
+            }
+        }
+
         return InteractionResult.PASS;
         //not sure if this is needed
         //CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, po, heldStack);

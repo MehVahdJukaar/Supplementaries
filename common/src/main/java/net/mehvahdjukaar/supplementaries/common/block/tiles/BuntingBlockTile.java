@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -11,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -24,6 +27,12 @@ public class BuntingBlockTile extends ItemDisplayTile { //implements IExtraModel
     public BuntingBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BUNTING_TILE.get(), pos, state, 4);
     }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox() {
+        return new AABB(worldPosition);
+    }
+
 
     @Override
     protected Component getDefaultName() {
@@ -47,9 +56,22 @@ public class BuntingBlockTile extends ItemDisplayTile { //implements IExtraModel
 
     @Override
     public void updateTileOnInventoryChanged() {
+        BlockState state = getBlockState();
         if (this.isEmpty()) {
-            level.setBlockAndUpdate(worldPosition, ModRegistry.ROPE.get()
-                    .withPropertiesOf(getBlockState()));
+            level.setBlockAndUpdate(worldPosition, BuntingBlock.toRope(state));
+        } else {
+            BlockState state2 = state;
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                var prop = BuntingBlock.HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir);
+                var old = state2.getValue(prop);
+                boolean isEmpty = this.getItem(dir.get2DDataValue()).isEmpty();
+                state2 = state2.setValue(prop, isEmpty ? (old == ModBlockProperties.Bunting.NONE ?  ModBlockProperties.Bunting.NONE : ModBlockProperties.Bunting.ROPE) :
+                        ModBlockProperties.Bunting.BUNTING);
+
+            }
+            if(state != state2){
+                level.setBlockAndUpdate(worldPosition, state2);
+            }
         }
     }
 

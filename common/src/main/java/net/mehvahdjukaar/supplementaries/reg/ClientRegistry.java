@@ -204,6 +204,8 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
 
+        ClientHelper.registerRenderType(ModFluids.LUMISENE_BLOCK.get(), RenderType.cutout());
+        ClientHelper.registerFluidRenderType(ModFluids.LUMISENE_FLUID.get(), RenderType.translucent());
 
         ItemProperties.register(Items.CROSSBOW, Supplementaries.res("rope_arrow"),
                 new CrossbowProperty(ModRegistry.ROPE_ARROW_ITEM.get()));

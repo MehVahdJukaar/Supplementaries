@@ -9,7 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonRotationPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -45,7 +45,7 @@ public class CannonController {
 
     private static float cameraYaw;
     private static float cameraPitch;
-    private static boolean anglesChanged;
+    private static boolean needsToUpdateServer;
     private static boolean preferShootingDown = true;
 
     @Nullable
@@ -128,26 +128,31 @@ public class CannonController {
             cameraYaw += yawIncrease * scale;
             cameraPitch += pitchIncrease * scale;
             cameraPitch = Mth.clamp(cameraPitch, -90, 90);
-            anglesChanged = true;
+            needsToUpdateServer = true;
         }
     }
 
 
     public static void onKeyPressed(int key, int action, int modifiers) {
-        if (action == GLFW.GLFW_PRESS && Minecraft.getInstance().options.keyShift.matches(key, action)) {
+        if (action != GLFW.GLFW_PRESS) return;
+        if (Minecraft.getInstance().options.keyShift.matches(key, action)) {
             turnOff();
         }
-        if (action == GLFW.GLFW_PRESS && Minecraft.getInstance().options.keyJump.matches(key, action)) {
+        if (Minecraft.getInstance().options.keyJump.matches(key, action)) {
             preferShootingDown = !preferShootingDown;
-            anglesChanged = true;
+            needsToUpdateServer = true;
+        }
+        if (Minecraft.getInstance().options.keyAttack.matches(key, action)) {
+            if (cannon != null && cannon.canFire()) {
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                        cannon.getYaw(0),
+                        cannon.getPitch(0), cannon.getFirePower(), true, cannon.getBlockPos()));
+            }
         }
     }
 
 
     public static void onMouseClicked(boolean attack) {
-        if (isActive()) {
-
-        }
     }
 
     public static void onInputUpdate(Input input) {
@@ -172,10 +177,11 @@ public class CannonController {
         if (level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile && !tile.isRemoved()) {
             cannon = tile;
 
-            if (anglesChanged) {
-                anglesChanged = false;
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonRotationPacket(
-                        cannon.getYaw(0), cannon.getPitch(0), cannonPos));
+            if (needsToUpdateServer) {
+                needsToUpdateServer = false;
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                        cannon.getYaw(0), cannon.getPitch(0), cannon.getFirePower(),
+                        false, cannonPos));
             }
         } else {
             turnOff();

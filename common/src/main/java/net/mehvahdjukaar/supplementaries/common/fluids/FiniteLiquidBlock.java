@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.forge;
+package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidInteractionRegistry;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,23 +34,21 @@ import java.util.function.Supplier;
 public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
-    public static final int MAX_LEVEL = 13;
     public static final IntegerProperty LEVEL = BlockStateProperties.LEVEL;
 
     private final List<FluidState> stateCache;
-    private final Supplier<? extends FiniteFluid> supplier;
+    private final FiniteFluid fluid;
+    private final int maxLevel;
     private boolean fluidStateCacheInitialized = false;
 
 
     public FiniteLiquidBlock(Supplier<? extends FiniteFluid> supplier, BlockBehaviour.Properties arg) {
         super(arg);
-        this.supplier = supplier;
+        this.fluid = supplier.get();
+        this.maxLevel = fluid.maxLayers;
+        assert maxLevel <= 15;
         this.stateCache = Lists.newArrayList();
         this.registerDefaultState((this.stateDefinition.any()).setValue(LEVEL, 0));
-    }
-
-    public FiniteFluid getFluid() {
-        return supplier.get();
     }
 
     @Override
@@ -66,17 +63,17 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
             this.initFluidStateCache();
         }
 
-        return this.stateCache.get(Math.min(i, MAX_LEVEL));
+        return this.stateCache.get(Math.min(i, maxLevel));
     }
 
     protected synchronized void initFluidStateCache() {
         if (!this.fluidStateCacheInitialized) {
-            this.stateCache.add(this.getFluid().makeState(MAX_LEVEL, false));
+            this.stateCache.add(this.fluid.makeState(maxLevel, false));
 
-            for (int i = 1; i < MAX_LEVEL; ++i) {
-                this.stateCache.add(this.getFluid().makeState(MAX_LEVEL - i, false));
+            for (int i = 1; i < maxLevel; ++i) {
+                this.stateCache.add(this.fluid.makeState(maxLevel - i, false));
             }
-            this.stateCache.add(this.getFluid().makeState(MAX_LEVEL, true));
+            this.stateCache.add(this.fluid.makeState(maxLevel, true));
             this.fluidStateCacheInitialized = true;
         }
     }
@@ -108,7 +105,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction direction) {
-        return adjacentBlockState.getFluidState().getType().isSame(this.getFluid());
+        return adjacentBlockState.getFluidState().getType().isSame(this.fluid);
     }
 
     @Override
@@ -128,24 +125,20 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (!FluidInteractionRegistry.canInteract(level, pos)) {
-            level.scheduleTick(pos, state.getFluidState().getType(), this.getFluid().getTickDelay(level));
-        }
+        level.scheduleTick(pos, state.getFluidState().getType(), this.fluid.getTickDelay(level));
     }
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
         if (state.getFluidState().isSource() || neighborState.getFluidState().isSource()) {
-            level.scheduleTick(currentPos, state.getFluidState().getType(), this.getFluid().getTickDelay(level));
+            level.scheduleTick(currentPos, state.getFluidState().getType(), this.fluid.getTickDelay(level));
         }
         return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
     }
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        if (!FluidInteractionRegistry.canInteract(level, pos)) {
-            level.scheduleTick(pos, state.getFluidState().getType(), this.getFluid().getTickDelay(level));
-        }
+        level.scheduleTick(pos, state.getFluidState().getType(), this.fluid.getTickDelay(level));
     }
 
     @Override
@@ -160,17 +153,17 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
         Map<BlockPos, Integer> posList = new HashMap<>();
         posList.put(pos, 0);
         this.findConnectedFluids(level, pos, posList, currentLevel);
-        if (currentLevel.get() < MAX_LEVEL) return ItemStack.EMPTY;
+        if (currentLevel.get() < maxLevel) return ItemStack.EMPTY;
         for (Map.Entry<BlockPos, Integer> entry : posList.entrySet()) {
             BlockPos p = entry.getKey();
             Integer value = entry.getValue();
             if (value == 0) {
                 level.setBlock(p, Blocks.AIR.defaultBlockState(), 11);
-            }else {
-                level.setBlock(p, this.getFluid().makeState(value, false).createLegacyBlock(), 11);
+            } else {
+                level.setBlock(p, this.fluid.makeState(value, false).createLegacyBlock(), 11);
             }
         }
-        return new ItemStack(this.getFluid().getBucket());
+        return new ItemStack(this.fluid.getBucket());
     }
 
     // breath first search
@@ -181,7 +174,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
         while (!queue.isEmpty()) {
             BlockPos currentPos = queue.poll();
             for (Direction direction : Direction.Plane.HORIZONTAL) {
-                if (currentLevel.get() >= MAX_LEVEL) return;
+                if (currentLevel.get() >= maxLevel) return;
                 BlockPos newPos = currentPos.relative(direction);
                 if (!remainders.containsKey(newPos)) {
                     BlockState state = level.getBlockState(newPos);
@@ -189,7 +182,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
                         int l = state.getFluidState().getAmount();
                         if (l > 0) {
                             currentLevel.addAndGet(l);
-                            remainders.put(newPos, Math.max(0, currentLevel.get() - MAX_LEVEL));
+                            remainders.put(newPos, Math.max(0, currentLevel.get() - maxLevel));
                             queue.offer(newPos);
                         }
                     }
@@ -197,9 +190,10 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
             }
         }
     }
+
     @Override
     public Optional<SoundEvent> getPickupSound() {
-        return this.getFluid().getPickupSound();
+        return this.fluid.getPickupSound();
     }
 
 }

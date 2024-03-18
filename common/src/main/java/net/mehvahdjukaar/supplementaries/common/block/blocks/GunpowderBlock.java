@@ -435,15 +435,15 @@ public class GunpowderBlock extends LightUpBlock {
 
 
     //for gunpowder -> gunpowder
-    private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor world) {
-        if (!this.isLitUp(state)) {
+    private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor level) {
+        if (!this.isLitUp(state, level, pos)) {
             //spawn particles when first lit
-            if (!world.isClientSide()) {
-                ((Level) world).blockEvent(pos, this, 0, 0);
+            if (!level.isClientSide()) {
+                ((Level) level).blockEvent(pos, this, 0, 0);
             }
-            world.setBlock(pos, toggleLitState(state, true), 11);
-            world.playSound(null, pos, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
-                    1.9f + world.getRandom().nextFloat() * 0.1f);
+            setLitUp(state, level, pos, true);
+            level.playSound(null, pos, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
+                    1.9f + level.getRandom().nextFloat() * 0.1f);
         }
     }
 
@@ -472,7 +472,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private boolean isFireSource(LevelAccessor world, BlockPos pos) {
+    public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
@@ -511,13 +511,13 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean isLitUp(BlockState state) {
+    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
         return state.getValue(BURNING) != 0;
     }
 
     @Override
-    public BlockState toggleLitState(BlockState state, boolean lit) {
-        return state.setValue(BURNING, lit ? 1 : 0);
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+        world.setBlock(pos, state.setValue(BURNING, lit ? 1 : 0), 3);
     }
 
     //client

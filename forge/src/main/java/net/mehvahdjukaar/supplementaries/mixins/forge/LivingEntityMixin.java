@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.mehvahdjukaar.supplementaries.forge.FiniteFluid;
+import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;

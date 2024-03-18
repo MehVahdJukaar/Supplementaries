@@ -3,18 +3,21 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -29,11 +32,14 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -53,10 +59,19 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         directions.put(Direction.WEST, WEST);
     });
 
+    public final Map<BlockState, BlockState> buntingToRope = new Object2ObjectOpenHashMap<>();
+
     public BuntingBlock(Properties properties) {
         super(properties);
+        for (BlockState state : this.stateDefinition.getPossibleStates()) {
+            BlockState state1 = state;
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                //remove bunting shapes
+                state1 = setConnection(dir, state1, hasConnection(dir, state1));
+            }
+            buntingToRope.put(state, state1);
+        }
     }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -75,10 +90,10 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         VoxelShape east = Block.box(6, 9, 6, 16, 13, 10);
         VoxelShape knot = Block.box(6, 9, 6, 10, 13, 10);
 
-        VoxelShape northBunting = Block.box(0, 0, 0, 0, 10, 8);
-        VoxelShape southBunting = Block.box(0, 0, 8, 0, 10, 16);
-        VoxelShape westBunting = Block.box(0, 0, 0, 8, 10, 0);
-        VoxelShape eastBunting = Block.box(8, 0, 0, 16, 10, 0);
+        VoxelShape northBunting = Block.box(7, 0, 0, 9, 10, 8);
+        VoxelShape southBunting = Block.box(7, 0, 8, 9, 10, 16);
+        VoxelShape westBunting = Block.box(0, 0, 7, 8, 10, 9);
+        VoxelShape eastBunting = Block.box(8, 0, 7, 16, 10, 9);
 
 
         for (BlockState state : this.stateDefinition.getPossibleStates()) {
@@ -113,6 +128,15 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         return new Object2ObjectOpenHashMap<>(shapes);
     }
 
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+                Containers.dropContents(world, pos, tile);
+            }
+            super.onRemove(state, world, pos, newState, isMoving);
+        }
+    }
 
     @Override
     public boolean hasConnection(Direction dir, BlockState state) {
@@ -125,7 +149,8 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
     public BlockState setConnection(Direction dir, BlockState state, boolean value) {
         if (dir == Direction.DOWN) return state.setValue(DOWN, value);
         if (dir == Direction.UP) return state.setValue(UP, value);
-        return state.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir), ModBlockProperties.Bunting.ROPE);
+        return state.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir),
+                value ? ModBlockProperties.Bunting.ROPE : ModBlockProperties.Bunting.NONE);
     }
 
     @Override
@@ -157,6 +182,11 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         return Optional.empty();
     }
 
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return super.getCollisionShape(buntingToRope.get(state), worldIn, pos, context);
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -167,21 +197,22 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
-            int ind;
 
-            Vec3 v = hit.getLocation();
-            v = v.subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5);
+            Vector3f hitPos = hit.getLocation()
+                    .subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
 
-            if (v.x < v.z && v.x > -v.z) {
-                ind = 0;
-            } else if (v.x < v.z && v.x < -v.z) {
-                ind = 1;
-            } else if (v.x > v.z && v.x < -v.z) {
-                ind = 2;
-            } else {
-                ind = 3;
-            }
-            return tile.interact(player, handIn, ind);
+            List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
+                    .filter(dir -> hasConnection(dir, state)).toList();
+
+            // find index of closest vector
+            var closest = availableDir.stream().min((a, b) -> {
+                Vector3f v1 = a.step();
+                Vector3f v2 = b.step();
+                float d1 = v1.distanceSquared(hitPos);
+                float d2 = v2.distanceSquared(hitPos);
+                return Float.compare(d1, d2);
+            });
+            if (closest.isPresent()) return tile.interact(player, handIn, closest.get().get2DDataValue());
         }
         return InteractionResult.PASS;
     }
@@ -221,5 +252,24 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         Direction dir = Direction.from2DDataValue(index);
         return state.getValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir)).isConnected();
     }
+
+    public static BlockState fromRope(BlockState state) {
+        BuntingBlock block = ModRegistry.BUNTING_BLOCK.get();
+        BlockState s = block.withPropertiesOf(state);
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            s = block.setConnection(dir, s, ((RopeBlock) state.getBlock()).hasConnection(dir, state));
+        }
+        return s;
+    }
+
+    public static BlockState toRope(BlockState state) {
+        RopeBlock block = ModRegistry.ROPE.get();
+        BlockState s = block.withPropertiesOf(state);
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            s = block.setConnection(dir, s, ((BuntingBlock) state.getBlock()).hasConnection(dir, state));
+        }
+        return s;
+    }
+
 
 }

@@ -45,14 +45,16 @@ import java.util.UUID;
 
 public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
+    private static final int TIME_TO_FIRE = 40;
+
     private float pitch = 0;
     private float prevPitch = 0;
     private float yaw = 0;
     private float prevYaw = 0;
 
     private float cooldown = 0;
-    private float fire_timer = 0;
-    private float firePower = 6;
+    private float chargeTimer = 0;
+    private byte firePower = 1;
 
     private float projectileDrag = 0;
     private float projectileGravity = 0f;
@@ -68,7 +70,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         tag.putFloat("pitch", this.pitch);
         tag.putFloat("cooldown", this.cooldown);
         tag.putFloat("fire_timer", this.cooldown);
-        tag.putFloat("fire_power", this.firePower);
+        tag.putByte("fire_power", this.firePower);
     }
 
     @Override
@@ -77,8 +79,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
         this.cooldown = tag.getFloat("cooldown");
-        this.fire_timer = tag.getFloat("fire_timer");
-        this.firePower = tag.getFloat("fire_power");
+        this.chargeTimer = tag.getFloat("fire_timer");
+        this.firePower = tag.getByte("fire_power");
         if (level != null) {
             recalculateProjectileStats();
         }
@@ -89,6 +91,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (this.level != null) {
             recalculateProjectileStats();
         }
+    }
+
+
+    public boolean canFire() {
+        return cooldown == 0 && chargeTimer == 0 && !getProjectile().isEmpty() && !getFuel().isEmpty() &&
+                getFuel().getCount() >= firePower;
+    }
+
+    // called from server when firing
+    public void fire() {
+        this.chargeTimer = TIME_TO_FIRE;
+        //update other clients
+        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
 
     @Override
@@ -112,8 +127,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return projectileGravity;
     }
 
-    public float getFirePower() {
-        return 1;
+    public byte getFirePower() {
+        return firePower;
     }
 
     public float getYaw(float partialTicks) {
@@ -130,12 +145,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.pitch = Mth.clamp(this.pitch, -80, 0);
     }
 
-    public void setPitch(float angle) {
-        this.pitch = angle;
+    public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire) {
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.firePower = firePower;
+        if (fire) this.fire();
     }
 
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
+    public void setPitch(float v) {
+        this.pitch = v;
     }
 
     @Override
@@ -334,6 +352,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             Supplementaries.error();
         }
     }
+
+
+
 
     private static class ProjectileTestLevel extends DummyWorld {
 

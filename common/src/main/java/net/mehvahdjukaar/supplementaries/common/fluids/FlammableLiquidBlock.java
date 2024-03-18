@@ -1,6 +1,8 @@
-package net.mehvahdjukaar.supplementaries.forge;
+package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -9,21 +11,24 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -53,13 +58,39 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public BlockState toggleLitState(BlockState state, boolean lit) {
-        return state.setValue(AGE, lit ? 1 : 0);
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+        world.setBlock(pos, state.setValue(AGE, lit ? 1 : 0), 3);
+    }
+
+    //TODO: check fabric
+
+    @ForgeOverride
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 60;
+    }
+
+    @ForgeOverride
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 300;
+    }
+
+    @ForgeOverride
+    public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         return interactWithPlayer(state, worldIn, pos, player, handIn);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return super.getCollisionShape(state, level, pos, context);
+    }
+
+    @Override
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return super.getInteractionShape(state, level, pos);
     }
 
     @Override
@@ -77,11 +108,18 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         BlockState state = this.defaultBlockState();
-        return toggleLitState(state, !flag);
+        BlockPos pos = context.getClickedPos();
+        Level level = context.getLevel();
+        boolean shouldBeOnFire = false;
+        for (Direction direction : context.getNearestLookingDirections()) {
+            if (GunpowderBlock.isFireSource(level, pos.relative(direction))) {
+                shouldBeOnFire = true;
+                break;
+            }
+        }
+        return state.setValue(AGE, shouldBeOnFire ? 1 : 0);
     }
-
 
     /**
      * Gets the delay before this block ticks again (without counting random ticks)
@@ -104,11 +142,10 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 level.setBlock(pos, state, 4);
             }
 
-            if (age == 15 && random.nextInt(4) == 0 && !((FireBlock) Blocks.FIRE)
-                    .canCatchFire(level, pos.below(), Direction.UP)) {
-                level.removeBlock(pos, false);
-                return;
-            }
+            //  if (age == 15 && random.nextInt(4) == 0 && !SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
+            //      level.removeBlock(pos, false);
+            //      return;
+            //  }
 
             boolean burnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
             int k = burnout ? -50 : 0;

@@ -16,8 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class SpeakerBlockScreen extends Screen {
-    private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
-    private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
+    private static final Component CHAT_TEXT = Component.translatable("gui.supplementaries.speaker_block.chat_message");
+    private static final Component NARRATOR_TEXT = Component.translatable("gui.supplementaries.speaker_block.narrator_message");
     private static final Component ACTION_BAR_TEXT = Component.translatable("gui.supplementaries.speaker_block.action_bar_message");
     private static final Component TITLE_TEXT = Component.translatable("gui.supplementaries.speaker_block.title_message");
     private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");

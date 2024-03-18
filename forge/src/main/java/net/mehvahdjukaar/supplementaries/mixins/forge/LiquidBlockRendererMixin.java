@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import net.mehvahdjukaar.supplementaries.forge.ModFluids;
+import net.mehvahdjukaar.supplementaries.reg.forge.ModFluidsImpl;
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -18,14 +18,12 @@ public class LiquidBlockRendererMixin {
     @Inject(method = "getHeight(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)F",
             at = @At("HEAD"), cancellable = true)
     public void supplementaries$modifyLumiseneHeight(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Float> cir) {
-        ModFluids.messWithFluidH(level, fluid, pos, blockState, fluidState, cir);
+        ModFluidsImpl.messWithFluidH(level, fluid, pos, blockState, fluidState, cir);
     }
 
     @Inject(method = "calculateAverageHeight",
             at = @At("HEAD"), cancellable = true)
     public void supplementaries$modifyLumiseneHeight(BlockAndTintGetter level, Fluid fluid, float g, float h, float i, BlockPos pos, CallbackInfoReturnable<Float> cir) {
-        if (fluid == ModFluids.LUMISENE_FLUID.get()) {
-            ModFluids.messWithAvH(level, fluid, g, h, i, pos, cir);
-        }
+        ModFluidsImpl.messWithAvH(level, fluid, g, h, i, pos, cir);
     }
 }
