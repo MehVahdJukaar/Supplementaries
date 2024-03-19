@@ -38,7 +38,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     private final List<FluidState> stateCache;
     private final FiniteFluid fluid;
-    private final int maxLevel;
+    public final int maxLevel;
     private boolean fluidStateCacheInitialized = false;
 
 
@@ -46,7 +46,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
         super(arg);
         this.fluid = supplier.get();
         this.maxLevel = fluid.maxLayers;
-        assert maxLevel <= 15;
+        assert maxLevel <= 16;
         this.stateCache = Lists.newArrayList();
         this.registerDefaultState((this.stateDefinition.any()).setValue(LEVEL, 0));
     }
@@ -68,12 +68,11 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     protected synchronized void initFluidStateCache() {
         if (!this.fluidStateCacheInitialized) {
-            this.stateCache.add(this.fluid.makeState(maxLevel, false));
+            this.stateCache.add(this.fluid.makeState(maxLevel));
 
             for (int i = 1; i < maxLevel; ++i) {
-                this.stateCache.add(this.fluid.makeState(maxLevel - i, false));
+                this.stateCache.add(this.fluid.makeState(maxLevel - i));
             }
-            this.stateCache.add(this.fluid.makeState(maxLevel, true));
             this.fluidStateCacheInitialized = true;
         }
     }
@@ -160,7 +159,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
             if (value == 0) {
                 level.setBlock(p, Blocks.AIR.defaultBlockState(), 11);
             } else {
-                level.setBlock(p, this.fluid.makeState(value, false).createLegacyBlock(), 11);
+                level.setBlock(p, this.fluid.makeState(value).createLegacyBlock(), 11);
             }
         }
         return new ItemStack(this.fluid.getBucket());

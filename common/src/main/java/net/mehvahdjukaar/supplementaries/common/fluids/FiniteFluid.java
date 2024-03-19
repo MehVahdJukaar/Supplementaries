@@ -15,8 +15,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -29,11 +27,10 @@ import java.util.function.Supplier;
 
 public abstract class FiniteFluid extends Fluid {
 
-    public static final BooleanProperty FALLING = BlockStateProperties.FALLING;
     public static final IntegerProperty LEVEL = ModBlockProperties.FINITE_FLUID_LEVEL;
     private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
 
-    public final int maxLayers;
+    protected final int maxLayers;
     private final Supplier<? extends BucketItem> bucket;
     private final Supplier<? extends Block> block;
 
@@ -44,6 +41,10 @@ public abstract class FiniteFluid extends Fluid {
         this.registerDefaultState(this.stateDefinition.any().setValue(LEVEL, maxLayers));
     }
 
+    public int getLayersPerBlock() {
+        return maxLayers;
+    }
+
     @Override
     public Item getBucket() {
         return bucket.get();
@@ -51,7 +52,7 @@ public abstract class FiniteFluid extends Fluid {
 
     @Override
     protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
-        builder.add(FALLING, LEVEL);
+        builder.add(LEVEL);
     }
 
     // flow direction. push force on entities
@@ -105,20 +106,20 @@ public abstract class FiniteFluid extends Fluid {
                 Direction dir = e.getKey();
                 BlockPos facingPos = pos.relative(dir);
                 BlockState s = level.getBlockState(facingPos);
-                FluidState fluidstate = makeState(oldAmount + 1, false);
+                FluidState fluidstate = makeState(oldAmount + 1);
                 this.spreadTo(level, facingPos, s, dir, fluidstate);
             }
 
 
-            FluidState myNewState = makeState(currentAmount - map.size(), false);
+            FluidState myNewState = makeState(currentAmount - map.size());
             BlockState blockstate = myNewState.createLegacyBlock();
             level.setBlock(pos, blockstate, 2);
             level.updateNeighborsAt(pos, blockstate.getBlock());
         }
     }
 
-    public FluidState makeState(int level, boolean falling) {
-        return this.defaultFluidState().setValue(LEVEL, level).setValue(FALLING, falling);
+    public FluidState makeState(int level) {
+        return this.defaultFluidState().setValue(LEVEL, level);
     }
 
     protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction,

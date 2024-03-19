@@ -472,9 +472,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
-        //wires handled separately
-        BlockState state = world.getBlockState(pos);
+    public static boolean isFireSource(BlockState state) {
         Block b = state.getBlock();
         if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
@@ -482,6 +480,12 @@ public class GunpowderBlock extends LightUpBlock {
             return state.getValue(CampfireBlock.LIT);
         }
         return state.is(ModTags.LIGHTS_GUNPOWDER);
+    }
+
+    public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
+        //wires handled separately
+        BlockState state = world.getBlockState(pos);
+        return isFireSource(state);
     }
 
     //TODO: this is not working

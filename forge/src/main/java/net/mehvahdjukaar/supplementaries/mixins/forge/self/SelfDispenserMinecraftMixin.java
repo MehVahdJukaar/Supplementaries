@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge;
+package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.core.Direction;

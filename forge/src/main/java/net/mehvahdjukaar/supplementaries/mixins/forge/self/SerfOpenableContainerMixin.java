@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge;
+package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.OpeneableContainerBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -12,9 +12,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import org.spongepowered.asm.mixin.Mixin;
-
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(OpeneableContainerBlockEntity.class)
 public abstract class SerfOpenableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {

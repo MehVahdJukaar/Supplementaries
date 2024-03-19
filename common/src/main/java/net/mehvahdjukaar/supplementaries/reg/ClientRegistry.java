@@ -33,6 +33,7 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
@@ -246,6 +247,9 @@ public class ClientRegistry {
 
         ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
                 new GlobeProperty());
+
+        ItemProperties.register(ModRegistry.BUNTING.get(), Supplementaries.res("dye"),
+                (stack, world, entity, s) -> BuntingItem.getColor(stack).getId()/100f);
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());

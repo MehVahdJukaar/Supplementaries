@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
@@ -31,6 +32,8 @@ public class ModFluids {
                 () -> new FlammableLiquidBlock(LUMISENE_FLUID,
                         BlockBehaviour.Properties.of()
                                 .replaceable()
+                                .instabreak()
+                                .mapColor(DyeColor.ORANGE)
                                 .pushReaction(PushReaction.DESTROY)
                                 .liquid()
                                 .noCollission()

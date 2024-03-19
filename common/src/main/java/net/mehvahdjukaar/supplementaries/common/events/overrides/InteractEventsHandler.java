@@ -177,7 +177,8 @@ public class InteractEventsHandler {
         if (canAlter) {
             BlockState aboveState = level.getBlockState(pos.above());
             if (aboveState.getFluidState().is(ModFluids.LUMISENE_FLUID.get())) {
-                aboveState.use(level, player, hand, hit);
+                return aboveState.use(level, player, hand, new BlockHitResult(hit.getLocation(),
+                        hit.getDirection(), pos.above(), false));
             }
         }
 

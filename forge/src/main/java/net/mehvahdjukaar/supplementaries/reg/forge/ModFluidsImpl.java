@@ -70,6 +70,7 @@ public class ModFluidsImpl {
                 private static final ResourceLocation STILL_TEXTURE = new ResourceLocation("block/water_still");
                 private static final ResourceLocation FLOWING_TEXTURE = new ResourceLocation("block/water_flow");
 
+                @Override
                 public ResourceLocation getStillTexture() {
                     return STILL_TEXTURE;
                 }
@@ -79,21 +80,25 @@ public class ModFluidsImpl {
                     return IClientFluidTypeExtensions.super.getStillTexture(state, getter, pos);
                 }
 
+                @Override
                 public ResourceLocation getFlowingTexture() {
                     return FLOWING_TEXTURE;
                 }
 
+                @Override
                 public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
                     return UNDERWATER_TEXTURE;
                 }
 
+                @Override
                 public Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-                    return new Vector3f(0.407F, 0.121F, 0.137F);
+                    return new Vector3f(1F, 0.8F, 0.01F);
                 }
 
+                @Override
                 public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape) {
-                    RenderSystem.setShaderFogStart(0.125F);
-                    RenderSystem.setShaderFogEnd(1.5F);
+                    RenderSystem.setShaderFogStart(0.1f);
+                    RenderSystem.setShaderFogEnd(8);
                 }
 
                 @Override
@@ -123,7 +128,7 @@ public class ModFluidsImpl {
 
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
-            super(13, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
+            super(16, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
         }
 
         @Override

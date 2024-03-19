@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge;
+package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge;
+package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
 import net.mehvahdjukaar.supplementaries.forge.SupplementariesForge;

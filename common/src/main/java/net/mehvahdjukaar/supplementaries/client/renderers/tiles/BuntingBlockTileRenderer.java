@@ -59,7 +59,9 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
 
                 int i = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
                 this.flag.zRot = i * 0.01F * Mth.cos(6.2831855F * h) * 3.1415927F;
-
+                this.box.xScale = 1F;
+                this.box.yScale = 1.1F;
+                this.box.zScale = 1.1F;
                 model.render(poseStack, ModMaterials.BUNTING_MATERIAL.get(color).buffer(bufferIn, RenderType::entityCutout),
                         combinedLightIn, combinedOverlayIn);
                 poseStack.popPose();
@@ -90,8 +92,8 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
                  PartPose.offsetAndRotation(0.0F, -2F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
        partdefinition.addOrReplaceChild("box", CubeListBuilder.create()
-                .texOffs(0, 12).addBox(-4F, -9.0F, -1.0F, 8.0F, 2.0F, 2.0F, new CubeDeformation(0.1F)),
-               PartPose.offsetAndRotation(0.0F, 5.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+                .texOffs(0, 12).addBox(-4F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
+               PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 32, 16);
     }

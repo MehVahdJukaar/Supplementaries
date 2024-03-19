@@ -45,10 +45,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     private static final List<FaucetSource.BlState> BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetSource.Tile> TILE_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetSource.Fluid> FLUID_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetSource.Fluid> SOURCE_FLUID_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.BlState> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
+    private static final List<FaucetTarget.Fluid> TARGET_FLUID_INTERACTIONS = new ArrayList<>();
 
     public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
@@ -141,7 +142,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
 
         FluidState fluidState = level.getFluidState(behind);
-        filledAmount = runInteractions(FLUID_INTERACTIONS, level, dir, behind, fluidState, justVisual);
+        filledAmount = runInteractions(SOURCE_FLUID_INTERACTIONS, level, dir, behind, fluidState, justVisual);
         if (filledAmount != null) return filledAmount;
 
         return 0;
@@ -185,6 +186,12 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
                 if (res != null) return res;
             }
         }
+        FluidState fluidState = belowState.getFluidState();
+        for (var bi : TARGET_FLUID_INTERACTIONS) {
+            Integer res = bi.fill(level, below, fluidState, fluid.fluid(), fluid.minAmount());
+            if (res != null) return res;
+        }
+
         return null;
     }
 
@@ -268,7 +275,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             success = true;
         }
         if (interaction instanceof FaucetSource.Fluid bs) {
-            FLUID_INTERACTIONS.add(bs);
+            SOURCE_FLUID_INTERACTIONS.add(bs);
             success = true;
         }
         if (interaction instanceof FaucetTarget.BlState tb) {
@@ -277,6 +284,10 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
         if (interaction instanceof FaucetTarget.Tile tt) {
             TARGET_TILE_INTERACTIONS.add(tt);
+            success = true;
+        }
+        if (interaction instanceof FaucetTarget.Fluid tf) {
+            TARGET_FLUID_INTERACTIONS.add(tf);
             success = true;
         }
         if (interaction instanceof FaucetItemSource is) {

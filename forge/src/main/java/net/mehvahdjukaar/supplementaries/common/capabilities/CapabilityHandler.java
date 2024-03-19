@@ -27,7 +27,6 @@ public class CapabilityHandler {
     public static final Capability<QuiverItemImpl.QuiverCapability> QUIVER_ITEM_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<IQuiverEntity> QUIVER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {});
 
-
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(ICatchableMob.class);
         event.register(IAntiqueTextProvider.class);

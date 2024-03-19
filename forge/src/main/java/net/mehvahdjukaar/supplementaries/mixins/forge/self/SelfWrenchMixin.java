@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge;
+package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
 import com.google.common.collect.ImmutableSet;
 import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

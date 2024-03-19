@@ -5,7 +5,10 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -27,10 +31,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 // diff property means we need a diff class
 public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightable {
@@ -41,9 +47,13 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     // age 15 = ded
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
 
+    public final VoxelShape[] interactionShapes;
 
     public FlammableLiquidBlock(Supplier<? extends FiniteFluid> supplier, Properties arg) {
         super(supplier, arg.lightLevel((state) -> state.getValue(AGE) > 0 ? 15 : 0));
+        this.interactionShapes = IntStream.range(0, 16)
+                .mapToObj(i -> box(0, 0, 0, 16, Math.max(0, 15 * (1 - i / (float) this.maxLevel)), 16))
+                .toArray(VoxelShape[]::new);
     }
 
     @Override
@@ -57,10 +67,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         return RenderShape.MODEL;
     }
 
-    @Override
-    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
-        world.setBlock(pos, state.setValue(AGE, lit ? 1 : 0), 3);
-    }
 
     //TODO: check fabric
 
@@ -79,31 +85,60 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+        var newState = super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+
+        if (GunpowderBlock.isFireSource(neighborState)) {
+            newState = newState.setValue(AGE, 1);
+        }
+        return newState;
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         return interactWithPlayer(state, worldIn, pos, player, handIn);
     }
 
     @Override
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+        if (state.getValue(LEVEL) < 10 || world.getFluidState(pos.above()).getType().isSame(state.getFluidState().getType()))
+            return false; // prevnt lighting up when too many layers
+        return ILightable.super.lightUp(player, state, pos, world, fireSourceType);
+    }
+
+    @Override
+    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
+        return isOnFire(state);
+    }
+
+    public static boolean isOnFire(BlockState state) {
+        return state.getValue(AGE) > 0;
+    }
+
+    @Override
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+        world.setBlock(pos, state.setValue(AGE, lit ? 1 : 0), 3);
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return super.getCollisionShape(state, level, pos, context);
+        return Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return isOnFire(state) ? interactionShapes[state.getValue(LEVEL)] : super.getShape(state, level, pos, context);
     }
 
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return super.getInteractionShape(state, level, pos);
+        return this.interactionShapes[state.getValue(LEVEL)];
     }
 
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
         interactWithProjectile(level, state, projectile, pos);
-    }
-
-    @Override
-    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof Projectile projectile) {
-            interactWithProjectile(worldIn, state, projectile, pos);
-        }
     }
 
     @Override
@@ -119,6 +154,56 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             }
         }
         return state.setValue(AGE, shouldBeOnFire ? 1 : 0);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (!isOnFire(state)) return;
+        if (random.nextInt(24) == 0) {
+            level.playLocalSound((double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+        }
+        int i;
+        double d;
+        double e;
+        double f;
+        for (i = 0; i < 3; ++i) {
+            d = (double) pos.getX() + random.nextDouble();
+            e = (double) pos.getY() + random.nextDouble() * 0.5 + 0.5;
+            f = (double) pos.getZ() + random.nextDouble();
+            level.addParticle(ParticleTypes.SMOKE, d, e, f, 0.0, 0.0, 0.0);
+        }
+    }
+
+    @Override
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (entity instanceof Projectile projectile) {
+            interactWithProjectile(level, state, projectile, pos);
+        }
+        // same logic as fire block
+        if (isOnFire(state)) {
+            if (!entity.fireImmune()) {
+                entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
+                if (entity.getRemainingFireTicks() == 0) {
+                    entity.setSecondsOnFire(8);
+                }
+            }
+            // normal fire damage
+            entity.hurt(level.damageSources().inFire(), 1);
+        }
+        super.entityInside(state, level, pos, entity);
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide() && isOnFire(state)) {
+            //extinguish sound
+            level.levelEvent(null, 1009, pos, 0);
+        }
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     /**
@@ -154,4 +239,19 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     }
 
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        // calls fluid random tick
+        super.randomTick(state, level, pos, random);
+
+        // hack to burn blocks around like lava does. we could also movethis into tick instead like fire
+        if(isOnFire(state)) {
+            Blocks.LAVA.randomTick(Blocks.LAVA.defaultBlockState(), level, pos, random);
+        }
+    }
+
+    @Override
+    public boolean isRandomlyTicking(BlockState state) {
+        return true;
+    }
 }

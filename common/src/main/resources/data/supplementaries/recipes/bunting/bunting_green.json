@@ -12,14 +12,14 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "lime_dye"
+      "item": "green_dye"
     }
   ],
   "result": {
     "item": "supplementaries:bunting",
     "count": 1,
     "nbt": {
-      "Color": "lime"
+      "Color": "green"
     }
   }
 }

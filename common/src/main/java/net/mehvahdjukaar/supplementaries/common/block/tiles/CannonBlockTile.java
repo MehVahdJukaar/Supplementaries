@@ -99,12 +99,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
                 getFuel().getCount() >= firePower;
     }
 
-    // called from server when firing
-    public void fire() {
-        this.chargeTimer = TIME_TO_FIRE;
-        //update other clients
-        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
-    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -149,7 +143,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.yaw = yaw;
         this.pitch = pitch;
         this.firePower = firePower;
-        if (fire) this.fire();
+        if (fire) this.ignite();
     }
 
     public void setPitch(float v) {
@@ -211,40 +205,56 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     public void ignite() {
         this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
+        // called from server when firing
+        this.chargeTimer = TIME_TO_FIRE;
+        //update other clients
+        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
         t.prevYaw = t.yaw;
         t.prevPitch = t.pitch;
 
-
-        if ((level.getGameTime() % 60) == 0) {
-            if (level.isClientSide) {
-                level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        -t.pitch * Mth.DEG_TO_RAD, -t.yaw * Mth.DEG_TO_RAD, 0);
-
-                PoseStack poseStack = new PoseStack();
-                RandomSource ran = level.random;
-                poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
-
-                poseStack.mulPose(Axis.YP.rotationDegrees(-t.yaw));
-                poseStack.mulPose(Axis.XP.rotationDegrees(-t.pitch));
-                poseStack.translate(0, 0, -1.4);
-
-                t.spawnDustRing(poseStack);
-
-                t.spawnSmokeTrail(poseStack, ran);
-
-            } else {
-                t.shootProjectile(level, pos, t);
+        if (t.cooldown > 0) {
+            t.cooldown--;
+        }
+        if (t.chargeTimer > 0) {
+            t.chargeTimer--;
+            if (t.chargeTimer == 0) {
+                t.fire();
             }
         }
     }
 
-    private boolean shootProjectile(Level level, BlockPos pos, CannonBlockTile t) {
-        Vec3 facing = Vec3.directionFromRotation(-t.pitch, t.yaw).scale(0.01);
+    public void fire() {
+        if (level.isClientSide) {
+            BlockPos pos = this.worldPosition;
+            level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    -this.pitch * Mth.DEG_TO_RAD, -this.yaw * Mth.DEG_TO_RAD, 0);
 
-        ItemStack projectile = t.getProjectile();
+            PoseStack poseStack = new PoseStack();
+            RandomSource ran = level.random;
+            poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
+
+            poseStack.mulPose(Axis.YP.rotationDegrees(-this.yaw));
+            poseStack.mulPose(Axis.XP.rotationDegrees(-this.pitch));
+            poseStack.translate(0, 0, -1.4);
+
+            this.spawnDustRing(poseStack);
+
+            this.spawnSmokeTrail(poseStack, ran);
+
+        } else {
+            this.shootProjectile();
+        }
+    }
+
+    private boolean shootProjectile() {
+        BlockPos pos = worldPosition;
+
+        Vec3 facing = Vec3.directionFromRotation(-this.pitch, this.yaw).scale(0.01);
+
+        ItemStack projectile = this.getProjectile();
 
         Entity proj = getProjectileFromItemHack(level, projectile);
 
@@ -352,8 +362,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             Supplementaries.error();
         }
     }
-
-
 
 
     private static class ProjectileTestLevel extends DummyWorld {

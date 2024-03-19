@@ -12,7 +12,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
 public class BuntingItem extends Item {
     public BuntingItem(Properties properties) {
@@ -51,13 +50,13 @@ public class BuntingItem extends Item {
         return des;
     }
 
-    @Nullable
     public static DyeColor getColor(ItemStack item) {
         if (item.getItem() instanceof BuntingItem) {
             CompoundTag tag = item.getTag();
-            if (tag == null) return DyeColor.WHITE;
-            return DyeColor.valueOf(tag.getString("Color"));
+            if (tag != null) {
+                return DyeColor.byName(tag.getString("Color"), DyeColor.WHITE);
+            }
         }
-        return null;
+        return DyeColor.WHITE;
     }
 }

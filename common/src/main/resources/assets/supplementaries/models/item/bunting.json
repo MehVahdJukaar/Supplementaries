@@ -1,7 +1,23 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "supplementaries:item/bunting"
-	}
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "supplementaries:item/buntings/bunting_white"
+    },
+    "overrides": [
+        { "predicate": { "supplementaries:dye": 0.01 }, "model": "supplementaries:item/bunting_orange" },
+        { "predicate": { "supplementaries:dye": 0.02 }, "model": "supplementaries:item/bunting_magenta" },
+        { "predicate": { "supplementaries:dye": 0.03 }, "model": "supplementaries:item/bunting_light_blue" },
+        { "predicate": { "supplementaries:dye": 0.04 }, "model": "supplementaries:item/bunting_yellow" },
+        { "predicate": { "supplementaries:dye": 0.05 }, "model": "supplementaries:item/bunting_lime" },
+        { "predicate": { "supplementaries:dye": 0.06 }, "model": "supplementaries:item/bunting_pink" },
+        { "predicate": { "supplementaries:dye": 0.07 }, "model": "supplementaries:item/bunting_gray" },
+        { "predicate": { "supplementaries:dye": 0.08 }, "model": "supplementaries:item/bunting_light_gray" },
+        { "predicate": { "supplementaries:dye": 0.09 }, "model": "supplementaries:item/bunting_cyan" },
+        { "predicate": { "supplementaries:dye": 0.10 }, "model": "supplementaries:item/bunting_purple" },
+        { "predicate": { "supplementaries:dye": 0.11 }, "model": "supplementaries:item/bunting_blue" },
+        { "predicate": { "supplementaries:dye": 0.12 }, "model": "supplementaries:item/bunting_brown" },
+        { "predicate": { "supplementaries:dye": 0.13 }, "model": "supplementaries:item/bunting_green" },
+        { "predicate": { "supplementaries:dye": 0.14 }, "model": "supplementaries:item/bunting_red" },
+        { "predicate": { "supplementaries:dye": 0.15 }, "model": "supplementaries:item/bunting_black" }
+    ]
 }

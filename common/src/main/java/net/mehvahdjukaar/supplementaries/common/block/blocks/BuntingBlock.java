@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -198,23 +200,43 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
 
-            Vector3f hitPos = hit.getLocation()
-                    .subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
-
-            List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
-                    .filter(dir -> hasConnection(dir, state)).toList();
-
-            // find index of closest vector
-            var closest = availableDir.stream().min((a, b) -> {
-                Vector3f v1 = a.step();
-                Vector3f v2 = b.step();
-                float d1 = v1.distanceSquared(hitPos);
-                float d2 = v2.distanceSquared(hitPos);
-                return Float.compare(d1, d2);
-            });
+            Optional<Direction> closest = findClosestConnection(state, pos, hit);
             if (closest.isPresent()) return tile.interact(player, handIn, closest.get().get2DDataValue());
         }
         return InteractionResult.PASS;
+    }
+
+    @ForgeOverride
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        Optional<Direction> closest = findClosestConnection(state, pos, target);
+        if (world.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
+            ItemStack held = tile.getItem(closest.get().get2DDataValue());
+            if (!held.isEmpty()) return held.copy();
+        }
+        return this.getCloneItemStack(world, pos, state);
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        return ModRegistry.ROPE_ITEM.get().getDefaultInstance();
+    }
+
+    private Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, HitResult hit) {
+
+        Vector3f hitPos = hit.getLocation()
+                .subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
+
+        List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
+                .filter(dir -> hasConnection(dir, state)).toList();
+
+        // find index of closest vector
+        return availableDir.stream().min((a, b) -> {
+            Vector3f v1 = a.step();
+            Vector3f v2 = b.step();
+            float d1 = v1.distanceSquared(hitPos);
+            float d2 = v2.distanceSquared(hitPos);
+            return Float.compare(d1, d2);
+        });
     }
 
 

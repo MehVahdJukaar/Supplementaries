@@ -13,6 +13,6 @@ class SpongeInteraction implements FaucetTarget.BlState {
         if (target.getBlock() == Blocks.SPONGE) {
             return minAmount;
         }
-        return 0;
+        return null;
     }
 }
