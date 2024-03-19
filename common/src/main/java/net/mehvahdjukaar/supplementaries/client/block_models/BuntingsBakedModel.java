@@ -49,6 +49,7 @@ public class BuntingsBakedModel implements CustomBakedModel {
                 poseStack.translate(0.5, 0.5, 0.5);
                 BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
                 builder.setAutoDirection();
+                builder.setAmbientOcclusion(false);
                 builder.setAutoBuild(quads::add);
                 if (north != null) {
                     BuntingBlockTileRenderer.renderBunting(north, Direction.NORTH,

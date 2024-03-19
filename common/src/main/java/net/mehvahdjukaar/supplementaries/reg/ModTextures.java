@@ -52,6 +52,7 @@ public class ModTextures {
     public static final ResourceLocation ENDERMAN_HEAD = Supplementaries.res("textures/entity/enderman_head.png");
     public static final ResourceLocation ENDERMAN_HEAD_EYES = Supplementaries.res("textures/entity/enderman_head_eyes.png");
     public static final ResourceLocation CANNON_TRAJECTORY = Supplementaries.res("textures/entity/cannon_trajectory.png");
+    public static final ResourceLocation CANNON_TRAJECTORY_RED = Supplementaries.res("textures/entity/cannon_trajectory_charging.png");
 
 
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");

@@ -65,6 +65,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
             //error;
             Supplementaries.error();
         }
+        requestModelReload();
     }
 
     @Override
@@ -121,6 +122,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     protected boolean getFancyDistance(Vec3 cameraPos) {
         LOD lod = new LOD(cameraPos, this.getBlockPos());
-        return lod.isVeryNear();
+        return lod.isNear();
     }
 }

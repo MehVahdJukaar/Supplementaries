@@ -68,7 +68,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
         tag.putFloat("cooldown", this.cooldown);
-        tag.putFloat("fire_timer", this.cooldown);
+        tag.putFloat("fire_timer", this.chargeTimer);
         tag.putByte("fire_power", this.firePower);
     }
 
@@ -93,11 +93,18 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
 
-    public boolean canFire() {
-        return cooldown == 0 && chargeTimer == 0 && !getProjectile().isEmpty() && !getFuel().isEmpty() &&
+    public boolean readyToFire() {
+        return cooldown == 0 && chargeTimer == 0 && hasFuelAndProjectiles();
+    }
+
+    public boolean hasFuelAndProjectiles(){
+        return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
                 getFuel().getCount() >= firePower;
     }
 
+    public float getCooldown() {
+        return cooldown;
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -246,6 +253,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         } else {
             this.shootProjectile();
         }
+        this.cooldown = 60;
     }
 
     private boolean shootProjectile() {
@@ -270,7 +278,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
                         pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
 
                 float inaccuracy = 0;
-                float power = -0.98f * getFirePower();
+                float power = -projectileDrag * getFirePower();
                 arrow.shoot(facing.x, facing.y, facing.z, power, inaccuracy);
 
                 level.addFreshEntity(arrow);

@@ -148,7 +148,7 @@ public class CannonController {
 
     public static void onMouseClicked(boolean attack) {
         if (attack) {
-            if (cannon != null && cannon.canFire()) {
+            if (cannon != null && cannon.readyToFire()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
                         cannon.getYaw(1),
                         cannon.getPitch(1), cannon.getFirePower(), true, cannon.getBlockPos()));
@@ -191,7 +191,9 @@ public class CannonController {
                                         int packedLight, int packedOverlay, float partialTicks,
                                         float yaw) {
         //if (!active || cannon != blockEntity) return;
-        if (hit != null && trajectory != null && blockEntity.canFire()) {
+        if (hit != null && trajectory != null && blockEntity.hasFuelAndProjectiles()) {
+
+            boolean cooldown = blockEntity.getCooldown() != 0;
 
             BlockPos cannonPos = blockEntity.getBlockPos();
 
@@ -214,12 +216,12 @@ public class CannonController {
             boolean hitAir = mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
 
             renderArrows(poseStack, buffer, partialTicks,
-                    trajectory, hitAir);
+                    trajectory, hitAir, cooldown);
 
             poseStack.popPose();
 
 
-            if (!hitAir) renderTargetCircle(poseStack, buffer, yaw);
+            if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, cooldown);
 
             if (debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
         }
@@ -238,10 +240,10 @@ public class CannonController {
         poseStack.popPose();
     }
 
-    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, float yaw) {
+    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, float yaw, boolean red) {
         poseStack.pushPose();
 
-        Material circleMaterial = ModMaterials.CANNON_TARGET_MATERIAL;
+        Material circleMaterial = red ? ModMaterials.CANNON_TARGET_RED_MATERIAL : ModMaterials.CANNON_TARGET_MATERIAL;
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
         Vec3 targetVec = new Vec3(0, trajectory.point().y, -trajectory.point().x).yRot(-yaw);
@@ -265,7 +267,8 @@ public class CannonController {
     }
 
 
-    private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks, CannonTrajectory trajectory, boolean hitAir) {
+    private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks,
+                                     CannonTrajectory trajectory, boolean hitAir, boolean red) {
 
         float finalTime = (float) trajectory.finalTime();
         if (finalTime > 100000) {
@@ -277,7 +280,7 @@ public class CannonController {
 
         float scale = 1;
         float size = 2.5f / 16f * scale;
-        VertexConsumer consumer = buffer.getBuffer(ModRenderTypes.CANNON_TRAJECTORY);
+        VertexConsumer consumer = buffer.getBuffer(red ? ModRenderTypes.CANNON_TRAJECTORY_RED : ModRenderTypes.CANNON_TRAJECTORY);
         Matrix4f matrix = poseStack.last().pose();
 
         float py = 0;
