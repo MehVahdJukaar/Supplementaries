@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
@@ -197,7 +196,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (player.isSecondaryUseActive()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
-            } else CannonController.activateCannonCamera(worldPosition);
+            } else CannonController.activateCannonCamera(this);
         } else if (player instanceof ServerPlayer sp) PlatHelper.openCustomMenu(sp, this, worldPosition);
 
     }
@@ -337,6 +336,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         var p = testLevel.projectile;
         if (p != null) return p;
+        if(projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
 
         return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
 
@@ -355,12 +355,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         var newMovement = proj.getDeltaMovement();
         this.projectileDrag = (float) newMovement.x;
         this.projectileGravity = (float) -newMovement.y;
-
-        if (projectileDrag <= 0 || projectileGravity <= 0) {
-            this.projectileDrag = 0.99f;
-            this.projectileGravity = 0.03f;
-            Supplementaries.error();
-        }
     }
 
 

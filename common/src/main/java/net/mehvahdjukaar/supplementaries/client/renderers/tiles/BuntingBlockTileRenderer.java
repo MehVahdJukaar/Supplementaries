@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
@@ -13,23 +14,30 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 
 public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBlockTile> {
 
-
-    private final ModelPart model;
-    private final ModelPart flag;
-    private final ModelPart box;
+    private static ModelPart MODEL;
+    private static ModelPart FLAG;
+    private static ModelPart BOX;
 
     public BuntingBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.model = context.bakeLayer(ClientRegistry.BUNTING_MODEL);
-        this.flag = model.getChild("flag");
-        this.box = model.getChild("box");
+        MODEL = context.bakeLayer(ClientRegistry.BUNTING_MODEL);
+        FLAG = MODEL.getChild("flag");
+        BOX = MODEL.getChild("box");
+    }
+
+    @Override
+    public boolean shouldRender(BuntingBlockTile blockEntity, Vec3 cameraPos) {
+        return blockEntity.shouldRenderFancy(cameraPos);
     }
 
     @Override
@@ -39,18 +47,31 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         poseStack.translate(0.5, 0.5, 0.5);
         BlockPos pos = tile.getBlockPos();
         long l = tile.getLevel().getGameTime();
-
         for (var e : tile.getBuntings().entrySet()) {
-            DyeColor color = e.getValue();
-            if (color != null) {
-                poseStack.pushPose();
+            renderBunting(e.getValue(), e.getKey(), partialTicks, poseStack,
+                    null, bufferIn, combinedLightIn,
+                    combinedOverlayIn, pos, l);
+        }
 
-                Direction dir = e.getKey();
-                var step = dir.step().mul(0.25f);
-                poseStack.mulPose(RotHlpr.rot(dir));
-                poseStack.translate(0, 0, -0.25);
-                poseStack.scale(1, -1, -1);
+        poseStack.popPose();
 
+    }
+
+    public static void renderBunting(DyeColor color, Direction dir, float partialTicks, PoseStack poseStack,
+                                     @Nullable VertexConsumer vertexConsumer, @Nullable MultiBufferSource buffer,
+                                     int combinedLightIn,
+                                     int combinedOverlayIn, BlockPos pos, long l) {
+        if (color != null) {
+            poseStack.pushPose();
+
+            var step = dir.step().mul(0.25f);
+            poseStack.mulPose(RotHlpr.rot(dir));
+            poseStack.translate(0, 0, -0.25);
+            poseStack.scale(1, -1, -1);
+
+            Material mat = ModMaterials.BUNTING_MATERIAL.get(color);
+            VertexConsumer wrapped;
+            if (buffer != null) {
                 float h = ((float) Math.floorMod((long) (
                         (pos.getX() + step.x) * 7 +
                                 (pos.getY() + step.y) * 9 +
@@ -58,42 +79,33 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
                         + partialTicks) / 100.0F;
 
                 int i = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
-                this.flag.zRot = i * 0.01F * Mth.cos(6.2831855F * h) * 3.1415927F;
-                this.box.xScale = 1F;
-                this.box.yScale = 1.1F;
-                this.box.zScale = 1.1F;
-                model.render(poseStack, ModMaterials.BUNTING_MATERIAL.get(color).buffer(bufferIn, RenderType::entityCutout),
-                        combinedLightIn, combinedOverlayIn);
-                poseStack.popPose();
+                FLAG.zRot = i * 0.01F * Mth.cos(6.2831855F * h) * 3.1415927F;
+
+                wrapped = mat.buffer(buffer, RenderType::entityCutout);
+
+            } else {
+                FLAG.xRot = 0;
+                wrapped = mat.sprite().wrap(vertexConsumer);
             }
+            BOX.xScale = 1F;
+            BOX.yScale = 1.1F;
+            BOX.zScale = 1.1F;
+            MODEL.render(poseStack, wrapped, combinedLightIn, combinedOverlayIn);
+            poseStack.popPose();
         }
-        poseStack.popPose();
-
-    }
-
-    public static LayerDefinition createMeshPixelPerfect() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
-
-        PartDefinition bone = partdefinition.addOrReplaceChild("bunting", CubeListBuilder.create()
-                .texOffs(0, 12).addBox(-3.0F, -9.0F, -1.0F, 6.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-3.0F, -7.0F, 0.0F, 6.0F, 10.0F, 0.0F, new CubeDeformation(0.0F)),
-                PartPose.offsetAndRotation(0.0F, 5, 0.0F, 0.0F, -1.5708F, 0.0F));
-
-        return LayerDefinition.create(meshdefinition, 16, 16);
     }
 
     public static LayerDefinition createMesh() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-         partdefinition.addOrReplaceChild("flag", CubeListBuilder.create()
-                .texOffs(0, 0).addBox(-3.5F, 0, 0.0F, 7.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)),
-                 PartPose.offsetAndRotation(0.0F, -2F, 0.0F, 0.0F, -1.5708F, 0.0F));
+        partdefinition.addOrReplaceChild("flag", CubeListBuilder.create()
+                        .texOffs(0, 0).addBox(-3.5F, 0, 0.0F, 7.0F, 11.0F, 0.0F, new CubeDeformation(0.0F)),
+                PartPose.offsetAndRotation(0.0F, -2F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-       partdefinition.addOrReplaceChild("box", CubeListBuilder.create()
-                .texOffs(0, 12).addBox(-4F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
-               PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+        partdefinition.addOrReplaceChild("box", CubeListBuilder.create()
+                        .texOffs(0, 12).addBox(-4F, -1.0F, -1.0F, 8.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
+                PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 32, 16);
     }

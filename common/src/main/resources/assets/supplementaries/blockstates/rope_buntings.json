@@ -32,6 +32,9 @@
         },
         {   "when": { "down": true },
             "apply": { "model": "supplementaries:block/rope_down"}
+        },
+        {
+          "apply": {"model": "supplementaries:block/bunting"}
         }
     ]
 }

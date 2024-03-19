@@ -30,6 +30,11 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
     }
 
     @Override
+    public int getViewDistance() {
+        return 48;
+    }
+
+    @Override
     public void render(DoormatBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 

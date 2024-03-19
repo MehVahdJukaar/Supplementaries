@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -127,6 +128,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
 
+        //TODO: swap with java model for correct shading
         BakedModel model = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), b.getType().modelPath());
         if(model != null) {
             renderer.renderModel(poseStack.last(),
@@ -136,7 +138,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
                     1.0F, 1.0F, 1.0F,
                     light, overlay);
         }else{
-            int error = 0;
+            Supplementaries.error();
         }
         poseStack.popPose();
     }

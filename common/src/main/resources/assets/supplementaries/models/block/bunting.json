@@ -1,0 +1,6 @@
+{
+    "textures": {
+        "particle": "minecraft:block/rope"
+    },
+    "loader": "supplementaries:bunting"
+}

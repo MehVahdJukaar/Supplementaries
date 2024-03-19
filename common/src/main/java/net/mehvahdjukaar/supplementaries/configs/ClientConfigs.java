@@ -289,6 +289,7 @@ public class ClientConfigs {
         public static final Supplier<List<String>> TICKABLE_MOBS;
 
         public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
+        public static final Supplier<Boolean> FAST_BUNTINGS;
 
         public static final Supplier<PendulumAnimation.Config> HAT_STAND_CONFIG;
 
@@ -315,6 +316,11 @@ public class ClientConfigs {
             builder.push("notice_board");
             NOTICE_BOARD_CENTERED_TEXT = builder.comment("Allows notice board displayed text to be centered instead of being left aligned")
                     .define("centered_text", true);
+            builder.pop();
+
+            builder.push("bunting");
+            FAST_BUNTINGS = builder.comment("Makes buntings use normal block models with no animation for faster performance. When off this is only active when viewed from a distance")
+                    .define("fast_buntings", false);
             builder.pop();
 
             builder.push("clock_block");

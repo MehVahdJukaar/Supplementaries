@@ -25,12 +25,12 @@ public class BuntingItem extends Item {
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
         if (state.is(ModRegistry.ROPE.get())) {
-            BlockState s = BuntingBlock.fromRope(state);
-            level.setBlockAndUpdate(pos, s);
-            BlockState newState = level.getBlockState(pos);
-            if (!newState.is(state.getBlock())) {
-                var ret = newState.use(level, context.getPlayer(), context.getHand(),
-                        new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, false));
+            BlockHitResult hit = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, false);
+            //we must place valid state immediately
+            BlockState s = BuntingBlock.fromRope(state, hit);
+            if (s != null) {
+                level.setBlockAndUpdate(pos, s);
+                var ret = s.use(level, context.getPlayer(), context.getHand(), hit);
                 if (!ret.consumesAction()) {
                     level.setBlockAndUpdate(pos, state);
                 }

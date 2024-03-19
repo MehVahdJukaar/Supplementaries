@@ -20,10 +20,39 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
     public static CannonTrajectory findBestTrajectory(Vec2 targetPoint, float gravity, float drag, float initialPow,
                                                       boolean preferShootingDown) {
 
+        double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
+
+        if (gravity == 0) {
+            // simple line
+            float finalDist = targetPoint.length();
+            double ld = Math.log(drag);
+
+            // inverse equation with no gravity
+            double arg = 1 + finalDist * ld / initialPow;
+            double t;
+            boolean miss = false;
+            if (arg < 0) {
+                // we cant reach
+                miss = true;
+                // that number is slope at which we stop time
+                t = Math.log(0.4 / initialPow) / Math.log(drag);
+            } else t = Math.log(arg) / ld;
+
+            float v0x = Mth.cos((float) targetAngle) * initialPow;
+            float v0y = Mth.sin((float) targetAngle) * initialPow;
+
+            float arcx = (float) arcX(t, gravity, drag, v0x);
+            float arcy = (float) arcY(t, gravity, drag, v0y);
+
+            Vec2 pointHit = new Vec2(arcx, arcy);
+            return new CannonTrajectory(pointHit, (float) targetAngle, t,
+                    miss, gravity, drag, v0x, v0y);
+        }
+
         if (initialPow == 0) return null;
         float tolerance = 0.001f;
 
-        float start = (float) (Math.atan2(targetPoint.y, targetPoint.x)) + 0.01f; // Initial angle
+        float start = (float) targetAngle + 0.01f; // Initial angle
         float end = (float) Math.PI / 2; // Maximum angle (90 degrees)
 
         Vec2 farAway = targetPoint.scale(1000);
@@ -462,6 +491,8 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         double inLog = 1 / Math.log(d);
 
         return (V0x * inLog * (Math.pow(d, t) - 1));
+
+        //vox* inlog *
     }
 
     public double getX(double t) {
@@ -477,4 +508,6 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         Vec3 localPos = new Vec3(0, v.y - 1, -v.x).yRot(-yaw);
         return BlockPos.containing(cannonPos.getCenter().add(localPos));
     }
+
+
 }

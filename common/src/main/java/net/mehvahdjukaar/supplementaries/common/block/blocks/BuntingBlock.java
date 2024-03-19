@@ -199,7 +199,6 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
-
             Optional<Direction> closest = findClosestConnection(state, pos, hit);
             if (closest.isPresent()) return tile.interact(player, handIn, closest.get().get2DDataValue());
         }
@@ -221,13 +220,13 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         return ModRegistry.ROPE_ITEM.get().getDefaultInstance();
     }
 
-    private Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, HitResult hit) {
+    private static Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, HitResult hit) {
 
         Vector3f hitPos = hit.getLocation()
                 .subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
 
         List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
-                .filter(dir -> hasConnection(dir, state)).toList();
+                .filter(dir -> ((AbstractRopeBlock) state.getBlock()).hasConnection(dir, state)).toList();
 
         // find index of closest vector
         return availableDir.stream().min((a, b) -> {
@@ -248,14 +247,21 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
                 level.getBlockEntity(pos) instanceof BuntingBlockTile tile) {
             int index = facing.get2DDataValue();
             ItemStack item = tile.getItem(index);
-            if (!item.isEmpty() && !canSupportBunting(newState, index)) {
-                if (level instanceof Level l) popItem(l, pos, item, facing);
-                tile.setItem(index, ItemStack.EMPTY);
+            if (!item.isEmpty()) {
+                if (!canSupportBunting(newState, index)) {
+                    if (level instanceof Level l) popItem(l, pos, item, facing);
+                    tile.setItem(index, ItemStack.EMPTY);
+                    newState =  newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.NONE);
+                }else{
+                    newState =  newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.BUNTING);
+                }
             }
-            if (tile.isEmpty()) newState = ModRegistry.ROPE.get().withPropertiesOf(newState);
+            if (tile.isEmpty()) newState = toRope(newState);
         }
         return newState;
     }
+
+
 
     public void popItem(Level level, BlockPos pos, ItemStack stack, Direction dir) {
         if (!level.isClientSide && !stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
@@ -273,6 +279,14 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
     public static boolean canSupportBunting(BlockState state, int index) {
         Direction dir = Direction.from2DDataValue(index);
         return state.getValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir)).isConnected();
+    }
+
+    @Nullable
+    public static BlockState fromRope(BlockState state, BlockHitResult hit) {
+        var s = fromRope(state);
+        Optional<Direction> closest = findClosestConnection(state, hit.getBlockPos(), hit);
+        return closest.map(direction -> s.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(direction),
+                ModBlockProperties.Bunting.BUNTING)).orElse(null);
     }
 
     public static BlockState fromRope(BlockState state) {

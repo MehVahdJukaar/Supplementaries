@@ -161,6 +161,7 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.BUNTING_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE_H.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.GLOBE.get(), RenderType.cutout());
@@ -406,6 +407,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
         event.register(Supplementaries.res("book_pile"), BookPileModel::new);
+        event.register(Supplementaries.res("bunting"), BuntingsBakedModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }
 

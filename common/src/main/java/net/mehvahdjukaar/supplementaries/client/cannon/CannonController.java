@@ -36,26 +36,28 @@ import static net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectory.f
 
 public class CannonController {
 
-    private static BlockPos cannonPos;
-    private static boolean active;
-    private static CameraType lastCameraType;
+    @Nullable
     private static CannonBlockTile cannon;
+
+    private static CameraType lastCameraType;
     private static HitResult hit;
     private static boolean firstTick = true;
 
-    private static float cameraYaw;
-    private static float cameraPitch;
+    // values controlled by player mouse movement. Not actually what camera uses
+    private static float yawIncrease;
+    private static float pitchIncrease;
+
+
     private static boolean needsToUpdateServer;
     private static boolean preferShootingDown = true;
 
     @Nullable
     private static CannonTrajectory trajectory;
 
-    public static void activateCannonCamera(BlockPos pos) {
-        active = true;
+    public static void activateCannonCamera(CannonBlockTile tile) {
+        cannon = tile;
         firstTick = true;
         preferShootingDown = true;
-        cannonPos = pos;
         Minecraft mc = Minecraft.getInstance();
         lastCameraType = mc.options.getCameraType();
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -63,7 +65,6 @@ public class CannonController {
     }
 
     public static void turnOff() {
-        active = false;
         cannon = null;
         if (lastCameraType != null) {
             Minecraft.getInstance().options.setCameraType(lastCameraType);
@@ -71,34 +72,38 @@ public class CannonController {
     }
 
     public static boolean isActive() {
-        return active;
+        return cannon != null;
     }
 
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
-        if (active && cannon != null) {
-            //do all setup here
-            float yaw = cannon.getYaw(partialTick);
-            float pitch = cannon.getPitch(partialTick);
+        if (isActive()) {
+            BlockPos cannonPos = cannon.getBlockPos();
 
-            Vec3 start = cannonPos.getCenter().add(0, 2, 0);
+            // update cannon visuals every render tick
+            cannon.addRotation(yawIncrease, 0);
+
+            Vec3 cameraPos = cannonPos.getCenter().add(0, 2, 0);
 
             //base pos. assume empty
-            camera.setPosition(start);
+            camera.setPosition(cameraPos);
 
-            camera.setRotation(180 + yaw, cameraPitch);
+            camera.setRotation(180 + cannon.getYaw(partialTick), camera.getXRot() + pitchIncrease);
 
             camera.move(-camera.getMaxZoom(4), 0, -1);
 
+            yawIncrease = 0;
+            pitchIncrease = 0;
+
 
             // find hit result
-            Vec3 lookDir2 = Vec3.directionFromRotation(-cameraPitch, yaw);
+            Vec3 lookDir2 = new Vec3(camera.getLookVector());
             float maxRange = 128;
-            Vec3 endPos = start.add(lookDir2.scale(-maxRange));
+            Vec3 endPos = cameraPos.add(lookDir2.scale(maxRange));
 
             BlockHitResult hitResult = level
-                    .clip(new ClipContext(start, endPos,
+                    .clip(new ClipContext(cameraPos, endPos,
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
             hit = hitResult;
@@ -115,21 +120,17 @@ public class CannonController {
             if (trajectory != null) {
                 cannon.setPitch(-trajectory.angle() * Mth.RAD_TO_DEG);
             }
+
+            return true;
         }
-        return active;
+        return false;
     }
 
-    public static void onPlayerRotated(double yawIncrease, double pitchIncrease) {
-        if (active && cannon != null) {
-            Minecraft mc = Minecraft.getInstance();
-            float scale = 0.2f;
-            cannon.addRotation((float) yawIncrease * scale, 0);
-            //TODO: fix these
-            cameraYaw += yawIncrease * scale;
-            cameraPitch += pitchIncrease * scale;
-            cameraPitch = Mth.clamp(cameraPitch, -90, 90);
-            needsToUpdateServer = true;
-        }
+    public static void onPlayerRotated(double yawAdd, double pitchAdd) {
+        float scale = 0.2f;
+        yawIncrease += yawAdd * scale;
+        pitchIncrease += pitchAdd * scale;
+        needsToUpdateServer = true;
     }
 
 
@@ -142,17 +143,17 @@ public class CannonController {
             preferShootingDown = !preferShootingDown;
             needsToUpdateServer = true;
         }
-        if (Minecraft.getInstance().options.keyAttack.matches(key, action)) {
-            if (cannon != null && cannon.canFire()) {
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(0),
-                        cannon.getPitch(0), cannon.getFirePower(), true, cannon.getBlockPos()));
-            }
-        }
     }
 
 
     public static void onMouseClicked(boolean attack) {
+        if (attack) {
+            if (cannon != null && cannon.canFire()) {
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                        cannon.getYaw(1),
+                        cannon.getPitch(1), cannon.getFirePower(), true, cannon.getBlockPos()));
+            }
+        }
     }
 
     public static void onInputUpdate(Input input) {
@@ -170,18 +171,16 @@ public class CannonController {
         }
     }
 
-
     public static void onClientTick(Minecraft mc) {
-        if (!active) return;
+        if (!isActive()) return;
         ClientLevel level = mc.level;
-        if (level.getBlockEntity(cannonPos) instanceof CannonBlockTile tile && !tile.isRemoved()) {
-            cannon = tile;
-
+        BlockPos pos = cannon.getBlockPos();
+        if (level.getBlockEntity(pos) == cannon && !cannon.isRemoved()) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
                         cannon.getYaw(0), cannon.getPitch(0), cannon.getFirePower(),
-                        false, cannonPos));
+                        false, cannon.getBlockPos()));
             }
         } else {
             turnOff();
@@ -192,7 +191,7 @@ public class CannonController {
                                         int packedLight, int packedOverlay, float partialTicks,
                                         float yaw) {
         //if (!active || cannon != blockEntity) return;
-        if (hit != null && trajectory != null && !blockEntity.getProjectile().isEmpty()) {
+        if (hit != null && trajectory != null && blockEntity.canFire()) {
 
             BlockPos cannonPos = blockEntity.getBlockPos();
 
