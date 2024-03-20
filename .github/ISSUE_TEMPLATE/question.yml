@@ -1,13 +1,27 @@
----
 name: Ask a question
-about: Got a question, ask away
-title: ''
-labels: question
-assignees: ''
+description: Found a bug? Report it.
+title: "[❓]: "
+labels: "question"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        QUESTION
 
----
+  - type: input
+    id: question
+    attributes:
+      label: Your Question
+      description: Ask a simple question
+      placeholder: ex. How to build the supplementaries?
+    validations:
+      required: true
 
-**Before continuing**
-Check the issues to ensure that there is no similar question asked by someone else. 
-
-
+  - type: textarea
+    id: Details
+    attributes:
+      label: "Detail"
+      description: "Can describe what you tried to do OR give a clear and concise description of what you are asking"
+      placeholder: "I've tried to build the supplementaries and got an error that it's missing the library, moonlight-lib.pom"
+    validations:
+        required: false
