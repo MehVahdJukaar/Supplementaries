@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
@@ -14,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -33,7 +35,6 @@ public class CannonController {
     // values controlled by player mouse movement. Not actually what camera uses
     private static float yawIncrease;
     private static float pitchIncrease;
-
 
     private static boolean needsToUpdateServer;
     private static boolean preferShootingDown = true;
@@ -87,7 +88,7 @@ public class CannonController {
             // lerp camera
             Vec3 targetCameraPos = centerCannonPos.add(0, 2, 0);
             float targetYRot = camera.getYRot() + yawIncrease;
-            float targetXRot = Mth.clamp(camera.getXRot() + pitchIncrease, -90, 70);
+            float targetXRot = Mth.clamp(camera.getXRot() + pitchIncrease, -90, 90);
 
             camera.setPosition(targetCameraPos);
             camera.setRotation(targetYRot, targetXRot);
@@ -119,22 +120,40 @@ public class CannonController {
             target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
 
             // calculate the yaw of target. no clue why its like this
-            float yaw = (Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z));
+            float wantedCannonYaw = (Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z));
 
+            var restraints = getPitchAndYawRestrains(cannon.getBlockState());
             trajectory = CannonTrajectory.findBest(target,
-                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), preferShootingDown);
+                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), preferShootingDown,
+                    restraints.minPitch, restraints.maxPitch);
 
             if (trajectory != null) {
                 float followSpeed = 0.4f;
                 //TODO: improve
                 cannon.setPitch(Mth.rotLerp(followSpeed, cannon.getPitch(1), trajectory.pitch() * Mth.RAD_TO_DEG));
-                cannon.setYaw(Mth.rotLerp(followSpeed, cannon.getYaw(1), yaw * Mth.RAD_TO_DEG));
+                float yaw = Mth.rotLerp(followSpeed, cannon.getYaw(1), wantedCannonYaw * Mth.RAD_TO_DEG);
+                cannon.setYaw(Mth.clamp(yaw, restraints.minYaw, restraints.maxYaw));
             }
 
             return true;
         }
         return false;
     }
+
+    private record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
+    }
+
+    private static Restraint getPitchAndYawRestrains(BlockState state) {
+        return switch (state.getValue(CannonBlock.FACING)) {
+            case NORTH -> new Restraint(70, 290, -360, 360);
+            case SOUTH -> new Restraint(-110, 110, -360, 360);
+            case EAST -> new Restraint(-200, 20, -360, 360);
+            case WEST -> new Restraint(-20, 200, -360, 360);
+            case UP -> new Restraint(-360, 360, -200, 20);
+            case DOWN -> new Restraint(-360, 360, -20, 200);
+        };
+    }
+
 
     public static void onPlayerRotated(double yawAdd, double pitchAdd) {
         float scale = 0.2f;

@@ -36,7 +36,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
@@ -46,12 +45,14 @@ import java.util.UUID;
 public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     private static final int TIME_TO_FIRE = 40;
+    private static final int FIRE_COOLDOWN = 60;
 
     private float pitch = 0;
     private float prevPitch = 0;
     private float yaw = 0;
     private float prevYaw = 0;
 
+    // both from 0 to 1
     private float cooldown = 0;
     private float chargeTimer = 0;
     private byte firePower = 1;
@@ -98,13 +99,17 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return cooldown == 0 && chargeTimer == 0 && hasFuelAndProjectiles();
     }
 
-    public boolean hasFuelAndProjectiles(){
+    public boolean hasFuelAndProjectiles() {
         return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
                 getFuel().getCount() >= firePower;
     }
 
     public float getCooldown() {
         return cooldown;
+    }
+
+   public float getFireTimer() {
+        return chargeTimer;
     }
 
     @Override
@@ -147,9 +152,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (fire) this.ignite();
     }
 
-    public Vec2 getPitchAndYawRestrains(){
-        return new Vec2(90, 90);
-    }
 
     public void setPitch(float v) {
         this.pitch = v;
@@ -215,7 +217,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
-        this.chargeTimer = TIME_TO_FIRE;
+        this.chargeTimer = 1;
         //update other clients
         this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
@@ -225,11 +227,13 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         t.prevPitch = t.pitch;
 
         if (t.cooldown > 0) {
-            t.cooldown--;
+            t.cooldown -= 1f / FIRE_COOLDOWN;
+            if (t.cooldown < 0) t.cooldown = 0;
         }
         if (t.chargeTimer > 0) {
-            t.chargeTimer--;
-            if (t.chargeTimer == 0) {
+            t.chargeTimer -= 1f / TIME_TO_FIRE;
+            if (t.chargeTimer <= 0) {
+                t.chargeTimer = 0;
                 t.fire();
             }
         }
@@ -256,7 +260,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         } else {
             this.shootProjectile();
         }
-        this.cooldown = 60;
+        this.cooldown = 1;
     }
 
     private boolean shootProjectile() {
@@ -347,7 +351,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         var p = testLevel.projectile;
         if (p != null) return p;
-        if(projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
+        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
 
         return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
 

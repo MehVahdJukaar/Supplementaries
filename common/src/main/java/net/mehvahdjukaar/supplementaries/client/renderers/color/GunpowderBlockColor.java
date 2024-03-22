@@ -14,7 +14,7 @@ public class GunpowderBlockColor implements BlockColor {
 
     static {
         for (int i = 0; i < 9; i++) {
-            float litAmount =  i / 8.0F;
+            float litAmount = i / 8.0F;
             float red = litAmount * 0.7F + 0.3F;
 
             float green = litAmount * litAmount * 0.4F + 0.3F;
@@ -31,7 +31,8 @@ public class GunpowderBlockColor implements BlockColor {
             int redInt = Mth.clamp(Mth.floor(red * 255), 0, 255);
             int greenInt = Mth.clamp(Mth.floor(green * 255), 0, 255);
             int blueInt = Mth.clamp(Mth.floor(blue * 255), 0, 255);
-            COLORS[i] = FastColor.ARGB32.color(0, redInt, greenInt, blueInt);;
+            COLORS[i] = FastColor.ARGB32.color(0, redInt, greenInt, blueInt);
+            ;
             //if(i==0) COLORS[i] = 0xffffff;
             // return 6579300;
         }
@@ -40,5 +41,9 @@ public class GunpowderBlockColor implements BlockColor {
     @Override
     public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int color) {
         return COLORS[state.getValue(GunpowderBlock.BURNING)];
+    }
+
+    public static int getColor(float f) {
+        return COLORS[Mth.clamp((int) (f * 8),0,8)];
     }
 }
