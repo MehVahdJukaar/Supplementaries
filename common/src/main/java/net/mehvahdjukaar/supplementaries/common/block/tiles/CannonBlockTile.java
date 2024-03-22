@@ -36,6 +36,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
@@ -139,12 +140,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return Mth.lerp(partialTicks, this.prevPitch, this.pitch);
     }
 
-    public void addRotation(float yaw, float pitch) {
-        this.yaw += yaw;
-        this.pitch += pitch;
-        this.pitch = Mth.clamp(this.pitch, -80, 0);
-    }
-
     public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire) {
         this.yaw = yaw;
         this.pitch = pitch;
@@ -152,8 +147,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (fire) this.ignite();
     }
 
+    public Vec2 getPitchAndYawRestrains(){
+        return new Vec2(90, 90);
+    }
+
     public void setPitch(float v) {
         this.pitch = v;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 
     @Override
@@ -236,14 +239,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (level.isClientSide) {
             BlockPos pos = this.worldPosition;
             level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    -this.pitch * Mth.DEG_TO_RAD, -this.yaw * Mth.DEG_TO_RAD, 0);
+                    this.pitch * Mth.DEG_TO_RAD, -this.yaw * Mth.DEG_TO_RAD, 0);
 
             PoseStack poseStack = new PoseStack();
             RandomSource ran = level.random;
             poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
 
             poseStack.mulPose(Axis.YP.rotationDegrees(-this.yaw));
-            poseStack.mulPose(Axis.XP.rotationDegrees(-this.pitch));
+            poseStack.mulPose(Axis.XP.rotationDegrees(this.pitch));
             poseStack.translate(0, 0, -1.4);
 
             this.spawnDustRing(poseStack);
@@ -259,7 +262,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private boolean shootProjectile() {
         BlockPos pos = worldPosition;
 
-        Vec3 facing = Vec3.directionFromRotation(-this.pitch, this.yaw).scale(0.01);
+        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(0.01);
 
         ItemStack projectile = this.getProjectile();
 

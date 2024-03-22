@@ -51,21 +51,21 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     //-------------resource pack dependant textures-------------
 
-
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
+
 
         //need this here for reasons I forgot
         GlobeManager.refreshColorsAndTextures(manager);
         ColorHelper.refreshBubbleColors(manager);
-
 
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
             try (var text = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman"));
                  var eyeText = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman_eyes"))) {
                 dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head"), text, false);
                 dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
-            }catch (Exception ignored){}
+            } catch (Exception ignored) {
+            }
         }
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
             RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("crossbow"), e -> {

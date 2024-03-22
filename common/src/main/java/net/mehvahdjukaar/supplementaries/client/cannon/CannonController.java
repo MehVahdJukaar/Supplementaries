@@ -1,12 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
@@ -15,32 +8,26 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.Input;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
-import static net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectory.findBestTrajectory;
 
 public class CannonController {
 
     @Nullable
-    private static CannonBlockTile cannon;
+    protected static CannonBlockTile cannon;
 
     private static CameraType lastCameraType;
-    private static HitResult hit;
+    protected static HitResult hit;
     private static boolean firstTick = true;
 
     // values controlled by player mouse movement. Not actually what camera uses
@@ -52,7 +39,13 @@ public class CannonController {
     private static boolean preferShootingDown = true;
 
     @Nullable
-    private static CannonTrajectory trajectory;
+    protected static CannonTrajectory trajectory;
+
+    // lerp camera
+    private static Vec3 lastCameraPos;
+    private static float lastZoomOut = 0;
+    private static float lastCameraYaw = 0;
+    private static float lastCameraPitch = 0;
 
     public static void activateCannonCamera(CannonBlockTile tile) {
         cannon = tile;
@@ -66,6 +59,10 @@ public class CannonController {
 
     public static void turnOff() {
         cannon = null;
+        lastCameraYaw = 0;
+        lastCameraPitch = 0;
+        lastZoomOut = 0;
+        lastCameraPos = null;
         if (lastCameraType != null) {
             Minecraft.getInstance().options.setCameraType(lastCameraType);
         }
@@ -79,19 +76,29 @@ public class CannonController {
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (isActive()) {
-            BlockPos cannonPos = cannon.getBlockPos();
+            Vec3 centerCannonPos = cannon.getBlockPos().getCenter();
 
-            // update cannon visuals every render tick
-            cannon.addRotation(yawIncrease, 0);
+            if (lastCameraPos == null) {
+                lastCameraPos = camera.getPosition();
+                lastCameraYaw = camera.getYRot();
+                lastCameraPitch = camera.getXRot();
+            }
 
-            Vec3 cameraPos = cannonPos.getCenter().add(0, 2, 0);
+            // lerp camera
+            Vec3 targetCameraPos = centerCannonPos.add(0, 2, 0);
+            float targetYRot = camera.getYRot() + yawIncrease;
+            float targetXRot = Mth.clamp(camera.getXRot() + pitchIncrease, -90, 70);
 
-            //base pos. assume empty
-            camera.setPosition(cameraPos);
+            camera.setPosition(targetCameraPos);
+            camera.setRotation(targetYRot, targetXRot);
 
-            camera.setRotation(180 + cannon.getYaw(partialTick), camera.getXRot() + pitchIncrease);
+            lastCameraPos = camera.getPosition();
+            lastCameraYaw = camera.getYRot();
+            lastCameraPitch = camera.getXRot();
+            lastZoomOut = (float) camera.getMaxZoom(4);
 
-            camera.move(-camera.getMaxZoom(4), 0, -1);
+
+            camera.move(-lastZoomOut, 0, -1);
 
             yawIncrease = 0;
             pitchIncrease = 0;
@@ -100,25 +107,28 @@ public class CannonController {
             // find hit result
             Vec3 lookDir2 = new Vec3(camera.getLookVector());
             float maxRange = 128;
-            Vec3 endPos = cameraPos.add(lookDir2.scale(maxRange));
+            Vec3 actualCameraPos = camera.getPosition();
+            Vec3 endPos = actualCameraPos.add(lookDir2.scale(maxRange));
 
-            BlockHitResult hitResult = level
-                    .clip(new ClipContext(cameraPos, endPos,
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
-
-            hit = hitResult;
-
+            hit = level.clip(new ClipContext(actualCameraPos, endPos,
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
             Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
             //rotate so we can work in 2d
             Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-            target = target.add(target.normalized().scale(0.05f));
+            target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
 
-            trajectory = findBestTrajectory(target,
+            // calculate the yaw of target. no clue why its like this
+            float yaw = (Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z));
+
+            trajectory = CannonTrajectory.findBest(target,
                     cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), preferShootingDown);
 
             if (trajectory != null) {
-                cannon.setPitch(-trajectory.angle() * Mth.RAD_TO_DEG);
+                float followSpeed = 0.4f;
+                //TODO: improve
+                cannon.setPitch(Mth.rotLerp(followSpeed, cannon.getPitch(1), trajectory.pitch() * Mth.RAD_TO_DEG));
+                cannon.setYaw(Mth.rotLerp(followSpeed, cannon.getYaw(1), yaw * Mth.RAD_TO_DEG));
             }
 
             return true;
@@ -130,7 +140,7 @@ public class CannonController {
         float scale = 0.2f;
         yawIncrease += yawAdd * scale;
         pitchIncrease += pitchAdd * scale;
-        needsToUpdateServer = true;
+        if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
     }
 
 
@@ -187,142 +197,6 @@ public class CannonController {
         }
     }
 
-    public static void renderTrajectory(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
-                                        int packedLight, int packedOverlay, float partialTicks,
-                                        float yaw) {
-        //if (!active || cannon != blockEntity) return;
-        if (hit != null && trajectory != null && blockEntity.hasFuelAndProjectiles()) {
-
-            boolean cooldown = blockEntity.getCooldown() != 0;
-
-            BlockPos cannonPos = blockEntity.getBlockPos();
-
-
-            Minecraft mc = Minecraft.getInstance();
-            boolean debug = !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
-
-
-            poseStack.pushPose();
-
-            //rotate so we can work in 2d
-            Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
-            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(Axis.YP.rotation(-yaw));
-
-            if (debug) renderTargetLine(poseStack, buffer, target);
-
-            boolean hitAir = mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
-
-            renderArrows(poseStack, buffer, partialTicks,
-                    trajectory, hitAir, cooldown);
-
-            poseStack.popPose();
-
-
-            if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, cooldown);
-
-            if (debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
-        }
-    }
-
-    private static void renderTargetBlock(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos, BlockHitResult bh) {
-        poseStack.pushPose();
-
-        BlockPos targetPos = bh.getBlockPos();
-        VertexConsumer lines = buffer.getBuffer(RenderType.lines());
-        Vec3 distance1 = targetPos.getCenter().subtract(pos.getCenter());
-
-        AABB bb = new AABB(distance1, distance1.add(1, 1, 1)).inflate(0.01);
-        LevelRenderer.renderLineBox(poseStack, lines, bb, 1.0F, 0, 0, 1.0F);
-
-        poseStack.popPose();
-    }
-
-    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, float yaw, boolean red) {
-        poseStack.pushPose();
-
-        Material circleMaterial = red ? ModMaterials.CANNON_TARGET_RED_MATERIAL : ModMaterials.CANNON_TARGET_MATERIAL;
-        VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
-
-        Vec3 targetVec = new Vec3(0, trajectory.point().y, -trajectory.point().x).yRot(-yaw);
-        poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.05, targetVec.z + 0.5);
-
-        poseStack.mulPose(Axis.XP.rotationDegrees(90));
-        int lu = LightTexture.FULL_BLOCK;
-        int lv = LightTexture.FULL_SKY;
-        VertexUtil.addQuad(circleBuilder, poseStack, -2f, -2f, 2f, 2f, lu, lv);
-        poseStack.popPose();
-    }
-
-    private static void renderTargetLine(PoseStack poseStack, MultiBufferSource buffer, Vec2 target) {
-        VertexConsumer consumer = buffer.getBuffer(RenderType.lines());
-        Matrix4f matrix4f = poseStack.last().pose();
-        Matrix3f matrix3f = poseStack.last().normal();
-        consumer.vertex(matrix4f, 0, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-        consumer.vertex(matrix4f, 0, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-        consumer.vertex(matrix4f, 0.01f, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-        consumer.vertex(matrix4f, 0.01f, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-    }
-
-
-    private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks,
-                                     CannonTrajectory trajectory, boolean hitAir, boolean red) {
-
-        float finalTime = (float) trajectory.finalTime();
-        if (finalTime > 100000) {
-            Supplementaries.error();
-            return;
-        }
-
-        poseStack.pushPose();
-
-        float scale = 1;
-        float size = 2.5f / 16f * scale;
-        VertexConsumer consumer = buffer.getBuffer(red ? ModRenderTypes.CANNON_TRAJECTORY_RED : ModRenderTypes.CANNON_TRAJECTORY);
-        Matrix4f matrix = poseStack.last().pose();
-
-        float py = 0;
-        float px = 0;
-        float d = -(System.currentTimeMillis() % 1000) / 1000f;
-        float step = finalTime / (int) finalTime;
-        float maxT = finalTime + (hitAir ? 0 : step);
-        for (float t = step; t < maxT; t += step) {
-
-            float textureStart = d % 1;
-            consumer.vertex(matrix, -size, py, px)
-                    .color(1, 1, 1, 1.0F)
-                    .uv(0, textureStart)
-                    .endVertex();
-            consumer.vertex(matrix, size, py, px)
-                    .color(1, 1, 1, 1.0F)
-                    .uv(5 / 16f, textureStart)
-                    .endVertex();
-
-            double ny = trajectory.getY(t);
-            double nx = -trajectory.getX(t);
-
-            float dis = (float) (Mth.length(nx - px, ny - py)) / scale;
-            float textEnd = textureStart + dis;
-
-            d += dis;
-            py = (float) ny;
-            px = (float) nx;
-
-            int alpha = (t + step >= maxT) ? 0 : 1;
-            consumer.vertex(matrix, size, py, px)
-                    .color(1f, 1f, 1f, alpha)
-                    .uv(5 / 16f, textEnd)
-                    .endVertex();
-            consumer.vertex(matrix, -size, py, px)
-                    .color(1f, 1f, 1f, alpha)
-                    .uv(0, textEnd)
-                    .endVertex();
-        }
-
-        poseStack.popPose();
-    }
 
 }
 

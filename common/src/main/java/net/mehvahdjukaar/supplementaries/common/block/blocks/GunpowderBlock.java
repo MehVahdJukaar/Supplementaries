@@ -402,7 +402,7 @@ public class GunpowderBlock extends LightUpBlock {
             else {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
-                    if (this.isFireSource(world, p)) {
+                    if (isFireSource(world, p)) {
                         this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
                         world.scheduleTick(pos, this, getDelay());
                         break;

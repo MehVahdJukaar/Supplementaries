@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.SpriteCoordinateUnExpander;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -176,7 +177,12 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                     this.type = colors.get(rand.nextInt(colors.size()));
                 } else {
                     List<BookType> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).toList();
-                    this.type = c.get(rand.nextInt(c.size()));
+                    if(c.isEmpty()) {
+                        Supplementaries.error();
+                        this.type = lastColor;
+                    } else {
+                        this.type = c.get(rand.nextInt(c.size()));
+                    }
                 }
                 colors.remove(this.type);
             } else {

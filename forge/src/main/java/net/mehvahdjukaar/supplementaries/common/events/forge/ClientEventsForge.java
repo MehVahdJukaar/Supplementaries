@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
@@ -84,6 +85,9 @@ public class ClientEventsForge {
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
                 new QuiverArrowSelectGuiImpl());
+
+        event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
+                new CannonChargeOverlayImpl());
     }
 
     @SubscribeEvent
@@ -208,4 +212,11 @@ public class ClientEventsForge {
         if (CannonController.isActive())
             event.setCanceled(true);
     }
+
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+        if (CannonController.isActive() && event.getOverlay() == VanillaGuiOverlay.EXPERIENCE_BAR.type())
+            event.setCanceled(true);
+    }
+
 }

@@ -205,7 +205,7 @@ public class ClientConfigs {
             TALL_GRASS_COLOR_CHANGE = builder.comment("Colors tall grass same color as grass")
                     .define("tall_grass_color", true);
             ACCURATE_COLORED_MAPS = builder.comment("Makes colored maps a bit more accurate. Might affect performance")
-                            .define("accurate_colors", false);
+                    .define("accurate_colors", false);
             builder.pop();
             builder.pop();
         }
@@ -352,7 +352,7 @@ public class ClientConfigs {
             builder.push("wind_vane");
             WIND_VANE_POWER_SCALING = builder.comment("""
                             Wind vane animation swings according to this equation:\s
-                            angle(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)
+                            pitch(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)
                             where:
                              - pow = max(1,redstone_power*<power_scaling>)
                              - time = time in ticks
@@ -360,7 +360,7 @@ public class ClientConfigs {
                             <power_scaling> = how much frequency changes depending on power. 2 means it spins twice as fast each power level (2* for rain, 4* for thunder)
                             increase to have more distinct indication when weather changes""")
                     .define("power_scaling", 3.0, 1.0, 100.0);
-            WIND_VANE_ANGLE_1 = builder.comment("Amplitude (maximum angle) of first sine wave")
+            WIND_VANE_ANGLE_1 = builder.comment("Amplitude (maximum pitch) of first sine wave")
                     .define("max_angle_1", 30.0, 0, 360);
             WIND_VANE_ANGLE_2 = builder.define("max_angle_2", 10.0, 0, 360);
             WIND_VANE_PERIOD_1 = builder.comment("Base period in ticks at 0 power of first sine wave")

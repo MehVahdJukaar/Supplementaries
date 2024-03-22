@@ -9,20 +9,29 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolean miss,
+public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolean miss,
                                float gravity, float drag, float v0x, float v0y) {
 
-    public static CannonTrajectory of(Vec2 point, float angle, double finalTime, boolean miss, float gravity, float drag, float pow) {
-        return new CannonTrajectory(point, angle, finalTime, miss, gravity, drag, (float) (Math.cos(angle) * pow), (float) (Math.sin(angle) * pow));
+    public static CannonTrajectory of(Vec2 point, float pitch, double finalTime, boolean miss, float gravity, float drag, float pow) {
+        return new CannonTrajectory(point, pitch, finalTime, miss, gravity, drag, (float) (Math.cos(pitch) * pow), (float) (Math.sin(pitch) * pow));
     }
 
     @Nullable
-    public static CannonTrajectory findBestTrajectory(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                                      boolean preferShootingDown) {
+    public static CannonTrajectory findBest(Vec2 targetPoint, float gravity, float drag, float initialPow,
+                                            boolean preferShootingDown) {
 
         double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
 
         if (gravity == 0) {
+
+            float v0x = Mth.cos((float) targetAngle) * initialPow;
+            float v0y = Mth.sin((float) targetAngle) * initialPow;
+
+            if (drag == 0) {
+                return new CannonTrajectory(targetPoint, (float) targetAngle,
+                        20, false, gravity, drag, v0x, v0y);
+            }
+
             // simple line
             float finalDist = targetPoint.length();
             double ld = Math.log(drag);
@@ -38,39 +47,36 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 t = Math.log(0.4 / initialPow) / Math.log(drag);
             } else t = Math.log(arg) / ld;
 
-            float v0x = Mth.cos((float) targetAngle) * initialPow;
-            float v0y = Mth.sin((float) targetAngle) * initialPow;
-
             float arcx = (float) arcX(t, gravity, drag, v0x);
             float arcy = (float) arcY(t, gravity, drag, v0y);
 
             Vec2 pointHit = new Vec2(arcx, arcy);
-            return new CannonTrajectory(pointHit, (float) targetAngle, t,
+            return new CannonTrajectory(pointHit,  (float) targetAngle, t,
                     miss, gravity, drag, v0x, v0y);
         }
 
         if (initialPow == 0) return null;
         float tolerance = 0.001f;
 
-        float start = (float) targetAngle + 0.01f; // Initial angle
-        float end = (float) Math.PI / 2; // Maximum angle (90 degrees)
+        float start = (float) targetAngle + 0.01f; // Initial pitch
+        float end = (float) Math.PI / 2; // Maximum pitch (90 degrees)
 
         Vec2 farAway = targetPoint.scale(1000);
-        // calculate trajectory that gives max distance = global maxima. 2 roots we need are either to its right or left angle wise
-        CannonTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway, gravity, drag, initialPow,
+        // calculate trajectory that gives max distance = global maxima. 2 roots we need are either to its right or left pitch wise
+        CannonTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway,  gravity, drag, initialPow,
                 0.01f,
                 tolerance, start, end);
-        float peakAngle = furthestTrajectory.angle();
+        float peakAngle = furthestTrajectory.pitch();
 
         // that function has 2 solutions. we need to reduce the angles we search, so we converge on the first one
-        // we can do this by using as max angle the angle that yields the highest distance (global maxima of the distance function)
+        // we can do this by using as max pitch the pitch that yields the highest distance (global maxima of the distance function)
         CannonTrajectory solution;
         if (preferShootingDown) {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+            solution = findBestTrajectoryGoldenSection(targetPoint,  gravity, drag, initialPow,
                     0.001f,
                     tolerance, start, peakAngle);
         } else {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+            solution = findBestTrajectoryGoldenSection(targetPoint,  gravity, drag, initialPow,
                     0.001f,
                     tolerance, peakAngle, end);
         }
@@ -78,7 +84,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
     }
 
     /**
-     * calculate the best angle to shoot a projectile at to hit a target, maximising distance to target point
+     * calculate the best pitch to shoot a projectile at to hit a target, maximising distance to target point
      *
      * @param step        iteration step
      * @param targetPoint target point
@@ -86,7 +92,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @param drag        drag (v multiplier)
      * @param initialPow  initial velocity
      */
-    private static CannonTrajectory findBestTrajectoryBruteForce(float step, Vec2 targetPoint, float gravity,
+    private static CannonTrajectory findBestTrajectoryBruteForce(float step, Vec2 targetPoint,  float gravity,
                                                                  float drag, float initialPow) {
         boolean exitEarly = true; //whether to grab first or second result. this doesnt work tho
         float stopDistance = 0.01f;
@@ -132,12 +138,12 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 Supplementaries.error();
             }
         }
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
+        return new CannonTrajectory(bestPoint,  bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
 
     /**
-     * Calculate the best angle to shoot a projectile at to hit a target, maximizing the distance to the target point.
+     * Calculate the best pitch to shoot a projectile at to hit a target, maximizing the distance to the target point.
      * Uses Secant method. Very fast. can only work when theres a global maxima
      *
      * @param targetPoint   Target point
@@ -146,13 +152,13 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @param initialPow    Initial velocity
      * @param tolerance     Tolerance for stopping the secant method
      * @param maxIterations Maximum number of iterations for the secant method
-     * @return Trajectory object containing the best point, angle, time, and miss flag
+     * @return Trajectory object containing the best point, pitch, time, and miss flag
      */
-    public static CannonTrajectory findBestTrajectorySecant(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                                            float tolerance, int maxIterations) {
+    private static CannonTrajectory findBestTrajectorySecant(Vec2 targetPoint,  float gravity, float drag, float initialPow,
+                                                             float tolerance, int maxIterations) {
         float targetSlope = targetPoint.y / targetPoint.x;
         float startAngle = (float) (Math.atan2(targetPoint.y, targetPoint.x)) + 0.01f;
-        float endAngle = (float) Math.PI / 2; // Maximum angle (90 degrees)
+        float endAngle = (float) Math.PI / 2; // Maximum pitch (90 degrees)
 
         // Initial guesses for the secant method
         float angle1 = startAngle;
@@ -195,7 +201,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestV0y = v0y1;
 
                 angle2 = angle1;
-                angle1 -= tolerance; // Move angle1 closer to the best angle
+                angle1 -= tolerance; // Move angle1 closer to the best pitch
                 distToTarget = distance1;
             } else {
                 bestPoint = r2.getFirst();
@@ -205,7 +211,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
                 bestV0y = v0y2;
 
                 angle1 = angle2;
-                angle2 += tolerance; // Move angle2 closer to the best angle
+                angle2 += tolerance; // Move angle2 closer to the best pitch
                 distToTarget = distance2;
             }
 
@@ -224,12 +230,12 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
             }
         }
 
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
+        return new CannonTrajectory(bestPoint,  bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
 
     /**
-     * Calculate the best angle such that the resulting trajectory is closest to the target point
+     * Calculate the best pitch such that the resulting trajectory is closest to the target point
      * Uses Golden-section search
      *
      * @param targetPoint Target point
@@ -237,7 +243,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
      * @param drag        Drag (v multiplier)
      * @param initialPow  Initial velocity
      * @param tolerance   Tolerance for stopping the search
-     * @return Trajectory object containing the best point, angle, time, and miss flag
+     * @return Trajectory object containing the best point, pitch, time, and miss flag
      */
     private static CannonTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow,
                                                                     float angleTolerance, float tolerance,
@@ -337,7 +343,7 @@ public record CannonTrajectory(Vec2 point, float angle, double finalTime, boolea
         return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
-    public static Pair<Vec2, Double> findLineIntersection(float m, float g, float d, float V0x, float V0y, float precision) {
+    private static Pair<Vec2, Double> findLineIntersection(float m, float g, float d, float V0x, float V0y, float precision) {
         return findLineIntersectionBisection(m, g, d, V0x, V0y, precision);
     }
 

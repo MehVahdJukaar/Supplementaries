@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -15,6 +15,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockTile> {
 
@@ -43,20 +45,35 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.mulPose(RotHlpr.Z180);
+        Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getRotation();
+        poseStack.mulPose(rotation);
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
 
         long t = System.currentTimeMillis();
 
-
         //write equation of sawtooth wave with same period as that sine wave
         float wave = (t % 1000) / 1000f;
 
         float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
+        float absoluteYaw = yawRad;
+        float pitchRad = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
+
+        Vector3f forward = new Vector3f(0f, 0, 1);
+
+        forward.rotateX(Mth.PI - pitchRad);
+
+        forward.rotateY(Mth.PI - yawRad);
+        forward.rotate(rotation.invert());
+
+        yawRad = (float) Mth.atan2(forward.x, forward.z);
+
+        pitchRad = (float) Mth.atan2(-forward.y, Mth.sqrt(forward.x * forward.x + forward.z * forward.z));
+
+
         this.legs.yRot = yawRad;
-        this.pivot.xRot = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
+        this.pivot.xRot = pitchRad;
 
         float scale = Mth.sin((t % 200) / 200f * (float) Math.PI) * 0.01f + 1f + wave * 0.06f;
         head.xScale = scale;
@@ -67,9 +84,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         model.render(poseStack, builder, packedLight, packedOverlay);
 
+
         poseStack.popPose();
 
-        CannonController.renderTrajectory(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, yawRad);
+        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, absoluteYaw);
     }
 
 

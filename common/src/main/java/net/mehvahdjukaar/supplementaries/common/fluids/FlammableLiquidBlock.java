@@ -95,6 +95,36 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+        if (!level.isClientSide) {
+            // doesn't set off immediately
+            level.scheduleTick(pos, this, getReactToFireDelay());
+        }
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moving) {
+        // super also calls schedule fluid tick. unrelated to fire
+        super.onPlace(state, world, pos, oldState, moving);
+        if (!oldState.is(state.getBlock()) && !world.isClientSide) {
+            //doesn't ignite immediately
+            world.scheduleTick(pos, this, getReactToFireDelay());
+        }
+    }
+
+    private int getReactToFireDelay() {
+        return 2;
+    }
+
+    /**
+     * Gets the delay before this block ticks again (without counting random ticks)
+     */
+    private int getFireTickDelay(RandomSource random) {
+        return 30 + random.nextInt(10);
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         return interactWithPlayer(state, worldIn, pos, player, handIn);
     }
@@ -204,13 +234,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             level.levelEvent(null, 1009, pos, 0);
         }
         super.playerWillDestroy(level, pos, state, player);
-    }
-
-    /**
-     * Gets the delay before this block ticks again (without counting random ticks)
-     */
-    private static int getFireTickDelay(RandomSource random) {
-        return 30 + random.nextInt(10);
     }
 
     @Override
