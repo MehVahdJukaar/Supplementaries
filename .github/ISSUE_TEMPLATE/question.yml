@@ -1,0 +1,27 @@
+name: Ask a question
+description: Got a question? Ask a question here.
+title: "[❓]: "
+labels: "question"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        QUESTION
+
+  - type: input
+    id: question
+    attributes:
+      label: Your Question
+      description: Ask a simple question
+      placeholder: ex. How to build the supplementaries?
+    validations:
+      required: true
+
+  - type: textarea
+    id: Details
+    attributes:
+      label: "Detail"
+      description: "Can describe what you tried to do OR give a clear and concise description of what you are asking"
+      placeholder: "I've tried to build the supplementaries and got an error that it's missing the library, moonlight-lib.pom"
+    validations:
+        required: false
