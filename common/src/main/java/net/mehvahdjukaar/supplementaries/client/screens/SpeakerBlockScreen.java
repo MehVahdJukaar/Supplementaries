@@ -134,7 +134,6 @@ public class SpeakerBlockScreen extends Screen {
             if (button == 0) {
                 this.volumeSlider.onReleased(mouseX, mouseY);
                 this.setFocused(this.editBox);
-                this.editBox.setFocused(true);
             }
         }
         return true;

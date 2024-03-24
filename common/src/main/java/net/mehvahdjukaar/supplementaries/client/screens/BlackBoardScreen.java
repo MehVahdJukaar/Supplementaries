@@ -51,6 +51,10 @@ public class BlackBoardScreen extends Screen {
     public void tick() {
         if (!isValid()) {
             this.onClose();
+        }else{
+            if(!(this.getFocused() instanceof BlackBoardButton)){
+                setFocused(null); //dont focus clear buttons
+            }
         }
     }
 
@@ -105,16 +109,17 @@ public class BlackBoardScreen extends Screen {
         }
     }
 
-    private void clear() {
+    private void clearPressed(Button button) {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 this.buttons[xx][yy].setColor((byte) 0);
             }
         }
+        this.saveHistoryStep();
     }
 
 
-    private void onUndo() {
+    private void undoPressed(Button button) {
         if (!this.history.isEmpty()) {
             for(var v : this.history.pollLast()){
                 this.buttons[v.x()][v.y()].setColor(v.color());
@@ -140,13 +145,13 @@ public class BlackBoardScreen extends Screen {
 
         int buttonW = 56;
         int sep = 4;
-        this.addRenderableWidget(Button.builder(CLEAR, b -> this.clear())
+        this.addRenderableWidget(Button.builder(CLEAR, this::clearPressed)
                 .bounds(this.width / 2 - buttonW / 2 - buttonW + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .bounds(this.width / 2 - buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
-        this.historyButton = this.addRenderableWidget(Button.builder(UNDO, button -> this.onUndo())
+        this.historyButton = this.addRenderableWidget(Button.builder(UNDO, this::undoPressed)
                 .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
     }
 

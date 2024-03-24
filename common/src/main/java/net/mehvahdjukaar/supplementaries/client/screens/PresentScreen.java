@@ -72,8 +72,6 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         this.recipient.setOutOfBoundResponder(up -> {
             if (!up) {
                 this.setFocused(descriptionBox);
-                this.recipient.setFocused(false);
-                this.descriptionBox.setFocused(true);
             }
         });
 
@@ -83,8 +81,6 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         this.descriptionBox.setOutOfBoundResponder(up -> {
             if (up) {
                 this.setFocused(recipient);
-                this.recipient.setFocused(true);
-                this.descriptionBox.setFocused(false);
             }
         });
 
