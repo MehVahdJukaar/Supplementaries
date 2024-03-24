@@ -48,6 +48,11 @@ public class ServerBoundSyncCannonPacket implements Message {
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level level = player.level();
+        float maxDist = 7;
+        // validate position. Anti cheat
+        if(pos.distToCenterSqr(player.position()) > maxDist*maxDist){
+            return;
+        }
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon) {
             cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire);
         } else {

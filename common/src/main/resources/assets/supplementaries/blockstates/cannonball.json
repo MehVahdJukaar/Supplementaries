@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "balls=1": {
+      "model": "supplementaries:block/cannonball_1"
+    },
+    "balls=2": {
+      "model": "supplementaries:block/cannonball_2"
+    },
+    "balls=3": {
+      "model": "supplementaries:block/cannonball_3"
+    },
+    "balls=4": {
+      "model": "supplementaries:block/cannonball_4"
+    }
+  }
+}

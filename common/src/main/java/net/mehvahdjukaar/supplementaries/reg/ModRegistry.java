@@ -959,11 +959,16 @@ public class ModRegistry {
 
     //cannon
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
-            BlockBehaviour.Properties.copy(Blocks.ANVIL)));
+            BlockBehaviour.Properties.copy(Blocks.ANVIL)
+                    .forceSolidOn().dynamicShape()));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
                     CannonBlockTile::new, CANNON.get()));
+
+    public static final Supplier<Block> CANNONBALL = regWithItem(CANNONBALL_NAME, () -> new CannonballBlock(
+            BlockBehaviour.Properties.copy(Blocks.ANVIL)
+    ));
 
     //urn
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(

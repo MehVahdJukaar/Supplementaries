@@ -39,7 +39,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -191,10 +190,10 @@ public class ServerEvents {
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
         ItemStack stack = itemEntity.getItem();
         if (!itemEntity.hasPickUpDelay() && CommonConfigs.Tools.QUIVER_PICKUP.get() &&
-                stack.getItem() instanceof ArrowItem &&
+                QuiverItem.canAcceptItem(stack) &&
                 (itemEntity.getOwner() == null ||
                         SuppPlatformStuff.getItemLifeSpawn(itemEntity) - itemEntity.getAge() <= 200 ||
-                        itemEntity.getOwner().equals(player.getUUID()))
+                        itemEntity.getOwner().equals(player))
         ) {
             ItemStack old = stack.copy();
             if (takeArrow(itemEntity, player, stack)) {

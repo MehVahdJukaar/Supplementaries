@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
+import net.mehvahdjukaar.supplementaries.common.utils.CircularList;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.minecraft.client.Minecraft;
@@ -16,14 +17,26 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 public class BlackBoardScreen extends Screen {
 
     private static final MutableComponent CLEAR = Component.translatable("gui.supplementaries.blackboard.clear");
+    private static final MutableComponent UNDO = Component.translatable("gui.supplementaries.blackboard.undo");
     private static final MutableComponent EDIT = Component.translatable("gui.supplementaries.blackboard.edit");
 
     private final BlackboardBlockTile tile;
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
+
+    private final Deque<List<Entry>> history = new CircularList<>(5);
+    private List<Entry> currentHistoryStep = new ArrayList<>();
+    private Button historyButton;
+
+    private record Entry(int x, int y, byte color) {
+    }
 
     private BlackBoardScreen(BlackboardBlockTile teBoard) {
         super(EDIT);
@@ -65,16 +78,29 @@ public class BlackBoardScreen extends Screen {
     }
 
     //dynamic refreshTextures for client
-    public void setPixel(int x, int y, boolean on) {
-        this.tile.setPixel(x, y, (byte) (on ? 1 : 0));
+    public void updateBlackboard(int x, int y, byte newColor) {
+        this.tile.setPixel(x, y, newColor);
+    }
+
+    public void addHistory(int x, int y, byte oldColor) {
+        this.currentHistoryStep.add(new Entry(x, y, oldColor));
+    }
+
+    public void saveHistoryStep(){
+        if(!currentHistoryStep.isEmpty()) {
+            this.history.add(currentHistoryStep);
+            this.currentHistoryStep = new ArrayList<>();
+            this.historyButton.active = true;
+        }
     }
 
     //calls drag for other buttons
-    public void dragButtons(double mx, double my, boolean on) {
+    public void onButtonDragged(double mx, double my, byte buttonValue) {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                if (this.buttons[xx][yy].isMouseOver(mx, my))
-                    this.buttons[xx][yy].onDrag(mx, my, on);
+                BlackBoardButton b = this.buttons[xx][yy];
+                if (b.isMouseOver(mx, my) && b.getColor() != buttonValue)
+                    b.setColor(buttonValue);
             }
         }
     }
@@ -82,27 +108,46 @@ public class BlackBoardScreen extends Screen {
     private void clear() {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                setPixel(xx, yy, false);
                 this.buttons[xx][yy].setColor((byte) 0);
             }
         }
     }
 
+
+    private void onUndo() {
+        if (!this.history.isEmpty()) {
+            for(var v : this.history.pollLast()){
+                this.buttons[v.x()][v.y()].setColor(v.color());
+            };
+            //clear history step from this undo we just added
+            this.currentHistoryStep.clear();
+        }
+        if (this.history.isEmpty()) {
+            this.historyButton.active = false;
+        }
+    }
+
+
     @Override
     protected void init() {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                this.buttons[xx][yy] = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this::setPixel, this::dragButtons);
-                this.addRenderableWidget(this.buttons[xx][yy]);
-                this.buttons[xx][yy].setColor(this.tile.getPixel(xx, yy));
+                byte pixel = this.tile.getPixel(xx, yy);
+                BlackBoardButton widget = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this, pixel);
+                this.buttons[xx][yy] = this.addRenderableWidget(widget);
             }
         }
 
+        int buttonW = 56;
+        int sep = 4;
         this.addRenderableWidget(Button.builder(CLEAR, b -> this.clear())
-                .bounds(this.width / 2 - 100, this.height / 4 + 120, 100 - 4, 20).build());
+                .bounds(this.width / 2 - buttonW / 2 - buttonW + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-                .bounds(this.width / 2 + 4, this.height / 4 + 120, 100 - 4, 20).build());
+                .bounds(this.width / 2 - buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
+
+        this.historyButton = this.addRenderableWidget(Button.builder(UNDO, button -> this.onUndo())
+                .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
     }
 
     @Override

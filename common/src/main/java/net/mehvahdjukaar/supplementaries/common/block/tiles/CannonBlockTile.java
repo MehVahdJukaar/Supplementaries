@@ -153,12 +153,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
 
-    public void setPitch(float v) {
-        this.pitch = v;
+    public void setPitch(float pitch) {
+        this.pitch = Mth.wrapDegrees(pitch);
     }
 
     public void setYaw(float yaw) {
-        this.yaw = yaw;
+        this.yaw = Mth.wrapDegrees(yaw);
     }
 
     @Override

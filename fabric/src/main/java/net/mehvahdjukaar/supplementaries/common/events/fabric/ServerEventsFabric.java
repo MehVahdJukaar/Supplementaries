@@ -49,6 +49,7 @@ public class ServerEventsFabric {
             }
         });
 
+
         if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
                   GenerationStep.Decoration.UNDERGROUND_DECORATION,

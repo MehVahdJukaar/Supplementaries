@@ -70,10 +70,11 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         yawRad = (float) Mth.atan2(forward.x, forward.z);
 
         pitchRad = (float) Mth.atan2(-forward.y, Mth.sqrt(forward.x * forward.x + forward.z * forward.z));
-
+        float rollRad = (float) Math.atan2(forward.y, forward.z);
 
         this.legs.yRot = yawRad;
         this.pivot.xRot = pitchRad;
+        this.pivot.zRot = 0;
 
         float scale = Mth.sin((t % 200) / 200f * (float) Math.PI) * 0.01f + 1f + wave * 0.06f;
         head.xScale = scale;

@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,7 +56,9 @@ public class CannonController {
         Minecraft mc = Minecraft.getInstance();
         lastCameraType = mc.options.getCameraType();
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-        mc.gui.setOverlayMessage(Component.translatable("mount.onboard", mc.options.keyShift.getTranslatedKeyMessage()), false);
+        mc.gui.setOverlayMessage(Component.translatable("message.supplementaries.cannon_maneuver",
+                mc.options.keyShift.getTranslatedKeyMessage(),
+                mc.options.keyAttack.getTranslatedKeyMessage()), false);
     }
 
     public static void turnOff() {
@@ -175,7 +178,7 @@ public class CannonController {
     }
 
 
-    public static void onMouseClicked(boolean attack) {
+    public static void onPlayerAttack(boolean attack) {
         if (attack) {
             if (cannon != null && cannon.readyToFire()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
@@ -204,18 +207,18 @@ public class CannonController {
         if (!isActive()) return;
         ClientLevel level = mc.level;
         BlockPos pos = cannon.getBlockPos();
-        if (level.getBlockEntity(pos) == cannon && !cannon.isRemoved()) {
+        Player player = Minecraft.getInstance().player;
+        float maxDist = 7;
+        if (level.getBlockEntity(pos) == cannon && !cannon.isRemoved() &&
+                pos.distToCenterSqr(player.position()) < maxDist * maxDist) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
                         cannon.getYaw(0), cannon.getPitch(0), cannon.getFirePower(),
                         false, cannon.getBlockPos()));
             }
-        } else {
-            turnOff();
-        }
+        } else turnOff();
     }
-
 
 }
 

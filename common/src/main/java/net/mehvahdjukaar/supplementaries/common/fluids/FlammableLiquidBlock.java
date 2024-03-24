@@ -239,7 +239,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         level.scheduleTick(pos, this, getFireTickDelay(level.random));
-        if (level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        if (level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK) && isOnFire(state)) {
 
             int age = state.getValue(AGE);
             int layers = state.getValue(LEVEL);

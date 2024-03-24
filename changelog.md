@@ -6,3 +6,7 @@
 - fixed some issues with jars and goblet fluids
 - wind vane uses an entity model now with proper shading
 - crystal displays can be chained
+- book pile generation fix
+- quiver pick up arrow fix
+- quiver can now have arrows be inserted from off hand
+- blackboard undo button

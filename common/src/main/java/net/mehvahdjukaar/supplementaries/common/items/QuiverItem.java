@@ -109,13 +109,25 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
+        InteractionHand otherHand = pUsedHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        ItemStack possibleArrowStack = player.getItemInHand(otherHand);
+        Data data = getQuiverData(stack);
+
+        if (data.canAcceptItem(possibleArrowStack)) {
+            ItemStack remaining = data.tryAdding(possibleArrowStack);
+            if (!remaining.equals(possibleArrowStack)) {
+                this.playInsertSound(player);
+                player.setItemInHand(otherHand, remaining);
+                return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
+            }
+        }
         if (player.isSecondaryUseActive()) {
-            Data data = getQuiverData(stack);
             if (data != null) {
                 if (data.cycle()) {
                     this.playInsertSound(player);
                 }
             }
+            return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
@@ -125,7 +137,6 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
             player.startUsingItem(pUsedHand);
             return InteractionResultHolder.consume(stack);
         }
-        return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
     }
 
     @Override
@@ -239,6 +250,9 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
+    public static boolean canAcceptItem(ItemStack toInsert) {
+        return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
+    }
 
     //this is cap, cap provider
     public interface Data {
@@ -253,7 +267,7 @@ public class QuiverItem extends Item implements DyeableLeatherItem {
         List<ItemStack> getContentView();
 
         default boolean canAcceptItem(ItemStack toInsert) {
-            return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
+            return QuiverItem.canAcceptItem(toInsert);
         }
 
         default ItemStack getSelected() {

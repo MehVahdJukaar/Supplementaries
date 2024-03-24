@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class CannonBlock extends DirectionalBlock implements EntityBlock , ILightable, IRotatable {
+public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
@@ -71,6 +72,26 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer != null && level.getBlockEntity(pos) instanceof CannonBlockTile cannon) {
+            Direction dir = Direction.orderedByNearest(placer)[0];
+            Direction myDir = state.getValue(FACING);
+            int i = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
+
+            if(dir.getAxis() == Direction.Axis.Y){
+                float pitch = dir == Direction.UP ? -90 : 90;
+                cannon.setPitch((myDir.getOpposite() == dir ? pitch+180 : pitch));
+
+            }
+           else  {
+                float yaw = dir.toYRot();
+                cannon.setYaw((myDir.getOpposite() == dir ? yaw+180 : yaw));
+            }
+        }
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
@@ -86,7 +107,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if(level.getBlockEntity(pos) instanceof CannonBlockTile tile){
+        if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             tile.use(player, hand, hit);
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
@@ -110,7 +131,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
 
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return switch (state.getValue(FACING)){
+        return switch (state.getValue(FACING)) {
             case UP -> SHAPE_UP;
             case DOWN -> SHAPE_DOWN;
             case NORTH -> SHAPE_NORTH;
@@ -122,7 +143,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity){
+        if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity) {
             return super.getCollisionShape(state, level, pos, context);
         }
         return Shapes.empty();
@@ -130,7 +151,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock , ILigh
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)){
+        return switch (state.getValue(FACING)) {
             case UP -> SHAPE_UP;
             case DOWN -> SHAPE_DOWN;
             case NORTH -> SHAPE_NORTH;

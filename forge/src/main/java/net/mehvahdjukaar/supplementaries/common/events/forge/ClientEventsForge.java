@@ -203,7 +203,7 @@ public class ClientEventsForge {
         if (CannonController.isActive()) {
             event.setCanceled(true);
             event.setSwingHand(false);
-            CannonController.onMouseClicked(event.isAttack());
+            CannonController.onPlayerAttack(event.isAttack());
         }
     }
 
@@ -215,8 +215,12 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
-        if (CannonController.isActive() && event.getOverlay() == VanillaGuiOverlay.EXPERIENCE_BAR.type())
-            event.setCanceled(true);
+        if (CannonController.isActive() ) {
+            var overlay = event.getOverlay();
+            if(overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+                event.setCanceled(true);
+            }
+        }
     }
 
 }

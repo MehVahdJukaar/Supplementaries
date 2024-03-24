@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,8 @@ import net.minecraft.util.FastColor;
 
 
 public class BlackBoardButton implements GuiEventListener, Renderable, NarratableEntry {
+
+    private final BlackBoardScreen parent;
     public final int u;
     public final int v;
     public final int x;
@@ -26,21 +29,19 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
     protected byte color = 0;
     protected boolean focused;
 
-    private final IDraggable onDragged;
-    private final IPressable onPress;
-
-    public BlackBoardButton(int centerX, int centerY, int u, int v, IPressable pressedAction,
-                            IDraggable dragAction) {
+    public BlackBoardButton(int centerX, int centerY, int u, int v, BlackBoardScreen screen, byte color) {
         this.x = centerX - ((8 - u) * SIZE);
         this.y = centerY - ((-v) * SIZE);
         this.u = u;
         this.v = v;
-        this.onPress = pressedAction;
-        this.onDragged = dragAction;
+        this.parent = screen;
+        this.color = color;
     }
 
     public void setColor(byte color) {
+        this.parent.addHistory(this.u, this.v, this.color);
         this.color = color;
+        this.parent.updateBlackboard(this.u, this.v, color);
     }
 
     public byte getColor() {
@@ -51,7 +52,7 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
     public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         renderButton(poseStack);
-        //soboolean wasHovered = this.isHovered();
+        //boolean wasHovered = this.isHovered();
     }
 
     public void renderButton(GuiGraphics graphics) {
@@ -80,43 +81,17 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
         this.renderButton(poseStack);
     }
 
-    //toggle
-    public void onClick(double mouseX, double mouseY) {
-        this.color = (byte) (this.color == 0 ? 1 : 0);
-        this.onPress.onPress(this.u, this.v, this.color != 0);
-
-    }
-
-    public void onRelease(double mouseX, double mouseY) {
-    }
-
-    //set
-    public void onDrag(double mouseX, double mouseY, boolean on) {
-        this.color = (byte) (on ? 1 : 0);
-        this.onPress.onPress(this.u, this.v, this.color != 0);
-    }
-
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isValidClickButton(button)) {
             boolean flag = this.isMouseOver(mouseX, mouseY);
             if (flag) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
-                this.onClick(mouseX, mouseY);
+                this.setColor((byte) (this.color == 0 ? 1 : 0));
                 return true;
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.isValidClickButton(button)) {
-            this.onRelease(mouseX, mouseY);
-            return true;
-        } else {
-            return false;
-        }
     }
 
     protected boolean isValidClickButton(int button) {
@@ -125,9 +100,18 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-
         if (this.isValidClickButton(button)) {
-            this.onDragged.onDragged(mouseX, mouseY, this.color != 0);
+            this.parent.onButtonDragged(mouseX, mouseY, this.color);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (this.isValidClickButton(button)) {
+            this.parent.saveHistoryStep();
             return true;
         } else {
             return false;
@@ -169,11 +153,11 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
     }
 
     public interface IPressable {
-        void onPress(int x, int y, boolean on);
+        void onPress(int x, int y, byte on);
     }
 
     public interface IDraggable {
-        void onDragged(double mouseX, double mouseY, boolean on);
+        void onDragged(double mouseX, double mouseY, byte on);
     }
 
 }

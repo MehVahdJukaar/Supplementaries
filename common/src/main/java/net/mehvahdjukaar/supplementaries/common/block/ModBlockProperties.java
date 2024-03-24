@@ -63,6 +63,7 @@ public class ModBlockProperties {
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);
     public static final IntegerProperty BOOKS = IntegerProperty.create("books", 1, 4);
     public static final IntegerProperty FINITE_FLUID_LEVEL = IntegerProperty.create("level", 1, 16);
+    public static final IntegerProperty BALLS = IntegerProperty.create("balls", 1, 4);
 
     public static final EnumProperty<Topping> TOPPING = EnumProperty.create("topping", Topping.class);
     public static final EnumProperty<Winding> WINDING = EnumProperty.create("winding", Winding.class);

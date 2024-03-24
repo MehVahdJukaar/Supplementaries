@@ -160,13 +160,16 @@ public class ServerEventsForge {
         }else{
             ClientEvents.onEntityLoad(event.getEntity(), event.getLevel());
         }
-
     }
+
+
+
+
+
 
 
     //TODO: add these on fabric
     //forge only
-
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -237,7 +240,6 @@ public class ServerEventsForge {
                     cat.getVariant() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
                     event.getSource().getEntity() instanceof LivingEntity p) {
                 p.addEffect(new MobEffectInstance(MobEffects.UNLUCK, 20 * 60 * 5));
-
             }
         }
     }

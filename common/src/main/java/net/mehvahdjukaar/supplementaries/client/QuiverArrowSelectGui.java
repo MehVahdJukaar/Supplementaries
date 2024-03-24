@@ -49,12 +49,10 @@ public abstract class QuiverArrowSelectGui extends Gui {
         usingKeyAndHasItem = on && (Minecraft.getInstance().player instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver());
     }
 
-    protected final ItemRenderer itemRenderer;
     protected final Minecraft minecraft;
 
     protected QuiverArrowSelectGui(Minecraft minecraft, ItemRenderer itemRenderer) {
         super(minecraft, itemRenderer);
-        this.itemRenderer = itemRenderer;
         this.minecraft = minecraft;
     }
 

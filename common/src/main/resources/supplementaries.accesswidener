@@ -14,6 +14,9 @@ accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 
 accessible field net/minecraft/world/level/block/AbstractCauldronBlock interactions Ljava/util/Map;
 
+accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+
+
 #shulker menu
 accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/minecraft/world/Container;
 
