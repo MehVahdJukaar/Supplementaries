@@ -174,6 +174,11 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
             if (item instanceof BookItem) {
                 if (lastColor == null) {
+                    if(colors.isEmpty()){
+                        Supplementaries.error();
+                        this.type = PlaceableBookManager.getByName("brown");
+                        return;
+                    }
                     this.type = colors.get(rand.nextInt(colors.size()));
                 } else {
                     List<BookType> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).toList();
@@ -187,6 +192,11 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 colors.remove(this.type);
             } else {
                 var possibleTypes = PlaceableBookManager.getByItem(bookStack);
+                if(possibleTypes.isEmpty()){
+                    Supplementaries.error();
+                    this.type = PlaceableBookManager.getByName("brown");
+                    return;
+                }
                 this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
             }
         }

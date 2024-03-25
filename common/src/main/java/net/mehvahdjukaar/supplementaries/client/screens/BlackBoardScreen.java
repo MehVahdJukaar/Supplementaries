@@ -31,7 +31,7 @@ public class BlackBoardScreen extends Screen {
 
     private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
 
-    private final Deque<List<Entry>> history = new CircularList<>(5);
+    private final Deque<List<Entry>> history = new CircularList<>(20);
     private List<Entry> currentHistoryStep = new ArrayList<>();
     private Button historyButton;
 
