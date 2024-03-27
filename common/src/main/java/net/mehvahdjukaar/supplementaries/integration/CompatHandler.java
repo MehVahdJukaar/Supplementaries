@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.core.BlockPos;
@@ -12,8 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.BooleanSupplier;
 
 public class CompatHandler {
 
@@ -31,7 +30,7 @@ public class CompatHandler {
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios");
     public static final boolean TRINKETS = isLoaded("trinkets");
-    public static final boolean FARMERS_DELIGHT = isLoaded("farmersdelight");
+    public static final boolean FARMERS_DELIGHT;
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
     public static final boolean INSPIRATIONS = isLoaded("inspirations");
     public static final boolean FRAMEDBLOCKS = isLoaded("framedblocks");
@@ -73,15 +72,31 @@ public class CompatHandler {
     public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
     public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
-    public static final boolean OPTIFINE = ((BooleanSupplier) () -> {
-        if (!PlatHelper.getPhysicalSide().isClient()) return false;
-        try {
-            Class.forName("net.optifine.Config");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
+    public static final boolean OPTIFINE;
+
+    static {
+        boolean of = false;
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            try {
+                Class.forName("net.optifine.Config");
+                of = true;
+            } catch (ClassNotFoundException ignored) {
+            }
         }
-    }).getAsBoolean();
+
+        OPTIFINE = of;
+
+        boolean fd = false;
+        if (isLoaded("farmersdelight")) {
+            try {
+                Class.forName("vectorwing.farmersdelight.FarmersDelight");
+                fd = true;
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Farmers Delight Refabricated is not installed. Disabling Farmers Delight Module");
+            }
+        }
+        FARMERS_DELIGHT = fd;
+    }
 
     private static boolean isLoaded(String name) {
         return PlatHelper.isModLoaded(name);

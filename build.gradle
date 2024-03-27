@@ -42,7 +42,12 @@ subprojects {
             projectId = rootProject.mod_id
             uploadFile = tasks.remapJar
             gameVersions = [rootProject.minecraft_version]
-            loaders = [modLoader]
+            if(modLoader == "forge"){
+                loaders = [modLoader, "neoforge"]
+            }else{
+                loaders = [modLoader]
+            }
+
             changelog = changelogText
 
             if (modLoader == "fabric") {
@@ -67,6 +72,10 @@ subprojects {
                 releaseType = 'release'
                 addGameVersion rootProject.minecraft_version
                 addGameVersion modLoader.capitalize()
+                if(modLoader == "forge"){
+                    addGameVersion "NeoForge"
+                }
+
 
                 mainArtifact(tasks.remapJar)
 
