@@ -13,7 +13,6 @@
   ],
   "mixins": [
     "ChunkHolderMixin",
-    "CompatFarmersDelightTomatoMixin",
     "FriendlyByteBufMixin",
     "LivingEntityMixin",
     "MobBucketItemAccessor",

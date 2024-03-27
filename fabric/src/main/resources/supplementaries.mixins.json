@@ -15,7 +15,6 @@
     "BiomeAccessor",
     "BowMixin",
     "BushBlockMixin",
-    "CompatFarmersDelightTomatoMixin",
     "CropBlockMixin",
     "CrossbowMixin",
     "MobBucketItemAccessor",

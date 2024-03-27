@@ -38,6 +38,7 @@ dependencies {
     modCompileOnly("org.violetmoon.zeta:Zeta-1.0-12")
     modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
+    modImplementation("curse.maven:farmers-delight-398521:5051242")
 
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")

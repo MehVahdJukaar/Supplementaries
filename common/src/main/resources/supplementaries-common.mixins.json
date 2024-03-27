@@ -15,6 +15,7 @@
     "CartographyTableMixin",
     "CatSitOnBlockGoalMixin",
     "ComparatorBlockMixin",
+    "CompatFarmersDelightTomatoMixin",
     "CrossbowItemRopeMixin",
     "EndermanMixin",
     "EntityMixin",

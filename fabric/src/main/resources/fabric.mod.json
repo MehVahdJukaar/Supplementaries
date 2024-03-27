@@ -50,5 +50,8 @@
     "sleep_tight": "*",
     "embeddium": "*",
     "amendments": "*"
+  },
+  "breaks": {
+    "farmersdelight": "<1.20-2.0.0"
   }
 }
