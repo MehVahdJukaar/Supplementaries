@@ -59,7 +59,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         RandomSource rand = RandomSource.create(r);
         //render cookies
         AtomicInteger i = new AtomicInteger();
-        renderCookies(poseStack, bufferIn, rand, combinedLightIn, combinedOverlayIn,
+        renderCookies(itemRenderer, poseStack, bufferIn, rand, combinedLightIn, combinedOverlayIn,
                 () -> {
                     int j = i.getAndIncrement();
                     return j < tile.getContainerSize() ? tile.getItem(j) : ItemStack.EMPTY;
@@ -119,12 +119,12 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
         if (!USE_MODEL && !tank.isEmpty()) {
             SoftFluid fluid = tank.getFluidValue();
             renderFluid(tank.getHeight(1), tank.getCachedStillColor(tile.getLevel(), tile.getBlockPos()),
-                    fluid.getLuminosity(), fluid.getStillTexture(),
+                    fluid.getEmissivity(), fluid.getStillTexture(),
                     poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
 
-    public static void renderCookies(PoseStack poseStack, MultiBufferSource buffer, RandomSource rand,
+    public static void renderCookies(ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource buffer, RandomSource rand,
                                      int light, int overlay, Supplier<ItemStack> itemIterator) {
 
         ItemStack cookieStack = itemIterator.get();
@@ -138,7 +138,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             do {
                 poseStack.mulPose(Axis.ZP.rotationDegrees(rand.nextInt(360)));
                 poseStack.translate(0, 0, 1 / (16f * scale));
-                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 BakedModel model = itemRenderer.getModel(cookieStack, null, null, 0);
                 itemRenderer.render(cookieStack, ItemDisplayContext.FIXED, true, poseStack, buffer, light,
                         overlay, model);

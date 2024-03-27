@@ -57,7 +57,7 @@ public class JarBakedModel implements CustomBakedModel {
                 TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
                 BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
                 builder.setAutoDirection();
-                builder.lightEmission(fluid.getLuminosity());
+                builder.lightEmission(fluid.getEmissivity());
                 builder.setTint(1);
                 var poseStack = new PoseStack();
                 poseStack.translate(0.5, yOffset, 0.5);

@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
@@ -39,25 +38,20 @@ public class FaucetBakedModel implements CustomBakedModel {
         if (SINGLE_PASS || renderType == RenderType.translucent()) {
             var fluid = data.get(ModBlockProperties.FLUID);
             if (fluid != null && !fluid.isEmptyFluid()) {
-                var l = liquid.getQuads(state, side, rand);
-                if (!l.isEmpty()) {
+                List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
+                if (!liquidQuads.isEmpty()) {
                     int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
                     int col2 = (color & 0x00FFFFFF) | (40 << 24);
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
 
-                    var b = BakedQuadBuilder.create(sprite);
-                    for (var q : l) {
-                        q = VertexUtil.swapSprite(q, sprite);
-                        VertexUtil.recolorVertices(q.getVertices(), i -> {
-                            if (i == 1 || i == 2) return col2;
-                            return color;
-                        });
-                        b.fromVanilla(q);
-                        b.setDirection(q.getDirection());
-                        b.lightEmission(fluid.getLuminosity());
-                        quads.add(b.build());
-                        //add emissivity. not rally needed since these do give off light too
-                    }
+                    BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
+                            .applyingSprite(sprite)
+                            .applyingColor(i -> {
+                                if (i == 1 || i == 2) return col2;
+                                return color;
+                            }).applyingEmissivity(fluid.getEmissivity());
+
+                    quads.addAll(transformer.transformAll(liquidQuads));
                 }
             }
             if (!SINGLE_PASS) return quads;

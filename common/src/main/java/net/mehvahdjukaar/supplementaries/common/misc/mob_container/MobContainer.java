@@ -174,7 +174,7 @@ public class MobContainer {
                 var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
                 var cap = CapturedMobHandler.getDataCap(type, true);
                 var f = cap.shouldRenderWithFluid();
-                ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
+                ResourceLocation fluidId = f.map(v -> v.unwrapKey().get().location()).orElse(null);
                 if (stack.isEmpty()) {
                     Supplementaries.LOGGER.error("Bucket error 3: name " + "none" + ", bucket " + stack + " fluid, " + fluidId);
                 }
@@ -267,7 +267,7 @@ public class MobContainer {
         var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
         if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
             var f = cap.shouldRenderWithFluid();
-            ResourceLocation fluidId = f.map(Utils::getID).orElse(null);
+            ResourceLocation fluidId = f.map(v -> v.unwrapKey().get().location()).orElse(null);
             if (bucketStack.isEmpty()) {
                 Supplementaries.LOGGER.error("Bucket error 2: name " + name + ", bucket " + bucketStack + " fluid, " + fluidId);
             }
@@ -310,7 +310,7 @@ public class MobContainer {
             entity.getVehicle().ejectPassengers();
         }
         if (entity instanceof Mob mob && !(mob instanceof Allay)) {
-            if(entity instanceof Bucketable) mob.setPersistenceRequired();
+            if (entity instanceof Bucketable) mob.setPersistenceRequired();
         }
         if (entity instanceof Bucketable bucketable) {
             bucketable.setFromBucket(true);
@@ -321,7 +321,7 @@ public class MobContainer {
             le.yHeadRotO = 0;
             le.yHeadRot = 0;
             le.walkAnimation.setSpeed(0);
-            le.walkAnimation.update(-le.walkAnimation.position(),1);
+            le.walkAnimation.update(-le.walkAnimation.position(), 1);
             le.walkAnimation.setSpeed(0);
             le.hurtDuration = 0;
             le.hurtTime = 0;

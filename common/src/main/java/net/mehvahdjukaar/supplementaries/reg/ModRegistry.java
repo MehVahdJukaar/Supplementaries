@@ -376,7 +376,7 @@ public class ModRegistry {
             ROPE_KNOT_NAME, () -> PlatHelper.newBlockEntityType(
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
-    //cannon
+    //buntings
     public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
     public static final Supplier<BuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new BuntingBlock(
             BlockBehaviour.Properties.copy(ROPE.get()).dropsLike(ROPE.get())));

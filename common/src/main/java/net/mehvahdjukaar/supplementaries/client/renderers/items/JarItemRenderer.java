@@ -28,6 +28,7 @@ public class JarItemRenderer extends CageItemRenderer {
 
     private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
+
     @Override
     public void renderContent(CompoundTag tag, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
 
@@ -72,10 +73,13 @@ public class JarItemRenderer extends CageItemRenderer {
             AtomicInteger i = new AtomicInteger();
             RAND.setSeed(420);
 
-            JarBlockTileRenderer.renderCookies(poseStack, buffer, RAND, light, overlay, () -> {
-                int j = i.getAndIncrement();
-                return j < items.size() ? ItemStack.of(items.getCompound(j)) : ItemStack.EMPTY;
-            });
+
+            JarBlockTileRenderer.renderCookies(
+                    Minecraft.getInstance().getItemRenderer(),
+                    poseStack, buffer, RAND, light, overlay, () -> {
+                        int j = i.getAndIncrement();
+                        return j < items.size() ? ItemStack.of(items.getCompound(j)) : ItemStack.EMPTY;
+                    });
         }
     }
 

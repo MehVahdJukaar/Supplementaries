@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -39,17 +38,13 @@ public class GobletBakedModel implements CustomBakedModel {
         if (SINGLE_PASS || renderType == RenderType.translucent()) {
             var fluid = data.get(ModBlockProperties.FLUID);
             if (fluid != null && !fluid.isEmptyFluid()) {
-                var l = liquid.getQuads(state, side, rand);
-                if (!l.isEmpty()) {
+                List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
+                if (!liquidQuads.isEmpty()) {
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
-                  var b =  BakedQuadBuilder.create(sprite);
-                  for(var q : VertexUtil.swapSprite(l, sprite)) {
-                      b.fromVanilla(q);
-                      b.setDirection(q.getDirection());
-                      b.lightEmission(fluid.getLuminosity());
-                      quads.add(b.build());
-                      //add emissivity. not rally needed since these do give off light too
-                  }
+                    BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
+                            .applyingSprite(sprite)
+                            .applyingEmissivity(fluid.getEmissivity());
+                    quads.addAll(transformer.transformAll(liquidQuads));
                 }
 
             }
