@@ -93,7 +93,7 @@ public class BlockUtil {
     public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level level, BlockState state, Vec3 hit) {
 
         // container shuffle stuff
-        if (CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
+        if (!level.isClientSide && CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
                 dir.getAxis() != Direction.Axis.Y && state.hasProperty(BarrelBlock.FACING)) {
             if (state.getBlock() != ModRegistry.HOURGLASS.get() && level.getBlockEntity(targetPos) instanceof Container c) {
                 shuffleContainerContent(c, level);
