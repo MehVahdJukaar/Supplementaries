@@ -461,6 +461,8 @@
   "subtitle.supplementaries.turntable.cat": "Ching Cheng Hanji",
 
   "create.display_source.fill_level.fluid_amount": "Fluid Amount",
+  "create.item_attributes.present_recipient": "Present addressed to: \"%1$s\"",
+  "create.item_attributes.present_recipient.inverted": "Present not addressed to: \"%1$s\"",
   "supplementaries.display_source.fluid_amount": "Fluid Amount",
   "supplementaries.display_source.item_name": "Item Name",
   "supplementaries.display_source.notice_board": "Copy Notice Board",
