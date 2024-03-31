@@ -40,23 +40,23 @@ public class PresentRecipientAttribute implements ItemAttribute {
 
     @Override
     public Object[] getTranslationParameters() {
-        return new Object[]{this.recipient};
+        return new Object[]{recipient};
     }
 
     @Override
     public void writeNBT(CompoundTag compoundTag) {
-        compoundTag.putString("Recipient", recipient);
+        compoundTag.putString("recipient", this.recipient);
     }
 
     @Override
     public ItemAttribute readNBT(CompoundTag compoundTag) {
-        return new PresentRecipientAttribute(compoundTag.getString("Recipient"));
+        return new PresentRecipientAttribute(compoundTag.getString("recipient"));
 
     }
     private String readRecipient(ItemStack itemStack) {
         String name;
         if (itemStack.getItem() instanceof PresentItem) {
-            var t = itemStack.getTagElement("block_entity_tag");
+            var t = itemStack.getTagElement("BlockEntityTag");
             if (t != null){
                 name = t.getString("Recipient");
                 if (name != PresentBlockTile.PUBLIC_KEY)
