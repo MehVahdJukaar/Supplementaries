@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Vector3f;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.PlatformHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
@@ -34,6 +35,7 @@ import java.util.Map;
 public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
     private final Map<GlobeBlockTile.GlobeModel, ModelPart> models = new EnumMap<>(GlobeBlockTile.GlobeModel.class);
+    private final boolean noise;
 
     public static LayerDefinition createBaseMesh() {
         MeshDefinition mesh = new MeshDefinition();
@@ -104,6 +106,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         models.put(GlobeBlockTile.GlobeModel.SNOW, special.getChild("snow"));
         models.put(GlobeBlockTile.GlobeModel.SHEARED, special.getChild("sheared"));
         INSTANCE = this;
+        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatformHelper.getPlatform().isForge();
     }
 
     @Override
@@ -135,7 +138,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            if (MiscUtils.FESTIVITY.isAprilsFool()) {
+            if (noise) {
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
                 float c = (float) Mth.clamp(si, -2, 2);
