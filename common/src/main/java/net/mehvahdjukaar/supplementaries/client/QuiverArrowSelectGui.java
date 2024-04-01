@@ -32,6 +32,8 @@ public abstract class QuiverArrowSelectGui extends Gui {
     private static boolean usingItem;
     private static boolean usingKeyAndHasItem = false;
 
+    private static double lastCumulativeMouseDx = 0;
+
     public static boolean isActive() {
         return usingItem || usingKeyAndHasItem;
     }
@@ -58,7 +60,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
 
 
     public static void onPlayerRotated(double yRotIncrease) {
-        int slotsMoved = (int) (yRotIncrease);
+        int slotsMoved = (int) (yRotIncrease*0.2);
         if (slotsMoved != 0) {
             Player player = Minecraft.getInstance().player;
             if (player != null) {
@@ -67,13 +69,19 @@ public abstract class QuiverArrowSelectGui extends Gui {
             }
         }
     }
-
     @EventCalled
-    public static boolean onMouseScrolled(double scrollDelta) {
-        Player player = Minecraft.getInstance().player;
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(
-                scrollDelta > 0 ? -1 : 1, getQuiverSlot(player)));
-        return true;
+    public static void ohMouseMoved(double deltaX) {
+        double scale = Minecraft.getInstance().options.sensitivity().get() * 0.02;
+        int oldI = (int) (lastCumulativeMouseDx * scale);
+        lastCumulativeMouseDx += deltaX;
+        int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
+        if (slotsMoved != 0) {
+            Player player = Minecraft.getInstance().player;
+            if (player != null) {
+                Slot s = getQuiverSlot(player);
+                ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleQuiverPacket(slotsMoved, s));
+            }
+        }
     }
 
     @EventCalled

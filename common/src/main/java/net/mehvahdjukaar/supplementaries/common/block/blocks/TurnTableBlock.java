@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -53,6 +54,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
 
     public TurnTableBlock(Properties properties) {
         super(properties);
+        QuiverArrowSelectGui
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP)
                 .setValue(POWER, 0).setValue(INVERTED, false).setValue(ROTATING, false));
     }
