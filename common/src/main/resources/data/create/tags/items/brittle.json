@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#supplementaries:candle_holders","required":false},
+    {"id":"#supplementaries:sconces","required":false}
+  ]
+}

@@ -112,7 +112,7 @@ public class ClockBlockTile extends BlockEntity {
     }
 
     public static boolean canReadTime(Level level) {
-        return level.dimensionType().natural() && !MiscUtils.FESTIVITY.isAprilsFool();
+        return level.dimensionType().natural() ^ MiscUtils.FESTIVITY.isAprilsFool();
     }
 
     public static void tick(Level level, BlockPos pPos, BlockState pState, ClockBlockTile tile) {
