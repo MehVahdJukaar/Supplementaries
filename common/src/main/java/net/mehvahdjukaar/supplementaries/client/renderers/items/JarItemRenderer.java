@@ -48,8 +48,8 @@ public class JarItemRenderer extends CageItemRenderer {
                     VertexUtils.renderFish(builder1, poseStack, 0, 0, fishTexture, light);
                     poseStack.popPose();
                 }
-                if (com.contains("id")) {
-                    var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("id")));
+                if (com.contains("Fluid")) {
+                    var holder = SoftFluidRegistry.getHolder(new ResourceLocation(com.getString("Fluid")));
                     if (holder != null) {
                         var s = holder.value();
                         renderFluid(9 / 12f, s.getTintColor(), 0, s.getStillTexture(),

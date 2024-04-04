@@ -42,8 +42,8 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         checkContainerSize(this.inventory, 2);
         this.inventory.startOpen(playerInventory.player);
 
-        this.addSlot(new DelegatingSlot(this.inventory, 0, 20, 20, this));
-        this.addSlot(new DelegatingSlot(this.inventory, 1, 60, 40, this));
+        this.addSlot(new DelegatingSlot(this.inventory, 0, 33, 35, this));
+        this.addSlot(new DelegatingSlot(this.inventory, 1, 127, 35, this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)

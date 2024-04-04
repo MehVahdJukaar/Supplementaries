@@ -4,30 +4,28 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> implements ContainerListener {
 
     private final CannonBlockTile tile;
 
-    private TargetButton targetButton;
-    private TextFieldHelper pitchSelector;
-    private TextFieldHelper yawSelector;
-    private boolean primed;
+    private Button manouverButton;
+    private EditBox pitchSelector;
+    private EditBox yawSelector;
+    private PowerSelectorWidget powerSelector;
     //hasn't received items yet
     private boolean needsInitialization = true;
 
@@ -37,30 +35,27 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.imageWidth = 176;
         this.imageHeight = 166;
 
-        this.tile =  menu.getContainer();
+        this.tile = menu.getContainer();
     }
 
     @Override
     public void init() {
         super.init();
 
-        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+        this.titleLabelX = 8;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.targetButton = this.addRenderableWidget(new TargetButton(i + 60 + 33, j + 33));
+        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 153, j + 58));
 
-        this.yawSelector = new TextFieldHelper(
-                () -> this.getYaw(),
-                (h) -> {
-                    this.setYaw(h);
-                },
-                TextFieldHelper.createClipboardGetter(this.minecraft),
-                TextFieldHelper.createClipboardSetter(this.minecraft),
-                (s) -> this.isValidAngle(s)
-        );
+        this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 89, j + 28, 18, 10));
+        this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 89, j + 49, 18, 10));
 
-
+        this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 16, j + 24, 4));
         this.menu.addSlotListener(this);
+    }
+
+
+    private void onManeuverPressed(Button button) {
     }
 
     private void setYaw(String h) {
@@ -70,13 +65,16 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         return "0";
     }
 
+    private void setPitch(String h) {
+    }
+
+    private String getPitch() {
+        return "0";
+    }
+
     private boolean isValidAngle(String s) {
         this.minecraft.font.width(s);
         return true;
-    }
-
-    private void pack() {
-
     }
 
     @Override
@@ -96,25 +94,19 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.renderBackground(graphics);
         int k = (this.width - this.imageWidth) / 2;
         int l = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.CANNON_GUI_TECTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        if (this.primed) {
-            int k = (this.width - this.imageWidth) / 2;
-            int l = (this.height - this.imageHeight) / 2;
-            Slot slot = this.menu.getSlot(0);
-            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 400, 12, 232, 16, 16, 256, 256);
-        }
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int x, int y) {
         super.renderLabels(graphics, x, y);
-        //packButton.renderToolTip(graphics, x - this.leftPos, y - this.topPos);
+        graphics.drawString(this.font, this.powerSelector.getPower() + "x", 32, 25, 4210752, false);
     }
 
     @Override
@@ -137,48 +129,93 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.menu.removeSlotListener(this);
     }
 
-    public class TargetButton extends AbstractButton {
-        private static final Tooltip TOOLTIP = Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver"));
 
-        private boolean packed;
+    private final class ManouverButton extends Button {
 
-        protected TargetButton(int x, int y) {
-            super(x, y, 22, 22, CommonComponents.EMPTY);
+        public ManouverButton(int x, int y) {
+            super(x, y, 10, 10, Component.empty(), CannonScreen.this::onManeuverPressed, Button.DEFAULT_NARRATION);
+            this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
         }
 
         @Override
-        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            int i = 198;
-            int j = 0;
-            if (!this.active) {
-                j += this.width * 2;
-            } else if (this.packed) {
-                j += this.width * 1;
-            } else if (this.isHovered) {
-                j += this.width * 3;
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
+            int x = 176;
+            int y = 36;
+            if (this.isHovered())
+                x += this.width;
+
+            guiGraphics.blit(ModTextures.CANNON_GUI_TECTURE, this.getX(), this.getY(), x, y, this.width, this.height);
+        }
+    }
+
+    private static class NumberEditBox extends EditBox {
+        public NumberEditBox(Font font, int x, int y, int width, int height) {
+            super(font, x, y, width, height, Component.empty());
+            this.setMaxLength(4);
+            this.setBordered(false);
+            this.setFilter(this::isValidAngle);
+        }
+
+        private boolean isValidAngle(String str) {
+            try {
+                if (str.isEmpty()) return true;
+                double d = Double.parseDouble(str);
+                // chck if it contains characters
+                if (str.contains("[a-zA-Z]+")) return false;
+                return d <= 360 && d >= -360;
+            } catch (NumberFormatException e) {
+                return false;
             }
-            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, this.getX(), this.getY(), j, i, this.width, this.height);
         }
+    }
 
-        public void setState(boolean hasItem, boolean packed) {
-            this.packed = packed;
-            this.active = hasItem;
-            this.setTooltip(!packed ? TOOLTIP : null);
+    private static class PowerSelectorWidget extends AbstractWidget {
+        private final int levels;
+        private int power = 2;
+
+        public PowerSelectorWidget(int x, int y, int levels) {
+            super(x, y, 12, 36, Component.empty());
+            this.levels = levels;
         }
 
         @Override
-        protected ClientTooltipPositioner createTooltipPositioner() {
-            return DefaultTooltipPositioner.INSTANCE;
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
+            int hoveredLevel = 0;
+            int levelH = this.height / levels;
+
+            if (this.isHovered) {
+                hoveredLevel = getSelectedHoveredLevel(mouseY);
+            }
+            for (int p = 1; p <= levels; p++) {
+                int selectedH = levelH * p;
+
+                int y = this.height - selectedH;
+                int x = 176 + (p == hoveredLevel ? this.width : 0);
+                if (p > power) {
+                    x += this.width * 2;
+                }
+                guiGraphics.blit(ModTextures.CANNON_GUI_TECTURE, this.getX(), this.getY() + y, x, y,
+                        this.width, levelH);
+            }
         }
 
         @Override
-        public void onPress() {
-            CannonScreen.this.pack();
+        public void onClick(double mouseX, double mouseY) {
+            this.power = getSelectedHoveredLevel(mouseY);
+        }
+
+        private int getSelectedHoveredLevel(double mouseY) {
+            float levelH = (float) this.height / levels;
+            return levels - (int) Math.floor((mouseY - this.getY()) / levelH);
         }
 
         @Override
         protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+
+        }
+
+        public int getPower() {
+            return this.power;
         }
     }
-
 }

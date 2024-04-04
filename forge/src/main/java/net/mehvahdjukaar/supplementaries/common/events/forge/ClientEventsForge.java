@@ -113,13 +113,6 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         if (Minecraft.getInstance().screen == null && !ClientRegistry.QUIVER_KEYBIND.isUnbound() &&
                 event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {

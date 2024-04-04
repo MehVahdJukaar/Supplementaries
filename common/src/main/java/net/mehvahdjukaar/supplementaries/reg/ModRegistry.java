@@ -172,7 +172,8 @@ public class ModRegistry {
                     FlagBlockTile::new, FLAGS.values().stream().map(Supplier::get).toArray(Block[]::new)));
     //presents
 
-    public static final Map<DyeColor, Supplier<Block>> PRESENTS = RegUtils.registerPresents(PRESENT_NAME, PresentBlock::new);
+    public static final Map<DyeColor, Supplier<Block>> PRESENTS = RegUtils.registerPresents(
+            PRESENT_NAME, PresentBlock::new, PresentItem::new);
 
     public static final Supplier<BlockEntityType<PresentBlockTile>> PRESENT_TILE = regTile(
             PRESENT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -181,7 +182,8 @@ public class ModRegistry {
 
     //trapped presents
 
-    public static final Map<DyeColor, Supplier<Block>> TRAPPED_PRESENTS = RegUtils.registerPresents(TRAPPED_PRESENT_NAME, TrappedPresentBlock::new);
+    public static final Map<DyeColor, Supplier<Block>> TRAPPED_PRESENTS = RegUtils.registerPresents(
+            TRAPPED_PRESENT_NAME, TrappedPresentBlock::new, TrappedPresentItem::new);
 
     public static final Supplier<BlockEntityType<TrappedPresentBlockTile>> TRAPPED_PRESENT_TILE = regTile(
             TRAPPED_PRESENT_NAME, () -> PlatHelper.newBlockEntityType(

@@ -165,7 +165,9 @@ public class RegUtils {
     }
 
     //presents
-    public static Map<DyeColor, Supplier<Block>> registerPresents(String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory) {
+    public static Map<DyeColor, Supplier<Block>> registerPresents(
+            String baseName, BiFunction<DyeColor, BlockBehaviour.Properties, Block> presentFactory,
+            BiFunction<Block, Item.Properties, PresentItem> itemFactory) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
         Supplier<Block> block = regBlock(baseName, () -> presentFactory.apply(null,
@@ -175,7 +177,7 @@ public class RegUtils {
                         .strength(1.0F)
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
-        regItem(baseName, () -> new PresentItem(block.get(), new Item.Properties()));
+        regItem(baseName, () -> itemFactory.apply(block.get(), new Item.Properties()));
 
 
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
@@ -189,7 +191,7 @@ public class RegUtils {
             map.put(color, bb);
             //item
 
-            regItem(name, () -> new PresentItem(bb.get(), (new Item.Properties())));
+            regItem(name, () -> itemFactory.apply(bb.get(), (new Item.Properties())));
         }
         return map;
     }

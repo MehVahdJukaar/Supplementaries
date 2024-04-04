@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -153,23 +154,23 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Nullable
-    public Component getSenderMessage() {
+    public MutableComponent getSenderMessage() {
         return getSenderMessage(this.sender);
     }
 
     @Nullable
-    public static Component getSenderMessage(String sender) {
+    public static MutableComponent getSenderMessage(String sender) {
         if (sender.isEmpty()) return null;
         return Component.translatable("message.supplementaries.present.from", sender);
     }
 
     @Nullable
-    public Component getRecipientMessage() {
+    public MutableComponent getRecipientMessage() {
         return getRecipientMessage(this.recipient);
     }
 
     @Nullable
-    public static Component getRecipientMessage(String recipient) {
+    public static MutableComponent getRecipientMessage(String recipient) {
         if (recipient.isEmpty()) return null;
         if (recipient.equalsIgnoreCase(PUBLIC_KEY)) {
             return Component.translatable("message.supplementaries.present.public");

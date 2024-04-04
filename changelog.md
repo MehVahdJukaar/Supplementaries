@@ -10,3 +10,4 @@
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
+- trapped presents will hide their names

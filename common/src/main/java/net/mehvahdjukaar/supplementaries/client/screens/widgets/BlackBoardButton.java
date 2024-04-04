@@ -152,13 +152,5 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
 
     }
 
-    public interface IPressable {
-        void onPress(int x, int y, byte on);
-    }
-
-    public interface IDraggable {
-        void onDragged(double mouseX, double mouseY, byte on);
-    }
-
 }
 

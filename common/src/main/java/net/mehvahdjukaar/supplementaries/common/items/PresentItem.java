@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -31,16 +32,17 @@ public class PresentItem extends BlockItem implements IColored {
                 boolean isPacked = false;
                 if (t.contains("Sender")) {
                     var c = PresentBlockTile.getSenderMessage(t.getString("Sender"));
-                    if (c != null) components.add(c);
+                    if (c != null) components.add(c.withStyle(ChatFormatting.GRAY));
                     isPacked = true;
                 }
                 if (t.contains("Recipient")) {
                     var c = PresentBlockTile.getRecipientMessage(t.getString("Recipient"));
-                    if (c != null) components.add(c);
+                    if (c != null) components.add(c.withStyle(ChatFormatting.GRAY));
                     isPacked = true;
                 }
                 if (!isPacked && t.contains("Items")) {
-                    components.add(Component.translatable("message.supplementaries.present.public"));
+                    components.add(Component.translatable("message.supplementaries.present.public")
+                            .withStyle(ChatFormatting.GRAY));
                 }
             }
         }
