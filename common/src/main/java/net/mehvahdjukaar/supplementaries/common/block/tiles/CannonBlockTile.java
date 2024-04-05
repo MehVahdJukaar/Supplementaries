@@ -161,6 +161,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.yaw = Mth.wrapDegrees(yaw);
     }
 
+    public void changeFirePower(int scrollDelta) {
+        this.firePower = (byte) Math.floorDiv(this.firePower + scrollDelta, 4);
+    }
     @Override
     protected Component getDefaultName() {
         return Component.translatable("gui.supplementaries.cannon");
@@ -371,6 +374,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.projectileDrag = (float) newMovement.x;
         this.projectileGravity = (float) -newMovement.y;
     }
+
 
 
     private static class ProjectileTestLevel extends DummyWorld {

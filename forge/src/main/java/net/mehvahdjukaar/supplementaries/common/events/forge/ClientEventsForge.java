@@ -131,9 +131,11 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onKeyPress(MovementInputUpdateEvent event) {
-
-
+    public static void onScroll(InputEvent.MouseScrollingEvent event) {
+        if(CannonController.isActive()){
+            CannonController.onMouseScrolled(event.getScrollDelta());
+            event.setCanceled(true);
+        }
     }
 
     //forge only below

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "020",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:planks"
+    },
+    "0": {
+      "item": "minecraft:iron_ingot"
+    },
+    "2": {
+      "item": "minecraft:dispenser"
+    }
+  },
+  "result": {
+    "item": "supplementaries:cannon",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannon"
+    }
+  ]
+}

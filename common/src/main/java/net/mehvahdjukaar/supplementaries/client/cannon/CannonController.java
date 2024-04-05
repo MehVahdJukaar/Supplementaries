@@ -177,6 +177,13 @@ public class CannonController {
         }
     }
 
+    public static void onMouseScrolled(double scrollDelta){
+        if (scrollDelta != 0) {
+            cannon.changeFirePower((int) scrollDelta);
+            needsToUpdateServer = true;
+        }
+    }
+
 
     public static void onPlayerAttack(boolean attack) {
         if (attack) {

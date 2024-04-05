@@ -861,6 +861,15 @@ public class ModRegistry {
     public static final Map<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS);
 
+    // gravel bricks
+    public static final Supplier<Block> GRAVEL_BRICKS = regWithItem(GRAVEL_BRICKS_NAME, () -> new GravelBricksBlock(
+            BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)
+                    .mapColor(Blocks.GRAVEL.defaultMapColor())
+                    .strength(1, 0.2f)
+                    .sound(SoundType.STONE)
+    ));
+
+
     //stone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
             RegHelper.registerFullBlockSet(res(STONE_TILE_NAME), Blocks.STONE_BRICKS);

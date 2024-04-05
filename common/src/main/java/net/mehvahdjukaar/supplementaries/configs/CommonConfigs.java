@@ -315,6 +315,10 @@ public class CommonConfigs {
                     .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
             builder.pop();
 
+            builder.push("gravel_bricks");
+            GRAVEL_BRICKS_ENABLED = feature(builder);
+            builder.pop();
+
             builder.push("timber_frame");
             TIMBER_FRAME_ENABLED = feature(builder);
             SWAP_TIMBER_FRAME = builder.comment("Allow placing a timber frame directly on a block by holding shift")
@@ -434,6 +438,7 @@ public class CommonConfigs {
             STONE_LAMP_ENABLED = feature(builder, ModConstants.STONE_LAMP_NAME);
             TILE_ENABLED = feature(builder, ModConstants.STONE_TILE_NAME);
             BLACKSTONE_TILE_ENABLED = feature(builder, ModConstants.BLACKSTONE_TILE_NAME);
+            BUNTINGS_ENABLED = feature(builder, ModConstants.BUNTING_NAME);
             SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
@@ -506,6 +511,10 @@ public class CommonConfigs {
         public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
 
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
+
+        public static final Supplier<Boolean> GRAVEL_BRICKS_ENABLED;
+
+        public static final Supplier<Boolean> BUNTINGS_ENABLED;
 
         public static final Supplier<Boolean> SCONCE_ENABLED;
 
@@ -669,6 +678,10 @@ public class CommonConfigs {
                             Codec.unboundedMap(BlockPredicate.CODEC, ResourceLocation.CODEC));
             builder.pop();
 
+            builder.push("cannon");
+            CANNON_ENABLED = feature(builder);
+            builder.pop();
+
             builder.push("present");
             PRESENT_ENABLED = feature(builder);
             TRAPPED_PRESENT_ENABLED = feature(builder, ModConstants.TRAPPED_PRESENT_NAME);
@@ -750,6 +763,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
+        public static final Supplier<Boolean> CANNON_ENABLED;
     }
 
 

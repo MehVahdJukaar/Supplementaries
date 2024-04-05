@@ -102,6 +102,7 @@ public final class ModConstants {
     public static final String TIMBER_BRACE_NAME = "timber_brace";
     public static final String TIMBER_CROSS_BRACE_NAME = "timber_cross_brace";
     public static final String ASH_BRICKS_NAME = "ash_bricks";
+    public static final String GRAVEL_BRICKS_NAME = "gravel_bricks";
     public static final String STONE_TILE_NAME = "stone_tile";
     public static final String STONE_LAMP_NAME = "stone_lamp";
     public static final String BLACKSTONE_TILE_NAME = "blackstone_tile";

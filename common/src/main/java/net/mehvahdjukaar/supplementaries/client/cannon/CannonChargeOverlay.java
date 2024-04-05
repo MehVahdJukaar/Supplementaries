@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.GunpowderBlockColor;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -37,8 +38,6 @@ public abstract class CannonChargeOverlay extends Gui {
 
             graphics.pose().popPose();
             Player player = Minecraft.getInstance().player;
-            int i2;
-            int j2;
             int k2;
             k2 = screenHeight - 16 - 3;
             this.renderSlot(graphics, left + 1 + 50 + 2, k2, player, cannon.getFuel(), 1);
@@ -64,9 +63,21 @@ public abstract class CannonChargeOverlay extends Gui {
             int k = (int) (c * 183.0F);
             int l = screenHeight - 32 + 3;
             graphics.blit(texture, i, l, 0, 0, 182, 5);
-
             float f = cannon.getFireTimer();
-            if (f > 0) RenderSystem.setShaderColor(1, 0.6f + 0.4f * f, f, 1.0F);
+
+            float min = 0.7F;
+
+            if (f > 0) {
+                f = 1-f;
+                float red = f * 0.4F + min;
+
+                float green =  min -f  *0.4f*min;
+                float blue = min;
+
+                RenderSystem.setShaderColor(red, green, min-f*blue, 1.0F);
+            }else {
+                RenderSystem.setShaderColor(min, min, min, 1.0F);
+            }
 
             graphics.blit(texture, i, l, 0, 5, k, 5);
 
