@@ -273,6 +273,9 @@ public class ModCreativeTabs {
                 ModConstants.FLINT_BLOCK_NAME,
                 ModRegistry.FLINT_BLOCK);
 
+        after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.BUNTING_NAME,
+                ModRegistry.BUNTING);
 
         after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FLAG_NAME,
@@ -282,6 +285,14 @@ public class ModCreativeTabs {
                 ModConstants.FLAG_NAME,
                 ModRegistry.FLAGS.values().toArray(Supplier[]::new));
 
+
+        before(e, Items.DISPENSER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.CANNON_NAME,
+                ModRegistry.CANNON);
+
+        after(e, Items.LAVA_BUCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.LUMISENE_NAME,
+                ModFluids.LUMISENE_BUCKET);
 
         after(e, Items.TNT_MINECART, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.DISPENSER_MINECART_NAME,

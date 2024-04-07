@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -44,10 +45,10 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 156, j + 10));
+        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 156, j + 10 + 6));
 
-        this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 29, 18, 10));
-        this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 49, 18, 10));
+        this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 29 + 6, 18, 10));
+        this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 49 + 6, 18, 10));
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
         this.menu.addSlotListener(this);
@@ -111,7 +112,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     @Override
     protected void renderLabels(GuiGraphics graphics, int x, int y) {
         super.renderLabels(graphics, x, y);
-        graphics.drawString(this.font, this.getActualPower() + "x", 36, 25, 4210752, false);
+        int color = 4210752;
+        int wantedPower = this.powerSelector.getPower();
+        if (wantedPower > this.getActualPower()) {
+            color = ChatFormatting.GRAY.getColor();
+        }
+        graphics.drawString(this.font, wantedPower + "x", 37, 25, color, false);
     }
 
     @Override
@@ -190,7 +196,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             if (this.isHovered) {
                 hoveredLevel = getSelectedHoveredLevel(mouseY);
             }
-           int actualPower = CannonScreen.this.getActualPower();
+            int actualPower = CannonScreen.this.getActualPower();
             for (int p = 1; p <= levels; p++) {
                 int selectedH = levelH * p;
 
@@ -198,8 +204,8 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
                 int x = 176 + (p == hoveredLevel ? this.width : 0);
                 if (p > power) {
                     x += this.width * 2;
-                }else if(p>actualPower){
-                    x += this.width*4;
+                } else if (p > actualPower) {
+                    x += this.width * 4;
                 }
                 guiGraphics.blit(Supplementaries.res("textures/gui/cannon_gui.png"), this.getX(), this.getY() + y, x, y,
                         this.width, levelH);

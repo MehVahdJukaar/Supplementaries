@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -48,6 +49,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("zombie horse", Items.ZOMBIE_HORSE_SPAWN_EGG);
         addIcon("placeable gunpowder", Items.GUNPOWDER);
         addIcon("mixins", Items.HOPPER);
+        addIcon("lumisene", ModFluids.LUMISENE_BUCKET.get());
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
         addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));

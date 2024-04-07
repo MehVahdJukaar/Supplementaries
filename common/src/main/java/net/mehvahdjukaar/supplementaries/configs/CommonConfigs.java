@@ -697,6 +697,11 @@ public class CommonConfigs {
             //       .define("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
+            builder.push(ModConstants.LUMISENE_NAME);
+
+            LUMISENE_ENABLED = feature(builder);
+            builder.pop();
+
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
             HOURGLASS_ENABLED = feature(builder, ModConstants.HOURGLASS_NAME);
 
@@ -758,6 +763,8 @@ public class CommonConfigs {
         public static final Supplier<Integer> FLAX_AVERAGE_EVERY = null;
 
         public static final Supplier<Boolean> FODDER_ENABLED;
+
+        public static final Supplier<Boolean> LUMISENE_ENABLED;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;

@@ -147,7 +147,7 @@ public class CannonController {
     }
 
     private static Restraint getPitchAndYawRestrains(BlockState state) {
-        return switch (state.getValue(CannonBlock.FACING)) {
+        return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
             case NORTH -> new Restraint(70, 290, -360, 360);
             case SOUTH -> new Restraint(-110, 110, -360, 360);
             case EAST -> new Restraint(-200, 20, -360, 360);

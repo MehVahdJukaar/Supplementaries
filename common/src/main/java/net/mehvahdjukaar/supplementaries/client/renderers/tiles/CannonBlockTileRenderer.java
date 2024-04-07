@@ -45,7 +45,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getRotation();
+        Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
         poseStack.mulPose(rotation);
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
@@ -70,7 +70,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         yawRad = (float) Mth.atan2(forward.x, forward.z);
 
         pitchRad = (float) Mth.atan2(-forward.y, Mth.sqrt(forward.x * forward.x + forward.z * forward.z));
-        float rollRad = (float) Math.atan2(forward.y, forward.z);
+        //float rollRad = (float) Math.atan2(forward.y, forward.z);
 
         this.legs.yRot = yawRad;
         this.pivot.xRot = pitchRad;

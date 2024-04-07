@@ -25,7 +25,9 @@ public class GravelBricksBlock extends Block {
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         super.fallOn(level, state, pos, entity, fallDistance);
-        if (!entity.isSteppingCarefully()) level.destroyBlock(pos, true, entity);
+        if (!entity.isSteppingCarefully()){
+            level.destroyBlock(pos, true, entity);
+        }
     }
 
 

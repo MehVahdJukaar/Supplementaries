@@ -26,9 +26,9 @@ public class ModFluids {
 
     static{
 
-        LUMISENE_FLUID = registerFluid(("lumisene"), ModFluids::createLumisene);
+        LUMISENE_FLUID = registerFluid(ModConstants.LUMISENE_NAME, ModFluids::createLumisene);
 
-        LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res("lumisene"),
+        LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res(ModConstants.LUMISENE_NAME),
                 () -> new FlammableLiquidBlock(LUMISENE_FLUID,
                         BlockBehaviour.Properties.of()
                                 .replaceable()

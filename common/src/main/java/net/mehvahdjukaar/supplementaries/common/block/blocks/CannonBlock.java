@@ -58,7 +58,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()
-                .setValue(FACING, context.getClickedFace().getOpposite())
+                .setValue(FACING, context.getClickedFace())
                 .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
@@ -77,8 +77,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         super.setPlacedBy(level, pos, state, placer, stack);
         if (placer != null && level.getBlockEntity(pos) instanceof CannonBlockTile cannon) {
             Direction dir = Direction.orderedByNearest(placer)[0];
-            Direction myDir = state.getValue(FACING);
-            int i = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 1 : -1;
+            Direction myDir = state.getValue(FACING).getOpposite();
 
             if(dir.getAxis() == Direction.Axis.Y){
                 float pitch = dir == Direction.UP ? -90 : 90;
@@ -131,7 +130,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return switch (state.getValue(FACING)) {
+        return switch (state.getValue(FACING).getOpposite()) {
             case UP -> SHAPE_UP;
             case DOWN -> SHAPE_DOWN;
             case NORTH -> SHAPE_NORTH;

@@ -6,10 +6,7 @@
       },
       "apply": [
         {
-          "model": "minecraft:block/soul_fire_floor0"
-        },
-        {
-          "model": "minecraft:block/soul_fire_floor1"
+          "model": "supplementaries:block/lumisene_fire"
         }
       ]
     }

@@ -1,7 +1,7 @@
 {
   "values": [
     "supplementaries:rope",
-    "supplementaries:rope_bunting",
+    "supplementaries:rope_buntings",
     {"id":"supplementaries:rope_tomato","required":false}
 
   ]

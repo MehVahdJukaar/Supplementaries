@@ -3,12 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -91,24 +93,25 @@ public class PearlMarker extends Entity {
         super.baseTick();
         // super.tick();
 
+        pearls.removeIf(Entity::isRemoved);
         boolean dead = pearls.isEmpty();
         Level level = level();
 
         if (!dead) {
             BlockPos pos = blockPosition();
             BlockState state = level.getBlockState(pos);
-            if (!(state.getBlock() instanceof DispenserBlock)) {
+            if (!(state.getBlock() instanceof DispenserBlock || state.getBlock() instanceof CannonBlock)) {
                 PistonMovingBlockEntity piston = null;
                 boolean didOffset = false;
 
                 BlockEntity tile = level.getBlockEntity(pos);
-                if (tile instanceof PistonMovingBlockEntity p && p.getMovedState().getBlock() instanceof DispenserBlock) {
+                if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p)) {
                     piston = p;
                 } else for (Direction d : Direction.values()) {
                     BlockPos offPos = pos.relative(d);
                     tile = level.getBlockEntity(offPos);
 
-                    if (tile instanceof PistonMovingBlockEntity p && p.getMovedState().getBlock() instanceof DispenserBlock) {
+                    if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p)) {
                         piston = p;
                         break;
                     }
@@ -128,6 +131,12 @@ public class PearlMarker extends Entity {
         if (dead && !level.isClientSide) {
             discard();
         }
+    }
+
+    @NotNull
+    private static boolean isValidBlock(PistonMovingBlockEntity p) {
+        Block b = p.getMovedState().getBlock();
+        return b instanceof DispenserBlock || b instanceof CannonBlock;
     }
 
 
@@ -157,19 +166,17 @@ public class PearlMarker extends Entity {
                 BlockPos fromPos = this.blockPosition();
                 BlockState state = level.getBlockState(fromPos);
                 BlockEntity blockEntity = level.getBlockEntity(fromPos);
-                if (state.getBlock() instanceof DispenserBlock && blockEntity instanceof DispenserBlockEntity) {
+                if (isValidBlockEntity(blockEntity)) {
                     BlockPos toPos = hitResult.getBlockPos().relative(hitResult.getDirection());
                     if (level.getBlockState(toPos).canBeReplaced()) {
                         CompoundTag nbt = blockEntity.saveWithoutMetadata();
                         blockEntity.setRemoved();
 
                         if (level.setBlockAndUpdate(fromPos, Blocks.AIR.defaultBlockState()) &&
-                                level.setBlockAndUpdate(toPos, state.setValue(DispenserBlock.FACING,
-                                        hitResult.getDirection()))) {
-
+                                level.setBlockAndUpdate(toPos, setLandingState(hitResult, state))) {
 
                             BlockEntity dstEntity = level.getBlockEntity(toPos);
-                            if (dstEntity instanceof DispenserBlockEntity) {
+                            if (isValidBlockEntity(dstEntity)) {
                                 dstEntity.load(nbt);
                             }
                             SoundType type = state.getSoundType();
@@ -191,6 +198,16 @@ public class PearlMarker extends Entity {
         } else {
             super.teleportTo(pX, pY, pZ);
         }
+    }
+
+    @NotNull
+    private static BlockState setLandingState(BlockHitResult hitResult, BlockState state) {
+        Direction dir = hitResult.getDirection();
+        return state.setValue(DispenserBlock.FACING, dir);
+    }
+
+    private static boolean isValidBlockEntity(BlockEntity blockEntity) {
+        return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity;
     }
 
     public BlockPos getTeleportPos() {
@@ -240,9 +257,12 @@ public class PearlMarker extends Entity {
         }
     }
 
-    public static ThrownEnderpearl getPearlToDispense(BlockSource source, Level level, BlockPos pos) {
+
+    public static ThrownEnderpearl getPearlToDispenseAndPlaceMarker(BlockSource source) {
+        Level level = source.getLevel();
+        BlockPos pos = source.getPos();
         ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
-        if (source instanceof MovingBlockSource movingBlockSource) {
+        if (source instanceof MovingBlockSource<?> movingBlockSource) {
             pearl.setOwner(movingBlockSource.getMinecartEntity());
         } else {
             var entity = level.getEntitiesOfClass(PearlMarker.class, new AABB(pos), (e) -> e.blockPosition().equals(pos)).stream().findAny();
@@ -258,8 +278,6 @@ public class PearlMarker extends Entity {
             marker.addPearl(pearl);
             pearl.setOwner(marker);
         }
-        Position position = DispenserBlock.getDispensePosition(source);
-        pearl.setPos(position.x(), position.y(), position.z());
         pearl.addTag("dispensed");
         return pearl;
     }

@@ -8,17 +8,21 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -108,7 +112,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return cooldown;
     }
 
-   public float getFireTimer() {
+    public float getFireTimer() {
         return chargeTimer;
     }
 
@@ -162,8 +166,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public void changeFirePower(int scrollDelta) {
-        this.firePower = (byte) Math.floorDiv(this.firePower + scrollDelta, 4);
+        this.firePower = (byte)(1+ Math.floorMod(this.firePower-1 + scrollDelta, 4));
     }
+
     @Override
     protected Component getDefaultName() {
         return Component.translatable("gui.supplementaries.cannon");
@@ -273,27 +278,34 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
         ItemStack projectile = this.getProjectile();
 
-        Entity proj = getProjectileFromItemHack(level, projectile);
+        Entity proj = getProjectileFromItemHack(projectile);
 
         if (proj instanceof Projectile arrow) {
             arrow.cachedOwner = null;
             arrow.ownerUUID = null;
-            CompoundTag c = new CompoundTag();
-            arrow.save(c);
-            var opt = EntityType.create(c, level); // create new to reset level properly
 
-            if (opt.isPresent()) {
-                arrow = (Projectile) opt.get();
-                arrow.setPos(pos.getX() + 0.5 - facing.x,
-                        pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
+            if (projectile.is(Items.ENDER_PEARL) && level instanceof ServerLevel se) {
+                BlockSource source = new BlockSourceImpl(se, worldPosition);
+                arrow = PearlMarker.getPearlToDispenseAndPlaceMarker(source);
+            } else {
+                CompoundTag c = new CompoundTag();
+                arrow.save(c);
+                var opt = EntityType.create(c, level); // create new to reset level properly
 
-                float inaccuracy = 0;
-                float power = -projectileDrag * getFirePower();
-                arrow.shoot(facing.x, facing.y, facing.z, power, inaccuracy);
-
-                level.addFreshEntity(arrow);
-                return true;
+                if (opt.isPresent()) {
+                    arrow = (Projectile) opt.get();
+                }
             }
+
+            arrow.setPos(pos.getX() + 0.5 - facing.x,
+                    pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
+
+            float inaccuracy = 0;
+            float power = -projectileDrag * getFirePower();
+            arrow.shoot(facing.x, facing.y, facing.z, power, inaccuracy);
+
+            level.addFreshEntity(arrow);
+            return true;
         }
         return false;
     }
@@ -343,7 +355,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
 
-    private static Entity getProjectileFromItemHack(Level level, ItemStack projectile) {
+    private Entity getProjectileFromItemHack(ItemStack projectile) {
+        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
+
+
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, level);
         if (projectile.getItem() instanceof ArrowItem ai) {
             return ai.createArrow(level, projectile, fakePlayer);
@@ -354,7 +369,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         var p = testLevel.projectile;
         if (p != null) return p;
-        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
 
         return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
 
@@ -366,7 +380,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         ItemStack projectile = getProjectile();
         if (projectile.isEmpty()) return;
 
-        Entity proj = getProjectileFromItemHack(level, projectile);
+        Entity proj = getProjectileFromItemHack(projectile);
 
         proj.setDeltaMovement(1, 0, 0);
         proj.tick();
@@ -374,7 +388,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.projectileDrag = (float) newMovement.x;
         this.projectileGravity = (float) -newMovement.y;
     }
-
 
 
     private static class ProjectileTestLevel extends DummyWorld {

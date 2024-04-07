@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AdditionalDispenserBehavior;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +22,9 @@ class EnderPearlBehavior extends AdditionalDispenserBehavior {
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         Level level = source.getLevel();
-        BlockPos pos = source.getPos();
-
-        ThrownEnderpearl pearl = PearlMarker.getPearlToDispense(source, level, pos);
-
+        ThrownEnderpearl pearl = PearlMarker.getPearlToDispenseAndPlaceMarker(source);
+        Position position = DispenserBlock.getDispensePosition(source);
+        pearl.setPos(position.x(), position.y(), position.z());
 
         Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 
