@@ -979,6 +979,8 @@ public class ModRegistry {
 
     public static final Supplier<Block> CANNONBALL = regWithItem(CANNONBALL_NAME, () -> new CannonballBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
+                    .sound(SoundType.COPPER)
+                    .noOcclusion()
     ));
 
     //urn

@@ -1,24 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -26,7 +21,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -42,7 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector4f;
 
 import java.util.UUID;
 
@@ -106,6 +99,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     public boolean hasFuelAndProjectiles() {
         return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
                 getFuel().getCount() >= firePower;
+    }
+
+    public boolean isFiring() {
+        return chargeTimer > 0;
     }
 
     public float getCooldown() {
@@ -222,12 +219,13 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public void ignite() {
-        this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
+        level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
         this.chargeTimer = 1;
         //update other clients
-        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
@@ -247,25 +245,11 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         }
     }
 
-    public void fire() {
+    private void fire() {
         if (level.isClientSide) {
-            BlockPos pos = this.worldPosition;
-            level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    this.pitch * Mth.DEG_TO_RAD, -this.yaw * Mth.DEG_TO_RAD, 0);
-
-            PoseStack poseStack = new PoseStack();
-            RandomSource ran = level.random;
-            poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
-
-            poseStack.mulPose(Axis.YP.rotationDegrees(-this.yaw));
-            poseStack.mulPose(Axis.XP.rotationDegrees(this.pitch));
-            poseStack.translate(0, 0, -1.4);
-
-            this.spawnDustRing(poseStack);
-
-            this.spawnSmokeTrail(poseStack, ran);
 
         } else {
+            level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
             this.shootProjectile();
         }
         this.cooldown = 1;
@@ -308,50 +292,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             return true;
         }
         return false;
-    }
-
-
-    private void spawnSmokeTrail(PoseStack poseStack, RandomSource ran) {
-        int smokeCount = 20;
-        for (int i = 0; i < smokeCount; i += 1) {
-
-            poseStack.pushPose();
-
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
-
-            float aperture = 0.5f;
-            poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
-
-            Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
-
-            level.addParticle(ParticleTypes.SMOKE,
-                    p.x, p.y, p.z,
-                    speed.x, speed.y, speed.z);
-            poseStack.popPose();
-        }
-    }
-
-    private void spawnDustRing(PoseStack poseStack) {
-        poseStack.pushPose();
-
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
-
-        int dustCount = 16;
-        for (int i = 0; i < dustCount; i += 1) {
-
-            poseStack.pushPose();
-
-            poseStack.mulPose(Axis.YP.rotationDegrees(90));
-
-            poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
-            level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
-                    p.x, p.y, p.z,
-                    speed.x, speed.y, speed.z);
-            poseStack.popPose();
-        }
-
-        poseStack.popPose();
     }
 
 

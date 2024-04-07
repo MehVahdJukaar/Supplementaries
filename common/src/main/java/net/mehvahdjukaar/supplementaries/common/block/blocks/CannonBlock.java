@@ -1,14 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -31,6 +40,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector4f;
 
 import java.util.Optional;
 
@@ -79,14 +89,26 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Direction dir = Direction.orderedByNearest(placer)[0];
             Direction myDir = state.getValue(FACING).getOpposite();
 
-            if(dir.getAxis() == Direction.Axis.Y){
+            if (dir.getAxis() == Direction.Axis.Y) {
                 float pitch = dir == Direction.UP ? -90 : 90;
-                cannon.setPitch((myDir.getOpposite() == dir ? pitch+180 : pitch));
+                cannon.setPitch((myDir.getOpposite() == dir ? pitch + 180 : pitch));
 
-            }
-           else  {
+            } else {
                 float yaw = dir.toYRot();
-                cannon.setYaw((myDir.getOpposite() == dir ? yaw+180 : yaw));
+                cannon.setYaw((myDir.getOpposite() == dir ? yaw + 180 : yaw));
+            }
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (!level.isClientSide) {
+            boolean wasPowered = state.getValue(POWERED);
+            if (wasPowered != level.hasNeighborSignal(pos)) {
+                level.setBlock(pos, state.cycle(POWERED), 2);
+                if (!wasPowered && level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+                    tile.ignite();
+                }
             }
         }
     }
@@ -114,13 +136,30 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public boolean isLitUp(BlockState blockState) {
+    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+            return tile.isFiring();
+        }
+        ;
         return false;
     }
 
     @Override
-    public BlockState toggleLitState(BlockState blockState, boolean b) {
-        return null;
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+        if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+            if (tile.readyToFire()) {
+                if (!world.isClientSide()) {
+                    this.setLitUp(state, world, pos, true);
+                    this.playLightUpSound(world, pos, fireSourceType);
+                }
+
+                world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -164,6 +203,89 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public Optional<BlockState> getRotatedState(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, Rotation rotation, Direction direction, @Nullable Vec3 vec3) {
         //TODO: figure out rotation stuff
         return Optional.empty();
+    }
+
+    @Override
+    public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        if (id > 1) return false;
+        if (!level.isClientSide) return true;
+        if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+            float yaw = tile.getYaw(1);
+            float pitch = tile.getPitch(1);
+
+            PoseStack poseStack = new PoseStack();
+            poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
+
+            poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
+            poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+            poseStack.translate(0, 0, -1.4);
+
+            if (id == 1) {
+                addFireParticles(pos, level, poseStack, pitch, yaw);
+                return true;
+            }
+            else {
+                Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
+
+                level.addParticle(ParticleTypes.FLAME,
+                        p.x, p.y, p.z, 0,0,0);
+            }
+        }
+
+        return false;
+    }
+
+
+    private void addFireParticles(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw) {
+        level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, 0);
+        RandomSource ran = level.random;
+
+        this.spawnDustRing(level, poseStack);
+        this.spawnSmokeTrail(level, poseStack, ran);
+    }
+
+    private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
+        int smokeCount = 20;
+        for (int i = 0; i < smokeCount; i += 1) {
+
+            poseStack.pushPose();
+
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
+
+            float aperture = 0.5f;
+            poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
+
+            Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+            level.addParticle(ParticleTypes.SMOKE,
+                    p.x, p.y, p.z,
+                    speed.x, speed.y, speed.z);
+            poseStack.popPose();
+        }
+    }
+
+    private void spawnDustRing(Level level, PoseStack poseStack) {
+        poseStack.pushPose();
+
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+
+        int dustCount = 16;
+        for (int i = 0; i < dustCount; i += 1) {
+
+            poseStack.pushPose();
+
+            poseStack.mulPose(Axis.YP.rotationDegrees(90));
+
+            poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
+            level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
+                    p.x, p.y, p.z,
+                    speed.x, speed.y, speed.z);
+            poseStack.popPose();
+        }
+
+        poseStack.popPose();
     }
 
 
