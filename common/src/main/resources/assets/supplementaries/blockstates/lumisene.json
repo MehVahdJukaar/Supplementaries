@@ -2,11 +2,51 @@
   "multipart": [
     {
       "when": {
-        "age": "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15"
+        "age": "5|6|7|8|9|10|11|12|13|14|15"
       },
       "apply": [
         {
-          "model": "supplementaries:block/lumisene_fire"
+          "model": "supplementaries:block/lumisene_fire_4"
+        }
+      ]
+    },
+    {
+      "when": {
+        "age": "4"
+      },
+      "apply": [
+        {
+          "model": "supplementaries:block/lumisene_fire_3"
+        }
+      ]
+    },
+    {
+      "when": {
+        "age": "3"
+      },
+      "apply": [
+        {
+          "model": "supplementaries:block/lumisene_fire_2"
+        }
+      ]
+    },
+    {
+      "when": {
+        "age": "2"
+      },
+      "apply": [
+        {
+          "model": "supplementaries:block/lumisene_fire_1"
+        }
+      ]
+    },
+    {
+      "when": {
+        "age": "1"
+      },
+      "apply": [
+        {
+          "model": "supplementaries:block/lumisene_fire_0"
         }
       ]
     }

@@ -681,10 +681,10 @@ public class ModCreativeTabs {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
                 if (!PlatHelper.isModLoaded(s.getFromMod())) continue;
-                if (s == BuiltInSoftFluids.POTION.get() || s.isEmpty()) continue;
+                if (s == BuiltInSoftFluids.POTION.get() || s.isEmptyFluid()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
-                fluidHolder.setFluid(new SoftFluidStack(h, 100));
+                fluidHolder.setFluid(SoftFluidStack.of(h, 100));
                 fluidHolder.capCapacity();
                 fluidHolder.save(com);
                 tryAddJar(items, com);
@@ -693,7 +693,7 @@ public class ModCreativeTabs {
             for (ResourceLocation potion : BuiltInRegistries.POTION.keySet()) {
                 CompoundTag com = new CompoundTag();
                 com.putString("Potion", potion.toString());
-                fluidHolder.setFluid(new SoftFluidStack(BuiltInSoftFluids.POTION.getHolder(), 100, com));
+                fluidHolder.setFluid(SoftFluidStack.of(BuiltInSoftFluids.POTION.getHolder(), 100, com));
                 fluidHolder.capCapacity();
                 CompoundTag com2 = new CompoundTag();
                 fluidHolder.save(com2);

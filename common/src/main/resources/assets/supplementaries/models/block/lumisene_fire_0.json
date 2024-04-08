@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {
-		"particle": "supplementaries:block/lumisene_fire",
-		"fire": "supplementaries:block/lumisene_fire"
+		"particle": "supplementaries:block/lumisene_fire_0",
+		"fire": "supplementaries:block/lumisene_fire_0"
 	},
 	"elements": [
 		{

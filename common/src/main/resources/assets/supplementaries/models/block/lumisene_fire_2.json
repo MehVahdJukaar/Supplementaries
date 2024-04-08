@@ -1,0 +1,7 @@
+{
+	"parent": "supplementaries:block/lumisene_fire_0",
+	"textures": {
+		"particle": "supplementaries:block/lumisene_fire_2",
+		"fire": "supplementaries:block/lumisene_fire_2"
+	}
+}

@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg.fabric;
 
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.fabric.LumiseneFluidRendererImpl;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.world.item.BucketItem;
@@ -18,6 +21,10 @@ public class ModFluidsImpl {
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
             super(16, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
+
+            if (PlatHelper.getPhysicalSide().isClient()) {
+                FluidRenderHandlerRegistry.INSTANCE.register(this, new LumiseneFluidRendererImpl());
+            }
         }
 
     }

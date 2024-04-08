@@ -131,7 +131,10 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onScroll(InputEvent.MouseScrollingEvent event) {
+    public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
+        if (QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())) {
+            event.setCanceled(true);
+        }
         if(CannonController.isActive()){
             CannonController.onMouseScrolled(event.getScrollDelta());
             event.setCanceled(true);
