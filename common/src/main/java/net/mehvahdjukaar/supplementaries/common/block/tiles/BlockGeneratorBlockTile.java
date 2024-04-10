@@ -15,16 +15,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 
 //Turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
 
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
-    private final AtomicReference<List<StructureLocator.LocatedStruct>> threadResult = new AtomicReference<>(null);
+    private CompletableFuture<List<StructureLocator.LocatedStruct>> threadResult;
     private boolean firstTick = true;
     private RoadSignFeature.Config config = null;
 
@@ -39,24 +39,26 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         if (tile.firstTick) {
             tile.firstTick = false;
 
-            ServerLevel serverLevel = (ServerLevel) level;
-            EXECUTORS.submit(() -> {
-                try {
-                    tile.threadResult.set(StructureLocator.findNearestMapFeatures(
-                            serverLevel, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
-                            false, 2, 8));
-                } catch (Exception ignored) {
-                }
+            tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestMapFeatures(
+                    (ServerLevel) level, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
+                    false, 2, 8),
+                    EXECUTORS).exceptionally(exception -> {
+                Supplementaries.LOGGER.error("Failed to generate road sign at " + pos + ": " + exception);
+                return null; // Handle exception by returning null
             });
+            return;
         }
-        try {
-            var result = tile.threadResult.get();
-            if (result != null) {
-                RoadSignFeature.applyPostProcess(tile.config, (ServerLevel) level, pos, result);
-            }
-        } catch (Exception e) {
+        if (tile.config == null || tile.threadResult == null || tile.threadResult.isCompletedExceptionally()) {
             level.removeBlock(pos, false);
-            Supplementaries.LOGGER.error("Failed to generate road sign at " + pos+": "+e);
+        }
+
+        if (tile.threadResult.isDone()) {
+            try {
+                RoadSignFeature.applyPostProcess(tile.config, (ServerLevel) level, pos, tile.threadResult.get());
+            } catch (Exception e) {
+                level.removeBlock(pos, false);
+                Supplementaries.LOGGER.error("Failed to generate road sign at " + pos + ": " + e);
+            }
         }
     }
 

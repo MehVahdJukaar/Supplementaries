@@ -36,7 +36,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     public void updateTileOnInventoryChanged() {
         this.sandData = HourglassTimesManager.getData(this.getDisplayedItem().getItem());
         int p = this.getDirection() == Direction.DOWN ? 1 : 0;
-        int l = this.sandData.getLight();
+        int l = this.sandData.light();
         if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
             if (this.level != null)
                 level.setBlock(this.worldPosition, this.getBlockState()

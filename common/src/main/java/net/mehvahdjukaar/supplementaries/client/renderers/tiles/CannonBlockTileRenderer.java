@@ -51,11 +51,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
 
-        long t = System.currentTimeMillis();
-
-        //write equation of sawtooth wave with same period as that sine wave
-        float wave = (t % 1000) / 1000f;
-
         float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
         float absoluteYaw = yawRad;
         float pitchRad = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
@@ -76,12 +71,21 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         this.pivot.xRot = pitchRad;
         this.pivot.zRot = 0;
 
-        float scale = Mth.sin((t % 200) / 200f * (float) Math.PI) * 0.01f + 1f + wave * 0.06f;
+
+        // animation
+        float cooldownCounter = tile.getCooldownAnimation(partialTick);
+        float fireCounter = tile.getFiringAnimation(partialTick);
+
+        //write equation of sawtooth wave with same period as that sine wave
+        float squish = triangle(1 - cooldownCounter, 0.02f, 0.15f) * 0.2f;
+
+        float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
+        float scale = wobble + 1f + squish * 0.7f;
         head.xScale = scale;
         head.yScale = scale;
-        float c = (wave) * 0.1f;
-        head.zScale = 1 - c;
-        head.z = c * 5.675f;
+
+        head.zScale = 1 - squish;
+        head.z = squish * 5.675f;
 
         model.render(poseStack, builder, packedLight, packedOverlay);
 
@@ -89,6 +93,26 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         poseStack.popPose();
 
         CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, absoluteYaw);
+    }
+
+    private float triangle(float cooldownCounter, float mid, float f) {
+        if (cooldownCounter <= mid) {
+            // Calculate the slope for the rising part
+            float slope = 1 / mid;
+            // Calculate the y-coordinate based on the slope
+            return slope * cooldownCounter;
+        }
+        // Check if cooldownCounter is within the range of mid to f
+        else if (cooldownCounter <= f) {
+            // Calculate the slope for the falling part
+            float slope = -1 / (f - mid);
+            // Calculate the y-coordinate based on the slope and offset by 1 to start from 1
+            return slope * (cooldownCounter - mid) + 1;
+        }
+        // If cooldownCounter is greater than f, return 0
+        else {
+            return 0;
+        }
     }
 
 

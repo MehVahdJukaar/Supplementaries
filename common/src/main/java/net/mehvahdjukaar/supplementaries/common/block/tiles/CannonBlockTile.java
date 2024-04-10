@@ -50,8 +50,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float prevYaw = 0;
 
     // both from 0 to 1
-    private float cooldown = 0;
-    private float chargeTimer = 0;
+    private float disabledCooldown = 0;
+    private float timeUntilFire = 0;
     private byte firePower = 1;
 
     private float projectileDrag = 0;
@@ -66,8 +66,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.saveAdditional(tag);
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
-        tag.putFloat("cooldown", this.cooldown);
-        tag.putFloat("fire_timer", this.chargeTimer);
+        tag.putFloat("cooldown", this.disabledCooldown);
+        tag.putFloat("fire_timer", this.timeUntilFire);
         tag.putByte("fire_power", this.firePower);
     }
 
@@ -76,8 +76,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.load(tag);
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
-        this.cooldown = tag.getFloat("cooldown");
-        this.chargeTimer = tag.getFloat("fire_timer");
+        this.disabledCooldown = tag.getFloat("cooldown");
+        this.timeUntilFire = tag.getFloat("fire_timer");
         this.firePower = tag.getByte("fire_power");
         if (level != null) {
             recalculateProjectileStats();
@@ -93,7 +93,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
 
     public boolean readyToFire() {
-        return cooldown == 0 && chargeTimer == 0 && hasFuelAndProjectiles();
+        return disabledCooldown == 0 && timeUntilFire == 0 && hasFuelAndProjectiles();
     }
 
     public boolean hasFuelAndProjectiles() {
@@ -102,15 +102,25 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public boolean isFiring() {
-        return chargeTimer > 0;
+        return timeUntilFire > 0;
     }
 
-    public float getCooldown() {
-        return cooldown;
+    public float getFiringAnimation(float partialTicks) {
+        if(timeUntilFire <= 0) return 0;
+        return timeUntilFire - (1f / TIME_TO_FIRE * partialTicks);
+    }
+
+    public float getCooldownAnimation(float partialTicks) {
+        if(disabledCooldown <= 0) return 0;
+        return disabledCooldown - (1f / FIRE_COOLDOWN * partialTicks);
     }
 
     public float getFireTimer() {
-        return chargeTimer;
+        return timeUntilFire;
+    }
+
+    public float getDisabledCooldown() {
+        return disabledCooldown;
     }
 
     @Override
@@ -222,7 +232,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
-        this.chargeTimer = 1;
+        this.timeUntilFire = 1;
         //update other clients
         level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
         level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
@@ -232,14 +242,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         t.prevYaw = t.yaw;
         t.prevPitch = t.pitch;
 
-        if (t.cooldown > 0) {
-            t.cooldown -= 1f / FIRE_COOLDOWN;
-            if (t.cooldown < 0) t.cooldown = 0;
+        if (t.disabledCooldown > 0) {
+            t.disabledCooldown -= 1f / FIRE_COOLDOWN;
+            if (t.disabledCooldown < 0) t.disabledCooldown = 0;
         }
-        if (t.chargeTimer > 0) {
-            t.chargeTimer -= 1f / TIME_TO_FIRE;
-            if (t.chargeTimer <= 0) {
-                t.chargeTimer = 0;
+        if (t.timeUntilFire > 0) {
+            t.timeUntilFire -= 1f / TIME_TO_FIRE;
+            if (t.timeUntilFire <= 0) {
+                t.timeUntilFire = 0;
                 t.fire();
             }
         }
@@ -247,12 +257,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     private void fire() {
         if (level.isClientSide) {
-
-        } else {
+            //call directly on client
             level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
+        } else {
             this.shootProjectile();
         }
-        this.cooldown = 1;
+        this.disabledCooldown = 1;
     }
 
     private boolean shootProjectile() {

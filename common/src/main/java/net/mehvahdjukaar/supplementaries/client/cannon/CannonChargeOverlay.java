@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.GunpowderBlockColor;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -59,7 +58,7 @@ public abstract class CannonChargeOverlay extends Gui {
 
             int i = screenWidth / 2 - 91;
 
-            float c = 1 - cannon.getCooldown();
+            float c = 1 - cannon.getDisabledCooldown();
             int k = (int) (c * 183.0F);
             int l = screenHeight - 32 + 3;
             graphics.blit(texture, i, l, 0, 0, 182, 5);

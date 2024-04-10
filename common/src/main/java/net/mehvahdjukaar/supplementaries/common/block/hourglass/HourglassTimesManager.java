@@ -53,9 +53,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
         this.dustsMap.clear();
 
         list.sort(Comparator.comparing(HourglassTimeData::ordering));
-        Lists.reverse(list);
-
-        for(var data : list) {
+        for(var data : Lists.reverse(list)) {
             this.dusts.add(data);
             data.getItems().forEach(i -> {
                 if (i.value() == Items.AIR) {
