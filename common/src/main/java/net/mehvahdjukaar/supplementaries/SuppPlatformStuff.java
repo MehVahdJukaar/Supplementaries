@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 
 public class SuppPlatformStuff {
@@ -65,11 +62,6 @@ public class SuppPlatformStuff {
     @ExpectPlatform
     public static float getDownfall(Biome biome){
         throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static  VillagerTrades.ItemListing[] fireRedMerchantTradesEvent(List<VillagerTrades.ItemListing> listings) {
-        throw new ArrayStoreException();
     }
 
     @ExpectPlatform

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.hourglass;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -21,7 +22,7 @@ import java.util.*;
 public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public static final HourglassTimesManager RELOAD_INSTANCE = new HourglassTimesManager();
+    public static final HourglassTimesManager INSTANCE = new HourglassTimesManager();
 
     private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
     private final Set<HourglassTimeData> dusts = new HashSet<>();
@@ -44,31 +45,32 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data " + key);
             }
         });
-        list.sort(Comparator.comparing(HourglassTimeData::getOrdering));
-        list.forEach(HourglassTimesManager::addData);
+        this.setData(list);
     }
 
-    public static void addData(HourglassTimeData data) {
-        RELOAD_INSTANCE.dusts.add(data);
-        data.getItems().forEach(i -> {
-            if (i.value() == Items.AIR) {
-                int aa = 1;
-            } else RELOAD_INSTANCE.dustsMap.put(i.value(), data);
-        });
+    public void setData(List<HourglassTimeData> list) {
+        this.dusts.clear();
+        this.dustsMap.clear();
+
+        list.sort(Comparator.comparing(HourglassTimeData::ordering));
+        Lists.reverse(list);
+
+        for(var data : list) {
+            this.dusts.add(data);
+            data.getItems().forEach(i -> {
+                if (i.value() == Items.AIR) {
+                    Supplementaries.error();
+                } else this.dustsMap.put(i.value(), data);
+            });
+        }
     }
 
     public static HourglassTimeData getData(Item item) {
-        return RELOAD_INSTANCE.dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
-    }
-
-    public static void acceptClientData(List<HourglassTimeData> hourglass) {
-        RELOAD_INSTANCE.dusts.clear();
-        RELOAD_INSTANCE.dustsMap.clear();
-        hourglass.forEach(HourglassTimesManager::addData);
+        return INSTANCE.dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(RELOAD_INSTANCE.dusts));
+        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(INSTANCE.dusts));
     }
 
 }

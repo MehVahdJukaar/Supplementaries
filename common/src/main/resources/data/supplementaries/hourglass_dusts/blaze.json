@@ -1,5 +1,6 @@
 {
   "items": ["minecraft:blaze_powder"],
   "duration": 277,
+  "light_level": 6,
   "texture":  "supplementaries:block/hourglass_blaze"
 }

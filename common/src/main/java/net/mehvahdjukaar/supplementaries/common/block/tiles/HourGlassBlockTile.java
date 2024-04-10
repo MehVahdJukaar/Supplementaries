@@ -39,7 +39,8 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         int l = this.sandData.getLight();
         if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
             if (this.level != null)
-                level.setBlock(this.worldPosition, this.getBlockState().setValue(HourGlassBlock.LIGHT_LEVEL, l), 4 | 16);
+                level.setBlock(this.worldPosition, this.getBlockState()
+                        .setValue(HourGlassBlock.LIGHT_LEVEL, l), 4 | 16);
         }
         this.prevProgress = p;
         this.progress = p;

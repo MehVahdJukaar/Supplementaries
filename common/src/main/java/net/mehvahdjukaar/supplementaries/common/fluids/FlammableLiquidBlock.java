@@ -56,6 +56,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 .toArray(VoxelShape[]::new);
     }
 
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
@@ -72,11 +73,13 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @ForgeOverride
     public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        if (face.getAxis().isVertical()) return 0;
         return 60;
     }
 
     @ForgeOverride
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        if (face.getAxis().isVertical()) return 0;
         return 300;
     }
 
@@ -268,7 +271,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         super.randomTick(state, level, pos, random);
 
         // hack to burn blocks around like lava does. we could also movethis into tick instead like fire
-        if(isOnFire(state)) {
+        if (isOnFire(state)) {
             Blocks.LAVA.randomTick(Blocks.LAVA.defaultBlockState(), level, pos, random);
         }
     }

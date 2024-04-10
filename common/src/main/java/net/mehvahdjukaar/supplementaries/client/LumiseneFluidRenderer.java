@@ -15,14 +15,14 @@ public class LumiseneFluidRenderer {
             Util.make(new ResourceLocation[4][4], (textures) -> {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
-                        textures[x][y] = Supplementaries.res("textures/block/lumisene_underwater_" + x + y + " .png");
+                        textures[x][y] = Supplementaries.res("textures/block/lumisene_" + x + y + ".png");
                     }
                 }
             });
 
     public ResourceLocation getStillTexture(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-        int x = pos.getX() % 4;
-        int y = pos.getZ() % 4;
+        int x = Math.floorMod(pos.getX(), 4);
+        int y = Math.floorMod(pos.getZ(), 4);
         return STILL_TEXTURES[x][y];
     }
 }

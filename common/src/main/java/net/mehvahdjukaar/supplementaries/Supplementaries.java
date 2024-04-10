@@ -78,7 +78,7 @@ public class Supplementaries {
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
         PlatHelper.addServerReloadListener(SongsManager.RELOAD_INSTANCE, res("flute_songs"));
-        PlatHelper.addServerReloadListener(HourglassTimesManager.RELOAD_INSTANCE, res("hourglass_data"));
+        PlatHelper.addServerReloadListener(HourglassTimesManager.INSTANCE, res("hourglass_data"));
         PlatHelper.addServerReloadListener(FaucetBehaviorsManager.RELOAD_INSTANCE, res("faucet_interactions"));
         PlatHelper.addServerReloadListener(CapturedMobHandler.RELOAD_INSTANCE, res("catchable_mobs_properties"));
 
