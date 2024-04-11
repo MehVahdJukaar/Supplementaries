@@ -1,0 +1,26 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "slidy_block"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "010",
+    "111",
+    "010"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_nugget"
+    },
+    "1": {
+      "item": "minecraft:tuff"
+    }
+  },
+  "result": {
+    "item": "supplementaries:slidy_block",
+    "count": 1
+  }
+}

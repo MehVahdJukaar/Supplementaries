@@ -195,7 +195,7 @@ public class CommonConfigs {
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
             TURN_TABLE_SHUFFLE = builder.comment("Allows turn table to shuffle containers content when rotated over horizontal axis")
-                            .define("shuffle_containers", true);
+                    .define("shuffle_containers", true);
             builder.pop();
 
             builder.push("pulley_block");
@@ -317,6 +317,13 @@ public class CommonConfigs {
 
             builder.push("gravel_bricks");
             GRAVEL_BRICKS_ENABLED = feature(builder);
+            builder.pop();
+
+
+            builder.push("slidy_block");
+            SLIDY_BLOCK_ENABLED = feature(builder);
+            SLIDY_BLOCK_SPEED = builder.comment("Slidy block speed")
+                    .define("speed", 0.125D, 0, 1);
             builder.pop();
 
             builder.push("timber_frame");
@@ -513,6 +520,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
 
         public static final Supplier<Boolean> GRAVEL_BRICKS_ENABLED;
+        public static final Supplier<Boolean> SLIDY_BLOCK_ENABLED;
+        public static final Supplier<Double> SLIDY_BLOCK_SPEED;
 
         public static final Supplier<Boolean> BUNTINGS_ENABLED;
 

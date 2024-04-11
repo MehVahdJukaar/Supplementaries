@@ -863,7 +863,8 @@ public class ModRegistry {
 
     // gravel bricks
     public static final Supplier<Block> GRAVEL_BRICKS = regWithItem(GRAVEL_BRICKS_NAME, () -> new GravelBricksBlock(
-            BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)
+            BlockBehaviour.Properties.of()
+                    .instrument(NoteBlockInstrument.BASEDRUM)
                     .mapColor(Blocks.GRAVEL.defaultMapColor())
                     .strength(1, 0.2f)
                     .sound(SoundType.STONE)
@@ -891,7 +892,9 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> MOVING_SLIDY_BLOCK_SOURCE = regBlock("moving_slidy_block_source", () -> new MovingSlidyBlockSource(
-            BlockBehaviour.Properties.of().noCollission().noLootTable())
+            BlockBehaviour.Properties.of().noCollission()
+                    .noOcclusion().mapColor(MapColor.NONE)
+                    .noLootTable().pushReaction(PushReaction.BLOCK))
     );
 
     //stone tile

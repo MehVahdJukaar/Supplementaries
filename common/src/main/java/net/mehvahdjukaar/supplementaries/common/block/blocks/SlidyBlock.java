@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -72,6 +73,9 @@ public class SlidyBlock extends FallingBlock {
             return InteractionResult.FAIL;
         }
         level.destroyBlock(neighborPos, true);
+
+        level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+
         MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

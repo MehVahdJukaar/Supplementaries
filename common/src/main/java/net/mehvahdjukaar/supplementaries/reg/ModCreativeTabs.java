@@ -278,10 +278,6 @@ public class ModCreativeTabs {
                 ModRegistry.SUS_GRAVEL_BRICKS);
 
         after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.GRAVEL_BRICKS_NAME,
-                ModRegistry.GRAVEL_BRICKS);
-
-        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SLIDY_BLOCK_NAME,
                 ModRegistry.SLIDY_BLOCK);
 

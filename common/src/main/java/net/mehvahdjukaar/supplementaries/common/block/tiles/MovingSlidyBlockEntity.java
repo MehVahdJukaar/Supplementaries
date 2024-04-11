@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -59,13 +61,15 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
 
                         level.setBlock(pos, blockState, 67);
                         level.neighborChanged(pos, blockState.getBlock(), pos);
+
+                        if (level instanceof ServerLevel sl) blockState.tick(sl, pos, sl.random);
                     }
                 }
 
             }
         } else {
             // all this just to change this single line
-            float f = t.progress + 0.125F;
+            float f = (float) (t.progress + CommonConfigs.Building.SLIDY_BLOCK_SPEED.get());
             moveCollidedEntities(level, pos, f, t);
             moveStuckEntities(level, pos, f, t);
             t.progress = f;
