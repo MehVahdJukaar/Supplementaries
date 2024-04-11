@@ -16,6 +16,13 @@ accessible field net/minecraft/world/level/block/AbstractCauldronBlock interacti
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 
+#piston stuff
+accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity lastTicked J
+accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity progressO F
+accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity progress F
+accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity deathTicks I
+accessible method net/minecraft/world/level/block/piston/PistonMovingBlockEntity moveCollidedEntities (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;FLnet/minecraft/world/level/block/piston/PistonMovingBlockEntity;)V
+accessible method net/minecraft/world/level/block/piston/PistonMovingBlockEntity moveStuckEntities (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;FLnet/minecraft/world/level/block/piston/PistonMovingBlockEntity;)V
 
 #shulker menu
 accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/minecraft/world/Container;

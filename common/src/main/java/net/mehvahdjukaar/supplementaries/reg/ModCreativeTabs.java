@@ -273,6 +273,18 @@ public class ModCreativeTabs {
                 ModConstants.FLINT_BLOCK_NAME,
                 ModRegistry.FLINT_BLOCK);
 
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.GRAVEL_BRICKS_NAME,
+                ModRegistry.SUS_GRAVEL_BRICKS);
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.GRAVEL_BRICKS_NAME,
+                ModRegistry.GRAVEL_BRICKS);
+
+        after(e, Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.SLIDY_BLOCK_NAME,
+                ModRegistry.SLIDY_BLOCK);
+
         after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.BUNTING_NAME,
                 ModRegistry.BUNTING);
@@ -456,6 +468,18 @@ public class ModCreativeTabs {
                 ModConstants.ASH_BRICKS_NAME,
                 ModRegistry.ASH_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
 
+
+        after(e, Items.REINFORCED_DEEPSLATE, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.GRAVEL_BRICKS_NAME,
+                ModRegistry.SUS_GRAVEL_BRICKS);
+
+        after(e, Items.REINFORCED_DEEPSLATE, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.GRAVEL_BRICKS_NAME,
+                ModRegistry.GRAVEL_BRICKS);
+
+        after(e, Items.REINFORCED_DEEPSLATE, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.SLIDY_BLOCK_NAME,
+                ModRegistry.SLIDY_BLOCK);
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,

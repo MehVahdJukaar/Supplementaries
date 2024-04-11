@@ -869,6 +869,30 @@ public class ModRegistry {
                     .sound(SoundType.STONE)
     ));
 
+    public static final Supplier<Block> SUS_GRAVEL_BRICKS = regWithItem(SUS_GRAVEL_BRICKS_NAME,
+            () -> new SusGravelBricksBlock(
+                    BlockBehaviour.Properties.copy(GRAVEL_BRICKS.get())
+            ));
+
+    public static final Supplier<BlockEntityType<SusGravelBricksTile>> SUS_GRAVEL_BRICKS_TILE = regTile(SUS_GRAVEL_BRICKS_NAME, () ->
+            PlatHelper.newBlockEntityType(SusGravelBricksTile::new, SUS_GRAVEL_BRICKS.get()));
+
+
+    public static final Supplier<Block> SLIDY_BLOCK = regWithItem(SLIDY_BLOCK_NAME, () -> new SlidyBlock(
+            BlockBehaviour.Properties.copy(Blocks.TUFF)
+    ));
+
+    public static final Supplier<Block> MOVING_SLIDY_BLOCK = regBlock("moving_slidy_block", () -> new MovingSlidyBlock(
+            BlockBehaviour.Properties.copy(Blocks.MOVING_PISTON)
+    ));
+
+    public static final Supplier<BlockEntityType<MovingSlidyBlockEntity>> MOVING_SLIDY_BLOCK_TILE = regTile("moving_slidy_block", () ->
+            PlatHelper.newBlockEntityType(MovingSlidyBlockEntity::new, MOVING_SLIDY_BLOCK.get()));
+
+
+    public static final Supplier<Block> MOVING_SLIDY_BLOCK_SOURCE = regBlock("moving_slidy_block_source", () -> new MovingSlidyBlockSource(
+            BlockBehaviour.Properties.of().noCollission().noLootTable())
+    );
 
     //stone tile
     public static final Map<RegHelper.VariantType, Supplier<Block>> STONE_TILE_BLOCKS =
