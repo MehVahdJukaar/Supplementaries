@@ -26,6 +26,12 @@ public class ModSounds {
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final Supplier<SoundEvent> CRANK = regSound("block.crank");
 
+    public static final Supplier<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
+
+    public static final Supplier<SoundEvent> WRENCH_ROTATE = regSound("item.wrench.rotate");
+    public static final Supplier<SoundEvent> WRENCH_HIT = regSound("item.wrench.hit");
+    public static final Supplier<SoundEvent> WRENCH_FAIL = regSound("item.wrench.fail");
+
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");
     public static final Supplier<SoundEvent> PRESENT_OPEN = regSound("block.present.open");
