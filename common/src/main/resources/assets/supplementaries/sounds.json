@@ -248,5 +248,71 @@
       "supplementaries:block/rope_step_2",
       "supplementaries:block/rope_step_3"
     ]
+  },
+  "block.rotate": {
+    "subtitle": "subtitle.supplementaries.rotate_block",
+    "sounds": [
+      {
+        "name": "minecraft:entity/itemframe/rotate_item1",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item2",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item3",
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:entity/itemframe/rotate_item4",
+        "pitch": 0.6
+      }
+    ]
+  },
+  "item.wrench.rotate": {
+    "subtitle": "subtitle.supplementaries.wrench.rotate",
+    "sounds": [
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.8
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.6
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 1.9
+      },
+      {
+        "name": "item/spyglass/use",
+        "volume": 0.5,
+        "pitch": 2.1
+      }
+    ]
+  },
+  "item.wrench.fail": {
+    "subtitle": "subtitle.supplementaries.wrench.fail",
+    "sounds": [
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.8
+      },
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.72
+      },
+      {
+        "name": "item/spyglass/stop",
+        "volume": 1,
+        "pitch": 0.65
+      }
+    ]
   }
 }
