@@ -7,7 +7,6 @@ public class ConfigUtilsImpl {
 
     public static void openModConfigs() {
         Minecraft mc = Minecraft.getInstance();
-
         mc.setScreen(new ModConfigSelectScreen(Minecraft.getInstance().screen));
     }
 }

@@ -30,10 +30,9 @@ public class SoapClearRecipe extends CustomRecipe {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {
                 Item item = itemstack.getItem();
-                boolean d = (BlocksColorAPI.getColor(item) != null &&
-                        !itemstack.is(ModTags.SOAP_BLACKLIST) &&
+                boolean isColored = (BlocksColorAPI.getColor(item) != null &&
                         !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
-                if (d || item instanceof DyeableLeatherItem || hasTrim(item)) {
+                if (isColored || item instanceof DyeableLeatherItem || hasTrim(item)) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -67,7 +68,8 @@ public class WrenchItem extends Item {
      */
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        pAttacker.level().playSound(null, pTarget, SoundEvents.ANVIL_PLACE, pAttacker.getSoundSource(), 0.5F, 1.8F);
+        pAttacker.level().playSound(null, pTarget,
+                SoundEvents.ANVIL_PLACE, pAttacker.getSoundSource(), 0.5F, 1.8F);
 
         pStack.hurtAndBreak(1, pAttacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
@@ -114,7 +116,8 @@ public class WrenchItem extends Item {
                 return InteractionResult.sidedSuccess(level.isClientSide);
             } else {
                 if (level.isClientSide) {
-                    level.playSound(context.getPlayer(), player, SoundEvents.SPYGLASS_STOP_USING, SoundSource.PLAYERS, 1.4F, 0.8F);
+                    level.playSound(context.getPlayer(), player,
+                            ModSounds.WRENCH_FAIL.get(), SoundSource.PLAYERS, 1.4F, 0.8F);
                 }
             }
         }

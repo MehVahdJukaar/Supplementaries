@@ -883,6 +883,10 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.TUFF)
     ));
 
+    public static final Supplier<BlockEntityType<SlidyBlockOptionalTile>> SLIDY_BLOCK_TILE = regTile(SLIDY_BLOCK_NAME, () ->
+            PlatHelper.newBlockEntityType(SlidyBlockOptionalTile::new, SLIDY_BLOCK.get()));
+
+
     public static final Supplier<Block> MOVING_SLIDY_BLOCK = regBlock("moving_slidy_block", () -> new MovingSlidyBlock(
             BlockBehaviour.Properties.copy(Blocks.MOVING_PISTON)
     ));

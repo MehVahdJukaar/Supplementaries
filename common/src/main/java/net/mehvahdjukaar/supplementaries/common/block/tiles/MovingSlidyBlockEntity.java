@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,7 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -75,8 +77,11 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             t.progress = f;
             if (t.progress >= 1.0F) {
                 t.progress = 1.0F;
-            }
 
+                if(level.getBlockState(pos.below()).is(BlockTags.ICE)){
+                    MovingSlidyBlock.maybeMove(movedState, level, pos, t.getDirection());
+                }
+            }
         }
     }
 

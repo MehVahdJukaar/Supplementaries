@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.PushReaction;
 
 public class MovingSlidyBlock extends MovingPistonBlock {
     public MovingSlidyBlock(Properties properties) {
@@ -22,9 +24,23 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         return new MovingSlidyBlockEntity(pos, blockState, movedState, direction, extending, isSourcePiston);
     }
 
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), MovingSlidyBlockEntity::tick);
+    }
+
+    public static boolean maybeMove(BlockState state, Level level, BlockPos pos, Direction direction) {
+        BlockPos neighborPos = pos.relative(direction);
+        BlockState neighbor = level.getBlockState(neighborPos);
+        if (!neighbor.isAir() && neighbor.getPistonPushReaction() != PushReaction.DESTROY) {
+            return false;
+        }
+        level.destroyBlock(neighborPos, true);
+
+        MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
+
+        return true;
     }
 
     public static void move(BlockState state, Level level, BlockPos pos, Direction direction, BlockPos neighborPos) {

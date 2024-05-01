@@ -113,7 +113,6 @@ public class Supplementaries {
     // villager that fishes. shepard that shears
     // soap washes trims
     // quiver holds fireworks
-    // FD pan flip anim
     // rope arrow inplace recipe
     // bellows blow ash out of ash block and IW ash one too
     // brush remove 1 layer ash or snow
@@ -126,6 +125,7 @@ public class Supplementaries {
     //steal from quark backpack
     //quark bubble hollow log and grates
     //blackboard gui to add color
+    //wind mechanic mod with kite, paper lanterns...
 
     //hat + present jack in the box anim
 //potion flask that works liqui quiver/big pot storage

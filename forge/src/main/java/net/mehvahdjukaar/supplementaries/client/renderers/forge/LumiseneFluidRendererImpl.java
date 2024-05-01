@@ -7,7 +7,10 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.joml.Vector3f;
 
@@ -15,6 +18,11 @@ public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements 
 
     @Override
     public ResourceLocation getFlowingTexture() {
+        return SINGLE_TEXTURE;
+    }
+
+    @Override
+    public ResourceLocation getStillTexture() {
         return SINGLE_TEXTURE;
     }
 

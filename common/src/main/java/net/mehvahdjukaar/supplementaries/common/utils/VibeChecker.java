@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeChecker {
@@ -23,7 +24,7 @@ public class VibeChecker {
 
     public static void checkVibe(Level level) {
         checkDatapackRegistry();
-
+        
         //check sheets class
         if (PlatHelper.getPhysicalSide().isClient()) clientStuff();
         if (true) return;
