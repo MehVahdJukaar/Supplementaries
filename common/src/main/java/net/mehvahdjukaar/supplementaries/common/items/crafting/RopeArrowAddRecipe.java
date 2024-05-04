@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,6 @@ public class RopeArrowAddRecipe extends CustomRecipe {
     }
 
 
-
     @Override
     public boolean matches(CraftingContainer inv, Level worldIn) {
 
@@ -27,39 +26,37 @@ public class RopeArrowAddRecipe extends CustomRecipe {
         ItemStack rope = null;
         int missingRopes = 0;
 
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get() && stack.getDamageValue()!=0) {
+            if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get() && stack.getDamageValue() != 0) {
                 if (arrow != null) {
                     return false;
                 }
                 arrow = stack;
                 missingRopes += arrow.getDamageValue();
-            }
-            else if(stack.is(ModTags.ROPES)) {
+            } else if (RopeArrowItem.isValidRope(stack)) {
                 rope = stack;
                 missingRopes--;
-            }
-            else if(!stack.isEmpty())return false;
+            } else if (!stack.isEmpty()) return false;
         }
-        return arrow != null && rope != null && missingRopes>=0;
+        return arrow != null && rope != null && missingRopes >= 0;
     }
 
     @Override
     public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         int ropes = 0;
         ItemStack arrow = null;
-        for(int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if(stack.is(ModTags.ROPES)){
+            if (RopeArrowItem.isValidRope(stack)) {
                 ropes++;
             }
-            if(stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get()) {
+            if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get()) {
                 arrow = stack;
             }
         }
         ItemStack returnArrow = arrow.copy();
-        returnArrow.setDamageValue(arrow.getDamageValue() - ropes);
+        RopeArrowItem.addRopes(returnArrow, ropes);
         return returnArrow;
 
     }

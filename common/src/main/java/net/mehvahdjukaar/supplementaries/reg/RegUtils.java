@@ -132,6 +132,8 @@ public class RegUtils {
             );
             map.put(color, coloredBlock);
         }
+        ModRegistry.ALL_CANDLE_HOLDERS.addAll(map.values());
+
         if (CompatHandler.BUZZIER_BEES) {
             BuzzierBeesCompat.registerCandle(baseName);
         }

@@ -356,8 +356,8 @@ public class ModRegistry {
 
 
     //candle holder
+    public static final List<Supplier<? extends Block>> ALL_CANDLE_HOLDERS = new ArrayList<>();
     public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(Supplementaries.res(CANDLE_HOLDER_NAME));
-    public static final List<Supplier<? extends Block>> ALL_CANDLE_HOLDERS = new ArrayList<>(CANDLE_HOLDERS.values());
 
     //rope
     public static final Supplier<RopeBlock> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(

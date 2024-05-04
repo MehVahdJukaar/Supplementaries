@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -15,14 +16,12 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RopeArrowItem extends ArrowItem {
     public RopeArrowItem(Properties builder) {
@@ -31,13 +30,29 @@ public class RopeArrowItem extends ArrowItem {
 
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-        int charges = stack.getMaxDamage() - stack.getDamageValue();
+        int charges = getRopes(stack);
         return new RopeArrowEntity(world, shooter, charges);
+    }
+
+    public static int getRopes(ItemStack stack) {
+        return stack.getMaxDamage() - stack.getDamageValue();
+    }
+
+    public static void addRopes(ItemStack stack, int ropes) {
+        stack.setDamageValue(stack.getDamageValue() - ropes);
+    }
+
+    public static int getRopeCapacity() {
+        return CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get();
+    }
+
+    public static boolean isValidRope(ItemStack stack) {
+        return stack.is(ModTags.ROPES);
     }
 
     @ForgeOverride
     public int getMaxDamage(ItemStack stack) {
-        return CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get();
+        return getRopeCapacity();
     }
 
     @ForgeOverride
@@ -88,11 +103,12 @@ public class RopeArrowItem extends ArrowItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+        tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", getRopes(stack), getRopeCapacity()));
         if (worldIn == null) return;
         if (!MiscUtils.showsHints(worldIn, flagIn)) return;
         var override = CommonConfigs.getRopeOverride();
         if (override != null) {
+
             tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location())
                     .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
@@ -100,42 +116,44 @@ public class RopeArrowItem extends ArrowItem {
 
     //TODO
     @Override
-    public boolean overrideStackedOnOther(ItemStack arrow, Slot pSlot, ClickAction pAction, Player pPlayer) {
-        if (pAction != ClickAction.SECONDARY) return false;
-        float damage = arrow.getDamageValue();
-        if (damage == 0) return false;
-
-        ItemStack itemstack = pSlot.getItem();
-        //place into slot
-        boolean didStuff = false;
-        if (!itemstack.isEmpty() && itemstack.getItem() instanceof BlockItem bi && bi.getBlock() == CommonConfigs.getSelectedRope()) {
-            var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
-            ItemStack remaining = data.tryAdding(taken);
-            if (!remaining.equals(taken)) {
-                this.playInsertSound(pPlayer);
-                didStuff = true;
-            }
-            pSlot.set(remaining);
-        }
-        return didStuff;
-    }
-
-    @Override
-    public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
-        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
-            AtomicBoolean didStuff = new AtomicBoolean(false);
-            if (!pOther.isEmpty()) {
-                ItemStack i = data.tryAdding(pOther);
-                if (!i.equals(pOther)) {
+    public boolean overrideStackedOnOther(ItemStack ropeArrow, Slot pSlot, ClickAction pAction, Player pPlayer) {
+        if (pAction != ClickAction.SECONDARY) {
+            ItemStack itemstack = pSlot.getItem();
+            if (isValidRope(itemstack)) {
+                float ropes = getRopes(ropeArrow);
+                int missingRope = (int) (ropeArrow.getMaxDamage() - ropes);
+                if (missingRope != 0) {
+                    ItemStack ropeTaken = pSlot.safeTake(itemstack.getCount(), missingRope, pPlayer);
+                    int ropeWeCanAdd = Math.min(missingRope, ropeTaken.getCount());
+                    addRopes(ropeArrow, ropeWeCanAdd);
                     this.playInsertSound(pPlayer);
-                    pAccess.set(i);
-                    didStuff.set(true);
+                    return true;
+                    //pSlot.set(remaining);
                 }
             }
-            return didStuff.get();
         }
         return false;
     }
+
+    @Override
+    public boolean overrideOtherStackedOnMe(ItemStack ropeArrow, ItemStack ropeStack, Slot pSlot, ClickAction pAction,
+                                            Player pPlayer, SlotAccess pAccess) {
+        if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
+            if (isValidRope(ropeStack)) {
+                float ropes = getRopes(ropeArrow);
+                int missingRope = (int) (ropeArrow.getMaxDamage() - ropes);
+                if (missingRope != 0) {
+                    int ropeWeCanAdd = Math.min(missingRope, ropeStack.getCount());
+                    addRopes(ropeArrow, ropeWeCanAdd);
+                    ropeStack.shrink(ropeWeCanAdd);
+                    this.playInsertSound(pPlayer);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     private void playInsertSound(Entity pEntity) {
         pEntity.playSound(ModSounds.ROPE_PLACE.get(), 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);

@@ -136,7 +136,6 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:4915903")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
-    modImplementation("curse.maven:morecreativetabs-forge-fabric-581838:4633213")
 
     modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     modRuntimeOnly("curse.maven:spark-361579:4738952")
@@ -152,14 +151,14 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:4581099")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    //modImplementation("curse.maven:quark-243121:4463411")
-    modCompileOnly("org.violetmoon.quark:Quark-4.0-433")
-    modCompileOnly("org.violetmoon.zeta:Zeta-1.0-12")
+    modImplementation("curse.maven:quark-243121:5264412")
+    modImplementation("curse.maven:zeta-968868:5254672")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")
     modImplementation("curse.maven:waystones-245755:4749833")
     modImplementation("curse.maven:goated-805646:4802277")
+    modImplementation("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 

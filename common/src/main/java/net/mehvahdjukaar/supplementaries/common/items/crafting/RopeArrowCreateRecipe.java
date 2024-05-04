@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class RopeArrowCreateRecipe extends CustomRecipe {
-    public RopeArrowCreateRecipe(ResourceLocation idIn,CraftingBookCategory category) {
+    public RopeArrowCreateRecipe(ResourceLocation idIn, CraftingBookCategory category) {
         super(idIn, category);
     }
 
@@ -23,7 +23,7 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
     public boolean matches(CraftingContainer inv, Level worldIn) {
 
         ItemStack itemstack = null;
-        ItemStack itemstack1 = null;
+        int ropes = 0;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
@@ -32,15 +32,11 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
                     return false;
                 }
                 itemstack = stack;
-            }
-            else if (stack.is(ModTags.ROPES)) {
-
-                itemstack1 = stack;
-
-            }
-            else if(!stack.isEmpty())return false;
+            } else if (RopeArrowItem.isValidRope(stack)) {
+                ropes++;
+            } else if (!stack.isEmpty()) return false;
         }
-        return itemstack != null && itemstack1 != null;
+        return itemstack != null && ropes > 0 && ropes < RopeArrowItem.getRopeCapacity();
     }
 
 
@@ -48,12 +44,13 @@ public class RopeArrowCreateRecipe extends CustomRecipe {
     public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
         int ropes = 0;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
-            if (inv.getItem(i).is(ModTags.ROPES)) {
+            if (RopeArrowItem.isValidRope(inv.getItem(i))) {
                 ropes++;
             }
         }
         ItemStack stack = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
-        stack.setDamageValue(stack.getMaxDamage() - ropes);
+        stack.setDamageValue(RopeArrowItem.getRopeCapacity());
+        RopeArrowItem.addRopes(stack, ropes);
         return stack;
 
     }
