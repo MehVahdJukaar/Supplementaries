@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.utils.forge;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidStackImpl;
-import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidTankImpl;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,7 +55,7 @@ public class FluidsUtilImpl {
             FluidStack fluidInTank = opt.resolve().get().drain(1000, IFluidHandler.FluidAction.SIMULATE);
             if (!fluidInTank.isEmpty()) {
                 if (!Utils.getID(source.getBlockState().getBlock()).getPath().equals("fluid_interface")) {
-                    return SoftFluidTankImpl.convertForgeFluid(fluidInTank);
+                    return SoftFluidStackImpl.fromForgeFluid(fluidInTank);
                 }
             }
         }

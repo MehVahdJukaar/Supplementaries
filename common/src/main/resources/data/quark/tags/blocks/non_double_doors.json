@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:iron_gate",
+    {"id":"supplementaries:gold_gate","required":false}
+  ]
+}

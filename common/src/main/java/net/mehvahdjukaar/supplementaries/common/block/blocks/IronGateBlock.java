@@ -26,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
 
 public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -121,12 +122,12 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+        DoubleDoorOpeningModule.enableFenceGates = false;
 
         if (!state.getValue(POWERED) && gold || !CommonConfigs.Building.CONSISTENT_GATE.get()) {
             Direction dir = player.getDirection();
 
-
-            if (CommonConfigs.Building.DOUBLE_IRON_GATE.get()) {
+            if ( CommonConfigs.Building.DOUBLE_IRON_GATE.get()) {
                 BlockPos up = pos.above();
                 BlockState stateUp = level.getBlockState(up);
                 if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
@@ -138,7 +139,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             }
 
             openGate(state, level, pos, dir);
-             soundAndEvent(state, level, pos, player);
+            soundAndEvent(state, level, pos, player);
 
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
