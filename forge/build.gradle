@@ -164,6 +164,8 @@ dependencies {
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modImplementation("curse.maven:balm-531761:4757228")
+    modImplementation("curse.maven:buzzier-bees-355458:5229011")
+    modImplementation("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
@@ -189,6 +191,9 @@ dependencies {
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
     modImplementation("curse.maven:citadel-331936:4786380")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
+    modImplementation("curse.maven:cyanide-541676:4824162")
+    modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
+    modCompileOnly("curse.maven:integrated-api-817709:5241489")
 
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 

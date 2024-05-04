@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/candle_holders/ceiling_1f",
+	"textures": {
+		"4": "supplementaries:block/candle_holder_ceiling",
+		"particle": "supplementaries:block/candle_holder_ceiling", "chain": "block/chain",
+		"all": "buzzier_bees:block/ender_candle_lit"
+	}
+}

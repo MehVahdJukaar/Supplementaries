@@ -224,7 +224,7 @@ public class ModCreativeTabs {
 
         after(e, ItemTags.CANDLES, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.CANDLE_HOLDER_NAME,
-                ModRegistry.CANDLE_HOLDERS.values().toArray(Supplier[]::new));
+                ModRegistry.ALL_CANDLE_HOLDERS.toArray(Supplier[]::new));
 
         after(e, ItemTags.CANDLES, CreativeModeTabs.COLORED_BLOCKS,
                 ModConstants.CANDLE_HOLDER_NAME,

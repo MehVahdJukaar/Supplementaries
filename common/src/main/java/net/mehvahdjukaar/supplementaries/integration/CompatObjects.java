@@ -46,6 +46,8 @@ public class CompatObjects {
 
 
     public static final Supplier<ParticleType<?>> SMALL_SOUL_FLAME = make("buzzier_bees:small_soul_fire_flame", BuiltInRegistries.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> SMALL_CUPRIC_FLAME = make("caverns_and_chasms:small_cupric_fire_flame", BuiltInRegistries.PARTICLE_TYPE);
+    public static final Supplier<ParticleType<?>> SMALL_END_FLAME = make("endergetic:small_ender_fire_flame", BuiltInRegistries.PARTICLE_TYPE);
 
     public static final Supplier<Item> SOUL_CANDLE_ITEM = make("buzzier_bees:soul_candle", BuiltInRegistries.ITEM);
 

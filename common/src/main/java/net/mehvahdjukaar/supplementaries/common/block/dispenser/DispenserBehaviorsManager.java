@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
@@ -76,7 +77,9 @@ public class DispenserBehaviorsManager {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
         if (CommonConfigs.Functional.SACK_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.SACK.get());
+            for(var s : SackBlock.SACK_BLOCKS) {
+                DispenserHelper.registerPlaceBlockBehavior(s);
+            }
         }
         if (CommonConfigs.Functional.JAR_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());

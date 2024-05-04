@@ -1,0 +1,9 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/candle_holders/floor_3",
+	"textures": {
+		"2": "supplementaries:block/candle_holder",
+		"particle": "supplementaries:block/candle_holder",
+		"all": "buzzier_bees:block/cupric_candle"
+	}
+}

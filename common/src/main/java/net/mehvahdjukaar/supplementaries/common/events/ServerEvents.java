@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -147,10 +148,12 @@ public class ServerEvents {
 
             try {
                 SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.EMPTY.getID());
+                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.WATER.getID());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }
         }
+        CurseLootFunction.rebuild();
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

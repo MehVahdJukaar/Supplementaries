@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -78,6 +79,8 @@ public class ModTags {
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     public static final TagKey<EntityType<?>> ROTATABLE = entityTag("rotatable");
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
+
+    public static final TagKey<Enchantment> CURSES_BLACKLIST = enchTag("curses_blacklist");
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
@@ -111,6 +114,10 @@ public class ModTags {
 
     private static TagKey<EntityType<?>> entityTag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, Supplementaries.res(name));
+    }
+
+    private static TagKey<Enchantment> enchTag(String name) {
+        return TagKey.create(Registries.ENCHANTMENT, Supplementaries.res(name));
     }
 
     private static TagKey<Biome> biomeTag(String name) {

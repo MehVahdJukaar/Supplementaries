@@ -54,6 +54,8 @@ public class CaveEnhancementsCompat {
                 () -> PlatHelper.newBlockEntityType(SpectacleCandleHolderTile::new,
                         SPECTACLE_CANDLE_HOLDERS.stream().map(Supplier::get).toArray(Block[]::new))
         );
+
+        ModRegistry.ALL_CANDLE_HOLDERS.add(b);
     }
 
 

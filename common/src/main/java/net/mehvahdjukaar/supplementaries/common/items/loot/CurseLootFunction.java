@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -20,14 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static net.mehvahdjukaar.moonlight.api.util.Utils.isTagged;
+
 public class CurseLootFunction extends LootItemConditionalFunction {
 
     private static final List<Enchantment> CURSES = new ArrayList<>();
 
     //call on mod setup
-    public static void setup() {
+    public static void rebuild() {
         for (var e : BuiltInRegistries.ENCHANTMENT) {
-            if (e.isCurse()) CURSES.add(e);
+            if (e.isCurse() && !isTagged(e, BuiltInRegistries.ENCHANTMENT, ModTags.CURSES_BLACKLIST)) CURSES.add(e);
         }
     }
 

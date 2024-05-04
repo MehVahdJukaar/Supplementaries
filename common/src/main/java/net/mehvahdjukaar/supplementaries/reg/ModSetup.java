@@ -10,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsMana
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.present.PresentBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
-import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -47,7 +46,6 @@ public class ModSetup {
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
-        CurseLootFunction.setup();
         PlaceableBookManager.setup();
     }
 

@@ -36,6 +36,7 @@ public class CompatHandler {
     public static final boolean FRAMEDBLOCKS = isLoaded("framedblocks");
     public static final boolean RGBLIB = isLoaded("rgblib");
     public static final boolean ENDERGETIC = isLoaded("endergetic");
+    public static final boolean CAVERNS_AND_CHASMS = isLoaded("caverns_and_chasms");
     public static final boolean DECO_BLOCKS_ABNORMALS = isLoaded("decorative_blocks_abnormals");
     public static final boolean MUCH_MORE_MOD_COMPAT = isLoaded("muchmoremodcompat");
     public static final boolean AUTUMNITY = isLoaded("autumnity");
