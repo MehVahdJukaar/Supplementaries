@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
@@ -147,17 +148,29 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         //can only place when first hits
         if (this.touchedGround) return;
         Entity owner = this.getOwner();
-        boolean success = false;
+        boolean success;
         Level level = level();
         success = trySplashPotStuff();
-        if (!success && owner instanceof Player player && player.mayBuild()) {
+        if (!success && owner instanceof Player player) {
+            if (!Utils.mayBuild(player, hit.getBlockPos())) return;
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return; //hack since we need client interaction aswell
                 }
             }
+        }
+        if (!success) {
+
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
+
+            Player player;
+            if (owner instanceof Player p) {
+                player = p;
+            } else {
+                //do we even need a player here
+                player = FakePlayerManager.getDefault(this, this);
+            }
 
             //block override. mimic forge event that would have called these
             InteractionResult overrideResult = InteractEventsHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);

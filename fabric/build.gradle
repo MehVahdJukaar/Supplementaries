@@ -57,6 +57,8 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4754432")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
+    //modImplementation("curse.maven:cyanide-541676:4824161")
+
     modImplementation("curse.maven:immediatelyfast-686911:4937544")
     modImplementation("org.uiutils:uiutils")
     //modImplementation("curse.maven:spectrum-556967:5080474")

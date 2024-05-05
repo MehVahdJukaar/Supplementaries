@@ -54,7 +54,7 @@ public class ServerBoundSyncCannonPacket implements Message {
             return;
         }
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon) {
-            cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire);
+            cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
         } else {
             Supplementaries.error(); //should not happen
         }

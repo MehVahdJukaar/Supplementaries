@@ -44,7 +44,7 @@ public class ServerEventsFabric {
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-            for(var p : server.getPlayerList().getPlayers()){
+            for (var p : server.getPlayerList().getPlayers()) {
                 ServerEvents.serverPlayerTick(p);
             }
         });
@@ -52,8 +52,8 @@ public class ServerEventsFabric {
 
         if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_CAVE_URNS),
-                  GenerationStep.Decoration.UNDERGROUND_DECORATION,
-                ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("cave_urns")));
+                    GenerationStep.Decoration.UNDERGROUND_DECORATION,
+                    ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("cave_urns")));
         }
         if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get() && CommonConfigs.Functional.FLAX_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_WILD_FLAX),

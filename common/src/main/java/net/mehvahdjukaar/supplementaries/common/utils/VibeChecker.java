@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -12,7 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.pathfinder.Path;
 
 public class VibeChecker {
@@ -23,7 +21,6 @@ public class VibeChecker {
     }
 
     public static void checkVibe(Level level) {
-        checkDatapackRegistry();
         
         //check sheets class
         if (PlatHelper.getPhysicalSide().isClient()) clientStuff();
@@ -49,15 +46,6 @@ public class VibeChecker {
         } catch (Exception e) {
             Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
             e.printStackTrace();
-        }
-    }
-
-    public static void checkDatapackRegistry() {
-        try {
-            SoftFluidRegistry.getEmpty();
-        } catch (Exception e) {
-            throw new RuntimeException("Not all required entries were found in datapack registry. How did this happen?" +
-                    "Note that this could be caused by Paper or similar servers. Know that those are NOT meant to be used with mods", e);
         }
     }
 

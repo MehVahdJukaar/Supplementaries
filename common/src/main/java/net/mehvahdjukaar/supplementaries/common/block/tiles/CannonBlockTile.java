@@ -57,6 +57,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float projectileDrag = 0;
     private float projectileGravity = 0f;
 
+    @Nullable
+    private UUID playerWhoIgnitedUUID = null;
+
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
     }
@@ -106,12 +109,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public float getFiringAnimation(float partialTicks) {
-        if(timeUntilFire <= 0) return 0;
+        if (timeUntilFire <= 0) return 0;
         return timeUntilFire - (1f / TIME_TO_FIRE * partialTicks);
     }
 
     public float getCooldownAnimation(float partialTicks) {
-        if(disabledCooldown <= 0) return 0;
+        if (disabledCooldown <= 0) return 0;
         return disabledCooldown - (1f / FIRE_COOLDOWN * partialTicks);
     }
 
@@ -156,11 +159,11 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return Mth.lerp(partialTicks, this.prevPitch, this.pitch);
     }
 
-    public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire) {
+    public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire, Player controllingPlayer) {
         this.yaw = yaw;
         this.pitch = pitch;
         this.firePower = firePower;
-        if (fire) this.ignite();
+        if (fire) this.ignite(controllingPlayer);
     }
 
 
@@ -173,7 +176,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public void changeFirePower(int scrollDelta) {
-        this.firePower = (byte)(1+ Math.floorMod(this.firePower-1 + scrollDelta, 4));
+        this.firePower = (byte) (1 + Math.floorMod(this.firePower - 1 + scrollDelta, 4));
     }
 
     @Override
@@ -228,14 +231,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     }
 
-    public void ignite() {
-        level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
+    public void ignite(@Nullable Player controllingPlayer) {
+        this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
         this.timeUntilFire = 1;
         //update other clients
-        level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
-        level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
+        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        this.level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
+        this.playerWhoIgnitedUUID = controllingPlayer != null ? controllingPlayer.getUUID() : null;
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
@@ -317,11 +321,20 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         testLevel.setup();
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
-        var p = testLevel.projectile;
-        if (p != null) return p;
+        Entity projectileEntity = testLevel.projectile;
+        if (projectileEntity == null) {
+            projectileEntity = new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
+        }
+        if (projectileEntity instanceof Projectile pr) {
+            pr.setOwner(getControllingPlayer());
+        }
+        return projectileEntity;
+    }
 
-        return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
-
+    @Nullable
+    private Player getControllingPlayer() {
+        if (this.playerWhoIgnitedUUID == null) return null;
+        return level.getPlayerByUUID(this.playerWhoIgnitedUUID);
     }
 
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");

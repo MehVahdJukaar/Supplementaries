@@ -31,6 +31,7 @@ public class RopeArrowItem extends ArrowItem {
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
         int charges = getRopes(stack);
+
         return new RopeArrowEntity(world, shooter, charges);
     }
 

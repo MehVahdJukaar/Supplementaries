@@ -107,7 +107,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             if (wasPowered != level.hasNeighborSignal(pos)) {
                 level.setBlock(pos, state.cycle(POWERED), 2);
                 if (!wasPowered && level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-                    tile.ignite();
+                    tile.ignite(null);
                 }
             }
         }
