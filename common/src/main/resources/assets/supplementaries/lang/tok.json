@@ -216,7 +216,7 @@
  "message.supplementaries.potion.lingering": "kon wawa",
  "message.supplementaries.potion.splash": "telo pana wawa",
  "subtitle.supplementaries.music.pancake": "kalama musi pi pan lipu",
- "block.supplementaries.pancake.desc": "jan Partyp - kalama musi pi pan lipu"
+ "block.supplementaries.pancake.desc": "jan Partyp - kalama musi pi pan lipu",
  "message.supplementaries.key.lockable": "ken wile e palisa open",
  "message.supplementaries.placeable": "ken kama leko",
  "item.supplementaries.red_merchant_spawn_egg": "sike mama pi jan esun loje",
@@ -477,7 +477,7 @@
  "leaves_type.ulterlands.souldrained": "kiwen kasi",
 
  "trinkets.slot.chest.quiver": "poki pi palisa alasa",
- "trinkets.slot.legs.key": "palisa open"
+ "trinkets.slot.legs.key": "palisa open",
 
- "gui.supplementaries.blackboard.undo": "o weka e ante sin",
+ "gui.supplementaries.blackboard.undo": "o weka e ante sin"
 }
