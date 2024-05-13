@@ -7,7 +7,7 @@
     {"id":"minecraft:repeating_command_block","required":true},
     {"id":"minecraft:chain_command_block","required":true},
     {"id":"minecraft:structure_block","required":true},
-    {"id":"minecraft:jigsaw_block","required":true},
+    {"id":"minecraft:jigsaw","required":true},
     {"id":"supplementaries:moving_slidy_block_source","required":true},
     {"id":"fastpaintings:painting","required":false},
     {"id":"create:belt","required":false},

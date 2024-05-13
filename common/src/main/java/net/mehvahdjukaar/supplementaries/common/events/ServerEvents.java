@@ -221,7 +221,7 @@ public class ServerEvents {
     private static boolean takeArrow(Entity itemEntity, Player player, ItemStack stack) {
         ItemStack quiverItem = QuiverItem.getQuiver(player);
         if (!quiverItem.isEmpty()) {
-            var data = QuiverItem.getQuiverData(quiverItem);
+            var data = QuiverItem.getQuiverContent(quiverItem);
             if (data != null) {
                 ItemStack copy = stack.copy();
                 int count = copy.getCount();

@@ -53,7 +53,7 @@ public class ServerBoundCycleQuiverPacket implements Message {
         if (stack.getItem() != ModRegistry.QUIVER_ITEM.get()) {
             Supplementaries.error(); //should not happen
         } else {
-            var data = QuiverItem.getQuiverData(stack);
+            var data = QuiverItem.getQuiverContent(stack);
             if (setSlot) {
                 data.setSelectedSlot(amount);
             } else {

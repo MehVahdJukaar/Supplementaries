@@ -13,6 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
@@ -31,7 +34,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
     }
 
     @Override
-    public void onMoved(BlockState movedState, Level level, BlockPos pos, Direction direction, boolean extending, PistonMovingBlockEntity tile) {
+    public void onMoved(Level level, BlockPos pos, BlockState movedState, Direction direction, boolean extending) {
         if (!extending && !level.isClientSide) {
             BlockPos firePos = pos.relative(direction);
             if (level.getBlockState(firePos).isAir()) {
@@ -66,6 +69,20 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         this.playSound(level, firePos);
     }
 
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (!level.isClientSide && entity instanceof LivingEntity le &&
+                !le.isSteppingCarefully() && le.isSprinting() && le.tickCount % 2 == 0 &&
+                le.getItemBySlot(EquipmentSlot.FEET).is(ModTags.IGNITE_FLINT_BLOCKS)) {
+            if (level.getBlockState(pos.above()).isAir()) {
+                //check if entity is moving
+                ignitePosition(level, pos.above(), true);
+            }
+        }
+
+        super.stepOn(level, pos, state, entity);
+    }
+
     public static boolean canBlockCreateSpark(BlockState state, Level level, BlockPos pos, Direction face) {
         return state.is(ModTags.FLINT_METALS) &&
                 state.isFaceSturdy(level, pos, face);
@@ -76,11 +93,11 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, (randomSource.nextFloat() - randomSource.nextFloat()) * 0.2F + 1.0F);
     }
 
-    private static final Long2ObjectMap<Direction> BY_NORMAL =  Arrays.stream(Direction.values())
+    private static final Long2ObjectMap<Direction> BY_NORMAL = Arrays.stream(Direction.values())
             .collect(Collectors.toMap((direction) -> new BlockPos(direction.getNormal()).asLong(),
                     (direction) -> direction, (direction, direction2) -> {
-        throw new IllegalArgumentException("Duplicate keys");
-    }, Long2ObjectOpenHashMap::new));
+                        throw new IllegalArgumentException("Duplicate keys");
+                    }, Long2ObjectOpenHashMap::new));
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block oldBlock, BlockPos targetPos, boolean isMoving) {

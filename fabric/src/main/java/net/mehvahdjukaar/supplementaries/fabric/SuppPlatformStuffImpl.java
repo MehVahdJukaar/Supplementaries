@@ -68,4 +68,8 @@ public class SuppPlatformStuffImpl {
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
     }
 
+    public static boolean canStickTo(BlockState movedState, BlockState maybeSticky) {
+        return maybeSticky.getBlock() == Blocks.SLIME_BLOCK || maybeSticky.getBlock() == Blocks.HONEY_BLOCK;
+    }
+
 }

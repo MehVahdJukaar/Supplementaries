@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -34,14 +35,14 @@ public class QuiverItemImpl {
         return ItemStack.EMPTY;
     }
 
-    public static QuiverItem.Data getQuiverData(ItemStack stack) {
+    public static QuiverItem.Content getQuiverContent(ItemStack stack) {
         if (stack.getItem() instanceof QuiverItem) {
             return new QuiverNBTData(stack.getOrCreateTag());
         }
         return null;
     }
 
-    public static class QuiverNBTData implements QuiverItem.Data {
+    public static class QuiverNBTData implements SelectableContainerItem.AbstractContent {
 
         public static final String TAG_ITEMS = "Items";
         private final List<ItemStack> stackView = new ArrayList<>(
@@ -129,7 +130,7 @@ public class QuiverItemImpl {
         }
 
         @Override
-        public void consumeArrow() {
+        public void consumeSelected() {
             if (tag.contains(TAG_ITEMS)) {
                 ListTag listTag = tag.getList(TAG_ITEMS, 10);
                 if (!listTag.isEmpty()) {

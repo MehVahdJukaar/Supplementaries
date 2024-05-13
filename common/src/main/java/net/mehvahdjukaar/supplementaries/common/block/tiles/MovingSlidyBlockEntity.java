@@ -74,6 +74,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             float f = (float) (t.progress + CommonConfigs.Building.SLIDY_BLOCK_SPEED.get());
             moveCollidedEntities(level, pos, f, t);
             moveStuckEntities(level, pos, f, t);
+
             t.progress = f;
             if (t.progress >= 1.0F) {
                 t.progress = 1.0F;

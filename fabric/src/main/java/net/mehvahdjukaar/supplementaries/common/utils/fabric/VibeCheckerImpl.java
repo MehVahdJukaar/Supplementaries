@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fabric;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
@@ -126,11 +128,12 @@ public class VibeCheckerImpl {
         try {
             DummySprite textureAtlasSprite = DummySprite.INSTANCE;
 
+            Preconditions.checkNotNull(RendererAccess.INSTANCE.getRenderer(), "No fabric renderer found");
+
             BakedQuadBuilder b = BakedQuadBuilder.create(textureAtlasSprite);
             b.setAutoDirection();
             VertexUtil.addQuad(b, new PoseStack(), 0, 0, 1, 1, 0, 0);
             var dummy = b.build();
-
             List<BakedQuad> l = List.of(dummy);
             Map<Direction, List<BakedQuad>> map = Maps.newEnumMap(Direction.class);
             map.putAll(Map.of(Direction.DOWN, l,
@@ -154,7 +157,7 @@ public class VibeCheckerImpl {
                         }
                     });
         } catch (Exception e) {
-            throw new VibeChecker.BadModError("Some OTHER mod failed to load baked models. Refusing to proceed further to prevent in game issues. See logs for details", e);
+            throw new VibeChecker.BadModError("Some OTHER mod (NOT supplementaries) failed to load baked models. Refusing to proceed further to prevent in game issues. See logs for details. This is not a supplementaries issue", e);
         }
     }
 

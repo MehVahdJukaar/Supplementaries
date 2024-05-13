@@ -73,4 +73,9 @@ public class SuppPlatformStuff {
     public static void disableOFWarn() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static boolean canStickTo(BlockState movedState, BlockState blockState) {
+        throw new AssertionError();
+    }
 }

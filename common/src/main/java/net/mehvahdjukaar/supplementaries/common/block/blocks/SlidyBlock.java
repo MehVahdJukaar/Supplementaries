@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,24 +18,36 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SeaPickleBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
-public class SlidyBlock extends FallingBlock {
+public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
     public static BooleanProperty ON_PRESSURE_PLATE = ModBlockProperties.ON_PRESSURE_PLATE;
 
     public SlidyBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(ON_PRESSURE_PLATE, false));
+    }
+
+    @Override
+    public void onMoved(Level level, BlockPos pos, BlockState movedState, Direction direction, boolean extending) {
+        if(!level.isClientSide)return;
+        if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
+            for (Direction dir : Direction.values()) {
+                if (SuppPlatformStuff.canStickTo(movedState, level.getBlockState(pos.relative(dir)))) {
+                    return;
+                }
+            }
+           // if (tile.getBlockPos() == pos.relative(direction) && tile.getDirection() == direction && tile.getBlockState().is(Blocks.STICKY_PISTON)) {
+          //      return;
+          //  }
+            MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
+        }
     }
 
     @Override

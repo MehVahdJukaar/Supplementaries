@@ -48,8 +48,8 @@ public abstract class AbstractSkeletonMixin extends Monster {
             var quiver = quiverEntity.supplementaries$getQuiver();
             //ignore offhand as it has priority over quiver
             if (!quiver.isEmpty() && this.getItemInHand(InteractionHand.OFF_HAND).getItem() != arrow.getItem()) {
-                var data = QuiverItem.getQuiverData(quiver);
-                if (data != null) data.consumeArrow();
+                var data = QuiverItem.getQuiverContent(quiver);
+                if (data != null) data.consumeSelected();
             }
         }
     }

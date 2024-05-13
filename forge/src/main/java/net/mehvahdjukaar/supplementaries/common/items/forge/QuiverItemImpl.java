@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items.forge;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -46,11 +47,11 @@ public class QuiverItemImpl {
     }
 
     @Nullable
-    public static QuiverItem.Data getQuiverData(ItemStack stack) {
+    public static QuiverItem.Content getQuiverContent(ItemStack stack) {
         return CapabilityHandler.get(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
     }
 
-    public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.Data {
+    public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, SelectableContainerItem.AbstractContent {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);
         private final LazyOptional<QuiverCapability> lazyOptional2 = LazyOptional.of(() -> this);
@@ -155,7 +156,7 @@ public class QuiverItemImpl {
         }
 
         @Override
-        public void consumeArrow() {
+        public void consumeSelected() {
             var s = this.getSelected();
             s.shrink(1);
             if (s.isEmpty()) this.stacks.set(this.selectedSlot, ItemStack.EMPTY);

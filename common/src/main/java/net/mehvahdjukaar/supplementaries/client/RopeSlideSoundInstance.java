@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -22,7 +21,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
         this.y = this.player.getY();
         this.z = this.player.getZ();
         this.looping = true;
-        this.delay = 0;
+        this.delay = 1; //wait a second before starting
         this.volume = 0.0F;
         this.ropeTicks = 0;
     }
@@ -30,8 +29,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         if (!this.player.isRemoved()) {
-
-            if (player.onClimbable() && CommonConfigs.Functional.ROPE_SLIDE.get()) {
+            if (player.onClimbable()) {
                 BlockState b = player.getFeetBlockState();
                 if (b.is(ModTags.FAST_FALL_ROPES)) {
 
@@ -59,7 +57,6 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
             this.pitch = 0.0F;
             this.volume = 0.0F;
             this.ropeTicks = 0;
-
         } else {
             this.stop();
         }
@@ -74,4 +71,5 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     public boolean canPlaySound() {
         return !this.player.isSilent();
     }
+
 }

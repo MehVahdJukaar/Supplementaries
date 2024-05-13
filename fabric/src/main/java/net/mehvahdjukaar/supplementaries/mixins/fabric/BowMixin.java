@@ -25,8 +25,8 @@ public abstract class BowMixin {
         if (!player.getInventory().hasAnyMatching(s -> s == arrowStack)) {
             var q = QuiverItem.getQuiver(shooter);
             if (!q.isEmpty()) {
-                var data = QuiverItem.getQuiverData(q);
-                if (data != null) data.consumeArrow();
+                var data = QuiverItem.getQuiverContent(q);
+                if (data != null) data.consumeSelected();
             }
         }
     }

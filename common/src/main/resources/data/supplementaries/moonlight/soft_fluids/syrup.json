@@ -10,6 +10,13 @@
     },
     {
       "filled": [
+        "promenade:maple_syrup_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    },
+    {
+      "filled": [
         "create_central_kitchen:syrup_bucket"
       ],
       "empty": "minecraft:bucket",

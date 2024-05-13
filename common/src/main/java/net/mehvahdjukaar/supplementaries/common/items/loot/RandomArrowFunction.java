@@ -78,7 +78,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     }
 
     private static ItemStack createRandomQuiver(RandomSource random, ItemStack quiver, int amount) {
-        var data = QuiverItem.getQuiverData(quiver);
+        var data = QuiverItem.getQuiverContent(quiver);
         if (data == null) return quiver;
         int tries = 0;
         while (amount > 0 && tries < 10) {

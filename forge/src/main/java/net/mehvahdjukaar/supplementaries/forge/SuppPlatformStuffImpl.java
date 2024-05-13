@@ -100,4 +100,8 @@ public class SuppPlatformStuffImpl {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
     }
 
+    public static boolean canStickTo(BlockState movedState, BlockState blockState) {
+        return movedState.canStickTo(blockState);
+    }
+
 }

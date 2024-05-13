@@ -663,10 +663,6 @@ public class CommonConfigs {
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01f, 0, 1);
             URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("cave_urns", true);
-            //URN_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-            //        .define("attempts_per_patch", 4, 1, 100);
-            //URN_PER_CHUNK = builder.worldReload().comment("Spawn attempts per chunk. Increases spawn frequency")
-            //        .define("spawn_attempts", 7, 0, 100);
             builder.pop();
 
             builder.push("soap");
@@ -700,10 +696,6 @@ public class CommonConfigs {
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
             WILD_FLAX_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("wild_flax", true);
-            //FLAX_AVERAGE_EVERY = builder.worldReload().comment("Spawn wild flax on average every 'x' chunks. Increases spawn frequency")
-            //        .define("rarity", 6, 1, 100);
-            //FLAX_PATCH_TRIES = builder.worldReload().comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-            //       .define("attempts_per_patch", 35, 1, 100);
             builder.pop();
 
             builder.push(ModConstants.LUMISENE_NAME);
@@ -763,13 +755,9 @@ public class CommonConfigs {
         public static final Supplier<Boolean> URN_ENABLED;
         public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
         public static final Supplier<Boolean> URN_PILE_ENABLED;
-        public static final Supplier<Integer> URN_PATCH_TRIES = null;
-        public static final Supplier<Integer> URN_PER_CHUNK = null;
 
         public static final Supplier<Boolean> FLAX_ENABLED;
         public static final Supplier<Boolean> WILD_FLAX_ENABLED;
-        public static final Supplier<Integer> FLAX_PATCH_TRIES = null;
-        public static final Supplier<Integer> FLAX_AVERAGE_EVERY = null;
 
         public static final Supplier<Boolean> FODDER_ENABLED;
 

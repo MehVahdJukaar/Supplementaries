@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -14,10 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
 
-    @Shadow @Final private Minecraft minecraft;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
     @Inject(method = "addPlayer", at = @At("RETURN"))
-    private void addRopeSoundInstance(int playerId, AbstractClientPlayer playerEntity, CallbackInfo ci){
-        this.minecraft.getSoundManager().queueTickingSound(new RopeSlideSoundInstance(playerEntity));
+    private void addRopeSoundInstance(int playerId, AbstractClientPlayer playerEntity, CallbackInfo ci) {
+        if (CommonConfigs.Functional.ROPE_SLIDE.get())
+            this.minecraft.getSoundManager().queueTickingSound(new RopeSlideSoundInstance(playerEntity));
     }
 }

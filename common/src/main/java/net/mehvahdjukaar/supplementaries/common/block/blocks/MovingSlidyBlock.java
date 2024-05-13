@@ -12,18 +12,17 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.PushReaction;
 
 public class MovingSlidyBlock extends MovingPistonBlock {
+
     public MovingSlidyBlock(Properties properties) {
         super(properties);
     }
 
-    public static BlockEntity newMovingBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState, Direction direction, boolean extending, boolean isSourcePiston) {
-        return new MovingSlidyBlockEntity(pos, blockState, movedState, direction, extending, isSourcePiston);
+    public static BlockEntity newMovingBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState, Direction direction) {
+        return new MovingSlidyBlockEntity(pos, blockState, movedState, direction, true, false);
     }
-
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
@@ -47,8 +46,9 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         BlockState newState = ModRegistry.MOVING_SLIDY_BLOCK.get().defaultBlockState()
                 .setValue(MovingSlidyBlock.FACING, direction);
         level.setBlock(neighborPos, newState, 67);
-        level.setBlockEntity(MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state,
-                direction, true, false));
+        BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state, direction);
+        level.setBlockEntity(be);
+
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
                 .defaultBlockState().setValue(BlockStateProperties.FACING, direction), Block.UPDATE_NONE);
     }

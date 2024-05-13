@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:iron_boots","required":true},
+    {"id":"minecraft:chainmail_boots","required":true}
+  ]
+}

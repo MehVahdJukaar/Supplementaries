@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,8 +23,8 @@ public abstract class CrossbowMixin {
         if(shooter instanceof Player p && !p.getInventory().hasAnyMatching(i->i==ammoStack)) {
             var q = QuiverItem.getQuiver(shooter);
             if (!q.isEmpty()) {
-                var data = QuiverItem.getQuiverData(q);
-                if (data != null) data.consumeArrow();
+                var data = QuiverItem.getQuiverContent(q);
+                if (data != null) data.consumeSelected();
             }
         }
     }

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -89,14 +90,14 @@ public class QuarkClientCompatImpl {
             if (event.player instanceof IQuiverEntity qe) {
                 var q = qe.supplementaries$getQuiver();
                 if (!q.isEmpty()) {
-                    QuiverItem.Data data = QuiverItem.getQuiverData(q);
+                    SelectableContainerItem.AbstractContent data = QuiverItem.getQuiverContent(q);
                     if (data != null) {
                         //sanity check
                         ItemStack selected = data.getSelected();
 
                         if (event.currentStack.is(selected.getItem())) {
                             //just recomputes everything
-                            int count = data.getSelectedArrowCount();
+                            int count = data.getSelectedItemCount();
                             Inventory inventory = event.player.getInventory();
 
                             for (int i = 0; i < inventory.getContainerSize(); ++i) {
