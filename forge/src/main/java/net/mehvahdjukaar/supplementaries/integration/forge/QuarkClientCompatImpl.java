@@ -90,7 +90,7 @@ public class QuarkClientCompatImpl {
             if (event.player instanceof IQuiverEntity qe) {
                 var q = qe.supplementaries$getQuiver();
                 if (!q.isEmpty()) {
-                    SelectableContainerItem.AbstractContent data = QuiverItem.getQuiverContent(q);
+                    SelectableContainerItem.AbstractData data = QuiverItem.getQuiverData(q);
                     if (data != null) {
                         //sanity check
                         ItemStack selected = data.getSelected();

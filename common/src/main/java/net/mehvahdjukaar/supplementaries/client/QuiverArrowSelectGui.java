@@ -130,7 +130,7 @@ public abstract class QuiverArrowSelectGui extends Gui {
                 PoseStack poseStack = graphics.pose();
                 poseStack.pushPose();
 
-                var data = QuiverItem.getQuiverContent(quiver);
+                var data = QuiverItem.getQuiverData(quiver);
 
                 int selected = data.getSelectedSlot();
                 List<ItemStack> items = data.getContentView();

@@ -47,11 +47,11 @@ public class QuiverItemImpl {
     }
 
     @Nullable
-    public static QuiverItem.Content getQuiverContent(ItemStack stack) {
+    public static QuiverItem.Data getQuiverContent(ItemStack stack) {
         return CapabilityHandler.get(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
     }
 
-    public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, SelectableContainerItem.AbstractContent {
+    public static class QuiverCapability extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, SelectableContainerItem.AbstractData {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);
         private final LazyOptional<QuiverCapability> lazyOptional2 = LazyOptional.of(() -> this);

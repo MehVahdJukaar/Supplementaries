@@ -35,14 +35,14 @@ public class QuiverItemImpl {
         return ItemStack.EMPTY;
     }
 
-    public static QuiverItem.Content getQuiverContent(ItemStack stack) {
+    public static QuiverItem.Data getQuiverData(ItemStack stack) {
         if (stack.getItem() instanceof QuiverItem) {
             return new QuiverNBTData(stack.getOrCreateTag());
         }
         return null;
     }
 
-    public static class QuiverNBTData implements SelectableContainerItem.AbstractContent {
+    public static class QuiverNBTData implements SelectableContainerItem.AbstractData {
 
         public static final String TAG_ITEMS = "Items";
         private final List<ItemStack> stackView = new ArrayList<>(

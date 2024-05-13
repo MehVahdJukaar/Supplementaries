@@ -11,20 +11,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class QuiverItem extends SelectableContainerItem<QuiverItem.Content> implements DyeableLeatherItem {
+public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> implements DyeableLeatherItem {
 
     public QuiverItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public Content getContent(ItemStack stack) {
-        return getQuiverContent(stack);
+    public Data getData(ItemStack stack) {
+        return getQuiverData(stack);
     }
 
     @Nullable
     @ExpectPlatform
-    public static Content getQuiverContent(ItemStack stack) {
+    public static QuiverItem.Data getQuiverData(ItemStack stack) {
         throw new AssertionError();
     }
 
@@ -40,7 +40,7 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Content> impl
     }
 
     //this is cap, cap provider
-    public interface Content extends AbstractContent {
+    public interface Data extends AbstractData {
 
         default boolean canAcceptItem(ItemStack toInsert) {
             return QuiverItem.canAcceptItem(toInsert);

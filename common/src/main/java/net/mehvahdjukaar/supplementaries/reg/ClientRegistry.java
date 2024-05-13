@@ -37,7 +37,7 @@ import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -422,7 +422,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
-        event.register(QuiverTooltip.class, QuiverTooltipComponent::new);
+        event.register(SelectableContainerTooltip.class, QuiverTooltipComponent::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);
         event.register(SherdTooltip.class, SherdTooltipComponent::new);

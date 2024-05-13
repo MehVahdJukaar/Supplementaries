@@ -23,7 +23,7 @@ public abstract class CrossbowMixin {
         if(shooter instanceof Player p && !p.getInventory().hasAnyMatching(i->i==ammoStack)) {
             var q = QuiverItem.getQuiver(shooter);
             if (!q.isEmpty()) {
-                var data = QuiverItem.getQuiverContent(q);
+                var data = QuiverItem.getQuiverData(q);
                 if (data != null) data.consumeSelected();
             }
         }

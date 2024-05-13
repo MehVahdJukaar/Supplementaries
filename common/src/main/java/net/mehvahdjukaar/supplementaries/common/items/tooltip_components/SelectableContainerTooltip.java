@@ -5,5 +5,5 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public record QuiverTooltip(List<ItemStack> stacks, int selected) implements TooltipComponent {
+public record SelectableContainerTooltip(List<ItemStack> stacks, int selected) implements TooltipComponent {
 }

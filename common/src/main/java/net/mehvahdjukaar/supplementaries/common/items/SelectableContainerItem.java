@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.QuiverTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -24,12 +24,11 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class SelectableContainerItem<D extends SelectableContainerItem.AbstractContent> extends Item {
+public abstract class SelectableContainerItem<D extends SelectableContainerItem.AbstractData> extends Item {
 
     private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
@@ -37,7 +36,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         super(properties);
     }
 
-    public abstract D getContent(ItemStack stack);
+    public abstract D getData(ItemStack stack);
 
     @Override
     public boolean canFitInsideContainerItems() {
@@ -53,7 +52,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             //place into slot
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
-                D data = this.getContent(quiver);
+                D data = this.getData(quiver);
                 if (data != null) {
                     data.removeOneStack().ifPresent((stack) -> {
                         this.playRemoveOneSound(pPlayer);
@@ -64,7 +63,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                D data = this.getContent(quiver);
+                D data = this.getData(quiver);
                 if (data != null) {
                     var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
                     ItemStack remaining = data.tryAdding(taken);
@@ -82,7 +81,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
-            AbstractContent data = this.getContent(quiver);
+            AbstractData data = this.getData(quiver);
             if (data != null) {
                 AtomicBoolean didStuff = new AtomicBoolean(false);
                 if (pOther.isEmpty()) {
@@ -111,7 +110,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         ItemStack stack = player.getItemInHand(pUsedHand);
         InteractionHand otherHand = pUsedHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack possibleArrowStack = player.getItemInHand(otherHand);
-        D data = this.getContent(stack);
+        D data = this.getData(stack);
 
         if (data.canAcceptItem(possibleArrowStack)) {
             ItemStack remaining = data.tryAdding(possibleArrowStack);
@@ -122,9 +121,9 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             }
         }
         if (player.isSecondaryUseActive()) {
-                if (data.cycle()) {
-                    this.playInsertSound(player);
-                }
+            if (data.cycle()) {
+                this.playInsertSound(player);
+            }
             return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
         } else {
             //same as startUsingItem but client only so it does not slow
@@ -154,7 +153,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        D data = this.getContent(pStack);
+        D data = this.getData(pStack);
         if (data != null) {
             return data.getSelected().getCount() > 0;
         }
@@ -163,7 +162,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        D data = this.getContent(pStack);
+        D data = this.getData(pStack);
         if (data != null) {
             return Math.min(1 + 12 * data.getSelectedItemCount() /
                     (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
@@ -179,7 +178,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        D data = this.getContent(pStack);
+        D data = this.getData(pStack);
         if (data != null) {
             NonNullList<ItemStack> list = NonNullList.create();
             boolean isEmpty = true;
@@ -188,7 +187,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
                 list.add(v);
             }
             if (!isEmpty) {
-                return Optional.of(new QuiverTooltip(new ArrayList<>(data.getContentView()), data.getSelectedSlot()));
+                return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
             }
         }
         return Optional.empty();
@@ -197,7 +196,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        D data = this.getContent(pStack);
+        D data = this.getData(pStack);
         if (data != null) {
             int c = data.getSelectedItemCount();
             if (c != 0) {
@@ -210,7 +209,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
-        D data = this.getContent(pItemEntity.getItem());
+        D data = this.getData(pItemEntity.getItem());
         if (data != null) {
             ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
         }
@@ -231,12 +230,12 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     //used to reset the selected arrow. I wish I didn't have to do this but I dont have control over when the itemstack is decremented
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        D data = this.getContent(stack);
+        D data = this.getData(stack);
         if (data != null) data.updateSelectedIfNeeded();
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
-    protected interface AbstractContent {
+    protected interface AbstractData {
 
         int getSelectedSlot();
 
