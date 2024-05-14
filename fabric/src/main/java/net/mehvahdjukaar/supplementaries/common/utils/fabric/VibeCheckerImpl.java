@@ -157,7 +157,14 @@ public class VibeCheckerImpl {
                         }
                     });
         } catch (Exception e) {
-            throw new VibeChecker.BadModError("Some OTHER mod (NOT supplementaries) failed to load baked models. Refusing to proceed further to prevent in game issues. See logs for details. This is not a supplementaries issue", e);
+            throw new VibeChecker.BadModError("""
+                    Sanity check failed.
+                    Supplementaries detected that some part of the baked model render code failed to execute.
+                    This can only mean that some OTHER mod caused it, thus being incompatible.
+                    Usual suspects are rendering mods.
+                    Refusing to proceed further to prevent in game issues like crashes or invisible chunks.
+                    See next error for details.
+                    """, e);
         }
     }
 

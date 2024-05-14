@@ -477,6 +477,10 @@ public class ModCreativeTabs {
                 ModConstants.SLIDY_BLOCK_NAME,
                 ModRegistry.SLIDY_BLOCK);
 
+        before(e, Items.FISHING_ROD, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.LUNCH_BASKET_NAME,
+                ModRegistry.LUNCH_BASKET);
+
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,
                 ModRegistry.WRENCH);

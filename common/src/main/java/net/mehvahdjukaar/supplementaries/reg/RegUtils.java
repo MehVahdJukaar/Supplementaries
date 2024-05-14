@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.Registrator;
@@ -22,10 +23,13 @@ import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -75,6 +79,16 @@ public class RegUtils {
         }
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
             event.register(Items.GUNPOWDER, new SuppAdditionalPlacement(ModRegistry.GUNPOWDER_BLOCK.get()));
+        }
+
+        if (CommonConfigs.Tools.LUNCH_BOX_PLACEABLE.get()) {
+            event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new AdditionalItemPlacement(ModRegistry.LUNCH_BASKET.get()) {
+                @Override
+                public InteractionResult overrideUseOn(UseOnContext pContext, FoodProperties foodProperties) {
+                    if (!pContext.getPlayer().isSecondaryUseActive()) return InteractionResult.PASS;
+                    return super.overrideUseOn(pContext, foodProperties);
+                }
+            });
         }
     }
 

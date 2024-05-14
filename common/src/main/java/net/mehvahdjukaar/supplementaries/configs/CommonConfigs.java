@@ -798,6 +798,8 @@ public class CommonConfigs {
 
             builder.push("lunch_basket");
             LUNCH_BOX_ENABLED = feature(builder);
+            LUNCH_BOX_PLACEABLE = builder.comment("Allows lunch baskets to be placed on the ground")
+                    .define("placeable", true);
             LUNCH_BOX_SLOTS = builder.comment("Arrow stacks that can fit inside a lunch basket. Requires reboot")
                     .gameRestart()
                     .define("slots", 6, 1, 9);
@@ -911,6 +913,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
         public static final Supplier<Boolean> LUNCH_BOX_ENABLED;
+        public static final Supplier<Boolean> LUNCH_BOX_PLACEABLE;
         public static final Supplier<Integer> LUNCH_BOX_SLOTS;
 
         public static final Supplier<Boolean> WRENCH_ENABLED;

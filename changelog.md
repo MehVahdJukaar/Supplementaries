@@ -14,3 +14,4 @@
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
 - fixed a rare issue with enderman heads
+- projectile weapons can now show their arrow as preview

@@ -25,7 +25,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.QuiverItemOverlayRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.ProjectileWeaponOverlayRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.SelectableItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
@@ -42,6 +43,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTo
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -63,6 +65,7 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -251,7 +254,7 @@ public class ClientRegistry {
                 new GlobeProperty());
 
         ItemProperties.register(ModRegistry.BUNTING.get(), Supplementaries.res("dye"),
-                (stack, world, entity, s) -> BuntingItem.getColor(stack).getId()/100f);
+                (stack, world, entity, s) -> BuntingItem.getColor(stack).getId() / 100f);
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
@@ -416,7 +419,19 @@ public class ClientRegistry {
     @EventCalled
     private static void registerItemDecorators(ClientHelper.ItemDecoratorEvent event) {
         event.register(ModRegistry.SLINGSHOT_ITEM.get(), new SlingshotItemOverlayRenderer());
-        event.register(ModRegistry.QUIVER_ITEM.get(), new QuiverItemOverlayRenderer());
+        if (ClientConfigs.Items.QUIVER_OVERLAY.get()) {
+            event.register(ModRegistry.QUIVER_ITEM.get(), new SelectableItemOverlayRenderer());
+        }
+        if (ClientConfigs.Items.LUNCH_BOX_OVERLAY.get()) {
+            event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new SelectableItemOverlayRenderer());
+        }
+        if (ClientConfigs.Tweaks.PROJECTILE_WEAPON_OVERLAY.get()) {
+            for (var i : BuiltInRegistries.ITEM) {
+                if (i instanceof ProjectileWeaponItem && i != ModRegistry.QUIVER_ITEM.get()) {
+                    event.register(i, new ProjectileWeaponOverlayRenderer());
+                }
+            }
+        }
     }
 
     @EventCalled

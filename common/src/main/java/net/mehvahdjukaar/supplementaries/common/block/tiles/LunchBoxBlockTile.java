@@ -16,9 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class SackBlockTile extends OpeneableContainerBlockEntity {
+public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
 
-    public SackBlockTile(BlockPos pos, BlockState state) {
+    public LunchBoxBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SACK_TILE.get(), pos, state, 27);
     }
 

@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,26 +18,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 public class SlingshotRendererHelper {
 
-    private static ItemStack clientCurrentAmmo = ItemStack.EMPTY;
     private static BlockPos lookPos = null;
-
-    public static ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
-        if (world != null) {
-            if (world.getGameTime() % 10 == 0) {
-                clientCurrentAmmo = ItemStack.EMPTY;
-
-                ItemStack findAmmo = player.getProjectile(cannon);
-                if (findAmmo.getItem() != net.minecraft.world.item.Items.ARROW) {
-                    clientCurrentAmmo = findAmmo;
-                }
-            }
-        }
-        return clientCurrentAmmo;
-    }
 
     public static void grabNewLookPos(Player player) {
 

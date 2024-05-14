@@ -83,6 +83,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> SLINGSHOT_OUTLINE;
         public static final Supplier<Integer> SLINGSHOT_OUTLINE_COLOR;
         public static final Supplier<Double> SLINGSHOT_PROJECTILE_SCALE;
+        public static final Supplier<Boolean> LUNCH_BOX_OVERLAY;
         public static final Supplier<Boolean> WRENCH_PARTICLES;
         public static final Supplier<Boolean> FLUTE_PARTICLES;
         public static final Supplier<Boolean> DEPTH_METER_CLICK;
@@ -95,7 +96,7 @@ public class ClientConfigs {
             builder.push("items");
 
             builder.push("slingshot");
-            SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected block")
+            SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected ammo")
                     .define("overlay", true);
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);
@@ -103,6 +104,11 @@ public class ClientConfigs {
                     .defineColor("block_outline_color", 0xffffff66);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .define("projectile_scale", 0.5, 0, 1);
+            builder.pop();
+
+            builder.push("lunch_basket");
+            LUNCH_BOX_OVERLAY = builder.comment("Adds an overlay to lunch boxes in gui displaying currently selected food")
+                    .define("overlay", true);
             builder.pop();
 
             builder.push("altimeter");
@@ -147,11 +153,10 @@ public class ClientConfigs {
 
     public static class Tweaks {
 
+
         private static void init() {
         }
 
-        public static final Supplier<Boolean> COLORED_ARROWS;
-        public static final Supplier<Boolean> COLORED_BREWING_STAND;
         public static final Supplier<Boolean> CLOCK_CLICK;
         public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
@@ -165,6 +170,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
+        public static final Supplier<Boolean> PROJECTILE_WEAPON_OVERLAY;
 
 
         static {
@@ -172,13 +178,10 @@ public class ClientConfigs {
 
             builder.comment("Game tweaks")
                     .push("tweaks");
-            COLORED_BREWING_STAND = builder.comment("Colors the brewing stand potion texture depending on the potions it's brewing.\n" +
-                            "If using a resource pack add tint index from 0 to 3 to the 3 potion layers")
-                    .define("brewing_stand_colors", true);
-            COLORED_ARROWS = builder.comment("Makes tipped arrows show their colors when loaded with a crossbow")
-                    .define("crossbows_colors", true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click", true);
+            PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
+                    .define("projectile_weapon_overlay", true);
             COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
                     .define("compass_right_click", false);
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
@@ -206,6 +209,7 @@ public class ClientConfigs {
                     .define("tall_grass_color", true);
             ACCURATE_COLORED_MAPS = builder.comment("Makes colored maps a bit more accurate. Might affect performance")
                     .define("accurate_colors", false);
+
             builder.pop();
             builder.pop();
         }

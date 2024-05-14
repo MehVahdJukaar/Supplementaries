@@ -141,6 +141,14 @@ public class ModRegistry {
             .stacksTo(1)
             .rarity(Rarity.RARE)));
 
+    public static final Supplier<Block> LUNCH_BASKET = regBlock(LUNCH_BASKET_NAME, () -> new LunchBoxBlock(
+            BlockBehaviour.Properties.copy(Blocks.CHEST)
+                    .strength(1, 1)));
+
+    public static final Supplier<BlockEntityType<LunchBoxBlockTile>> LUNCH_BASKET_TILE = regTile(
+            LUNCH_BASKET_NAME, () -> PlatHelper.newBlockEntityType(
+                    LunchBoxBlockTile::new, LUNCH_BASKET.get()));
+
 
     //speedometer
     //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));

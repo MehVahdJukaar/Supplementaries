@@ -3,29 +3,45 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
+public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
+
+    private ItemStack clientCurrentAmmo = ItemStack.EMPTY;
+
+    //unneded optimization
+    public ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
+        if (world != null) {
+            if (world.getGameTime() % 10 == 0) {
+                clientCurrentAmmo = ItemStack.EMPTY;
+
+                ItemStack findAmmo = player.getProjectile(cannon);
+                if (findAmmo.getItem() != net.minecraft.world.item.Items.ARROW) {
+                    clientCurrentAmmo = findAmmo;
+                }
+            }
+        }
+        return clientCurrentAmmo;
+    }
 
     @Override
     public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
-        boolean overlay = ClientConfigs.Items.QUIVER_OVERLAY.get();
-        if (overlay) {
-            LocalPlayer player = Minecraft.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
 
-            if (player != null) {
-                ItemStack ammo = QuiverItem.getQuiverData(stack).getSelected();
-                renderAmmo(graphics, x, y, ammo);
-            }
-            return true;
+        if (player != null && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {
+
+            ItemStack ammo = getAmmoForPreview(stack, Minecraft.getInstance().level, player);
+
+            renderAmmo(graphics, x, y, ammo);
         }
-        return false;
+        return true;
     }
 
     public static void renderAmmo(GuiGraphics graphics, int x, int y, ItemStack ammo) {
@@ -48,4 +64,5 @@ public class QuiverItemOverlayRenderer implements IItemDecoratorRenderer {
             RenderSystem.applyModelViewMatrix();
         }
     }
+
 }

@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
+import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,7 +18,9 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> {
+import java.util.function.Supplier;
+
+public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> implements ICustomItemRendererProvider {
 
     public LunchBoxItem(Properties properties) {
         super(properties);
@@ -76,6 +81,11 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> {
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    @Override
+    public Supplier<ItemStackRenderer> getRendererFactory() {
+        return LunchBoxItemRenderer::new;
     }
 
     @Override
