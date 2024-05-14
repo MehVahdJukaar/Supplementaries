@@ -30,6 +30,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -49,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SackBlock extends FallingBlock implements EntityBlock {
+public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterloggedBlock {
 
     public static final List<Block> SACK_BLOCKS = new ArrayList<>();
 
@@ -84,6 +85,7 @@ public class SackBlock extends FallingBlock implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(OPEN, WATERLOGGED);
     }
 
@@ -146,9 +148,10 @@ public class SackBlock extends FallingBlock implements EntityBlock {
         } else {
             if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
 
-                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p->{
+                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
                     p.writeBoolean(true);
                     p.writeBlockPos(pos);
+                    p.writeInt(tile.getContainerSize());
                 });
                 PiglinAi.angerNearbyPiglins(player, true);
 

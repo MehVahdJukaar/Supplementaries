@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
-import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -20,6 +20,10 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     public SackBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SACK_TILE.get(), pos, state, 27);
+    }
+
+    public static int getUnlockedSlots() {
+        return CommonConfigs.Functional.SACK_SLOTS.get();
     }
 
     @Override
@@ -58,15 +62,11 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new SackContainerMenu(id, player, this);
-    }
-
-    public static int getUnlockedSlots() {
-        return CommonConfigs.Functional.SACK_SLOTS.get();
+        return new VariableSizeContainerMenu(id, player, this, getContainerSize());
     }
 
     public boolean isSlotUnlocked(int ind) {
-        return ind < getUnlockedSlots();
+        return ind < getContainerSize();
     }
 
     @Override

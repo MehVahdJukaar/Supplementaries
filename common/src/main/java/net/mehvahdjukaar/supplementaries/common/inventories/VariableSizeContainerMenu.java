@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,51 +12,52 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 
-public class SackContainerMenu extends AbstractContainerMenu implements IContainerProvider {
+public class VariableSizeContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
+    public final int unlockedSlots;
 
     @Override
     public Container getContainer() {
         return inventory;
     }
 
-    public SackContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer));
+    public VariableSizeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer),
+                packetBuffer.readInt());
     }
 
     //hack for snowy spirit sleds entities
-    @Nullable
+    @NotNull
     private static Container getContainerFromPacket(Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         boolean isBlockPos = packetBuffer.readBoolean();
         Level level = playerInventory.player.level();
         if (isBlockPos) {
-            return ModRegistry.SACK_TILE.get().getBlockEntity(
-                    level, packetBuffer.readBlockPos()
-            );
+            BlockPos pos = packetBuffer.readBlockPos();
+            if (level.getBlockEntity(pos) instanceof Container c) return c;
         } else {
             var e = level.getEntity(packetBuffer.readVarInt());
             if (e instanceof Container c) return c;
             else if (e instanceof IContainerProvider c) return c.getContainer();
-            throw new UnsupportedOperationException("Cannot find container associated with entity "+ e);
         }
+        throw new UnsupportedOperationException("Cannot find container associated with entity ");
     }
 
-    public SackContainerMenu(int id, Inventory playerInventory, Container container) {
-        super(ModMenuTypes.SACK.get(), id);
+    public VariableSizeContainerMenu(int id, Inventory playerInventory, Container container, int unlockedSlots) {
+        super(ModMenuTypes.VARIABLE_SIZE.get(), id);
         //tile container
         this.inventory = container;
-        checkContainerSize(container, SackBlockTile.getUnlockedSlots());
+        this.unlockedSlots = unlockedSlots;
+        checkContainerSize(container, unlockedSlots);
+
         container.startOpen(playerInventory.player);
 
-        int size = CommonConfigs.Functional.SACK_SLOTS.get();
-
-        int[] dims = SackContainerMenu.getRatio(size);
+        int[] dims = VariableSizeContainerMenu.getRatio(unlockedSlots);
         if (dims[0] > 9) {
             dims[0] = 9;
-            dims[1] = (int) Math.ceil(size / 9f);
+            dims[1] = (int) Math.ceil(unlockedSlots / 9f);
         }
 
         int yp = 17 + (18 * 3) / 2 - (9) * dims[1];
@@ -67,12 +67,12 @@ public class SackContainerMenu extends AbstractContainerMenu implements IContain
         int xp;
         for (int h = 0; h < dims[1]; ++h) {
             dimXPrev = dimx;
-            dimx = Math.min(dims[0], size);
+            dimx = Math.min(dims[0], unlockedSlots);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
                 this.addSlot(new DelegatingSlot(container, j + (h * dimXPrev), xp + j * 18, yp + 18 * h, this));
             }
-            size -= dims[0];
+            unlockedSlots -= dims[0];
         }
 
         for (int si = 0; si < 3; ++si)

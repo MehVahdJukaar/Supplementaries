@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
-import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -9,9 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 
-public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
+public class VariableSizeContainerScreen extends AbstractContainerScreen<VariableSizeContainerMenu> {
 
-    public SackScreen(SackContainerMenu container, Inventory inventory, Component text) {
+    public VariableSizeContainerScreen(VariableSizeContainerMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
@@ -20,11 +19,12 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
     @Override
     protected void renderBg(GuiGraphics matrixStack, float partialTicks, int x, int y) {
     }
-//TODO: merge
+
+    //TODO: merge
     private void renderBack(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.SACK_GUI_TEXTURE,x, y, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 
@@ -32,10 +32,9 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
         int k = -1 + (this.width - this.imageWidth) / 2;
         int l = -1 + (this.height - this.imageHeight) / 2;
 
-        int size = CommonConfigs.Functional.SACK_SLOTS.get();
+        int size = this.menu.unlockedSlots;
 
-
-        int[] dims = SackContainerMenu.getRatio(size);
+        int[] dims = VariableSizeContainerMenu.getRatio(size);
         if (dims[0] > 9) {
             dims[0] = 9;
             dims[1] = (int) Math.ceil(size / 9f);
@@ -49,7 +48,7 @@ public class SackScreen extends AbstractContainerScreen<SackContainerMenu> {
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                graphics. blit(ModTextures.SLOT_TEXTURE, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
+                graphics.blit(ModTextures.SLOT_TEXTURE, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
             }
             size -= dims[0];
         }

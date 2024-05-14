@@ -220,6 +220,7 @@
   "block.supplementaries.urn": "Urn",
   "block.supplementaries.wild_flax": "Wild Flax",
   "block.supplementaries.wind_vane": "Wind Vane",
+  "block.supplementaries.lunch_basket": "Lunch Basket",
 
 
 
@@ -302,6 +303,7 @@
   "gui.supplementaries.present.trapped": "Prime",
   "gui.supplementaries.pulley_block": "Pulley Block",
   "gui.supplementaries.sack": "Sack",
+  "gui.supplementaries.lunch_basket": "Lunch Basket",
   "gui.supplementaries.safe": "Safe",
   "gui.supplementaries.safe.name": "%1$s's %2$s",
   "gui.supplementaries.safe.password": "%2$s key: %1$s",

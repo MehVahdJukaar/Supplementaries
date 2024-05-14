@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.inventories.SackContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.minecraft.client.Minecraft;
@@ -39,7 +39,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     public InventoryTooltipComponent(InventoryTooltip tooltip) {
         this.tag = tooltip.tag();
         this.item = tooltip.item();
-        this.dimensions = SackContainerMenu.getRatio(tooltip.size());
+        this.dimensions = VariableSizeContainerMenu.getRatio(tooltip.size());
         this.size = tooltip.size();
         BlockEntity te = ItemsUtil.loadBlockEntityFromItem(this.tag, this.item);
         if (te instanceof SafeBlockTile safe) {

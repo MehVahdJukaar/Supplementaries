@@ -24,8 +24,8 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD = RegHelper.registerMenuType(
             Supplementaries.res(NOTICE_BOARD_NAME), NoticeBoardContainerMenu::new);
 
-    public static final Supplier<MenuType<SackContainerMenu>> SACK = RegHelper.registerMenuType(
-            Supplementaries.res(SACK_NAME), SackContainerMenu::new);
+    public static final Supplier<MenuType<VariableSizeContainerMenu>> VARIABLE_SIZE = RegHelper.registerMenuType(
+            Supplementaries.res("variable_size"), VariableSizeContainerMenu::new);
 
     public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
             Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);
