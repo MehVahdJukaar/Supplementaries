@@ -32,7 +32,7 @@ public class ModNetwork {
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSelectMerchantTradePacket.class, ServerBoundSelectMerchantTradePacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetPresentPacket.class, ServerBoundSetPresentPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetTrappedPresentPacket.class, ServerBoundSetTrappedPresentPacket::new)
-            .register(NetworkDir.PLAY_TO_SERVER, ServerBoundCycleQuiverPacket.class, ServerBoundCycleQuiverPacket::new)
+            .register(NetworkDir.PLAY_TO_SERVER, ServerBoundCycleSelectableContainerItemPacket.class, ServerBoundCycleSelectableContainerItemPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestConfigReloadPacket.class, ServerBoundRequestConfigReloadPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSyncCannonPacket.class, ServerBoundSyncCannonPacket::new)
 

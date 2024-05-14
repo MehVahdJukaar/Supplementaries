@@ -1,15 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -19,22 +13,6 @@ import java.util.Optional;
 
 public class QuiverItemImpl {
 
-    public static ItemStack getQuiver(LivingEntity entity) {
-        if (!(entity instanceof Player) && entity instanceof IQuiverEntity e) return e.supplementaries$getQuiver();
-        if (entity instanceof Player p) {
-            var curioQuiver = CompatHandler.getQuiverFromModsSlots(p);
-            if (!curioQuiver.isEmpty()) return curioQuiver;
-            if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
-            for(var h : p.getHandSlots()){
-                if (h.is(ModRegistry.QUIVER_ITEM.get())) return h;
-            }
-            for (var s : p.getInventory().items) {
-                if (s.is(ModRegistry.QUIVER_ITEM.get())) return s;
-            }
-        }
-        return ItemStack.EMPTY;
-    }
-
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
         if (stack.getItem() instanceof QuiverItem) {
             return new QuiverNBTData(stack.getOrCreateTag());
@@ -42,11 +20,11 @@ public class QuiverItemImpl {
         return null;
     }
 
-    public static class QuiverNBTData implements SelectableContainerItem.AbstractData {
+    public static class QuiverNBTData implements QuiverItem.Data {
 
         public static final String TAG_ITEMS = "Items";
         private final List<ItemStack> stackView = new ArrayList<>(
-                Collections.nCopies(CommonConfigs.Tools.QUIVER_SLOTS.get(), ItemStack.EMPTY));
+                Collections.nCopies(ModRegistry.QUIVER_ITEM.get().getMaxSlots(), ItemStack.EMPTY));
         private final CompoundTag tag;
 
         public QuiverNBTData(CompoundTag tag) {

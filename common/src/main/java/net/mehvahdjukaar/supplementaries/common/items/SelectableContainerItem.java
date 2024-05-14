@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -108,10 +109,12 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack stack = player.getItemInHand(pUsedHand);
-        InteractionHand otherHand = pUsedHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-        ItemStack possibleArrowStack = player.getItemInHand(otherHand);
         D data = this.getData(stack);
 
+        InteractionHand otherHand = pUsedHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        ItemStack possibleArrowStack = player.getItemInHand(otherHand);
+
+        //try inserting offhand
         if (data.canAcceptItem(possibleArrowStack)) {
             ItemStack remaining = data.tryAdding(possibleArrowStack);
             if (!remaining.equals(possibleArrowStack)) {
@@ -120,6 +123,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
                 return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
             }
         }
+
         if (player.isSecondaryUseActive()) {
             if (data.cycle()) {
                 this.playInsertSound(player);
@@ -128,7 +132,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                QuiverArrowSelectGui.setUsingItem(true);
+                SelectableContainerItemHud.setUsingItem(stack);
             }
             this.playRemoveOneSound(player);
             player.startUsingItem(pUsedHand);
@@ -144,7 +148,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            QuiverArrowSelectGui.setUsingItem(false);
+            SelectableContainerItemHud.setUsingItem(ItemStack.EMPTY);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());
@@ -235,7 +239,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
-    protected interface AbstractData {
+    // BS instance fields
+
+    @NotNull
+    public abstract ItemStack getFirstInInventory(Player player);
+
+    public abstract int getMaxSlots();
+
+    public interface AbstractData {
 
         int getSelectedSlot();
 
@@ -248,7 +259,11 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
         boolean canAcceptItem(ItemStack toInsert);
 
-        ItemStack getSelected();
+        default ItemStack getSelected() {
+            var content = this.getContentView();
+            int selected = this.getSelectedSlot();
+            return content.get(selected);
+        }
 
         default boolean cycle() {
             return cycle(1);
@@ -308,6 +323,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
         //fabric and skeleton shoot goal. forge for player doesn't need this as stack decrement already affects the one in quiver
         void consumeSelected();
+
     }
 
 }

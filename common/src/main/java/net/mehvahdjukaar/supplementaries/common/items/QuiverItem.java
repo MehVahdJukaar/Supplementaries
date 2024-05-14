@@ -1,8 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +27,17 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
         return getQuiverData(stack);
     }
 
+    @NotNull
+    @Override
+    public ItemStack getFirstInInventory(Player player) {
+        return getQuiver(player);
+    }
+
+    @Override
+    public int getMaxSlots() {
+        return CommonConfigs.Tools.QUIVER_SLOTS.get();
+    }
+
     @Nullable
     @ExpectPlatform
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
@@ -29,9 +45,16 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @NotNull
-    @ExpectPlatform
     public static ItemStack getQuiver(LivingEntity entity) {
-        throw new AssertionError();
+        if (entity instanceof Player player) {
+            var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
+            if (!curioQuiver.isEmpty()) return curioQuiver;
+            if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
+        } else if (entity instanceof IQuiverEntity e) {
+            return e.supplementaries$getQuiver();
+        }
+
+        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
 

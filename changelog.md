@@ -13,3 +13,4 @@
 - trapped presents will hide their names
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
+- fixed a rare issue with enderman heads

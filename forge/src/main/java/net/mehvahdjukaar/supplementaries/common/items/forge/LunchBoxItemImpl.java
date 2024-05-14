@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -12,36 +14,44 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.violetmoon.quark.api.event.UsageTickerEvent;
 
 import java.util.List;
 import java.util.Optional;
 
-public class QuiverItemImpl {
+public class LunchBoxItemImpl {
 
-    @Nullable
-    public static QuiverItem.Data getQuiverData(ItemStack stack) {
-        return CapabilityHandler.get(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
+    static{
+        MinecraftForge.EVENT_BUS.addListener(LunchBoxItemImpl::onUsageTicker);
     }
 
-    public static class Cap extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.Data {
+    public static void onUsageTicker(UsageTickerEvent event){
+    }
+
+    public static LunchBoxItem.Data getLunchBoxData(ItemStack stack) {
+        return CapabilityHandler.get(stack, CapabilityHandler.LUNCH_BOX_ITEM_HANDLER);
+    }
+
+    //mes but will geet rewritte in 1.20.6 anyways
+    public static class Cap extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, LunchBoxItem.Data {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);
         private final LazyOptional<Cap> lazyOptional2 = LazyOptional.of(() -> this);
 
         //Provider
         @Override
-        public <T> LazyOptional<T> getCapability(@NotNull net.minecraftforge.common.capabilities.Capability<T> cap, Direction side) {
+        public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
             var v = ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, lazyOptional);
             if (v.isPresent()) return v;
-            v = CapabilityHandler.QUIVER_ITEM_HANDLER.orEmpty(cap, lazyOptional2);
+            v = CapabilityHandler.LUNCH_BOX_ITEM_HANDLER.orEmpty(cap, lazyOptional2);
             return v;
         }
 
         @Override
         public CompoundTag serializeNBT() {
             var c = super.serializeNBT();
-            c.putInt("SelectedSlot", this.selectedSlot);
+            c.putByte("SelectedSlot",(byte) this.selectedSlot);
+            c.putBoolean("Open", this.isOpen);
             return c;
         }
 
@@ -49,10 +59,12 @@ public class QuiverItemImpl {
         public void deserializeNBT(CompoundTag nbt) {
             super.deserializeNBT(nbt);
             this.selectedSlot = nbt.getByte("SelectedSlot");
+            this.isOpen = nbt.getBoolean("Open");
         }
 
         //actual cap
 
+        private boolean isOpen = false;
         private int selectedSlot = 0;
 
         public Cap(int maxSlots) {
@@ -66,6 +78,11 @@ public class QuiverItemImpl {
 
         public List<ItemStack> getContentView() {
             return this.stacks;
+        }
+
+        @Override
+        public boolean canEatFrom() {
+            return true;
         }
 
         @Override

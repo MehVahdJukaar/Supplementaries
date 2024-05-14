@@ -700,7 +700,7 @@ public class ModCreativeTabs {
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
-                if (!PlatHelper.isModLoaded(s.getFromMod())) continue;
+                //if (s.isEnabled()) continue;
                 if (s == BuiltInSoftFluids.POTION.get() || s.isEmptyFluid()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();

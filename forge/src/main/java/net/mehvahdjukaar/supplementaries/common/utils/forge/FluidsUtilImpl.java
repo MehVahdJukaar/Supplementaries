@@ -32,14 +32,15 @@ public class FluidsUtilImpl {
     public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluid, int minAmount) {
         IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
         if (handlerDown != null && fluid instanceof SoftFluidStackImpl impl) {
-            var f = fluid.getVanillaFluid();
             FluidStack stack = impl.toForgeFluid();
-            stack.setAmount(250 * minAmount);
-            if (stack.isEmpty()) return null;
-            int filled = handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
-            tileBelow.setChanged();
+            if (!stack.isEmpty()) {
+                stack.setAmount(250 * minAmount);
+                if (stack.isEmpty()) return null;
+                int filled = handlerDown.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+                tileBelow.setChanged();
 
-            return Mth.ceil(filled / 250f);
+                return Mth.ceil(filled / 250f);
+            }
         }
         return null;
     }

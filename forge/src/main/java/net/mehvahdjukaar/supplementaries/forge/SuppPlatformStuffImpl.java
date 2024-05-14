@@ -8,9 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,9 +26,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 public class SuppPlatformStuffImpl {
 
@@ -68,7 +74,7 @@ public class SuppPlatformStuffImpl {
         return modified;
     }
 
-    public static boolean isEndermanMask(EnderMan enderMan, Player player, ItemStack itemstack) {
+    public static boolean isEndermanMask(@NotNull EnderMan enderMan, Player player, ItemStack itemstack) {
         try {
             return itemstack.isEnderMask(player, enderMan);
         } catch (Exception e) {
@@ -102,6 +108,21 @@ public class SuppPlatformStuffImpl {
 
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {
         return movedState.canStickTo(blockState);
+    }
+
+    public static ItemStack getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
+        var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);
+        if (cap != null) {
+            for (int i = 0; i < cap.getSlots(); i++) {
+                ItemStack quiver = cap.getStackInSlot(i);
+                if (predicate.test(quiver)) return quiver;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
+        return selected.getFoodProperties(entity);
     }
 
 }

@@ -1,7 +1,7 @@
-package net.mehvahdjukaar.supplementaries.client.renderers.forge;
+package net.mehvahdjukaar.supplementaries.client.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -13,14 +13,15 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IGuiOverlay {
+public class SelectableContainerItemHudImpl implements IGuiOverlay {
 
-    public QuiverArrowSelectGuiImpl() {
-        super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());
+    protected Minecraft minecraft;
+
+    public SelectableContainerItemHudImpl() {
+        this.minecraft = Minecraft.getInstance();
     }
 
-    @Override
-    protected void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
+    public static void drawHighlight(Minecraft mc, GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
 
         MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().getStyleModifier());
@@ -28,7 +29,7 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IG
             mutablecomponent.withStyle(ChatFormatting.ITALIC);
         }
         Component highlightTip = selectedArrow.getHighlightTip(mutablecomponent);
-        int fontWidth = this.getFont().width(highlightTip);
+        int fontWidth = mc.font.width(highlightTip);
         int nx = (screenWidth - fontWidth) / 2;
         int ny = py - 19;
 
@@ -36,10 +37,10 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IG
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        graphics.fill(nx - 2, ny - 2, nx + fontWidth + 2, ny + 9 + 2, this.minecraft.options.getBackgroundColor(0));
+        graphics.fill(nx - 2, ny - 2, nx + fontWidth + 2, ny + 9 + 2, mc.options.getBackgroundColor(0));
         Font font = IClientItemExtensions.of(selectedArrow).getFont(selectedArrow, IClientItemExtensions.FontContext.SELECTED_ITEM_NAME);
         if (font == null) {
-            graphics.drawString(this.getFont(), highlightTip, nx, ny, 0xFFFFFF + (l << 24));
+            graphics.drawString(mc.font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
         } else {
             nx = (screenWidth - font.width(highlightTip)) / 2;
             graphics.drawString(font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
@@ -47,11 +48,10 @@ public class QuiverArrowSelectGuiImpl extends QuiverArrowSelectGui implements IG
         RenderSystem.disableBlend();
     }
 
+
     @Override
-    public void render(ForgeGui forgeGui, GuiGraphics graphics, float partialTicks, int width, int height) {
-        if (isActive()) {
-            renderQuiverContent(graphics, partialTicks, width, height);
-        }
+    public void render(ForgeGui forgeGui, GuiGraphics arg, float f, int i, int j) {
+        SelectableContainerItemHud.render(minecraft, arg, f, i, j);
     }
 
 }

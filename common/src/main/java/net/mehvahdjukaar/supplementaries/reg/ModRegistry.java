@@ -136,6 +136,11 @@ public class ModRegistry {
             .stacksTo(1)
             .rarity(Rarity.RARE)));
 
+    //lunch basket
+    public static final Supplier<LunchBoxItem> LUNCH_BASKET_ITEM = regItem(LUNCH_BASKET_NAME, () -> new LunchBoxItem((new Item.Properties())
+            .stacksTo(1)
+            .rarity(Rarity.RARE)));
+
 
     //speedometer
     //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));

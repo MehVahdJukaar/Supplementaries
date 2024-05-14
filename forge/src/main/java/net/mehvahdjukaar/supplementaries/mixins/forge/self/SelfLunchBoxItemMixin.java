@@ -1,47 +1,49 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.forge.LunchBoxItemImpl;
 import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(QuiverItem.class)
-public abstract class SelfQuiverItem extends Item {
+@Mixin(LunchBoxItem.class)
+public abstract class SelfLunchBoxItemMixin extends SelectableContainerItem<QuiverItem.Data> {
 
-    protected SelfQuiverItem(Properties arg) {
+    protected SelfLunchBoxItemMixin(Properties arg) {
         super(arg);
     }
 
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new QuiverItemImpl.QuiverCapability();
+        return new LunchBoxItemImpl.Cap(this.getMaxSlots());
     }
 
     @Nullable
     @Override
     public CompoundTag getShareTag(ItemStack stack) {
         CompoundTag baseTag = stack.getTag();
-        var cap = QuiverItemImpl.getQuiverData(stack);
-        if (cap instanceof QuiverItemImpl.QuiverCapability c) {
+        var cap = LunchBoxItemImpl.getLunchBoxData(stack);
+        if (cap instanceof LunchBoxItemImpl.Cap c) {
             if (baseTag == null) baseTag = new CompoundTag();
             baseTag = baseTag.copy();
-            baseTag.put("QuiverCap", c.serializeNBT());
+            baseTag.put("LunchBoxCap", c.serializeNBT());
         }
         return baseTag;
     }
 
     @Override
     public void readShareTag(ItemStack stack, @Nullable CompoundTag tag) {
-        if (tag != null && tag.contains("QuiverCap")) {
-            CompoundTag capTag = tag.getCompound("QuiverCap");
-            tag.remove("QuiverCap");
+        if (tag != null && tag.contains("LunchBoxCap")) {
+            CompoundTag capTag = tag.getCompound("LunchBoxCap");
+            tag.remove("LunchBoxCap");
             var cap = QuiverItemImpl.getQuiverData(stack);
-            if (cap instanceof QuiverItemImpl.QuiverCapability c) {
+            if (cap instanceof QuiverItemImpl.Cap c) {
                 c.deserializeNBT(capTag);
             }
         }

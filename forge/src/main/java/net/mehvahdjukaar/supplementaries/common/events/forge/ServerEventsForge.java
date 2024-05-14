@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -213,6 +214,7 @@ public class ServerEventsForge {
         } else {
             WeatheredMapRecipe.onWorldUnload();
             WaySignStructure.clearCache();
+            EndermanSkullBlockTile.clearCache();
         }
     }
 

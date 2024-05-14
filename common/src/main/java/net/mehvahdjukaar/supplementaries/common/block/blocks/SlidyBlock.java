@@ -36,16 +36,12 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
     @Override
     public void onMoved(Level level, BlockPos pos, BlockState movedState, Direction direction, boolean extending) {
-        if(!level.isClientSide)return;
         if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
             for (Direction dir : Direction.values()) {
                 if (SuppPlatformStuff.canStickTo(movedState, level.getBlockState(pos.relative(dir)))) {
                     return;
                 }
             }
-           // if (tile.getBlockPos() == pos.relative(direction) && tile.getDirection() == direction && tile.getBlockState().is(Blocks.STICKY_PISTON)) {
-          //      return;
-          //  }
             MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
         }
     }

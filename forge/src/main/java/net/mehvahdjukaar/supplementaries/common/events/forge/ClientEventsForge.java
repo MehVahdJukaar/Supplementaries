@@ -3,12 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.QuiverArrowSelectGui;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.client.forge.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
-import net.mehvahdjukaar.supplementaries.client.renderers.forge.QuiverArrowSelectGuiImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -84,7 +85,7 @@ public class ClientEventsForge {
 
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
-                new QuiverArrowSelectGuiImpl());
+                new SelectableContainerItemHudImpl());
 
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
                 new CannonChargeOverlayImpl());
@@ -93,7 +94,7 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void itemTooltip(ItemTooltipEvent event) {
         if (event.getEntity() != null) {
-                ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
+            ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
         }
     }
 
@@ -115,16 +116,16 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         if (Minecraft.getInstance().screen == null && !ClientRegistry.QUIVER_KEYBIND.isUnbound() &&
-                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue()) {
+                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue() && Minecraft.getInstance().player instanceof IQuiverEntity qe) {
             int a = event.getAction();
             if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
-                QuiverArrowSelectGui.setUsingKeybind(true);
+                SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiver());
             } else if (a == InputConstants.RELEASE) {
-                QuiverArrowSelectGui.setUsingKeybind(false);
+                SelectableContainerItemHud.setUsingKeybind(ItemStack.EMPTY);
             }
         }
 
-        if(CannonController.isActive()){
+        if (CannonController.isActive()) {
             CannonController.onKeyPressed(event.getKey(), event.getAction(), event.getModifiers());
             //event.setCanceled(true);
         }
@@ -132,10 +133,10 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (QuiverArrowSelectGui.isActive() && QuiverArrowSelectGui.onMouseScrolled(event.getScrollDelta())) {
+        if (SelectableContainerItemHud.onMouseScrolled(event.getScrollDelta())) {
             event.setCanceled(true);
         }
-        if(CannonController.isActive()){
+        if (CannonController.isActive()) {
             CannonController.onMouseScrolled(event.getScrollDelta());
             event.setCanceled(true);
         }
@@ -213,9 +214,9 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
-        if (CannonController.isActive() ) {
+        if (CannonController.isActive()) {
             var overlay = event.getOverlay();
-            if(overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
                 event.setCanceled(true);
             }
         }

@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 
 public class SuppPlatformStuff {
@@ -39,7 +43,7 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static boolean isEndermanMask(EnderMan enderMan, Player player, ItemStack itemstack) {
+    public static boolean isEndermanMask(@NotNull EnderMan enderMan, Player player, ItemStack itemstack) {
         throw new AssertionError();
     }
 
@@ -76,6 +80,16 @@ public class SuppPlatformStuff {
 
     @ExpectPlatform
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
         throw new AssertionError();
     }
 }

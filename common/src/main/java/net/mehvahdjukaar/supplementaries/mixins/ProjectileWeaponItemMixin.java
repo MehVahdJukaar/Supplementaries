@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -45,7 +44,7 @@ public abstract class ProjectileWeaponItemMixin {
             }
         }
         if(quiverStack != null){
-            SelectableContainerItem.AbstractData data = QuiverItem.getQuiverData(quiverStack);
+            var data = QuiverItem.getQuiverData(quiverStack);
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
                 if (!arrow.isEmpty()) cir.setReturnValue(arrow);
