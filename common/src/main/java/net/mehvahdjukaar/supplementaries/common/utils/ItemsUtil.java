@@ -4,10 +4,15 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -23,6 +28,8 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class ItemsUtil {
 
@@ -134,4 +141,32 @@ public class ItemsUtil {
         throw new AssertionError();
     }
 
+
+    public static void addShulkerLikeTooltips(CompoundTag blockEntityTag, List<Component> tooltip) {
+        if (blockEntityTag.contains("LootTable", 8)) {
+            tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
+        }
+        if (blockEntityTag.contains("Items", 9)) {
+            NonNullList<ItemStack> itemStacks = NonNullList.withSize(27, ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(blockEntityTag, itemStacks);
+            int i = 0;
+            int j = 0;
+
+            for (ItemStack itemstack : itemStacks) {
+                if (!itemstack.isEmpty()) {
+                    ++j;
+                    if (i <= 4) {
+                        ++i;
+                        MutableComponent component = itemstack.getHoverName().copy();
+                        component.append(" x").append(String.valueOf(itemstack.getCount()));
+                        tooltip.add(component.withStyle(ChatFormatting.GRAY));
+                    }
+                }
+            }
+
+            if (j - i > 0) {
+                tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+            }
+        }
+    }
 }

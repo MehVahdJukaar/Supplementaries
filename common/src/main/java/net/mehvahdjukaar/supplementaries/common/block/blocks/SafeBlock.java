@@ -3,25 +3,23 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -49,7 +47,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +57,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
 
     public SafeBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0));
@@ -71,6 +69,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OPEN, FACING, WATERLOGGED, LAVALOGGED);
     }
+
     //schedule block tick
     @Override
     public void tick(BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource rand) {
@@ -133,7 +132,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
             return InteractionResult.CONSUME;
         } else {
             if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-                if(tile.handleAction(player,handIn)){
+                if (tile.handleAction(player, handIn)) {
                     return InteractionResult.CONSUME;
                 }
             }
@@ -153,32 +152,10 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                     if (!id.equals(Minecraft.getInstance().player.getUUID())) {
                         String name = compoundTag.getString("OwnerName");
                         tooltip.add((Component.translatable("message.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
+
+                        //TODO: this is wrong. needs to be added below aswell.also check quark configs and account for both modes.
+                        ItemsUtil.addShulkerLikeTooltips(compoundTag, tooltip);
                         return;
-                    }
-                }
-                if (compoundTag.contains("LootTable", 8)) {
-                    tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
-                }
-                if (compoundTag.contains("Items", 9)) {
-                    NonNullList<ItemStack> itemStacks = NonNullList.withSize(27, ItemStack.EMPTY);
-                    ContainerHelper.loadAllItems(compoundTag, itemStacks);
-                    int i = 0;
-                    int j = 0;
-
-                    for (ItemStack itemstack : itemStacks) {
-                        if (!itemstack.isEmpty()) {
-                            ++j;
-                            if (i <= 4) {
-                                ++i;
-                                MutableComponent component = itemstack.getHoverName().copy();
-                                component.append(" x").append(String.valueOf(itemstack.getCount()));
-                                tooltip.add(component.withStyle(ChatFormatting.GRAY));
-                            }
-                        }
-                    }
-
-                    if (j - i > 0) {
-                        tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     }
                 }
                 return;
@@ -192,16 +169,15 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         tooltip.add((Component.translatable("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
     }
 
-    public ItemStack getSafeItem(SafeBlockTile te) {
-        CompoundTag compoundTag = te.saveWithoutMetadata();
-        ItemStack itemstack = new ItemStack(this);
+    private static void saveTileToItem(SafeBlockTile tile, ItemStack itemstack) {
+        CompoundTag compoundTag = tile.saveWithoutMetadata();
         if (!compoundTag.isEmpty()) {
             itemstack.addTagElement("BlockEntityTag", compoundTag);
         }
-        if (te.hasCustomName()) {
-            itemstack.setHoverName(te.getCustomName());
+
+        if (tile.hasCustomName()) {
+            itemstack.setHoverName(tile.getCustomName());
         }
-        return itemstack;
     }
 
     //overrides creative drop
@@ -209,9 +185,10 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                ItemStack itemstack = this.getSafeItem(tile);
+                ItemStack itemstack = new ItemStack(this);
+                saveTileToItem(tile, itemstack);
 
-                ItemEntity itementity = new ItemEntity(level,  pos.getX() + 0.5D,  pos.getY() + 0.5D,  pos.getZ() + 0.5D, itemstack);
+                ItemEntity itementity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
                 level.addFreshEntity(itementity);
             } else {
@@ -221,12 +198,14 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         super.playerWillDestroy(level, pos, state, player);
     }
 
-    //TODO: use loot table instead
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SafeBlockTile tile) {
-            ItemStack itemstack = this.getSafeItem(tile);
-            return Collections.singletonList(itemstack);
+            builder = builder.withDynamicDrop(CONTENTS, (context) -> {
+                for (int i = 0; i < tile.getContainerSize(); ++i) {
+                    context.accept(tile.getItem(i));
+                }
+            });
         }
         return super.getDrops(state, builder);
     }
@@ -235,7 +214,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            return getSafeItem(tile);
+            saveTileToItem(tile, itemstack);
         }
         return itemstack;
     }
@@ -248,8 +227,9 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
                 tile.setCustomName(stack.getHoverName());
             }
             if (placer instanceof Player) {
-                if (tile.getOwner() == null)
+                if (tile.getOwner() == null) {
                     tile.setOwner(placer.getUUID());
+                }
             }
         }
     }
@@ -273,14 +253,16 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
+            return tile.isPublic() ? 0 : 15;
+        }
+        return 0;
     }
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        return blockEntity instanceof MenuProvider m ? m : null;
+        return level.getBlockEntity(pos) instanceof MenuProvider m ? m : null;
     }
 
     @Override

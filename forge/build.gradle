@@ -151,7 +151,8 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:4581099")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:5264412")
+    modImplementation("curse.maven:quark-243121:5344451")
+
     modImplementation("curse.maven:zeta-968868:5254672")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")

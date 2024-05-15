@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -16,7 +15,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,27 +27,37 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
-    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public LunchBoxBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(OPEN, false));
+        this.registerDefaultState(this.defaultBlockState()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(OPEN, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(OPEN);
+        builder.add(OPEN, FACING);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context)
+                .setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nullable
@@ -64,12 +75,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
             return InteractionResult.CONSUME;
         } else {
             if (worldIn.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-
-                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
-                    p.writeBoolean(true);
-                    p.writeBlockPos(pos);
-                    p.writeInt(tile.getContainerSize());
-                });
+                VariableSizeContainerMenu.openTileMenu(player, tile);
                 PiglinAi.angerNearbyPiglins(player, true);
 
                 return InteractionResult.CONSUME;
@@ -81,37 +87,29 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
     //for creative drop
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-        if (worldIn.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            if (!worldIn.isClientSide && player.isCreative()) {
-                CompoundTag compoundTag = tile.saveWithoutMetadata();
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
+            if (!level.isClientSide && player.isCreative()) {
                 ItemStack itemstack = new ItemStack(this);
-                if (!compoundTag.isEmpty()) {
-                    itemstack.addTagElement("BlockEntityTag", compoundTag);
-                }
+                saveTileToItem(itemstack, tile);
 
-                if (tile.hasCustomName()) {
-                    itemstack.setHoverName(tile.getCustomName());
-                }
-
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
+                ItemEntity itementity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
-                worldIn.addFreshEntity(itementity);
+                level.addFreshEntity(itementity);
             } else {
                 tile.unpackLootTable(player);
             }
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof SackBlockTile tile) {
-            builder = builder.withDynamicDrop(CONTENTS, (context) -> {
-                for (int i = 0; i < tile.getContainerSize(); ++i) {
-                    context.accept(tile.getItem(i));
-                }
-            });
+        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof LunchBoxBlockTile tile) {
+            ItemStack lunchBox = new ItemStack(this);
+            saveTileToItem(lunchBox, tile);
+            //TODO: 1.21: use loot tables copy nbt stuff
+            return Collections.singletonList(lunchBox);
         }
         return super.getDrops(state, builder);
     }
@@ -119,21 +117,37 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            CompoundTag compoundTag = tile.saveWithoutMetadata();
-            if (!compoundTag.isEmpty()) {
-                itemstack.addTagElement("BlockEntityTag", compoundTag);
-            }
+        if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
+            saveTileToItem(itemstack, tile);
         }
         return itemstack;
     }
 
+    private static void saveTileToItem(ItemStack itemstack, LunchBoxBlockTile tile) {
+        var data = LunchBoxItem.getLunchBoxData(itemstack);
+        if (data != null) {
+            for (int inx = 0; inx < tile.getContainerSize(); inx++) {
+                data.tryAdding(tile.getItem(inx));
+            }
+        } else Supplementaries.error();
+        if (tile.hasCustomName()) {
+            itemstack.setHoverName(tile.getCustomName());
+        }
+    }
+
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
+        if (worldIn.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
+            if (stack.hasCustomHoverName()) {
                 tile.setCustomName(stack.getHoverName());
             }
+            var data = LunchBoxItem.getLunchBoxData(stack);
+            if (data != null) {
+                int index = 0;
+                for (var i : data.getContentView()) {
+                    tile.setItem(index++, i.copy());
+                }
+            } else Supplementaries.error();
         }
     }
 
@@ -152,19 +166,8 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-        if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            int i = 0;
-            float f = 0.0F;
-            int slots = SackBlockTile.getUnlockedSlots();
-            for (int j = 0; j < slots; ++j) {
-                ItemStack itemstack = tile.getItem(j);
-                if (!itemstack.isEmpty()) {
-                    f += itemstack.getCount() / (float) Math.min(tile.getMaxStackSize(), itemstack.getMaxStackSize());
-                    ++i;
-                }
-            }
-            f = f / slots;
-            return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+        if (worldIn.getBlockEntity(pos) instanceof Container tile) {
+            return AbstractContainerMenu.getRedstoneSignalFromContainer(tile);
         }
         return 0;
     }

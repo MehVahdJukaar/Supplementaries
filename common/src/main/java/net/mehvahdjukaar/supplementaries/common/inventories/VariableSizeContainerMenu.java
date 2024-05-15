@@ -1,23 +1,47 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 
 public class VariableSizeContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
     public final int unlockedSlots;
+
+    //for tile
+    public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(Player player, C tile) {
+        PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
+            p.writeBoolean(true);
+            p.writeBlockPos(tile.getBlockPos());
+            p.writeInt(tile.getContainerSize());
+        });
+    }
+
+    //for entity
+    public static <C extends Entity & Container & MenuProvider> void openEntityMenu(Player player, C entity) {
+        PlatHelper.openCustomMenu((ServerPlayer) player, entity, p -> {
+            p.writeBoolean(false);
+            p.writeVarInt(entity.getId());
+            p.writeInt(entity.getContainerSize());
+        });
+    }
+
 
     @Override
     public Container getContainer() {

@@ -9,15 +9,11 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SlotAccess;
@@ -65,36 +61,10 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-
         if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-                if (tag.contains("LootTable", 8)) {
-                    tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
-                }
-
-                if (tag.contains("Items", 9)) {
-                    NonNullList<ItemStack> nonnulllist = NonNullList.withSize(9, ItemStack.EMPTY);
-                    ContainerHelper.loadAllItems(tag, nonnulllist);
-                    int i = 0;
-                    int j = 0;
-
-                    for (ItemStack itemstack : nonnulllist) {
-                        if (!itemstack.isEmpty()) {
-                            ++j;
-                            if (i <= 4) {
-                                ++i;
-                                MutableComponent component = itemstack.getHoverName().copy();
-                                component.append(" x").append(String.valueOf(itemstack.getCount()));
-                                tooltip.add(component.withStyle(ChatFormatting.GRAY));
-                            }
-                        }
-                    }
-                    if (j - i > 0) {
-                        tooltip.add((Component.translatable("container.shulkerBox.more", j - i))
-                                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
-                    }
-                }
+               ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
             }
         }
     }

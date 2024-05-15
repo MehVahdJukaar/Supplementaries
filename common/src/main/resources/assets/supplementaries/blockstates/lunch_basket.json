@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,open=false": {
       "model": "supplementaries:block/lunch_basket"
     },
-    "facing=east": {
+    "facing=east,open=false": {
       "model": "supplementaries:block/lunch_basket",
       "y": 90
     },
-    "facing=south": {
+    "facing=south,open=false": {
       "model": "supplementaries:block/lunch_basket",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,open=false": {
       "model": "supplementaries:block/lunch_basket",
+      "y": 270
+    },
+    "facing=north,open=true": {
+      "model": "supplementaries:block/lunch_basket_open"
+    },
+    "facing=east,open=true": {
+      "model": "supplementaries:block/lunch_basket_open",
+      "y": 90
+    },
+    "facing=south,open=true": {
+      "model": "supplementaries:block/lunch_basket_open",
+      "y": 180
+    },
+    "facing=west,open=true": {
+      "model": "supplementaries:block/lunch_basket_open",
       "y": 270
     }
   }

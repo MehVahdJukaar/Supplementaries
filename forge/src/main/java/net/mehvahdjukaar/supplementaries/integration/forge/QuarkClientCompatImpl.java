@@ -5,10 +5,7 @@ import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SackItem;
-import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
-import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -39,7 +36,8 @@ public class QuarkClientCompatImpl {
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
         MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
-        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::quiverUsageTicker);
+        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerCount);
+        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerStack);
         ClientHelper.addTooltipComponentRegistration(QuarkClientCompatImpl::registerTooltipComponent);
     }
 
@@ -83,8 +81,18 @@ public class QuarkClientCompatImpl {
     }
 
 
-    public static void quiverUsageTicker(UsageTickerEvent.GetCount event) {
-        if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
+    public static void usageTickerStack(UsageTickerEvent.GetStack event) {
+        if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
+            var data = li.getData(event.currentRealStack);
+            event.setResultStack(data.getSelected());
+        }
+    }
+
+    public static void usageTickerCount(UsageTickerEvent.GetCount event) {
+        if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
+            var data = li.getData(event.currentRealStack);
+            event.setResultCount(data.getSelectedItemCount());
+        } else if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
             //adds missing ones from quiver
 
             if (event.player instanceof IQuiverEntity qe) {

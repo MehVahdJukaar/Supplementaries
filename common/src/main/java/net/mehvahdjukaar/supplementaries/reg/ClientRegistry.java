@@ -112,6 +112,7 @@ public class ClientRegistry {
     public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
 
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
+    public static final ResourceLocation LUNCH_BOX_ITEM_MODEL = Supplementaries.res("block/lunch_basket_gui");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Supplier<Map<WoodType, ResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
@@ -207,6 +208,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CANNON.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.LUNCH_BASKET.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
 
@@ -390,6 +392,7 @@ public class ClientRegistry {
         PlaceableBookManager.getAll().forEach(b -> event.register(b.modelPath()));
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
+        event.register(LUNCH_BOX_ITEM_MODEL);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
 
