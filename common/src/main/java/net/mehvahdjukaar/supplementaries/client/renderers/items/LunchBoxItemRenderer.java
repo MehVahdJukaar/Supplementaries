@@ -25,14 +25,15 @@ public class LunchBoxItemRenderer extends ItemStackRenderer {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         ItemRenderer itemRenderer = mc.getItemRenderer();
+        var data = LunchBoxItem.getLunchBoxData(stack);
         if (transformType != ItemDisplayContext.GUI && player != null && player.isUsingItem() && player.getUseItem() == stack) {
-            var data = LunchBoxItem.getLunchBoxData(stack);
             itemRenderer.renderStatic(
                     data.getSelected(), transformType, combinedLightIn, combinedOverlayIn, pose, buffer,
                     mc.level, 0);
         } else {
-            BakedModel model = ClientHelper.getModel(mc.getModelManager(), ClientRegistry.LUNCH_BOX_ITEM_MODEL);
-            itemRenderer.render(stack,  transformType, false, pose, buffer,
+            BakedModel model = ClientHelper.getModel(mc.getModelManager(),
+                    data.canEatFrom() ? ClientRegistry.LUNCH_BOX_OPEN_ITEM_MODEL : ClientRegistry.LUNCH_BOX_ITEM_MODEL);
+            itemRenderer.render(stack, transformType, false, pose, buffer,
                     combinedLightIn, combinedOverlayIn, model);
         }
         pose.popPose();

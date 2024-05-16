@@ -45,10 +45,10 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 156, j + 10 + 6));
+        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
 
-        this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 29 + 6, 18, 10));
-        this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 146, j + 49 + 6, 18, 10));
+        this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
+        this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
         this.menu.addSlotListener(this);

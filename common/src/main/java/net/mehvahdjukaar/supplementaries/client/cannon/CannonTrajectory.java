@@ -18,17 +18,20 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
 
     @Nullable
     public static CannonTrajectory findBest(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                            boolean preferShootingDown, float minPitch, float maxPitch) {
+                                            ShootingMode mode, float minPitch, float maxPitch) {
 
         double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
 
-        if (gravity == 0) {
+        if(mode == ShootingMode.MANUAL){
+            gravity = 0;
+        }
 
+        if (gravity == 0) {
             float v0x = Mth.cos((float) targetAngle) * initialPow;
             float v0y = Mth.sin((float) targetAngle) * initialPow;
 
             if (drag == 0) {
-                return new CannonTrajectory(targetPoint, (float) targetAngle,
+                    return new CannonTrajectory(targetPoint, (float) targetAngle,
                         20, false, gravity, drag, v0x, v0y);
             }
 
@@ -46,6 +49,11 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
                 // that number is slope at which we stop time
                 t = Math.log(0.4 / initialPow) / Math.log(drag);
             } else t = Math.log(arg) / ld;
+
+            if(mode == ShootingMode.MANUAL){
+                t = 4;
+                miss = true;
+            }
 
             float arcx = (float) arcX(t, gravity, drag, v0x);
             float arcy = (float) arcY(t, gravity, drag, v0y);
@@ -71,7 +79,7 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
         // that function has 2 solutions. we need to reduce the angles we search, so we converge on the first one
         // we can do this by using as max pitch the pitch that yields the highest distance (global maxima of the distance function)
         CannonTrajectory solution;
-        if (preferShootingDown && minPitch < peakAngle) {
+        if (mode == ShootingMode.DOWN && minPitch < peakAngle) {
             solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
                     0.001f,
                     tolerance, Math.max(start, minPitch), Math.min(peakAngle, maxPitch));

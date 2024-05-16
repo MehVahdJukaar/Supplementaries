@@ -54,7 +54,8 @@ public class CannonTrajectoryRenderer {
 
             if (debug) renderTargetLine(poseStack, buffer, target);
 
-            boolean hitAir = mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
+            boolean hitAir = shootingMode == ShootingMode.MANUAL ||
+                    mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
 
             renderArrows(poseStack, buffer, partialTicks,
                     trajectory, hitAir, rendersRed);
@@ -64,7 +65,7 @@ public class CannonTrajectoryRenderer {
 
             if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, rendersRed);
 
-            if (debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
+            if (!hitAir && debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
         }
     }
 

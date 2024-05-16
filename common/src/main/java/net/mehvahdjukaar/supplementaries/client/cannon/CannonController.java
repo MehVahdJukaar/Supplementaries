@@ -37,7 +37,7 @@ public class CannonController {
     private static float pitchIncrease;
 
     private static boolean needsToUpdateServer;
-    private static boolean preferShootingDown = true;
+    protected static ShootingMode shootingMode = ShootingMode.DOWN;
 
     @Nullable
     protected static CannonTrajectory trajectory;
@@ -51,7 +51,7 @@ public class CannonController {
     public static void activateCannonCamera(CannonBlockTile tile) {
         cannon = tile;
         firstTick = true;
-        preferShootingDown = true;
+        shootingMode = ShootingMode.DOWN;
         Minecraft mc = Minecraft.getInstance();
         lastCameraType = mc.options.getCameraType();
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -126,7 +126,7 @@ public class CannonController {
 
             var restraints = getPitchAndYawRestrains(cannon.getBlockState());
             trajectory = CannonTrajectory.findBest(target,
-                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), preferShootingDown,
+                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), shootingMode,
                     restraints.minPitch, restraints.maxPitch);
 
             if (trajectory != null) {
@@ -171,7 +171,7 @@ public class CannonController {
             turnOff();
         }
         if (Minecraft.getInstance().options.keyJump.matches(key, action)) {
-            preferShootingDown = !preferShootingDown;
+            shootingMode = shootingMode.cycle();
             needsToUpdateServer = true;
         }
     }

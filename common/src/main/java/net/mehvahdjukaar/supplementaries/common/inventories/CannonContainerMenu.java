@@ -43,7 +43,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         this.inventory.startOpen(playerInventory.player);
 
         this.addSlot(new DelegatingSlot(this.inventory, 0, 38, 35, this));
-        this.addSlot(new DelegatingSlot(this.inventory, 1, 87, 35, this));
+        this.addSlot(new DelegatingSlot(this.inventory, 1, 85, 35, this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
