@@ -110,9 +110,9 @@ public class ClientRegistry {
     public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
     public static final ResourceLocation ALTIMETER_TEMPLATE = Supplementaries.res("item/altimeter_template");
     public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
+    public static final ResourceLocation LUNCH_BOX_ITEM_MODEL = Supplementaries.res("item/lunch_basket_gui");
 
     public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
-    public static final ResourceLocation LUNCH_BOX_ITEM_MODEL = Supplementaries.res("block/lunch_basket_gui");
     public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
     public static final Supplier<Map<WoodType, ResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),

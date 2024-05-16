@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
@@ -110,15 +111,18 @@ public class SuppPlatformStuffImpl {
         return movedState.canStickTo(blockState);
     }
 
-    public static ItemStack getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
+    public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {
                 ItemStack quiver = cap.getStackInSlot(i);
-                if (predicate.test(quiver)) return quiver;
+                if (predicate.test(quiver)) {
+                    int finalI = i;
+                    return () -> cap.getStackInSlot(finalI);
+                }
             }
         }
-        return ItemStack.EMPTY;
+        return SlotReference.EMPTY;
     }
 
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {

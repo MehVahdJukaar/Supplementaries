@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -84,7 +85,7 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static ItemStack getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
+    public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         throw new AssertionError();
     }
 

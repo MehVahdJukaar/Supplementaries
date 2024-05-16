@@ -3,14 +3,17 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +28,14 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     @Override
     public Data getData(ItemStack stack) {
         return getQuiverData(stack);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if(entity instanceof IQuiverEntity qe){
+            qe.supplementaries$setQuiver(stack);
+        }
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     @NotNull
@@ -45,18 +56,21 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @NotNull
-    public static ItemStack getQuiver(LivingEntity entity) {
+    public static SlotReference getQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
             if (!curioQuiver.isEmpty()) return curioQuiver;
-            if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return ItemStack.EMPTY;
+            if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return SlotReference.EMPTY;
         } else if (entity instanceof IQuiverEntity e) {
-            return e.supplementaries$getQuiver();
+            return e::supplementaries$getQuiver;
         }
 
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
+    public static ItemStack getQuiver(LivingEntity entity) {
+        return getQuiverSlot(entity).get();
+    }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
         return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);

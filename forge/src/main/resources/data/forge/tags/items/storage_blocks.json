@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:flax_block",
+    "supplementaries:flint_block",
+    "supplementaries:feather_block",
+    "supplementaries:sugar_cube",
+    "supplementaries:soap_block"
+  ]
+}

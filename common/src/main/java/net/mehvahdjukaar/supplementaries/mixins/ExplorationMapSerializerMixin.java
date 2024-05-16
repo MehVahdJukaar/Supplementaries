@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.mehvahdjukaar.supplementaries.common.misc.IExplorationFunctionExtension;
+import net.mehvahdjukaar.supplementaries.common.utils.IExplorationFunctionExtension;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;

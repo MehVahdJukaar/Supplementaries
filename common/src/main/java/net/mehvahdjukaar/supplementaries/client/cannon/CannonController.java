@@ -26,7 +26,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class CannonController {
 
-    @Nullable
     protected static CannonBlockTile cannon;
 
     private static CameraType lastCameraType;

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket.Slot;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class SelectableContainerItemHud {
     private static final ResourceLocation TEXTURE = Supplementaries.res("textures/gui/quiver_select.png");
@@ -31,7 +33,7 @@ public abstract class SelectableContainerItemHud {
 
     @Nullable
     private static SelectableContainerItem<?> itemUsed;
-    private static ItemStack stackUsed;
+    private static Supplier<ItemStack> stackSlot;
     private static boolean usingKey = false; //false if just using
     private static double lastCumulativeMouseDx = 0;
 
@@ -48,9 +50,9 @@ public abstract class SelectableContainerItemHud {
     }
 
     //todo: test key and use combinaton
-    public static void setUsingItem(ItemStack item) {
-        stackUsed = item;
-        if (item.getItem() instanceof SelectableContainerItem<?> selectable) {
+    public static void setUsingItem(SlotReference slot) {
+        stackSlot = slot;
+        if (slot.getItem() instanceof SelectableContainerItem<?> selectable) {
             itemUsed = selectable;
         } else {
             itemUsed = null;
@@ -58,23 +60,16 @@ public abstract class SelectableContainerItemHud {
     }
 
     public static void setUsingKeybind(ItemStack item) {
-        stackUsed = item;
-        if (item.getItem() instanceof SelectableContainerItem<?> selectable) {
-            itemUsed = selectable;
-            usingKey = true;
-        } else {
-            itemUsed = null;
-            usingKey = false;
-        }
+        usingKey = itemUsed != null;
     }
 
     @EventCalled
     public static boolean onMouseScrolled(double scrollDelta) {
         if (itemUsed != null) {
             Player player = Minecraft.getInstance().player;
-            // Within this scope, the compiler knows that myField is not null
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
-                    scrollDelta > 0 ? -1 : 1, getUseItemSlot(player), itemUsed));
+            int amount = scrollDelta > 0 ? -1 : 1;
+            Slot slot = getUseItemSlot(player);
+            sendCycle(amount, slot);
             return true;
         }
         return false;
@@ -91,11 +86,23 @@ public abstract class SelectableContainerItemHud {
             if (slotsMoved != 0) {
                 Player player = Minecraft.getInstance().player;
                 if (player != null) {
-                    Slot s = getUseItemSlot(player);
-                    ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, s, itemUsed));
+                    Slot slot = getUseItemSlot(player);
+                    sendCycle(slotsMoved, slot);
                 }
             }
         }
+    }
+
+    private static void sendCycle(int slotsMoved, Slot slot) {
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
+        //update client immediately. stacks now may be desynced
+        getItemUsedData().cycle(slotsMoved);
+    }
+
+    private static void sendSetSlot(Slot slot, int number) {
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
+                number, slot, true, itemUsed));
+        getItemUsedData().setSelectedSlot(number);
     }
 
     @EventCalled
@@ -105,23 +112,21 @@ public abstract class SelectableContainerItemHud {
 
         Player player = Minecraft.getInstance().player;
 
+        Slot slot = getUseItemSlot(player);
         switch (key) {
             case GLFW.GLFW_KEY_LEFT -> {
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
-                        -1, getUseItemSlot(player), itemUsed));
+                sendCycle(-1, slot);
                 return true;
             }
             case GLFW.GLFW_KEY_RIGHT -> {
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
-                        1, getUseItemSlot(player), itemUsed));
+                sendCycle(1, slot);
                 return true;
             }
         }
         int number = key - 48;
         if (number >= 1 && number <= 9) {
             if (number <= itemUsed.getMaxSlots()) {
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
-                        number - 1, getUseItemSlot(player), true, itemUsed));
+                sendSetSlot(slot, number - 1);
             }
             //cancels all number keys to prevent switching items
             return true;
@@ -135,12 +140,11 @@ public abstract class SelectableContainerItemHud {
         if (itemUsed == null) return;
 
         if (minecraft.getCameraEntity() instanceof Player) {
-            ItemStack quiver = stackUsed;
             ///gui.setupOverlayRenderState(true, false);
             PoseStack poseStack = graphics.pose();
             poseStack.pushPose();
 
-            var data = itemUsed.getData(quiver);
+            var data = getItemUsedData();
 
             int selected = data.getSelectedSlot();
             List<ItemStack> items = data.getContentView();
@@ -182,13 +186,14 @@ public abstract class SelectableContainerItemHud {
             }
 
             poseStack.popPose();
-
-            //TODO: is this needed?
-            setUsingItem(stackUsed);
             return;
         }
-        setUsingItem(ItemStack.EMPTY);
+        setUsingItem(SlotReference.EMPTY);
 
+    }
+
+    private static SelectableContainerItem.AbstractData getItemUsedData() {
+        return itemUsed.getData(stackSlot.get());
     }
 
     private static void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed, Font font) {
@@ -207,8 +212,7 @@ public abstract class SelectableContainerItemHud {
 
 
     @ExpectPlatform
-    protected static void drawHighlight(Minecraft mc, GuiGraphics graphics, int screenWidth, int py, ItemStack
-            selectedArrow) {
+    protected static void drawHighlight(Minecraft mc, GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         throw new AssertionError();
     }
 

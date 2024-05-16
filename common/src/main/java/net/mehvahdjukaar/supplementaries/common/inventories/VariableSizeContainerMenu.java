@@ -174,10 +174,9 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
             {5, 2},
             {6, 2},
             {7, 2},
+            {5, 3},
             {8, 2},
-            {8, 2},
-            {9, 2},
-            {10, 2},
+            {6, 3},
             {7, 3},
             {8, 3},
             {9, 3}

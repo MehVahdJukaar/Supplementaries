@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class SuppClientPlatformStuffImpl {
+
     public static RenderType staticNoise(ResourceLocation location) {
         return SupplementariesForgeClient.staticNoise(location);
     }

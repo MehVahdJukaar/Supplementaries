@@ -50,7 +50,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.setBlockEntity(be);
 
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
-                .defaultBlockState().setValue(BlockStateProperties.FACING, direction), Block.UPDATE_NONE);
+                .defaultBlockState().setValue(BlockStateProperties.FACING, direction), Block.UPDATE_ALL);
     }
 
 }

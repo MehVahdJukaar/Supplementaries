@@ -39,7 +39,7 @@ public abstract class ProjectileWeaponItemMixin {
                     quiverStack = stack;
                 }else if(shooter instanceof ServerPlayer sp){
                     //server side curio stuff
-                   quiverStack = CompatHandler.getQuiverFromModsSlots(sp);
+                   quiverStack = CompatHandler.getQuiverFromModsSlots(sp).get();
                 }
             }
         }

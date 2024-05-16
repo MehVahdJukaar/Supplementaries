@@ -8,8 +8,10 @@ import org.jetbrains.annotations.NotNull;
 public class LunchBoxItemImpl {
     @NotNull
     public static ItemStack getLunchBox(LivingEntity entity) {
+        return null;
     }
 
     public static LunchBoxItem.Data getLunchBoxData(ItemStack stack) {
+        return null;
     }
 }

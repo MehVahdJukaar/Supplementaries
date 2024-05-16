@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -107,11 +108,11 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
-        ItemStack stack = player.getItemInHand(pUsedHand);
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         D data = this.getData(stack);
 
-        InteractionHand otherHand = pUsedHand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack possibleArrowStack = player.getItemInHand(otherHand);
 
         //try inserting offhand
@@ -132,10 +133,10 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                SelectableContainerItemHud.setUsingItem(stack);
+                SelectableContainerItemHud.setUsingItem(SlotReference.hand(player, hand));
             }
             this.playRemoveOneSound(player);
-            player.startUsingItem(pUsedHand);
+            player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);
         }
     }
@@ -148,7 +149,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            SelectableContainerItemHud.setUsingItem(ItemStack.EMPTY);
+            SelectableContainerItemHud.setUsingItem(SlotReference.EMPTY);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());

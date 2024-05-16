@@ -43,4 +43,7 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
             level.removeBlock(pos, true);
         }
     }
+    //TODO: fix not updating neighboring blocks
+
+
 }

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.minecraft.resources.ResourceLocation;
 

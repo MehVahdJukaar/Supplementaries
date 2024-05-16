@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -14,25 +13,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.api.event.UsageTickerEvent;
 
 import java.util.List;
 import java.util.Optional;
 
 public class LunchBoxItemImpl {
 
-    static{
-        MinecraftForge.EVENT_BUS.addListener(LunchBoxItemImpl::onUsageTicker);
-    }
-
-    public static void onUsageTicker(UsageTickerEvent event){
-    }
 
     public static LunchBoxItem.Data getLunchBoxData(ItemStack stack) {
         return CapabilityHandler.get(stack, CapabilityHandler.LUNCH_BOX_ITEM_HANDLER);
     }
 
-    //mes but will geet rewritte in 1.20.6 anyways
+    //mess but will get rewritten in 1.20.6 anyways
     public static class Cap extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, LunchBoxItem.Data {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);
@@ -82,7 +74,7 @@ public class LunchBoxItemImpl {
 
         @Override
         public boolean canEatFrom() {
-            return true;
+            return isOpen;
         }
 
         @Override
@@ -152,6 +144,11 @@ public class LunchBoxItemImpl {
             if (s.isEmpty()) this.stacks.set(this.selectedSlot, ItemStack.EMPTY);
             this.updateSelectedIfNeeded();
             //not implemented because it isn't needed
+        }
+
+        @Override
+        public void switchMode() {
+            this.isOpen = !this.isOpen;
         }
     }
 }

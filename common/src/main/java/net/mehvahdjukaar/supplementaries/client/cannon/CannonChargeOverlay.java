@@ -39,8 +39,8 @@ public abstract class CannonChargeOverlay extends Gui {
             Player player = Minecraft.getInstance().player;
             int k2;
             k2 = screenHeight - 16 - 3;
-            this.renderSlot(graphics, left + 1 + 50 + 2, k2, player, cannon.getFuel(), 1);
-            this.renderSlot(graphics, left + 1 + 110 + 2, k2, player, cannon.getProjectile(), 1);
+            this.renderSlot(graphics, left + 1 + 47 + 2, k2, player, cannon.getProjectile(), 1);
+            this.renderSlot(graphics, left + 1 + 113 + 2, k2, player, cannon.getFuel(), 1);
 
 
             graphics.pose().pushPose();
@@ -48,8 +48,10 @@ public abstract class CannonChargeOverlay extends Gui {
 
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             int w = 9;
+            int hitType = CannonController.trajectory != null && !CannonController.trajectory.miss() ?
+                    0 : 18;
             graphics.blit(texture, (screenWidth - w) / 2, (screenHeight - w) / 2,
-                    0, 10, w, w);
+                    hitType, 10, w, w);
 
             RenderSystem.defaultBlendFunc();
 
@@ -67,14 +69,14 @@ public abstract class CannonChargeOverlay extends Gui {
             float min = 0.7F;
 
             if (f > 0) {
-                f = 1-f;
+                f = 1 - f;
                 float red = f * 0.4F + min;
 
-                float green =  min -f  *0.4f*min;
+                float green = min - f * 0.4f * min;
                 float blue = min;
 
-                RenderSystem.setShaderColor(red, green, min-f*blue, 1.0F);
-            }else {
+                RenderSystem.setShaderColor(red, green, min - f * blue, 1.0F);
+            } else {
                 RenderSystem.setShaderColor(min, min, min, 1.0F);
             }
 

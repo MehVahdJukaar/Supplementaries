@@ -7,17 +7,20 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> implements ICustomItemRendererProvider {
@@ -27,14 +30,27 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
-        ItemStack stack = player.getItemInHand(pUsedHand);
+    public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        Data data = this.getData(pStack);
+        if (data != null) {
+            boolean open = data.canEatFrom();
+            pTooltipComponents.add(open ?
+                    Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
+                    Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
+        }
+
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         var data = getData(stack);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
             if(food.isEdible()) {
                 if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
-                    player.startUsingItem(pUsedHand);
+                    player.startUsingItem(hand);
                     return InteractionResultHolder.consume(stack);
                 } else {
                     return InteractionResultHolder.fail(stack);
@@ -43,7 +59,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
             return InteractionResultHolder.pass(stack);
         }
-        return super.use(pLevel, player, pUsedHand);
+        return super.use(pLevel, player, hand);
     }
 
     @ForgeOverride
@@ -111,7 +127,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @NotNull
     public static ItemStack getLunchBox(LivingEntity entity) {
-        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
+        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem).get();
     }
 
     private static boolean canAcceptItem(ItemStack toInsert) {
@@ -125,6 +141,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         }
 
         boolean canEatFrom();
+
+        void switchMode();
     }
 
 

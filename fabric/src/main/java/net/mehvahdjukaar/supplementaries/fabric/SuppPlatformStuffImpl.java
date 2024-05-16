@@ -2,12 +2,14 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -76,16 +78,26 @@ public class SuppPlatformStuffImpl {
         return maybeSticky.getBlock() == Blocks.SLIME_BLOCK || maybeSticky.getBlock() == Blocks.HONEY_BLOCK;
     }
 
-    public static ItemStack getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
-        for (var h : entity.getHandSlots()) {
-            if (predicate.test(h)) return h;
+    public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
+        ItemStack mainHand = entity.getMainHandItem();
+        if (predicate.test(mainHand)) {
+            return SlotReference.slot(entity, EquipmentSlot.MAINHAND);
         }
+        ItemStack offHand = entity.getOffhandItem();
+        if (predicate.test(offHand)) {
+            return SlotReference.slot(entity, EquipmentSlot.OFFHAND);
+        }
+
         if (entity instanceof Player player) {
-            for (var s : player.getInventory().items) {
-                if (predicate.test(s)) return s;
+            var inv = player.getInventory();
+            for (int i = 0; i < inv.getContainerSize(); i++) {
+                ItemStack s = inv.getItem(i);
+                if (predicate.test(s)) {
+                    return SlotReference.inv(player, i);
+                }
             }
         }
-        return ItemStack.EMPTY;
+        return SlotReference.EMPTY;
     }
 
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.AdventurerMapsHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.IExplorationFunctionExtension;
+import net.mehvahdjukaar.supplementaries.common.utils.IExplorationFunctionExtension;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;

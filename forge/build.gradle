@@ -148,7 +148,7 @@ dependencies {
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
-    modCompileOnly("curse.maven:curios-309927:4581099")
+    modImplementation("curse.maven:curios-309927:5296876")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     modImplementation("curse.maven:quark-243121:5344451")

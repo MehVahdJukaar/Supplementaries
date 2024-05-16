@@ -3,9 +3,10 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
-public abstract class LocalPlayerMixin extends AbstractClientPlayer implements IQuiverEntity {
+public abstract class LocalPlayerMixin extends AbstractClientPlayer implements IQuiverPlayer {
 
 
     protected LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
@@ -45,7 +46,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         return original;
     }
     @Unique
-    private ItemStack supplementaries$quiver = ItemStack.EMPTY;
+    private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
 
     // this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",
@@ -54,17 +55,22 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER)
     )
     private void checkIfHasQuiver(CallbackInfo ci) {
-        supplementaries$quiver = QuiverItem.getQuiver(this);
+       supplementaries$quiverForRenderer = QuiverItem.getQuiver(this);
     }
 
     @Override
     public ItemStack supplementaries$getQuiver() {
-        return supplementaries$quiver;
+        return supplementaries$quiverForRenderer;
+    }
+
+    @Override
+    public SlotReference supplementaries$getQuiverSlot() {
+        return null;
     }
 
     @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
-        this.supplementaries$quiver = quiver;
+        this.supplementaries$quiverForRenderer = quiver;
     }
 
     @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))

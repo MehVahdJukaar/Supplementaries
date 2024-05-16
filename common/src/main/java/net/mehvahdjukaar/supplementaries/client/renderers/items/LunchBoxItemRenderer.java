@@ -32,7 +32,8 @@ public class LunchBoxItemRenderer extends ItemStackRenderer {
                     mc.level, 0);
         } else {
             BakedModel model = ClientHelper.getModel(mc.getModelManager(), ClientRegistry.LUNCH_BOX_ITEM_MODEL);
-            itemRenderer.render(stack,  transformType, false, pose, buffer, combinedLightIn, combinedOverlayIn, model);
+            itemRenderer.render(stack,  transformType, false, pose, buffer,
+                    combinedLightIn, combinedOverlayIn, model);
         }
         pose.popPose();
     }
