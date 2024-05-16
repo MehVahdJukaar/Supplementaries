@@ -101,6 +101,15 @@ public class LunchBoxItemImpl {
             return originalSlot != selectedSlot;
         }
 
+        @Override
+        public void tryAddingUnchecked(ItemStack result) {
+            //TODO: prioritize only on existing
+          //  if(tryAdding(result, true)) {
+            //    ItemHandlerHelper.giveItemToPlayer(null, result, null);
+            //}
+            ItemHandlerHelper.insertItem(this, result, false);
+        }
+
         public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
                 if (onlyOnExisting) {

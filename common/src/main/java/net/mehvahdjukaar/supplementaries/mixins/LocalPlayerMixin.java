@@ -30,7 +30,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
     @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)
-    private void hasEnoughImpulseToStartSprinting(CallbackInfoReturnable<Boolean> cir) {
+    private void suppl$PreventSprintingWithOverencumbered(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && this.hasEffect(ModRegistry.OVERENCUMBERED.get())) {
             cir.setReturnValue(false);
         }
@@ -39,14 +39,18 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     // prevents quiver slow
     @ModifyExpressionValue(method = "aiStep",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isUsingItem()Z"))
-    private boolean supplementaries$preventQuiverSlow(boolean original) {
+    private boolean suppl$preventQuiverSlow(boolean original) {
         if (this.getUseItem().getItem() == ModRegistry.QUIVER_ITEM.get() && CommonConfigs.Tools.QUIVER_PREVENTS_SLOWS.get()) {
             return false;
         }
         return original;
     }
+
+    // cached quiver
     @Unique
     private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
+    @Unique
+    private SlotReference supplementaries$quiverSlotForHUD = SlotReference.EMPTY;
 
     // this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",
@@ -54,8 +58,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
                     shift = At.Shift.AFTER)
     )
-    private void checkIfHasQuiver(CallbackInfo ci) {
-       supplementaries$quiverForRenderer = QuiverItem.getQuiver(this);
+    private void suppl$checkIfHasQuiver(CallbackInfo ci) {
+       supplementaries$quiverSlotForHUD = QuiverItem.getQuiverSlot(this);
+       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get();
     }
 
     @Override
@@ -64,9 +69,10 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
     @Override
-    public SlotReference supplementaries$getQuiverSlot() {
-        return null;
-    }
+    public SlotReference supplementaries$getQuiverSlot(){
+        return supplementaries$quiverSlotForHUD;
+    };
+
 
     @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
@@ -74,7 +80,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
     @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
-    public boolean supplementaries$preventMovementWhileOperatingCannon(Input instance, boolean bl, float f) {
+    public boolean suppl$preventMovementWhileOperatingCannon(Input instance, boolean bl, float f) {
         if (CannonController.isActive()) {
             CannonController.onInputUpdate(instance);
             return false;

@@ -8,12 +8,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -63,13 +62,14 @@ public class ClientEventsFabric {
 
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
-        //also using to check keybind
+        //equivalent of forge event to check beybind. more efficent like this on forge
 
-        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverEntity qe){
-            SelectableContainerItemHud.setUsingKeybind(InputConstants.isKeyDown(
+        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
+            boolean keyDown = InputConstants.isKeyDown(
                     Minecraft.getInstance().getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
-            ) ? qe.supplementaries$getQuiver() : ItemStack.EMPTY);
+            );
+            if (keyDown) SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiverSlot());
         }
     }
 }

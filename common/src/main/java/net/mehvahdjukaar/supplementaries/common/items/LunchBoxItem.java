@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -93,7 +94,18 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = getData(stack);
         if (data.canEatFrom()) {
-            ItemStack eaten = data.getSelected().finishUsingItem(level, livingEntity);
+            ItemStack selected = data.getSelected();
+            //assume it will be decremented by at most 1
+            //hacks
+            ItemStack copy = selected.copyWithCount(1);
+            ItemStack result = copy.finishUsingItem(level, livingEntity);
+            if(result.isEmpty()) {
+                data.consumeSelected();
+            }
+            else if(result != copy){
+                data.consumeSelected();
+                data.tryAddingUnchecked(result);
+            }
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
@@ -114,7 +126,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return getLunchBoxData(stack);
     }
 
-
     @Override
     public @NotNull ItemStack getFirstInInventory(Player player) {
         return getLunchBox(player);
@@ -127,7 +138,11 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @NotNull
     public static ItemStack getLunchBox(LivingEntity entity) {
-        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem).get();
+        return getLunchBoxSlot(entity).get();
+    }
+    @NotNull
+    public static SlotReference getLunchBoxSlot(LivingEntity entity) {
+        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
     }
 
     private static boolean canAcceptItem(ItemStack toInsert) {
@@ -136,6 +151,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     public interface Data extends AbstractData {
+
         default boolean canAcceptItem(ItemStack toInsert) {
             return LunchBoxItem.canAcceptItem(toInsert);
         }
@@ -143,6 +159,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         boolean canEatFrom();
 
         void switchMode();
+
+        void tryAddingUnchecked(ItemStack result);
     }
 
 

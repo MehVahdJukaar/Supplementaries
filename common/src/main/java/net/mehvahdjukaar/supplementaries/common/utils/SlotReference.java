@@ -12,9 +12,6 @@ import java.util.function.Supplier;
 
 public interface SlotReference extends Supplier<ItemStack> {
 
-
-
-
     default Item getItem() {
         return this.get().getItem();
     }
@@ -42,7 +39,7 @@ public interface SlotReference extends Supplier<ItemStack> {
     }
 
    default boolean isEmpty(){
-        return this != EMPTY;
+        return this == EMPTY;
    };
 
     ;

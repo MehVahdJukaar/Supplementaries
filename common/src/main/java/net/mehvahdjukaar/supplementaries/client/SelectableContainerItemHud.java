@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -9,8 +10,10 @@ import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket.Slot;
+import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -59,8 +62,15 @@ public abstract class SelectableContainerItemHud {
         }
     }
 
-    public static void setUsingKeybind(ItemStack item) {
+    public static void setUsingKeybind(SlotReference slot) {
+        setUsingItem(slot);
         usingKey = itemUsed != null;
+    }
+
+    private static void closeHud() {
+        itemUsed = null;
+        usingKey = false;
+        stackSlot = SlotReference.EMPTY;
     }
 
     @EventCalled
@@ -94,15 +104,21 @@ public abstract class SelectableContainerItemHud {
     }
 
     private static void sendCycle(int slotsMoved, Slot slot) {
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
-        //update client immediately. stacks now may be desynced
-        getItemUsedData().cycle(slotsMoved);
+        var data = getItemUsedData();
+        if (data != null) {
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
+            //update client immediately. stacks now may be desynced
+            data.cycle(slotsMoved);
+        }
     }
 
     private static void sendSetSlot(Slot slot, int number) {
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
-                number, slot, true, itemUsed));
-        getItemUsedData().setSelectedSlot(number);
+        var data = getItemUsedData();
+        if (data != null) {
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
+                    number, slot, true, itemUsed));
+            getItemUsedData().setSelectedSlot(number);
+        }
     }
 
     @EventCalled
@@ -135,66 +151,86 @@ public abstract class SelectableContainerItemHud {
     }
 
 
-    public static void render(Minecraft minecraft, GuiGraphics graphics, float partialTicks,
-                              int screenWidth, int screenHeight) {
+    public static void render(Minecraft minecraft, GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
         if (itemUsed == null) return;
-
-        if (minecraft.getCameraEntity() instanceof Player) {
-            ///gui.setupOverlayRenderState(true, false);
-            PoseStack poseStack = graphics.pose();
-            poseStack.pushPose();
-
-            var data = getItemUsedData();
-
-            int selected = data.getSelectedSlot();
-            List<ItemStack> items = data.getContentView();
-            int slots = items.size();
-
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-
-            int centerX = screenWidth / 2;
-
-            poseStack.pushPose();
-            poseStack.translate(0, 0, -90);
-
-            int uWidth = slots * 20 + 2;
-            int px = uWidth / 2;
-            int py = screenHeight / 2 - 40;
-
-            px += ClientConfigs.Items.QUIVER_GUI_X.get();
-            py += ClientConfigs.Items.QUIVER_GUI_Y.get();
-
-            graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 22);
-            graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 22);
-            graphics.blit(TEXTURE, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
-
-            poseStack.popPose();
-
-            int i1 = 1;
-
-            for (int i = 0; i < slots; ++i) {
-                int kx = centerX - px + 3 + i * 20;
-                renderSlot(graphics, kx, py + 3, items.get(i), i1++, minecraft.font);
-            }
-            RenderSystem.disableBlend();
-
-
-            ItemStack selectedArrow = items.get(selected);
-            if (!selectedArrow.isEmpty()) {
-                drawHighlight(minecraft, graphics, screenWidth, py, selectedArrow);
-            }
-
-            poseStack.popPose();
+        if (!(minecraft.getCameraEntity() instanceof IQuiverPlayer)) {
+            closeHud();
             return;
         }
-        setUsingItem(SlotReference.EMPTY);
+        //checks for keypress here to handle all possible cases
+        if (isUsingKey()) {
+            if (!ClientRegistry.QUIVER_KEYBIND.isUnbound()) {
+                boolean keyDown = InputConstants.isKeyDown(
+                        Minecraft.getInstance().getWindow().getWindow(),
+                        ClientRegistry.QUIVER_KEYBIND.key.getValue()
+                );
+                if (!keyDown) {
+                    closeHud();
+                    return;
+                }
+            }
+        }
 
+        var data = getItemUsedData();
+        if (data == null) {
+            closeHud();
+            return;
+        }
+        ///gui.setupOverlayRenderState(true, false);
+        PoseStack poseStack = graphics.pose();
+        poseStack.pushPose();
+
+        int selected = data.getSelectedSlot();
+        List<ItemStack> items = data.getContentView();
+        int slots = items.size();
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        int centerX = screenWidth / 2;
+
+        poseStack.pushPose();
+        poseStack.translate(0, 0, -90);
+
+        int uWidth = slots * 20 + 2;
+        int px = uWidth / 2;
+        int py = screenHeight / 2 - 40;
+
+        px += ClientConfigs.Items.QUIVER_GUI_X.get();
+        py += ClientConfigs.Items.QUIVER_GUI_Y.get();
+
+        graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 22);
+        graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 22);
+        graphics.blit(TEXTURE, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
+
+        poseStack.popPose();
+
+        int i1 = 1;
+
+        for (int i = 0; i < slots; ++i) {
+            int kx = centerX - px + 3 + i * 20;
+            renderSlot(graphics, kx, py + 3, items.get(i), i1++, minecraft.font);
+        }
+        RenderSystem.disableBlend();
+
+
+        ItemStack selectedArrow = items.get(selected);
+        if (!selectedArrow.isEmpty()) {
+            drawHighlight(minecraft, graphics, screenWidth, py, selectedArrow);
+        }
+        poseStack.popPose();
     }
 
+    @Nullable
     private static SelectableContainerItem.AbstractData getItemUsedData() {
-        return itemUsed.getData(stackSlot.get());
+        if (itemUsed == null) return null;
+        ItemStack stack = stackSlot.get();
+        lastStack = stack;
+        if (!stack.is(itemUsed)) return null;
+        return itemUsed.getData(stack);
     }
+
+    static ItemStack lastStack = ItemStack.EMPTY;
 
     private static void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed, Font font) {
         if (!pStack.isEmpty()) {

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.forge.SelectableContainerItemHudImpl;
@@ -15,6 +14,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -115,13 +116,14 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (Minecraft.getInstance().screen == null && !ClientRegistry.QUIVER_KEYBIND.isUnbound() &&
-                event.getKey() == ClientRegistry.QUIVER_KEYBIND.getKey().getValue() && Minecraft.getInstance().player instanceof IQuiverEntity qe) {
+        if (Minecraft.getInstance().screen == null &&
+                ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
+                && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
             int a = event.getAction();
             if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
-                SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiver());
+                SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiverSlot());
             } else if (a == InputConstants.RELEASE) {
-                SelectableContainerItemHud.setUsingKeybind(ItemStack.EMPTY);
+                SelectableContainerItemHud.setUsingKeybind(SlotReference.EMPTY);
             }
         }
 

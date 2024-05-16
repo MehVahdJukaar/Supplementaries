@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
@@ -120,18 +118,6 @@ public class ClientEvents {
                     (CompatHandler.GOATED && current.equals(ClientRegistry.BARBARIC_RAGE_SHADER)))) {
                 renderer.shutdownEffect();
             }
-        }
-
-        //forge handles key up with event
-        if (SelectableContainerItemHud.isUsingKey() && !ClientRegistry.QUIVER_KEYBIND.isUnbound()) {
-            //handles release edge cases
-
-            boolean down = InputConstants.isKeyDown(
-                    Minecraft.getInstance().getWindow().getWindow(),
-                    ClientRegistry.QUIVER_KEYBIND.key.getValue()
-            );
-            var quiver = ((IQuiverEntity) p).supplementaries$getQuiver();
-            SelectableContainerItemHud.setUsingKeybind(down ? quiver : ItemStack.EMPTY);
         }
 
         CannonController.onClientTick(minecraft);
