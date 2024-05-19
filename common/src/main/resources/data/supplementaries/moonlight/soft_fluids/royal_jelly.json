@@ -15,7 +15,7 @@
       "filled": [
         "the_bumblezone:royal_jelly_bottle"
       ],
-      "empty": "minecraft:bottle",
+      "empty": "minecraft:glass_bottle",
       "capacity": 1
     }
   ],

@@ -156,7 +156,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public float getPitch(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevPitch, this.pitch);
+        return Mth.rotLerp(partialTicks, this.prevPitch, this.pitch);
     }
 
     public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire, Player controllingPlayer) {

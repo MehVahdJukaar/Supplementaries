@@ -76,7 +76,6 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 float angle3 = (time % (360 * 350)) / 350f;
                 float wo = 0.015f * Mth.sin((float) (2 * Math.PI * angle2 / 360));
                 float ho = 0.1f * Mth.sin((float) (2 * Math.PI * angle3 / 360));
-                VertexConsumer builder = bufferIn.getBuffer(RenderType.cutout());
                 poseStack.translate(0.5, 0.5, 0.5);
                 Quaternionf rotation = Axis.YP.rotationDegrees(-angle);
                 poseStack.mulPose(rotation);
@@ -87,7 +86,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 int fishType = data.getFishTexture();
 
                 //overlay
-                VertexUtils.renderFish(builder, poseStack, wo, ho, fishType, combinedLightIn);
+                VertexUtils.renderFish(bufferIn, poseStack, wo, ho, fishType, combinedLightIn);
                 poseStack.popPose();
 
             } else {

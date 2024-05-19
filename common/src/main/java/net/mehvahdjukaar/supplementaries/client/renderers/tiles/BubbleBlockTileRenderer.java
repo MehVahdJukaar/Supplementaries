@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.minecraft.client.Minecraft;
@@ -9,7 +8,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockTile> {
 
@@ -25,10 +23,8 @@ public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockT
         float scale = tile.getScale(partialTicks);
         poseStack.scale(scale, scale, scale);
 
-        TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
         var cons = buffer.getBuffer(Minecraft.useShaderTransparency() ? Sheets.translucentItemSheet() : Sheets.translucentCullBlockSheet());
-        VertexUtils.renderBubble(cons, poseStack, 1, sprite, light,
-                tile.getBlockPos(), tile.getLevel(), partialTicks);
+        VertexUtils.renderBubble(cons, poseStack, light, tile.getBlockPos(), tile.getLevel(), partialTicks);
 
         poseStack.popPose();
     }

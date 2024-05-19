@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import com.mojang.blaze3d.platform.Lighting;
-import net.mehvahdjukaar.supplementaries.client.screens.widgets.BlackBoardButton;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.DrawableBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
@@ -29,11 +29,13 @@ public class BlackBoardScreen extends Screen {
 
     private final BlackboardBlockTile tile;
 
-    private final BlackBoardButton[][] buttons = new BlackBoardButton[16][16];
+    private final DrawableBlackBoardButton[][] buttons = new DrawableBlackBoardButton[16][16];
 
     private final Deque<List<Entry>> history = new CircularList<>(20);
     private List<Entry> currentHistoryStep = new ArrayList<>();
     private Button historyButton;
+    private byte selectedColor = 1;
+
 
     private record Entry(int x, int y, byte color) {
     }
@@ -52,7 +54,7 @@ public class BlackBoardScreen extends Screen {
         if (!isValid()) {
             this.onClose();
         }else{
-            if(!(this.getFocused() instanceof BlackBoardButton)){
+            if(!(this.getFocused() instanceof DrawableBlackBoardButton)){
                 setFocused(null); //dont focus clear buttons
             }
         }
@@ -62,6 +64,15 @@ public class BlackBoardScreen extends Screen {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
                 !this.tile.playerIsTooFarAwayToEdit(tile.getLevel(), tile.getBlockPos(), this.minecraft.player.getUUID());
     }
+
+    public byte getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void setSelectedColor(byte color) {
+        this.selectedColor = color;
+    }
+
 
     @Override
     public void onClose() {
@@ -102,7 +113,7 @@ public class BlackBoardScreen extends Screen {
     public void onButtonDragged(double mx, double my, byte buttonValue) {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                BlackBoardButton b = this.buttons[xx][yy];
+                DrawableBlackBoardButton b = this.buttons[xx][yy];
                 if (b.isMouseOver(mx, my) && b.getColor() != buttonValue)
                     b.setColor(buttonValue);
             }
@@ -138,7 +149,7 @@ public class BlackBoardScreen extends Screen {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 byte pixel = this.tile.getPixel(xx, yy);
-                BlackBoardButton widget = new BlackBoardButton((this.width / 2), 40 + 25, xx, yy, this, pixel);
+                DrawableBlackBoardButton widget = new DrawableBlackBoardButton(this,(this.width / 2), 40 + 25, xx, yy,  pixel);
                 this.buttons[xx][yy] = this.addRenderableWidget(widget);
             }
         }
@@ -172,6 +183,7 @@ public class BlackBoardScreen extends Screen {
                     ut = xx;
                     vt = yy;
                 }
+                //TODO: ehm shouldnt these have their render automatically called?
                 this.buttons[xx][yy].render(graphics, mouseX, mouseY, partialTicks);
             }
         }

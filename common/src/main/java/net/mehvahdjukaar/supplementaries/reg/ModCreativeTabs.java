@@ -550,7 +550,7 @@ public class ModCreativeTabs {
 
         afterML(e, "quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.IRON_GATE_NAME,
-                ModRegistry.IRON_GATE);
+                ModRegistry.GOLD_GATE);
 
         before(e, Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.SOAP_NAME,

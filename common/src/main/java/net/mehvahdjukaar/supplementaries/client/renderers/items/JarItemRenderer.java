@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
@@ -11,7 +10,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRend
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -41,11 +39,10 @@ public class JarItemRenderer extends CageItemRenderer {
                 int fishTexture = com.getInt("FishTexture");
                 if (fishTexture >= 0) {
                     poseStack.pushPose();
-                    VertexConsumer builder1 = buffer.getBuffer(RenderType.cutout());
                     poseStack.translate(0.5, 0.3125, 0.5);
                     poseStack.mulPose(RotHlpr.YN45);
                     poseStack.scale(1.5f, 1.5f, 1.5f);
-                    VertexUtils.renderFish(builder1, poseStack, 0, 0, fishTexture, light);
+                    VertexUtils.renderFish(buffer, poseStack, 0, 0, fishTexture, light);
                     poseStack.popPose();
                 }
                 if (com.contains("Fluid")) {

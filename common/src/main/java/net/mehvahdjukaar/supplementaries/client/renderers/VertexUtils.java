@@ -4,11 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
@@ -25,18 +25,19 @@ public class VertexUtils {
         return FastColor.ARGB32.color(255, (int) (col[0] * 255), (int) (col[1] * 255), (int) (col[2] * 255));
     }
 
-    public static void renderBubble(VertexConsumer builder, PoseStack poseStack, float w,
-                                    TextureAtlasSprite sprite, int combinedLightIn,
-                                    BlockPos pos, Level level, float partialTicks) {
+    public static void renderBubble(VertexConsumer builder, PoseStack poseStack,
+                                    int combinedLightIn, BlockPos pos, Level level, float partialTicks) {
+        TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
+        builder = sprite.wrap(builder);
+
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        float atlasScaleU = sprite.getU1() - sprite.getU0();
-        float atlasScaleV = sprite.getV1() - sprite.getV0();
-        float minU = sprite.getU0();
-        float minV = sprite.getV0();
-        float maxU = minU + atlasScaleU * w;
-        float maxV = minV + atlasScaleV * w;
-        float maxV2 = minV + atlasScaleV * w;
+        float minU = 0;
+        float minV = 0;
+        float maxU = 1;
+        float maxV = 1;
+
+        float w = 1;
 
         long t = level == null ? System.currentTimeMillis() / 50 : level.getGameTime();
         float time = (Math.floorMod((pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L) + t, 100L) + partialTicks) / 100.0F;
@@ -72,26 +73,26 @@ public class VertexUtils {
 
         //addQuadTop(builder, poseStack, -l+dx1, w, l, l, w, -l, minU, minV, maxU, maxV2, r, g, b, a, lu, lv, 0, 1, 0);
         //top
-        vert(builder, poseStack, -l - usw, l + usw, l + usw, minU, maxV2, cUsw, lu, lv, 0, 1, 0);
-        vert(builder, poseStack, l + use, l + use, l + use, maxU, maxV2, cUse, lu, lv, 0, 1, 0);
+        vert(builder, poseStack, -l - usw, l + usw, l + usw, minU, maxV, cUsw, lu, lv, 0, 1, 0);
+        vert(builder, poseStack, l + use, l + use, l + use, maxU, maxV, cUse, lu, lv, 0, 1, 0);
         vert(builder, poseStack, l + une, l + une, -l - une, maxU, minV, cUne, lu, lv, 0, 1, 0);
         vert(builder, poseStack, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, 0, 1, 0);
 
 
         //addQuadTop(builder, poseStack, -l, 0, -l, l, 0, l, minU, minV, maxU, maxV2, r5, g5, b5, a, lu, lv, 0, -1, 0);
-
-        vert(builder, poseStack, -l - dnw, -l - dnw, -l - dnw, minU, maxV2, cDnw, lu, lv, 0, -1, 0);
-        vert(builder, poseStack, l + dne, -l - dne, -l - dne, maxU, maxV2, cDne, lu, lv, 0, -1, 0);
+        //bottom
+        vert(builder, poseStack, -l - dnw, -l - dnw, -l - dnw, minU, maxV, cDnw, lu, lv, 0, -1, 0);
+        vert(builder, poseStack, l + dne, -l - dne, -l - dne, maxU, maxV, cDne, lu, lv, 0, -1, 0);
         vert(builder, poseStack, l + dse, -l - dse, l + dse, maxU, minV, cDse, lu, lv, 0, -1, 0);
         vert(builder, poseStack, -l - dsw, -l - dsw, l + dsw, minU, minV, cDsw, lu, lv, 0, -1, 0);
 
         // north z-
         // x y z u v r g b a lu lv
         //addQuadSide(builder, poseStack, l, 0, -l, -l, w, -l, minU, minV, maxU, maxV, r8, g8, b8, a, lu, lv, 0, 0, 1);
-        vert(builder, poseStack, l + dne, -l - dne, -l - dne, minU, maxV, cDne, lu, lv, 0, 0, 1);
-        vert(builder, poseStack, -l - dnw, -l - dnw, -l - dnw, maxU, maxV, cDnw, lu, lv, 0, 0, 1);
-        vert(builder, poseStack, -l - unw, l + unw, -l - unw, maxU, minV, cUnw, lu, lv, 0, 0, 1);
-        vert(builder, poseStack, l + une, l + une, -l - une, minU, minV, cUne, lu, lv, 0, 0, 1);
+        vert(builder, poseStack, l + dne, -l - dne, -l - dne, minU, maxV, cDne, lu, lv, 0, 0, -1);
+        vert(builder, poseStack, -l - dnw, -l - dnw, -l - dnw, maxU, maxV, cDnw, lu, lv, 0, 0, -1);
+        vert(builder, poseStack, -l - unw, l + unw, -l - unw, maxU, minV, cUnw, lu, lv, 0, 0, -1);
+        vert(builder, poseStack, l + une, l + une, -l - une, minU, minV, cUne, lu, lv, 0, 0, -1);
         // west
         //addQuadSide(builder, poseStack, -l, 0, -l, -l, w, l, minU, minV, maxU, maxV, r6, g6, b6, a, lu, lv, -1, 0, 0);
         vert(builder, poseStack, -l - dnw, -l - dnw, -l - dnw, minU, maxV, cDnw, lu, lv, -1, 0, 0);
@@ -100,10 +101,10 @@ public class VertexUtils {
         vert(builder, poseStack, -l - unw, l + unw, -l - unw, minU, minV, cUnw, lu, lv, -1, 0, 0);
         // south
         //addQuadSide(builder, poseStack, -l, 0, l, l, w, l, minU, minV, maxU, maxV, r8, g8, b8, a, lu, lv, 0, 0, -1);
-        vert(builder, poseStack, -l - dsw, -l - dsw, l + dsw, minU, maxV, cDsw, lu, lv, 0, 0, -1);
-        vert(builder, poseStack, l + dse, -l - dse, l + dse, maxU, maxV, cDse, lu, lv, 0, 0, -1);
-        vert(builder, poseStack, l + use, l + use, l + use, maxU, minV, cUse, lu, lv, 0, 0, -1);
-        vert(builder, poseStack, -l - usw, l + usw, l + usw, minU, minV, cUsw, lu, lv, 0, 0, -1);
+        vert(builder, poseStack, -l - dsw, -l - dsw, l + dsw, minU, maxV, cDsw, lu, lv, 0, 0, 1);
+        vert(builder, poseStack, l + dse, -l - dse, l + dse, maxU, maxV, cDse, lu, lv, 0, 0, 1);
+        vert(builder, poseStack, l + use, l + use, l + use, maxU, minV, cUse, lu, lv, 0, 0, 1);
+        vert(builder, poseStack, -l - usw, l + usw, l + usw, minU, minV, cUsw, lu, lv, 0, 0, 1);
         // east
         //addQuadSide(builder, poseStack, l, 0, l, l, w, -l, minU, minV, maxU, maxV, r6, g6, b6, a, lu, lv, 1, 0, 0);
         vert(builder, poseStack, l + dse, -l - dse, l + dse, minU, maxV, cDse, lu, lv, 1, 0, 0);
@@ -123,14 +124,14 @@ public class VertexUtils {
         builder.uv(u, v);
         builder.overlayCoords(0, 10);
         builder.uv2(lu, lv);
-        builder.normal(nx, ny, nz);
+        builder.normal(poseStack.last().normal(), nx, ny, nz);
         builder.endVertex();
     }
 
 
     //RendererUtil.renderFish(builder, matrixStackIn, wo, ho, fishType,240 , combinedOverlayIn);
 
-    public static void renderFish(VertexConsumer builder, PoseStack poseStack, float wo, float ho, int fishType, int combinedLightIn) {
+    public static void renderFish(MultiBufferSource buffers, PoseStack poseStack, float wo, float ho, int fishType, int combinedLightIn) {
         int textW = 64;
         int textH = 32;
         int fishW = 5;
@@ -139,19 +140,18 @@ public class VertexUtils {
         int fishv = fishType % (textH / fishH);
         int fishu = fishType / (textH / fishH);
 
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ModTextures.FISHIES_TEXTURE);
+        VertexConsumer builder = ModMaterials.FISHIES.buffer(buffers, RenderType::entityCutout);
+
         float w = fishW / (float) textW;
         float h = fishH / (float) textH;
         float hw = 4 * w / 2f;
         float hh = 2 * h / 2f;
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        float atlasscaleU = sprite.getU1() - sprite.getU0();
-        float atlasscaleV = sprite.getV1() - sprite.getV0();
-        float minu = sprite.getU0() + atlasscaleU * fishu * w;
-        float minv = sprite.getV0() + atlasscaleV * fishv * h;
-        float maxu = atlasscaleU * w + minu;
-        float maxv = atlasscaleV * h + minv;
+        float minu = 0 * fishu * w;
+        float minv = 0 * fishv * h;
+        float maxu = 1 * w + minu;
+        float maxv = 1 * h + minv;
 
 
         for (int k = 0; k < 2; k++) {
@@ -166,8 +166,8 @@ public class VertexUtils {
                 maxu = temp;
             }
             lu = 240;
-            minu += (atlasscaleU / 2);
-            maxu += (atlasscaleU / 2);
+            minu += (1 / 2);
+            maxu += (1 / 2);
 
         }
     }

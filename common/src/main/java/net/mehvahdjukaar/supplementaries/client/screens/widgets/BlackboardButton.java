@@ -17,31 +17,26 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FastColor;
 
 
-public class BlackBoardButton implements GuiEventListener, Renderable, NarratableEntry {
-
-    private final BlackBoardScreen parent;
+public abstract class  BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
+public static final int SIZE = 6;
+    protected final BlackBoardScreen parent;
+    public final int size;
     public final int u;
     public final int v;
     public final int x;
     public final int y;
-    public static final int SIZE = 6;
     protected boolean isHovered;
-    protected byte color = 0;
+    protected byte color;
     protected boolean focused;
 
-    public BlackBoardButton(int centerX, int centerY, int u, int v, BlackBoardScreen screen, byte color) {
-        this.x = centerX - ((8 - u) * SIZE);
-        this.y = centerY - ((-v) * SIZE);
+    public BlackboardButton(BlackBoardScreen screen, int x, int y, int u, int v,  byte color, int size) {
+        this.x = x;
+        this.y = y;
         this.u = u;
         this.v = v;
         this.parent = screen;
         this.color = color;
-    }
-
-    public void setColor(byte color) {
-        this.parent.addHistory(this.u, this.v, this.color);
-        this.color = color;
-        this.parent.updateBlackboard(this.u, this.v, color);
+        this.size = size;
     }
 
     public byte getColor() {
@@ -87,35 +82,17 @@ public class BlackBoardButton implements GuiEventListener, Renderable, Narratabl
             boolean flag = this.isMouseOver(mouseX, mouseY);
             if (flag) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
-                this.setColor((byte) (this.color == 0 ? 1 : 0));
+                this.onClick();
                 return true;
             }
         }
         return false;
     }
 
+    protected abstract void onClick();
+
     protected boolean isValidClickButton(int button) {
         return button == 0;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (this.isValidClickButton(button)) {
-            this.parent.onButtonDragged(mouseX, mouseY, this.color);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (this.isValidClickButton(button)) {
-            this.parent.saveHistoryStep();
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public boolean isHovered() {

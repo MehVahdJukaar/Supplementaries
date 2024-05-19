@@ -122,7 +122,7 @@ public class CannonController {
             target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
 
             // calculate the yaw of target. no clue why its like this
-            float wantedCannonYaw = (Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z));
+            float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
             var restraints = getPitchAndYawRestrains(cannon.getBlockState());
             trajectory = CannonTrajectory.findBest(target,
@@ -130,10 +130,15 @@ public class CannonController {
                     restraints.minPitch, restraints.maxPitch);
 
             if (trajectory != null) {
-                float followSpeed = 0.4f;
+                float followSpeed = 0.25f;
                 //TODO: improve
-                cannon.setPitch(Mth.rotLerp(followSpeed, cannon.getPitch(1), trajectory.pitch() * Mth.RAD_TO_DEG));
-                float yaw = Mth.rotLerp(followSpeed, cannon.getYaw(1), wantedCannonYaw * Mth.RAD_TO_DEG);
+                cannon.setPitch(Mth.rotLerp(1, cannon.getPitch(1), trajectory.pitch() * Mth.RAD_TO_DEG));
+
+                float yaw = wantedCannonYaw * Mth.RAD_TO_DEG;//  Mth.rotLerp(1, cannon.getYaw(1), wantedCannonYaw * Mth.RAD_TO_DEG);
+                float prevYaw = cannon.getYaw(0);
+                //overshoots since we are setting this every render tick. Calculates the next tick yaw
+                float deltaYaw = Mth.wrapDegrees(yaw - prevYaw);
+                yaw = prevYaw + deltaYaw / partialTick;
                 cannon.setYaw(Mth.clamp(yaw, restraints.minYaw, restraints.maxYaw));
             }
 
@@ -176,7 +181,7 @@ public class CannonController {
         }
     }
 
-    public static void onMouseScrolled(double scrollDelta){
+    public static void onMouseScrolled(double scrollDelta) {
         if (scrollDelta != 0) {
             cannon.changeFirePower((int) scrollDelta);
             needsToUpdateServer = true;

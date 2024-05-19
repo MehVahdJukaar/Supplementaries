@@ -1,0 +1,22 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "the_bumblezone:sugar_water_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": 1
+    }
+  ],
+  "food": {
+    "divider": 1,
+    "item": "the_bumblezone:sugar_water_bottle"
+  },
+  "tint_method": "no_tint",
+  "equivalent_fluids": [
+    "the_bumblezone:sugar_water"
+  ],
+  "use_texture_from": "the_bumblezone:sugar_water",
+  "still_texture": "the_bumblezone:block/sugar_water_still",
+  "flowing_texture": "the_bumblezone:block/sugar_water_flowing"
+}

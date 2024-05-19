@@ -26,8 +26,8 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     private final CannonBlockTile tile;
 
     private Button manouverButton;
-    private EditBox pitchSelector;
-    private EditBox yawSelector;
+    private NumberEditBox pitchSelector;
+    private NumberEditBox yawSelector;
     private PowerSelectorWidget powerSelector;
 
     public CannonScreen(CannonContainerMenu menu, Inventory inventory, Component text) {
@@ -48,7 +48,9 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
+        this.yawSelector.setValue(tile.getYaw(1));
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
+        this.pitchSelector.setValue(tile.getPitch(1));
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
         this.menu.addSlotListener(this);
@@ -168,7 +170,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
         private boolean isValidAngle(String str) {
             try {
-                if (str.isEmpty()) return true;
+                if (str.isEmpty() || str.equals("+") || str.equals("-")) return true;
                 double d = Double.parseDouble(str);
                 // chck if it contains characters
                 if (str.contains("[a-zA-Z]+")) return false;
@@ -176,6 +178,10 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             } catch (NumberFormatException e) {
                 return false;
             }
+        }
+
+        public void setValue(float value) {
+            this.setValue(String.valueOf((int) value));
         }
     }
 
