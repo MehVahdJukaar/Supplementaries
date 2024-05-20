@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import com.mojang.blaze3d.platform.Lighting;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.DrawableBlackBoardButton;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.DyeBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
@@ -53,8 +53,8 @@ public class BlackBoardScreen extends Screen {
     public void tick() {
         if (!isValid()) {
             this.onClose();
-        }else{
-            if(!(this.getFocused() instanceof DrawableBlackBoardButton)){
+        } else {
+            if (!(this.getFocused() instanceof DrawableBlackBoardButton)) {
                 setFocused(null); //dont focus clear buttons
             }
         }
@@ -101,8 +101,8 @@ public class BlackBoardScreen extends Screen {
         this.currentHistoryStep.add(new Entry(x, y, oldColor));
     }
 
-    public void saveHistoryStep(){
-        if(!currentHistoryStep.isEmpty()) {
+    public void saveHistoryStep() {
+        if (!currentHistoryStep.isEmpty()) {
             this.history.add(currentHistoryStep);
             this.currentHistoryStep = new ArrayList<>();
             this.historyButton.active = true;
@@ -132,9 +132,10 @@ public class BlackBoardScreen extends Screen {
 
     private void undoPressed(Button button) {
         if (!this.history.isEmpty()) {
-            for(var v : this.history.pollLast()){
+            for (var v : this.history.pollLast()) {
                 this.buttons[v.x()][v.y()].setColor(v.color());
-            };
+            }
+            ;
             //clear history step from this undo we just added
             this.currentHistoryStep.clear();
         }
@@ -149,7 +150,7 @@ public class BlackBoardScreen extends Screen {
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 byte pixel = this.tile.getPixel(xx, yy);
-                DrawableBlackBoardButton widget = new DrawableBlackBoardButton(this,(this.width / 2), 40 + 25, xx, yy,  pixel);
+                DrawableBlackBoardButton widget = new DrawableBlackBoardButton(this, (this.width / 2), 40 + 25, xx, yy, pixel);
                 this.buttons[xx][yy] = this.addRenderableWidget(widget);
             }
         }
@@ -164,34 +165,35 @@ public class BlackBoardScreen extends Screen {
 
         this.historyButton = this.addRenderableWidget(Button.builder(UNDO, this::undoPressed)
                 .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
+
+        for(byte b = 0; b < 16; b++){
+            this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2,
+                    75 + b * 10,  b));
+        }
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-        Lighting.setupForFlatItems();
         this.renderBackground(graphics);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
-        graphics.pose().pushPose();
+        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
 
-        int ut = -1;
-        int vt = -1;
+       // RenderSystem.enableDepthTest();
+        super.render(graphics, mouseX, mouseY, partialTicks);
+       // RenderSystem.disableDepthTest();
+        graphics.pose().pushPose();
+        label:
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
-                if (this.buttons[xx][yy].isHovered()) {
-                    ut = xx;
-                    vt = yy;
+                DrawableBlackBoardButton button = this.buttons[xx][yy];
+                if (button.isHovered()) {
+                    button.renderHoverOverlay(graphics);
+                    break label;
                 }
-                //TODO: ehm shouldnt these have their render automatically called?
-                this.buttons[xx][yy].render(graphics, mouseX, mouseY, partialTicks);
             }
         }
-        if (ut != -1) this.buttons[ut][vt].renderTooltip(graphics);
         graphics.pose().popPose();
-
-        Lighting.setupFor3DItems();
-        super.render(graphics, mouseX, mouseY, partialTicks);
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 }

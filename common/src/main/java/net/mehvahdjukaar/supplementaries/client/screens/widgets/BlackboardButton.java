@@ -17,23 +17,18 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FastColor;
 
 
-public abstract class  BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
-public static final int SIZE = 6;
+public abstract class BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
     protected final BlackBoardScreen parent;
     public final int size;
-    public final int u;
-    public final int v;
     public final int x;
     public final int y;
     protected boolean isHovered;
     protected byte color;
     protected boolean focused;
 
-    public BlackboardButton(BlackBoardScreen screen, int x, int y, int u, int v,  byte color, int size) {
+    public BlackboardButton(BlackBoardScreen screen, int x, int y, byte color, int size) {
         this.x = x;
         this.y = y;
-        this.u = u;
-        this.v = v;
         this.parent = screen;
         this.color = color;
         this.size = size;
@@ -44,14 +39,8 @@ public static final int SIZE = 6;
     }
 
     @Override
-    public void render(GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
-        renderButton(poseStack);
-        //boolean wasHovered = this.isHovered();
-    }
-
-    public void renderButton(GuiGraphics graphics) {
-        int offset = this.color > 0 ? 16 : 0;
 
         int rgb = BlackboardBlock.colorFromByte(this.color);
         float b = FastColor.ARGB32.blue(rgb) / 255f;
@@ -59,21 +48,27 @@ public static final int SIZE = 6;
         float r = FastColor.ARGB32.red(rgb) / 255f;
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
-        graphics.blit( ModTextures.BLACKBOARD_GUI_TEXTURE,this.x, this.y,
-                (float) (this.u + offset) * SIZE, (float) this.v * SIZE,
-                SIZE, SIZE, 32 * SIZE, 16 * SIZE);
+        renderButton(graphics);
+
+        if (this.isHovered()) {
+            renderHoverOverlay(graphics);
+        }
     }
 
-    public void renderTooltip(GuiGraphics poseStack) {
-        //maybe remove this
-        poseStack.pose().translate(0,0,90);
-        RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+    protected abstract void renderButton(GuiGraphics graphics);
 
-        poseStack. blit(ModTextures.BLACKBOARD_GUI_TEXTURE, this.x - 1, this.y - 1,
-                16f * SIZE, 0,
-                SIZE + 2, SIZE + 2, 32 * SIZE, 16 * SIZE);
-        //render again to cover stuff
-        this.renderButton(poseStack);
+    public void renderHoverOverlay(GuiGraphics graphics) {
+        var pose = graphics.pose();
+        pose.pushPose();
+
+        pose.translate(0, 0, 90);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        graphics.blit(ModTextures.BLACKBOARD_GUI_GRID,
+                this.x - 1, this.y - 1, size + 2, size + 2,
+                0, 0,
+                16, 16, 16, 16);
+
+        pose.popPose();
     }
 
     @Override
@@ -111,7 +106,7 @@ public static final int SIZE = 6;
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + SIZE) && mouseY < (this.y + SIZE);
+        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + size) && mouseY < (this.y + size);
     }
 
 

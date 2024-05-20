@@ -2,14 +2,21 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.gui.GuiGraphics;
 
 
 public class DrawableBlackBoardButton extends BlackboardButton {
 
     public static final int SIZE = 6;
 
+    private final int u;
+    private final int v;
+
     public DrawableBlackBoardButton(BlackBoardScreen screen, int centerX, int centerY, int u, int v, byte color) {
-        super(screen, centerX - ((8 - u) * SIZE), centerY - ((-v) * SIZE), u, v, color, SIZE);
+        super(screen, centerX - ((8 - u) * SIZE), centerY - ((-v) * SIZE), color, SIZE);
+        this.u = u;
+        this.v = v;
     }
 
     public void setColor(byte color) {
@@ -44,6 +51,15 @@ public class DrawableBlackBoardButton extends BlackboardButton {
         } else {
             return false;
         }
+    }
+
+    @Override
+    protected void renderButton(GuiGraphics graphics) {
+        int offset = this.color > 0 ? 16 : 0;
+        graphics.blit(ModTextures.BLACKBOARD_GUI_TEXTURE,
+                this.x, this.y,
+                (float) (this.u + offset) * size, (float) this.v * size,
+                size, size, 32 * size, 16 * size);
     }
 
 }

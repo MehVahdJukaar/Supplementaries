@@ -49,8 +49,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
     @Override
     public void render(ClockBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-
-        VertexConsumer builder = ModMaterials.CLOCK_HAND.buffer(bufferIn, RenderType::entityCutoutNoCull);
+        VertexConsumer builder = ModMaterials.CLOCK_HAND.buffer(bufferIn, RenderType::entityCutout);
 
         poseStack.pushPose();
         poseStack.translate(0.5d, 0.5d, 0.5d);

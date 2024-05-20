@@ -37,7 +37,7 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
         boolean bl = blockState.getBlock() instanceof WallSkullBlock;
         Direction direction = bl ? blockState.getValue(WallSkullBlock.FACING) : null;
         float g = 22.5F * (bl ? (2 + direction.get2DDataValue()) * 4 : blockState.getValue(SkullBlock.ROTATION));
-        RenderType renderType = RenderType.entityCutoutNoCull(ModTextures.ENDERMAN_HEAD);
+        RenderType renderType = RenderType.entityCutout(ModTextures.ENDERMAN_HEAD);
         poseStack.pushPose();
         if (direction != null) {
             var v = direction.step();

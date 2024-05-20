@@ -53,6 +53,7 @@ public class ModTextures {
     public static final ResourceLocation ENDERMAN_HEAD_EYES = Supplementaries.res("textures/entity/enderman_head_eyes.png");
     public static final ResourceLocation CANNON_TRAJECTORY = Supplementaries.res("textures/entity/cannon_trajectory.png");
     public static final ResourceLocation CANNON_TRAJECTORY_RED = Supplementaries.res("textures/entity/cannon_trajectory_charging.png");
+    public static final ResourceLocation BLACKBOARD_GUI_GRID = Supplementaries.res("textures/gui/blackboard_grid.png");
 
 
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
@@ -75,6 +76,7 @@ public class ModTextures {
     //gui
     public static final ResourceLocation SLIME_GUI_OVERLAY = Supplementaries.res("textures/gui/slime_overlay.png");
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
+    public static final ResourceLocation BLACKBOARD_BLANK_TEXTURE = Supplementaries.res("textures/gui/blackboard_blank.png");
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
     public static final ResourceLocation VARIABLE_SIZE_CONTAINER_TEXTURE = Supplementaries.res("textures/gui/variable_size_container_gui.png");
