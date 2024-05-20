@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +13,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.FastColor;
 
 
 public abstract class BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
@@ -22,7 +20,7 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
     public final int size;
     public final int x;
     public final int y;
-    protected boolean isHovered;
+    protected boolean shouldDrawOverlay;
     protected byte color;
     protected boolean focused;
 
@@ -40,17 +38,11 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.isHovered = this.isMouseOver(mouseX, mouseY);
+        this.shouldDrawOverlay = this.isMouseOver(mouseX, mouseY);
 
-        int rgb = BlackboardBlock.colorFromByte(this.color);
-        float b = FastColor.ARGB32.blue(rgb) / 255f;
-        float g = FastColor.ARGB32.green(rgb) / 255f;
-        float r = FastColor.ARGB32.red(rgb) / 255f;
-
-        RenderSystem.setShaderColor(r, g, b, 1.0F);
         renderButton(graphics);
 
-        if (this.isHovered()) {
+        if (this.isShouldDrawOverlay()) {
             renderHoverOverlay(graphics);
         }
     }
@@ -90,8 +82,8 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
         return button == 0;
     }
 
-    public boolean isHovered() {
-        return this.isHovered;
+    public boolean isShouldDrawOverlay() {
+        return this.shouldDrawOverlay;
     }
 
     @Override

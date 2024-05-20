@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.CircularList;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.minecraft.client.Minecraft;
@@ -166,9 +167,13 @@ public class BlackBoardScreen extends Screen {
         this.historyButton = this.addRenderableWidget(Button.builder(UNDO, this::undoPressed)
                 .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
-        for(byte b = 0; b < 16; b++){
-            this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2,
-                    75 + b * 10,  b));
+        if (CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
+            for (byte b = 0; b < 16; b++) {
+                int ox = b / 8;
+                int oy = b % 8;
+                this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 80 + ox * 10,
+                        73 + oy * 10, b));
+            }
         }
     }
 
@@ -179,15 +184,15 @@ public class BlackBoardScreen extends Screen {
 
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
 
-       // RenderSystem.enableDepthTest();
+        // RenderSystem.enableDepthTest();
         super.render(graphics, mouseX, mouseY, partialTicks);
-       // RenderSystem.disableDepthTest();
+        // RenderSystem.disableDepthTest();
         graphics.pose().pushPose();
         label:
         for (int xx = 0; xx < 16; xx++) {
             for (int yy = 0; yy < 16; yy++) {
                 DrawableBlackBoardButton button = this.buttons[xx][yy];
-                if (button.isHovered()) {
+                if (button.isShouldDrawOverlay()) {
                     button.renderHoverOverlay(graphics);
                     break label;
                 }

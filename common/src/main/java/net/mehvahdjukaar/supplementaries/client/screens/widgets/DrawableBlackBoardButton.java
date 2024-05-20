@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.FastColor;
 
 
 public class DrawableBlackBoardButton extends BlackboardButton {
@@ -55,6 +58,12 @@ public class DrawableBlackBoardButton extends BlackboardButton {
 
     @Override
     protected void renderButton(GuiGraphics graphics) {
+        int rgb = BlackboardBlock.colorFromByte(this.color);
+        float b = FastColor.ARGB32.blue(rgb) / 255f;
+        float g = FastColor.ARGB32.green(rgb) / 255f;
+        float r = FastColor.ARGB32.red(rgb) / 255f;
+
+        RenderSystem.setShaderColor(r, g, b, 1.0F);
         int offset = this.color > 0 ? 16 : 0;
         graphics.blit(ModTextures.BLACKBOARD_GUI_TEXTURE,
                 this.x, this.y,
