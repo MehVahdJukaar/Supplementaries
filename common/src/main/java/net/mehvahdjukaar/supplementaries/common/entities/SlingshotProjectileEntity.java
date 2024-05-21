@@ -152,7 +152,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         Level level = level();
         success = trySplashPotStuff();
         if (!success && owner instanceof Player player) {
-            if (!Utils.mayBuild(player, hit.getBlockPos())) return;
+            if (!Utils.mayPerformBlockAction(player, hit.getBlockPos(), getItem())) return;
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
                     return; //hack since we need client interaction aswell

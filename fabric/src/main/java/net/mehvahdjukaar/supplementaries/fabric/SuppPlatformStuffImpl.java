@@ -69,8 +69,8 @@ public class SuppPlatformStuffImpl {
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
     }
 
-    public static void disableOFWarn() {
-        ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
+    public static void disableOFWarn(boolean on) {
+        ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
     }
 

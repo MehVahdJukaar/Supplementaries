@@ -50,6 +50,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         }
         if (tile.config == null || tile.threadResult == null || tile.threadResult.isCompletedExceptionally()) {
             level.removeBlock(pos, false);
+            return;
         }
 
         if (tile.threadResult.isDone()) {

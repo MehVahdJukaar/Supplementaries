@@ -38,7 +38,7 @@ public class SupplementariesForgeClient {
 
     public static void handleDrawScreenEventPost(ScreenEvent.Init.Post event) {
         if (!firstScreenShown && event.getScreen() instanceof TitleScreen) {
-                ClientEvents.onDrawScreen(event.getScreen());
+                ClientEvents.onFirstScreen(event.getScreen());
             firstScreenShown = true;
         }
     }

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlockGeneratorBlockTile;
@@ -238,6 +239,8 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(), 2);
         if (reader.getBlockEntity(pos.above()) instanceof BlockGeneratorBlockTile t) {
             t.setConfig(c);
+        }else {
+            Supplementaries.LOGGER.error("Failed to get Road Sign Block Entity during generation. How did this happen?");
         }
         return true;
     }

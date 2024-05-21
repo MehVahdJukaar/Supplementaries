@@ -354,7 +354,7 @@ public class GunpowderBlock extends LightUpBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         InteractionResult lightUp = super.use(state, world, pos, player, hand, hit);
         if (lightUp.consumesAction()) return lightUp;
-        if (Utils.mayBuild(player, pos)) {
+        if (Utils.mayPerformBlockAction(player, pos, player.getItemInHand(hand))) {
             if (isCross(state) || isDot(state)) {
                 BlockState blockstate = isCross(state) ? this.defaultBlockState() : this.crossState;
                 blockstate = blockstate.setValue(BURNING, state.getValue(BURNING));

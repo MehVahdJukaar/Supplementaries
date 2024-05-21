@@ -24,7 +24,7 @@ public class SupplementariesFabricClient implements ClientModInitializer {
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (!firstScreenShown && screen instanceof TitleScreen) {
-                ClientEvents.onDrawScreen(screen);
+                ClientEvents.onFirstScreen(screen);
                 firstScreenShown = true;
             }
         });

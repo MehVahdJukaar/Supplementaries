@@ -54,9 +54,9 @@ public class WelcomeMessageScreen extends Screen {
 
         this.disaleButton = this.addRenderableWidget(Button.builder(
                 Component.translatable("gui.supplementaries.welcome_screen.turn_off"), (pressed) -> {
-            Minecraft.getInstance().setScreen(this.lastScreen);
-            onTurnOff.run();
-        }).bounds(this.width / 2 - 155, this.height * 5 / 6, 150, 20).build());
+                    Minecraft.getInstance().setScreen(this.lastScreen);
+                    onTurnOff.run();
+                }).bounds(this.width / 2 - 155, this.height * 5 / 6, 150, 20).build());
         this.disaleButton.active = false;
 
         this.message = MultiLineLabel.create(this.font, text, this.width - 50);
@@ -112,7 +112,6 @@ public class WelcomeMessageScreen extends Screen {
     }
 
 
-
     // static stuff
 
     private static final Component OF_TEXT = Component.translatable("gui.supplementaries.optifine.message");
@@ -125,7 +124,7 @@ public class WelcomeMessageScreen extends Screen {
             .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD);
 
     public static WelcomeMessageScreen createOptifine(Screen screen) {
-        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT, OF_URL, SuppPlatformStuff::disableOFWarn);
+        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT, OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
     }
 
     private static final Component AM_TEXT = Component.translatable("gui.supplementaries.amendments.message");

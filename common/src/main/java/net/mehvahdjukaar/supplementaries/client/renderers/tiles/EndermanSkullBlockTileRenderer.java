@@ -20,23 +20,21 @@ import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.rende
 public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<EndermanSkullBlockTile> {
 
     @Nullable
-    public static EndermanSkullModel MODEL = null;
+    private final EndermanSkullModel model;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        MODEL = new EndermanSkullModel(context.getModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL));
+        this.model = new EndermanSkullModel(context.getModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL));
     }
 
     @Override
     public void render(EndermanSkullBlockTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
-        var m = MODEL;
-        if (m == null) return;
         float f = blockEntity.getMouthAnimation(partialTick);
 
         BlockState blockState = blockEntity.getBlockState();
-        boolean bl = blockState.getBlock() instanceof WallSkullBlock;
-        Direction direction = bl ? blockState.getValue(WallSkullBlock.FACING) : null;
-        float g = 22.5F * (bl ? (2 + direction.get2DDataValue()) * 4 : blockState.getValue(SkullBlock.ROTATION));
+        boolean wall = blockState.getBlock() instanceof WallSkullBlock;
+        Direction direction = wall ? blockState.getValue(WallSkullBlock.FACING) : null;
+        float rotation = 22.5F * (wall ? (2 + direction.get2DDataValue()) * 4 : blockState.getValue(SkullBlock.ROTATION));
         RenderType renderType = RenderType.entityCutout(ModTextures.ENDERMAN_HEAD);
         poseStack.pushPose();
         if (direction != null) {
@@ -44,10 +42,11 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
             v.mul(0.001f);
             poseStack.translate(v.x(), v.y(), v.z());
         }
-        renderSkull(direction, g, f, poseStack, bufferSource, packedLight, m, renderType);
+
+        renderSkull(direction, rotation, f, poseStack, bufferSource, packedLight, model, renderType);
 
         renderType = RenderType.eyes(ModTextures.ENDERMAN_HEAD_EYES);
-        renderSkull(direction, g, f, poseStack, bufferSource, 15728640, m, renderType);
+        renderSkull(direction, rotation, f, poseStack, bufferSource, 15728640, model, renderType);
 
         poseStack.popPose();
     }

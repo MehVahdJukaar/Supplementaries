@@ -169,8 +169,8 @@ public class BlackBoardScreen extends Screen {
 
         if (CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
             for (byte b = 0; b < 16; b++) {
-                int ox = b / 8;
-                int oy = b % 8;
+                int ox = b % 2;
+                int oy = b / 2;
                 this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 80 + ox * 10,
                         73 + oy * 10, b));
             }

@@ -59,4 +59,11 @@ public class BuntingItem extends Item {
         }
         return DyeColor.WHITE;
     }
+
+    public static ItemStack getColored(DyeColor color) {
+        ItemStack stack = new ItemStack(ModRegistry.BUNTING.get());
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putString("Color", color.getName());
+        return stack;
+    }
 }

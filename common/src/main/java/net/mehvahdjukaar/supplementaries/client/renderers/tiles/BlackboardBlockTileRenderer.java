@@ -98,30 +98,29 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             BlockHitResult blockHit = (BlockHitResult) hit;
             if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
                 Player player = mc.player;
-                if (player != null && Utils.mayBuild(player, pos)) {
-                    if (BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
+                if (player != null && Utils.mayPerformBlockAction(player, pos, player.getMainHandItem())
+                        && BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
 
-                        poseStack.pushPose();
-                        poseStack.translate(0.5, 0.5, 0.5);
-                        poseStack.mulPose(RotHlpr.rot(dir));
-                        poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
+                    poseStack.pushPose();
+                    poseStack.translate(0.5, 0.5, 0.5);
+                    poseStack.mulPose(RotHlpr.rot(dir));
+                    poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
-                        int lu = light & '\uffff';
-                        int lv = light >> 16 & '\uffff';
+                    int lu = light & '\uffff';
+                    int lv = light >> 16 & '\uffff';
 
-                        Vector2i pair = BlackboardBlock.getHitSubPixel(blockHit);
-                        float p = 1 / 16f;
-                        float x = pair.x() * p;
-                        float y = pair.y() * p;
+                    Vector2i pair = BlackboardBlock.getHitSubPixel(blockHit);
+                    float p = 1 / 16f;
+                    float x = pair.x() * p;
+                    float y = pair.y() * p;
 
-                        VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, RenderType::entityCutout);
+                    VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, RenderType::entityCutout);
 
-                        poseStack.translate(1 - x - p, 1 - y - p, 0);
+                    poseStack.translate(1 - x - p, 1 - y - p, 0);
 
-                        VertexUtil.addQuad(builder, poseStack, 0, 0, p, p, lu, lv);
+                    VertexUtil.addQuad(builder, poseStack, 0, 0, p, p, lu, lv);
 
-                        poseStack.popPose();
-                    }
+                    poseStack.popPose();
                 }
             }
         }

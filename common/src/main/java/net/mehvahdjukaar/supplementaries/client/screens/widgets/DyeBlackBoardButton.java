@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.FastColor;
@@ -26,7 +27,7 @@ public class DyeBlackBoardButton extends BlackboardButton {
 
     @Override
     protected void renderButton(GuiGraphics graphics) {
-        int rgb = DyeColor.byId(color).getMapColor().col;
+        int rgb = this.color == 0 ? DyeColor.BLACK.getMapColor().col : BlackboardBlock.colorFromByte(this.color);
         float mul = shouldDrawOverlay ? 1.2f : 1.0f;
         float b = Mth.clamp(FastColor.ARGB32.blue(rgb) / 255f * mul,0,1);
         float r = Mth.clamp(FastColor.ARGB32.red(rgb) / 255f * mul,0,1);

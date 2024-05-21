@@ -131,7 +131,7 @@ public class InteractEventsHandler {
             if (CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
             }
-            if (override.altersWorld() && !Utils.mayBuild(player, hit.getBlockPos())) {
+            if (override.altersWorld() && !Utils.mayPerformBlockAction(player, hit.getBlockPos(), stack)) {
                 return InteractionResult.PASS;
             }
             return override.tryPerformingAction(level, player, hand, stack, hit);
@@ -149,7 +149,7 @@ public class InteractEventsHandler {
         ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
         BlockPos pos = hit.getBlockPos();
 
-        boolean canAlter = Utils.mayBuild(player, pos) && (!CompatHandler.FLAN || FlanCompat.canPlace(player, pos));
+        boolean canAlter = Utils.mayPerformBlockAction(player, pos, stack) && (!CompatHandler.FLAN || FlanCompat.canPlace(player, pos));
 
         if (override != null && override.isEnabled()) {
             if (override.altersWorld() && !canAlter) {

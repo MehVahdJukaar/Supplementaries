@@ -103,8 +103,8 @@ public class SuppPlatformStuffImpl {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
 
-    public static void disableOFWarn() {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(true);
+    public static void disableOFWarn(boolean on) {
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {

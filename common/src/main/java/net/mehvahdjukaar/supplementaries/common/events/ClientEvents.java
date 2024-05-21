@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -43,6 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Consumer;
 
 
@@ -77,10 +79,16 @@ public class ClientEvents {
     }
 
     @EventCalled
-    public static void onDrawScreen(Screen screen) {
+    public static void onFirstScreen(Screen screen) {
         Screen newScreen = screen;
-        if (CompatHandler.OPTIFINE && !ClientConfigs.General.NO_OPTIFINE_WARN.get()) {
-            newScreen = WelcomeMessageScreen.createOptifine(newScreen);
+        //fires on first draw screen. config will be set after that
+        if (CompatHandler.OPTIFINE) {
+            boolean disabled = ClientConfigs.General.NO_OPTIFINE_WARN.get();
+            if (new Random().nextFloat() < 0.05f) { //screw OF users :P
+                SuppPlatformStuff.disableOFWarn(false);
+                disabled = !disabled;
+            }
+            if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);
         }
         if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
             newScreen = WelcomeMessageScreen.createAmendments(newScreen);

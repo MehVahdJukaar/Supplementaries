@@ -75,7 +75,7 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static void disableOFWarn() {
+    public static void disableOFWarn(boolean on) {
         throw new AssertionError();
     }
 

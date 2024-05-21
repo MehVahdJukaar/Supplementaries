@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -284,6 +285,11 @@ public class ModCreativeTabs {
         after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.BUNTING_NAME,
                 ModRegistry.BUNTING);
+
+        after(e, ItemTags.BANNERS, CreativeModeTabs.COLORED_BLOCKS,
+                ModConstants.BUNTING_NAME,
+                Arrays.stream(DyeColor.values()).map(d -> (Supplier<Item>)
+                        () -> BuntingItem.getColored(d).getItem()).toArray(Supplier[]::new));
 
         after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FLAG_NAME,

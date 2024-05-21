@@ -91,7 +91,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
         Direction face = hit.getDirection();
         Direction myDir = state.getValue(FACING);
         if (face != myDir && face != myDir.getOpposite()) {
-            if (!Utils.mayBuild(player,pos)) {
+            if (!Utils.mayPerformBlockAction(player, pos, player.getItemInHand(handIn))) {
                 return InteractionResult.PASS;
             } else {
                 state = state.cycle(INVERTED);
@@ -109,7 +109,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
         int currentPower = state.getValue(POWER);
         // on-off
         if (bestNeighborSignal != currentPower) {
-            world.setBlock(pos, state.setValue(POWER, bestNeighborSignal).setValue(ROTATING, bestNeighborSignal!=0), 2 | 4);
+            world.setBlock(pos, state.setValue(POWER, bestNeighborSignal).setValue(ROTATING, bestNeighborSignal != 0), 2 | 4);
             return true;
             //returns if state changed
         }
@@ -174,10 +174,10 @@ public class TurnTableBlock extends Block implements EntityBlock {
             //TODO: use setMotion
             if ((e instanceof LivingEntity entity)) {
 
-                if(e instanceof ServerPlayer player){
+                if (e instanceof ServerPlayer player) {
                     Advancement advancement = world.getServer().getAdvancements().getAdvancement(Supplementaries.res("husbandry/turn_table"));
-                    if(advancement != null){
-                        if(!player.getAdvancements().getOrStartProgress(advancement).isDone()) {
+                    if (advancement != null) {
+                        if (!player.getAdvancements().getOrStartProgress(advancement).isDone()) {
                             player.getAdvancements().award(advancement, "unlock");
                         }
                     }

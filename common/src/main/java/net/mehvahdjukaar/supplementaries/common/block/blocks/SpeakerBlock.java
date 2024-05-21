@@ -105,8 +105,8 @@ public class SpeakerBlock extends Block implements EntityBlock {
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
             //ink
-            if (Utils.mayBuild(player,pos) && !state.getValue(ANTIQUE)) {
-                ItemStack stack = player.getItemInHand(hand);
+            ItemStack stack = player.getItemInHand(hand);
+            if (!state.getValue(ANTIQUE) && Utils.mayPerformBlockAction(player, pos, stack)) {
                 if (stack.is(ModRegistry.ANTIQUE_INK.get())) {
                     level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     level.setBlockAndUpdate(pos, state.setValue(ANTIQUE, true));
@@ -142,7 +142,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
         if (eventID == 0) {
             Direction facing = state.getValue(FACING);
             world.addParticle(ModParticles.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
-                    pos.getZ() + 0.5 + facing.getStepZ() * 0.725,  world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
+                    pos.getZ() + 0.5 + facing.getStepZ() * 0.725, world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);
             return true;
         }
         return super.triggerEvent(state, world, pos, eventID, eventParam);

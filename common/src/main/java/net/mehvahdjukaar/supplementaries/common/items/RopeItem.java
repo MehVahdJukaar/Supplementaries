@@ -27,19 +27,19 @@ public class RopeItem extends BlockItem {
     public InteractionResult place(BlockPlaceContext context) {
 
         Player player = context.getPlayer();
-        if (player == null || Utils.mayBuild(player,context.getClickedPos())) {
+        if (player == null || Utils.mayPerformBlockAction(player,context.getClickedPos(), context.getItemInHand())) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
             BlockState state = world.getBlockState(pos);
             ModBlockProperties.PostType type = ModBlockProperties.PostType.get(state);
 
             if (type != null) {
+                ItemStack stack = context.getItemInHand();
 
                 if (AbstractRopeKnotBlock.convertToRopeKnot(type, state, world, pos) == null) {
                     return InteractionResult.FAIL;
                 }
 
-                ItemStack stack = context.getItemInHand();
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, stack);
                 }
