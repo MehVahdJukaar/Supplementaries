@@ -5,21 +5,20 @@
         "autumnity:sap_bottle"
       ],
       "empty": "minecraft:glass_bottle",
-      "capacity": 1
+      "capacity": "BOTTLE"
     },
     {
       "filled": [
         "thermal:sap_bucket"
       ],
       "empty": "minecraft:bucket",
-      "capacity": 4
+      "capacity": "BUCKET"
     }
   ],
   "color": "#8e3f26",
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "food": {
-    "divider": 1,
     "item": "autumnity:sap_bottle"
   },
   "from_mod": "supplementaries",

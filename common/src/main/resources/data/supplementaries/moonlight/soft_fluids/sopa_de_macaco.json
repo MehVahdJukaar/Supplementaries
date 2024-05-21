@@ -6,12 +6,12 @@
         "alexsmobs:sopa_de_macaco"
       ],
       "empty": "minecraft:bowl",
-      "capacity": 2
+      "capacity": "BOWL"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
-    "divider": 2,
+    "divider": "BOWL",
     "item": "alexsmobs:sopa_de_macaco"
   },
   "from_mod": "alexsmobs",

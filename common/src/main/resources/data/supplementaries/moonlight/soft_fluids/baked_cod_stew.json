@@ -6,12 +6,12 @@
         "farmersdelight:baked_cod_stew"
       ],
       "empty": "minecraft:bowl",
-      "capacity": 2
+      "capacity": "BOWL"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
-    "divider": 2,
+    "divider": "BOWL",
     "item": "farmersdelight:baked_cod_stew"
   },
   "from_mod": "farmersdelight",

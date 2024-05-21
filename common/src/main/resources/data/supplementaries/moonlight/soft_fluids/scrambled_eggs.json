@@ -6,12 +6,12 @@
         "environmental:scrambled_eggs"
       ],
       "empty": "minecraft:bowl",
-      "capacity": 2
+      "capacity": "BOWL"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
-    "divider": 2,
+    "divider": "BOWL",
     "item": "environmental:scrambled_eggs"
   },
   "from_mod": "environmental",

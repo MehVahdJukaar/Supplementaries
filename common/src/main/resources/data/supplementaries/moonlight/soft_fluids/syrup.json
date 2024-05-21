@@ -19,7 +19,7 @@
         "create_central_kitchen:syrup_bucket"
       ],
       "empty": "minecraft:bucket",
-      "capacity": 4
+      "capacity": "BUCKET"
     }
   ],
   "equivalent_fluids": [

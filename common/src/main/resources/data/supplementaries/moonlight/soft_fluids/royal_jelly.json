@@ -7,7 +7,7 @@
         "the_bumblezone:royal_jelly_block"
       ],
       "empty": "minecraft:air",
-      "capacity": 4
+      "capacity": "BLOCK"
     },
     {
       "fill_sound": "minecraft:block.honey_block.place",
@@ -16,11 +16,10 @@
         "the_bumblezone:royal_jelly_bottle"
       ],
       "empty": "minecraft:glass_bottle",
-      "capacity": 1
+      "capacity": "BOTTLE"
     }
   ],
   "food": {
-    "divider": 1,
     "item": "the_bumblezone:royal_jelly_bottle"
   },
   "tint_method": "no_tint",

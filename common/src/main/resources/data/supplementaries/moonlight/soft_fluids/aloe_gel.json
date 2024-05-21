@@ -12,12 +12,12 @@
         "item.atmospheric:aloe_gel_block"
       ],
       "empty": "minecraft:air",
-      "capacity": 4
+      "capacity": "BLOCK"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
-    "divider": 1,
+    "divider": "BOTTLE",
     "item": "atmospheric:aloe_gel_bottle"
   },
   "from_mod": "atmospheric",

@@ -6,12 +6,12 @@
         "goodending:algae_bucket"
       ],
       "empty": "minecraft:bucket",
-      "capacity": 4
+      "capacity": "BUCKET"
     }
   ],
   "flowing_texture": "goodending:block/algae",
   "food": {
-    "divider": 4,
+    "divider": "BUCKET",
     "item": "goodending:algae_bucket"
   },
   "from_mod": "goodending",

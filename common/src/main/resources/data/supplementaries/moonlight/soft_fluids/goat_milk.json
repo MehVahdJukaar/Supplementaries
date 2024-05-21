@@ -5,7 +5,7 @@
         "betteranimalsplus:goatmilk"
       ],
       "empty": "minecraft:bucket",
-      "capacity": 4
+      "capacity": "BUCKET"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/milk_liquid",

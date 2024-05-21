@@ -6,12 +6,11 @@
         "farmersdelight:apple_cider"
       ],
       "empty": "minecraft:glass_bottle",
-      "capacity": 1
+      "capacity": "BOTTLE"
     }
   ],
   "flowing_texture": "minecraft:block/water_flow",
   "food": {
-    "divider": 1,
     "item": "farmersdelight:apple_cider"
   },
   "from_mod": "farmersdelight",
