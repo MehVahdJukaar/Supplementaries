@@ -10,8 +10,6 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -256,8 +254,7 @@ public class GunpowderBlock extends LightUpBlock {
     @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return b instanceof ILightable || b instanceof TntBlock || b instanceof CampfireBlock || b instanceof AbstractCandleBlock ||
-                (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isBrazier(b));
+        return state.is(ModTags.LIGHTS_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock || b instanceof AbstractCandleBlock;
     }
 
     @Override
@@ -476,8 +473,8 @@ public class GunpowderBlock extends LightUpBlock {
         Block b = state.getBlock();
         if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
-        if (b instanceof CampfireBlock || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isBrazier(b))) {
-            return state.getValue(CampfireBlock.LIT);
+        if (state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) && state.hasProperty(BlockStateProperties.LIT)) {
+            return state.getValue(BlockStateProperties.LIT);
         }
         return state.is(ModTags.LIGHTS_GUNPOWDER);
     }

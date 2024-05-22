@@ -5,14 +5,12 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -108,13 +106,23 @@ public class GunpowderExplosion extends Explosion {
             //lights up burnable blocks
             if (block instanceof ILightable lightable) {
                 lightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
-            } else if ((state.is(BlockTags.CAMPFIRES) && CampfireBlock.canLight(state)) ||
-                    (state.getBlock() instanceof AbstractCandleBlock && !AbstractCandleBlock.isLit(state)) ||
-                    (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.canLightBrazier(state))) {
+            } else if (canLight(state)) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
                 ILightable.FireSourceType.FLAMING_ARROW.play(level, pos);
             }
         }
+    }
+
+    private static boolean canLight(BlockState state) {
+        Block b = state.getBlock();
+        if(b instanceof AbstractCandleBlock){
+            return !AbstractCandleBlock.isLit(state);
+        }
+        if(state.hasProperty(BlockStateProperties.LIT) && state.is(ModTags.LIGHTABLE_BY_GUNPOWDER)){
+            return !state.getValue(BlockStateProperties.LIT) &&
+                    (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !state.getValue(BlockStateProperties.WATERLOGGED));
+        }
+        return false;
     }
 
     @Override

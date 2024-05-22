@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.fabric;
 
 import com.google.common.base.Suppliers;
-import lilypuree.decorative_blocks.blocks.BrazierBlock;
 import lilypuree.decorative_blocks.blocks.ChandelierBlock;
 import lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -25,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 
@@ -78,15 +76,6 @@ public class DecoBlocksCompatImpl {
                             .lightLevel((state) -> 15), CompatObjects.GLOW_CHANDELIER,
                             CompatObjects.GLOW_FLAME));
         } else GLOW_CHANDELIER_ROPE = null;
-    }
-
-    public static boolean isBrazier(Block b) {
-        return b instanceof BrazierBlock;
-    }
-
-    public static boolean canLightBrazier(BlockState state) {
-        return isBrazier(state.getBlock()) && !state.getValue(BlockStateProperties.WATERLOGGED)
-                && !state.getValue(BlockStateProperties.LIT);
     }
 
     public static boolean isPalisade(BlockState state) {

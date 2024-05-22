@@ -38,6 +38,7 @@ public class ModTags {
     public static final TagKey<Block> FLINT_METALS = blockTag("flint_metals");
     public static final TagKey<Block> FRAME_BLOCK_BLACKLIST = blockTag("frame_block_blacklist");
     public static final TagKey<Block> LIGHTS_GUNPOWDER = blockTag("lights_gunpowder");
+    public static final TagKey<Block> LIGHTABLE_BY_GUNPOWDER = blockTag("lightable_by_gunpowder");
     public static final TagKey<Block> PREVENTS_OFFSET_ABOVE = blockTag("prevents_offset_above");
     public static final TagKey<Block> TINTED_ON_MAPS_GENERIC = blockTag("map_tint_generic");
     public static final TagKey<Block> TINTED_ON_MAPS_GC = blockTag("map_tint_grass_color");

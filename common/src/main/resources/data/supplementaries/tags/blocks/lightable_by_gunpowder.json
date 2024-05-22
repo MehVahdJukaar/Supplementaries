@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#decorative_blocks:braziers","required":false},
+    {"id":"#caverns_and_chasms:braziers","required":false},
+    {"id":"#minecraft:candles","required":true},
+    {"id":"#minecraft:campfires","required":true},
+    {"id":"amendments:candle_skull","required":false}
+  ]
+}
