@@ -993,8 +993,12 @@ public class ModRegistry {
     );
 
     //gunpowder block
-    public static final Supplier<Block> GUNPOWDER_BLOCK = regBlock(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
+    public static final Supplier<Block> GUNPOWDER_BLOCK = regWithItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
             BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
+
+    //fire pit
+    public static final Supplier<Block> FIRE_PIT = regBlock(FIRE_PIT_NAME, () -> new FirePitBlock(1,
+            BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK).sound(SoundType.COPPER)));
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regBlock(BOOK_PILE_NAME, () -> new BookPileBlock(

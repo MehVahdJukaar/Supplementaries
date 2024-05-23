@@ -56,6 +56,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         this.isAquarium = aquarium;
     }
 
+    @Override
+    public boolean canFitInsideContainerItems() {
+        return false;
+    }
+
     //if it can hold and display liquids
     public boolean isAquarium() {
         return isAquarium;

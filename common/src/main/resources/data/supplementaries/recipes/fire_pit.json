@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "121",
+    "111"
+  ],
+  "key": {
+    "2": {
+      "item": "supplementaries:lumisene_bottle"
+    },
+    "1": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "supplementaries:fire_pit",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fire_pit"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "lumisene"
+    }
+  ]
+}

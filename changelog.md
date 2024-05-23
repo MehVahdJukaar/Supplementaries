@@ -15,3 +15,4 @@
 - sprinting on flint blocks with iron boots will cause sparks
 - fixed a rare issue with enderman heads
 - projectile weapons can now show their arrow as preview
+- cages and jars cant go in container items anymore

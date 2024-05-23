@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "supplementaries:block/fire_pit"
+    },
+    "hanging=true": {
+      "model": "supplementaries:block/fire_pit_hanging"
+    }
+  }
+}
