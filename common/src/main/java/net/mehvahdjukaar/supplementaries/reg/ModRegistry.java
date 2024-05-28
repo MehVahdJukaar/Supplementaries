@@ -997,7 +997,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
 
     //fire pit
-    public static final Supplier<Block> FIRE_PIT = regBlock(FIRE_PIT_NAME, () -> new FirePitBlock(1,
+    public static final Supplier<Block> FIRE_PIT = regWithItem(FIRE_PIT_NAME, () -> new FirePitBlock(1,
             BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK).sound(SoundType.COPPER)));
 
     //placeable book

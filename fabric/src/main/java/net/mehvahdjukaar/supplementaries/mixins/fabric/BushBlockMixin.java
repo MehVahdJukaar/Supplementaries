@@ -14,6 +14,6 @@ public abstract class BushBlockMixin {
 
     @ModifyReturnValue(method = "mayPlaceOn", at = @At("RETURN"))
     public boolean mayPlaceOn(boolean original, BlockState state, BlockGetter level, BlockPos pos) {
-        return !original && state.getBlock() instanceof PlanterBlock;
+        return original || state.getBlock() instanceof PlanterBlock;
     }
 }

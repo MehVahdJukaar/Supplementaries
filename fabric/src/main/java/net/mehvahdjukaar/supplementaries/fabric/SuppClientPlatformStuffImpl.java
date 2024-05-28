@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import net.fabricmc.api.EnvType;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
-import net.mehvahdjukaar.supplementaries.common.worldgen.MineshaftElevatorPiece;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;

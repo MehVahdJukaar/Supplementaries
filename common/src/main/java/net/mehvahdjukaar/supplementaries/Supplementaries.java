@@ -107,6 +107,7 @@ public class Supplementaries {
     // fletching table quiver fill
     // emi world interaction (ash)
     // raycon mod
+    // luck makes crit happen
     // death marke off map
     // fisherman fish
     // middle click flower box stuff

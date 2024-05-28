@@ -126,7 +126,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 
-            if (entity instanceof TamableAnimal pet && pet.isTame() && !pet.isOwnedBy(player)) {
+            if (entity instanceof TamableAnimal pet && (!pet.isTame() || !pet.isOwnedBy(player))) {
                 return false;
             }
 
@@ -227,7 +227,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     if (player.isCreative() && nbt.contains("UUID")) {
                         nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
                     }
-                }
+                }else Supplementaries.LOGGER.error("Failed to load entity from itemstack");
             }
             if (success) {
                 if (!world.isClientSide) {
