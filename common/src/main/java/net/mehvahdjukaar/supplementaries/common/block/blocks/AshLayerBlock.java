@@ -229,7 +229,8 @@ public class AshLayerBlock extends FallingBlock {
 
     @EventCalled
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
-        if (CommonConfigs.Building.ASH_BURN.get()) {
+        double chance = CommonConfigs.Building.ASH_BURN_CHANCE.get();
+        if (chance != 0) {
             BlockState state = event.getState();
             LevelAccessor level = event.getLevel();
             BlockPos pos = event.getPos();

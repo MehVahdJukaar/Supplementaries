@@ -136,11 +136,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
+    public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             return tile.isFiring();
         }
-        ;
         return false;
     }
 

@@ -102,6 +102,8 @@ public class Supplementaries {
     // yes this is where I write crap. deal with it XD
     // flute pacifier
     // wolf howl
+
+    // remove bomb packet. setting hurt marked has the same effect
     // bundle and quiver dispenser interaction
     // zombie villagers spawn away from center. biome spawn
     // fletching table quiver fill

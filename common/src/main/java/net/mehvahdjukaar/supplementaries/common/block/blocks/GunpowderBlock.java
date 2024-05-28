@@ -512,7 +512,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
+    public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getValue(BURNING) != 0;
     }
 

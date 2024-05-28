@@ -35,9 +35,12 @@ class SoftFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid, int minAmount) {
         if (tile instanceof ISoftFluidTankProvider holder && holder.canInteractWithSoftFluidTank()) {
             SoftFluidTank tank = holder.getSoftFluidTank();
-            if (tank.addFluid(fluid.copyWithCount(minAmount))) {
+            //only inserts the minimum amount every time. thats how faucet prefers to work
+            int added = tank.addFluid(fluid.copyWithCount(minAmount), true);
+            if (added >= minAmount) {
+                tank.addFluid(fluid.copyWithCount(minAmount), false);
                 tile.setChanged();
-                return minAmount;
+                return added;
             }
             return 0;
         }

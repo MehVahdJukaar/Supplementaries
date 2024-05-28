@@ -382,8 +382,8 @@ public class CommonConfigs {
 
             builder.push("ash");
             ASH_ENABLED = feature(builder);
-            ASH_BURN = builder.comment("Burnable blocks will have a chance to create ash layers when burned")
-                    .define("ash_from_fire", true);
+            ASH_BURN_CHANCE = builder.comment("Burnable blocks will have a chance to create ash layers when burned. Greater this number the greater the chance will be")
+                    .define("ash_from_fire_chance", 1d, 0, 1);
             ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Burning mobs will drop ash when they die")
                             .define("ash_from_burning_mobs", true);
@@ -477,7 +477,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> ASH_ENABLED;
         public static final Supplier<Boolean> ASH_FROM_MOBS;
-        public static final Supplier<Boolean> ASH_BURN;
+        public static final Supplier<Double> ASH_BURN_CHANCE;
         public static final Supplier<Boolean> ASH_RAIN;
         public static final Supplier<Boolean> BASALT_ASH_ENABLED;
 

@@ -140,7 +140,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public boolean isLitUp(BlockState state, LevelAccessor level, BlockPos pos) {
+    public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
         return isOnFire(state);
     }
 
