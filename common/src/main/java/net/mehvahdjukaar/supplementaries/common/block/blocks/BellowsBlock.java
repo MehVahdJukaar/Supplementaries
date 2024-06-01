@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import it.unimi.dsi.fastutil.floats.Float2ObjectAVLTreeMap;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -29,16 +28,12 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BellowsBlock extends Block implements EntityBlock {
-
-    private static final VoxelShape DEFAULT_SHAPE = Shapes.create(Shapes.block().bounds().inflate(0.1f));
-    //don't ask me why we use this weird map
-    private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_Y_CACHE = new Float2ObjectAVLTreeMap<>();
-    private static final Float2ObjectAVLTreeMap<VoxelShape> SHAPES_X_Z_CACHE = new Float2ObjectAVLTreeMap<>();
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -60,16 +55,13 @@ public class BellowsBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-
-        if (worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
-            float height = tile.getHeight();
-            //3 digit
-            height = (float) (Math.round(height * 1000.0) / 1000.0);
-
+        if (context instanceof EntityCollisionContext &&
+                worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
+            float height = tile.getHeight(1);
             if (state.getValue(FACING).getAxis() == Direction.Axis.Y) {
-                return SHAPES_Y_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeY);
+                return createVoxelShapeY(height);
             } else {
-                return SHAPES_X_Z_CACHE.computeIfAbsent(height, BellowsBlock::createVoxelShapeXZ);
+                return createVoxelShapeXZ(height);
             }
         }
         return Shapes.block();

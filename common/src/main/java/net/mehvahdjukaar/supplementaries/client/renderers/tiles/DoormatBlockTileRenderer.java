@@ -51,7 +51,6 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
         poseStack.translate(0, -0.010416667F * 19, -0.0625 - 0.005);
         poseStack.scale(0.010416667F, 0.010416667F, -0.010416667F);
 
-
         TextHolder textHolder = tile.getTextHolder();
         var prop = TextUtil.renderProperties(textHolder.getColor(), textHolder.hasGlowingText(),
                 ClientConfigs.getSignColorMult(),

@@ -165,9 +165,6 @@ public class CommonConfigs {
                     .define("base_velocity_scaling", 5.0, 0.0, 64);
             BELLOWS_MAX_VEL = builder.comment("entities with velocity greater than this won't be pushed")
                     .define("power_scaling", 2.0, 0.0, 16);
-            BELLOWS_FLAG = builder.comment("sets velocity changed flag when pushing entities +\n" +
-                            "causes pushing animation to be smooth client side but also restricts player movement when being pushed")
-                    .define("velocity_changed_flag", true);
             BELLOWS_RANGE = builder.comment("maximum range")
                     .comment("note that it will still only keep alive the two fire blocks closer to it")
                     .define("range", 5, 0, 16);
@@ -248,7 +245,6 @@ public class CommonConfigs {
         public static final Supplier<Integer> BELLOWS_POWER_SCALING;
         public static final Supplier<Double> BELLOWS_MAX_VEL;
         public static final Supplier<Double> BELLOWS_BASE_VEL_SCALING;
-        public static final Supplier<Boolean> BELLOWS_FLAG;
         public static final Supplier<Integer> BELLOWS_RANGE;
 
         public static final Supplier<Boolean> PISTON_LAUNCHER_ENABLED;

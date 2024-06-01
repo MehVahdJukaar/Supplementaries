@@ -37,11 +37,13 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("flag", ModRegistry.FLAGS.get(DyeColor.WHITE).get());
         addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("dispenser tweaks", Items.DISPENSER);
+        addIcon("golden apple disenchant", Items.ENCHANTED_GOLDEN_APPLE);
+        addIcon("throwable bricks", Items.BRICK);
         addIcon("throwable bricks", Items.BRICK);
         addIcon("rope", ModRegistry.ROPE.get());
         addIcon("placeable sticks", Items.STICK);
-        addIcon("placeable sticks", Items.STICK);
-        addIcon("brewing stand colors", Items.BREWING_STAND);
+        addIcon("item lore", Items.NAME_TAG);
+        addIcon("noteblock scare", Items.NOTE_BLOCK);
         addIcon("timber frame", ModRegistry.TIMBER_BRACE_ITEM.get());
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
         addIcon("map tweaks", Items.FILLED_MAP);

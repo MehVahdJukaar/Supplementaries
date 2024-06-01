@@ -152,7 +152,7 @@ dependencies {
     modImplementation("curse.maven:curios-309927:5296876")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:5344451")
+    modImplementation("curse.maven:quark-243121:5378961")
 
     modImplementation("curse.maven:zeta-968868:5254672")
 

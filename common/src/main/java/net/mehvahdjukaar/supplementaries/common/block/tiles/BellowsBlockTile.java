@@ -55,15 +55,11 @@ public class BellowsBlockTile extends BlockEntity {
         super(ModRegistry.BELLOWS_TILE.get(), pos, state);
     }
 
-    public float getHeight() {
-        return height;
-    }
-
     public float getHeight(float partialTicks) {
         return Mth.lerp(partialTicks, this.prevHeight, this.height);
     }
 
-    public void setManualPress(){
+    public void setManualPress() {
         manualPress = 10;
     }
 
@@ -72,44 +68,37 @@ public class BellowsBlockTile extends BlockEntity {
         return new AABB(this.worldPosition);
     }
 
-    private AABB getHalfBoundingBox(Direction dir) {
-        return new AABB(this.worldPosition)
-                .contract(-0.5 * dir.getStepX(), -0.5 * dir.getStepY(), -0.5 * dir.getStepZ());
+    private AABB getProgressDeltaAabb(Direction dir) {
+        var bb = new AABB(BlockPos.ZERO);
+        float max = Math.max(height, prevHeight);
+        float min = Math.min(height, prevHeight);
+        return (switch (dir) {
+            case UP -> bb.setMaxY(1 + max).setMinY(1 + min);
+            case DOWN -> bb.setMaxY(max).setMinY(min);
+            case NORTH -> bb.setMaxZ(max).setMinZ(min);
+            case SOUTH -> bb.setMaxZ(1 + max).setMinZ(1 + min);
+            case EAST -> bb.setMaxX(1 + max).setMinX(1 + min);
+            case WEST -> bb.setMaxX(max).setMinX(min);
+        }).move(worldPosition);
     }
 
     //TODO: rewrite some of this
 
+    //TODO: make this act on player on client side
     private void moveCollidedEntities(Level level) {
         Direction dir = this.getDirection().getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.UP;
         for (int j = 0; j < 2; j++) {
-            AABB halfBoundingBox = this.getHalfBoundingBox(dir);
-            List<Entity> list = level.getEntities(null, halfBoundingBox);
+            AABB progressDelta = this.getProgressDeltaAabb(dir);
+            List<Entity> list = level.getEntities(null, progressDelta);
             if (!list.isEmpty()) {
                 for (Entity entity : list) {
                     if (entity.getPistonPushReaction() != PushReaction.IGNORE) {
-                        AABB entityBB = entity.getBoundingBox();
-                        double dy = 0.0D;
-                        double dz = 0.0D;
-                        float f = this.height + 0.01f;
-                        switch (dir) {
-                            case SOUTH -> {
-                                dz = halfBoundingBox.maxZ + f - entityBB.minZ;
-                                if (dz < 0) continue;
-                            }
-                            default -> {
-                                dz = halfBoundingBox.minZ - f - entityBB.maxZ;
-                                if (dz > 0) continue;
-                            }
-                            case UP -> {
-                                dy = halfBoundingBox.maxY + f - entityBB.minY;
-                                if (dy < 0) continue;
-                            }
-                            case DOWN -> {
-                                dy = halfBoundingBox.minY - f - entityBB.maxY;
-                                if (dy > 0) continue;
-                            }
-                        }
-                        entity.move(MoverType.SHULKER_BOX, new Vec3(0, dy, dz));
+                        double f = 0.00;
+                        entity.move(MoverType.SHULKER_BOX, new Vec3(
+                                (progressDelta.getXsize() + f) * dir.getStepX(),
+                                (progressDelta.getYsize() + f) * dir.getStepY(),
+                                (progressDelta.getZsize() + f) *  dir.getStepZ()));
+                        entity.setOnGround(true);
                     }
                 }
             }
@@ -168,8 +157,8 @@ public class BellowsBlockTile extends BlockEntity {
             velocity *= (range - dist) / range;
 
             if (Math.abs(entity.getDeltaMovement().get(facing.getAxis())) < maxVelocity) {
-                entity.setDeltaMovement(entity.getDeltaMovement().add(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity));
-                if (CommonConfigs.Redstone.BELLOWS_FLAG.get()) entity.hurtMarked = true;
+                entity.push(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity);
+                entity.hurtMarked = true;
             }
         }
     }
@@ -254,7 +243,6 @@ public class BellowsBlockTile extends BlockEntity {
 
     //TODO: optimize this (also for flywheel)
     public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockTile tile) {
-
         int power = state.getValue(BellowsBlock.POWER);
         tile.prevHeight = tile.height;
 

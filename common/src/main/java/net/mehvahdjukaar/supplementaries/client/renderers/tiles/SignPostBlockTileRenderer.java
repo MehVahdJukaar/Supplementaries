@@ -21,7 +21,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -85,7 +84,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
             if (up) {
                 if (LOD.isOutOfFocus(relAngle, signUp.yaw() + 90, 2)) {
-                    var v = new Vector3f();
+                    var v = new Vector3f(1,0,0);
                     v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
                     var textProperties = tile.getTextHolder(0).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
 
@@ -96,9 +95,9 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             if (down) {
                 if (LOD.isOutOfFocus(relAngle, signDown.yaw() + 90, 2)) {
 
-                    var v = new Vector3f();
-                    v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
-                    var textProperties = tile.getTextHolder(1).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
+                    Vector3f normalVector = new Vector3f(1,0,0);
+                    normalVector.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
+                    var textProperties = tile.getTextHolder(1).computeRenderProperties(combinedLightIn, normalVector, lod::isVeryNear);
 
                     poseStack.translate(0, -0.5, 0);
                     renderSignText(tile, poseStack, bufferIn, signDown, textProperties, 1);

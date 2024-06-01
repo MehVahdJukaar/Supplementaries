@@ -38,7 +38,7 @@ dependencies {
     //modCompileOnly("org.violetmoon.quark:Quark-4.0-433")
     modCompileOnly("org.violetmoon.zeta:Zeta-1.0-12")
     modCompileOnly("curse.maven:create-328085:4835191")
-    modCompileOnly("curse.maven:quark-243121:5344451")
+    modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
 
