@@ -5,8 +5,10 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -29,6 +31,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -64,6 +67,11 @@ public class PresentBehaviorsManager {
         TrappedPresentBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), BOMB_BEHAVIOR);
 
         TrappedPresentBlock.registerBehavior(ModRegistry.HAT_STAND.get(), SKIBIDI_BEHAVIOR);
+
+        var nuke = CompatObjects.NUKE_BLOCK.get();
+        if (nuke != null) {
+            TrappedPresentBlock.registerBehavior(nuke, TNT_BEHAVIOR);
+        }
     }
 
     //projectiles, fireworks, tnt, spawn eggs
@@ -79,7 +87,7 @@ public class PresentBehaviorsManager {
             Entity e = spawnMob(type, level, source, stack);
             if (e != null) {
                 stack.shrink(1);
-                level.gameEvent(null,GameEvent.ENTITY_PLACE, pos);
+                level.gameEvent(null, GameEvent.ENTITY_PLACE, pos);
                 return Optional.of(stack);
             }
         } catch (Exception exception) {
@@ -100,8 +108,9 @@ public class PresentBehaviorsManager {
             HatStandEntity e = spawnMob(type, level, source, stack);
             if (e != null) {
                 stack.shrink(1);
-                level.gameEvent(null,GameEvent.ENTITY_PLACE, pos);
+                level.gameEvent(null, GameEvent.ENTITY_PLACE, pos);
                 e.setSkibidi(true, false, null);
+                e.setDeltaMovement(0,0,0);
                 return Optional.of(stack);
             }
         } catch (Exception exception) {
@@ -111,17 +120,21 @@ public class PresentBehaviorsManager {
     };
 
 
-
     private static final IPresentItemBehavior TNT_BEHAVIOR = (source, stack) -> {
-
         Level level = source.getLevel();
         BlockPos blockpos = source.getPos().above();
-        if (stack.getItem() instanceof BlockItem bi && bi.getBlock() instanceof TntBlock tnt) {
-            Explosion dummyExplosion = new Explosion(level, null,
-                    blockpos.getX() + 0.5, blockpos.getX() + 0.5, blockpos.getX() + 0.5, 0, false, Explosion.BlockInteraction.KEEP);
-            tnt.wasExploded(level, blockpos, dummyExplosion);
+        if (stack.getItem() instanceof BlockItem bi) {
+            Block tnt = bi.getBlock();
+            if (tnt instanceof TntBlock) {
+                Explosion dummyExplosion = new Explosion(level, null,
+                        blockpos.getX() + 0.5, blockpos.getX() + 0.5, blockpos.getX() + 0.5, 0, false, Explosion.BlockInteraction.KEEP);
+                tnt.wasExploded(level, blockpos, dummyExplosion);
+            } else {
+                GunpowderExplosion.igniteTntHack(level, blockpos, tnt);
+            }
 
-            var entities = level.getEntitiesOfClass(PrimedTnt.class, (new AABB(blockpos)).move(0, 0.5, 0));
+            var entities = level.getEntities((Entity) null, new AABB(blockpos).move(0, 0.5, 0),
+                    entity -> (entity instanceof PrimedTnt) || entity.getType() == CompatObjects.ALEX_NUKE.get());
             for (var e : entities) {
                 Vec3 p = e.position();
                 e.setPos(new Vec3(p.x, blockpos.getY() + 10 / 16f, p.z));
@@ -160,7 +173,7 @@ public class PresentBehaviorsManager {
 
 
     @Nullable
-    private static<T extends Entity> T spawnMob(EntityType<T> entityType, ServerLevel serverLevel, BlockSource source, @Nullable ItemStack stack) {
+    private static <T extends Entity> T spawnMob(EntityType<T> entityType, ServerLevel serverLevel, BlockSource source, @Nullable ItemStack stack) {
         BlockPos pos = source.getPos();
         CompoundTag tag = stack == null ? null : stack.getTag();
         Component component = stack != null && stack.hasCustomHoverName() ? stack.getHoverName() : null;
@@ -188,7 +201,7 @@ public class PresentBehaviorsManager {
             }
             serverLevel.addFreshEntityWithPassengers(entity);
             //update client velocity
-            ModNetwork.CHANNEL.sendToAllClientPlayersInRange( serverLevel, pos,48,
+            ModNetwork.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 48,
                     new ClientBoundSendKnockbackPacket(entity.getDeltaMovement(), entity.getId()));
         }
         return entity;

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -254,7 +255,8 @@ public class GunpowderBlock extends LightUpBlock {
     @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return state.is(ModTags.LIGHTS_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock || b instanceof AbstractCandleBlock;
+        return state.is(ModTags.LIGHTS_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
     }
 
     @Override

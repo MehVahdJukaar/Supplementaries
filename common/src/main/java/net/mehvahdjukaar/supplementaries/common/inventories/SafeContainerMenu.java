@@ -11,7 +11,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 
 public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvider {
 
@@ -36,7 +35,7 @@ public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvi
     @Override
     protected Slot addSlot(Slot slot) {
         if (slot instanceof ShulkerBoxSlot) {
-            return super.addSlot(new DelegatingSlot((BaseContainerBlockEntity) container, slot.getContainerSlot(), slot.x, slot.y, this));
+            return super.addSlot(new DelegatingSlot(container, slot.getContainerSlot(), slot.x, slot.y, this));
         } else {
             return super.addSlot(slot);
         }

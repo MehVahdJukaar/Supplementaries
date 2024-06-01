@@ -246,8 +246,9 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new SafeContainerMenu(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        if (inv.player.isSpectator()) return null;
+        return new SafeContainerMenu(id, inv, this);
     }
 
 

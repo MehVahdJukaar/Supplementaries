@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -10,10 +11,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 
 public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
+    @Nullable
     protected final AbstractPresentBlockTile inventory;
 
     @Override
@@ -21,10 +24,15 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return inventory;
     }
 
-    //client container factory
-    public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(ModMenuTypes.PRESENT_BLOCK.get(), id, playerInventory,
-                (AbstractPresentBlockTile) playerInventory.player.level().getBlockEntity(packetBuffer.readBlockPos()));
+
+    public static PresentContainerMenu create(Integer integer, Inventory inventory, FriendlyByteBuf buf) {
+        if (buf != null) {
+            BlockPos pos = buf.readBlockPos();
+            if (inventory.player.level().getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
+                return new PresentContainerMenu(integer, inventory, tile);
+            }
+        }
+        return new PresentContainerMenu(integer, inventory, null);
     }
 
     public <T extends PresentContainerMenu> PresentContainerMenu(int id, Inventory playerInventory,
@@ -39,6 +47,8 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         //tile inventory
         this.inventory = inventory;
 
+        if (inventory == null) return;
+
         checkContainerSize(this.inventory, 1);
         this.inventory.startOpen(playerInventory.player);
 
@@ -51,6 +61,11 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
+    @Override
+    public boolean stillValid(Player playerIn) {
+        return this.inventory != null && this.inventory.stillValid(playerIn);
+    }
+
     protected int getSlotY() {
         return 20;
     }
@@ -59,10 +74,6 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return 17;
     }
 
-    @Override
-    public boolean stillValid(Player playerIn) {
-        return this.inventory.stillValid(playerIn);
-    }
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
@@ -103,5 +114,6 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
             this.clearContainer(playerIn, this.inventory);
         }
     }
+
 
 }

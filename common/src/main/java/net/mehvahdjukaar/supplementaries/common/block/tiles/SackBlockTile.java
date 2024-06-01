@@ -61,8 +61,9 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new VariableSizeContainerMenu(id, player, this, getContainerSize());
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        if (inv.player.isSpectator()) return null;
+        return new VariableSizeContainerMenu(id, inv, this, getContainerSize());
     }
 
     public boolean isSlotUnlocked(int ind) {

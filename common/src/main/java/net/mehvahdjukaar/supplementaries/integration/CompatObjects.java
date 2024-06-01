@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -78,6 +79,10 @@ public class CompatObjects {
     public static final Supplier<MobEffect> STUNNED_EFFECT = make("oreganized:stunned", BuiltInRegistries.MOB_EFFECT);
 
     public static final Supplier<Enchantment> END_VEIL = make("betterend:end_veil", BuiltInRegistries.ENCHANTMENT);
+
+    public static final Supplier<EntityType<?>> ALEX_NUKE = make("alexcaves:nuclear_bomb", BuiltInRegistries.ENTITY_TYPE);
+
+    public static final Supplier<Block> NUKE_BLOCK = make("alexcaves:nuclear_bomb", BuiltInRegistries.BLOCK);
 
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()

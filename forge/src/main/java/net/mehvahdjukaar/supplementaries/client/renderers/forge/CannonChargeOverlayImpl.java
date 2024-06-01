@@ -11,6 +11,7 @@ public class CannonChargeOverlayImpl extends CannonChargeHud implements IGuiOver
     public CannonChargeOverlayImpl() {
         super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());
     }
+
     @Override
     public void render(ForgeGui forgeGui, GuiGraphics graphics, float f, int i, int j) {
         render(graphics, f, i, j);

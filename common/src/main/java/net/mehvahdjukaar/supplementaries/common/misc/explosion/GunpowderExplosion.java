@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
@@ -13,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -101,6 +104,8 @@ public class GunpowderExplosion extends Explosion {
             if (ForgeHelper.getExplosionResistance(state, this.level, pos, this) == 0) {
                 if (block instanceof TntBlock) {
                     this.getToBlow().add(pos);
+                } else if (block == CompatObjects.NUKE_BLOCK.get()) {
+                    igniteTntHack(this.level, pos, block);
                 }
             }
             //lights up burnable blocks
@@ -115,10 +120,10 @@ public class GunpowderExplosion extends Explosion {
 
     private static boolean canLight(BlockState state) {
         Block b = state.getBlock();
-        if(b instanceof AbstractCandleBlock){
+        if (b instanceof AbstractCandleBlock) {
             return !AbstractCandleBlock.isLit(state);
         }
-        if(state.hasProperty(BlockStateProperties.LIT) && state.is(ModTags.LIGHTABLE_BY_GUNPOWDER)){
+        if (state.hasProperty(BlockStateProperties.LIT) && state.is(ModTags.LIGHTABLE_BY_GUNPOWDER)) {
             return !state.getValue(BlockStateProperties.LIT) &&
                     (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !state.getValue(BlockStateProperties.WATERLOGGED));
         }
@@ -163,11 +168,25 @@ public class GunpowderExplosion extends Explosion {
         }
 
         if (spawnFire) {
-            BlockPos pos = BlockPos.containing(this.x,this.y,this.z);
+            BlockPos pos = BlockPos.containing(this.x, this.y, this.z);
             if (this.level.getBlockState(pos).isAir() && this.level.getBlockState(pos.below()).isSolidRender(this.level, pos.below())) {
                 this.level.setBlockAndUpdate(pos, BaseFireBlock.getState(this.level, pos));
             }
         }
+    }
+
+
+    // specifically for alex caves nukes basically
+    public static void igniteTntHack(Level level, BlockPos blockpos, Block tnt) {
+        Arrow dummyArrow = new Arrow(level, blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5);
+        dummyArrow.setSecondsOnFire(20);
+        BlockState old = level.getBlockState(blockpos);
+        //this will remove block above. too bad we are about to explode it anyways
+        tnt.onProjectileHit(level, tnt.defaultBlockState(),
+                new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, blockpos, true),
+                dummyArrow);
+        //restore old block
+        level.setBlockAndUpdate(blockpos, old);
     }
 
 }

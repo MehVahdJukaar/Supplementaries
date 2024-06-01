@@ -109,8 +109,9 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new TrappedPresentContainerMenu(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        if (inv.player.isSpectator()) return null;
+        return new TrappedPresentContainerMenu(id, inv, this);
     }
 
     @Override
