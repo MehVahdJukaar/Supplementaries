@@ -15,24 +15,28 @@ public class ModCommands {
     }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context, Commands.CommandSelection selection) {
-        dispatcher.register(
+
+        var node = dispatcher.register(
                 Commands.literal(Supplementaries.MOD_ID)
                         .then(Commands.literal("globe")
                                 .requires((p) -> p.hasPermission(2))
-                                .then(ChangeGlobeSeedCommand.register(dispatcher))
-                                .then(ResetGlobeSeedCommand.register(dispatcher))
+                                .then(ChangeGlobeSeedCommand.register(context))
+                                .then(ResetGlobeSeedCommand.register(context))
                         )
-                        .then(ReloadConfigsCommand.register(dispatcher))
-                        .then(OpenConfiguredCommand.register(dispatcher))
-                        .then(IUsedToRollTheDice.register(dispatcher))
-                        .then(AddCageMobCommand.register(dispatcher, context))
-                        .then(RecordSongCommand.register(dispatcher))
+                        .then(ReloadConfigsCommand.register(context))
+                        .then(OpenConfiguredCommand.register(context))
+                        .then(IUsedToRollTheDice.register(context))
+                        .then(AddCageMobCommand.register(context))
+                        .then(RecordSongCommand.register(context))
+                        .then(ChangeDimensionCommand.register(context))
                         .then(Commands.literal("map")
                                 .requires((p) -> p.hasPermission(2))
-                                .then(MapMarkerCommand.register(dispatcher, context))
-                                .then(StructureMapCommand.register(dispatcher, context))
+                                .then(MapMarkerCommand.register(context))
+                                .then(StructureMapCommand.register(context))
                         )
 
         );
+
+        dispatcher.register(Commands.literal("supp").redirect(node));
     }
 }

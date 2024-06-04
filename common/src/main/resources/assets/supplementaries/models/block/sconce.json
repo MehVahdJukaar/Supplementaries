@@ -73,8 +73,12 @@
 			"shade": false,
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 9, 8]},
 			"faces": {
-				"east": {"uv": [6, 12, 10, 16], "texture": "#1"},
-				"west": {"uv": [6, 12, 10, 16], "texture": "#1"}
+				"east": {"uv": [6, 12, 10, 16], "texture": "#1",        "forge_data": {
+					"block_light": 15
+				}},
+				"west": {"uv": [6, 12, 10, 16], "texture": "#1",        "forge_data": {
+					"block_light": 15
+				}}
 			}
 		},
 		{
@@ -83,8 +87,12 @@
 			"shade": false,
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 9, 8]},
 			"faces": {
-				"north": {"uv": [6, 12, 10, 16], "texture": "#1"},
-				"south": {"uv": [6, 12, 10, 16], "texture": "#1"}
+				"north": {"uv": [6, 12, 10, 16], "texture": "#1",        "forge_data": {
+					"block_light": 15
+				}},
+				"south": {"uv": [6, 12, 10, 16], "texture": "#1",        "forge_data": {
+					"block_light": 15
+				}}
 			}
 		}
 	],

@@ -10,9 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -121,61 +119,61 @@ public class Credits implements Serializable {
     public String createCreditsText() {
         StringBuilder builder = new StringBuilder();
         builder.append("""
-                \u00A76
-                \u00A7lSupplementaries
+                §6
+                §lSupplementaries
 
 
 
 
-                \u00A74Author:\u00A7r
+                §4Author:§r
                 +
-                \u00A70MehVahdJukaar
+                §0MehVahdJukaar
 
-                \u00A74Artist:\u00A7r
+                §4Artist:§r
 
-                \u00A70Plantkillable
+                §0Plantkillable
                                 
                                 
                 """);
 
         builder.append("""
-                \u00A74Supporters:\u00A7r
-                \u00A70
+                §4Supporters:§r
+                §0
                 """);
         supporters.keySet().forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Mod Compatibility:\u00A7r
-                \u00A70
+                §5Mod Compatibility:§r
+                §0
                 """);
         modCompatibility.forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Music and Sounds:\u00A7r
-                \u00A70
+                §5Music and Sounds:§r
+                §0
                 """);
         soundArtists.forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Other Artists:\u00A7r
-                \u00A70
+                §5Other Artists:§r
+                §0
                 """);
         otherArtists.forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Translators:\u00A7r
-                \u00A70
+                §5Translators:§r
+                §0
                 """);
         translators.forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n");
 
         builder.append("""
-                \u00A75Others:\u00A7r
-                \u00A70
+                §5Others:§r
+                §0
                 """);
         others.forEach(s -> builder.append(s).append("\n"));
         builder.append("\n\n\n\n\n");
@@ -229,17 +227,4 @@ public class Credits implements Serializable {
         }
     }
 
-    public static void stuff(ServerPlayer player) {
-        Thread thread = new Thread(() -> {
-            try {
-                Component name = player.getName();
-                if (true) {
-                    // URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
-                }
-            } catch (Exception e) {
-                int aa = 1;
-            }
-        });
-        thread.start();
-    }
 }

@@ -127,8 +127,12 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     @Override
     public ItemStack createMap(ServerLevel level, BlockPos targetPos, ResourceLocation structure, ItemStack original) {
         CompoundTag tag = original.getOrCreateTag();
-        return AdventurerMapsHandler.createStructureMap(level, targetPos, getStructureHolder(level, structure),
+        ItemStack newItem = AdventurerMapsHandler.createStructureMap(level, targetPos, getStructureHolder(level, structure),
                 getZoomLevel(tag), getDecoration(tag), getMapName(tag), getColor(tag));
+        if (original.hasCustomHoverName()) {
+            newItem.setHoverName(original.getHoverName());
+        }
+        return newItem;
     }
 
     @Override

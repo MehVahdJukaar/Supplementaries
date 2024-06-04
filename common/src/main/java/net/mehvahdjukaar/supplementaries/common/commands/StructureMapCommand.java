@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.commands;
 
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class StructureMapCommand {
     private static final DynamicCommandExceptionType ERROR_STRUCTURE_INVALID = new DynamicCommandExceptionType((object) -> Component.translatable("commands.locate.structure.invalid", new Object[]{object}));
 
-    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
         return Commands.literal("structure_map")
                 .requires(cs -> cs.hasPermission(2))
                 .then(Commands.argument("structure", ResourceOrTagKeyArgument.resourceOrTagKey(Registries.STRUCTURE))

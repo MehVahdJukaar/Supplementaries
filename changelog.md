@@ -16,3 +16,6 @@
 - fixed a rare issue with enderman heads
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
+- Fixed bellows hitbox
+- Fixed some containers causing issues in spectator
+- Added /supplementaries dimension command, allows to teleport to dimensions

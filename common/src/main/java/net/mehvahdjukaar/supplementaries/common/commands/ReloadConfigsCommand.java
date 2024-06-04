@@ -1,18 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.commands;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
 public class ReloadConfigsCommand implements Command<CommandSourceStack> {
 
-    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext dispatcher) {
         return Commands.literal("reload")
                 .requires((p) -> p.hasPermission(0))
                 .executes(new ReloadConfigsCommand());

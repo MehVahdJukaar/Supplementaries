@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.commands;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.EntityType;
 
 public class AddCageMobCommand implements Command<CommandSourceStack> {
 
-    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
+    public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
         return Commands.literal("cage")
                 .requires(cs -> cs.hasPermission(2))
                 .then(Commands.argument("entity", ResourceArgument.resource(context, Registries.ENTITY_TYPE))

@@ -30,6 +30,7 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType,
                              PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlayIn) {
 
+        poseStack.translate(1,0,1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
         renderer.renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
     }

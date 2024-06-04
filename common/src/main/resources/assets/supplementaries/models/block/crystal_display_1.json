@@ -106,7 +106,7 @@
             16
           ],
           "texture": "#2",
-            "forge_data": {
+          "forge_data": {
             "block_light": 15
           }
         }
