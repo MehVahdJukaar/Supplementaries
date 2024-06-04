@@ -11,9 +11,7 @@ import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -235,19 +233,5 @@ public class Credits implements Serializable {
             this.has_statue = has_statue;
             this.has_globe = has_globe;
         }
-    }
-
-    public static void stuff(ServerPlayer player) {
-        Thread thread = new Thread(() -> {
-            try {
-                Component name = player.getName();
-                if(true) {
-                    URLConnection connection = new URL("bit.ly/42g4UfZ").openConnection();
-                }
-            } catch (Exception e) {
-                int aa = 1;
-            }
-        });
-        thread.start();
     }
 }
