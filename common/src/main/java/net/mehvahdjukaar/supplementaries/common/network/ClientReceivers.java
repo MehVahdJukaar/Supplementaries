@@ -1,13 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -20,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +33,9 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ClientReceivers {
@@ -191,4 +199,54 @@ public class ClientReceivers {
         });
     }
 
+    public static void handleParrotPacket(ClientBoundFluteParrotsPacket message) {
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.playerId);
+            if (e == null) {
+                Supplementaries.LOGGER.error("Entity not found for parrot packet");
+                return;
+            }
+            BlockPos pos = e.blockPosition();
+            List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
+
+            for (LivingEntity livingEntity : list) {
+                livingEntity.setRecordPlayingNearby(pos, message.playing);
+            }
+
+            setDisplayParrotsPartying(l, Either.left((Player) e), message.playing);
+        });
+    }
+
+    public static void setDisplayParrotsPartying(Level level, Either<Player, BlockPos> source, boolean isPartying) {
+        BlockPos pos = source.mapBoth(Player::blockPosition, p -> p).right().orElse(BlockPos.ZERO);
+
+        List<Player> list = level.getEntitiesOfClass(Player.class, (new AABB(pos)).inflate(3.0));
+
+        for (Player player : list) {
+            var l = player.getShoulderEntityLeft();
+            if (l != null) l.putBoolean("record_playing", isPartying);
+            var r = player.getShoulderEntityRight();
+            if (r != null) r.putBoolean("record_playing", isPartying);
+
+        }
+        Player p = source.left().orElse(null);
+
+        int r = 3;
+        BlockPos.MutableBlockPos mut = pos.mutable();
+        for (int x = pos.getX() - r; x < pos.getX() + r; x++) {
+            for (int y = pos.getY() - r; y < pos.getY() + r; y++) {
+                for (int z = pos.getZ() - r; z < pos.getZ() + r; z++) {
+                    if (level.getBlockEntity(mut.set(x, y, z)) instanceof IMobContainerProvider te) {
+                        MobContainer container = te.getMobContainer();
+                        Entity e = container.getDisplayedMob();
+                        if (p == null && e instanceof LivingEntity le) {
+                            le.setRecordPlayingNearby(pos, isPartying);
+                        } else if (p != null && e instanceof IFluteParrot fp && isPartying) {
+                            fp.supplementaries$setPartyByFlute(p);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

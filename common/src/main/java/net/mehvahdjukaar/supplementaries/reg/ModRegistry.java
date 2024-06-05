@@ -356,7 +356,6 @@ public class ModRegistry {
     public static final Supplier<Item> SCONCE_ITEM_SOUL = regItem(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(
             SCONCE_SOUL.get(), SCONCE_WALL_SOUL.get(), new Item.Properties(), Direction.DOWN));
 
-    public static final List<Supplier<Item>> SCONCES = new ArrayList<>(List.of(SCONCE_ITEM, SCONCE_ITEM_SOUL));
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
@@ -367,6 +366,12 @@ public class ModRegistry {
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(
             SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(), new Item.Properties(), Direction.DOWN));
 
+
+    //sconce lever
+    public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
+            BlockBehaviour.Properties.copy(SCONCE.get()),
+            () -> ParticleTypes.FLAME
+    ));
 
     //candle holder
     public static final List<Supplier<? extends Block>> ALL_CANDLE_HOLDERS = new ArrayList<>();
@@ -606,12 +611,6 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
                     .sound(SoundType.POLISHED_DEEPSLATE)
                     .strength(0.5f, 0.5f)
-    ));
-
-    //sconce lever
-    public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()),
-            () -> ParticleTypes.FLAME
     ));
 
     //crank

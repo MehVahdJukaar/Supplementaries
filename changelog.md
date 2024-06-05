@@ -19,3 +19,4 @@
 - Fixed bellows hitbox
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions
+- Playing a flute will make parrots dance (in cages and on shoulder too)

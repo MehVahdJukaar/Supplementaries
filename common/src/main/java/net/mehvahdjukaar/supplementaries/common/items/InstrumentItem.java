@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundFluteParrotsPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +33,7 @@ public abstract class InstrumentItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         player.startUsingItem(hand);
+        ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(player, new ClientBoundFluteParrotsPacket(player, true));
         return InteractionResultHolder.consume(player.getItemInHand(hand));
     }
 
@@ -44,6 +47,7 @@ public abstract class InstrumentItem extends Item {
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
         SongsManager.clearCurrentlyPlaying(entity.getUUID());
+        ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
     }
 
     public float getPitch(int note) {

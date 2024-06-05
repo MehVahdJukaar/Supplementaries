@@ -24,6 +24,7 @@ public class ModNetwork {
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundPlaySongNotesPacket.class, ClientBoundPlaySongNotesPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundOpenConfigsPacket.class, ClientBoundOpenConfigsPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncAmbientLightPacket.class, ClientBoundSyncAmbientLightPacket::new)
+            .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundFluteParrotsPacket.class, ClientBoundFluteParrotsPacket::new)
 
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetSpeakerBlockPacket.class, ServerBoundSetSpeakerBlockPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSetTextHolderPacket.class, ServerBoundSetTextHolderPacket::new)
