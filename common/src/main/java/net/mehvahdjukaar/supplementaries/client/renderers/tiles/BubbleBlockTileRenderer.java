@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,7 +24,7 @@ public class BubbleBlockTileRenderer implements BlockEntityRenderer<BubbleBlockT
         poseStack.scale(scale, scale, scale);
 
         var cons = buffer.getBuffer(Minecraft.useShaderTransparency() ? Sheets.translucentItemSheet() : Sheets.translucentCullBlockSheet());
-        VertexUtils.renderBubble(cons, poseStack, light, tile.getBlockPos(), tile.getLevel(), partialTicks);
+        VertexModels.renderBubble(cons, poseStack, light, tile.getBlockPos(), tile.getLevel(), partialTicks);
 
         poseStack.popPose();
     }

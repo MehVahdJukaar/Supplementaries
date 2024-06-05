@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.JarBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class JarItemRenderer extends CageItemRenderer {
                     poseStack.translate(0.5, 0.3125, 0.5);
                     poseStack.mulPose(RotHlpr.YN45);
                     poseStack.scale(1.5f, 1.5f, 1.5f);
-                    VertexUtils.renderFish(buffer, poseStack, 0, 0, fishTexture, light);
+                    VertexModels.renderFish(buffer, poseStack, 0, 0, fishTexture, light);
                     poseStack.popPose();
                 }
                 if (com.contains("Fluid")) {

@@ -18,7 +18,7 @@ public class ConfettiParticle extends TextureSheetParticle {
         this.zd = motionZ;
 
         this.setSize(0.001F, 0.001F);
-        this.gravity = 0.015F/0.04F;
+        this.gravity = 0.015F / 0.04F;
         //longer
         this.lifetime = (int) (80.0D / (this.random.nextFloat() * 0.3D + 0.7D));
 
@@ -30,9 +30,9 @@ public class ConfettiParticle extends TextureSheetParticle {
         this.bCol = Math.max(0.0F, MathHelper.sin((i + 0.6666667F) * ((float)Math.PI * 2F)) * 0.65F + 0.35F);
         */
 
-        this.rCol = FastColor.ARGB32.red(col)/255f;
-        this.gCol = FastColor.ARGB32.green(col)/255f;
-        this.bCol = FastColor.ARGB32.blue(col)/255f;
+        this.rCol = FastColor.ARGB32.red(col) / 255f;
+        this.gCol = FastColor.ARGB32.green(col) / 255f;
+        this.bCol = FastColor.ARGB32.blue(col) / 255f;
     }
 
     @Override

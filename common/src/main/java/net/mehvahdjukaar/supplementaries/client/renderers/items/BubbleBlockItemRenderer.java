@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -23,7 +23,7 @@ public class BubbleBlockItemRenderer extends ItemStackRenderer {
         poseStack.translate(0.5, 0.5, 0.5);
         Minecraft minecraft = Minecraft.getInstance();
 
-        VertexUtils.renderBubble(buffer.getBuffer(Sheets.translucentCullBlockSheet()), poseStack, light,
+        VertexModels.renderBubble(buffer.getBuffer(Sheets.translucentCullBlockSheet()), poseStack, light,
                  BlockPos.ZERO, minecraft.level, minecraft.getFrameTime());
 
         poseStack.popPose();

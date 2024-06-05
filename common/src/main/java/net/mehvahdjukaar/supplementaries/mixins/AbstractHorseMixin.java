@@ -41,9 +41,6 @@ public abstract class AbstractHorseMixin extends Animal {
     protected abstract void eating();
 
     @Shadow
-    protected int temper;
-
-    @Shadow
     public abstract boolean isTamed();
 
     @Inject(method = "addBehaviourGoals", at = @At("HEAD"))

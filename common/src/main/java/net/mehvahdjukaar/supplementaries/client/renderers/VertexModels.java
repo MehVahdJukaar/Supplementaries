@@ -15,9 +15,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-//TODO: move to lib
-public class VertexUtils {
-    //centered on x,z. aligned on y=0
+public class VertexModels {
 
     public static int setColorForAge(float age, float phase) {
         float a = (age + phase) % 1;

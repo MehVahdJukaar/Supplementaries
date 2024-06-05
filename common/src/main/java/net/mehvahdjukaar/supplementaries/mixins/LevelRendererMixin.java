@@ -6,13 +6,11 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotRendere
 import net.mehvahdjukaar.supplementaries.common.network.ClientReceivers;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,11 +36,6 @@ public abstract class LevelRendererMixin {
     private void supplementaries$renderSlingshotOutline(PoseStack matrixStack, float partialTicks, long finishNanoTime, boolean blockOutlines, Camera camera, GameRenderer renderer, LightTexture lightTexture, Matrix4f matrix4f, CallbackInfo ci) {
         if (blockOutlines) SlingshotRendererHelper.renderBlockOutline(matrixStack, camera, this.minecraft);
     }
-
-    @Shadow
-    @Nullable
-    private ClientLevel level;
-
 
     @Inject(method = "notifyNearbyEntities", at = @At("HEAD"))
     private void setPartying(Level worldIn, BlockPos pos, boolean isPartying, CallbackInfo info) {

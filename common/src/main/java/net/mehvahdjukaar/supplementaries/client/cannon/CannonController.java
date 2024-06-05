@@ -48,7 +48,7 @@ public class CannonController {
     private static float lastCameraYaw = 0;
     private static float lastCameraPitch = 0;
 
-    public static void activateCannonCamera(CannonBlockTile tile) {
+    public static void startControlling(CannonBlockTile tile) {
         cannon = tile;
         firstTick = true;
         shootingMode = ShootingMode.DOWN;

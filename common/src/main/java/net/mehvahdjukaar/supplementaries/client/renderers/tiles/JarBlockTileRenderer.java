@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.VertexUtils;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -86,7 +86,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 int fishType = data.getFishTexture();
 
                 //overlay
-                VertexUtils.renderFish(bufferIn, poseStack, wo, ho, fishType, combinedLightIn);
+                VertexModels.renderFish(bufferIn, poseStack, wo, ho, fishType, combinedLightIn);
                 poseStack.popPose();
 
             } else {

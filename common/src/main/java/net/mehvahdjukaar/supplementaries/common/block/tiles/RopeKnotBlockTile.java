@@ -74,7 +74,6 @@ public class RopeKnotBlockTile extends MimicBlockTile {
         }
     }
 
-    //TODO: cleanup
     @Override
     public void setChanged() {
         if (this.level == null) return;

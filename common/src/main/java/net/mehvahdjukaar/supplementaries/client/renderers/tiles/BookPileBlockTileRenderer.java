@@ -128,7 +128,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
 
-        //TODO: swap with java model for correct shading
+        //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
         BakedModel model = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), b.getType().modelPath());
         if(model != null) {
             renderer.renderModel(poseStack.last(),

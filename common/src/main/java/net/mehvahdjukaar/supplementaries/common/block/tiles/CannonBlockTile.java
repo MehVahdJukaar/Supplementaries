@@ -54,8 +54,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private float timeUntilFire = 0;
     private byte firePower = 1;
 
+
     private float projectileDrag = 0;
     private float projectileGravity = 0f;
+    private boolean statsDirty = true;
 
     @Nullable
     private UUID playerWhoIgnitedUUID = null;
@@ -82,9 +84,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.disabledCooldown = tag.getFloat("cooldown");
         this.timeUntilFire = tag.getFloat("fire_timer");
         this.firePower = tag.getByte("fire_power");
-        if (level != null) {
-            recalculateProjectileStats();
-        }
+        this.statsDirty = true;
     }
 
     @Override
@@ -140,10 +140,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public float getProjectileDrag() {
+        if (statsDirty) recalculateProjectileStats();
         return projectileDrag;
     }
 
     public float getProjectileGravity() {
+        if (statsDirty) recalculateProjectileStats();
         return projectileGravity;
     }
 
@@ -226,7 +228,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (player.isSecondaryUseActive()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
-            } else CannonController.activateCannonCamera(this);
+            } else CannonController.startControlling(this);
         } else if (player instanceof ServerPlayer sp) PlatHelper.openCustomMenu(sp, this, worldPosition);
 
     }
@@ -299,7 +301,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
                     pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
 
             float inaccuracy = 0;
-            float power = -projectileDrag * getFirePower();
+            float power = -getProjectileDrag() * getFirePower();
             arrow.shoot(facing.x, facing.y, facing.z, power, inaccuracy);
 
             level.addFreshEntity(arrow);
@@ -350,6 +352,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         var newMovement = proj.getDeltaMovement();
         this.projectileDrag = (float) newMovement.x;
         this.projectileGravity = (float) -newMovement.y;
+        this.statsDirty = false;
     }
 
 

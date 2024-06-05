@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -25,7 +27,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     private final CannonBlockTile tile;
 
-    private Button manouverButton;
     private NumberEditBox pitchSelector;
     private NumberEditBox yawSelector;
     private PowerSelectorWidget powerSelector;
@@ -45,12 +46,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        this.manouverButton = this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
+        this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.yawSelector.setValue(tile.getYaw(1));
+        this.yawSelector.setNumber(tile.getYaw(1));
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.pitchSelector.setValue(tile.getPitch(1));
+        this.pitchSelector.setNumber(tile.getPitch(1));
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
         this.menu.addSlotListener(this);
@@ -58,31 +59,26 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
 
     private void onManeuverPressed(Button button) {
-        CannonController.activateCannonCamera(tile);
+        CannonController.startControlling(tile);
         this.onClose();
     }
 
-    private void setYaw(String h) {
-    }
-
-    private String getYaw() {
-        return "0";
-    }
-
-    private void setPitch(String h) {
-    }
-
-    private String getPitch() {
-        return "0";
+    @Override
+    public void onClose() {
+        super.onClose();
+        //sync tile regardless. Uses custom packet why not
+        float yaw = this.yawSelector.getNumber();
+        float pitch = this.pitchSelector.getNumber();
+        byte power = this.powerSelector.getPower();
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                yaw, pitch, power, false, this.tile.getBlockPos()
+        ));
+        //update client immediately too
+        this.tile.syncAttributes(yaw, pitch, power, false, minecraft.player);
     }
 
     private int getActualPower() {
         return Math.min(this.powerSelector.getPower(), tile.getFuel().getCount());
-    }
-
-    private boolean isValidAngle(String s) {
-        this.minecraft.font.width(s);
-        return true;
     }
 
     @Override
@@ -180,18 +176,26 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             }
         }
 
-        public void setValue(float value) {
+        public void setNumber(float value) {
             this.setValue(String.valueOf((int) value));
+        }
+
+        public float getNumber() {
+            try {
+                return Float.parseFloat(this.getValue());
+            } catch (NumberFormatException e) {
+                return 0;
+            }
         }
     }
 
     private class PowerSelectorWidget extends AbstractWidget {
-        private final int levels;
-        private int power = 2;
+        private final byte levels;
+        private byte power = 2;
 
         public PowerSelectorWidget(int x, int y, int levels) {
             super(x, y, 12, 36, Component.empty());
-            this.levels = levels;
+            this.levels = (byte) levels;
         }
 
         @Override
@@ -223,9 +227,9 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             this.power = getSelectedHoveredLevel(mouseY);
         }
 
-        private int getSelectedHoveredLevel(double mouseY) {
+        private byte getSelectedHoveredLevel(double mouseY) {
             float levelH = (float) this.height / levels;
-            return levels - (int) Math.floor((mouseY - this.getY()) / levelH);
+            return (byte) (levels - Math.floor((mouseY - this.getY()) / levelH));
         }
 
         @Override
@@ -233,7 +237,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
         }
 
-        public int getPower() {
+        public byte getPower() {
             return this.power;
         }
     }
