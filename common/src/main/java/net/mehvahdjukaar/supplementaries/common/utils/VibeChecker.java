@@ -54,19 +54,21 @@ public class VibeChecker {
     private static void clientStuff() {
         for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet()) {
             if (!Sheets.BANNER_MATERIALS.containsKey(v)) {
+                var a = new ArrayList<>(BuiltInRegistries.BANNER_PATTERN.registryKeySet());
+                a.removeAll(Sheets.BANNER_MATERIALS.keySet());
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
-                        "Missing entries: " + new ArrayList<>(BuiltInRegistries.BANNER_PATTERN.registryKeySet())
-                        .removeAll(Sheets.BANNER_MATERIALS.keySet()) + "\n" +
+                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
                         "Check previous forge log lines to find the offending mod.");
             }
         }
         for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
             if (!Sheets.DECORATED_POT_MATERIALS.containsKey(v)) {
+                var a = new ArrayList<>(BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet());
+                a.removeAll(Sheets.DECORATED_POT_MATERIALS.keySet());
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
-                        "Missing entries: " + new ArrayList<>(BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet())
-                        .removeAll(Sheets.DECORATED_POT_MATERIALS.keySet()) + "\n" +
+                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
                         "Check previous forge log lines to find the offending mod.");
             }
         }

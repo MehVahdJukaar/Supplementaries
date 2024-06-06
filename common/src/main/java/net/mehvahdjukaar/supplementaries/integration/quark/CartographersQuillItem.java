@@ -54,7 +54,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     public static final String TAG_SEARCH_RADIUS = "maxSearchRadius";
     public static final String TAG_ZOOM = "zoomLevel";
     public static final String TAG_DECORATION = "decoration";
-    public static final String TAG_NAME = "decoration";
+    public static final String TAG_NAME = "name";
 
     protected static final String TAG_RADIUS = "searchRadius";
     protected static final String TAG_POS_INDEX = "searchIndex";

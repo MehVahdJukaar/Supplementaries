@@ -206,11 +206,15 @@ public class ClientReceivers {
                 Supplementaries.LOGGER.error("Entity not found for parrot packet");
                 return;
             }
-            BlockPos pos = e.blockPosition();
-            List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
+            if(message.playing && e instanceof Player p){
+                BlockPos pos = e.blockPosition();
+                List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
 
-            for (LivingEntity livingEntity : list) {
-                livingEntity.setRecordPlayingNearby(pos, message.playing);
+                for (LivingEntity livingEntity : list) {
+                    if (livingEntity instanceof IFluteParrot fp) {
+                        fp.supplementaries$setPartyByFlute(p);
+                    }
+                }
             }
 
             setDisplayParrotsPartying(l, Either.left((Player) e), message.playing);
@@ -218,7 +222,9 @@ public class ClientReceivers {
     }
 
     public static void setDisplayParrotsPartying(Level level, Either<Player, BlockPos> source, boolean isPartying) {
-        BlockPos pos = source.mapBoth(Player::blockPosition, p -> p).right().orElse(BlockPos.ZERO);
+        BlockPos pos;
+        if (source.right().isPresent()) pos = source.right().get();
+        else pos = source.left().get().blockPosition();
 
         List<Player> list = level.getEntitiesOfClass(Player.class, (new AABB(pos)).inflate(3.0));
 

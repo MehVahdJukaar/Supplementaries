@@ -33,7 +33,9 @@ public abstract class InstrumentItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         player.startUsingItem(hand);
-        ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(player, new ClientBoundFluteParrotsPacket(player, true));
+        if (!world.isClientSide) {
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
+        }
         return InteractionResultHolder.consume(player.getItemInHand(hand));
     }
 
@@ -47,7 +49,9 @@ public abstract class InstrumentItem extends Item {
     @Override
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
         SongsManager.clearCurrentlyPlaying(entity.getUUID());
-        ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
+        if (!pLevel.isClientSide) {
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
+        }
     }
 
     public float getPitch(int note) {

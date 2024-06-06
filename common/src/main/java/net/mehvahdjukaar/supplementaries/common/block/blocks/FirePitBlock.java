@@ -34,7 +34,9 @@ import org.jetbrains.annotations.Nullable;
 public class FirePitBlock extends LightUpWaterBlock {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
 
-    protected static final VoxelShape SHAPE = Shapes.or(Block.box(1.0D, 4.0D, 1.0D, 15.0D, 9.0D, 15.0D), Block.box(2.0D, 0.0D, 2.0D, 14.0D, 4.0D, 14.0D));
+    protected static final VoxelShape SHAPE = Shapes.or(
+            Block.box(1.0D, 0.0D, 1.0D, 15.0D, 1.0D, 15.0D),
+            Block.box(0.0D, 1.0D, 0.0D, 16, 3, 16));
 
     private final float fireDamage;
 
@@ -116,7 +118,7 @@ public class FirePitBlock extends LightUpWaterBlock {
     @ForgeOverride
     @Nullable
     public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob entity) {
-        return isLitUp(state, (LevelAccessor) level, pos) ? BlockPathTypes.DAMAGE_FIRE : null;
+        return isLitUp(state, level, pos) ? BlockPathTypes.DAMAGE_FIRE : null;
     }
 
     @Override
