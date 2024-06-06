@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items.loot;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -30,7 +29,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     //call on mod setup
     public static void setup() {
         for (Potion potion : BuiltInRegistries.POTION) {
-            if (Utils.isTagged(potion, BuiltInRegistries.POTION, ModTags.QUIVER_POTION_BLACKLIST)) continue;
+            if (BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.QUIVER_POTION_BLACKLIST)) continue;
             boolean isNegative = false;
             for (var e : potion.getEffects()) {
                 if (!e.getEffect().isBeneficial()) {

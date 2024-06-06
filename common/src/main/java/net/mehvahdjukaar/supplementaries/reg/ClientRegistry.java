@@ -167,6 +167,7 @@ public class ClientRegistry {
         MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(ModRegistry.FIRE_PIT.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BUNTING_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE_H.get(), RenderType.cutout());

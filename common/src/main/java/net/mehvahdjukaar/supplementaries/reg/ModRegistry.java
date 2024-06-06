@@ -373,6 +373,8 @@ public class ModRegistry {
             () -> ParticleTypes.FLAME
     ));
 
+    public static final List<Supplier<Item>> SCONCES = new ArrayList<>(List.of(SCONCE_ITEM, SCONCE_ITEM_SOUL));
+
     //candle holder
     public static final List<Supplier<? extends Block>> ALL_CANDLE_HOLDERS = new ArrayList<>();
     public static final Map<DyeColor, Supplier<Block>> CANDLE_HOLDERS = RegUtils.registerCandleHolders(Supplementaries.res(CANDLE_HOLDER_NAME));
@@ -404,6 +406,16 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
             "rope_buntings", () -> PlatHelper.newBlockEntityType(
                     BuntingBlockTile::new, BUNTING_BLOCK.get()));
+
+    // wicker fence
+    public static final Supplier<Block> WICKER_FENCE = regWithItem(WICKER_FENCE_NAME, () -> new WickerFenceBlock(
+            BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)
+                    .mapColor(MapColor.WOOD)
+                    .ignitedByLava()
+                    .strength(0.5f)
+                    .sound(SoundType.SCAFFOLDING)
+                    .noOcclusion()
+    ));
 
     //spikes
     public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(

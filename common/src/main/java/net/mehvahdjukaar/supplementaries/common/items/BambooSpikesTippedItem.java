@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -56,14 +55,14 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get();
     }
 
-    public static boolean isPotionValid(Potion potion){
+    public static boolean isPotionValid(Potion potion) {
         List<MobEffectInstance> effects = potion.getEffects();
-        if(CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()){
-            for(var e: effects){
-                if(e.getEffect().isBeneficial()) return false;
+        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+            for (var e : effects) {
+                if (e.getEffect().isBeneficial()) return false;
             }
         }
-        return !Utils.isTagged(potion, BuiltInRegistries.POTION,ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     @Override

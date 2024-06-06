@@ -1,8 +1,11 @@
 {
   "conditions": [
     {
-      "type": "supplementaries:flag",
-      "flag": "altimeter"
+      "type": "forge:not",
+      "value":     {
+        "type": "forge:tag_empty",
+        "tag": "supplementaries:altimeters"
+      }
     },
     {
       "type": "supplementaries:flag",

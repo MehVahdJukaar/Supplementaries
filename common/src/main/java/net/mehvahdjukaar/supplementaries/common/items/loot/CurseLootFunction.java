@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static net.mehvahdjukaar.moonlight.api.util.Utils.isTagged;
-
 public class CurseLootFunction extends LootItemConditionalFunction {
 
     private static final List<Enchantment> CURSES = new ArrayList<>();
@@ -30,7 +28,7 @@ public class CurseLootFunction extends LootItemConditionalFunction {
     //call on mod setup
     public static void rebuild() {
         for (var e : BuiltInRegistries.ENCHANTMENT) {
-            if (e.isCurse() && !isTagged(e, BuiltInRegistries.ENCHANTMENT, ModTags.CURSES_BLACKLIST)) CURSES.add(e);
+            if (e.isCurse() && !BuiltInRegistries.ENCHANTMENT.wrapAsHolder(e).is(ModTags.CURSES_BLACKLIST)) CURSES.add(e);
         }
     }
 

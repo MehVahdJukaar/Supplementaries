@@ -458,6 +458,7 @@ public class CommonConfigs {
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
+            WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
             //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -564,6 +565,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
+        public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
 
         public static final Supplier<Boolean> HAT_STAND_ENABLED;
         public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;

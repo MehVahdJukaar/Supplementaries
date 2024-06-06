@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FlowerBoxBakedModel implements CustomBakedModel {
@@ -109,7 +108,6 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
         BakedModel model;
         //for special flowers
-        //TODO: automatically scan and load models from blockstate flower folder
         ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem());
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
@@ -122,24 +120,22 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         }
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand);
-        for (BakedQuad q : mimicQuads) {
-            poseStack.pushPose();
-            int[] v = Arrays.copyOf(q.getVertices(), q.getVertices().length);
 
-            if (res == null) {
-                poseStack.translate(-0.5f, -0.5f, -0.5f);
-                poseStack.scale(0.6249f, 0.6249f, 0.6249f);
-            } else {
-                poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
-            }
-            Matrix4f matrix = poseStack.last().pose();
-            VertexUtil.transformVertices(v, matrix);
-
-            poseStack.popPose();
-
-            quads.add(new BakedQuad(v, q.getTintIndex() >= 0 ? index : q.getTintIndex(),
-                    Direction.rotate(matrix, q.getDirection()), q.getSprite(), q.isShade()));
+        poseStack.pushPose();
+        if (res == null) {
+            poseStack.translate(-0.5f, -0.5f, -0.5f);
+            poseStack.scale(0.6249f, 0.6249f, 0.6249f);
+        } else {
+            poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
         }
+        Matrix4f matrix = poseStack.last().pose();
+        poseStack.popPose();
+
+        BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
+                .applyingTransform(matrix)
+                .applyingTintIndex(index);
+
+        quads.addAll(transformer.transformAll(mimicQuads));
     }
 
     @Override

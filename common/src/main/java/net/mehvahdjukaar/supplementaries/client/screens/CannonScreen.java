@@ -129,6 +129,8 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     @Override
     public void containerTick() {
         super.containerTick();
+        this.yawSelector.tick();
+        this.pitchSelector.tick();
     }
 
     @Override

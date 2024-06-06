@@ -18,6 +18,7 @@ import static net.mehvahdjukaar.supplementaries.reg.RegUtils.regBlock;
 import static net.mehvahdjukaar.supplementaries.reg.RegUtils.regItem;
 
 public class ArchitectsPalCompat {
+
     public static void init() {
         ModRegistry.SCONCES.add(SCONCE_ITEM_NETHER_BRASS);
     }

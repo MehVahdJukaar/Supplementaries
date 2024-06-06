@@ -43,8 +43,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE_Z = box(2, 0, 1, 14, 9, 15);
-    private static final VoxelShape SHAPE_X = box(1, 0, 2, 15, 9, 14);
+    private static final VoxelShape SHAPE = box(2, 0, 2, 14, 9, 14);
 
     public LunchBoxBlock(Properties properties) {
         super(properties);
@@ -67,7 +66,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
+        return SHAPE;
     }
 
     @Nullable
