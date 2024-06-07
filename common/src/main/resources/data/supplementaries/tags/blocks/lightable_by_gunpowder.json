@@ -8,6 +8,7 @@
     {"id":"#bbb:braziers","required":false},
     {"id":"#forge:braziers","required":false},
     {"id":"#minecraft:candles","required":true},
+    {"id":"#minecraft:candle_cakes","required":true},
     {"id":"#minecraft:campfires","required":true},
     {"id":"amendments:candle_skull","required":false}
   ]
