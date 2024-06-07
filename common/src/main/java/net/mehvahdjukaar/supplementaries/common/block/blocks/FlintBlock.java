@@ -56,7 +56,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
 
         ModNetwork.CHANNEL.sendToAllClientPlayersInRange(level, firePos, 64,
                 new ClientBoundParticlePacket(Vec3.atCenterOf(firePos),
-                        ClientBoundParticlePacket.EventType.FLINT_BLOCK_IGNITE,
+                        ClientBoundParticlePacket.Type.FLINT_BLOCK_IGNITE,
                         isIronMoving ? 1 : 0));
         for (Direction dir : Direction.values()) {
 

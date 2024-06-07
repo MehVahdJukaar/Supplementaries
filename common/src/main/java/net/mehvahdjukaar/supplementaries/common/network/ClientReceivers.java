@@ -23,6 +23,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -144,8 +147,34 @@ public class ClientReceivers {
                         }
                     }
                 }
+                case CONFETTI -> {
+                    float spread = 9f;
+                    var dir = message.dir;
+                    var pos = message.pos;
+                    float scale = message.extraData != null ? (message.extraData + 1) * 0.6f : 1;
+                    for (int j = 0; j < 40; ++j) {
+                        Vec3 facingDir = randomizeVector(l.random, dir, spread)
+                                .scale(scale * Mth.nextFloat(l.random, 0.3f, 0.7f));
+                        l.addParticle(ModParticles.CONFETTI_PARTICLE.get(), pos.x, pos.y, pos.z,
+                                facingDir.x, facingDir.y, facingDir.z);
+                    }
+                }
             }
         });
+    }
+
+    public static Vec3 randomizeVector(RandomSource random, Vec3 vector, float spread) {
+        float pitch = (float) -Math.toDegrees(Math.asin(vector.y));
+        float yaw = (float) Math.toDegrees(Math.atan2(-vector.x, vector.z));
+
+        // Add randomness
+        double deltaPitch = (random.nextGaussian()) * spread;
+        double deltaYaw = (random.nextGaussian()) * spread;
+
+        pitch += deltaPitch;
+        yaw += deltaYaw;
+
+        return Vec3.directionFromRotation(pitch - 10, yaw);
     }
 
     public static void handleSyncAntiqueInkPacket(ClientBoundSyncAntiqueInk message) {
@@ -206,7 +235,7 @@ public class ClientReceivers {
                 Supplementaries.LOGGER.error("Entity not found for parrot packet");
                 return;
             }
-            if(message.playing && e instanceof Player p){
+            if (message.playing && e instanceof Player p) {
                 BlockPos pos = e.blockPosition();
                 List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
 

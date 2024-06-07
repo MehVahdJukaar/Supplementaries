@@ -11,14 +11,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClientBoundParticlePacket implements Message {
 
-    public final EventType id;
+    public final Type id;
     @Nullable
     public final Vec3 pos;
     @Nullable
     public final Integer extraData;
+    @Nullable
+    public final Vec3 dir;
 
     public ClientBoundParticlePacket(FriendlyByteBuf buffer) {
-        this.id = buffer.readEnum(EventType.class);
+        this.id = buffer.readEnum(Type.class);
         if (buffer.readBoolean()) {
             this.extraData = buffer.readInt();
         } else this.extraData = null;
@@ -26,27 +28,40 @@ public class ClientBoundParticlePacket implements Message {
             this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         } else {
             this.pos = null;
+        }if(buffer.readBoolean()) {
+            this.dir = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+        }else{
+            this.dir = null;
         }
     }
 
-    public ClientBoundParticlePacket(BlockPos pos, EventType id) {
+    public ClientBoundParticlePacket(BlockPos pos, Type id) {
         this(Vec3.atCenterOf(pos), id);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, EventType id) {
+    public ClientBoundParticlePacket(Vec3 pos, Type id) {
         this(pos, id, null);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, EventType id, Integer extraData) {
+    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData) {
         this.pos = pos;
         this.id = id;
         this.extraData = extraData;
+        this.dir = null;
     }
 
-    public ClientBoundParticlePacket(Entity entity, EventType id) {
+    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData, Vec3 direction) {
+        this.pos = pos;
+        this.id = id;
+        this.extraData = extraData;
+        this.dir = direction;
+    }
+
+    public ClientBoundParticlePacket(Entity entity, Type id) {
         this.extraData = entity.getId();
         this.id = id;
         this.pos = null;
+        this.dir = null;
     }
 
     @Override
@@ -66,6 +81,14 @@ public class ClientBoundParticlePacket implements Message {
         } else {
             buffer.writeBoolean(false);
         }
+        if (dir != null) {
+            buffer.writeBoolean(true);
+            buffer.writeDouble(this.dir.x);
+            buffer.writeDouble(this.dir.y);
+            buffer.writeDouble(this.dir.z);
+        } else {
+            buffer.writeBoolean(false);
+        }
     }
 
     @Override
@@ -73,13 +96,14 @@ public class ClientBoundParticlePacket implements Message {
         ClientReceivers.handleSpawnBlockParticlePacket(this);
     }
 
-    public enum EventType {
+    public enum Type {
         BUBBLE_BLOW,
         BUBBLE_CLEAN,
         BUBBLE_CLEAN_ENTITY,
         DISPENSER_MINECART,
         FLINT_BLOCK_IGNITE,
-        WAX_ON
+        WAX_ON,
+        CONFETTI
     }
 
 }

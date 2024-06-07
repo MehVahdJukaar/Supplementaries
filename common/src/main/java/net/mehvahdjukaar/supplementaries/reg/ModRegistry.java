@@ -112,6 +112,9 @@ public class ModRegistry {
             .stacksTo(1)
             .durability(192)));
 
+    //confetti
+    public static final Supplier<Item> CONFETTI_POPPER = regItem(CONFETTI_POPPER_NAME, () -> new ConfettiPopperItem(new Item.Properties()));
+
     //flute
     public static final Supplier<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem(new Item.Properties()
             .stacksTo(1)

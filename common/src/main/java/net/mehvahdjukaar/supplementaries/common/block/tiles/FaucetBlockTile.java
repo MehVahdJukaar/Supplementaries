@@ -300,7 +300,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     public static <T> void removeDataInteractions(Collection<T> interactions) {
         for (var v : interactions) {
-            if (v instanceof FaucetTarget fs) {
+            if (v instanceof FaucetTarget<?> fs) {
                 BLOCK_INTERACTIONS.remove(fs);
             } else if (v instanceof FaucetItemSource fs) {
                 ITEM_INTERACTIONS.remove(fs);

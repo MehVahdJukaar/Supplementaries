@@ -65,6 +65,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         builder.add(FACING, POWERED);
     }
 
+    @Override
+    public boolean isSignalSource(BlockState state) {
+        return true;
+    }
+
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()

@@ -313,6 +313,10 @@ public class ModCreativeTabs {
                 ModConstants.LUMISENE_NAME,
                 ModFluids.LUMISENE_BUCKET);
 
+        after(e, Items.FIREWORK_ROCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.CONFETTI_POPPER_NAME,
+                ModRegistry.CONFETTI_POPPER);
+
         after(e, Items.TNT_MINECART, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.DISPENSER_MINECART_NAME,
                 ModRegistry.DISPENSER_MINECART_ITEM);

@@ -16,7 +16,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -35,13 +34,13 @@ public class FirePitBlock extends LightUpWaterBlock {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
 
     protected static final VoxelShape SHAPE = Shapes.or(
-            Block.box(1.0D, 0.0D, 1.0D, 15.0D, 1.0D, 15.0D),
-            Block.box(0.0D, 1.0D, 0.0D, 16, 3, 16));
+            Block.box(2.0D, 0.0D, 1.0D, 14.0D, 2.0D, 14.0D),
+            Block.box(0.0D, 2.0D, 0.0D, 16, 5, 16));
 
     private final float fireDamage;
 
     public FirePitBlock(float fireDamage, BlockBehaviour.Properties properties) {
-        super(properties);
+        super(properties.lightLevel((state) -> state.getValue(LIT) ? 15 : 0));
         this.fireDamage = fireDamage;
         this.registerDefaultState(this.defaultBlockState().setValue(HANGING, false));
     }
@@ -96,13 +95,6 @@ public class FirePitBlock extends LightUpWaterBlock {
         RandomSource random = level.getRandom();
         level.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5D + random.nextDouble() / 2.0D * (random.nextBoolean() ? 1 : -1), pos.getY() + 0.4D, pos.getZ() + 0.5D + random.nextDouble() / 2.0D * (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
     }
-
-    @Override
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        Direction direction = getDir(state).getOpposite();
-        return Block.canSupportCenter(level, pos.relative(direction), direction.getOpposite());
-    }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

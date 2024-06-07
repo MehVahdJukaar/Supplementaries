@@ -896,6 +896,7 @@ public class CommonConfigs {
             CANDY_ENABLED = feature(builder, ModConstants.CANDY_NAME);
             STASIS_ENABLED = feature(builder, ModConstants.STASIS_NAME);
             DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
+            POPPER_ENABLED = feature(builder, ModConstants.CONFETTI_POPPER_NAME);
 
             builder.pop();
         }
@@ -954,6 +955,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> STASIS_ENABLED;
 
         public static final Supplier<Boolean> DEPTH_METER_ENABLED;
+        public static final Supplier<Boolean> POPPER_ENABLED;
 
         public static final Supplier<Boolean> SLICE_MAP_ENABLED;
         public static final Supplier<Double> SLICE_MAP_RANGE;

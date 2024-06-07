@@ -44,7 +44,7 @@ public interface IWaxable {
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
                 ModNetwork.CHANNEL.sendToAllClientPlayersInRange(level, pos, 64,
-                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.EventType.WAX_ON));
+                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.WAX_ON));
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);

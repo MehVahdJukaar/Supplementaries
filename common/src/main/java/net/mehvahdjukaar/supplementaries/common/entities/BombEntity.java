@@ -130,8 +130,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             }
             case 10 -> {
                 spawnBreakParticles();
-                if (MiscUtils.FESTIVITY.isBirthday()) {
-                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
+                if (MiscUtils.FESTIVITY.isBirthday() || PlatHelper.isDev()) {
+                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 550, 0.3f);
                 } else {
                     level().addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
                             this.type.getRadius(), 0, 0);
@@ -152,7 +152,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     private void spawnParticleInASphere(ParticleOptions type, int amount, float speed) {
-        double inclinationIncrement = Math.PI / amount; // Angle between each latitude line
         double azimuthIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
 
         for (int i = 0; i < amount; i++) {
