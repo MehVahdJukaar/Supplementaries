@@ -135,8 +135,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return this.getItem(1);
     }
 
+    public void setProjectile(ItemStack stack) {
+        this.setItem(1, stack);
+    }
+
     public ItemStack getFuel() {
         return this.getItem(0);
+    }
+
+    public void setFuel(ItemStack stack) {
+        this.setItem(0, stack);
     }
 
     public float getProjectileDrag() {
@@ -234,6 +242,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public void ignite(@Nullable Player controllingPlayer) {
+        if (this.getProjectile().isEmpty()) return;
+
         this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
                 1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
@@ -262,17 +272,31 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     private void fire() {
+        if (this.getProjectile().isEmpty()) return;
+
         if (level.isClientSide) {
             //call directly on client
             level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
         } else {
-            this.shootProjectile();
+            if (this.shootProjectile()) {
+                Player p = getControllingPlayer();
+                if (p == null || !p.isCreative()) {
+                    ItemStack fuel = this.getFuel();
+                    fuel.shrink(this.firePower);
+                    this.setFuel(fuel);
+
+                    ItemStack projectile = this.getProjectile();
+                    projectile.shrink(1);
+                    this.setProjectile(projectile);
+                }
+            }
+
         }
         this.disabledCooldown = 1;
     }
 
     private boolean shootProjectile() {
-        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(0.01);
+        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw);
         ItemStack projectile = this.getProjectile();
 
         if (selectedBehavior == null) updateBehavior();

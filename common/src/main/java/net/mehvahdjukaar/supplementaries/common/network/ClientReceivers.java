@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -148,11 +149,11 @@ public class ClientReceivers {
                     }
                 }
                 case CONFETTI -> {
-                    float spread = 9f;
+                    float spread = 0.1f;
                     var dir = message.dir;
                     var pos = message.pos;
-                    float scale = message.extraData != null ? (message.extraData + 1) * 0.6f : 1;
-                    for (int j = 0; j < 40; ++j) {
+                    float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
+                    for (int j = 0; j < 50; ++j) {
                         Vec3 facingDir = randomizeVector(l.random, dir, spread)
                                 .scale(scale * Mth.nextFloat(l.random, 0.3f, 0.7f));
                         l.addParticle(ModParticles.CONFETTI_PARTICLE.get(), pos.x, pos.y, pos.z,
@@ -163,18 +164,40 @@ public class ClientReceivers {
         });
     }
 
-    public static Vec3 randomizeVector(RandomSource random, Vec3 vector, float spread) {
-        float pitch = (float) -Math.toDegrees(Math.asin(vector.y));
-        float yaw = (float) Math.toDegrees(Math.atan2(-vector.x, vector.z));
+    public static Vec3 randomizeVector(RandomSource random, Vec3 mean, float spread) {
+        // Generate a random vector with a Gaussian distribution
+        float x = (float) random.nextGaussian() * spread;
+        float y = (float) random.nextGaussian()* spread;
+        float z = (float) random.nextGaussian()* spread;
 
-        // Add randomness
-        double deltaPitch = (random.nextGaussian()) * spread;
-        double deltaYaw = (random.nextGaussian()) * spread;
+        // Create a random vector from the Gaussian distribution
+        Vector3f randomGaussianVector = new Vector3f(x, y, z);
 
-        pitch += deltaPitch;
-        yaw += deltaYaw;
+        // Normalize the mean vector
+        Vector3f normalizedMean = mean.toVector3f().normalize();
 
-        return Vec3.directionFromRotation(pitch - 10, yaw);
+        // Find two orthogonal vectors to the mean vector to form a basis
+        Vector3f basis1 = findOrthogonalVector(normalizedMean).normalize();
+        Vector3f basis2 = new Vector3f(normalizedMean).cross(basis1).normalize();
+
+        // Project the random Gaussian vector onto the plane formed by basis1 and basis2
+        float projectedX = randomGaussianVector.dot(basis1);
+        float projectedY = randomGaussianVector.dot(basis2);
+
+        // Create the final random vector on the plane and add the mean vector
+        Vector3f randomOnPlane = new Vector3f(basis1).mul(projectedX).add(new Vector3f(basis2).mul(projectedY));
+        Vector3f finalRandomVector = new Vector3f(randomOnPlane).add(mean.toVector3f());
+
+        return new Vec3(finalRandomVector);
+    }
+
+    // Helper function to find an arbitrary vector orthogonal to the given vector
+    private static Vector3f findOrthogonalVector(Vector3f v) {
+        if (Math.abs(v.x) > Math.abs(v.y)) {
+            return new Vector3f(-v.z, 0, v.x).normalize();
+        } else {
+            return new Vector3f(0, v.z, -v.y).normalize();
+        }
     }
 
     public static void handleSyncAntiqueInkPacket(ClientBoundSyncAntiqueInk message) {

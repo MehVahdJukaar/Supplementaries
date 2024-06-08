@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -185,10 +186,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity) {
-            return super.getCollisionShape(state, level, pos, context);
+        if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Projectile p && p.tickCount < 4) {
+            return Shapes.empty();
         }
-        return Shapes.empty();
+        return super.getCollisionShape(state, level, pos, context);
     }
 
     @Override

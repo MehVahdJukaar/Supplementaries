@@ -27,7 +27,11 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
     private final float gravity;
 
     public DefaultProjectileBehavior(Level level, ItemStack projectile) {
-
+        if (projectile.isEmpty()) {
+            this.drag = 0;
+            this.gravity = 0;
+            return;
+        }
         Entity proj = createEntity(projectile, level, Vec3.ZERO);
 
         proj.setDeltaMovement(1, 0, 0);
@@ -50,6 +54,14 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, BlockPos pos, Vec3 facing, int power, float drag, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, level, facing);
+
+        facing.scale(0.01f);
+
+        //create new one just to be sure
+        CompoundTag c = new CompoundTag();
+        entity.save(c);
+        var opt = EntityType.create(c, level); // create new to reset level properly
+        if (opt.isPresent()) entity=  opt.get();
 
         // setup entity
         if (entity instanceof Projectile pr) {
@@ -80,25 +92,25 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
         if (projectile.getItem() instanceof ArrowItem ai) {
             return ai.createArrow(level, projectile, fakePlayer);
         }
-
         //create from item
 
         ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
         testLevel.setup();
+
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         Entity entity = testLevel.projectile;
 
-        //create new one just to be sure
-        CompoundTag c = new CompoundTag();
-        entity.save(c);
-        var opt = EntityType.create(c, level); // create new to reset level properly
+        if (entity != null) {
+            return entity;
+        }
 
-        return opt.orElseGet(() -> new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY));
+        return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
     }
 
     private static class ProjectileTestLevel extends DummyWorld {
 
+        @Nullable
         private Entity projectile = null;
 
         public ProjectileTestLevel() {

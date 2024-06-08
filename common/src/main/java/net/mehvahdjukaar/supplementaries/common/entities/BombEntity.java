@@ -131,7 +131,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             case 10 -> {
                 spawnBreakParticles();
                 if (MiscUtils.FESTIVITY.isBirthday() || PlatHelper.isDev()) {
-                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 550, 0.3f);
+                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
                 } else {
                     level().addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
                             this.type.getRadius(), 0, 0);

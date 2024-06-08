@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
@@ -36,6 +37,7 @@ public class ModSetup {
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
+            CannonBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
             PresentBehaviorsManager::registerBehaviors,
             FaucetBehaviorsManager::registerBehaviors, //amendments is also registering them so we need to do it here

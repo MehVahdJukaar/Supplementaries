@@ -107,7 +107,7 @@ public class ConfettiParticle extends TextureSheetParticle {
 
         boolean hasLanded = (onGround || still);
 
-        float posChange = 0.02f;
+        float posChange = 0.01f;
         this.xd += posChange * X_NOISE.getValue(particleRandom, this.age, false);
         this.zd += posChange * Z_NOISE.getValue(particleRandom, this.age, false);
         this.oYaw = this.yaw;

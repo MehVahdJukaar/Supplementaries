@@ -32,7 +32,7 @@ public class PopperBehavior implements ICannonBehavior {
                 pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
 
         ClientBoundParticlePacket packet = new ClientBoundParticlePacket(p, ClientBoundParticlePacket.Type.CONFETTI,
-                power, facing);
+                power, facing.scale(-1));
         ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, pos, packet);
         return true;
     }
