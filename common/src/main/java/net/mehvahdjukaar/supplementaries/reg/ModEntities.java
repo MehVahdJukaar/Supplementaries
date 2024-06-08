@@ -74,6 +74,11 @@ public class ModEntities {
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(1));
 
+    //bomb
+    public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->
+            EntityType.Builder.<CannonBallEntity>of(CannonBallEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1));
+
     //rope arrow
     public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)

@@ -23,9 +23,14 @@ public class ConfettiPopperItem extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, InteractionHand hand) {
         playSound(level, player, player.getX(), player.getY(), player.getZ());
         if (!level.isClientSide) {
+
             Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
+            //hack
+            float oldRot = player.getXRot();
+            player.setXRot(oldRot-20);
             ClientBoundParticlePacket packet = new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.CONFETTI,
                     null, player.getLookAngle());
+            player.setXRot(oldRot);
             ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(pos), packet);
         }
 

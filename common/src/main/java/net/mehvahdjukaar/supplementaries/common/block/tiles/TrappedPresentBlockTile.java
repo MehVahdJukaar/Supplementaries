@@ -3,12 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
-import net.mehvahdjukaar.supplementaries.common.block.present.IPresentItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSourceImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
@@ -65,19 +65,19 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     @Override
     public boolean canOpen(Player player) {
-        if(!super.canOpen(player))return false;
-        if(!this.isUnused())return false;
+        if (!super.canOpen(player)) return false;
+        if (!this.isUnused()) return false;
         return !this.isPrimed();
     }
 
     @Override
-    public InteractionResult interact(Level  level, BlockPos pos, BlockState state, Player player) {
-        if(state.getValue(TrappedPresentBlock.ON_COOLDOWN)){
+    public InteractionResult interact(Level level, BlockPos pos, BlockState state, Player player) {
+        if (state.getValue(TrappedPresentBlock.ON_COOLDOWN)) {
             return InteractionResult.FAIL;
         }
         if (this.isUnused()) {
             if (this.canOpen(player)) {
-                if(player instanceof ServerPlayer serverPlayer) {
+                if (player instanceof ServerPlayer serverPlayer) {
                     PlatHelper.openCustomMenu(serverPlayer, this, pos);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
@@ -85,7 +85,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
                 //boom!
                 level.setBlockAndUpdate(pos, state.setValue(TrappedPresentBlock.ON_COOLDOWN, true));
                 level.scheduleTick(pos, state.getBlock(), 10);
-                if(level instanceof ServerLevel sl) {
+                if (level instanceof ServerLevel sl) {
                     detonate(sl, pos);
                 }
             }
@@ -96,12 +96,18 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     }
 
     public void detonate(ServerLevel level, BlockPos pos) {
-        BlockSourceImpl blocksourceimpl = new BlockSourceImpl(level, pos);
         ItemStack stack = this.getItem(0);
-        IPresentItemBehavior presentItemBehavior = TrappedPresentBlock.getPresentBehavior(stack);
+        IFireItemBehavior behavior = TrappedPresentBlock.getPresentBehavior(stack.getItem());
         this.updateState(false);
-        presentItemBehavior.trigger(blocksourceimpl, stack);
+        if (behavior.fire(stack.copy(), level, pos, 0.4f, new Vec3(0, 1, 0),
+                0.6f, 1, 11, null)) {
+            stack.shrink(1);
+        }
+
+        level.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+
     }
+
 
     @Override
     public Component getDefaultName() {

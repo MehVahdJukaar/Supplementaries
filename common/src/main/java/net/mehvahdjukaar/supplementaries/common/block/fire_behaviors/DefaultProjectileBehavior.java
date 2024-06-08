@@ -1,10 +1,9 @@
-package net.mehvahdjukaar.supplementaries.common.block.cannon;
+package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -21,38 +20,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class DefaultProjectileBehavior implements ICannonBehavior {
+public class DefaultProjectileBehavior implements IFireItemBehavior, IBallistic {
 
-    private final float drag;
-    private final float gravity;
-
-    public DefaultProjectileBehavior(Level level, ItemStack projectile) {
+    @Override
+    public Data calculateData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
-            this.drag = 0;
-            this.gravity = 0;
-            return;
+            return new Data(1, 0);
         }
         Entity proj = createEntity(projectile, level, Vec3.ZERO);
 
         proj.setDeltaMovement(1, 0, 0);
         proj.tick();
         var newMovement = proj.getDeltaMovement();
-        this.drag = (float) newMovement.x;
-        this.gravity = (float) -newMovement.y;
+        float drag = (float) newMovement.x;
+        float gravity = (float) -newMovement.y;
+        return new Data(drag, gravity);
     }
 
     @Override
-    public float getDrag() {
-        return drag;
-    }
-
-    @Override
-    public float getGravity() {
-        return gravity;
-    }
-
-    @Override
-    public boolean fire(ItemStack stack, ServerLevel level, BlockPos pos, Vec3 facing, int power, float drag, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos,
+                        Vec3 facing, float power, float drag, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, level, facing);
 
         facing.scale(0.01f);
@@ -72,9 +59,7 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
             pr.shoot(facing.x, facing.y, facing.z, -drag * power, inaccuracy);
         }
 
-        entity.setPos(pos.getX() + 0.5 - facing.x,
-                pos.getY() + 0.5 - facing.y, pos.getZ() + 0.5 - facing.z);
-
+        entity.setPos(firePos.x, firePos.y, firePos.z);
 
         level.addFreshEntity(entity);
         return true;
@@ -128,7 +113,6 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
         }
     }
 
-
     @Deprecated(forRemoval = true)
     //in degrees
     public static double getPitch(Vec3 vec3) {
@@ -140,4 +124,5 @@ public class DefaultProjectileBehavior implements ICannonBehavior {
     public static double getYaw(Vec3 vec3) {
         return Math.toDegrees(Math.atan2(-vec3.x, vec3.z));
     }
+
 }

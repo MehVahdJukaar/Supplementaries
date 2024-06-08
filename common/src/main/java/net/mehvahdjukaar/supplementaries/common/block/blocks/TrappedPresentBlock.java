@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.supplementaries.common.block.present.IPresentItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SpitItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -27,11 +27,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class TrappedPresentBlock extends AbstractPresentBlock {
 
-    private static final Map<Item, IPresentItemBehavior> TRAPPED_PRESENT_INTERACTIONS_REGISTRY =  new IdentityHashMap<>();
+    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS =  new IdentityHashMap<>();
+    private static final IFireItemBehavior DEFAULT = new SpitItemBehavior();
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
@@ -42,12 +42,12 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
                 .setValue(ON_COOLDOWN,false));
     }
 
-    public static void registerBehavior(ItemLike pItem, IPresentItemBehavior pBehavior) {
-        TRAPPED_PRESENT_INTERACTIONS_REGISTRY.put(pItem.asItem(), pBehavior);
+    public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
+        FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
     }
 
-    public static IPresentItemBehavior getPresentBehavior(ItemStack pStack) {
-        return TRAPPED_PRESENT_INTERACTIONS_REGISTRY.getOrDefault(pStack.getItem(), (source, stack) -> Optional.empty());
+    public static IFireItemBehavior getPresentBehavior(ItemLike item) {
+        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
     }
 
     @Override

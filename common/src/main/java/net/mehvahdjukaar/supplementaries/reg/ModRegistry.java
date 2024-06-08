@@ -1022,11 +1022,15 @@ public class ModRegistry {
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
                     CannonBlockTile::new, CANNON.get()));
 
-    public static final Supplier<Block> CANNONBALL = regWithItem(CANNONBALL_NAME, () -> new CannonballBlock(
+    //cannonball
+    public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonballBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
                     .sound(SoundType.COPPER)
                     .noOcclusion()
     ));
+
+    public static final Supplier<Item> CANNONBALL_ITEM = regItem(CANNONBALL_NAME, () ->
+            new CannonBallItem(CANNONBALL.get(), new Item.Properties()));
 
     //urn
     public static final Supplier<Block> URN = regWithItem(URN_NAME, () -> new UrnBlock(

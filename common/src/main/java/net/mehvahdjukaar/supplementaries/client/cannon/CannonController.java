@@ -126,7 +126,7 @@ public class CannonController {
 
             var restraints = getPitchAndYawRestrains(cannon.getBlockState());
             trajectory = CannonTrajectory.findBest(target,
-                    cannon.getProjectileGravity(), cannon.getProjectileDrag(), cannon.getFirePower(), shootingMode,
+                    cannon.getProjectileGravity(), cannon.getTrajectoryData(), cannon.getFirePower(), shootingMode,
                     restraints.minPitch, restraints.maxPitch);
 
             if (trajectory != null) {

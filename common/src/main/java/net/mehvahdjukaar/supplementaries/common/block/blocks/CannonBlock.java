@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -20,9 +21,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
@@ -43,9 +46,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
+
+    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new HashMap<>();
+    private static final IFireItemBehavior DEFAULT = null;
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
@@ -58,6 +66,14 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     public CannonBlock(Properties properties) {
         super(properties);
+    }
+
+    public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
+        FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
+    }
+
+    public static IFireItemBehavior getCannonBehavior(ItemLike item) {
+        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
     }
 
     @Override

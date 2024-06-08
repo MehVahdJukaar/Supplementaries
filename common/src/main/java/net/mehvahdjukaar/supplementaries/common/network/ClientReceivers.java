@@ -21,6 +21,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -153,10 +154,14 @@ public class ClientReceivers {
                     var dir = message.dir;
                     var pos = message.pos;
                     float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
-                    for (int j = 0; j < 50; ++j) {
-                        Vec3 facingDir = randomizeVector(l.random, dir, spread)
-                                .scale(scale * Mth.nextFloat(l.random, 0.3f, 0.7f));
-                        l.addParticle(ModParticles.CONFETTI_PARTICLE.get(), pos.x, pos.y, pos.z,
+                    for (int j = 0; j < 60; ++j) {
+
+                        Vector3f facingDir = randomizeVector(l.random, dir, spread)
+                                .mul(scale * Mth.nextFloat(l.random, 0.3f, 0.7f));
+                        SimpleParticleType p = l.random.nextInt(6) == 0 ?
+                                ModParticles.STREAMER_PARTICLE.get() :
+                                ModParticles.CONFETTI_PARTICLE.get();
+                        l.addParticle(p, pos.x, pos.y, pos.z,
                                 facingDir.x, facingDir.y, facingDir.z);
                     }
                 }
@@ -164,31 +169,14 @@ public class ClientReceivers {
         });
     }
 
-    public static Vec3 randomizeVector(RandomSource random, Vec3 mean, float spread) {
-        // Generate a random vector with a Gaussian distribution
-        float x = (float) random.nextGaussian() * spread;
-        float y = (float) random.nextGaussian()* spread;
-        float z = (float) random.nextGaussian()* spread;
+    public static Vector3f randomizeVector(RandomSource random, Vec3 mean, float spread) {
+        Vector3f facing = mean.toVector3f();
+        Vector3f ort = findOrthogonalVector(facing);
+        ort.rotateAxis(random.nextFloat() * Mth.TWO_PI, facing.x, facing.y, facing.z);
+        ort.mul((float) (random.nextGaussian() * spread));
 
-        // Create a random vector from the Gaussian distribution
-        Vector3f randomGaussianVector = new Vector3f(x, y, z);
-
-        // Normalize the mean vector
-        Vector3f normalizedMean = mean.toVector3f().normalize();
-
-        // Find two orthogonal vectors to the mean vector to form a basis
-        Vector3f basis1 = findOrthogonalVector(normalizedMean).normalize();
-        Vector3f basis2 = new Vector3f(normalizedMean).cross(basis1).normalize();
-
-        // Project the random Gaussian vector onto the plane formed by basis1 and basis2
-        float projectedX = randomGaussianVector.dot(basis1);
-        float projectedY = randomGaussianVector.dot(basis2);
-
-        // Create the final random vector on the plane and add the mean vector
-        Vector3f randomOnPlane = new Vector3f(basis1).mul(projectedX).add(new Vector3f(basis2).mul(projectedY));
-        Vector3f finalRandomVector = new Vector3f(randomOnPlane).add(mean.toVector3f());
-
-        return new Vec3(finalRandomVector);
+        facing.add(ort).normalize();
+        return facing;
     }
 
     // Helper function to find an arbitrary vector orthogonal to the given vector

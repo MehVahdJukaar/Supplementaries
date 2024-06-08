@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
@@ -56,11 +54,15 @@ public class ConfettiParticle extends TextureSheetParticle {
         //longer
         this.lifetime = random.nextInt(400, 700);
 
-        int col = ColorHelper.getRandomBrightColor(this.random);
+        this.quadSize *=1.25f;
+        /*
+        int col =  ColorHelper.getRandomBrightColor(this.random);
 
         this.rCol = FastColor.ARGB32.red(col) / 255f;
         this.gCol = FastColor.ARGB32.green(col) / 255f;
         this.bCol = FastColor.ARGB32.blue(col) / 255f;
+
+         */
     }
 
     @Override

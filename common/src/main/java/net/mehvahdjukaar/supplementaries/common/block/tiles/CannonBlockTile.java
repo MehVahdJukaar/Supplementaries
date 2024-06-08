@@ -2,8 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.DefaultProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.ICannonBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -20,7 +21,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -29,14 +29,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
-    private static final Map<Item, BiFunction<Level, ItemStack, ICannonBehavior>> SPECIAL_BEHAVIORS = new HashMap<>();
 
     private static final int TIME_TO_FIRE = 40;
     private static final int FIRE_COOLDOWN = 60;
@@ -52,7 +48,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     private byte firePower = 1;
 
     @Nullable
-    private ICannonBehavior selectedBehavior;
+    private IBallistic.Data trajectoryData;
 
     @Nullable
     private UUID playerWhoIgnitedUUID = null;
@@ -79,20 +75,23 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.disabledCooldown = tag.getFloat("cooldown");
         this.timeUntilFire = tag.getFloat("fire_timer");
         this.firePower = tag.getByte("fire_power");
-        this.selectedBehavior = null;
+        this.trajectoryData = null;
     }
 
     @Override
     public void setChanged() {
-        if (this.level != null) {
-            selectedBehavior = null;
-        }
+        super.setChanged();
+        this.trajectoryData = null;
     }
 
-    public void updateBehavior() {
+    public void computeTrajectoryData() {
         ItemStack proj = this.getProjectile();
-        selectedBehavior = SPECIAL_BEHAVIORS.getOrDefault(proj.getItem(), DefaultProjectileBehavior::new)
-                .apply(level, proj);
+        var behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
+        if (behavior instanceof IBallistic b) {
+            this.trajectoryData = b.calculateData(proj, level);
+        } else {
+            this.trajectoryData = IBallistic.line();
+        }
     }
 
     public boolean readyToFire() {
@@ -147,14 +146,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.setItem(0, stack);
     }
 
-    public float getProjectileDrag() {
-        if (selectedBehavior == null) updateBehavior();
-        return selectedBehavior.getDrag();
-    }
-
-    public float getProjectileGravity() {
-        if (selectedBehavior == null) updateBehavior();
-        return selectedBehavior.getGravity();
+    public IBallistic.Data getTrajectoryData() {
+        if (trajectoryData == null) computeTrajectoryData();
+        return trajectoryData;
     }
 
     public byte getFirePower() {
@@ -299,9 +293,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw);
         ItemStack projectile = this.getProjectile();
 
-        if (selectedBehavior == null) updateBehavior();
-        return selectedBehavior.fire(projectile, (ServerLevel) level, worldPosition,
-                facing, firePower, getProjectileDrag(), 0, getControllingPlayer());
+        IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
+
+        return behavior.fire(projectile.copy(), (ServerLevel) level, worldPosition, 0.5f,
+                facing, firePower, getTrajectoryData().drag(), 0, getControllingPlayer());
     }
 
 
@@ -311,8 +306,5 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return level.getPlayerByUUID(this.playerWhoIgnitedUUID);
     }
 
-    public static void registerBehavior(Item item, BiFunction<Level, ItemStack, ICannonBehavior> behavior) {
-        SPECIAL_BEHAVIORS.put(item, behavior);
-    }
 
 }

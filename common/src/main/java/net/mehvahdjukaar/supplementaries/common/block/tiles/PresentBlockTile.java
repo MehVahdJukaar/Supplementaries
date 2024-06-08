@@ -29,8 +29,8 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     private String recipient = "";
     private String sender = "";
     private String description = "";
-
     //TODO: filtering here
+
     public PresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PRESENT_TILE.get(), pos, state);
     }

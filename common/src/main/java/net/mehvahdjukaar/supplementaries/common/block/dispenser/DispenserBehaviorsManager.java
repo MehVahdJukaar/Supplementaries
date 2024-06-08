@@ -97,6 +97,10 @@ public class DispenserBehaviorsManager {
             DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
         }
 
+        if(CommonConfigs.Tools.POPPER_ENABLED.get()){
+            DispenserHelper.registerCustomBehavior(new PopperBehavior(ModRegistry.CONFETTI_POPPER.get()));
+        }
+
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
             BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
                     DispenserHelper.registerCustomBehavior(new ThrowableBricksBehavior(h.value()))

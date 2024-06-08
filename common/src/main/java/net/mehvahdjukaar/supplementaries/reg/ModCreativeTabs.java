@@ -496,6 +496,10 @@ public class ModCreativeTabs {
                 ModConstants.LUNCH_BASKET_NAME,
                 ModRegistry.LUNCH_BASKET);
 
+        before(e, Items.SNOWBALL, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.CANNONBALL_NAME,
+                ModRegistry.CANNONBALL_ITEM);
+
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,
                 ModRegistry.WRENCH);
@@ -507,6 +511,7 @@ public class ModCreativeTabs {
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.SLINGSHOT_NAME,
                 ModRegistry.SLINGSHOT_ITEM);
+
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.ROPE_ARROW_NAME,
@@ -558,6 +563,10 @@ public class ModCreativeTabs {
         add(e, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.WATTLE_AND_DAUB,
                 ModRegistry.DAUB_FRAME, ModRegistry.DAUB_BRACE, ModRegistry.DAUB_CROSS_BRACE);
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.WICKER_FENCE_NAME,
+                ModRegistry.WICKER_FENCE);
 
         after(e, Items.IRON_BARS, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.IRON_GATE_NAME,

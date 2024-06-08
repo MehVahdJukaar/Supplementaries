@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTi
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -18,11 +17,9 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
 
 
     private final EndermanSkullBlockTile dummyTile;
-    private final BlockEntityRenderDispatcher renderer;
 
     public EndermanHeadItemRenderer() {
         super();
-        this.renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher();
         this.dummyTile = new EndermanSkullBlockTile(BlockPos.ZERO, ModRegistry.ENDERMAN_SKULL_BLOCK.get().defaultBlockState());
     }
 
@@ -32,6 +29,6 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
 
         poseStack.translate(1,0,1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        renderer.renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
+        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
     }
 }

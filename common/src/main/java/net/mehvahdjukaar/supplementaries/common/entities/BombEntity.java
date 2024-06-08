@@ -115,7 +115,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     private void spawnBreakParticles() {
         for (int i = 0; i < 8; ++i) {
             this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM,
-                    new ItemStack(ModRegistry.BOMB_ITEM.get())),
+                            new ItemStack(ModRegistry.BOMB_ITEM.get())),
                     this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
@@ -162,7 +162,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             double y = speed * Math.sin(inclination) * Math.sin(azimuth);
             double z = speed * Math.cos(inclination);
 
-            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ()+z,x,y,z);
+            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ() + z, x, y, z);
         }
     }
 
@@ -181,7 +181,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
-        if (this.active && this.tickCount>1) {
+        if (this.active && this.tickCount > 1) {
             double x = currentPos.x;
             double y = currentPos.y;
             double z = currentPos.z;

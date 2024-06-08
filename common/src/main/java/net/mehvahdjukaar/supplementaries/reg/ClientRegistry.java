@@ -322,6 +322,8 @@ public class ClientRegistry {
         event.register(ModParticles.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         event.register(ModParticles.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
         event.register(ModParticles.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+        event.register(ModParticles.STREAMER_PARTICLE.get(), StreamerParticle.Factory::new);
+        event.register(ModParticles.WIND_STREAM.get(), WindTrailParticle.Factory::new);
         event.register(ModParticles.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
         event.register(ModParticles.ROTATION_TRAIL_EMITTER.get(), RotationTrailEmitter.Factory::new);
         event.register(ModParticles.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
@@ -349,6 +351,7 @@ public class ClientRegistry {
         //entities
         event.register(ModEntities.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModEntities.CANNONBALL.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);
