@@ -92,7 +92,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
                                         float soundPitch, float power, float accuracy, float yaw) {
 
         projectileStack.setCount(1);
-        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(entity, level, projectileStack, stack);
+        SlingshotProjectileEntity projectile = new SlingshotProjectileEntity(level, projectileStack, stack, entity);
 
         Vec3 vector3d1 = entity.getUpVector(1.0F);
         Quaternionf quaternionf = new Quaternionf().setAngleAxis(yaw * 0.017453292F, vector3d1.x(), vector3d1.y(), vector3d1.z());

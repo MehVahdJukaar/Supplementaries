@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class EnderPearlBehavior extends DefaultProjectileBehavior {
+public class EnderPearlBehavior extends GenericProjectileBehavior {
 
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 pos, Vec3 facing,

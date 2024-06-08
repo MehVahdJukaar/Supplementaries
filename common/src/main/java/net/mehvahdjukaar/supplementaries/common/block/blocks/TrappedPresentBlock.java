@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SpitItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
@@ -30,8 +32,9 @@ import java.util.Map;
 
 public class TrappedPresentBlock extends AbstractPresentBlock {
 
-    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS =  new IdentityHashMap<>();
-    private static final IFireItemBehavior DEFAULT = new SpitItemBehavior();
+    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new IdentityHashMap<>();
+    private static final IFireItemBehavior DEFAULT =
+            new AlternativeBehavior(new GenericProjectileBehavior(), new SpitItemBehavior());
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
@@ -39,7 +42,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
     public TrappedPresentBlock(DyeColor color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
-                .setValue(ON_COOLDOWN,false));
+                .setValue(ON_COOLDOWN, false));
     }
 
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
@@ -92,7 +95,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.tick(state, level, pos, random);
-        if(state.getValue(ON_COOLDOWN)){
+        if (state.getValue(ON_COOLDOWN)) {
             level.setBlockAndUpdate(pos, state.setValue(ON_COOLDOWN, false));
         }
     }

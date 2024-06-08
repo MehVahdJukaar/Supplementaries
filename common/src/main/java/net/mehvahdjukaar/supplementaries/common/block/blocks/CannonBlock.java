@@ -6,7 +6,10 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -53,7 +56,8 @@ import java.util.Optional;
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new HashMap<>();
-    private static final IFireItemBehavior DEFAULT = null;
+    private static final IFireItemBehavior DEFAULT =
+            new AlternativeBehavior(new GenericProjectileBehavior(), new SlingshotProjectileBehavior());
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);

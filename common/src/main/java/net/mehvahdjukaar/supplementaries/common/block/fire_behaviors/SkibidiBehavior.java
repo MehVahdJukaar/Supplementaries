@@ -4,35 +4,31 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
-public class SkibidiBehavior extends SpawnEggBehavior{
+public class SkibidiBehavior extends SpawnEggBehavior {
 
     @Override
-    public Optional<ItemStack> useItem(BlockSource source, ItemStack stack) {
-        // ALSO FIX HEAD PLACEMENT ON SLABS
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, float drag, int inaccuracy, @Nullable Player owner) {
         EntityType<HatStandEntity> type = ModEntities.HAT_STAND.get();
         try {
-            ServerLevel level = source.getLevel();
-
-            BlockPos pos = source.getPos();
-            HatStandEntity e = spawnMob(type, level, source, stack);
+            HatStandEntity e = spawnMob(type, level, firePos, firePos, power, stack);
             if (e != null) {
-                stack.shrink(1);
-                level.gameEvent(null, GameEvent.ENTITY_PLACE, pos);
+                level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
                 e.setSkibidi(true, false, null);
-                e.setDeltaMovement(0,0,0);
-                return Optional.of(stack);
+                e.setDeltaMovement(0, 0, 0);
+                return true;
             }
         } catch (Exception exception) {
-            Supplementaries.LOGGER.error("Error while dispensing spawn egg from trapped present at {}", source.getPos(), exception);
+            Supplementaries.LOGGER.error("Error while dispensing spawn egg from trapped present at {}", BlockPos.containing(firePos), exception);
         }
-        return Optional.empty();
+        return false;
     }
+
 }

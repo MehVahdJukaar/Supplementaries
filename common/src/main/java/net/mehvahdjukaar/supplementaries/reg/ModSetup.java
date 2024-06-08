@@ -7,8 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.CannonBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PresentBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -37,9 +36,8 @@ public class ModSetup {
             ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
-            CannonBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
-            PresentBehaviorsManager::registerBehaviors,
+            FireBehaviorsManager::registerBehaviors,
             FaucetBehaviorsManager::registerBehaviors, //amendments is also registering them so we need to do it here
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );

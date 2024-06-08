@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
-import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class DefaultProjectileBehavior implements IFireItemBehavior, IBallistic {
+public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic {
 
     @Override
     public Data calculateData(ItemStack projectile, Level level) {
@@ -42,31 +41,36 @@ public class DefaultProjectileBehavior implements IFireItemBehavior, IBallistic 
                         Vec3 facing, float power, float drag, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, level, facing);
 
-        facing.scale(0.01f);
+        if(entity == null) {
 
-        //create new one just to be sure
-        CompoundTag c = new CompoundTag();
-        entity.save(c);
-        var opt = EntityType.create(c, level); // create new to reset level properly
-        if (opt.isPresent()) entity=  opt.get();
+            facing.scale(0.01f);
 
-        // setup entity
-        if (entity instanceof Projectile pr) {
-            pr.cachedOwner = null;
-            pr.ownerUUID = null;
-            pr.setOwner(owner);
+            //create new one just to be sure
+            CompoundTag c = new CompoundTag();
+            entity.save(c);
+            var opt = EntityType.create(c, level); // create new to reset level properly
+            if (opt.isPresent()) entity = opt.get();
 
-            pr.shoot(facing.x, facing.y, facing.z, -drag * power, inaccuracy);
+            // setup entity
+            if (entity instanceof Projectile pr) {
+                pr.cachedOwner = null;
+                pr.ownerUUID = null;
+                pr.setOwner(owner);
+
+                pr.shoot(facing.x, facing.y, facing.z, -drag * power, inaccuracy);
+            }
+
+            entity.setPos(firePos.x, firePos.y, firePos.z);
+
+            level.addFreshEntity(entity);
+            return true;
         }
-
-        entity.setPos(firePos.x, firePos.y, firePos.z);
-
-        level.addFreshEntity(entity);
-        return true;
+        return false;
     }
 
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
 
+    @Nullable
     protected Entity createEntity(ItemStack projectile, Level level, Vec3 facing) {
         if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
 
@@ -84,13 +88,8 @@ public class DefaultProjectileBehavior implements IFireItemBehavior, IBallistic 
 
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
-        Entity entity = testLevel.projectile;
 
-        if (entity != null) {
-            return entity;
-        }
-
-        return new SlingshotProjectileEntity(level, projectile, ItemStack.EMPTY);
+        return testLevel.projectile;
     }
 
     private static class ProjectileTestLevel extends DummyWorld {

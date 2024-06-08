@@ -43,6 +43,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -64,10 +65,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         return 0;
     });
 
-    public SlingshotProjectileEntity(LivingEntity thrower, Level world, ItemStack item, ItemStack throwerStack) {
+    public SlingshotProjectileEntity(Level world, ItemStack item, ItemStack throwerStack,
+                                     @Nullable LivingEntity thrower) {
         this(world, item, throwerStack);
-        setPos(thrower.getX(), thrower.getEyeY() - 0.1, thrower.getZ());
-        this.setOwner(thrower);
+        if (thrower != null) {
+            setPos(thrower.getX(), thrower.getEyeY() - 0.1, thrower.getZ());
+            this.setOwner(thrower);
+        }
     }
 
     public SlingshotProjectileEntity(Level world, ItemStack item, ItemStack throwerStack) {

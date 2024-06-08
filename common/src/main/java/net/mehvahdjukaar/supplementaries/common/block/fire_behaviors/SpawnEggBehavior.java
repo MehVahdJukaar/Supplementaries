@@ -28,6 +28,10 @@ public class SpawnEggBehavior implements IFireItemBehavior {
             Entity e = spawnMob(type, level, firePos, firePos, power, stack);
             if (e != null) {
                 level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
+
+                //update client velocity
+                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
+                        new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
                 return true;
             }
         } catch (Exception exception) {
@@ -63,9 +67,6 @@ public class SpawnEggBehavior implements IFireItemBehavior {
                 mob.playAmbientSound();
             }
             serverLevel.addFreshEntityWithPassengers(entity);
-            //update client velocity
-            ModNetwork.CHANNEL.sendToAllClientPlayersInRange(serverLevel, BlockPos.containing(firePos), 48,
-                    new ClientBoundSendKnockbackPacket(entity.getDeltaMovement(), entity.getId()));
         }
         return entity;
     }
