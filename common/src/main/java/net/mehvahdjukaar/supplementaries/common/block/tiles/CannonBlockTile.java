@@ -90,7 +90,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (behavior instanceof IBallistic b) {
             this.trajectoryData = b.calculateData(proj, level);
         } else {
-            this.trajectoryData = IBallistic.line();
+            this.trajectoryData = IBallistic.LINE;
         }
     }
 
@@ -290,7 +290,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     private boolean shootProjectile() {
-        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw);
+        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(-1);
         ItemStack projectile = this.getProjectile();
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());

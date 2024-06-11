@@ -1,6 +1,6 @@
 {
   "targets": [
-    "swap",
+    "swap"
   ],
   "passes": [
     {

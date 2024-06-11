@@ -1,13 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,16 +36,26 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void appendHoverText(ItemStack pStack, Level level, List<Component> list, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, level, list, pIsAdvanced);
+        if (MiscUtils.showsHints(level, pIsAdvanced)) {
+            addClientTooltip(list);
+        }
         Data data = this.getData(pStack);
         if (data != null) {
             boolean open = data.canEatFrom();
-            pTooltipComponents.add(open ?
+            list.add(open ?
                     Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
                     Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
         }
 
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static void addClientTooltip(List<Component> list) {
+        list.add(Component.translatable("message.supplementaries.lunch_box.tooltip",
+                        Minecraft.getInstance().options.keyAttack.getTranslatedKeyMessage())
+                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override

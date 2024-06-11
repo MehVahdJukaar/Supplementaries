@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,15 +12,25 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.Nullable;
 
-public class CannonballBlock extends WaterBlock {
+public class CannonBallBlock extends WaterBlock {
 
     // jojo reference?
     public static final IntegerProperty BALLS = ModBlockProperties.BALLS;
 
-    public CannonballBlock(BlockBehaviour.Properties properties) {
+    public CannonBallBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState((this.stateDefinition.any().setValue(BALLS, 1))
                 .setValue(WATERLOGGED, false));
+    }
+
+    @Override
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        return 1;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getFluidState().isEmpty();
     }
 
     @Override

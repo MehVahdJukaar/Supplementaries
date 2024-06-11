@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.Enderm
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -46,7 +47,7 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
         renderSkull(direction, rotation, f, poseStack, bufferSource, packedLight, model, renderType);
 
         renderType = RenderType.eyes(ModTextures.ENDERMAN_HEAD_EYES);
-        renderSkull(direction, rotation, f, poseStack, bufferSource, 15728640, model, renderType);
+        renderSkull(direction, rotation, f, poseStack, bufferSource, LightTexture.FULL_SKY, model, renderType);
 
         poseStack.popPose();
     }

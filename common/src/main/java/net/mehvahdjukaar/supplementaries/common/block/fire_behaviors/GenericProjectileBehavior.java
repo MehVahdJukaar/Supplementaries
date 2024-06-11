@@ -24,16 +24,18 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
     @Override
     public Data calculateData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
-            return new Data(1, 0);
+            return IBallistic.LINE;
         }
         Entity proj = createEntity(projectile, level, Vec3.ZERO);
-
-        proj.setDeltaMovement(1, 0, 0);
-        proj.tick();
-        var newMovement = proj.getDeltaMovement();
-        float drag = (float) newMovement.x;
-        float gravity = (float) -newMovement.y;
-        return new Data(drag, gravity);
+        if (proj != null) {
+            proj.setDeltaMovement(1, 0, 0);
+            proj.tick();
+            var newMovement = proj.getDeltaMovement();
+            float drag = (float) newMovement.x;
+            float gravity = (float) -newMovement.y;
+            return new Data(drag, gravity);
+        }
+        return IBallistic.LINE;
     }
 
     @Override
@@ -41,9 +43,9 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
                         Vec3 facing, float power, float drag, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, level, facing);
 
-        if(entity == null) {
+        if (entity != null) {
 
-            facing.scale(0.01f);
+          //  facing.scale(0.01f);
 
             //create new one just to be sure
             CompoundTag c = new CompoundTag();
@@ -57,9 +59,11 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
                 pr.ownerUUID = null;
                 pr.setOwner(owner);
 
-                pr.shoot(facing.x, facing.y, facing.z, -drag * power, inaccuracy);
+                pr.shoot(facing.x, facing.y, facing.z, drag * power, inaccuracy);
             }
 
+            float radius = entity.getBbWidth() * 1.42f;
+            //  firePos = firePos.add(facing.normalize().scale(radius));
             entity.setPos(firePos.x, firePos.y, firePos.z);
 
             level.addFreshEntity(entity);

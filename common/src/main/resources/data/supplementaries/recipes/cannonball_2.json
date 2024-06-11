@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "111",
+    " 1 "
+  ],
+  "key": {
+    "0": {
+      "item": "forge:storage_blocks/lead"
+    }
+  },
+  "result": {
+    "item": "supplementaries:cannonball",
+    "count": 10
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:storage_blocks/lead"
+      }
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -12,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -264,8 +267,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public void addPlacementTooltip(List<Component> tooltip) {
-        tooltip.add(Component.translatable("message.supplementaries.cage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("message.supplementaries.cage.tooltip",
+                        Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())
+                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     private void angerNearbyEntities(Entity entity, Player player) {

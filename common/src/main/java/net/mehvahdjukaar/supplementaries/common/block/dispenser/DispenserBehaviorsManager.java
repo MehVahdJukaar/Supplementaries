@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
@@ -51,7 +52,7 @@ public class DispenserBehaviorsManager {
 
         if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
             DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
-           // DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
+            // DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
@@ -77,7 +78,7 @@ public class DispenserBehaviorsManager {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
         }
         if (CommonConfigs.Functional.SACK_ENABLED.get()) {
-            for(var s : SackBlock.SACK_BLOCKS) {
+            for (var s : SackBlock.SACK_BLOCKS) {
                 DispenserHelper.registerPlaceBlockBehavior(s);
             }
         }
@@ -97,8 +98,10 @@ public class DispenserBehaviorsManager {
             DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
         }
 
-        if(CommonConfigs.Tools.POPPER_ENABLED.get()){
-            DispenserHelper.registerCustomBehavior(new PopperBehavior(ModRegistry.CONFETTI_POPPER.get()));
+        if (CommonConfigs.Tools.POPPER_ENABLED.get()) {
+            DispenserHelper.registerCustomBehavior(
+                    new FireBehaviorProxy(ModRegistry.CONFETTI_POPPER.get(),
+                            new PopperBehavior(), 0.7f, 1, false));
         }
 
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
@@ -152,7 +155,7 @@ public class DispenserBehaviorsManager {
                     if (isForge && axe && i instanceof AxeItem) {
                         DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(i));
                     }
-                    if(key && i instanceof KeyItem){
+                    if (key && i instanceof KeyItem) {
                         DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
                     }
                 } catch (Exception e) {

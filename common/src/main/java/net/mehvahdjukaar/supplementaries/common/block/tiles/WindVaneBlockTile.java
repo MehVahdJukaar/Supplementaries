@@ -30,7 +30,6 @@ public class WindVaneBlockTile extends BlockEntity {
     }
 
     public float getYaw(float partialTicks) {
-
         return  Mth.lerp(partialTicks, prevYaw, yaw);
     }
 

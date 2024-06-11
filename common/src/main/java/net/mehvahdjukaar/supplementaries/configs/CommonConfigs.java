@@ -687,6 +687,7 @@ public class CommonConfigs {
 
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
+            CANNONBALL_ENABLED = feature(builder, "cannonball");
             builder.pop();
 
             builder.push("present");
@@ -770,6 +771,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<Boolean> CANNONBALL_ENABLED;
     }
 
 

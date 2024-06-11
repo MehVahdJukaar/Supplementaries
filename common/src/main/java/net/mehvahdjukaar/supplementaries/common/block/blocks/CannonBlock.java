@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -84,6 +85,16 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(FACING, POWERED);
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getFluidState().isEmpty();
+    }
+
+    @Override
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+        return 1;
     }
 
     @Override
@@ -206,8 +217,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Projectile p && p.tickCount < 4) {
-            return Shapes.empty();
+        if (context instanceof EntityCollisionContext ec &&
+                level instanceof ServerLevel
+                && ec.getEntity() instanceof Projectile p) {
+            if (p.tickCount < 10) {
+                return Shapes.empty();
+            }
         }
         return super.getCollisionShape(state, level, pos, context);
     }
@@ -248,12 +263,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             if (id == 1) {
                 addFireParticles(pos, level, poseStack, pitch, yaw);
                 return true;
-            }
-            else {
+            } else {
                 Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
 
                 level.addParticle(ParticleTypes.FLAME,
-                        p.x, p.y, p.z, 0,0,0);
+                        p.x, p.y, p.z, 0, 0, 0);
             }
         }
 

@@ -600,6 +600,8 @@ public class ModRegistry {
     public static final Supplier<Block> BELLOWS = regWithItem(BELLOWS_NAME, () -> new BellowsBlock(
             BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .mapColor(MapColor.COLOR_BROWN)
+                    .isViewBlocking(NEVER)
+                    .isRedstoneConductor(NEVER)
                     .dynamicShape()
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
@@ -1016,16 +1018,23 @@ public class ModRegistry {
     //cannon
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
-                    .forceSolidOn().dynamicShape()));
+                    .isSuffocating(NEVER)
+                    .isRedstoneConductor(NEVER)
+                    .isViewBlocking(NEVER)
+                    .noOcclusion()
+                    ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
                     CannonBlockTile::new, CANNON.get()));
 
     //cannonball
-    public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonballBlock(
+    public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
                     .sound(SoundType.COPPER)
+                    .isSuffocating(NEVER)
+                    .isRedstoneConductor(NEVER)
+                    .isViewBlocking(NEVER)
                     .noOcclusion()
     ));
 

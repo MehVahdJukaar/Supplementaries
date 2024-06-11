@@ -6,9 +6,7 @@ import net.minecraft.world.level.Level;
 // Provides stats for a ballistic trajectory
 public interface IBallistic {
 
-    static Data line() {
-        return new Data(1, 0);
-    }
+    Data LINE = new Data(1, 0);
 
     Data calculateData(ItemStack stack, Level level);
 

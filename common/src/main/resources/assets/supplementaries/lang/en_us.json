@@ -385,7 +385,7 @@
   "message.supplementaries.altimeter": "Y: %d",
   "message.supplementaries.blackboard": "Waxed",
   "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
-  "message.supplementaries.cage": "[Shift] to place",
+  "message.supplementaries.cage.tooltip": "[%s] to place",
   "message.supplementaries.cage.fail": "You can only capture small animals",
   "message.supplementaries.candle_holder": "Stackable",
   "message.supplementaries.cartographers_quill": "Unknown",
@@ -438,6 +438,7 @@
   "message.supplementaries.cannon_maneuver": "Press %2$s to Dismount, %2$s to Fire",
   "message.supplementaries.lunch_box.tooltip.open": "Opened",
   "message.supplementaries.lunch_box.tooltip.closed": "Closed",
+  "message.supplementaries.lunch_box.tooltip": "[%s] to switch mode",
 
 
   "painting.supplementaries.bombs.author": "Plantkillable",

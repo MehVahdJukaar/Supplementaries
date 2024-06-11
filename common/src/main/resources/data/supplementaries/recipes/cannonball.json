@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "111",
+    " 1 "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "supplementaries:cannonball",
+    "count": 8
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "type": "forge:tag_empty",
+      "tag": "forge:storage_blocks/lead"
+    }
+  ]
+}

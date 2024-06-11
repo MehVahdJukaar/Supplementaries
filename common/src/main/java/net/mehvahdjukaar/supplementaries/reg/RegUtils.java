@@ -47,6 +47,8 @@ import java.util.function.Supplier;
 //this is just stuff that could have been in registry class. split to make classes smaller
 public class RegUtils {
 
+    protected static final BlockBehaviour.StatePredicate NEVER = (state, reader, pos) -> false;
+
     public static void initDynamicRegistry() {
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
         AdditionalItemPlacementsAPI.addRegistration(RegUtils::registerPlacements);
