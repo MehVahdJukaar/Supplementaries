@@ -45,7 +45,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     // both from 0 to 1
     private float disabledCooldown = 0;
     private float timeUntilFire = 0;
-    private byte firePower = 1;
+    private byte powerLevel = 1;
 
     @Nullable
     private IBallistic.Data trajectoryData;
@@ -64,7 +64,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         tag.putFloat("pitch", this.pitch);
         tag.putFloat("cooldown", this.disabledCooldown);
         tag.putFloat("fire_timer", this.timeUntilFire);
-        tag.putByte("fire_power", this.firePower);
+        tag.putByte("fire_power", this.powerLevel);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.pitch = tag.getFloat("pitch");
         this.disabledCooldown = tag.getFloat("cooldown");
         this.timeUntilFire = tag.getFloat("fire_timer");
-        this.firePower = tag.getByte("fire_power");
+        this.powerLevel = tag.getByte("fire_power");
         this.trajectoryData = null;
     }
 
@@ -84,7 +84,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         this.trajectoryData = null;
     }
 
-    public void computeTrajectoryData() {
+    private void computeTrajectoryData() {
         ItemStack proj = this.getProjectile();
         var behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
         if (behavior instanceof IBallistic b) {
@@ -100,7 +100,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     public boolean hasFuelAndProjectiles() {
         return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
-                getFuel().getCount() >= firePower;
+                getFuel().getCount() >= powerLevel;
     }
 
     public boolean isFiring() {
@@ -151,12 +151,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return trajectoryData;
     }
 
-    public byte getFirePower() {
-        return firePower;
+    public byte getPowerLevel() {
+        return powerLevel;
+    }
+
+    public float getFirePower(){
+        return (float) powerLevel * 0.7f;
     }
 
     public float getYaw(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevYaw, this.yaw);
+        return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw);
     }
 
     public float getPitch(float partialTicks) {
@@ -166,7 +170,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire, Player controllingPlayer) {
         this.yaw = yaw;
         this.pitch = pitch;
-        this.firePower = firePower;
+        this.powerLevel = firePower;
         if (fire) this.ignite(controllingPlayer);
     }
 
@@ -180,7 +184,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public void changeFirePower(int scrollDelta) {
-        this.firePower = (byte) (1 + Math.floorMod(this.firePower - 1 + scrollDelta, 4));
+        this.powerLevel = (byte) (1 + Math.floorMod(this.powerLevel - 1 + scrollDelta, 4));
     }
 
     @Override
@@ -276,12 +280,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
                 Player p = getControllingPlayer();
                 if (p == null || !p.isCreative()) {
                     ItemStack fuel = this.getFuel();
-                    fuel.shrink(this.firePower);
+                    fuel.shrink(this.powerLevel);
                     this.setFuel(fuel);
 
                     ItemStack projectile = this.getProjectile();
                     projectile.shrink(1);
                     this.setProjectile(projectile);
+                    this.setChanged();
+                    this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
                 }
             }
 
@@ -296,7 +302,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
         return behavior.fire(projectile.copy(), (ServerLevel) level, worldPosition, 0.5f,
-                facing, firePower, getTrajectoryData().drag(), 0, getControllingPlayer());
+                facing, getFirePower(), getTrajectoryData().drag(), 0, getControllingPlayer());
     }
 
 

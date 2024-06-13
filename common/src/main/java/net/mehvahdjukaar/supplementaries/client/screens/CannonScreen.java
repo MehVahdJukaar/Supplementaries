@@ -54,7 +54,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.pitchSelector.setNumber(tile.getPitch(1));
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
-        this.powerSelector.power = tile.getFirePower();
+        this.powerSelector.power = tile.getPowerLevel();
         this.menu.addSlotListener(this);
     }
 

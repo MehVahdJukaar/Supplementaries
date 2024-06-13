@@ -54,7 +54,7 @@ public class CannonTrajectoryRenderer {
 
             if (debug) renderTargetLine(poseStack, buffer, target);
 
-            boolean hitAir = shootingMode == ShootingMode.MANUAL ||
+            boolean hitAir = shootingMode == ShootingMode.STRAIGHT ||
                     mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
 
             renderArrows(poseStack, buffer, partialTicks,

@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,13 +23,12 @@ public class SpawnEggBehavior implements IFireItemBehavior {
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, float drag, int inaccuracy, @Nullable Player owner) {
         EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack.getTag());
         try {
-            Entity e = spawnMob(type, level, firePos, firePos, power, stack);
+            Entity e = spawnMob(type, level, firePos, direction, power, stack);
             if (e != null) {
                 level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
-
                 //update client velocity
-                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
-                        new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
+               /// ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
+               //         new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
                 return true;
             }
         } catch (Exception exception) {
@@ -59,6 +56,8 @@ public class SpawnEggBehavior implements IFireItemBehavior {
             entity.moveTo(firePos.x(), firePos.y(), firePos.z(), Mth.wrapDegrees(serverLevel.random.nextFloat() * 360.0F), 0.0F);
 
             entity.setDeltaMovement(direction.scale(power));
+            //entity.hasImpulse = true;
+            entity.hurtMarked = true;
 
             if (entity instanceof Mob mob) {
                 mob.yHeadRot = mob.getYRot();
@@ -66,7 +65,7 @@ public class SpawnEggBehavior implements IFireItemBehavior {
                 mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.DISPENSER, null, tag);
                 mob.playAmbientSound();
             }
-            serverLevel.addFreshEntityWithPassengers(entity);
+            serverLevel.addFreshEntity(entity);
         }
         return entity;
     }

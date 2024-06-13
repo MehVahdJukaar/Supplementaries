@@ -90,7 +90,7 @@ public abstract class CannonChargeHud extends Gui {
         graphics.blit(texture, xpBarLeft, xpbarTop, 0, 5, k, 5);
 
 
-        int power = CannonController.cannon.getFirePower();
+        byte power = CannonController.cannon.getPowerLevel();
 
         int color = switch (power) {
             default -> 0xffcc00;
@@ -118,12 +118,11 @@ public abstract class CannonChargeHud extends Gui {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         int w = 9;
         int hitType;
-        if(CannonController.shootingMode == ShootingMode.MANUAL){
+        if (CannonController.shootingMode == ShootingMode.STRAIGHT) {
             hitType = 6;
-        }else if(CannonController.trajectory == null || CannonController.trajectory.miss()) {
+        } else if (CannonController.trajectory == null || CannonController.trajectory.miss()) {
             hitType = 2;
-        }
-        else hitType = 0;
+        } else hitType = 0;
 
         graphics.blit(texture, (screenWidth - w) / 2, (screenHeight - w) / 2,
                 hitType * w, 10, w, w);

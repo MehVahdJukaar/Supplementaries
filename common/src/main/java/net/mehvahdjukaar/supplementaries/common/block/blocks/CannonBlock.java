@@ -21,6 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -79,6 +80,15 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
         return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
+    }
+
+    @Nullable
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+            return tile;
+        }
+        return null;
     }
 
     @Override

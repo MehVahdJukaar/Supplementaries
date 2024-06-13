@@ -47,7 +47,8 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
     }
     //called server side. needs syncing with entity event
 
-    public void startConverting() {
+    @Unique
+    public void supp$startConverting() {
         if (!this.supp$isConverting()) {
             this.supplementaries$conversionTime = CONV_TIME;
             this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
@@ -71,7 +72,8 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
         return this.supplementaries$conversionTime > 0;
     }
 
-    private void doHorseConvertion() {
+    @Unique
+    private void supp$doHorseConvertion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
@@ -133,7 +135,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime == 0) {
-                    this.doHorseConvertion();
+                    this.supp$doHorseConvertion();
                 }
             }
         }
@@ -150,7 +152,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
 
             this.eat(level, itemstack);
             if (!level.isClientSide) {
-                this.startConverting();
+                this.supp$startConverting();
             }
 
             cir.cancel();

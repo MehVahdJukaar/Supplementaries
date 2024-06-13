@@ -22,17 +22,13 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
 
         double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
 
-        if(mode == ShootingMode.MANUAL){
-            gravity = 0;
-        }
-
-        if (gravity == 0) {
+        if (gravity == 0 || mode == ShootingMode.STRAIGHT) {
             float v0x = Mth.cos((float) targetAngle) * initialPow;
             float v0y = Mth.sin((float) targetAngle) * initialPow;
 
-            if (drag == 0) {
+            if (drag == 0 || drag == 1 || mode == ShootingMode.STRAIGHT) {
                     return new CannonTrajectory(targetPoint, (float) targetAngle,
-                        20, false, gravity, drag, v0x, v0y);
+                        4, true, 0, 0.9f, v0x, v0y);
             }
 
             // simple line
@@ -49,11 +45,6 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
                 // that number is slope at which we stop time
                 t = Math.log(0.4 / initialPow) / Math.log(drag);
             } else t = Math.log(arg) / ld;
-
-            if(mode == ShootingMode.MANUAL){
-                t = 4;
-                miss = true;
-            }
 
             float arcx = (float) arcX(t, gravity, drag, v0x);
             float arcy = (float) arcY(t, gravity, drag, v0y);

@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.BlockPos;
@@ -51,7 +53,7 @@ public class CannonController {
     public static void startControlling(CannonBlockTile tile) {
         cannon = tile;
         firstTick = true;
-        shootingMode = ShootingMode.DOWN;
+        shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
         Minecraft mc = Minecraft.getInstance();
         lastCameraType = mc.options.getCameraType();
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -173,12 +175,21 @@ public class CannonController {
 
     public static void onKeyPressed(int key, int action, int modifiers) {
         if (action != GLFW.GLFW_PRESS) return;
-        if (Minecraft.getInstance().options.keyShift.matches(key, action)) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen != null) return;
+        Options options = mc.options;
+        if (options.keyShift.matches(key, action)) {
             turnOff();
         }
-        if (Minecraft.getInstance().options.keyJump.matches(key, action)) {
-            shootingMode = shootingMode.cycle();
-            needsToUpdateServer = true;
+        if (options.keyInventory.matches(key, action)) {
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+            //Minecraft.getInstance().player.openMenu()
+        }
+        if (options.keyJump.matches(key, action)) {
+            if (trajectory != null && trajectory.gravity() != 0) {
+                shootingMode = shootingMode.cycle();
+                needsToUpdateServer = true;
+            }
         }
     }
 
@@ -195,7 +206,7 @@ public class CannonController {
             if (cannon != null && cannon.readyToFire()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
                         cannon.getYaw(1),
-                        cannon.getPitch(1), cannon.getFirePower(), true, cannon.getBlockPos()));
+                        cannon.getPitch(1), cannon.getPowerLevel(), true, cannon.getBlockPos()));
             }
         }
     }
@@ -226,7 +237,7 @@ public class CannonController {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(0), cannon.getPitch(0), cannon.getFirePower(),
+                        cannon.getYaw(0), cannon.getPitch(0), cannon.getPowerLevel(),
                         false, cannon.getBlockPos()));
             }
         } else turnOff();

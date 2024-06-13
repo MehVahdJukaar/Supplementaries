@@ -37,6 +37,7 @@ public class ModNetwork {
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestConfigReloadPacket.class, ServerBoundRequestConfigReloadPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSyncCannonPacket.class, ServerBoundSyncCannonPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundLunchBoxRightClickedPacket.class, ServerBoundLunchBoxRightClickedPacket::new)
+            .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestOpenCannonGuiMessage.class, ServerBoundRequestOpenCannonGuiMessage::new)
 
             .register(NetworkDir.BOTH, SyncSkellyQuiverPacket.class, SyncSkellyQuiverPacket::new)
             .register(NetworkDir.BOTH, PicklePacket.class, PicklePacket::new)

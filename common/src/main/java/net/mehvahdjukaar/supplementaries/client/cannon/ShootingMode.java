@@ -3,13 +3,13 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 public enum ShootingMode {
     DOWN,
     UP,
-    MANUAL;
+    STRAIGHT;
 
     ShootingMode cycle(){
         return switch(this){
             case DOWN -> UP;
-            case UP -> MANUAL;
-            case MANUAL -> DOWN;
+            case UP -> STRAIGHT;
+            case STRAIGHT -> DOWN;
         };
     }
 }
