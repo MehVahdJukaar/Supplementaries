@@ -38,11 +38,11 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
         List<HourglassTimeData> list = new ArrayList<>();
         jsonMap.forEach((key, json) -> {
             try {
-                var result = HourglassTimeData.REGISTRY_CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, access), json);
+                var result = HourglassTimeData.CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, access), json);
                 HourglassTimeData data = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to parse hourglass data: {}", e));
                 list.add(data);
             } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data " + key);
+                Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data {}", key);
             }
         });
         this.setData(list);

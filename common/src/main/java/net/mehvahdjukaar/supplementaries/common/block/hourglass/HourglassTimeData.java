@@ -15,6 +15,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BannerBlock;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, 
 
     public static final HourglassTimeData EMPTY = new HourglassTimeData(HolderSet.direct(), 0, 0, Optional.empty(), 99);
 
-    public static final Codec<HourglassTimeData> REGISTRY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<HourglassTimeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(p -> p.dusts),
             ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
             StrOpt.of(Codec.intRange(0, 15), "light_level", 0).forGetter(p -> p.light),
