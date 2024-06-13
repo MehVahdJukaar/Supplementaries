@@ -18,6 +18,9 @@ public class ModFluidsImpl {
         return new LumiseneFluid();
     }
 
+    public static Item createLumiseneBottle() {
+    }
+
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
             super(16, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);

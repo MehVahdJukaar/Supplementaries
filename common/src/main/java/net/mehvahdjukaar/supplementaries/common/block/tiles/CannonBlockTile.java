@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -156,7 +157,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public float getFirePower(){
-        return (float) powerLevel * 0.7f;
+        return (float) (powerLevel * CommonConfigs.Functional.CANNON_FIRE_POWER.get());
     }
 
     public float getYaw(float partialTicks) {

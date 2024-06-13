@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,7 +35,7 @@ public class FirePitBlock extends LightUpWaterBlock {
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
 
     protected static final VoxelShape SHAPE = Shapes.or(
-            Block.box(2.0D, 0.0D, 1.0D, 14.0D, 2.0D, 14.0D),
+            Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D),
             Block.box(0.0D, 2.0D, 0.0D, 16, 5, 16));
 
     private final float fireDamage;
@@ -56,21 +57,15 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        for (Direction direction : context.getNearestLookingDirections()) {
-            if (direction.getAxis() == Direction.Axis.Y) {
-                BlockState blockstate = this.defaultBlockState().setValue(HANGING, direction == Direction.UP);
-                if (blockstate.canSurvive(context.getLevel(), context.getClickedPos())) {
-                    return super.getStateForPlacement(context);
-                }
-            }
-        }
-        return null;
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        return super.getStateForPlacement(context)
+                .setValue(HANGING, IRopeConnection.isSupportingCeiling(pos.above(), level));
     }
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
-
         return getDir(stateIn).getOpposite() == facing && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
 

@@ -225,4 +225,11 @@ public class ClientEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onRenderOutline(RenderHighlightEvent.Block event) {
+        if (CannonController.isActive()) {
+            event.setCanceled(true);
+        }
+    }
+
 }

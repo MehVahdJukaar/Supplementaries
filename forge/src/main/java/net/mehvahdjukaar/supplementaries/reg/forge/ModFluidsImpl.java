@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRendererImpl;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.items.forge.FiniteFluidBucket;
+import net.mehvahdjukaar.supplementaries.common.items.forge.LumiseneBottleItem;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -30,9 +31,16 @@ import java.util.function.Supplier;
 
 public class ModFluidsImpl {
 
+    protected static final int MAX_LAYERS = 16;
+
     public static BucketItem createLumiseneBucket() {
         return new FiniteFluidBucket(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
-                .craftRemainder(Items.BUCKET));
+                .craftRemainder(Items.BUCKET), MAX_LAYERS);
+    }
+
+    public static Item createLumiseneBottle() {
+        return new LumiseneBottleItem(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
+                .craftRemainder(Items.BUCKET), MAX_LAYERS / 4);
     }
 
     public static FiniteFluid createLumisene() {
@@ -70,7 +78,7 @@ public class ModFluidsImpl {
 
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
-            super(16, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
+            super(MAX_LAYERS, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
         }
 
         @Override
@@ -93,5 +101,6 @@ public class ModFluidsImpl {
         // cir.setReturnValue(Math.max(i,Math.max(g,h)));
         // if (fluid == ModFluidsImpl.LUMISENE_FLUID.get()) {
     }
+
 
 }

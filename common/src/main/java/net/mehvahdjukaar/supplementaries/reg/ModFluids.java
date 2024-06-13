@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
@@ -23,6 +24,7 @@ public class ModFluids {
     public static final Supplier<FiniteFluid> LUMISENE_FLUID;
     public static final Supplier<FlammableLiquidBlock> LUMISENE_BLOCK;
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
+    public static final Supplier<Item> LUMISENE_BOTTLE;
 
     static{
 
@@ -44,10 +46,18 @@ public class ModFluids {
 
         LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),
                 ModFluids::createLumiseneBucket);
+
+        LUMISENE_BOTTLE = RegHelper.registerItem(Supplementaries.res("lumisene_bottle"),
+                ModFluids::createLumiseneBottle);
     }
 
     @ExpectPlatform
     private static BucketItem createLumiseneBucket() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    private static Item createLumiseneBottle() {
         throw new AssertionError();
     }
 

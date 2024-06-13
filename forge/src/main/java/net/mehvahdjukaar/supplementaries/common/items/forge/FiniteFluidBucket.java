@@ -23,48 +23,52 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class FiniteFluidBucket extends BucketItem {
-    public FiniteFluidBucket(Supplier<? extends FiniteFluid> supplier, Properties builder) {
+    private final int capacity;
+
+    public FiniteFluidBucket(Supplier<? extends FiniteFluid> supplier, Properties builder, int capacity) {
         super(supplier, builder);
+        this.capacity = capacity;
     }
 
     @Override
-    public boolean emptyContents(@Nullable Player arg, Level arg2, BlockPos arg3, @Nullable BlockHitResult arg4, @Nullable ItemStack container) {
+    public boolean emptyContents(@Nullable Player arg, Level level, BlockPos pos, @Nullable BlockHitResult arg4, @Nullable ItemStack container) {
         Fluid content = this.getFluid();
-        BlockState blockstate = arg2.getBlockState(arg3);
+        BlockState blockstate = level.getBlockState(pos);
         Block block = blockstate.getBlock();
         boolean flag = blockstate.canBeReplaced(content);
-        boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(arg2, arg3, blockstate, content);
+        boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(level, pos, blockstate, content);
         Optional<FluidStack> containedFluidStack = Optional.ofNullable(container).flatMap(FluidUtil::getFluidContained);
         if (!flag1) {
-            return arg4 != null && this.emptyContents(arg, arg2, arg4.getBlockPos().relative(arg4.getDirection()), null, container);
-        } else if (containedFluidStack.isPresent() && content.getFluidType().isVaporizedOnPlacement(arg2, arg3, containedFluidStack.get())) {
-            content.getFluidType().onVaporize(arg, arg2, arg3, containedFluidStack.get());
+            return arg4 != null && this.emptyContents(arg, level, arg4.getBlockPos().relative(arg4.getDirection()), null, container);
+        } else if (containedFluidStack.isPresent() && content.getFluidType().isVaporizedOnPlacement(level, pos, containedFluidStack.get())) {
+            content.getFluidType().onVaporize(arg, level, pos, containedFluidStack.get());
             return true;
-        } else if (arg2.dimensionType().ultraWarm() && content.is(FluidTags.WATER)) {
+        } else if (level.dimensionType().ultraWarm() && content.is(FluidTags.WATER)) {
             //TODO: instant catch fire here
-            int i = arg3.getX();
-            int j = arg3.getY();
-            int k = arg3.getZ();
-            arg2.playSound(arg, arg3, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (arg2.random.nextFloat() - arg2.random.nextFloat()) * 0.8F);
+            int i = pos.getX();
+            int j = pos.getY();
+            int k = pos.getZ();
+            level.playSound(arg, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
 
             for (int l = 0; l < 8; ++l) {
-                arg2.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0, 0.0, 0.0);
+                level.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0, 0.0, 0.0);
             }
 
             return true;
-        } else if (block instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(arg2, arg3, blockstate, content)) {
-            lc.placeLiquid(arg2, arg3, blockstate, content.defaultFluidState());
-            this.playEmptySound(arg, arg2, arg3);
+        } else if (block instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(level, pos, blockstate, content)) {
+            lc.placeLiquid(level, pos, blockstate, content.defaultFluidState()
+                    .setValue(FiniteFluid.LEVEL, capacity));
+            this.playEmptySound(arg, level, pos);
             return true;
         } else {
-            if (!arg2.isClientSide && flag && !blockstate.liquid()) {
-                arg2.destroyBlock(arg3, true);
+            if (!level.isClientSide && flag && !blockstate.liquid()) {
+                level.destroyBlock(pos, true);
             }
 
-            if (!arg2.setBlock(arg3, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
+            if (!level.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
                 return false;
             } else {
-                this.playEmptySound(arg, arg2, arg3);
+                this.playEmptySound(arg, level, pos);
                 return true;
             }
         }

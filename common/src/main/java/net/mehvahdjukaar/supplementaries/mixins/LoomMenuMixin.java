@@ -20,12 +20,12 @@ public abstract class LoomMenuMixin extends AbstractContainerMenu {
         super(menuType, i);
     }
 
-    @WrapOperation(method ="quickMoveStack",
+    @WrapOperation(method = "quickMoveStack",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;",
                     ordinal = 0))
     public Item getItem(ItemStack instance, Operation<Item> original) {
-        if(instance.getItem() instanceof FlagItem fi){
+        if (instance.getItem() instanceof FlagItem fi) {
             return BannerBlock.byColor(fi.getColor()).asItem();
         }
         return original.call(instance);

@@ -18,7 +18,9 @@ import java.util.Optional;
 public abstract class BannerPatternItemMixin extends Item {
 
 
-    @Shadow @Final private TagKey<BannerPattern> bannerPattern;
+    @Shadow
+    @Final
+    private TagKey<BannerPattern> bannerPattern;
 
     protected BannerPatternItemMixin(Properties properties) {
         super(properties);
@@ -26,7 +28,7 @@ public abstract class BannerPatternItemMixin extends Item {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        if(ClientConfigs.Tweaks.BANNER_PATTERN_TOOLTIP.get()) {
+        if (ClientConfigs.Tweaks.BANNER_PATTERN_TOOLTIP.get()) {
             return Optional.of(new BannerPatternTooltip(this.bannerPattern));
         }
         return Optional.empty();

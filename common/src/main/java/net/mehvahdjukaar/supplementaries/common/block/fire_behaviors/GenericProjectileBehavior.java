@@ -45,8 +45,6 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
 
         if (entity != null) {
 
-          //  facing.scale(0.01f);
-
             //create new one just to be sure
             CompoundTag c = new CompoundTag();
             entity.save(c);
@@ -63,7 +61,7 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
             }
 
             float radius = entity.getBbWidth() * 1.42f;
-            //  firePos = firePos.add(facing.normalize().scale(radius));
+             firePos = firePos.add(facing.normalize().scale(radius));
             entity.setPos(firePos.x, firePos.y, firePos.z);
 
             level.addFreshEntity(entity);

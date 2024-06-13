@@ -574,6 +574,7 @@ public class CommonConfigs {
 
 
     public static class Functional {
+
         public static void init() {
         }
 
@@ -687,6 +688,8 @@ public class CommonConfigs {
 
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
+            CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
+                    .define("fire_power", 0.7f, 0, 5);
             CANNONBALL_ENABLED = feature(builder, "cannonball");
             builder.pop();
 
@@ -771,6 +774,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
     }
 
