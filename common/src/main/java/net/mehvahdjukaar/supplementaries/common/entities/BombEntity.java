@@ -240,7 +240,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    protected float getGravity() {
+    public float getGravity() {
         return 0.05F;
     }
 

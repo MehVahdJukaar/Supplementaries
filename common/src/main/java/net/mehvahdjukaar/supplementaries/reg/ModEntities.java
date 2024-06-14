@@ -67,31 +67,31 @@ public class ModEntities {
     //brick
     public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1));
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(20));
 
     //bomb
     public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(1));
+                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(20));
 
     //bomb
     public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->
             EntityType.Builder.<CannonBallEntity>of(CannonBallEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1));
+                    .sized(0.75F, 0.75F).clientTrackingRange(10).updateInterval(10000));
 
     //rope arrow
     public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(4)
-                    .updateInterval(1));
+                    .updateInterval(20));
 
     //slingshot projectile
     public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(1));
+                    .clientTrackingRange(6)
+                    .updateInterval(20));
 
     //firefly
 

@@ -351,7 +351,7 @@ public class ClientRegistry {
         //entities
         event.register(ModEntities.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.register(ModEntities.CANNONBALL.get(), context -> new ThrownItemRenderer<>(context, 1, false));
+        event.register(ModEntities.CANNONBALL.get(), context -> new ThrownItemRenderer<>(context, 1.5f, false));
         event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);

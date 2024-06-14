@@ -19,6 +19,7 @@ public class ModFluidsImpl {
     }
 
     public static Item createLumiseneBottle() {
+        return new Item(new Item.Properties());
     }
 
     public static class LumiseneFluid extends FiniteFluid {

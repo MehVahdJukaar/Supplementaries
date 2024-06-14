@@ -4,6 +4,8 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -11,11 +13,12 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
 
     public CannonBallEntity(Level world, Player playerIn) {
-        super(ModEntities.CANNONBALL.get(),playerIn, world);
+        super(ModEntities.CANNONBALL.get(), playerIn, world);
     }
 
     public CannonBallEntity(EntityType<CannonBallEntity> type, Level level) {
@@ -28,33 +31,39 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     @Override
-    protected float getGravity() {
-        return super.getGravity();
+    public void tick() {
+       super.tick();
     }
 
     @Override
-    protected float getDeceleration() {
-        return super.getDeceleration();
-    }
-
-    @Override
-    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
-        super.spawnTrailParticles(currentPos, newPos);
-        double x = currentPos.x;
-        double y = currentPos.y;
-        double z = currentPos.z;
-        double dx = newPos.x - x;
-        double dy = newPos.y - y;
-        double dz = newPos.z - z;
-        int s = 4;
+    public void spawnTrailParticles() {
         var speed = this.getDeltaMovement();
-        for (int i = 0; i < s; ++i) {
-            double j = i / (double) s;
+        var normalSpeed = speed.normalize();
+        // Calculate pitch and yaw in radians
+        double pitch = Math.asin(normalSpeed.y);
+        double yaw = Math.atan2(normalSpeed.x, normalSpeed.z);
+
+        double dx = getX() - xo;
+        double dy = getY() - yo;
+        double dz = getZ() - zo;
+
+
+        if (random.nextFloat() < speed.length() * 0.55) {
+
+            Vector3f offset = new Vector3f(0, (random.nextFloat() * this.getBbWidth()*0.73f), 0);
+            offset.rotateZ(level().random.nextFloat() * Mth.TWO_PI);
+
+            // Apply rotations
+            offset.rotateX((float) pitch);
+            offset.rotateY((float) yaw);
+            float j = 0;// random.nextFloat()*-0.5f;
+
             this.level().addParticle(ModParticles.WIND_STREAM.get(),
-                    x - dx * j + random.nextGaussian() * 0.1,
-                    y - dy * j + random.nextGaussian() * 0.1,
-                    z - dz * j + random.nextGaussian() * 0.1,
-                    speed.x, speed.y, speed.z);
+                    offset.x + j * dx,
+                    offset.y + j * dy + this.getBbWidth() / 3,
+                    offset.z + j * dz,
+                    this.getId(), 0, 0
+            );
         }
     }
 
@@ -68,7 +77,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         this.setDeltaMovement(speed.scale(0.4));
         super.onHitBlock(result);
 
-        if(this.getDeltaMovement().lengthSqr()<0.2){
+        if (this.getDeltaMovement().lengthSqr() < 0.2) {
             this.discard();
         }
     }

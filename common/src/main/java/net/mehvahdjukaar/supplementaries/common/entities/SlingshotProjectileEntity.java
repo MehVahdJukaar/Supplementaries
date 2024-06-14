@@ -354,7 +354,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     }
 
     @Override
-    protected float getDeceleration() {
+    public float getDeceleration() {
         return this.isNoGravity() ? (float) (double) CommonConfigs.Tools.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
     }
 
