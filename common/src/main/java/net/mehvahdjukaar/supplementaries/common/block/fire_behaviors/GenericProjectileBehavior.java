@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -61,8 +62,8 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
                 pr.shoot(facing.x, facing.y, facing.z, drag * power, inaccuracy);
             }
 
-          //  float radius = entity.getBbWidth() * 1.42f;
-             //firePos = firePos.add(facing.normalize().scale(radius));
+            //  float radius = entity.getBbWidth() * 1.42f;
+            //firePos = firePos.add(facing.normalize().scale(radius));
             entity.setPos(firePos.x, firePos.y, firePos.z);
 
             level.addFreshEntity(entity);
@@ -76,13 +77,16 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
 
     @Nullable
     protected Entity createEntity(ItemStack projectile, Level level, Vec3 facing) {
-        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(level);
+        //we could hae subclassed here...
+        ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
+
+        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(testLevel);
+        if (projectile.is(ModRegistry.CANNONBALL_ITEM.get())) return ModEntities.CANNONBALL.get().create(testLevel);
 
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, level);
         fakePlayer.setXRot((float) getPitch(facing));
         fakePlayer.setYRot((float) getYaw(facing));
 
-        ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
         testLevel.setup();
 
         if (projectile.getItem() instanceof ArrowItem ai) {

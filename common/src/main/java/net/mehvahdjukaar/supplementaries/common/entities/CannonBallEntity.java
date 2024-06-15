@@ -70,25 +70,31 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
+        super.onHitBlock(result);
+        if (this.getDeltaMovement().length() < 0.4) {
+            this.discard();
+            return;
+        }
+
         float radius = 1.5f;
+
+        Vec3 movement = this.getDeltaMovement();
+        double vel = Math.abs(movement.length());
+
+        // this derives from kinetic energy calculation
+        float scaling = 40f;
+        float maxAmount = (float) (vel*vel*scaling);
 
         var loc = result.getLocation();
         CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                loc.x(), loc.y(), loc.z(), result.getBlockPos(), radius);
+                loc.x(), loc.y(), loc.z(), result.getBlockPos(), maxAmount, radius);
         exp.explode();
         exp.finalizeExplosion(true);
+        float exploded = exp.getExploded();
 
-        Vec3 speed = this.getDeltaMovement();
-        double len = Math.abs(speed.length());
-        double decrement = 0.3;
-        double newLen = Math.max(0, len - decrement);
-        this.setDeltaMovement(speed.normalize().scale(newLen));
-        super.onHitBlock(result);
+        double speedUsed = exploded/maxAmount;
+        this.setDeltaMovement(movement.normalize().scale(1-speedUsed));
 
-        if (newLen < decrement) {
-            this.discard();
-        }
-        //this.discard();
     }
 
 }

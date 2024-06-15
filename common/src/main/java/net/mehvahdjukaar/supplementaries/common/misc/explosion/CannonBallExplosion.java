@@ -31,7 +31,7 @@ public class CannonBallExplosion extends Explosion {
     private final BlockPos centerPos;
     private final float maxExplodedAmount;
 
-    private float explodedAmount;
+    private float explosionAmountLeft;
 
     public CannonBallExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
                                BlockPos centerPos, float maxExplodedAmount, float maxRadius) {
@@ -49,15 +49,15 @@ public class CannonBallExplosion extends Explosion {
 
         toVisit.add(centerPos);
 
-        while (!toVisit.isEmpty() && explosionBudget.get() > 0) {
+        while (!toVisit.isEmpty() && explosionBudget.get() > 0.25) {
             BlockPos currentPos = toVisit.poll();
             visit(currentPos, center, explosionBudget, this.getToBlow(), visited, toVisit);
         }
-        this.explodedAmount = explosionBudget.get();
+        this.explosionAmountLeft = explosionBudget.get();
     }
 
     public float getExploded() {
-        return this.explodedAmount;
+        return maxExplodedAmount - explosionAmountLeft;
     }
 
     private void visit(BlockPos pos, Vec3 center,
@@ -65,7 +65,8 @@ public class CannonBallExplosion extends Explosion {
                        List<BlockPos> toExplode,
                        Set<BlockPos> visited,
                        Queue<BlockPos> toVisit) {
-        if (center.distanceToSqr(pos.getCenter()) > (this.radius * this.radius))
+        float r = this.radius + level.random.nextFloat();
+        if (center.distanceToSqr(pos.getCenter()) > (r * r))
             return;
         if (!level.isInWorldBounds(pos) || visited.contains(pos))
             return;
@@ -74,23 +75,21 @@ public class CannonBallExplosion extends Explosion {
         BlockState blockState = level.getBlockState(pos);
         FluidState fluidState = level.getFluidState(pos);
 
+        boolean canPropagateExplosion = false;
         if (blockState.isSolid()) {
             Optional<Float> optional = damageCalculator.getBlockExplosionResistance(null, level, pos, blockState, fluidState);
             if (optional.isPresent()) {
                 float resistance = (optional.get() + 0.3F) * 0.3F;
-                if (resistance > explosionBudget.get()) {
-                    return;
-                }
-                float newBudget = explosionBudget.updateAndGet(b -> b - resistance);
-                if (newBudget <= 0) {
-                    return; // Stop processing if the budget is exhausted
-                }
-            }
 
-            if (explosionBudget.get() > 0.0F && damageCalculator.shouldBlockExplode(null, level, pos, blockState, 1)) {
-                toExplode.add(pos);
+                float newB = explosionBudget.get() - resistance;
+                if (newB > 0.0F && damageCalculator.shouldBlockExplode(null, level, pos, blockState, 1)) {
+                    toExplode.add(pos);
+                    explosionBudget.set(newB);
+                    canPropagateExplosion = true;
+                }
             }
         }
+        if (!canPropagateExplosion) return;
 
         List<BlockPos> neighborPos = new ArrayList<>();
         for (Direction d : Direction.values()) {
