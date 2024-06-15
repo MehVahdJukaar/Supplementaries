@@ -255,6 +255,8 @@
   "item.supplementaries.antique_ink": "古式墨水",
   "message.supplementaries.command.record.start": "开始录制音符盒",
   "message.supplementaries.command.record.stop": "停止录制音符盒：存储于recorded_songs/%s",
+  "message.supplementaries.argument.instrument.invalid": "乐器必须是 %1$s 之一, 找到的是 %2$s",
+  "message.supplementaries.argument.source.invalid": "来源必须是 %1$s 之一, 找到的是 %2$s",
   "item.supplementaries.wrench": "扳手",
   "block.supplementaries.urn": "瓮",
   "block.supplementaries.stone_tile_stairs": "石瓦楼梯",
