@@ -59,6 +59,11 @@
   "message.supplementaries.command.configs_reloaded": "重新加載配置",
   "block.supplementaries.copper_lantern": "銅燈籠",
 
+  "message.supplementaries.command.record.start": "開始錄製音階盒",
+  "message.supplementaries.command.record.stop": "停止錄製音階盒：存储于recorded_songs/%s",
+  "message.supplementaries.argument.instrument.invalid": "樂器必須是 %1$s 之一, 找到的是 %2$s",
+  "message.supplementaries.argument.source.invalid": "來源必須是 %1$s 之一, 找到的是 %2$s",
+
   "message.supplementaries.hourglass": "接受任何灰塵，沙子或粉末",
   "message.supplementaries.cage": "[Shift] 放置",
   "gui.supplementaries.safe.name": "%1$s's %2$s",
