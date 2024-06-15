@@ -16,10 +16,7 @@ import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.HatStandRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.RedMerchantRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.RopeArrowRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.SlingshotProjectileRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
@@ -61,7 +58,6 @@ import net.minecraft.client.renderer.blockentity.PistonHeadRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -94,6 +90,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
     public static final ModelLayerLocation HAT_STAND_MODEL = loc("hat_stand");
+    public static final ModelLayerLocation CANNONBALL_MODEL = loc("cannonball");
     public static final ModelLayerLocation HAT_STAND_MODEL_ARMOR = loc("hat_stand_armor");
     public static final ModelLayerLocation JARVIS_MODEL = loc("jarvis");
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
@@ -349,9 +346,13 @@ public class ClientRegistry {
     @EventCalled
     private static void registerEntityRenderers(ClientHelper.EntityRendererEvent event) {
         //entities
-        event.register(ModEntities.BOMB.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ThrownItemRenderer<>(context, 1, false));
-        event.register(ModEntities.CANNONBALL.get(), context -> new ThrownItemRenderer<>(context, 1.5f, false));
+        event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+        event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+        if(ClientConfigs.Items.CANNONBALL_3D.get()) {
+            event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
+        }else {
+            event.register(ModEntities.CANNONBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1.615f));
+        }
         event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);
@@ -481,6 +482,7 @@ public class ClientRegistry {
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
         event.register(HAT_STAND_MODEL, HatStandModel::createMesh);
+        event.register(CANNONBALL_MODEL, CannonballRenderer::createMesh);
         event.register(HAT_STAND_MODEL_ARMOR, HatStandModel::createArmorMesh);
         event.register(JARVIS_MODEL, JarredModel::createMesh);
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);

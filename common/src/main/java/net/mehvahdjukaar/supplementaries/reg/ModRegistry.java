@@ -1032,6 +1032,7 @@ public class ModRegistry {
     //cannonball
     public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
+                    .strength(5,6)
                     .sound(SoundType.COPPER)
                     .isSuffocating(NEVER)
                     .isRedstoneConductor(NEVER)

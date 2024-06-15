@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -16,37 +15,31 @@ import org.jetbrains.annotations.Nullable;
 
 public class ModDamageSources {
 
-    private static final ResourceKey<DamageType> SPIKE_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE,
-            Supplementaries.res("bamboo_spikes"));
-    private static final ResourceKey<DamageType> BOTTLING_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE,
-            Supplementaries.res("xp_extracting"));
-    private static final ResourceKey<DamageType> BOMB_EXPLOSION = ResourceKey.create(Registries.DAMAGE_TYPE,
-            Supplementaries.res("bomb_explosion"));
-    private static final ResourceKey<DamageType> PLAYER_BOMB_EXPLOSION = ResourceKey.create(Registries.DAMAGE_TYPE,
-            Supplementaries.res("bomb_explosion"));
-
-    private static final DataObjectReference<DamageType> spike = new DataObjectReference<>(SPIKE_DAMAGE.location(), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> bottling = new DataObjectReference<>(BOTTLING_DAMAGE.location(), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> bombExplosion = new DataObjectReference<>(BOMB_EXPLOSION.location(), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> playerBombExplosion = new DataObjectReference<>(PLAYER_BOMB_EXPLOSION.location(), Registries.DAMAGE_TYPE);
-
-    //these are data defined now
+    private static final DataObjectReference<DamageType> SPIKE = new DataObjectReference<>(Supplementaries.res("bamboo_spikes"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> BOTTLING = new DataObjectReference<>(Supplementaries.res("xp_extracting"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> BOMB = new DataObjectReference<>(Supplementaries.res("bomb_explosion"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> PLAYER_BOMB = new DataObjectReference<>(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> CANNONBALL = new DataObjectReference<>(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> PLAYER_CANNONBALL = new DataObjectReference<>(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
 
     public static DamageSource spikePlayer(Player player) {
-        return new SpikePlayerDamageSource(spike.getHolder(), player);
+        return new SpikePlayerDamageSource(SPIKE.getHolder(), player);
     }
 
     public static DamageSource spike() {
-        return new DamageSource(spike.getHolder());
+        return new DamageSource(SPIKE.getHolder());
     }
 
     public static DamageSource bottling() {
-        return new DamageSource(bottling.getHolder());
+        return new DamageSource(BOTTLING.getHolder());
     }
 
+    public static DamageSource bombExplosion(@Nullable Entity projectile, @Nullable Entity shooter) {
+        return new DamageSource(shooter != null && projectile != null ? PLAYER_BOMB.getHolder() : BOMB.getHolder(), projectile, shooter);
+    }
 
-    public static DamageSource bombExplosion(@Nullable Entity entity, @Nullable Entity entity2) {
-        return new DamageSource(entity2 != null && entity != null ? playerBombExplosion.getHolder() : bombExplosion.getHolder(), entity, entity2);
+    public static DamageSource cannonBallExplosion(@Nullable Entity projectile, @Nullable Entity shooter) {
+        return new DamageSource(shooter != null && projectile != null ? PLAYER_CANNONBALL.getHolder() : CANNONBALL.getHolder(), projectile, shooter);
     }
 
     public static class SpikePlayerDamageSource extends DamageSource {

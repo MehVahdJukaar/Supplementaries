@@ -50,8 +50,8 @@ public class BombExplosion extends Explosion {
 
     public BombExplosion(Level world, @Nullable Entity entity,
                          @Nullable ExplosionDamageCalculator context, double x, double y, double z,
-                         float radius, BombEntity.BombType bombType, BlockInteraction interaction) {
-        super(world, entity, null, context, x, y, z, radius, false, interaction);
+                         BombEntity.BombType bombType, BlockInteraction interaction) {
+        super(world, entity, null, context, x, y, z, (float) bombType.getRadius(), false, interaction);
         this.bombType = bombType;
         this.damageCalculator = context == null ? this.bombMakeDamageCalculator(entity) : context;
         this.damageSource = ModDamageSources.bombExplosion(getDirectSourceEntity(), getIndirectSourceEntity());
@@ -72,6 +72,10 @@ public class BombExplosion extends Explosion {
         return entity == null ? EXPLOSION_DAMAGE_CALCULATOR : new EntityBasedExplosionDamageCalculator(entity);
     }
 
+    public BombEntity.BombType bombType() {
+        return bombType;
+    }
+
     @Override
     public ObjectArrayList<BlockPos> getToBlow() {
         return (ObjectArrayList<BlockPos>) super.getToBlow();
@@ -86,8 +90,9 @@ public class BombExplosion extends Explosion {
             this.level.playLocalSound(this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.BLOCKS, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F), false);
 
             if (spawnParticles) {
-                if (!(this.radius < 2.0F) && interactsWithBlocks) {
-                    this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.x, this.y, this.z, 1.0, 0.0, 0.0);
+                if (!(this.radius < 1.5F) && interactsWithBlocks) {
+                    this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.x, this.y, this.z,
+                            radius, 0.0, 0.0);
                 } else {
                     this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), this.x, this.y, this.z, 1.0, 0.0, 0.0);
                 }

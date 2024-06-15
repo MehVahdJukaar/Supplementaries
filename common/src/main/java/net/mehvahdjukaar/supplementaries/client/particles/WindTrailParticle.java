@@ -40,10 +40,6 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
 
         this.quadSize *= 7f;
 
-        if (entity instanceof ImprovedProjectileEntity ip) {
-            this.gravity = (ip.getGravity()) / 0.04f; //must be same as cannon entity one
-            this.friction = ip.getDeceleration(); //same here
-        }
         this.maxAlpha = 0.3f + random.nextFloat() * 0.65f;
 
         Vec3 sp = entity.getDeltaMovement();

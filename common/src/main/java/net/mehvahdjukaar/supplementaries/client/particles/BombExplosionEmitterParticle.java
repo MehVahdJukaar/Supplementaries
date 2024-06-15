@@ -21,14 +21,14 @@ public class BombExplosionEmitterParticle extends NoRenderParticle {
 
     @Override
     public void tick() {
-        float amountMult = 0.6f;
+        float amountMult = 0.75f;
         // scale with area
         for (int i = 0; i < (radius * radius * radius) * amountMult; ++i) {
 
             double phi = Math.acos(2 * random.nextDouble() - 1);// Inverse of cumulative distribution function for uniform distribution in [0, π]
             double theta = random.nextDouble() * 2 * Math.PI;
 
-            double r = (random.nextDouble() - random.nextDouble()) * radius * 1.3;
+            double r = (random.nextDouble() - random.nextDouble()) * radius * 1.5;
 
             double d0 = this.x + r * Math.sin(phi) * Math.cos(theta);
             double d1 = this.y + r * Math.sin(phi) * Math.sin(theta);

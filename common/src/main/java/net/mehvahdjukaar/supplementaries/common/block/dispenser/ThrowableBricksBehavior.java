@@ -47,7 +47,7 @@ class ThrowableBricksBehavior extends DispenserHelper.AdditionalDispenserBehavio
 
     //TODO: fix throwable bricks rendering glitchyness
     protected float getProjectileVelocity() {
-        return 0.9F;
+        return 0.8F;
     }
 
 }

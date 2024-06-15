@@ -225,11 +225,12 @@
   "block.supplementaries.wicker_fence": "Wicker Fence",
 
 
-
   "death.attack.supplementaries.bamboo_spikes": "%1$s was impaled on a spike",
   "death.attack.supplementaries.bamboo_spikes.player": "%1$s impaled on a spike whilst fighting %2$s",
   "death.attack.supplementaries.xp_extracting": "%1$s wasn't so experienced after all",
   "death.attack.supplementaries.xp_extracting.player": "%1$s extracted too much while fighting %2$s",
+  "death.attack.supplementaries.cannonball": "%1$s was blasted to bits",
+  "death.attack.supplementaries.cannonball.player": "%1$s was blasted to bits by %2$s",
 
   "effect.supplementaries.overencumbered": "Overencumbered",
   "effect.supplementaries.overencumbered.description": "Prevents sprinting. Further levels reduce jump height hinder walking speed respectively",
@@ -505,5 +506,13 @@
   "wood_type.twilightforest.dark": "Darkwood",
   "wood_type.twilightforest.sorting": "Sortingwood",
   "wood_type.twilightforest.time": "Timewood",
-  "wood_type.twilightforest.trans": "Transwood"
+  "wood_type.twilightforest.trans": "Transwood",
+
+
+  "commands.supplementaries.registry.error.unknown_registry": "Unknown registry '%s'",
+  "commands.supplementaries.registry.registry_key": "%s",
+  "commands.supplementaries.registry.elements_count": "Entries: %s",
+  "commands.supplementaries.registry.copy_elements_names": "Click to copy all entry names to clipboard",
+  "commands.supplementaries.registry.element": "%s : %s",
+  "commands.supplementaries.registry.page_info": "%s <page %s / %s>"
 }

@@ -88,6 +88,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> FLUTE_PARTICLES;
         public static final Supplier<Boolean> DEPTH_METER_CLICK;
         public static final Supplier<Integer> DEPTH_METER_STEP_MULT;
+        public static final Supplier<Boolean> CANNONBALL_3D;
         public static final Supplier<List<ResourceLocation>> DEPTH_METER_DIMENSIONS;
 
         static {
@@ -118,6 +119,11 @@ public class ClientConfigs {
                     .defineObjectList("extra_dimension_textures", () -> List.of(Level.NETHER.location(), Level.END.location()), ResourceLocation.CODEC);
             DEPTH_METER_STEP_MULT = builder.comment("Increasing this to be more than 1 will result in delth meter display image to be shown in float amounts instead of pixel perfect ones")
                     .define("texture_precision_multiplier", 1, 1, 10);
+            builder.pop();
+
+            builder.push("cannonball");
+            CANNONBALL_3D = builder.comment("Render cannonballs as 3D models")
+                    .define("3d_model", false);
             builder.pop();
 
             builder.push("quiver");

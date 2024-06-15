@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -61,13 +63,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     public BombEntity(Level worldIn, LivingEntity throwerIn, BombType type) {
         super(ModEntities.BOMB.get(), throwerIn, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 300);
     }
 
     public BombEntity(Level worldIn, double x, double y, double z, BombType type) {
         super(ModEntities.BOMB.get(), x, y, z, worldIn);
         this.type = type;
-        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 200);
+        this.maxAge = (hasFuse ? CommonConfigs.Tools.BOMB_FUSE.get() : 300);
     }
 
     //data to be saved when the entity gets unloaded
@@ -115,8 +117,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     private void spawnBreakParticles() {
         for (int i = 0; i < 8; ++i) {
-            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM,
-                            new ItemStack(ModRegistry.BOMB_ITEM.get())),
+            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, getItem()),
                     this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
         }
     }
@@ -285,7 +286,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
         BombExplosion explosion = new BombExplosion(this.level(), this,
                 new BombExplosionDamageCalculator(this.type),
-                this.getX(), this.getY() + 0.25, this.getZ(), (float) type.getRadius(),
+                this.getX(), this.getY() + 0.25, this.getZ(),
                 this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
 
         explosion.explode();
@@ -293,11 +294,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
         for (var p : level().players()) {
             if (p.distanceToSqr(this) < 64 * 64) {
-                Vec3 loc = new Vec3(explosion.x, explosion.y, explosion.z);
-                Message message = ClientBoundExplosionPacket.bomb(loc,
-                        explosion.radius, explosion.getToBlow(), explosion.getHitPlayers().get(p));
+                Message message = ClientBoundExplosionPacket.bomb(explosion, p);
 
-                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), BlockPos.containing(loc), message);
+                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) p, message);
             }
         }
 

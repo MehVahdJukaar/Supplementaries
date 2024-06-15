@@ -10,16 +10,19 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,12 +88,12 @@ public class CannonBallExplosion extends Explosion {
 
         boolean canPropagateExplosion = false;
         if (blockState.isSolid()) {
-            Optional<Float> optional = damageCalculator.getBlockExplosionResistance(null, level, pos, blockState, fluidState);
+            Optional<Float> optional = damageCalculator.getBlockExplosionResistance(this, level, pos, blockState, fluidState);
             if (optional.isPresent()) {
                 float resistance = (optional.get() + 0.3F) * 0.3F;
 
                 float newB = explosionBudget.get() - resistance;
-                if (newB > 0.0F && damageCalculator.shouldBlockExplode(null, level, pos, blockState, 1)) {
+                if (newB > 0.0F && damageCalculator.shouldBlockExplode(this, level, pos, blockState, 1)) {
                     toExplode.add(pos);
                     explosionBudget.set(newB);
                     canPropagateExplosion = true;
@@ -110,42 +113,20 @@ public class CannonBallExplosion extends Explosion {
 
     @Override
     public void finalizeExplosion(boolean spawnParticles) {
-
         if (spawnParticles) {
             this.level.addParticle(ParticleTypes.EXPLOSION, this.x, this.y, this.z, 1.0, 0.0, 0.0);
         }
-
-        ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         LivingEntity indirectSource = this.getIndirectSourceEntity();
-        boolean isPlayer = indirectSource instanceof Player;
+        boolean hasDrop = !(indirectSource instanceof Player player && player.isCreative());
+
         Util.shuffle((ObjectArrayList<?>) this.getToBlow(), this.level.random);
 
         for (BlockPos blockPos : this.getToBlow()) {
             BlockState blockState = level.getBlockState(blockPos);
-            Block block = blockState.getBlock();
             if (!blockState.isAir()) {
-                BlockPos blockPos2 = blockPos.immutable();
-                level.getProfiler().push("explosion_blocks");
-                if (block.dropFromExplosion(this)) {
-                    if (level instanceof ServerLevel serverLevel) {
-                        BlockEntity blockEntity = blockState.hasBlockEntity() ? level.getBlockEntity(blockPos) : null;
-                        LootParams.Builder builder = (new LootParams.Builder(serverLevel)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, this.source);
-
-                        blockState.spawnAfterBreak(serverLevel, blockPos, ItemStack.EMPTY, isPlayer);
-                        blockState.getDrops(builder).forEach((itemStack) -> {
-                            addBlockDrops(drops, itemStack, blockPos2);
-                        });
-                    }
-                }
-
-                this.level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
-                block.wasExploded(this.level, blockPos, this);
-                this.level.getProfiler().pop();
+                this.level.destroyBlock(blockPos, hasDrop);
             }
         }
-
-        if (indirectSource instanceof Player player && player.isCreative()) return;
-        for (var pair : drops)
-            Block.popResource(this.level, pair.getSecond(), pair.getFirst());
     }
+
 }

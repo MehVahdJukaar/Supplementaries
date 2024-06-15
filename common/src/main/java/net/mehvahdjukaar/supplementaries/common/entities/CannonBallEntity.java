@@ -5,29 +5,34 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
 
-    private boolean removeNextTick;
-
     public CannonBallEntity(Level world, Player playerIn) {
         super(ModEntities.CANNONBALL.get(), playerIn, world);
+        this.maxAge = 300;
     }
 
     public CannonBallEntity(EntityType<CannonBallEntity> type, Level level) {
         super(type, level);
+        this.maxAge = 300;
     }
 
     @Override
@@ -38,9 +43,6 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.removeNextTick) {
-            this.discard();
-        }
     }
 
     @Override
@@ -77,12 +79,17 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
     }
 
+    private void playDestroyEffects() {
+        for (int i = 0; i < 8; ++i) {
+            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem()),
+                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+        }
+        this.playSound(SoundEvents.METAL_BREAK, 1.0F, 1.5F);
+    }
+
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (this.getDeltaMovement().length() < 0.4) {
-            this.removeNextTick = true;
-        }
 
         if (!level().isClientSide) {
             float radius = 1.1f;
@@ -91,7 +98,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             double vel = Math.abs(movement.length());
 
             // this derives from kinetic energy calculation
-            float scaling = 40f;
+            float scaling = 30;
             float maxAmount = (float) (vel * vel * scaling);
 
             Vec3 loc = result.getLocation();
@@ -105,12 +112,26 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             float exploded = exp.getExploded();
 
-            double speedUsed = exploded / maxAmount;
-            this.setDeltaMovement(movement.normalize().scale(1 - speedUsed));
-            Message message = ClientBoundExplosionPacket.cannonball(loc, radius, exp.getToBlow(), this);
+            if(exploded != 0) {
+                double speedUsed = exploded / maxAmount;
+                this.setDeltaMovement(movement.normalize().scale(1 - speedUsed));
+                Message message = ClientBoundExplosionPacket.cannonball(exp, this);
 
-            ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
+                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
+            }
+
+            if (this.getDeltaMovement().length() < 0.4 || exploded == 0) {
+                playDestroyEffects();
+                this.discard();
+            }
+
         }
     }
 
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        double speed = this.getDeltaMovement().length();
+        float dmg = (float) (5 * speed * speed);
+        result.getEntity().hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), dmg);
+    }
 }

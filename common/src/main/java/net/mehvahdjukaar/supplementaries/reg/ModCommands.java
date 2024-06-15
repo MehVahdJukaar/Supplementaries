@@ -23,6 +23,7 @@ public class ModCommands {
                                 .then(ChangeGlobeSeedCommand.register(context))
                                 .then(ResetGlobeSeedCommand.register(context))
                         )
+                        .then(RegistryCommand.register())
                         .then(ReloadConfigsCommand.register(context))
                         .then(OpenConfiguredCommand.register(context))
                         .then(IUsedToRollTheDice.register(context))

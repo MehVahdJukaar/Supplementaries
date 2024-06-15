@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -41,11 +42,11 @@ class ThrowableBricksBehavior implements ItemUseOverride {
         if (!world.isClientSide) {
             ThrowableBrickEntity brickEntity = new ThrowableBrickEntity(world, player);
             brickEntity.setItem(stack);
-            float pow = 0.7f;
+            float pow = 0.55f;
             brickEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F * pow, 1.0F * pow);
             world.addFreshEntity(brickEntity);
         }
-
+        
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }

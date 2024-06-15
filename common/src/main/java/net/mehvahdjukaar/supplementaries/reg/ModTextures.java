@@ -54,6 +54,7 @@ public class ModTextures {
     public static final ResourceLocation CANNON_TRAJECTORY = Supplementaries.res("textures/entity/cannon_trajectory.png");
     public static final ResourceLocation CANNON_TRAJECTORY_RED = Supplementaries.res("textures/entity/cannon_trajectory_charging.png");
     public static final ResourceLocation BLACKBOARD_GUI_GRID = Supplementaries.res("textures/gui/blackboard_grid.png");
+    public static final ResourceLocation CANNONBALL_TEXTURE = Supplementaries.res("textures/entity/cannonball.png");
 
 
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");

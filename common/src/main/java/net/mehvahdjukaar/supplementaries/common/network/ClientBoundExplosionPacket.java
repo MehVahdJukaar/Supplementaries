@@ -3,9 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,17 +18,22 @@ import java.util.List;
 public record ClientBoundExplosionPacket(Type type, Vec3 pos, float power, List<BlockPos> toBlow,
                                          @Nullable Vec3 knockback, int getId) implements Message {
 
-    public static ClientBoundExplosionPacket bomb(Vec3 pos, float power, List<BlockPos> toBlow, Vec3 knockback) {
-        return new ClientBoundExplosionPacket(Type.BOMB, pos, power, toBlow, knockback, 0);
+    public static ClientBoundExplosionPacket bomb(BombExplosion expl, @Nullable Player player) {
+        Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
+        return new ClientBoundExplosionPacket(Type.BOMB, pos, expl.radius, expl.getToBlow(),
+                expl.getHitPlayers().get(player), expl.bombType().ordinal());
     }
 
-    public static ClientBoundExplosionPacket cannonball(Vec3 pos, float power, List<BlockPos> toBlow, CannonBallEntity source) {
-        return new ClientBoundExplosionPacket(Type.CANNONBALL, pos, power, toBlow, source.getDeltaMovement(), source.getId());
+    public static ClientBoundExplosionPacket cannonball(CannonBallExplosion expl, CannonBallEntity source) {
+        Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
+        return new ClientBoundExplosionPacket(Type.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
     }
 
-    public static ClientBoundExplosionPacket gunpowder(Vec3 pos, float power, List<BlockPos> toBlow, Vec3 knockback) {
-        return new ClientBoundExplosionPacket(Type.GUNPOWDER, pos, power, toBlow, knockback, 0);
+    public static ClientBoundExplosionPacket gunpowder(GunpowderExplosion expl) {
+        Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
+        return new ClientBoundExplosionPacket(Type.GUNPOWDER, pos, expl.radius, expl.getToBlow(), null, -1);
     }
+
 
     public static ClientBoundExplosionPacket fromBuffer(FriendlyByteBuf buffer) {
         double x = buffer.readDouble();

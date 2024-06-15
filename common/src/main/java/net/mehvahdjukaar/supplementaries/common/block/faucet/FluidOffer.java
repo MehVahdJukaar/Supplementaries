@@ -9,7 +9,7 @@ public record FluidOffer(SoftFluidStack fluid, int minAmount) {
 
     public static FluidOffer of(SoftFluidStack stack, int min) {
         if (stack.getCount() < min) {
-            throw new IllegalStateException("Minimum fluid amount was bigger than actual fluid amount");
+            throw new IllegalStateException("Minimum fluid amount was bigger than actual fluid amount for fluid stack "+ stack);
         }
         return new FluidOffer(stack, min);
     }

@@ -20,3 +20,8 @@
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions
 - Playing a flute will make parrots dance (in cages and on shoulder too)
+- thrown bricks and bombs renderer is how centered on their hitbox
+- added record command to fabric (thanks ot laite07)
+- wind vanes now use a flywheel model (when flywheel is on)
+- fixed some client desync issues with bomb explosions
+- added /supplementaries registry command, lists all the content of a registry
