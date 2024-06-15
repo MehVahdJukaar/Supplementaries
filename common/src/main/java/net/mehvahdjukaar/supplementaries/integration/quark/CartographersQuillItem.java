@@ -419,7 +419,8 @@ public class CartographersQuillItem extends PathfindersQuillItem {
                 } else {
                     state.z -= 1;
                 }
-                Supplementaries.LOGGER.warn("E " + s2.elapsed());
+                Supplementaries.LOGGER.warn("E {}", s2.elapsed());
+                Supplementaries.error();
 
                 return Either.right(chunkPos);
             } else {

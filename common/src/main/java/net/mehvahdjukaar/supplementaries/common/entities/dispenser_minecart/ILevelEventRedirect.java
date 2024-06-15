@@ -9,9 +9,9 @@ import net.minecraft.world.phys.Vec3;
 
 public interface ILevelEventRedirect {
 
-    void setRedirected(boolean redirected, Vec3 entityId);
+    void supp$setRedirected(boolean redirected, Vec3 entityId);
 
-    static boolean tryRedirect(ILevelEventRedirect serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
+    static boolean supp$tryRedirect(ILevelEventRedirect serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
         if (pType == 2000) {
             ModNetwork.CHANNEL.sendToAllClientPlayersInRange((ServerLevel) serverLevel, pPos, 64,
                     new ClientBoundParticlePacket(vec3, ClientBoundParticlePacket.Type.DISPENSER_MINECART));

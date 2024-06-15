@@ -3,14 +3,15 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -127,14 +131,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             }
             case 10 -> {
                 spawnBreakParticles();
-                if (MiscUtils.FESTIVITY.isBirthday() || PlatHelper.isDev()) {
-                    this.spawnParticleInASphere(ModParticles.CONFETTI_PARTICLE.get(), 55, 0.3f);
-                } else {
-                    level().addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.getX(), this.getY() + 1, this.getZ(),
-                            this.type.getRadius(), 0, 0);
-                }
-                type.spawnExtraParticles(this);
-
                 this.discard();
             }
             case 68 -> level().addParticle(ParticleTypes.SONIC_BOOM, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
@@ -145,21 +141,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 }
                 this.active = false;
             }
-        }
-    }
-
-    private void spawnParticleInASphere(ParticleOptions type, int amount, float speed) {
-        double azimuthIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
-
-        for (int i = 0; i < amount; i++) {
-            double inclination = Math.acos(1 - (2 * (i + 0.5) / amount)); // Angle from the pole
-            double azimuth = azimuthIncrement * i; // Rotation around the axis
-
-            double x = speed * Math.sin(inclination) * Math.cos(azimuth);
-            double y = speed * Math.sin(inclination) * Math.sin(azimuth);
-            double z = speed * Math.cos(inclination);
-
-            this.level().addParticle(type, this.getX(), this.getY() + 1, this.getZ() + z, x, y, z);
         }
     }
 
@@ -308,7 +289,18 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
 
         explosion.explode();
-        explosion.doFinalizeExplosion();
+        explosion.finalizeExplosion(true);
+
+        for (var p : level().players()) {
+            if (p.distanceToSqr(this) < 64 * 64) {
+                Vec3 loc = new Vec3(explosion.x, explosion.y, explosion.z);
+                Message message = ClientBoundExplosionPacket.bomb(loc,
+                        explosion.radius, explosion.getToBlow(), explosion.getHitPlayers().get(p));
+
+                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), BlockPos.containing(loc), message);
+            }
+        }
+
     }
 
     public enum BreakingMode {
@@ -362,25 +354,41 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             return this != BLUE;
         }
 
-        public void spawnExtraParticles(BombEntity bomb) {
+        public void spawnExtraParticles(double x, double y, double z, Level level) {
             switch (this) {
                 case BLUE -> {
-                    bomb.spawnParticleInASphere(ParticleTypes.FLAME, 40, 0.4f);
+                    spawnParticleInASphere(level, x, y, z, ParticleTypes.FLAME, 40, 0.4f);
                 }
                 case SPIKY -> {
+                    RandomSource random = level.getRandom();
                     //maybe use method above?
                     var particle = CompatObjects.SHARPNEL.get();
                     if (particle instanceof ParticleOptions p) {
                         for (int i = 0; i < 80; i++) {
-                            float dx = (float) (bomb.random.nextGaussian() * 2f);
-                            float dy = (float) (bomb.random.nextGaussian() * 2f);
-                            float dz = (float) (bomb.random.nextGaussian() * 2f);
-                            bomb.level().addParticle(p, bomb.getX(), bomb.getY() + 1, bomb.getZ(), dx, dy, dz);
+                            float dx = (float) (random.nextGaussian() * 2f);
+                            float dy = (float) (random.nextGaussian() * 2f);
+                            float dz = (float) (random.nextGaussian() * 2f);
+                            level.addParticle(p, x, y, z, dx, dy, dz);
                         }
                     } else {
-                        bomb.spawnParticleInASphere(ParticleTypes.CRIT, 100, 5f);
+                        spawnParticleInASphere(level, x, y, z, ParticleTypes.CRIT, 100, 5f);
                     }
                 }
+            }
+        }
+
+        private void spawnParticleInASphere(Level level, double x, double y, double z, ParticleOptions type, int amount, float speed) {
+            double azimuthIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
+
+            for (int i = 0; i < amount; i++) {
+                double inclination = Math.acos(1 - (2 * (i + 0.5) / amount)); // Angle from the pole
+                double azimuth = azimuthIncrement * i; // Rotation around the axis
+
+                double vx = speed * Math.sin(inclination) * Math.cos(azimuth);
+                double vy = speed * Math.sin(inclination) * Math.sin(azimuth);
+                double vz = speed * Math.cos(inclination);
+
+                level.addParticle(type, x, y, z, vx, vy, vz);
             }
         }
 

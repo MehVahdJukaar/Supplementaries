@@ -82,7 +82,7 @@ public class ColoredMapHandler {
         return null;
     }
 
-    private static class Counter implements CustomMapData.DirtyCounter {
+    public static class Counter implements CustomMapData.DirtyCounter {
         private int minDirtyX = 0;
         private int maxDirtyX = 127;
         private int minDirtyZ = 0;

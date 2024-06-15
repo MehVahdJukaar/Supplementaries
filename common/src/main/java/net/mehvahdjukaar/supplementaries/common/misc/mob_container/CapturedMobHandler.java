@@ -100,42 +100,6 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         return ICatchableMob.DEFAULT;
     }
 
-    //debug
-    public static void saveFile(DataDefinedCatchableMob data) {
-        File folder = PlatHelper.getGamePath().resolve("test_cap").toFile();
-
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-        try {
-
-            File exportPath = new File(folder, data.getOwners().get(0).toString().replace(":", "_") + ".json");
-            try (FileWriter writer = new FileWriter(exportPath)) {
-                var j = DataDefinedCatchableMob.CODEC.encodeStart(JsonOps.INSTANCE, data);
-
-                CapturedMobHandler.GSON.toJson(sortJson(j.result().get().getAsJsonObject()), writer);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static JsonObject sortJson(JsonObject jsonObject) {
-        try {
-            Map<String, JsonElement> joToMap = new TreeMap<>();
-            jsonObject.entrySet().forEach(e -> {
-                var j = e.getValue();
-                if (j instanceof JsonObject jo) j = sortJson(jo);
-                joToMap.put(e.getKey(), j);
-            });
-            JsonObject sortedJSON = new JsonObject();
-            joToMap.forEach(sortedJSON::add);
-            return sortedJSON;
-        } catch (Exception ignored) {
-        }
-        return jsonObject;
-    }
-
     public static boolean isCommandMob(String entity) {
         return COMMAND_MOBS.contains(entity);
     }

@@ -109,7 +109,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemStack2 = slot.getItem();
             itemStack = itemStack2.copy();
             if (index == 2) {
@@ -158,7 +158,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.trader.setTradingPlayer((Player)null);
+        this.trader.setTradingPlayer(null);
         if (!this.trader.isClientSide()) {
             if (!player.isAlive() || player instanceof ServerPlayer sp && sp.hasDisconnected()) {
                 ItemStack itemStack = this.tradeContainer.removeItemNoUpdate(0);
@@ -199,9 +199,9 @@ public class RedMerchantMenu extends AbstractContainerMenu {
             }
 
             if (this.tradeContainer.getItem(0).isEmpty() && this.tradeContainer.getItem(1).isEmpty()) {
-                ItemStack itemStack3 = ((MerchantOffer)this.getOffers().get(selectedMerchantRecipe)).getCostA();
+                ItemStack itemStack3 = (this.getOffers().get(selectedMerchantRecipe)).getCostA();
                 this.moveFromInventoryToPaymentSlot(0, itemStack3);
-                ItemStack itemStack4 = ((MerchantOffer)this.getOffers().get(selectedMerchantRecipe)).getCostB();
+                ItemStack itemStack4 = (this.getOffers().get(selectedMerchantRecipe)).getCostB();
                 this.moveFromInventoryToPaymentSlot(1, itemStack4);
             }
 
@@ -211,7 +211,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
     private void moveFromInventoryToPaymentSlot(int paymentSlotIndex, ItemStack paymentSlot) {
         if (!paymentSlot.isEmpty()) {
             for(int i = 3; i < 39; ++i) {
-                ItemStack itemStack = ((Slot)this.slots.get(i)).getItem();
+                ItemStack itemStack = (this.slots.get(i)).getItem();
                 if (!itemStack.isEmpty() && ItemStack.isSameItemSameTags(paymentSlot, itemStack)) {
                     ItemStack itemStack2 = this.tradeContainer.getItem(paymentSlotIndex);
                     int j = itemStack2.isEmpty() ? 0 : itemStack2.getCount();

@@ -43,7 +43,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                     (ServerLevel) level, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
                     false, 2, 8),
                     EXECUTORS).exceptionally(exception -> {
-                Supplementaries.LOGGER.error("Failed to generate road sign at " + pos + ": " + exception);
+                throwError(pos, exception);
                 return null; // Handle exception by returning null
             });
             return;
@@ -58,9 +58,13 @@ public class BlockGeneratorBlockTile extends BlockEntity {
                 RoadSignFeature.applyPostProcess(tile.config, (ServerLevel) level, pos, tile.threadResult.get());
             } catch (Exception e) {
                 level.removeBlock(pos, false);
-                Supplementaries.LOGGER.error("Failed to generate road sign at " + pos + ": " + e);
+                throwError(pos, e);
             }
         }
+    }
+
+    private static void throwError(BlockPos pos, Throwable exception) {
+        Supplementaries.LOGGER.error("Failed to generate road sign at {}: {}", pos, exception);
     }
 
     public void setConfig(RoadSignFeature.Config c) {

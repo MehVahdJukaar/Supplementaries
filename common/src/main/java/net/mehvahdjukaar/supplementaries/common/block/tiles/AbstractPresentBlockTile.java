@@ -42,12 +42,6 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inv) {
-        if (inv.player.isSpectator()) return null;
-        return new TrappedPresentContainerMenu(id, inv, this);
-    }
-
-    @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return MiscUtils.isAllowedInShulker(stack, level) && !(stack.getItem() instanceof PresentItem);
     }

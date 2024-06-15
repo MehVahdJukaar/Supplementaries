@@ -454,7 +454,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
 
     }
 
-    static class DisplayCache {
+    protected static class DisplayCache {
         static final DisplayCache EMPTY = new DisplayCache("", new Pos2i(0, 0), true, new int[]{0}, new LineInfo[]{new LineInfo(Style.EMPTY, "", 0, 0)}, new Rect2i[0]);
         private final String fullText;
         final Pos2i cursor;
@@ -526,6 +526,6 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         }
     }
 
-    record Pos2i(int x, int y) {
+    protected record Pos2i(int x, int y) {
     }
 }

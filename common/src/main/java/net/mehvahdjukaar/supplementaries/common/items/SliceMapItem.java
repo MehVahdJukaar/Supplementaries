@@ -124,7 +124,7 @@ public class SliceMapItem extends EmptyMapItem {
         return true;
     }
 
-    private static class DepthMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
+    public static class DepthMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
 
         private Integer height = null;
 

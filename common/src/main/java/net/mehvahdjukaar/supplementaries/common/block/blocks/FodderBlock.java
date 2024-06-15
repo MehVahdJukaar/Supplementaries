@@ -135,9 +135,7 @@ public class FodderBlock extends WaterBlock {
                 } else {
                     world.destroyBlock(pos, false);
                 }
-                stack.hurtAndBreak(1, player, (e) -> {
-                    e.broadcastBreakEvent(hand);
-                });
+                stack.hurtAndBreak(1, player, (e) -> e.broadcastBreakEvent(hand));
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
         }

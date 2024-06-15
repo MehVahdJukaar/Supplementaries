@@ -15,7 +15,6 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BannerBlock;
 
 import java.util.Optional;
 import java.util.stream.Stream;

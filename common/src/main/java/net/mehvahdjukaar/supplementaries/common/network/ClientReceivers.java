@@ -7,10 +7,15 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -33,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -190,9 +196,9 @@ public class ClientReceivers {
 
     public static void handleSyncAntiqueInkPacket(ClientBoundSyncAntiqueInk message) {
         withLevelDo(l -> {
-            BlockEntity tile = l.getBlockEntity(message.pos);
+            BlockEntity tile = l.getBlockEntity(message.pos());
             if (tile != null) {
-                AntiqueInkItem.setAntiqueInk(tile, message.ink);
+                AntiqueInkItem.setAntiqueInk(tile, message.ink());
             }
         });
     }
@@ -241,12 +247,12 @@ public class ClientReceivers {
 
     public static void handleParrotPacket(ClientBoundFluteParrotsPacket message) {
         withLevelDo(l -> {
-            Entity e = l.getEntity(message.playerId);
+            Entity e = l.getEntity(message.playerId());
             if (e == null) {
                 Supplementaries.LOGGER.error("Entity not found for parrot packet");
                 return;
             }
-            if (message.playing && e instanceof Player p) {
+            if (message.playing() && e instanceof Player p) {
                 BlockPos pos = e.blockPosition();
                 List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
 
@@ -257,7 +263,7 @@ public class ClientReceivers {
                 }
             }
 
-            setDisplayParrotsPartying(l, Either.left((Player) e), message.playing);
+            setDisplayParrotsPartying(l, Either.left((Player) e), message.playing());
         });
     }
 
@@ -294,5 +300,35 @@ public class ClientReceivers {
                 }
             }
         }
+    }
+
+    public static void handleExplosionPacket(ClientBoundExplosionPacket packet) {
+        withLevelDo(l -> {
+            Vec3 pos = packet.pos();
+            float power = packet.power();
+            List<BlockPos> toBlow = packet.toBlow();
+            Vec3 knockback = packet.knockback();
+            switch (packet.type()) {
+                case BOMB -> {
+                    Explosion explosion = new BombExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow,
+                            BombEntity.BombType.values()[packet.getId()]);
+                    explosion.finalizeExplosion(true);
+                    if(knockback != null) {
+                        withPlayerDo(p -> p.setDeltaMovement(p.getDeltaMovement().add(knockback.x, knockback.y, knockback.z)));
+                    }
+                }
+                case CANNONBALL -> {
+                    Explosion explosion = new CannonBallExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow);
+                    explosion.finalizeExplosion(true);
+                    if (l.getEntity(packet.getId()) instanceof CannonBallEntity le && knockback != null) {
+                        le.setDeltaMovement(knockback);
+                    }
+                }
+                case GUNPOWDER -> {
+                    Explosion explosion = new GunpowderExplosion(l, null, pos.x, pos.y, pos.z, power);
+                    explosion.finalizeExplosion(true);
+                }
+            }
+        });
     }
 }

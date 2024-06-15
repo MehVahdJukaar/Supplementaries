@@ -52,7 +52,7 @@ public class Credits implements Serializable {
     private final List<String> others;
 
 
-    public Credits(Map<String, Supporter> supporters, List<String> artists, List<String> translators, List<String> mod_compat,
+    private Credits(Map<String, Supporter> supporters, List<String> artists, List<String> translators, List<String> mod_compat,
                    List<String> sounds, List<String> others) {
         this.supporters = supporters;
         this.otherArtists = artists;
@@ -110,10 +110,6 @@ public class Credits implements Serializable {
 
     public List<UUID> getDevs() {
         return devs;
-    }
-
-    public Map<String, Supporter> supporters() {
-        return supporters;
     }
 
     public String createCreditsText() {

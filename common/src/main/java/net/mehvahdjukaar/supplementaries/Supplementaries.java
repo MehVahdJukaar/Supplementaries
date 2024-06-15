@@ -100,6 +100,11 @@ public class Supplementaries {
         }
     }
 
+    public static void error(String message, Object... params){
+        error();
+        LOGGER.error(message, params);
+    }
+
     // yes this is where I write crap. deal with it XD
     // flute pacifier
     // wolf howl

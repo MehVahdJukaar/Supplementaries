@@ -23,7 +23,7 @@ import java.util.Optional;
 
 
 public class StructureMapCommand {
-    private static final DynamicCommandExceptionType ERROR_STRUCTURE_INVALID = new DynamicCommandExceptionType((object) -> Component.translatable("commands.locate.structure.invalid", new Object[]{object}));
+    private static final DynamicCommandExceptionType ERROR_STRUCTURE_INVALID = new DynamicCommandExceptionType((object) -> Component.translatable("commands.locate.structure.invalid", object));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
         return Commands.literal("structure_map")

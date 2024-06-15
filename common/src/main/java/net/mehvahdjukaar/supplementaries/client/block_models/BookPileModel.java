@@ -28,10 +28,7 @@ import java.util.function.Function;
 
 public class BookPileModel implements CustomBakedModel {
 
-    private final ModelState transform;
-
     public BookPileModel(ModelState transform, Function<Material, TextureAtlasSprite> spriteGetter) {
-        this.transform = transform;
     }
 
     @Override

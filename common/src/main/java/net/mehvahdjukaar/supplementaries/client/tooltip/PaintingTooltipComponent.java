@@ -12,7 +12,6 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 
 public class PaintingTooltipComponent implements ClientTooltipComponent {
 
-    private final int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
     private final PaintingVariant pattern;
     private final int height;
     private final int width;
@@ -21,6 +20,7 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
         this.pattern = tooltip.pattern();
         float h = pattern.getHeight();
         float w = pattern.getWidth();
+        int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
         if (h > w) {
             this.height = size;
             this.width = (int) ((size / h) * w);

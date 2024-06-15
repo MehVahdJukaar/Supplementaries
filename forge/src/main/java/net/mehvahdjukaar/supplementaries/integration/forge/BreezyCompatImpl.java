@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.integration.forge;
 import codyhuh.breezy.common.WindDirectionSavedData;
 import codyhuh.breezy.networking.BreezyNetworking;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.commands.LootCommand;
 import net.minecraft.world.level.Level;
 
 public class BreezyCompatImpl {

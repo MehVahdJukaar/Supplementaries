@@ -29,7 +29,7 @@ public abstract class ParrotMixin extends Entity implements IFluteParrot {
     private BlockPos jukebox;
 
     @Unique
-    private final List<Player> fluteEntities = new ArrayList<>();
+    private final List<Player> supp$fluteEntities = new ArrayList<>();
 
     public ParrotMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -37,19 +37,19 @@ public abstract class ParrotMixin extends Entity implements IFluteParrot {
 
     @Inject(method = "aiStep", at = @At("TAIL"))
     private void supplementaries$fluteAi(CallbackInfo ci) {
-        if (!fluteEntities.isEmpty()) {
+        if (!supp$fluteEntities.isEmpty()) {
 
-            fluteEntities.removeIf(player -> player.isRemoved() ||
+            supp$fluteEntities.removeIf(player -> player.isRemoved() ||
                     !player.blockPosition().closerToCenterThan(this.position(), 3.46)
                     || !(player.getUseItem().getItem() instanceof FluteItem));
-            if (!fluteEntities.isEmpty()) partyParrot = true;
+            if (!supp$fluteEntities.isEmpty()) partyParrot = true;
             else if (jukebox == null && partyParrot) partyParrot = false;
         }
     }
 
     @Override
     public void supplementaries$setPartyByFlute(Player player) {
-        fluteEntities.add(player);
+        supp$fluteEntities.add(player);
         partyParrot = true;
     }
 }

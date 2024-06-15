@@ -46,8 +46,7 @@ public class VibeChecker {
                 i.tick();
             }
         } catch (Exception e) {
-            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended");
-            e.printStackTrace();
+            Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended", e);
         }
     }
 
@@ -79,7 +78,7 @@ public class VibeChecker {
     private static void crashWhenStolenMod() {
         String s = "creaturesfromthesnow";
         if (PlatHelper.isModLoaded(s)) {
-            Supplementaries.LOGGER.error("[!!!] The mod " + s + " contains stolen assets and code from Frozen Up which is ARR.");
+            Supplementaries.LOGGER.error("[!!!] The mod {} contains stolen assets and code from Frozen Up which is ARR.", s);
         }
     }
 

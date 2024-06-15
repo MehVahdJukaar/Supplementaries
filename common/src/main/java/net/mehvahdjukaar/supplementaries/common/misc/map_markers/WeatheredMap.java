@@ -346,7 +346,7 @@ public class WeatheredMap {
         } catch (Exception e) {
             mc = MapColor.TERRACOTTA_WHITE;
             mc1 = MapColor.RAW_IRON;
-            Supplementaries.LOGGER.warn("Failed to add custom map colors for antique map: " + e);
+            Supplementaries.LOGGER.warn("Failed to add custom map colors for antique map: ", e);
         }
         ANTIQUE_DARK = mc1;
         ANTIQUE_LIGHT = mc;

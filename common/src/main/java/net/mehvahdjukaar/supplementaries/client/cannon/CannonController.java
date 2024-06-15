@@ -9,7 +9,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

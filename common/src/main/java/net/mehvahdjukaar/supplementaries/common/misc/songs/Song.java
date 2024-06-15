@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.util.Mth;
 
 import java.util.Arrays;
@@ -108,7 +109,7 @@ public class Song {
                 n = n / 100;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Supplementaries.error("Error playing note for song: {}", this.name);
         }
         return toPlay;
     }

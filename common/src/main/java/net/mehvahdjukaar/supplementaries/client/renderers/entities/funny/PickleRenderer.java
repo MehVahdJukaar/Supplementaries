@@ -120,37 +120,7 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
     }
 
     protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        if (itemstack.isEmpty()) {
-            return HumanoidModel.ArmPose.EMPTY;
-        } else {
-            if (player.getUsedItemHand() == hand && player.getUseItemRemainingTicks() > 0) {
-                UseAnim useAnimation = itemstack.getUseAnimation();
-                if (useAnimation == UseAnim.BLOCK) {
-                    return HumanoidModel.ArmPose.BLOCK;
-                }
-
-                if (useAnimation == UseAnim.BOW) {
-                    return HumanoidModel.ArmPose.BOW_AND_ARROW;
-                }
-
-                if (useAnimation == UseAnim.SPEAR) {
-                    return HumanoidModel.ArmPose.THROW_SPEAR;
-                }
-
-                if (useAnimation == UseAnim.CROSSBOW && hand == player.getUsedItemHand()) {
-                    return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
-                }
-
-                if (useAnimation == UseAnim.SPYGLASS) {
-                    return HumanoidModel.ArmPose.SPYGLASS;
-                }
-            } else if (!player.swinging && itemstack.getItem() == Items.CROSSBOW && CrossbowItem.isCharged(itemstack)) {
-                return HumanoidModel.ArmPose.CROSSBOW_HOLD;
-            }
-
-            return HumanoidModel.ArmPose.ITEM;
-        }
+        return JarredRenderer.getArmPose(player, hand);
     }
 
     @Override

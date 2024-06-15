@@ -15,10 +15,8 @@ public class SlimedRenderType extends RenderType {
         super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
 
-    protected static final TexturingStateShard TEXTURING_STATE_SHARD = new TexturingStateShard("entity_glint_texturing", () -> {
-        animateTexture(1.2F, 4L);
-
-    }, RenderSystem::resetTextureMatrix);
+    protected static final TexturingStateShard TEXTURING_STATE_SHARD = new TexturingStateShard("entity_glint_texturing",
+            () -> animateTexture(1.2F, 4L), RenderSystem::resetTextureMatrix);
 
     protected static final TextureStateShard TEXTURE_SHARD = new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, true, false);
 /*

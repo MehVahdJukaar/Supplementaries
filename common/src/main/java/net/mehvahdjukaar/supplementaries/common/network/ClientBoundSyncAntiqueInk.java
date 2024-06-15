@@ -6,18 +6,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
 
-public class ClientBoundSyncAntiqueInk implements Message {
-    public final BlockPos pos;
-    public final boolean ink;
+public record ClientBoundSyncAntiqueInk(BlockPos pos, boolean ink) implements Message {
 
     public ClientBoundSyncAntiqueInk(FriendlyByteBuf buffer) {
-        this.pos = buffer.readBlockPos();
-        this.ink = buffer.readBoolean();
-    }
-
-    public ClientBoundSyncAntiqueInk(BlockPos pos, boolean ink) {
-        this.pos = pos;
-        this.ink = ink;
+          this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
     @Override

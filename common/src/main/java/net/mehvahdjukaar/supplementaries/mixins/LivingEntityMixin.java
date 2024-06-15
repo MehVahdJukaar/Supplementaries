@@ -69,7 +69,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "triggerItemUseEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isUsingItem()Z"))
     private void suppl$eatFromLunchBasket(ItemStack stack, int amount, CallbackInfo ci,
-                                          @Local LocalRef<ItemStack> food) {
+                                          @Local(argsOnly = true) LocalRef<ItemStack> food) {
         if (stack.getItem() instanceof LunchBoxItem li) {
             var data = li.getData(stack);
             if (data.canEatFrom()) {

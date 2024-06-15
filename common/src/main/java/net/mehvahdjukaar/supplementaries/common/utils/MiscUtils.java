@@ -74,7 +74,7 @@ public class MiscUtils {
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int date = calendar.get(Calendar.DATE);
-            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date <= 1))
+            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date == 1))
                 return HALLOWEEN;
             if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
             if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;

@@ -647,10 +647,7 @@ public class ModCreativeTabs {
                                 ResourceKey<CreativeModeTab> tab, String key,
                                 Supplier<?>... items) {
         ResourceLocation id = new ResourceLocation(modTarget);
-        Item target = BuiltInRegistries.ITEM.getOptional(id).orElse(null);
-        if (target != null) {
-            after(event, target, tab, key, items);
-        }
+        BuiltInRegistries.ITEM.getOptional(id).ifPresent(target -> after(event, target, tab, key, items));
     }
 
     private static void afterTL(RegHelper.ItemToTabEvent event, Item target,

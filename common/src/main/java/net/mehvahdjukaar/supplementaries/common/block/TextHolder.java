@@ -303,8 +303,8 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public boolean isEmpty(@Nullable Player player) {
         boolean b = player == null || player.isTextFilteringEnabled();
-        return !Arrays.stream(this.getMessages(b)).anyMatch((component) ->
-                !component.getString().isEmpty());
+        return Arrays.stream(this.getMessages(b)).allMatch((component) ->
+                component.getString().isEmpty());
     }
 
     public void clear() {

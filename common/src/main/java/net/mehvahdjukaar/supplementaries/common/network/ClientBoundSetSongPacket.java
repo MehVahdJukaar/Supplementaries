@@ -8,18 +8,10 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.UUID;
 
-public class ClientBoundSetSongPacket implements Message {
-    private final String song;
-    private final UUID id;
+public record ClientBoundSetSongPacket(String song, UUID id) implements Message {
 
     public ClientBoundSetSongPacket(FriendlyByteBuf buf) {
-        this.song = buf.readUtf();
-        this.id = buf.readUUID();
-    }
-
-    public ClientBoundSetSongPacket(UUID id, String s) {
-        this.song = s;
-        this.id = id;
+          this(buf.readUtf(), buf.readUUID());
     }
 
     @Override

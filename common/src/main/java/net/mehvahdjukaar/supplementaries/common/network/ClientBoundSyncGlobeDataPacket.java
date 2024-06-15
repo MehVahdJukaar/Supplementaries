@@ -8,15 +8,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
 
-public class ClientBoundSyncGlobeDataPacket implements Message {
-    public final GlobeData data;
+public record ClientBoundSyncGlobeDataPacket(GlobeData data) implements Message {
 
     public ClientBoundSyncGlobeDataPacket(FriendlyByteBuf buffer) {
-        this.data = new GlobeData(buffer.readNbt());
-    }
-
-    public ClientBoundSyncGlobeDataPacket(GlobeData data) {
-        this.data = data;
+        this(new GlobeData(buffer.readNbt()));
     }
 
     @Override

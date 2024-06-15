@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.mehvahdjukaar.supplementaries.common.commands.arguments.fabric.NoteBlockInstrumentArgument;
 import net.mehvahdjukaar.supplementaries.common.commands.arguments.fabric.SourceArgument;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;

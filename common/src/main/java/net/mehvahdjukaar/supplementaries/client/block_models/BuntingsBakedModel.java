@@ -28,12 +28,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public class BuntingsBakedModel implements CustomBakedModel {
-    private final BlockModelShaper blockModelShaper;
-    private final ModelState rotation;
 
     public BuntingsBakedModel(ModelState transform, Function<Material, TextureAtlasSprite> spriteGetter) {
-        this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
-        this.rotation = transform;
     }
 
     @Override

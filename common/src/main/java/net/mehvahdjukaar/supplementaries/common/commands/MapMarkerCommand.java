@@ -17,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 
 
 public class MapMarkerCommand {
-    private static final DynamicCommandExceptionType ERROR_STRUCTURE_INVALID = new DynamicCommandExceptionType((object) ->
-            Component.translatable("commands.locate.structure.invalid", object));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
         return Commands.literal("add_marker")

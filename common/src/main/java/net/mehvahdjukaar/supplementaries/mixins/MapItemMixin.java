@@ -92,7 +92,7 @@ public abstract class MapItemMixin {
             ordinal = 3,
             target = "Lnet/minecraft/world/level/block/state/BlockState;getMapColor(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/MapColor;"))
     public MapColor removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MapColor> operation,
-                                                  @Local Level l,
+                                                  @Local(argsOnly = true) Level l,
                                                   @Local LevelChunk chunk,
                                                   @Local(ordinal = 14) int w,
                                                   @Local(ordinal = 0) BlockState state,

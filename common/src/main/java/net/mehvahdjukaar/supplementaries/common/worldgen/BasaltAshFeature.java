@@ -52,7 +52,8 @@ public class BasaltAshFeature extends Feature<Config> {
     }
 
     public boolean placeAsh(WorldGenLevel worldGenLevel, int ySpread, BlockPos origin,
-                            RuleTest basaltTest, BlockStateProvider ash, Optional<BlockState> belowAsh, RandomSource random) {
+                            RuleTest basaltTest, BlockStateProvider ash, Optional<BlockState> belowAsh,
+                            RandomSource random) {
 
         BlockPos.MutableBlockPos pos = origin.mutable();
         int inY = pos.getY();

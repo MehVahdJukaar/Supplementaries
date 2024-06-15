@@ -74,10 +74,10 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                 temp.add(song);
                 SongsManager.addSong(song);
             } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for song " + key);
+                Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key);
             }
         });
-        if (temp.size() != 0) Supplementaries.LOGGER.info("Loaded " + temp.size() + " flute songs");
+        if (!temp.isEmpty()) Supplementaries.LOGGER.info("Loaded {} flute songs", temp.size());
     }
 
     private static void addSong(Song song) {
@@ -312,7 +312,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                 r.result().ifPresent(a -> GSON.toJson(a.getAsJsonObject(), writer));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Supplementaries.error("Failed to save recorded song: ", e);
         }
     }
 

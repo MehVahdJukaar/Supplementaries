@@ -25,7 +25,8 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
             ItemStack book = lectern.getDisplayedItem();
             if (!book.isEmpty()) {
                 if (book.is(Items.WRITABLE_BOOK)) {
-                    lectern.setDisplayedItem(book = this.signBook(book));
+                    book = this.signBook(book);
+                    lectern.setDisplayedItem(book);
                 }
 
                 if (book.is(Items.WRITTEN_BOOK)) {

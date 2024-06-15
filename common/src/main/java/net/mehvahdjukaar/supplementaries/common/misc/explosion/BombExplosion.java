@@ -5,16 +5,14 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -47,17 +45,25 @@ import java.util.Set;
 public class BombExplosion extends Explosion {
 
     private final BombEntity.BombType bombType;
-
     private final ExplosionDamageCalculator damageCalculator;
 
 
     public BombExplosion(Level world, @Nullable Entity entity,
                          @Nullable ExplosionDamageCalculator context, double x, double y, double z,
                          float radius, BombEntity.BombType bombType, BlockInteraction interaction) {
-        super(world, entity,null, context, x, y, z, radius, false, interaction);
+        super(world, entity, null, context, x, y, z, radius, false, interaction);
         this.bombType = bombType;
         this.damageCalculator = context == null ? this.bombMakeDamageCalculator(entity) : context;
-        this.damageSource =  ModDamageSources.bombExplosion(getDirectSourceEntity(), getIndirectSourceEntity());
+        this.damageSource = ModDamageSources.bombExplosion(getDirectSourceEntity(), getIndirectSourceEntity());
+    }
+
+
+    //client factory
+    public BombExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
+                         float radius, List<BlockPos> toBlow, BombEntity.BombType bombType) {
+        super(level, source, toBlowX, toBlowY, toBlowZ, radius, toBlow);
+        this.bombType = bombType;
+        this.damageCalculator = this.bombMakeDamageCalculator(source);
     }
 
     private static final ExplosionDamageCalculator EXPLOSION_DAMAGE_CALCULATOR = new ExplosionDamageCalculator();
@@ -71,14 +77,29 @@ public class BombExplosion extends Explosion {
         return (ObjectArrayList<BlockPos>) super.getToBlow();
     }
 
-    public void doFinalizeExplosion() {
 
-        this.level.playSound(null, this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.NEUTRAL, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F));
+    @Override
+    public void finalizeExplosion(boolean spawnParticles) {
+        boolean interactsWithBlocks = this.interactsWithBlocks();
+
+        if (this.level.isClientSide) {
+            this.level.playLocalSound(this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.BLOCKS, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F), false);
+
+            if (spawnParticles) {
+                if (!(this.radius < 2.0F) && interactsWithBlocks) {
+                    this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), this.x, this.y, this.z, 1.0, 0.0, 0.0);
+                } else {
+                    this.level.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), this.x, this.y, this.z, 1.0, 0.0, 0.0);
+                }
+            }
+            bombType.spawnExtraParticles(x, y, z, level);
+        }
+
 
         ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
         Util.shuffle(this.getToBlow(), this.level.random);
 
-
+        if (!interactsWithBlocks) return;
         for (BlockPos blockpos : this.getToBlow()) {
             BlockState blockstate = this.level.getBlockState(blockpos);
             if (!blockstate.isAir()) {
@@ -209,7 +230,7 @@ public class BombExplosion extends Explosion {
                             if (!isPlayer || (!playerEntity.isSpectator() && !playerEntity.isCreative())) {
                                 bombType.applyStatusEffects(livingEntity, distSq);
                             }
-                            if(entity instanceof Creeper creeper){
+                            if (entity instanceof Creeper creeper) {
                                 creeper.ignite();
                             }
 
@@ -220,15 +241,6 @@ public class BombExplosion extends Explosion {
 
                     }
                 }
-            }
-        }
-
-        //send knockback packet to players
-
-        if (!level.isClientSide) {
-            for (var e : this.getHitPlayers().entrySet()) {
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) e.getKey(),
-                        new ClientBoundSendKnockbackPacket(e.getValue(), e.getKey().getId()));
             }
         }
 

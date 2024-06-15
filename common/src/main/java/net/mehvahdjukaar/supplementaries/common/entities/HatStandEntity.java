@@ -416,14 +416,16 @@ public class HatStandEntity extends LivingEntity {
     public void setYBodyRot(float pOffset) {
         float r = this.getYRot();
         this.yRotO = r;
-        this.yBodyRotO = this.yBodyRot = r;
+        this.yBodyRotO = r;
+        this.yBodyRot = r;
     }
 
     @Override
     public void setYHeadRot(float pRotation) {
         float r = this.getYRot();
         this.yRotO = r;
-        this.yHeadRotO = this.yHeadRot = r;
+        this.yHeadRotO = r;
+        this.yHeadRot = r;
     }
 
     @Override

@@ -40,6 +40,14 @@ public class CannonBallExplosion extends Explosion {
         this.maxExplodedAmount = maxExplodedAmount;
     }
 
+    //client factory
+    public CannonBallExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
+                               float radius, List<BlockPos> toBlow) {
+        super(level, source, toBlowX, toBlowY, toBlowZ, radius, toBlow);
+        this.centerPos = BlockPos.containing(new Vec3(toBlowX, toBlowY, toBlowZ));
+        this.maxExplodedAmount = 0;
+    }
+
     @Override
     public void explode() {
         Vec3 center = new Vec3(this.x, this.y, this.z);

@@ -8,8 +8,6 @@ import dan200.computercraft.shared.Capabilities;
 import dan200.computercraft.shared.media.items.PrintoutItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;

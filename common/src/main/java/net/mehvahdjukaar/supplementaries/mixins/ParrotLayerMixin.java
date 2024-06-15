@@ -42,7 +42,7 @@ public abstract class ParrotLayerMixin<T extends Player> {
                 Parrot.Variant variant = Parrot.Variant.byId(compoundTag.getInt("Variant"));
 
                 VertexConsumer vertexConsumer = buffer.getBuffer(this.model.renderType(ParrotRenderer.getVariantTexture(variant)));
-                renderOnShoulderPartying(model, matrixStack, vertexConsumer, packedLight,
+                supp$renderOnShoulderPartying(model, matrixStack, vertexConsumer, packedLight,
                         OverlayTexture.NO_OVERLAY, limbSwing, limbSwingAmount, netHeadYaw, headPitch,
                         livingEntity.tickCount, 0);
                 matrixStack.popPose();
@@ -53,9 +53,9 @@ public abstract class ParrotLayerMixin<T extends Player> {
     }
 
     @Unique
-    private static void renderOnShoulderPartying(ParrotModel model, PoseStack poseStack, VertexConsumer buffer,
-                                         int packedLight, int packedOverlay, float limbSwing, float limbSwingAmount,
-                                         float netHeadYaw, float headPitch, int tickCount, float bob) {
+    private static void supp$renderOnShoulderPartying(ParrotModel model, PoseStack poseStack, VertexConsumer buffer,
+                                                      int packedLight, int packedOverlay, float limbSwing, float limbSwingAmount,
+                                                      float netHeadYaw, float headPitch, int tickCount, float bob) {
         model.prepare(ParrotModel.State.PARTY);
         model.setupAnim(ParrotModel.State.PARTY, tickCount, limbSwing, limbSwingAmount, bob, netHeadYaw, headPitch);
         model.root().render(poseStack, buffer, packedLight, packedOverlay);

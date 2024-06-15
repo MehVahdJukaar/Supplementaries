@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.forge;
 
 import net.blay09.mods.waystones.block.entity.WaystoneBlockEntityBase;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;

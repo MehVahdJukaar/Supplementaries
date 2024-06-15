@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
-import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

@@ -110,7 +110,7 @@ public class RopeArrowItem extends ArrowItem {
         var override = CommonConfigs.getRopeOverride();
         if (override != null) {
 
-            tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location())
+            tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location().toString())
                     .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }

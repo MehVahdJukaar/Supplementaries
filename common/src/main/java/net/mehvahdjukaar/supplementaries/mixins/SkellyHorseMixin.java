@@ -57,7 +57,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
         if (CommonConfigs.Tweaks.ZOMBIE_HORSE.get() && this.isTamed() && !this.isBaby()) {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.getItem() == Items.ROTTEN_FLESH && supplementaries$fleshCount < CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
-                this.feedRottenFlesh(player, hand, stack);
+                this.supp$feedRottenFlesh(player, hand, stack);
                 cir.cancel();
                 cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
             }
@@ -70,7 +70,8 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
         return SoundEvents.HORSE_EAT;
     }
 
-    public void feedRottenFlesh(Player player, InteractionHand hand, ItemStack stack) {
+    @Unique
+    public void supp$feedRottenFlesh(Player player, InteractionHand hand, ItemStack stack) {
         float heal = 0.5f;
         if (this.getHealth() < this.getMaxHealth()) {
             this.heal(heal);
@@ -94,7 +95,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
     }
 
     @Unique
-    private void doZombieConversion() {
+    private void supp$doZombieConversion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
@@ -158,7 +159,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime <= 0 && ForgeHelper.canLivingConvert(this, EntityType.ZOMBIE_HORSE, (timer) -> this.supplementaries$conversionTime = timer)) {
-                    this.doZombieConversion();
+                    this.supp$doZombieConversion();
                 }
             }
         }

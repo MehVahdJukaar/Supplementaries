@@ -197,7 +197,7 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    private enum AirType {
+    protected enum AirType {
         AIR, BUBBLE, SOAP
     }
 
@@ -358,7 +358,7 @@ public class BellowsBlockTile extends BlockEntity {
         return flag;
     }
 
-    public void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
+    protected void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {
         if (airType == AirType.SOAP) {
             for (int m = 0; m < (1 + world.random.nextInt(3)); m++) {
                 ParticleUtil.spawnParticleOnFace(world, pos, dir, ModParticles.SUDS_PARTICLE.get(), 0.3f, 0.5f, true);

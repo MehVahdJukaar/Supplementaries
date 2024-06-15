@@ -28,7 +28,7 @@ public class ClockDisplaySource extends SingleLineDisplaySource {
                 int dayTime = (int) (sLevel.getDayTime() % 24000L);
                 int hours = (dayTime / 1000 + 6) % 24;
                 int minutes = dayTime % 1000 * 60 / 1000;
-                MutableComponent suffix = Lang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"), new Object[0]);
+                MutableComponent suffix = Lang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"));
                 minutes = minutes / 5 * 5;
                 if (c12) {
                     hours %= 12;

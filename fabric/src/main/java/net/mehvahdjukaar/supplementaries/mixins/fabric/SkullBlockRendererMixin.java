@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins.fabric;
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
-import net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabric;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.EntityModelSet;

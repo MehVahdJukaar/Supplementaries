@@ -19,12 +19,6 @@ interface ItemUseOnBlockOverride extends ItemUseOverride {
         return appliesToItem(item);
     }
 
-    @Override
-    @Nullable
-    default MutableComponent getTooltip() {
-        return null;
-    }
-
     default boolean placesBlock(){
         return false;
     }

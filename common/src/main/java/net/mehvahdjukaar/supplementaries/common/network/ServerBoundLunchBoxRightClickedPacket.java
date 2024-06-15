@@ -10,15 +10,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
-public class ServerBoundLunchBoxRightClickedPacket implements Message {
-    private final InteractionHand hand;
+public record ServerBoundLunchBoxRightClickedPacket(InteractionHand hand) implements Message {
 
     public ServerBoundLunchBoxRightClickedPacket(FriendlyByteBuf buf) {
-        this.hand = buf.readEnum(InteractionHand.class);
-    }
-
-    public ServerBoundLunchBoxRightClickedPacket(InteractionHand hand) {
-        this.hand = hand;
+        this(buf.readEnum(InteractionHand.class));
     }
 
     @Override

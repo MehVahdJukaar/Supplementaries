@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.integration.forge.configured;
 
 import net.mehvahdjukaar.moonlight.api.client.gui.LinkButton;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
-import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;

@@ -122,6 +122,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         return this.getCharges(stack) > 0;
     }
 
+    @SuppressWarnings("UnsafePlatformOnlyCall")
     private int getCharges(ItemStack stack) {
         return this.getMaxDamage(stack) - this.getDamage(stack);
     }
