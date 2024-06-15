@@ -30,9 +30,9 @@ public abstract class CannonChargeHud extends Gui {
             CannonBlockTile cannon = CannonController.cannon;
 
 
-            renderHotbar(graphics, screenWidth, screenHeight, texture, cannon);
+            renderHotBar(graphics, screenWidth, screenHeight, texture, cannon);
 
-            renderCrosshair(graphics, screenWidth, screenHeight, texture);
+            renderCrossHair(graphics, screenWidth, screenHeight, texture);
 
             renderBar(graphics, screenWidth, screenHeight, texture, cannon);
 
@@ -50,7 +50,7 @@ public abstract class CannonChargeHud extends Gui {
         graphics.blit(texture, iconLeft, iconTop, iconU, 42, iconW, iconW);
     }
 
-    private void renderHotbar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon) {
+    private void renderHotBar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon) {
         int left = screenWidth / 2 - 91;
         graphics.pose().pushPose();
         graphics.pose().translate(0.0F, 0.0F, -90.0F);
@@ -69,8 +69,8 @@ public abstract class CannonChargeHud extends Gui {
 
         float c = 1 - cannon.getDisabledCooldown();
         int k = (int) (c * 183.0F);
-        int xpbarTop = screenHeight - 32 + 3;
-        graphics.blit(texture, xpBarLeft, xpbarTop, 0, 0, 182, 5);
+        int xpBarTop = screenHeight - 32 + 3;
+        graphics.blit(texture, xpBarLeft, xpBarTop, 0, 0, 182, 5);
         float f = cannon.getFireTimer();
 
         float min = 0.7F;
@@ -87,7 +87,7 @@ public abstract class CannonChargeHud extends Gui {
             RenderSystem.setShaderColor(min, min, min, 1.0F);
         }
 
-        graphics.blit(texture, xpBarLeft, xpbarTop, 0, 5, k, 5);
+        graphics.blit(texture, xpBarLeft, xpBarTop, 0, 5, k, 5);
 
 
         byte power = CannonController.cannon.getPowerLevel();
@@ -111,7 +111,7 @@ public abstract class CannonChargeHud extends Gui {
         graphics.drawString(this.getFont(), s, i1, j1, color, false);
     }
 
-    private static void renderCrosshair(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture) {
+    private static void renderCrossHair(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture) {
         graphics.pose().pushPose();
         graphics.pose().translate(0, 0, -90);
 

@@ -134,7 +134,7 @@ public abstract class FiniteFluid extends Fluid {
         }
     }
 
-    protected Map<Direction, Integer> getWantedSpreadDirections(Level level, BlockPos pos, BlockState state) {
+    protected Map<Direction, Integer> getWantedSpreadDirections(BlockGetter level, BlockPos pos, BlockState state) {
         Map<Direction, Integer> list = new HashMap<>();
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {

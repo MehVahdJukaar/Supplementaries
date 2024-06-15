@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -27,8 +29,18 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
         this.yOff = yOff;
         this.zOff = zOff;
 
-        this.lifetime = 13 + random.nextInt(15);
-        this.quadSize *= 5.5f;
+        //todo: this determines animation speed essentially. make it depend on speed. or make age depend on speed
+        this.lifetime = 5 + random.nextInt(10);
+
+        double normalizedTick = (double) entity.tickCount / lifetime;
+
+        // Map normalized value to the desired age transition
+        if (normalizedTick < 0.5) {
+            // As tickCount increases from 0 to lifetime/2, age increases smoothly from 0 to maximum
+            this.age += random.nextInt(Mth.ceil((0.5 - normalizedTick) * lifetime));
+        }
+
+        this.quadSize *= 7f;
 
         if (entity instanceof ImprovedProjectileEntity ip) {
             this.gravity = (ip.getGravity()) / 0.04f; //must be same as cannon entity one
@@ -44,7 +56,7 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
     }
 
     private void updateAlpha() {
-        this.alpha = (float) (this.maxAlpha * Mth.clamp(this.speed() * 1 - 0.2, 0, 1));
+        this.alpha = (float) (this.maxAlpha * Mth.clamp(this.speed() * 1 - 0.15, 0, 1));
         float percentage = (this.age / (float) this.lifetime);
         // Apply fading effect towards the end of the lifetime
         float fadeStart = 0.5f; // Start fading when 80% of the lifetime is reached

@@ -16,9 +16,9 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -183,6 +183,18 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+                Containers.dropContents(world, pos, tile);
+                world.updateNeighbourForOutputSignal(pos, this);
+            }
+            super.onRemove(state, world, pos, newState, isMoving);
+        }
+    }
+
+
+    @Override
     public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             return tile.isFiring();
@@ -226,15 +238,20 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return super.getShape(state, level, pos, context);
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if (context instanceof EntityCollisionContext ec &&
-                level instanceof ServerLevel
-                && ec.getEntity() instanceof Projectile p) {
-            if (p.tickCount < 10) {
+        if (context instanceof EntityCollisionContext ec) {
+            if (ec.getEntity() instanceof Projectile p && p.tickCount < 10) {
                 return Shapes.empty();
+            } else if(ec.getEntity() != null){
+                return super.getCollisionShape(state, level, pos, context);
             }
         }
-        return super.getCollisionShape(state, level, pos, context);
+        return Shapes.empty();
     }
 
     @Override
@@ -295,7 +312,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
-        int smokeCount = 20;
+        int smokeCount = 40;
         for (int i = 0; i < smokeCount; i += 1) {
 
             poseStack.pushPose();

@@ -156,8 +156,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return powerLevel;
     }
 
-    public float getFirePower(){
-        return (float) (powerLevel * CommonConfigs.Functional.CANNON_FIRE_POWER.get());
+    public float getFirePower() {
+        return (float) (Math.pow(powerLevel, CommonConfigs.Functional.CANNON_FIRE_POWER.get()));
     }
 
     public float getYaw(float partialTicks) {
@@ -271,7 +271,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     private void fire() {
-        if (this.getProjectile().isEmpty()) return;
+        if (!this.hasFuelAndProjectiles()) return;
 
         if (level.isClientSide) {
             //call directly on client

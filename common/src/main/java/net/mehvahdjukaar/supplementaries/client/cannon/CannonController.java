@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
@@ -167,8 +168,8 @@ public class CannonController {
 
     public static void onPlayerRotated(double yawAdd, double pitchAdd) {
         float scale = 0.2f;
-        yawIncrease += yawAdd * scale;
-        pitchIncrease += pitchAdd * scale;
+        yawIncrease += (float) (yawAdd * scale);
+        pitchIncrease += (float) (pitchAdd * scale);
         if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
     }
 
@@ -228,9 +229,10 @@ public class CannonController {
 
     public static void onClientTick(Minecraft mc) {
         if (!isActive()) return;
-        ClientLevel level = mc.level;
-        BlockPos pos = cannon.getBlockPos();
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        Level level = player.level();
+        BlockPos pos = cannon.getBlockPos();
         float maxDist = 7;
         if (level.getBlockEntity(pos) == cannon && !cannon.isRemoved() &&
                 pos.distToCenterSqr(player.position()) < maxDist * maxDist) {

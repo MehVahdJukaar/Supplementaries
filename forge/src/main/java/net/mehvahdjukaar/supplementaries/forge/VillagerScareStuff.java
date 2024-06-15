@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.*;
@@ -16,13 +15,9 @@ import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 

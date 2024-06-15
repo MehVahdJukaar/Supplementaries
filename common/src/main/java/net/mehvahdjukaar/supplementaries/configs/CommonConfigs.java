@@ -689,7 +689,7 @@ public class CommonConfigs {
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
-                    .define("fire_power", 0.7f, 0, 5);
+                    .define("fire_power", 0.6f, 0, 5);
             CANNONBALL_ENABLED = feature(builder, "cannonball");
             builder.pop();
 

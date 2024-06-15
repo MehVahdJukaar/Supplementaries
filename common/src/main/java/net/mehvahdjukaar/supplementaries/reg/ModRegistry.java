@@ -1019,6 +1019,7 @@ public class ModRegistry {
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
                     .isSuffocating(NEVER)
+                    .forceSolidOff()
                     .isRedstoneConductor(NEVER)
                     .isViewBlocking(NEVER)
                     .noOcclusion()
@@ -1066,7 +1067,6 @@ public class ModRegistry {
                     .isViewBlocking((state, l, p) -> state.getValue(AshLayerBlock.LAYERS) >= 8)
                     .requiresCorrectToolForDrops()
     ));
-
 
     //ash
     public static final Supplier<Item> ASH_BRICK_ITEM = regItem(ASH_BRICK_NAME, () -> new Item(new Item.Properties()));

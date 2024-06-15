@@ -20,9 +20,8 @@ public class CannonBallItem extends BlockItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 
-        if (!PlatHelper.isDev()) return super.use(worldIn, playerIn, handIn);
+        if (!PlatHelper.isDev() || !playerIn.isCreative()) return super.use(worldIn, playerIn, handIn);
         ItemStack itemstack = playerIn.getItemInHand(handIn);
-
         if (!worldIn.isClientSide) {
             CannonBallEntity bombEntity = new CannonBallEntity(worldIn, playerIn);
             float pitch = -10;//playerIn.isSneaking()?0:-20;

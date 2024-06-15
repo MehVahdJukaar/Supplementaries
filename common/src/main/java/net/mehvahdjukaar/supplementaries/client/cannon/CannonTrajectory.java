@@ -27,8 +27,8 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
             float v0y = Mth.sin((float) targetAngle) * initialPow;
 
             if (drag == 0 || drag == 1 || mode == ShootingMode.STRAIGHT) {
-                    return new CannonTrajectory(targetPoint, (float) targetAngle,
-                        4, true, 0, 0.9f, v0x, v0y);
+                return new CannonTrajectory(targetPoint, (float) targetAngle,
+                        6, true, gravity, 1, v0x, v0y);
             }
 
             // simple line
@@ -479,6 +479,8 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
      * @param V0y initial velocity
      */
     public static double arcY(double t, float g, float d, float V0y) {
+        // if (d == 1) return V0y * t - 0.5 * g * t * t;
+        if (d == 1) return V0y * t;
         float k = g / (d - 1);
         double inLog = 1 / Math.log(d);
         return ((V0y - k) * inLog * (Math.pow(d, t) - 1) + k * t);
@@ -493,11 +495,10 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
      * @param V0x initial velocity
      */
     public static double arcX(double t, float g, float d, float V0x) {
+        if (d == 1) return V0x * t;
         double inLog = 1 / Math.log(d);
 
         return (V0x * inLog * (Math.pow(d, t) - 1));
-
-        //vox* inlog *
     }
 
     public double getX(double t) {
