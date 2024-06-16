@@ -14,14 +14,16 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(OpeneableContainerBlockEntity.class)
-public abstract class SerfOpenableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {
+public abstract class SelfOpenableContainerMixin extends RandomizableContainerBlockEntity implements WorldlyContainer {
 
-    protected SerfOpenableContainerMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
+    protected SelfOpenableContainerMixin(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
         super(arg, arg2, arg3);
     }
 
+    @Unique
     private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
 
     @Override

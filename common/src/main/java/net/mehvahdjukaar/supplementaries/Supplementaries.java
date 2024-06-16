@@ -109,7 +109,8 @@ public class Supplementaries {
     // flute pacifier
     // wolf howl
 
-    // remove bomb packet. setting hurt marked has the same effect
+    // randomize enchant for quiver and lunch boxes
+    // dispensers shoow quiver content
     // bundle and quiver dispenser interaction
     // zombie villagers spawn away from center. biome spawn
     // fletching table quiver fill

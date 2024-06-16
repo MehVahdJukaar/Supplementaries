@@ -12,7 +12,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +67,12 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
+    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
+        DoormatScreen.open(this);
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos blockPos, Player player) {
         DoormatScreen.open(this);
     }
 
@@ -90,5 +99,22 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     public UUID getPlayerWhoMayEdit() {
         return playerWhoMayEdit;
+    }
+
+
+    @Override
+    public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return null;
     }
 }

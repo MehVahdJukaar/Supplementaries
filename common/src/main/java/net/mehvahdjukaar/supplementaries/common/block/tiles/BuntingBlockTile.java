@@ -15,11 +15,16 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -38,15 +43,13 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         super(ModRegistry.BUNTING_TILE.get(), pos, state, 4);
     }
 
+    public Map<Direction, DyeColor> getBuntings() {
+        return buntings;
+    }
+
     @ForgeOverride
     public AABB getRenderBoundingBox() {
         return new AABB(worldPosition);
-    }
-
-
-    @Override
-    protected Component getDefaultName() {
-        return Component.literal("Bunting");
     }
 
     @Override
@@ -61,9 +64,9 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
                 }
             }
         }
-        if(buntings.isEmpty()){
-            //error;
-            Supplementaries.error();
+        if (buntings.isEmpty()) {
+            //error; should be cleared soon
+            // Supplementaries.error();
         }
         requestModelReload();
     }
@@ -79,12 +82,12 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
                 var prop = BuntingBlock.HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir);
                 var old = state2.getValue(prop);
                 boolean isEmpty = this.getItem(dir.get2DDataValue()).isEmpty();
-                state2 = state2.setValue(prop, isEmpty ? (old == ModBlockProperties.Bunting.NONE ?  ModBlockProperties.Bunting.NONE : ModBlockProperties.Bunting.ROPE) :
+                state2 = state2.setValue(prop, isEmpty ? (old == ModBlockProperties.Bunting.NONE ? ModBlockProperties.Bunting.NONE : ModBlockProperties.Bunting.ROPE) :
                         ModBlockProperties.Bunting.BUNTING);
 
             }
-            if(state != state2){
-               level.setBlockAndUpdate(worldPosition, state2);
+            if (state != state2) {
+                level.setBlockAndUpdate(worldPosition, state2);
             }
         }
     }
@@ -93,17 +96,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     public boolean needsToUpdateClientWhenChanged() {
         return false; //dont need as we always set block ourselves. 2 packets will otherwise confuse clients
     }
-
-    public Map<Direction, DyeColor> getBuntings() {
-        return buntings;
-    }
-
-    @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
-                BuntingBlock.canSupportBunting(getBlockState(), index);
-    }
-
 
     @Override
     public boolean isNeverFancy() {
@@ -124,4 +116,32 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         LOD lod = new LOD(cameraPos, this.getBlockPos());
         return lod.isNear();
     }
+
+    @Override
+    public Component getDefaultName() {
+        return Component.translatable("item.supplementaries.bunting");
+    }
+
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
+                BuntingBlock.canSupportBunting(getBlockState(), index);
+    }
+
+    @Override
+    public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public boolean canOpen(Player player) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return null;
+    }
+
 }

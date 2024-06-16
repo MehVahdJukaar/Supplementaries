@@ -24,6 +24,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -258,5 +262,27 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         public int size() {
             return books.size();
         }
+    }
+
+
+    @Override
+    public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canOpen(Player player) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return null;
     }
 }

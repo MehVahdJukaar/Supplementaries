@@ -20,6 +20,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder, IExtraModelDataProvider {
 
@@ -122,14 +126,15 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         return false;
     }
 
-    @Override
-    public void afterDataPacket(ExtraModelData oldData) {
-        IExtraModelDataProvider.super.afterDataPacket(oldData);
-    }
-
 
     @Override
     public SoundEvent getAddItemSound() {
         return SoundEvents.CROP_PLANTED;
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return null;
     }
 }

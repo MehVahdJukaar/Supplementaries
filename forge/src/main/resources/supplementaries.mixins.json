@@ -30,7 +30,7 @@
     "self.SelfSoapItemMixin",
     "self.SelfSpeakerBlockTileMixin",
     "self.SelfWrenchMixin",
-    "self.SerfOpenableContainerMixin"
+    "self.SelfOpenableContainerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
