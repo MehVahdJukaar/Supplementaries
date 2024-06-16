@@ -49,9 +49,9 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.yawSelector.setNumber(tile.getYaw(1));
+        this.yawSelector.setNumber(tile.getYaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.pitchSelector.setNumber(tile.getPitch(1));
+        this.pitchSelector.setNumber(tile.getPitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
         this.powerSelector.power = tile.getPowerLevel();

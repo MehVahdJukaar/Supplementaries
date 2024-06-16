@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProj
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -49,6 +50,8 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.HashMap;
@@ -138,11 +141,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             if (dir.getAxis() == Direction.Axis.Y) {
                 float pitch = dir == Direction.UP ? -90 : 90;
-                cannon.setPitch((myDir.getOpposite() == dir ? pitch + 180 : pitch));
+                cannon.setRestrainedPitch((myDir.getOpposite() == dir ? pitch + 180 : pitch));
 
             } else {
                 float yaw = dir.toYRot();
-                cannon.setYaw((myDir.getOpposite() == dir ? yaw + 180 : yaw));
+                cannon.setRestrainedYaw((myDir.getOpposite() == dir ? yaw + 180 : yaw));
             }
         }
     }
@@ -247,7 +250,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         if (context instanceof EntityCollisionContext ec) {
             if (ec.getEntity() instanceof Projectile p && p.tickCount < 10) {
                 return Shapes.empty();
-            } else if(ec.getEntity() != null){
+            } else if (ec.getEntity() != null) {
                 return super.getCollisionShape(state, level, pos, context);
             }
         }
@@ -267,18 +270,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public Optional<BlockState> getRotatedState(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos, Rotation rotation, Direction direction, @Nullable Vec3 vec3) {
-        //TODO: figure out rotation stuff
-        return Optional.empty();
-    }
-
-    @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
         if (id > 1) return false;
         if (!level.isClientSide) return true;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-            float yaw = tile.getYaw(1);
-            float pitch = tile.getPitch(1);
+            float yaw = tile.getYaw();
+            float pitch = tile.getPitch();
 
             PoseStack poseStack = new PoseStack();
             poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
@@ -352,6 +349,29 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         }
 
         poseStack.popPose();
+    }
+
+    @Override
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor levelAccessor, BlockPos blockPos,
+                                                Rotation rotation, Direction axis, @Nullable Vec3 hit) {
+        boolean ccw = rotation == Rotation.COUNTERCLOCKWISE_90;
+        return BlockUtil.getRotatedDirectionalBlock(state, axis, ccw).or(() -> Optional.of(state));
+    }
+
+    @Override
+    public void onRotated(BlockState newState, BlockState oldState, LevelAccessor world, BlockPos pos, Rotation rotation,
+                          Direction axis, @Nullable Vec3 hit) {
+        if (axis.getAxis() == newState.getValue(FACING).getAxis() && world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
+            float angle = rotation.rotate(0, 4) * -90;
+            Vector3f currentDir = Vec3.directionFromRotation(tile.getPitch(), tile.getYaw()).toVector3f();
+            Quaternionf q = new Quaternionf().rotateAxis(angle*Mth.DEG_TO_RAD, axis.step());
+            currentDir.rotate(q);
+            Vec3 newDir = new Vec3(currentDir);
+            tile.setRestrainedYaw((float) MthUtils.getYaw(newDir));
+            tile.setRestrainedPitch((float) MthUtils.getPitch(newDir));
+            tile.setChanged();
+            tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);
+        }
     }
 
 

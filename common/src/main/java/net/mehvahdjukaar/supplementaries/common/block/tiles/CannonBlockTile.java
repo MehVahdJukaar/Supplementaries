@@ -164,8 +164,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw);
     }
 
+    public float getYaw() {
+        return yaw;
+    }
+
     public float getPitch(float partialTicks) {
         return Mth.rotLerp(partialTicks, this.prevPitch, this.pitch);
+    }
+
+    public float getPitch() {
+        return pitch;
     }
 
     public void syncAttributes(float yaw, float pitch, byte firePower, boolean fire, Player controllingPlayer) {
@@ -176,12 +184,29 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
 
-    public void setPitch(float pitch) {
-        this.pitch = Mth.wrapDegrees(pitch);
+    public void setRestrainedPitch(float pitch) {
+        Restraint r = this.getPitchAndYawRestrains();
+        this.pitch = Mth.wrapDegrees(Mth.clamp(pitch, r.minPitch, r.maxPitch));
     }
 
-    public void setYaw(float yaw) {
-        this.yaw = Mth.wrapDegrees(yaw);
+    public void setRestrainedYaw(float yaw) {
+        Restraint r = this.getPitchAndYawRestrains();
+        this.yaw = Mth.wrapDegrees(Mth.clamp(yaw, r.minYaw, r.maxYaw));
+    }
+
+    public record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
+    }
+
+    public Restraint getPitchAndYawRestrains() {
+        BlockState state = this.getBlockState();
+        return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
+            case NORTH -> new Restraint(70, 290, -360, 360);
+            case SOUTH -> new Restraint(-110, 110, -360, 360);
+            case EAST -> new Restraint(-200, 20, -360, 360);
+            case WEST -> new Restraint(-20, 200, -360, 360);
+            case UP -> new Restraint(-360, 360, -200, 20);
+            case DOWN -> new Restraint(-360, 360, -20, 200);
+        };
     }
 
     public void changeFirePower(int scrollDelta) {

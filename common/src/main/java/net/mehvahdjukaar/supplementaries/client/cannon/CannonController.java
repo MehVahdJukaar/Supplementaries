@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -126,23 +125,23 @@ public class CannonController {
             // calculate the yaw of target. no clue why its like this
             float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
-            var restraints = getPitchAndYawRestrains(cannon.getBlockState());
+            var restraints = cannon.getPitchAndYawRestrains();
             var ballistic = cannon.getTrajectoryData();
             trajectory = CannonTrajectory.findBest(target,
                     ballistic.gravity(), ballistic.drag(), cannon.getFirePower(), shootingMode,
-                    restraints.minPitch, restraints.maxPitch);
+                    restraints.minPitch(), restraints.maxPitch());
 
             if (trajectory != null) {
                 float followSpeed = 0.25f;
                 //TODO: improve
-                cannon.setPitch(Mth.rotLerp(1, cannon.getPitch(1), trajectory.pitch() * Mth.RAD_TO_DEG));
+                cannon.setRestrainedPitch(Mth.rotLerp(1, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
 
                 float yaw = wantedCannonYaw * Mth.RAD_TO_DEG;//  Mth.rotLerp(1, cannon.getYaw(1), wantedCannonYaw * Mth.RAD_TO_DEG);
                 float prevYaw = cannon.getYaw(0);
                 //overshoots since we are setting this every render tick. Calculates the next tick yaw
                 float deltaYaw = Mth.wrapDegrees(yaw - prevYaw);
                 yaw = prevYaw + deltaYaw / partialTick;
-                cannon.setYaw(Mth.clamp(yaw, restraints.minYaw, restraints.maxYaw));
+                cannon.setRestrainedYaw(yaw);
             }
 
             return true;
@@ -150,19 +149,7 @@ public class CannonController {
         return false;
     }
 
-    private record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
-    }
 
-    private static Restraint getPitchAndYawRestrains(BlockState state) {
-        return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
-            case NORTH -> new Restraint(70, 290, -360, 360);
-            case SOUTH -> new Restraint(-110, 110, -360, 360);
-            case EAST -> new Restraint(-200, 20, -360, 360);
-            case WEST -> new Restraint(-20, 200, -360, 360);
-            case UP -> new Restraint(-360, 360, -200, 20);
-            case DOWN -> new Restraint(-360, 360, -20, 200);
-        };
-    }
 
 
     public static void onPlayerRotated(double yawAdd, double pitchAdd) {
@@ -205,8 +192,8 @@ public class CannonController {
         if (attack) {
             if (cannon != null && cannon.readyToFire()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(1),
-                        cannon.getPitch(1), cannon.getPowerLevel(), true, cannon.getBlockPos()));
+                        cannon.getYaw(),
+                        cannon.getPitch(), cannon.getPowerLevel(), true, cannon.getBlockPos()));
             }
         }
     }
@@ -238,7 +225,7 @@ public class CannonController {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
                 ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(0), cannon.getPitch(0), cannon.getPowerLevel(),
+                        cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
                         false, cannon.getBlockPos()));
             }
         } else turnOff();

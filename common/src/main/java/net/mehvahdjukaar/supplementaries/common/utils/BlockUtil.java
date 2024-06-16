@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -145,8 +146,7 @@ public class BlockUtil {
                 if (dc != null) {
                     int bites = state.getValue(CakeBlock.BITES);
                     if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
-                            dc.defaultBlockState()
-                                    .setValue(CakeBlock.BITES, bites), world, targetPos, rot));
+                            dc.defaultBlockState().setValue(CakeBlock.BITES, bites), world, targetPos, rot));
                 }
             }
 
@@ -154,25 +154,16 @@ public class BlockUtil {
             //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
             //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
             if (rotated == state) {
-                if (state.hasProperty(BlockStateProperties.FACING)) {
-                    rotated = state.setValue(BlockStateProperties.FACING,
-                            rot.rotate(state.getValue(BlockStateProperties.FACING)));
-                } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-                    rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING,
-                            rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
-                } else if (state.hasProperty(RotatedPillarBlock.AXIS)) {
-                    rotated = RotatedPillarBlock.rotatePillar(state, rot);
-                } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_AXIS)) {
-                    rotated = state.cycle(BlockStateProperties.HORIZONTAL_AXIS);
-                }
+                rotated = rotateVerticalStandard(state, rotated, rot);
             }
             return Optional.of(rotated);
         } else if (state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            return Optional.of(rotateFaceBlockHorizontal(dir, ccw, state));
+            var res = getRotatedHorizontalFaceBlock(state, dir, ccw);
+            if (res.isPresent()) return res;
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {
-            return Optional.of(rotateBlockStateOnAxis(state, dir, ccw));
+            return getRotatedDirectionalBlock(state, dir, ccw);
         }
         // axis blocks
         if (state.hasProperty(BlockStateProperties.AXIS)) {
@@ -185,21 +176,7 @@ public class BlockUtil {
             }
         }
         if (block instanceof StairBlock) {
-            Direction facing = state.getValue(StairBlock.FACING);
-            if (facing.getAxis() == dir.getAxis()) return Optional.empty();
-
-            boolean flipped = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ^ ccw;
-            Half half = state.getValue(StairBlock.HALF);
-            boolean top = half == Half.TOP;
-            boolean positive = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE;
-
-            if ((top ^ positive) ^ flipped) {
-                half = top ? Half.BOTTOM : Half.TOP;
-            } else {
-                facing = facing.getOpposite();
-            }
-
-            return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
+            return getRotatedStairs(state, dir, ccw);
         }
         if (state.hasProperty(SlabBlock.TYPE)) {
             SlabType type = state.getValue(SlabBlock.TYPE);
@@ -219,20 +196,21 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    //check if it has facing property
-    private static BlockState rotateBlockStateOnAxis(BlockState state, Direction axis, boolean ccw) {
-        Vec3 targetNormal = MthUtils.V3itoV3(state.getValue(BlockStateProperties.FACING).getNormal());
-        Vec3 myNormal = MthUtils.V3itoV3(axis.getNormal());
-        if (!ccw) targetNormal = targetNormal.scale(-1);
-
-        Vec3 rotated = myNormal.cross(targetNormal);
-        // not on same axis, can rotate
-        if (rotated != Vec3.ZERO) {
-            Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
-            return state.setValue(BlockStateProperties.FACING, newDir);
+    private static BlockState rotateVerticalStandard(BlockState state, BlockState rotated, Rotation rot) {
+        if (state.hasProperty(BlockStateProperties.FACING)) {
+            rotated = state.setValue(BlockStateProperties.FACING,
+                    rot.rotate(state.getValue(BlockStateProperties.FACING)));
+        } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            rotated = state.setValue(BlockStateProperties.HORIZONTAL_FACING,
+                    rot.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+        } else if (state.hasProperty(RotatedPillarBlock.AXIS)) {
+            rotated = RotatedPillarBlock.rotatePillar(state, rot);
+        } else if (state.hasProperty(BlockStateProperties.HORIZONTAL_AXIS)) {
+            rotated = state.cycle(BlockStateProperties.HORIZONTAL_AXIS);
         }
-        return state;
+        return rotated;
     }
+
 
     private static boolean isBlacklisted(BlockState state) {
         // double blocks
@@ -263,76 +241,15 @@ public class BlockUtil {
             return Optional.of(Direction.UP);
         }
 
-        if (state.hasProperty(BlockStateProperties.EXTENDED) && state.getValue(BlockStateProperties.EXTENDED)) {
-            if (state.hasProperty(PistonHeadBlock.FACING)) {
-                BlockState newBase = rotateBlockStateOnAxis(state, face, ccw);
-                BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING));
-                if (level.getBlockState(headPos).hasProperty(PistonHeadBlock.SHORT)) {
-                    BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING));
-                    if (level.getBlockState(newHeadPos).canBeReplaced()) {
-
-                        level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
-                        level.setBlock(pos, newBase, 2);
-                        level.removeBlock(headPos, false);
-                        return Optional.of(face);
-                    }
-                }
-                return Optional.empty();
-            }
-        }
-        if (state.hasProperty(BlockStateProperties.SHORT)) {
-            if (state.hasProperty(PistonHeadBlock.FACING)) {
-                BlockState newBase = rotateBlockStateOnAxis(state, face, ccw);
-                BlockPos headPos = pos.relative(state.getValue(PistonHeadBlock.FACING).getOpposite());
-                if (level.getBlockState(headPos).hasProperty(PistonBaseBlock.EXTENDED)) {
-                    BlockPos newHeadPos = pos.relative(newBase.getValue(PistonHeadBlock.FACING).getOpposite());
-                    if (level.getBlockState(newHeadPos).canBeReplaced()) {
-
-                        level.setBlock(newHeadPos, rotateBlockStateOnAxis(level.getBlockState(headPos), face, ccw), 2);
-                        level.setBlock(pos, newBase, 2);
-                        level.removeBlock(headPos, false);
-                        return Optional.of(face);
-                    }
-                }
-                return Optional.empty();
-            }
+        if (state.hasProperty(BlockStateProperties.SHORT) || state.hasProperty(PistonBaseBlock.EXTENDED) && state.hasProperty(PistonBaseBlock.FACING)) {
+            var opt = rotatePistonHead(state, pos, level, face, ccw);
+            if (opt.isPresent()) return opt;
         }
         if (b instanceof BedBlock) {
-            BlockState newBed = ForgeHelper.rotateBlock(state, level, pos, rot);
-            BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
-            BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
-            if (level.getBlockState(targetPos).canBeReplaced()) {
-                level.setBlock(targetPos, ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot), 2);
-                level.setBlock(pos, newBed, 2);
-                level.removeBlock(oldPos, false);
-                return Optional.of(face);
-            }
-            return Optional.empty();
+            return rotateBedBlock(face, pos, level, state, rot);
         }
         if (b instanceof ChestBlock) {
-            if (state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                BlockState newChest = ForgeHelper.rotateBlock(state, level, pos, rot);
-                BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
-                BlockPos targetPos = pos.relative(ChestBlock.getConnectedDirection(newChest));
-                if (level.getBlockState(targetPos).canBeReplaced()) {
-                    BlockState connectedNewState = ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot);
-                    level.setBlock(targetPos, connectedNewState, 2);
-                    level.setBlock(pos, newChest, 2);
-
-                    BlockEntity tile = level.getBlockEntity(oldPos);
-                    if (tile != null) {
-                        CompoundTag tag = tile.saveWithoutMetadata();
-                        if (level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile) {
-                            newChestTile.load(tag);
-                        }
-                        tile.setRemoved();
-                    }
-
-                    level.setBlockAndUpdate(oldPos, Blocks.AIR.defaultBlockState());
-                    return Optional.of(face);
-                }
-            }
-            return Optional.empty();
+            return rotateDoubleChest(face, pos, level, state, rot);
         }
         if (DoorBlock.isWoodenDoor(state)) {
             //TODO: add
@@ -358,103 +275,140 @@ public class BlockUtil {
         c.setChanged();
     }
 
+
+    //TODO: add rotation vertical slabs & doors
+
+
+    //rotations per block
+
+    public static Optional<BlockState> getRotatedStairs(BlockState state, Direction axis, boolean ccw) {
+        Direction facing = state.getValue(StairBlock.FACING);
+        if (facing.getAxis() == axis.getAxis()) return Optional.empty();
+
+        boolean flipped = axis.getAxisDirection() == Direction.AxisDirection.POSITIVE ^ ccw;
+        Half half = state.getValue(StairBlock.HALF);
+        boolean top = half == Half.TOP;
+        boolean positive = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE;
+
+        if ((top ^ positive) ^ flipped) {
+            half = top ? Half.BOTTOM : Half.TOP;
+        } else {
+            facing = facing.getOpposite();
+        }
+
+        return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
+    }
+
+    //check if it has facing property
+    public static Optional<BlockState> getRotatedDirectionalBlock(BlockState state, Direction axis, boolean ccw) {
+        Vec3 targetNormal = MthUtils.V3itoV3(state.getValue(BlockStateProperties.FACING).getNormal());
+        Vec3 myNormal = MthUtils.V3itoV3(axis.getNormal());
+        if (!ccw) targetNormal = targetNormal.scale(-1);
+
+        Vec3 rotated = myNormal.cross(targetNormal);
+        // not on same axis, can rotate
+        if (!rotated.equals(Vec3.ZERO)) {
+            Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
+            return Optional.of(state.setValue(BlockStateProperties.FACING, newDir));
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<BlockState> getRotatedHorizontalFaceBlock(BlockState original, Direction axis, boolean ccw) {
+
+        Direction facingDir = original.getValue(BlockStateProperties.HORIZONTAL_FACING);
+        if (facingDir.getAxis() == axis.getAxis()) return Optional.empty();
+
+        var face = original.getValue(BlockStateProperties.ATTACH_FACE);
+        return Optional.of(switch (face) {
+            case FLOOR -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, ccw ? axis.getClockWise() : axis.getCounterClockWise());
+            case CEILING -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
+                    .setValue(BlockStateProperties.HORIZONTAL_FACING, !ccw ? axis.getClockWise() : axis.getCounterClockWise());
+            case WALL -> {
+                ccw = ccw ^ (axis.getAxisDirection() != Direction.AxisDirection.POSITIVE);
+                yield original.setValue(BlockStateProperties.ATTACH_FACE,
+                        (facingDir.getAxisDirection() == Direction.AxisDirection.POSITIVE) ^ ccw ? AttachFace.CEILING : AttachFace.FLOOR);
+            }
+        });
+    }
+
+    private static Optional<Direction> rotateDoubleChest(Direction face, BlockPos pos, Level level, BlockState state, Rotation rot) {
+        if (state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+            BlockState newChest = ForgeHelper.rotateBlock(state, level, pos, rot);
+            BlockPos oldPos = pos.relative(ChestBlock.getConnectedDirection(state));
+            BlockPos targetPos = pos.relative(ChestBlock.getConnectedDirection(newChest));
+            if (level.getBlockState(targetPos).canBeReplaced()) {
+                BlockState connectedNewState = ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot);
+                level.setBlock(targetPos, connectedNewState, 2);
+                level.setBlock(pos, newChest, 2);
+
+                BlockEntity tile = level.getBlockEntity(oldPos);
+                if (tile != null) {
+                    CompoundTag tag = tile.saveWithoutMetadata();
+                    if (level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile) {
+                        newChestTile.load(tag);
+                    }
+                    tile.setRemoved();
+                }
+
+                level.setBlockAndUpdate(oldPos, Blocks.AIR.defaultBlockState());
+                return Optional.of(face);
+            }
+        }
+        return Optional.empty();
+    }
+
+
+    public static Optional<Direction> rotatePistonHead(BlockState state, BlockPos pos, Level level, Direction face, boolean ccw) {
+        Optional<BlockState> newBase = getRotatedDirectionalBlock(state, face, ccw);
+        if (newBase.isEmpty()) return Optional.empty();
+        BlockState newBaseState = newBase.get();
+        BlockPos oldHeadPos;
+        BlockState oldHead;
+        BlockPos newHeadPos;
+        if (state.hasProperty(PistonHeadBlock.SHORT)) {
+            oldHeadPos = pos.relative(state.getValue(PistonHeadBlock.FACING).getOpposite());
+            oldHead = level.getBlockState(oldHeadPos);
+            if (!oldHead.hasProperty(PistonBaseBlock.EXTENDED)) return Optional.empty();
+            newHeadPos = pos.relative(newBaseState.getValue(PistonHeadBlock.FACING).getOpposite());
+        } else if (state.hasProperty(PistonBaseBlock.EXTENDED)) {
+            oldHeadPos = pos.relative(state.getValue(PistonHeadBlock.FACING));
+            oldHead = level.getBlockState(oldHeadPos);
+            if (!oldHead.hasProperty(PistonHeadBlock.SHORT)) return Optional.empty();
+            newHeadPos = pos.relative(newBaseState.getValue(PistonBaseBlock.FACING));
+        } else return Optional.empty();
+
+        if (level.getBlockState(newHeadPos).canBeReplaced()) {
+            Optional<BlockState> rotatedHead = getRotatedDirectionalBlock(oldHead, face, ccw);
+            if (rotatedHead.isPresent()) {
+                level.setBlock(newHeadPos, rotatedHead.get(), 2);
+                level.setBlock(pos, newBaseState, 2);
+                level.removeBlock(oldHeadPos, false);
+                return Optional.of(face);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+
+    public static @NotNull Optional<Direction> rotateBedBlock(Direction face, BlockPos pos, Level level, BlockState state, Rotation rot) {
+        BlockState newBed = ForgeHelper.rotateBlock(state, level, pos, rot);
+        BlockPos oldPos = pos.relative(getConnectedBedDirection(state));
+        BlockPos targetPos = pos.relative(getConnectedBedDirection(newBed));
+        if (level.getBlockState(targetPos).canBeReplaced()) {
+            level.setBlock(targetPos, ForgeHelper.rotateBlock(level.getBlockState(oldPos), level, oldPos, rot), 2);
+            level.setBlock(pos, newBed, 2);
+            level.removeBlock(oldPos, false);
+            return Optional.of(face);
+        }
+        return Optional.empty();
+    }
+
     public static Direction getConnectedBedDirection(BlockState bedState) {
         BedPart part = bedState.getValue(BedBlock.PART);
         Direction dir = bedState.getValue(BedBlock.FACING);
         return part == BedPart.FOOT ? dir : dir.getOpposite();
     }
-
-    //TODO: add rotation vertical slabs & doors
-
-    private static BlockState rotateFaceBlockHorizontal(Direction dir, boolean ccw, BlockState original) {
-
-        Direction facingDir = original.getValue(BlockStateProperties.HORIZONTAL_FACING);
-        if (facingDir.getAxis() == dir.getAxis()) return original;
-
-        var face = original.getValue(BlockStateProperties.ATTACH_FACE);
-        return switch (face) {
-            case FLOOR -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
-                    .setValue(BlockStateProperties.HORIZONTAL_FACING, ccw ? dir.getClockWise() : dir.getCounterClockWise());
-            case CEILING -> original.setValue(BlockStateProperties.ATTACH_FACE, AttachFace.WALL)
-                    .setValue(BlockStateProperties.HORIZONTAL_FACING, !ccw ? dir.getClockWise() : dir.getCounterClockWise());
-            case WALL -> {
-                ccw = ccw ^ (dir.getAxisDirection() != Direction.AxisDirection.POSITIVE);
-                yield original.setValue(BlockStateProperties.ATTACH_FACE,
-                        (facingDir.getAxisDirection() == Direction.AxisDirection.POSITIVE) ^ ccw ? AttachFace.CEILING : AttachFace.FLOOR);
-            }
-
-        };
-
-    }
-
-//TODO:
-/*
-    // can be called on both sides
-    // returns the direction onto which the block was actually rotated
-    public static int getRotationComparatorSignal(Direction dir, BlockPos targetPos, Level world, BlockState state) {
-
-        //interface stuff
-        if (state.getBlock() instanceof IRotatable rotatable) {
-            return rotatable.getComparatorRotation(state, world, targetPos, dir);
-        }
-
-        Block block = state.getBlock();
-
-        if (state.hasProperty(ModBlockProperties.FLIPPED)) {
-            return state.getValue(ModBlockProperties.FLIPPED) ? 1: 0;
-        }
-        //horizontal facing blocks -easy
-        if (dir.getAxis() == Direction.Axis.Y) {
-
-            if (block == Blocks.CAKE) {
-                //always faces west
-                return 2;
-            }
-        } else if (state.hasProperty(BlockStateProperties.ATTACH_FACE) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            return Optional.of(rotateFaceBlockHorizontal(dir, ccw, state));
-        }
-        // 6 dir blocks blocks
-        if (state.hasProperty(BlockStateProperties.FACING)) {
-            return Optional.of(rotateBlockStateOnAxis(state, dir, ccw));
-        }
-        // axis blocks
-        if (state.hasProperty(BlockStateProperties.AXIS)) {
-            Direction.Axis targetAxis = state.getValue(BlockStateProperties.AXIS);
-            Direction.Axis myAxis = dir.getAxis();
-            if (myAxis == Direction.Axis.X) {
-                return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.Z : Direction.Axis.Y));
-            } else if (myAxis == Direction.Axis.Z) {
-                return Optional.of(state.setValue(BlockStateProperties.AXIS, targetAxis == Direction.Axis.Y ? Direction.Axis.X : Direction.Axis.Y));
-            }
-        }
-        if (block instanceof StairBlock) {
-            Direction facing = state.getValue(StairBlock.FACING);
-            if (facing.getAxis() == dir.getAxis()) return Optional.empty();
-
-            boolean flipped = dir.getAxisDirection() == Direction.AxisDirection.POSITIVE ^ ccw;
-            Half half = state.getValue(StairBlock.HALF);
-            boolean top = half == Half.TOP;
-            boolean positive = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE;
-
-            if ((top ^ positive) ^ flipped) {
-                half = top ? Half.BOTTOM : Half.TOP;
-            } else {
-                facing = facing.getOpposite();
-            }
-
-            return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
-        }
-        if (state.hasProperty(SlabBlock.TYPE)) {
-            SlabType type = state.getValue(SlabBlock.TYPE);
-            if (type == SlabType.DOUBLE) return Optional.empty();
-            return Optional.of(state.setValue(SlabBlock.TYPE, type == SlabType.BOTTOM ? SlabType.TOP : SlabType.BOTTOM));
-        }
-        if (state.hasProperty(TrapDoorBlock.HALF)) {
-            return Optional.of(state.cycle(TrapDoorBlock.HALF));
-        }
-
-
-
-    }*/
-
 }
