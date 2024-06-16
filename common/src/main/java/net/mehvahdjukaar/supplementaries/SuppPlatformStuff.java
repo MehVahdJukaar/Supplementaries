@@ -4,6 +4,7 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmInstance;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +94,11 @@ public class SuppPlatformStuff {
 
     @ExpectPlatform
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundType getSoundType(BlockState blockState, BlockPos pos, Level level, Entity entity) {
         throw new AssertionError();
     }
 }

@@ -14,9 +14,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
@@ -210,7 +212,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if (tile.readyToFire()) {
                 if (!world.isClientSide()) {
-                    this.setLitUp(state, world, pos, true);
+                    tile.ignite(null);
                     this.playLightUpSound(world, pos, fireSourceType);
                 }
 
@@ -285,27 +287,39 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             poseStack.translate(0, 0, -1.4);
 
             if (id == 1) {
-                addFireParticles(pos, level, poseStack, pitch, yaw);
-                return true;
+                playFiringEffects(pos, level, poseStack, pitch, yaw, tile.getPowerLevel());
             } else {
-                Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
-
-                level.addParticle(ParticleTypes.FLAME,
-                        p.x, p.y, p.z, 0, 0, 0);
+                playIgniteEffects(pos, level, poseStack);
             }
-        }
 
+        }
         return false;
     }
 
+    private static void playIgniteEffects(BlockPos pos, Level level, PoseStack poseStack) {
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
 
-    private void addFireParticles(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw) {
+        level.addParticle(ParticleTypes.FLAME,
+                p.x, p.y, p.z, 0, 0, 0);
+
+        level.playLocalSound(pos, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
+                1.2f + level.getRandom().nextFloat() * 0.2f, false);
+    }
+
+
+    private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power) {
         level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, 0);
         RandomSource ran = level.random;
 
         this.spawnDustRing(level, poseStack);
         this.spawnSmokeTrail(level, poseStack, ran);
+
+        // power from 1 to 4
+        float soundPitch = 1.3f - power * 0.1f;
+        float soundVolume = 0.9f + power * 0.1f;
+        level.playLocalSound(pos, ModSounds.CANNON_FIRE.get(), SoundSource.BLOCKS,
+                soundVolume, soundPitch, false);
     }
 
     private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
@@ -364,7 +378,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         if (axis.getAxis() == newState.getValue(FACING).getAxis() && world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             float angle = rotation.rotate(0, 4) * -90;
             Vector3f currentDir = Vec3.directionFromRotation(tile.getPitch(), tile.getYaw()).toVector3f();
-            Quaternionf q = new Quaternionf().rotateAxis(angle*Mth.DEG_TO_RAD, axis.step());
+            Quaternionf q = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, axis.step());
             currentDir.rotate(q);
             Vec3 newDir = new Vec3(currentDir);
             tile.setRestrainedYaw((float) MthUtils.getYaw(newDir));

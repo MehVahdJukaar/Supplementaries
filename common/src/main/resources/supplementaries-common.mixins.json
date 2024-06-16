@@ -62,7 +62,6 @@
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",
     "MapTextureMixin",
-    "MinecraftMixin",
     "MouseHandlerMixin",
     "PageButtonMixin",
     "ParrotLayerMixin",

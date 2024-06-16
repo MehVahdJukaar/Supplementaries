@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
+import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> implements ICustomItemRendererProvider {
+public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> implements ICustomItemRendererProvider, ILeftClickReact {
 
     public LunchBoxItem(Properties properties) {
         super(properties);
@@ -64,7 +65,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         var data = getData(stack);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
-            if(food.isEdible()) {
+            if (food.isEdible()) {
                 if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
                     player.startUsingItem(hand);
                     return InteractionResultHolder.consume(stack);
@@ -77,6 +78,14 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         }
         return super.use(pLevel, player, hand);
     }
+
+    @Override
+    public boolean onLeftClick(ItemStack stack, Player player, InteractionHand hand) {
+        var data = getData(stack);
+        data.switchMode();
+        return true;
+    }
+
 
     @ForgeOverride
     public @Nullable FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
@@ -114,10 +123,9 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = copy.finishUsingItem(level, livingEntity);
-            if(result.isEmpty()) {
+            if (result.isEmpty()) {
                 data.consumeSelected();
-            }
-            else if(result != copy){
+            } else if (result != copy) {
                 data.consumeSelected();
                 data.tryAddingUnchecked(result);
             }
@@ -155,6 +163,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     public static ItemStack getLunchBox(LivingEntity entity) {
         return getLunchBoxSlot(entity).get();
     }
+
     @NotNull
     public static SlotReference getLunchBoxSlot(LivingEntity entity) {
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);

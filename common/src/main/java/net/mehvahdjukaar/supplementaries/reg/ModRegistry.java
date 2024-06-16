@@ -141,8 +141,7 @@ public class ModRegistry {
 
     //lunch basket
     public static final Supplier<LunchBoxItem> LUNCH_BASKET_ITEM = regItem(LUNCH_BASKET_NAME, () -> new LunchBoxItem((new Item.Properties())
-            .stacksTo(1)
-            .rarity(Rarity.RARE)));
+            .stacksTo(1)));
 
     public static final Supplier<Block> LUNCH_BASKET = regBlock(LUNCH_BASKET_NAME, () -> new LunchBoxBlock(
             BlockBehaviour.Properties.copy(Blocks.CHEST)

@@ -1,28 +1,30 @@
 package net.mehvahdjukaar.supplementaries.common.misc.explosion;
 
-import com.mojang.datafixers.util.Pair;
+import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
+import com.google.common.collect.UnmodifiableIterator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.InfestedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,12 +123,48 @@ public class CannonBallExplosion extends Explosion {
 
         Util.shuffle((ObjectArrayList<?>) this.getToBlow(), this.level.random);
 
+        Multiset<SoundEvent> sounds = LinkedHashMultiset.create();
         for (BlockPos blockPos : this.getToBlow()) {
             BlockState blockState = level.getBlockState(blockPos);
             if (!blockState.isAir()) {
-                this.level.destroyBlock(blockPos, hasDrop);
+                //this.level.destroyBlock(blockPos, hasDrop);
+                destroyBlockNoEffects(blockPos, level, indirectSource, 512, sounds);
+            }
+        }
+        if (level.isClientSide && !sounds.isEmpty()) {
+            var iter = Multisets.copyHighestCountFirst(sounds).iterator();
+            for(int i = 0; i<2 && iter.hasNext(); i++) {
+                SoundEvent sound = iter.next();
+
+                //TODO: make this depend on blocks broken
+                this.level.playLocalSound(x, y, z, sound, SoundSource.BLOCKS,
+                        1.4f, 0.6F, false);
             }
         }
     }
 
+    public boolean destroyBlockNoEffects(BlockPos pos, Level level, @Nullable Entity entity, int recursionLeft,
+                                         Multiset<SoundEvent> sounds) {
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.isAir()) {
+            return false;
+        } else {
+            FluidState fluidState = level.getFluidState(pos);
+            if (level.isClientSide && !(blockState.getBlock() instanceof BaseFireBlock)) {
+                sounds.add(SuppPlatformStuff.getSoundType(blockState, pos, level, entity).getBreakSound());
+                level.addDestroyBlockEffect(pos, blockState);
+                //level.levelEvent(2001, pos, Block.getId(blockState));
+            }
+
+            BlockEntity blockEntity = blockState.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+            Block.dropResources(blockState, level, pos, blockEntity, entity, ItemStack.EMPTY);
+
+            boolean bl = level.setBlock(pos, fluidState.createLegacyBlock(), BaseFireBlock.UPDATE_ALL, recursionLeft);
+            if (bl) {
+                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(entity, blockState));
+            }
+
+            return bl;
+        }
+    }
 }

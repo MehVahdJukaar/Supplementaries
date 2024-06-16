@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 0 ",
+    "010",
+    "000"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:wool"
+    },
+    "0": {
+      "item": "minecraft:bamboo"
+    }
+  },
+  "result": {
+    "item": "supplementaries:lunch_basket",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lunch_basket"
+    }
+  ]
+}

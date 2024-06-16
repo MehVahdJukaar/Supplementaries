@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -261,15 +262,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
             } else CannonController.startControlling(this);
-        } else if (player instanceof ServerPlayer sp) PlatHelper.openCustomMenu(sp, this, worldPosition);
+        } else if (player instanceof ServerPlayer sp){
+            PlatHelper.openCustomMenu(sp, this, worldPosition);
+        }
 
     }
 
     public void ignite(@Nullable Player controllingPlayer) {
         if (this.getProjectile().isEmpty()) return;
 
-        this.level.playSound(null, worldPosition, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 1.0f,
-                1.8f + level.getRandom().nextFloat() * 0.2f);
         // called from server when firing
         this.timeUntilFire = 1;
         //update other clients
@@ -299,7 +300,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (!this.hasFuelAndProjectiles()) return;
 
         if (level.isClientSide) {
-            //call directly on client
+            //call directly on client. is this needed?
             level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
         } else {
             if (this.shootProjectile()) {

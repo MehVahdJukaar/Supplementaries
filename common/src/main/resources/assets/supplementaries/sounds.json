@@ -249,6 +249,20 @@
     ],
     "subtitle": "subtitles.block.generic.hit"
   },
+  "block.cannon.fire": {
+    "sounds": [
+      "supplementaries:block/cannon_fire_0",
+      "supplementaries:block/cannon_fire_1",
+      "supplementaries:block/cannon_fire_2",
+      "supplementaries:block/cannon_fire_3"
+    ],
+    "subtitle": "subtitles.supplementaries.cannon.fire"
+  },
+  "block.cannon.ignite": {
+    "sounds": [
+      "supplementaries:block/cannon_fizzle"
+    ]
+  },
   "block.rotate": {
     "subtitle": "subtitle.supplementaries.rotate_block",
     "sounds": [

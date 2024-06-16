@@ -47,7 +47,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         if (CompatHandler.FLYWHEEL) return;
 
         poseStack.pushPose();
-        poseStack.translate(0.25, 0.5, 0.5);
+        poseStack.translate(0.5, 0.5, 0.5);
         Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
         poseStack.mulPose(rotation);
 

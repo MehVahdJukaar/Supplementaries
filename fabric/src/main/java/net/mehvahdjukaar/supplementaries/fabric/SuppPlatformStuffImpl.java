@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,6 +104,10 @@ public class SuppPlatformStuffImpl {
 
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
         return selected.getItem().getFoodProperties();
+    }
+
+    public static SoundType getSoundType(BlockState blockState, BlockPos pos, Level level, Entity entity) {
+        return blockState.getSoundType();
     }
 
 }

@@ -7,7 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 public class ModNetwork {
 
     public static final ChannelHandler CHANNEL = ChannelHandler.builder(Supplementaries.MOD_ID)
-            .version(2)
+            .version(3)
 
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundPlaySpeakerMessagePacket.class, ClientBoundPlaySpeakerMessagePacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncGlobeDataPacket.class, ClientBoundSyncGlobeDataPacket::new)
@@ -37,7 +37,6 @@ public class ModNetwork {
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundCycleSelectableContainerItemPacket.class, ServerBoundCycleSelectableContainerItemPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestConfigReloadPacket.class, ServerBoundRequestConfigReloadPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundSyncCannonPacket.class, ServerBoundSyncCannonPacket::new)
-            .register(NetworkDir.PLAY_TO_SERVER, ServerBoundLunchBoxRightClickedPacket.class, ServerBoundLunchBoxRightClickedPacket::new)
             .register(NetworkDir.PLAY_TO_SERVER, ServerBoundRequestOpenCannonGuiMessage.class, ServerBoundRequestOpenCannonGuiMessage::new)
 
             .register(NetworkDir.BOTH, SyncSkellyQuiverPacket.class, SyncSkellyQuiverPacket::new)

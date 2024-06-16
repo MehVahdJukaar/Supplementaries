@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -127,6 +129,10 @@ public class SuppPlatformStuffImpl {
 
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
         return selected.getFoodProperties(entity);
+    }
+
+    public static SoundType getSoundType(BlockState blockState, BlockPos pos, Level level, Entity entity) {
+        return blockState.getSoundType(level, pos, entity);
     }
 
 }

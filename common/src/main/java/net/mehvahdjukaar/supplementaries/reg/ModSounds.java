@@ -50,6 +50,9 @@ public class ModSounds {
     public static final Supplier<SoundEvent> BUBBLE_PLACE = regSound("block.bubble_block.place");
     public static final Supplier<SoundEvent> BUBBLE_BLOW = regSound("item.bubble_blower");
 
+    public static final Supplier<SoundEvent> CANNON_FIRE = regSound("block.cannon.fire");
+    public static final Supplier<SoundEvent> CANNON_IGNITE = regSound("block.cannon.ignite");
+
     public static final Supplier<SoundEvent> JAR_PLACE = regSound("block.jar.place");
     public static final Supplier<SoundEvent> JAR_BREAK = regSound("block.jar.break");
     public static final Supplier<SoundEvent> JAR_COOKIE = regSound("block.jar.cookie");

@@ -18,6 +18,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -118,6 +119,12 @@ public class WickerFenceBlock extends WaterBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         LevelReader levelReader = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
+        BlockState state = super.getStateForPlacement(context);
+        return allUpdate(state, blockPos, levelReader);
+    }
+
+    //update all. we need this
+    private @NotNull BlockState allUpdate(BlockState  state, BlockPos blockPos, LevelReader levelReader) {
         BlockPos northPos = blockPos.north();
         BlockPos eastPos = blockPos.east();
         BlockPos southPos = blockPos.south();
@@ -128,11 +135,19 @@ public class WickerFenceBlock extends WaterBlock {
         BlockState southState = levelReader.getBlockState(southPos);
         BlockState westState = levelReader.getBlockState(westPos);
         BlockState aboveState = levelReader.getBlockState(abovePos);
+
         boolean north = this.connectsTo(northState, northState.isFaceSturdy(levelReader, northPos, Direction.SOUTH), Direction.SOUTH);
         boolean east = this.connectsTo(eastState, eastState.isFaceSturdy(levelReader, eastPos, Direction.WEST), Direction.WEST);
         boolean south = this.connectsTo(southState, southState.isFaceSturdy(levelReader, southPos, Direction.NORTH), Direction.NORTH);
         boolean weast = this.connectsTo(westState, westState.isFaceSturdy(levelReader, westPos, Direction.EAST), Direction.EAST);
-        BlockState state = super.getStateForPlacement(context);
+
+        if (!east && !weast && !north && !south) {
+            east = true;
+            weast = true;
+            north = true;
+            south = true;
+        }
+
         return this.getCorrectShape(levelReader, state, abovePos, aboveState, north, east, south, weast);
     }
 
@@ -146,11 +161,11 @@ public class WickerFenceBlock extends WaterBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
         state = super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
-        if (direction == Direction.DOWN) {
-            return state;
-        } else {
-            return direction == Direction.UP ? this.topUpdate(level, state, neighborPos, neighborState) : this.sideUpdate(level, currentPos, state, neighborPos, neighborState, direction);
-        }
+        return switch (direction) {
+            case DOWN -> state;
+            case UP -> this.topUpdate(level, state, neighborPos, neighborState);
+            default -> this.allUpdate(state, currentPos, level);
+        };
     }
 
     private static boolean isConnected(BlockState state, Property<WallSide> heightProperty) {
@@ -162,24 +177,12 @@ public class WickerFenceBlock extends WaterBlock {
     }
 
     private BlockState topUpdate(LevelReader level, BlockState state, BlockPos pos, BlockState secondState) {
-        boolean bl = isConnected(state, NORTH_WALL);
-        boolean bl2 = isConnected(state, EAST_WALL);
-        boolean bl3 = isConnected(state, SOUTH_WALL);
-        boolean bl4 = isConnected(state, WEST_WALL);
-        return this.getCorrectShape(level, state, pos, secondState, bl, bl2, bl3, bl4);
+        boolean north = isConnected(state, NORTH_WALL);
+        boolean east = isConnected(state, EAST_WALL);
+        boolean south = isConnected(state, SOUTH_WALL);
+        boolean west = isConnected(state, WEST_WALL);
+        return this.getCorrectShape(level, state, pos, secondState, north, east, south, west);
     }
-
-    private BlockState sideUpdate(LevelReader level, BlockPos firstPos, BlockState firstState, BlockPos secondPos, BlockState secondState, Direction dir) {
-        Direction direction = dir.getOpposite();
-        boolean bl = dir == Direction.NORTH ? this.connectsTo(secondState, secondState.isFaceSturdy(level, secondPos, direction), direction) : isConnected(firstState, NORTH_WALL);
-        boolean bl2 = dir == Direction.EAST ? this.connectsTo(secondState, secondState.isFaceSturdy(level, secondPos, direction), direction) : isConnected(firstState, EAST_WALL);
-        boolean bl3 = dir == Direction.SOUTH ? this.connectsTo(secondState, secondState.isFaceSturdy(level, secondPos, direction), direction) : isConnected(firstState, SOUTH_WALL);
-        boolean bl4 = dir == Direction.WEST ? this.connectsTo(secondState, secondState.isFaceSturdy(level, secondPos, direction), direction) : isConnected(firstState, WEST_WALL);
-        BlockPos blockPos = firstPos.above();
-        BlockState blockState = level.getBlockState(blockPos);
-        return this.getCorrectShape(level, firstState, blockPos, blockState, bl, bl2, bl3, bl4);
-    }
-
 
     private boolean shouldRaisePost(BlockState state, BlockState neighbour, VoxelShape shape) {
         boolean bl = neighbour.getBlock() instanceof WallBlock && neighbour.getValue(UP);
@@ -209,12 +212,6 @@ public class WickerFenceBlock extends WaterBlock {
     }
 
     private BlockState updateSides(BlockState state, boolean northConnection, boolean eastConnection, boolean southConnection, boolean westConnection, VoxelShape wallShape) {
-        if (!eastConnection && !westConnection && !northConnection && !southConnection) {
-            eastConnection = true;
-            westConnection = true;
-            northConnection = true;
-            southConnection = true;
-        }
         return state.setValue(NORTH_WALL, this.makeWallState(northConnection, wallShape, NORTH_TEST))
                 .setValue(EAST_WALL, this.makeWallState(eastConnection, wallShape, EAST_TEST))
                 .setValue(SOUTH_WALL, this.makeWallState(southConnection, wallShape, SOUTH_TEST))
