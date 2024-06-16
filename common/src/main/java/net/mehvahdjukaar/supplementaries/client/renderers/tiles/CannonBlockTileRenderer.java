@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -42,18 +43,19 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
+        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
+        if (CompatHandler.FLYWHEEL) return;
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.translate(0.25, 0.5, 0.5);
         Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
         poseStack.mulPose(rotation);
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
 
-        float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
-        float absoluteYaw = yawRad;
         float pitchRad = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
+        float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
 
         Vector3f forward = new Vector3f(0f, 0, 1);
 
@@ -89,13 +91,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         model.render(poseStack, builder, packedLight, packedOverlay);
 
-
         poseStack.popPose();
-
-        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick, absoluteYaw);
     }
 
-    private float triangle(float cooldownCounter, float mid, float end) {
+    public static float triangle(float cooldownCounter, float mid, float end) {
         if (cooldownCounter <= mid) {
             // Calculate the slope for the rising part
             float slope = 1 / mid;
@@ -121,19 +120,22 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         PartDefinition partdefinition = meshdefinition.getRoot();
 
         PartDefinition legs = partdefinition.addOrReplaceChild("legs", CubeListBuilder.create()
-                        .texOffs(0, 0).addBox(6.0F, 4.0F, -3.0F, 2.0F, 10.0F, 6.0F, new CubeDeformation(0.0F))
-                        .texOffs(48, 0).addBox(-8.0F, 4.0F, -3.0F, 2.0F, 10.0F, 6.0F),
-                PartPose.offset(0.0F, -8.0F, 0.0F));
+                        .texOffs(0, 0).addBox(6.0F, -4.0F, -3.0F, 2.0F, 10.0F, 6.0F)
+                        .texOffs(48, 0).addBox(-8.0F, -4.0F, -3.0F, 2.0F, 10.0F, 6.0F),
+                PartPose.ZERO);
 
-        PartDefinition head = legs.addOrReplaceChild("head_pivot", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 7.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
+        PartDefinition head = legs.addOrReplaceChild("head_pivot", CubeListBuilder.create(),
+                PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
         PartDefinition bone = head.addOrReplaceChild("head", CubeListBuilder.create()
-                        .texOffs(0, 46).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
+                        .texOffs(0, 46).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 6.0F)
                         .texOffs(0, 18).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 13.0F, new CubeDeformation(-0.3125F)),
-                PartPose.offset(0.0F, 0.0F, 0.0F));
+                PartPose.ZERO);
 
-        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, 0).addBox(-16.0F, -2.0F, 0.0F, 16.0F, 2.0F, 16.0F, new CubeDeformation(0.0F)),
-                PartPose.offset(8.0F, 8, -8.0F));
+        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create()
+                        .texOffs(0, 0)
+                        .addBox(-8.0F, 6.0F, -8.0F, 16.0F, 2.0F, 16.0F),
+                PartPose.ZERO);
 
         return LayerDefinition.create(meshdefinition, 64, 64);
     }

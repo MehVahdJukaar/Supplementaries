@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmInstance;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.core.BlockPos;

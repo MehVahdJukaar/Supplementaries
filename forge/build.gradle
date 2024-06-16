@@ -186,7 +186,7 @@ dependencies {
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
     modImplementation("curse.maven:emi-580555:5032425")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
-    modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
+    modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")

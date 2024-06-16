@@ -29,8 +29,7 @@ public class CannonTrajectoryRenderer {
 
 
     public static void render(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
-                              int packedLight, int packedOverlay, float partialTicks,
-                              float yaw) {
+                              int packedLight, int packedOverlay, float partialTicks) {
         if (cannon != blockEntity) return;
         if (hit != null && trajectory != null) {
 
@@ -44,6 +43,8 @@ public class CannonTrajectoryRenderer {
 
 
             poseStack.pushPose();
+
+            float yaw = blockEntity.getYaw(partialTicks) * Mth.DEG_TO_RAD;
 
             //rotate so we can work in 2d
             Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
