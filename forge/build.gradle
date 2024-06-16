@@ -165,8 +165,8 @@ dependencies {
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modImplementation("curse.maven:balm-531761:4757228")
-    modImplementation("curse.maven:buzzier-bees-355458:5229011")
-    modImplementation("curse.maven:blueprint-382216:5292242")
+    modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
+    modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")

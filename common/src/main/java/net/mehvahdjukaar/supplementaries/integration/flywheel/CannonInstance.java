@@ -13,10 +13,8 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.ChunkPos;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -88,13 +86,12 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
         float cooldownCounter = blockEntity.getCooldownAnimation(partialTick);
         float fireCounter = blockEntity.getFiringAnimation(partialTick);
 
-        //write equation of sawtooth wave with same period as that sine wave
         float squish = CannonBlockTileRenderer.triangle(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
 
         float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
         float scale = wobble + 1f + squish * 0.7f;
 
-        this.stack.translate(0,0,  (squish * 5.675f)/16f);
+        this.stack.translate(0, 0, (squish * 5.675f) / 16f);
         this.stack.scale(scale, scale, 1 - squish);
 
         this.headOverlay.setTransform(this.stack);

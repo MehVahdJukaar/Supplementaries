@@ -26,3 +26,4 @@
 - fixed some client desync issues with bomb explosions
 - added /supplementaries registry command, lists all the content of a registry
 - improved turn table and wrench rotation logic fixing some bugs and inconsistencies
+- Fixed some dupes with falling urns

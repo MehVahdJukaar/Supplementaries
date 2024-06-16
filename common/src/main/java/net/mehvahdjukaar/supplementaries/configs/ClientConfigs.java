@@ -123,7 +123,7 @@ public class ClientConfigs {
 
             builder.push("cannonball");
             CANNONBALL_3D = builder.comment("Render cannonballs as 3D models")
-                    .define("3d_model", false);
+                    .define("3d_model", true);
             builder.pop();
 
             builder.push("quiver");
