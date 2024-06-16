@@ -107,22 +107,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
         return false;
     }
 
-    @Override
-    public boolean canSurvive(BlockState state, LevelReader pLevel, BlockPos pos) {
-        return canSupportCenter(pLevel, pos.below(), Direction.UP);
-    }
-
     //called when a neighbor is placed
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
-        }
-        if (!stateIn.canSurvive(worldIn, currentPos)) {
-            if (worldIn instanceof ServerLevel serverLevel) {
-                this.tick(stateIn, serverLevel, currentPos, worldIn.getRandom());
-            }
-            return stateIn;
         }
         return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
