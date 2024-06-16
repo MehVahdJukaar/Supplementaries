@@ -11,7 +11,8 @@ public class SlingshotProjectileBehavior extends GenericProjectileBehavior {
 
     @Override
     protected @Nullable Entity createEntity(ItemStack stack, Level level, Vec3 facing) {
-        return new SlingshotProjectileEntity(level, stack, ItemStack.EMPTY);
-    }
+        ProjectileTestLevel testLevel = ProjectileTestLevel.get();
 
+        return new SlingshotProjectileEntity(testLevel, stack, ItemStack.EMPTY);
+    }
 }

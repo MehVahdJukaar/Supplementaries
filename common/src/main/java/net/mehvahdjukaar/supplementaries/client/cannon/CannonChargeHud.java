@@ -36,18 +36,23 @@ public abstract class CannonChargeHud extends Gui {
 
             renderBar(graphics, screenWidth, screenHeight, texture, cannon);
 
-            renderTrajectoryIcon(graphics, screenWidth, screenHeight, texture);
+            renderTrajectoryIcons(graphics, screenWidth, screenHeight, texture);
 
         }
     }
 
-    private static void renderTrajectoryIcon(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture) {
+    private static void renderTrajectoryIcons(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture) {
         // trajectory icons
+
         int iconLeft = screenWidth / 2 + 96;
         int iconTop = screenHeight / 2 + 105;
         int iconW = 14;
         int iconU = CannonController.shootingMode.ordinal() * iconW;
         graphics.blit(texture, iconLeft, iconTop, iconU, 42, iconW, iconW);
+
+        iconLeft = screenWidth / 2 - (96 + 14);
+        iconU = CannonController.showsTrajectory ? 0 : 14;
+        graphics.blit(texture, iconLeft, iconTop, iconU, 42 + 14, iconW, iconW);
     }
 
     private void renderHotBar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon) {
@@ -67,7 +72,7 @@ public abstract class CannonChargeHud extends Gui {
     private void renderBar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon) {
         int xpBarLeft = screenWidth / 2 - 91;
 
-        float c = 1 - cannon.getDisabledCooldown();
+        float c = 1 - cannon.getCooldownTimer();
         int k = (int) (c * 183.0F);
         int xpBarTop = screenHeight - 32 + 3;
         graphics.blit(texture, xpBarLeft, xpBarTop, 0, 0, 182, 5);

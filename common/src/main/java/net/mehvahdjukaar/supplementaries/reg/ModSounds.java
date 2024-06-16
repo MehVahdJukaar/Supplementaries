@@ -53,6 +53,12 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CANNON_FIRE = regSound("block.cannon.fire");
     public static final Supplier<SoundEvent> CANNON_IGNITE = regSound("block.cannon.ignite");
 
+    public static final Supplier<SoundEvent> CONFETTI_POPPER = regSound("item.confetti_popper");
+
+    public static final Supplier<SoundEvent> LUNCH_BASKET_OPEN = regSound("item.lunch_basket.open");
+    public static final Supplier<SoundEvent> LUNCH_BASKET_CLOSE = regSound("item.lunch_basket.close");
+    public static final Supplier<SoundEvent> LUNCH_BASKET_INSERT = regSound("item.lunch_basket.insert");
+
     public static final Supplier<SoundEvent> JAR_PLACE = regSound("block.jar.place");
     public static final Supplier<SoundEvent> JAR_BREAK = regSound("block.jar.break");
     public static final Supplier<SoundEvent> JAR_COOKIE = regSound("block.jar.cookie");

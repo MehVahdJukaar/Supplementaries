@@ -8,8 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,17 +33,14 @@ import java.util.UUID;
 public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
 
-    private static final int TIME_TO_FIRE = 40;
-    private static final int FIRE_COOLDOWN = 60;
-
     private float pitch = 0;
     private float prevPitch = 0;
     private float yaw = 0;
     private float prevYaw = 0;
 
-    // both from 0 to 1
-    private float disabledCooldown = 0;
-    private float timeUntilFire = 0;
+    // both from 0 to config value. in tick
+    private int cooldownTimer = 0;
+    private int fuseTimer = 0;
     private byte powerLevel = 1;
 
     @Nullable
@@ -64,8 +58,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.saveAdditional(tag);
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
-        tag.putFloat("cooldown", this.disabledCooldown);
-        tag.putFloat("fire_timer", this.timeUntilFire);
+        tag.putInt("cooldown", this.cooldownTimer);
+        tag.putInt("fire_timer", this.fuseTimer);
         tag.putByte("fire_power", this.powerLevel);
     }
 
@@ -74,8 +68,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         super.load(tag);
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
-        this.disabledCooldown = tag.getFloat("cooldown");
-        this.timeUntilFire = tag.getFloat("fire_timer");
+        this.cooldownTimer = tag.getInt("cooldown");
+        this.fuseTimer = tag.getInt("fuse_timer");
         this.powerLevel = tag.getByte("fire_power");
         this.trajectoryData = null;
     }
@@ -97,7 +91,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public boolean readyToFire() {
-        return disabledCooldown == 0 && timeUntilFire == 0 && hasFuelAndProjectiles();
+        return cooldownTimer == 0 && fuseTimer == 0 && hasFuelAndProjectiles();
     }
 
     public boolean hasFuelAndProjectiles() {
@@ -106,25 +100,25 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
     }
 
     public boolean isFiring() {
-        return timeUntilFire > 0;
+        return fuseTimer > 0;
     }
 
     public float getFiringAnimation(float partialTicks) {
-        if (timeUntilFire <= 0) return 0;
-        return timeUntilFire - (1f / TIME_TO_FIRE * partialTicks);
+        if (fuseTimer <= 0) return 0;
+        return (fuseTimer - partialTicks) / CommonConfigs.Functional.CANNON_FUSE_TIME.get();
     }
 
     public float getCooldownAnimation(float partialTicks) {
-        if (disabledCooldown <= 0) return 0;
-        return disabledCooldown - (1f / FIRE_COOLDOWN * partialTicks);
+        if (cooldownTimer <= 0) return 0;
+        return (cooldownTimer - partialTicks) / CommonConfigs.Functional.CANNON_FUSE_TIME.get();
     }
 
     public float getFireTimer() {
-        return timeUntilFire;
+        return fuseTimer;
     }
 
-    public float getDisabledCooldown() {
-        return disabledCooldown;
+    public float getCooldownTimer() {
+        return cooldownTimer;
     }
 
     @Override
@@ -262,7 +256,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             if (player instanceof ServerPlayer serverPlayer) {
                 //  startControlling(serverPlayer);
             } else CannonController.startControlling(this);
-        } else if (player instanceof ServerPlayer sp){
+        } else if (player instanceof ServerPlayer sp) {
             PlatHelper.openCustomMenu(sp, this, worldPosition);
         }
 
@@ -272,7 +266,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         if (this.getProjectile().isEmpty()) return;
 
         // called from server when firing
-        this.timeUntilFire = 1;
+        this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
         //update other clients
         this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
         this.level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
@@ -283,14 +277,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         t.prevYaw = t.yaw;
         t.prevPitch = t.pitch;
 
-        if (t.disabledCooldown > 0) {
-            t.disabledCooldown -= 1f / FIRE_COOLDOWN;
-            if (t.disabledCooldown < 0) t.disabledCooldown = 0;
+        if (t.cooldownTimer > 0) {
+            t.cooldownTimer -= 1;
         }
-        if (t.timeUntilFire > 0) {
-            t.timeUntilFire -= 1f / TIME_TO_FIRE;
-            if (t.timeUntilFire <= 0) {
-                t.timeUntilFire = 0;
+        if (t.fuseTimer > 0) {
+            t.fuseTimer -= 1;
+            if (t.fuseTimer <= 0) {
                 t.fire();
             }
         }
@@ -319,7 +311,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
             }
 
         }
-        this.disabledCooldown = 1;
+        this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
 
     private boolean shootProjectile() {

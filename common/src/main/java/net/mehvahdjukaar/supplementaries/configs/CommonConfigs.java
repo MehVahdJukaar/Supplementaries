@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -690,6 +691,10 @@ public class CommonConfigs {
             CANNON_ENABLED = feature(builder);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
                     .define("fire_power", 0.6f, 0, 5);
+            CANNON_FUSE_TIME = builder.comment("Time for a cannon to fire a projectile after it has been lit up")
+                    .define("fuse_time", 40, 0, 500);
+            CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
+                    .define("cooldown", 60, 0, 500);
             CANNONBALL_ENABLED = feature(builder, "cannonball");
             builder.pop();
 
@@ -775,6 +780,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
         public static final Supplier<Double> CANNON_FIRE_POWER;
+        public static final Supplier<Integer> CANNON_FUSE_TIME;
+        public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
     }
 

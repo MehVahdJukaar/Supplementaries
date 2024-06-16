@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -21,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
@@ -170,6 +172,9 @@ public class ClientReceivers {
                         l.addParticle(p, pos.x, pos.y, pos.z,
                                 facingDir.x, facingDir.y, facingDir.z);
                     }
+
+                    l.playLocalSound(message.pos.x, message.pos.y,message.pos.z, ModSounds.CONFETTI_POPPER.get(),
+                            SoundSource.PLAYERS, 1.0f, l.random.nextFloat() * 0.2F + 0.8F, false);
                 }
             }
         });

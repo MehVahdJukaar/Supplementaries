@@ -38,6 +38,7 @@ import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
@@ -244,18 +245,19 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     public void tick() {
 
+        // if has stasis
         if (this.isNoPhysics()) {
-            int i = this.entityData.get(ID_LOYALTY);
+            int loyaltyLevel = this.entityData.get(ID_LOYALTY);
             Entity owner = this.getOwner();
-            if (i > 0 && this.isAcceptableReturnOwner(owner)) {
-                Vec3 vector3d = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
-                this.setPosRaw(this.getX(), this.getY() + vector3d.y * 0.015D * i, this.getZ());
+            if (loyaltyLevel > 0 && this.isAcceptableReturnOwner(owner)) {
+                Vec3 force = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
+                this.setPosRaw(this.getX(), this.getY() + force.y * 0.015D * loyaltyLevel, this.getZ());
                 if (this.level().isClientSide) {
                     this.yOld = this.getY();
                 }
 
-                double d0 = 0.05D * i;
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vector3d.normalize().scale(d0)));
+                double d0 = 0.05D * loyaltyLevel;
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(force.normalize().scale(d0)));
 
                 //++this.clientSideReturnTridentTickCount;
             }

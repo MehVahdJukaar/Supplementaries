@@ -30,6 +30,35 @@
       }
     ]
   },
+  "item.lunch_basket.open": {
+    "subtitle": "subtitle.supplementaries.lunch_basket.open",
+    "sounds": [
+      "supplementaries:item/basket_open_0",
+      "supplementaries:item/basket_open_1"
+    ]
+  },
+  "item.lunch_basket.close": {
+    "subtitle": "subtitle.supplementaries.lunch_basket.close",
+    "sounds": [
+      "supplementaries:item/basket_open_0",
+      "supplementaries:item/basket_open_1"
+    ]
+  },
+  "item.lunch_basket.insert": {
+    "subtitle": "subtitles.item.bundle.insert",
+    "sounds": [
+      "supplementaries:item/basket_insert_0",
+      "supplementaries:item/basket_insert_1"
+    ]
+  },
+  "item.confetti_popper": {
+    "subtitle": "subtitle.supplementaries.confetti_popper",
+    "sounds": [
+      "supplementaries:item/confetti_popper_0",
+      "supplementaries:item/confetti_popper_1",
+      "supplementaries:item/confetti_popper_2"
+    ]
+  },
   "block.gunpowder.ignite": {
     "subtitle": "subtitle.supplementaries.gunpowder.ignite",
     "sounds": [

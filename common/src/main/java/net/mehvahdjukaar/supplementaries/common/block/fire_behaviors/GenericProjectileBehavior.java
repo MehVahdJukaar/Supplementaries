@@ -78,7 +78,7 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
     @Nullable
     protected Entity createEntity(ItemStack projectile, Level level, Vec3 facing) {
         //we could hae subclassed here...
-        ProjectileTestLevel testLevel = ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
+        ProjectileTestLevel testLevel = ProjectileTestLevel.get();
 
         if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(testLevel);
         if (projectile.is(ModRegistry.CANNONBALL_ITEM.get())) return ModEntities.CANNONBALL.get().create(testLevel);
@@ -101,7 +101,11 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
         return testLevel.projectile;
     }
 
-    private static class ProjectileTestLevel extends DummyWorld {
+    protected static class ProjectileTestLevel extends DummyWorld {
+
+        protected static ProjectileTestLevel get() {
+            return ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
+        }
 
         @Nullable
         private Entity projectile = null;

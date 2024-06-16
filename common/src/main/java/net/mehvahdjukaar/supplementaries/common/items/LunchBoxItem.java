@@ -9,14 +9,18 @@ import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.network.ClientReceivers;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -83,6 +87,9 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     public boolean onLeftClick(ItemStack stack, Player player, InteractionHand hand) {
         var data = getData(stack);
         data.switchMode();
+
+        player.playSound(ModSounds.LUNCH_BASKET_OPEN.get(), 0.8F,
+                0.8F + player.level().getRandom().nextFloat() * 0.4F);
         return true;
     }
 
@@ -132,6 +139,13 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    @Override
+    protected void playInsertSound(Entity pEntity) {
+        pEntity.playSound(ModSounds.LUNCH_BASKET_INSERT.get(), 0.8F,
+                0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
+
     }
 
     @Override

@@ -205,7 +205,11 @@ public class ClientEventsForge {
         if (CannonController.isActive()) {
             event.setCanceled(true);
             event.setSwingHand(false);
-            CannonController.onPlayerAttack(event.isAttack());
+            if(event.isAttack()) {
+                CannonController.onPlayerAttack();
+            }else if(event.isUseItem()){
+                CannonController.onPlayerUse();
+            }
         }
     }
 

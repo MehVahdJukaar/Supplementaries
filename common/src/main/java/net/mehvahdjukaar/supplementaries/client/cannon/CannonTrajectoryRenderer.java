@@ -31,43 +31,43 @@ public class CannonTrajectoryRenderer {
     public static void render(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
                               int packedLight, int packedOverlay, float partialTicks) {
         if (cannon != blockEntity) return;
-        if (hit != null && trajectory != null) {
+        if (hit == null || trajectory == null || !showsTrajectory) return;
 
-            boolean rendersRed = !blockEntity.readyToFire();
+        boolean rendersRed = !blockEntity.readyToFire();
 
-            BlockPos cannonPos = blockEntity.getBlockPos();
-
-
-            Minecraft mc = Minecraft.getInstance();
-            boolean debug = !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
+        BlockPos cannonPos = blockEntity.getBlockPos();
 
 
-            poseStack.pushPose();
-
-            float yaw = blockEntity.getYaw(partialTicks) * Mth.DEG_TO_RAD;
-
-            //rotate so we can work in 2d
-            Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
-            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(Axis.YP.rotation(-yaw));
-
-            if (debug) renderTargetLine(poseStack, buffer, target);
-
-            boolean hitAir = shootingMode == ShootingMode.STRAIGHT ||
-                    mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
-
-            renderArrows(poseStack, buffer, partialTicks,
-                    trajectory, hitAir, rendersRed);
-
-            poseStack.popPose();
+        Minecraft mc = Minecraft.getInstance();
+        boolean debug = !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
 
 
-            if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, rendersRed);
+        poseStack.pushPose();
 
-            if (!hitAir && debug && hit instanceof BlockHitResult bh) renderTargetBlock(poseStack, buffer, cannonPos, bh);
-        }
+        float yaw = blockEntity.getYaw(partialTicks) * Mth.DEG_TO_RAD;
+
+        //rotate so we can work in 2d
+        Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
+        Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+
+        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.mulPose(Axis.YP.rotation(-yaw));
+
+        if (debug) renderTargetLine(poseStack, buffer, target);
+
+        boolean hitAir = shootingMode == ShootingMode.STRAIGHT ||
+                mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
+
+        renderArrows(poseStack, buffer, partialTicks,
+                trajectory, hitAir, rendersRed);
+
+        poseStack.popPose();
+
+
+        if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, rendersRed);
+
+        if (!hitAir && debug && hit instanceof BlockHitResult bh)
+            renderTargetBlock(poseStack, buffer, cannonPos, bh);
     }
 
     private static void renderTargetBlock(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos, BlockHitResult bh) {

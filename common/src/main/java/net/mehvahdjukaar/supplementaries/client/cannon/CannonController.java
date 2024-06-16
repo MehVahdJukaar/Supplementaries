@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
@@ -48,6 +47,8 @@ public class CannonController {
     private static float lastZoomOut = 0;
     private static float lastCameraYaw = 0;
     private static float lastCameraPitch = 0;
+
+    protected static boolean showsTrajectory = true;
 
     public static void startControlling(CannonBlockTile tile) {
         cannon = tile;
@@ -150,8 +151,6 @@ public class CannonController {
     }
 
 
-
-
     public static void onPlayerRotated(double yawAdd, double pitchAdd) {
         float scale = 0.2f;
         yawIncrease += (float) (yawAdd * scale);
@@ -167,12 +166,10 @@ public class CannonController {
         Options options = mc.options;
         if (options.keyShift.matches(key, action)) {
             turnOff();
-        }
-        if (options.keyInventory.matches(key, action)) {
+        } else if (options.keyInventory.matches(key, action)) {
             ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
             //Minecraft.getInstance().player.openMenu()
-        }
-        if (options.keyJump.matches(key, action)) {
+        } else if (options.keyJump.matches(key, action)) {
             if (trajectory != null && trajectory.gravity() != 0) {
                 shootingMode = shootingMode.cycle();
                 needsToUpdateServer = true;
@@ -188,14 +185,16 @@ public class CannonController {
     }
 
 
-    public static void onPlayerAttack(boolean attack) {
-        if (attack) {
-            if (cannon != null && cannon.readyToFire()) {
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(),
-                        cannon.getPitch(), cannon.getPowerLevel(), true, cannon.getBlockPos()));
-            }
+    public static void onPlayerAttack() {
+        if (cannon != null && cannon.readyToFire()) {
+            ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                    cannon.getYaw(),
+                    cannon.getPitch(), cannon.getPowerLevel(), true, cannon.getBlockPos()));
         }
+    }
+
+    public static void onPlayerUse() {
+        showsTrajectory = !showsTrajectory;
     }
 
     public static void onInputUpdate(Input input) {
