@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.husbandry.sus_stew.description"
     },
-    "frame": "challenge",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": true

@@ -712,6 +712,8 @@ public class CommonConfigs {
             builder.push(ModConstants.LUMISENE_NAME);
 
             LUMISENE_ENABLED = feature(builder);
+        //    LUMISENE_SPREAD_SPEED = builder.comment("Speed at which lumisene spreads")
+          //          .define("spread_speed", 0.1f, 0, 1);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);

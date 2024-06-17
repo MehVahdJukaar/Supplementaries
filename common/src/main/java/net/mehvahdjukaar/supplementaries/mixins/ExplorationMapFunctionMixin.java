@@ -9,9 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.phys.Vec3;
@@ -23,6 +25,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Locale;
 
 @Mixin(ExplorationMapFunction.class)
 public abstract class ExplorationMapFunctionMixin implements IExplorationFunctionExtension {
@@ -46,6 +50,14 @@ public abstract class ExplorationMapFunctionMixin implements IExplorationFunctio
     @Final
     boolean skipKnownStructures;
 
+    @Shadow
+    @Final
+    private MapDecoration.Type mapDecoration;
+
+    @Shadow
+    @Final
+    public static MapDecoration.Type DEFAULT_DECORATION;
+
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findNearestMapStructure(Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;"), cancellable = true)
     public void turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir, @Local Vec3 pos,
                             @Local ServerLevel level) {
@@ -54,9 +66,17 @@ public abstract class ExplorationMapFunctionMixin implements IExplorationFunctio
             var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
                     .getTag(destination).orElse(null);
 
+            ResourceLocation marker;
+            if (supplementaries$customDecoration != null) {
+                marker = supplementaries$customDecoration;
+            } else if (mapDecoration == DEFAULT_DECORATION && !destination.equals(StructureTags.ON_WOODLAND_EXPLORER_MAPS)) {
+                marker = null; //auto assign a custom marker for structure
+            } else {
+                marker = new ResourceLocation(mapDecoration.toString().toLowerCase(Locale.ROOT));
+            }
             cir.setReturnValue(AdventurerMapsHandler.createMapOrQuill(context.getLevel(),
                     BlockPos.containing(pos), targets,
-                this.searchRadius, this.skipKnownStructures, this.zoom, supplementaries$customDecoration,
+                    this.searchRadius, this.skipKnownStructures, this.zoom, marker,
                     null, 0));
         }
     }

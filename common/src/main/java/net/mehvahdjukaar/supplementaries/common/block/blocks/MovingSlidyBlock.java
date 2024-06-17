@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -38,7 +40,8 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.destroyBlock(neighborPos, true);
 
         MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
-
+        level.playSound(null, pos, ModSounds.SLIDY_BLOCK_SLIDE.get(), SoundSource.BLOCKS,
+                1.0F, 1.1F + level.random.nextFloat() * 0.15F);
         return true;
     }
 

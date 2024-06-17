@@ -59,7 +59,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
         tag.putInt("cooldown", this.cooldownTimer);
-        tag.putInt("fire_timer", this.fuseTimer);
+        tag.putInt("fuse_timer", this.fuseTimer);
         tag.putByte("fire_power", this.powerLevel);
     }
 
@@ -110,15 +110,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     public float getCooldownAnimation(float partialTicks) {
         if (cooldownTimer <= 0) return 0;
-        return (cooldownTimer - partialTicks) / CommonConfigs.Functional.CANNON_FUSE_TIME.get();
-    }
-
-    public float getFireTimer() {
-        return fuseTimer;
-    }
-
-    public float getCooldownTimer() {
-        return cooldownTimer;
+        return (cooldownTimer - partialTicks) / CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
 
     @Override

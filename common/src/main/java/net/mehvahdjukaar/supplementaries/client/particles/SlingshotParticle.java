@@ -4,35 +4,37 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
 public class SlingshotParticle extends TextureSheetParticle {
 
-    private final SpriteSet sprites;
-
     private SlingshotParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ, SpriteSet sprites) {
         super(world, x, y, z);
-        this.sprites = sprites;
-
         this.xd = motionX;
         this.yd = motionY;
         this.zd = motionZ;
 
-        this.quadSize *= 2.5F;
+        this.quadSize *= 1F;
         //longer
         this.lifetime = (int) (10.0D / (this.random.nextFloat() * 0.3D + 0.7D));
         this.hasPhysics = false;
 
-        this.setSpriteFromAge(this.sprites);
+        this.pickSprite(sprites);
+    }
+
+    @Override
+    public float getQuadSize(float partialTicks) {
+        float d = (this.age+ partialTicks) / (float) this.lifetime ;
+        return Mth.lerp(d, this.quadSize, this.quadSize * 5.8f);
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.setSpriteFromAge(this.sprites);
         //crazy hyperbole instead of normal parabula. idk
-        float x = this.age / (float) this.lifetime;
-        final float a = MthUtils.PHI;
-        this.alpha = a + 1 / (x - a);
+        float d = this.age / (float) this.lifetime;
+        final float p = MthUtils.PHI;
+        this.alpha = p + 1 / (d - p);
     }
 
     @Override

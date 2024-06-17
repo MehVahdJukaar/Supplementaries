@@ -4,6 +4,8 @@ import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -102,14 +104,6 @@ public class LunchBoxItemImpl {
         }
 
         @Override
-        public void tryAddingUnchecked(ItemStack result) {
-            //TODO: prioritize only on existing
-          //  if(tryAdding(result, true)) {
-            //    ItemHandlerHelper.giveItemToPlayer(null, result, null);
-            //}
-            ItemHandlerHelper.insertItem(this, result, false);
-        }
-
         public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (!toInsert.isEmpty() && toInsert.getItem().canFitInsideContainerItems()) {
                 if (onlyOnExisting) {

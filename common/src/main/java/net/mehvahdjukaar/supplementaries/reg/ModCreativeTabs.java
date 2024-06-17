@@ -394,6 +394,10 @@ public class ModCreativeTabs {
                 ModRegistry.REDSTONE_ILLUMINATOR);
 
         after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
+                ModConstants.CANNONBALL_NAME,
+                ModRegistry.CANNONBALL_ITEM);
+
+        after(e, Items.END_CRYSTAL, CreativeModeTabs.COMBAT,
                 ModConstants.BOMB_NAME,
                 ModRegistry.BOMB_ITEM, ModRegistry.BOMB_BLUE_ITEM);
 
@@ -495,10 +499,6 @@ public class ModCreativeTabs {
         before(e, Items.FISHING_ROD, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUNCH_BASKET_NAME,
                 ModRegistry.LUNCH_BASKET);
-
-        before(e, Items.SNOWBALL, CreativeModeTabs.TOOLS_AND_UTILITIES,
-                ModConstants.CANNONBALL_NAME,
-                ModRegistry.CANNONBALL_ITEM);
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,

@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.network.ClientReceivers;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -17,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -86,16 +85,21 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     @Override
     public boolean onLeftClick(ItemStack stack, Player player, InteractionHand hand) {
         var data = getData(stack);
+        boolean open = data.canEatFrom();
         data.switchMode();
 
-        player.playSound(ModSounds.LUNCH_BASKET_OPEN.get(), 0.8F,
-                0.8F + player.level().getRandom().nextFloat() * 0.4F);
+        if (open) {
+            player.playSound(ModSounds.LUNCH_BASKET_CLOSE.get(),
+                    0.3F, 1F + player.level().getRandom().nextFloat() * 0.3F);
+        } else {
+            player.playSound(ModSounds.LUNCH_BASKET_OPEN.get(),
+                    0.3F, 1.6F + player.level().getRandom().nextFloat() * 0.3F);
+        }
         return true;
     }
-
-
+    @Nullable
     @ForgeOverride
-    public @Nullable FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+    public  FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
         var data = getData(stack);
         if (data.canEatFrom()) {
             return SuppPlatformStuff.getFoodProperties(data.getSelected(), entity);
@@ -134,7 +138,11 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
                 data.consumeSelected();
             } else if (result != copy) {
                 data.consumeSelected();
-                data.tryAddingUnchecked(result);
+                ItemStack remaining = data.tryAdding(result);
+
+                if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                    p.drop(remaining, false);
+                }
             }
             return stack;
         }
@@ -197,8 +205,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         boolean canEatFrom();
 
         void switchMode();
-
-        void tryAddingUnchecked(ItemStack result);
     }
 
 

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.misc.explosion;
 import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
-import com.google.common.collect.UnmodifiableIterator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.Util;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -133,12 +131,12 @@ public class CannonBallExplosion extends Explosion {
         }
         if (level.isClientSide && !sounds.isEmpty()) {
             var iter = Multisets.copyHighestCountFirst(sounds).iterator();
-            for(int i = 0; i<2 && iter.hasNext(); i++) {
+            for (int i = 0; i < 3 && iter.hasNext(); i++) {
                 SoundEvent sound = iter.next();
 
                 //TODO: make this depend on blocks broken
                 this.level.playLocalSound(x, y, z, sound, SoundSource.BLOCKS,
-                        1.4f, 0.6F, false);
+                        2.5f, 0.6F + level.random.nextFloat() * 0.2f, false);
             }
         }
     }

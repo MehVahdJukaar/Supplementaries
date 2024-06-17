@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.mojang.brigadier.CommandDispatcher;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.commands.*;
@@ -12,6 +13,12 @@ public class ModCommands {
 
     public static void init() {
         RegHelper.addCommandRegistration(ModCommands::register);
+        registerArguments();
+    }
+
+    @ExpectPlatform
+    public static void registerArguments() {
+        throw new AssertionError();
     }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context, Commands.CommandSelection selection) {

@@ -58,6 +58,7 @@ import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -224,7 +225,7 @@ public class QuarkCompat {
 
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, @Nullable TagKey<Structure> destination,
                                                 int radius, boolean skipKnown, int zoom,
-                                                MapDecoration.Type destinationType, @Nullable String name, int color) {
+                                                ResourceLocation destinationType, @Nullable String name, int color) {
         HolderSet<Structure> targets = null;
         if (destination != null) {
             var v = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(destination);
@@ -237,8 +238,12 @@ public class QuarkCompat {
 
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> targets,
                                                 int radius, boolean skipKnown, int zoom,
-                                                MapDecoration.Type destinationType, @Nullable String name, int color) {
-        return CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom, destinationType, name, color);
+                                                ResourceLocation destinationType, @Nullable String name, int color) {
+        var item = CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom, null, name, color);
+        if (destinationType != null) {
+            item.getOrCreateTag().putString(CartographersQuillItem.TAG_DECORATION, destinationType.toString().toLowerCase(Locale.ROOT));
+        }
+        return item;
     }
 
 }

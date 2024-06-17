@@ -63,7 +63,6 @@ public class Supplementaries {
         ModEntities.init();
         ModParticles.init();
         ModCommands.init();
-        ModArguments.init();
         ModVillagerTrades.init();
         ModWorldgenRegistry.init();
         ModMapMarkers.init();
@@ -109,6 +108,7 @@ public class Supplementaries {
     // flute pacifier
     // wolf howl
 
+    // warp fly and warper block
     // randomize enchant for quiver and lunch boxes
     // dispensers shoow quiver content
     // bundle and quiver dispenser interaction

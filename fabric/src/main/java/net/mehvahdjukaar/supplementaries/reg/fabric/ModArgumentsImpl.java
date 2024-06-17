@@ -10,13 +10,5 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 
 public class ModArgumentsImpl {
 
-    public static void registerArguments() {
-        registerArgument("source", SourceArgument.class, SingletonArgumentInfo.contextFree(SourceArgument::new));
-        registerArgument("note_block_instrument", NoteBlockInstrumentArgument.class, SingletonArgumentInfo.contextFree(NoteBlockInstrumentArgument::new));
-    }
 
-    public static  <A extends ArgumentType<?>, T extends ArgumentTypeInfo.Template<A>> void registerArgument(
-            String name, Class<? extends A> clazz, ArgumentTypeInfo<A, T> serializer) {
-        ArgumentTypeRegistry.registerArgumentType(Supplementaries.res(name), clazz, serializer);
-    }
 }

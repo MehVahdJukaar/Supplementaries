@@ -891,7 +891,7 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> SLIDY_BLOCK = regWithItem(SLIDY_BLOCK_NAME, () -> new SlidyBlock(
-            BlockBehaviour.Properties.copy(Blocks.TUFF)
+            BlockBehaviour.Properties.copy(Blocks.TUFF).sound(ModSounds.SLIDY_BLOCK)
     ));
 
     public static final Supplier<BlockEntityType<SlidyBlockOptionalTile>> SLIDY_BLOCK_TILE = regTile(SLIDY_BLOCK_NAME, () ->

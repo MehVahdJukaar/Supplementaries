@@ -83,6 +83,65 @@
     ],
     "subtitle": "subtitle.supplementaries.music.pancake"
   },
+  "block.slidy_block.break": {
+    "sounds": [
+      "supplementaries:block/slidy_block_place_0",
+      "supplementaries:block/slidy_block_place_1",
+      "supplementaries:block/slidy_block_place_2",
+      "supplementaries:block/slidy_block_place_3",
+      "supplementaries:block/slidy_block_place_4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.slidy_block.place": {
+    "sounds": [
+      "supplementaries:block/slidy_block_place_0",
+      "supplementaries:block/slidy_block_place_1",
+      "supplementaries:block/slidy_block_place_2",
+      "supplementaries:block/slidy_block_place_3"
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "block.slidy_block.fall": {
+    "sounds": [
+      "supplementaries:block/slidy_block_step_0",
+      "supplementaries:block/slidy_block_step_1",
+      "supplementaries:block/slidy_block_step_2",
+      "supplementaries:block/slidy_block_step_3",
+      "supplementaries:block/slidy_block_step_4",
+      "supplementaries:block/slidy_block_step_5"
+    ]
+  },
+  "block.slidy_block.hit": {
+    "sounds": [
+      "supplementaries:block/slidy_block_step_0",
+      "supplementaries:block/slidy_block_step_1",
+      "supplementaries:block/slidy_block_step_2",
+      "supplementaries:block/slidy_block_step_3",
+      "supplementaries:block/slidy_block_step_4",
+      "supplementaries:block/slidy_block_step_5"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.slidy_block.step": {
+    "sounds": [
+      "supplementaries:block/slidy_block_step_0",
+      "supplementaries:block/slidy_block_step_1",
+      "supplementaries:block/slidy_block_step_2",
+      "supplementaries:block/slidy_block_step_3",
+      "supplementaries:block/slidy_block_step_4",
+      "supplementaries:block/slidy_block_step_5"
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "block.slidy_block.slide": {
+    "sounds": [
+      "supplementaries:block/slidy_block_slide_0",
+      "supplementaries:block/slidy_block_slide_1",
+      "supplementaries:block/slidy_block_slide_2"
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
   "block.sack.break": {
     "sounds": [
       "supplementaries:block/sack_break_0",

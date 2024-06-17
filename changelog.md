@@ -22,9 +22,10 @@
 - Playing a flute will make parrots dance (in cages and on shoulder too)
 - thrown bricks and bombs renderer is how centered on their hitbox
 - added record command to fabric (thanks ot laite07)
-- wind vanes now use a flywheel model (when flywheel is on)
+- wind vanes and cannons now use a flywheel model (when flywheel is on)
 - fixed some client desync issues with bomb explosions
 - added /supplementaries registry command, lists all the content of a registry
 - improved turn table and wrench rotation logic fixing some bugs and inconsistencies
 - Fixed some dupes with falling urns
 - added cannon map marker
+- fixed quill maps not supporting vanilla decorations properly

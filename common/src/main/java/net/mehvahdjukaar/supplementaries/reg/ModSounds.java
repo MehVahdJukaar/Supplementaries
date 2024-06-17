@@ -55,6 +55,15 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> CONFETTI_POPPER = regSound("item.confetti_popper");
 
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_PLACE = regSound("block.slidy_block.place");
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_BREAK = regSound("block.slidy_block.break");
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_HIt = regSound("block.slidy_block.hit");
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_FALL = regSound("block.slidy_block.fall");
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_STEP = regSound("block.slidy_block.step");
+    public static final Supplier<SoundEvent> SLIDY_BLOCK_SLIDE = regSound("block.slidy_block.slide");
+
+
+
     public static final Supplier<SoundEvent> LUNCH_BASKET_OPEN = regSound("item.lunch_basket.open");
     public static final Supplier<SoundEvent> LUNCH_BASKET_CLOSE = regSound("item.lunch_basket.close");
     public static final Supplier<SoundEvent> LUNCH_BASKET_INSERT = regSound("item.lunch_basket.insert");
@@ -76,6 +85,13 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
+
+    public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,
+            SLIDY_BLOCK_BREAK,
+            SLIDY_BLOCK_STEP,
+            SLIDY_BLOCK_PLACE,
+            SLIDY_BLOCK_HIt,
+            SLIDY_BLOCK_FALL);
 
     public static final ModSoundType JAR = new ModSoundType(1.0F, 1.0F,
             JAR_BREAK,

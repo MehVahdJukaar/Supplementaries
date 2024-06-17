@@ -43,13 +43,13 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("rope", ModRegistry.ROPE.get());
         addIcon("placeable sticks", Items.STICK);
         addIcon("item lore", Items.NAME_TAG);
-        addIcon("noteblock scare", Items.NOTE_BLOCK);
         addIcon("timber frame", ModRegistry.TIMBER_BRACE_ITEM.get());
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
         addIcon("map tweaks", Items.FILLED_MAP);
         addIcon("initialization", ModRegistry.COG_BLOCK.get());
         addIcon("zombie horse", Items.ZOMBIE_HORSE_SPAWN_EGG);
         addIcon("placeable gunpowder", Items.GUNPOWDER);
+        addIcon("noteblocks scare", Items.NOTE_BLOCK);
         addIcon("mixins", Items.HOPPER);
         addIcon("lumisene", ModFluids.LUMISENE_BUCKET.get());
         addIcon("server protection", Items.COMMAND_BLOCK);

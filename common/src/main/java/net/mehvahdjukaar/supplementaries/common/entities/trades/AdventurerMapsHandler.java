@@ -47,7 +47,7 @@ public class AdventurerMapsHandler {
 
         if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
             var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
-                    radius, skipKnown, zoom, null, name, color);
+                    radius, skipKnown, zoom, mapMarker, name, color);
             item.setHoverName(Component.translatable(name));
             return item;
         }

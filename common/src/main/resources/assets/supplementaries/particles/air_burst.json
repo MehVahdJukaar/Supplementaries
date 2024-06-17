@@ -1,9 +1,5 @@
 {
   "textures": [
-    "supplementaries:air_burst_0",
-    "supplementaries:air_burst_1",
-    "supplementaries:air_burst_3",
-    "supplementaries:air_burst_4",
-	"supplementaries:air_burst_5"
+    "supplementaries:air_burst_2"
   ]
 }

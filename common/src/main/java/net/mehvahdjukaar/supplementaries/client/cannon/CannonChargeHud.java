@@ -34,7 +34,7 @@ public abstract class CannonChargeHud extends Gui {
 
             renderCrossHair(graphics, screenWidth, screenHeight, texture);
 
-            renderBar(graphics, screenWidth, screenHeight, texture, cannon);
+            renderBar(graphics, screenWidth, screenHeight, texture, cannon, partialTicks);
 
             renderTrajectoryIcons(graphics, screenWidth, screenHeight, texture);
 
@@ -69,14 +69,15 @@ public abstract class CannonChargeHud extends Gui {
         this.renderSlot(graphics, left + 1 + 113 + 2, k2, player, cannon.getFuel(), 1);
     }
 
-    private void renderBar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon) {
+    private void renderBar(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture, CannonBlockTile cannon,
+                           float partialTicks) {
         int xpBarLeft = screenWidth / 2 - 91;
 
-        float c = 1 - cannon.getCooldownTimer();
+        float c = 1 - cannon.getCooldownAnimation(partialTicks);
         int k = (int) (c * 183.0F);
         int xpBarTop = screenHeight - 32 + 3;
         graphics.blit(texture, xpBarLeft, xpBarTop, 0, 0, 182, 5);
-        float f = cannon.getFireTimer();
+        float f = cannon.getFiringAnimation(partialTicks);
 
         float min = 0.7F;
 
