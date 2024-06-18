@@ -49,10 +49,7 @@ import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.FlameParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.SnowflakeParticle;
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.PistonHeadRenderer;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
@@ -310,7 +307,7 @@ public class ClientRegistry {
         event.register(ModParticles.GREEN_FLAME.get(), FlameParticle.Provider::new);
         event.register(ModParticles.DRIPPING_LIQUID.get(), DrippingLiquidParticle.Factory::new);
         event.register(ModParticles.FALLING_LIQUID.get(), FallingLiquidParticle.Factory::new);
-        event.register(ModParticles.SPLASHING_LIQUID.get(), SplashingLiquidParticle.Factory::new);
+        event.register(ModParticles.SPLASHING_LIQUID.get(), ColoredSplashingParticle::new);
         event.register(ModParticles.BOMB_EXPLOSION_PARTICLE.get(), BombExplosionParticle.Factory::new);
         event.register(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), BombExplosionEmitterParticle.Factory::new);
         event.register(ModParticles.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
@@ -328,6 +325,20 @@ public class ClientRegistry {
         event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
         event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
         event.register(ModParticles.CANNON_FIRE_PARTICLE.get(), CannonFireParticle.Factory::new);
+    }
+
+    public static class ColoredSplashingParticle extends SplashParticle.Provider {
+        public ColoredSplashingParticle(SpriteSet sprites) {
+            super(sprites);
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
+                                       double r, double g, double b) {
+            var p = super.createParticle(type, level, x, y, z, 0, 0, 0);
+            p.setColor((float) r, (float) g, (float) b);
+            return p;
+        }
     }
 
     private static class AshParticleFactory extends SnowflakeParticle.Provider {
@@ -348,9 +359,9 @@ public class ClientRegistry {
         //entities
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
-        if(ClientConfigs.Items.CANNONBALL_3D.get()) {
+        if (ClientConfigs.Items.CANNONBALL_3D.get()) {
             event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
-        }else {
+        } else {
             event.register(ModEntities.CANNONBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1.615f));
         }
         event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
@@ -492,44 +503,6 @@ public class ClientRegistry {
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
     }
-
-
-    /*
-    //unused
-    @SubscribeEvent
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        if (true) return;
-        //adds to all entities
-        var entityTypes = ImmutableList.copyOf(
-                ForgeRegistries.ENTITIES.getValues().stream()
-                        .filter(DefaultAttributes::hasSupplier)
-                        .filter(e -> (e != EntityType.ENDER_DRAGON))
-                        .map(entityType -> (EntityType<LivingEntity>) entityType)
-                        .collect(Collectors.toList()));
-
-        entityTypes.forEach((entityType -> addLayer(event.getRenderer(entityType))));
-
-        //player skins
-        for (String skinType : event.getSkins()) {
-            var renderer = event.getSkin(skinType);
-            if (renderer != null) renderer.addLayer(new SlimedLayer(renderer));
-        }
-    }
-
-    private static <T extends LivingEntity, M extends EntityModel<T>, R extends LivingEntityRenderer<T, M>> void
-    addLayer(@Nullable R renderer) {
-        if (renderer != null) {
-            renderer.addLayer(new SlimedLayer<>(renderer));
-        }
-    }
-
-    public static ShaderInstance instance;
-
-    public static void registerShaders(RegisterShadersEvent event) throws IOException {
-        event.registerShader(new ShaderInstance(event.getResourceManager(), Supplementaries.res("banner_mask"),
-                        DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP), s -> instance = s);
-    }
- */
 
 
     public static LevelLightEngine getLightEngine() {

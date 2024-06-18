@@ -44,9 +44,14 @@ public class SupplementariesForgeClient {
     }
 
     private static ShaderInstance staticNoiseShader;
+    private static ShaderInstance entityOffsetShader;
 
     public static ShaderInstance getStaticNoiseShader() {
         return staticNoiseShader;
+    }
+
+    public static ShaderInstance getEntityOffsetShader() {
+        return entityOffsetShader;
     }
 
     public static RenderType staticNoise(ResourceLocation location) {
@@ -56,10 +61,15 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void registerShader(RegisterShadersEvent event) {
         try {
-            ShaderInstance translucentParticleShader = new ShaderInstance(event.getResourceProvider(),
+            ShaderInstance noiseShader = new ShaderInstance(event.getResourceProvider(),
                     Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY);
 
-            event.registerShader(translucentParticleShader, s -> staticNoiseShader = s);
+            event.registerShader(noiseShader, s -> staticNoiseShader = s);
+
+            ShaderInstance slimeShader = new ShaderInstance(event.getResourceProvider(),
+                    Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY);
+
+            event.registerShader(slimeShader, s -> entityOffsetShader = s);
 
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed to parse shader: " + e);

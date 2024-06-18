@@ -6,11 +6,11 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
@@ -173,7 +173,7 @@ public class ClientReceivers {
                                 facingDir.x, facingDir.y, facingDir.z);
                     }
 
-                    l.playLocalSound(message.pos.x, message.pos.y,message.pos.z, ModSounds.CONFETTI_POPPER.get(),
+                    l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
                             SoundSource.PLAYERS, 1.0f, l.random.nextFloat() * 0.2F + 0.8F, false);
                 }
             }
@@ -318,7 +318,7 @@ public class ClientReceivers {
                     Explosion explosion = new BombExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow,
                             BombEntity.BombType.values()[packet.getId()]);
                     explosion.finalizeExplosion(true);
-                    if(knockback != null) {
+                    if (knockback != null) {
                         withPlayerDo(p -> p.setDeltaMovement(p.getDeltaMovement().add(knockback.x, knockback.y, knockback.z)));
                     }
                 }
@@ -333,6 +333,15 @@ public class ClientReceivers {
                     Explosion explosion = new GunpowderExplosion(l, null, pos.x, pos.y, pos.z, power);
                     explosion.finalizeExplosion(true);
                 }
+            }
+        });
+    }
+
+    public static void handleSyncSlimed(ClientBoundSyncSlimedInk message) {
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.id());
+            if (e instanceof ISlimeable s) {
+                s.supp$setSlimedTicks(message.duration());
             }
         });
     }

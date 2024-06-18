@@ -149,7 +149,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     private boolean maybeBounce(BlockPos pos, Direction hitDirection) {
-        boolean shouldBounce = false;
+        boolean shouldBounce;
         Vec3 velocity = this.getDeltaMovement();
         Vector3f surfaceNormal = hitDirection.step();
 
@@ -161,7 +161,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             double cosAngle = Math.abs(dot / velocity.length());
 
-            float bounceCosAngle = Mth.cos(70 * Mth.DEG_TO_RAD);
+            float bounceCosAngle = Mth.cos(75 * Mth.DEG_TO_RAD);
             shouldBounce = cosAngle < bounceCosAngle;
         }
 
@@ -169,7 +169,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
             this.setDeltaMovement(newVel);
             SoundType soundType = hitBlock.getSoundType();
-            this.playSound(soundType.getFallSound(), soundType.volume, soundType.getPitch());
+            this.playSound(soundType.getFallSound(), soundType.volume*1.5f, soundType.getPitch());
             return true;
         }
         return false;

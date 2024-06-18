@@ -1,13 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.forge.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
@@ -22,13 +25,18 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +51,11 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.stream.Collectors;
 
 public class ClientEventsForge {
 
@@ -74,15 +86,36 @@ public class ClientEventsForge {
                 renderer.addLayer(new JarredHeadLayer<>(model, event.getEntityModels()));
             }
         }
-        var renderer = event.getRenderer(EntityType.SKELETON);
-        if (renderer != null) {
-            renderer.addLayer(new QuiverLayer(renderer, true));
+        var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
+        if (skeletonRenderer != null) {
+            skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
         }
-        var renderer2 = event.getRenderer(EntityType.STRAY);
-        if (renderer2 != null) {
-            renderer2.addLayer(new QuiverLayer(renderer2, true));
+        var strayRenderer = event.getRenderer(EntityType.STRAY);
+        if (strayRenderer != null) {
+            strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
+        }
+
+
+        //adds to all entities
+        var entityTypes = ImmutableList.copyOf(
+                ForgeRegistries.ENTITY_TYPES.getValues().stream()
+                        .filter(DefaultAttributes::hasSupplier)
+                        .filter(e -> (e != EntityType.ENDER_DRAGON))
+                        .map(entityType -> (EntityType<LivingEntity>) entityType)
+                        .collect(Collectors.toList()));
+
+        entityTypes.forEach((entityType -> {
+            var r = event.getRenderer(entityType);
+            if (r != null &&  !((Object)r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
+        }));
+
+        //player skins
+        for (String skinType : event.getSkins()) {
+            var r = event.getSkin(skinType);
+            if (r != null) r.addLayer(new SlimedLayer(r));
         }
     }
+
 
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
@@ -205,9 +238,9 @@ public class ClientEventsForge {
         if (CannonController.isActive()) {
             event.setCanceled(true);
             event.setSwingHand(false);
-            if(event.isAttack()) {
+            if (event.isAttack()) {
                 CannonController.onPlayerAttack();
-            }else if(event.isUseItem()){
+            } else if (event.isUseItem()) {
                 CannonController.onPlayerUse();
             }
         }
@@ -235,5 +268,6 @@ public class ClientEventsForge {
             event.setCanceled(true);
         }
     }
+
 
 }

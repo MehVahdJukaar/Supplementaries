@@ -4,19 +4,18 @@ import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 public class DrippingLiquidParticle extends TextureSheetParticle {
-    private final Fluid fluid;
 
-    private DrippingLiquidParticle(ClientLevel world, double x, double y, double z, Fluid fluid) {
+    private DrippingLiquidParticle(ClientLevel world, double x, double y, double z) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.06F;
-        this.fluid = fluid;
         this.gravity *= 0.02F;
         this.lifetime = 40;
     }
@@ -37,7 +36,7 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
                 this.zd *=  0.98F;
                 BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (fluidstate.getType() == this.fluid && this.y <  ( blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (!fluidstate.isEmpty() && this.y <  ( blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
 
@@ -73,7 +72,7 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
-            DrippingLiquidParticle drippingLiquidParticle = new DrippingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
+            DrippingLiquidParticle drippingLiquidParticle = new DrippingLiquidParticle(worldIn, x, y, z);
             drippingLiquidParticle.setColor((float) r, (float) g, (float) b);
             drippingLiquidParticle.pickSprite(this.spriteSet);
             return drippingLiquidParticle;

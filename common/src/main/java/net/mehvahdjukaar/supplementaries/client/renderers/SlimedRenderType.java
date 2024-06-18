@@ -1,12 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.renderers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
 public class SlimedRenderType extends RenderType {
@@ -15,38 +14,37 @@ public class SlimedRenderType extends RenderType {
         super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
 
-    protected static final TexturingStateShard TEXTURING_STATE_SHARD = new TexturingStateShard("entity_glint_texturing",
-            () -> animateTexture(1.2F, 4L), RenderSystem::resetTextureMatrix);
-
-    protected static final TextureStateShard TEXTURE_SHARD = new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, true, false);
-/*
-    public static final RenderType SLIMED_RENDER_TYPE =
-            create("slimed", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
-                    true, true, CompositeState.builder()
-                            .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_NO_CULL_SHADER)
-                            .setTextureState(TEXTURE_SHARD)
-                            .setCullState(NO_CULL)
-                            .setOverlayState(OVERLAY)
-                            .setLightmapState(LIGHTMAP)
-                            .setDepthTestState(EQUAL_DEPTH_TEST)
-                            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                            .setTexturingState(TEXTURING_STATE_SHARD)
-                            .createCompositeState(true));
-*/
-
-    private static void animateTexture(float in, long time) {
-        long i = Util.getMillis() * time;
-        float f = (float) (i % 80000L) / 80000.0F;
-        float f1 = 0.5f + Mth.sin((float) (((float) (i % 30000L) / 30000.0F) * Math.PI)) * 0.5f;
-
-        Matrix4f matrix4f = (new Matrix4f()).translation(0.0F, f, 0.0F);
-
-        matrix4f.rotate(Axis.ZP.rotationDegrees(30));
-
-        matrix4f.mul((new Matrix4f()).scale(0.5f, 0.5f, 0.5f));
-        RenderSystem.setTextureMatrix(matrix4f);
-
-
+    private static class OffsetTexturing extends TexturingStateShard {
+        public OffsetTexturing(int width, int height) {
+            super("slime_offset_texturing",
+                    () -> {
+                        float u = (float) (System.currentTimeMillis() % 400000L) / 400000.0F;
+                        Matrix4f translation = new Matrix4f().translation(0, -u, 0.0F);
+                        float x = (float) width / 64;
+                        float y = (float) height / 64;
+                        translation.scale(x, y, 1);
+                        RenderSystem.setTextureMatrix(translation);
+                    },
+                    RenderSystem::resetTextureMatrix);
+        }
     }
 
+
+    public static RenderType get(int width, int height) {
+        return create("slimed",
+                DefaultVertexFormat.NEW_ENTITY,
+                VertexFormat.Mode.QUADS,
+                256,
+                false, true,
+                CompositeState.builder()
+                        .setShaderState(new ShaderStateShard(SuppClientPlatformStuff::getEntityOffsetShader))
+                        .setTextureState(new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, false, false))
+                        .setCullState(NO_CULL)
+                        .setOverlayState(OVERLAY)
+                        .setLightmapState(LIGHTMAP)
+                        .setDepthTestState(EQUAL_DEPTH_TEST)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setTexturingState(new OffsetTexturing(width, height))
+                        .createCompositeState(false));
+    }
 }

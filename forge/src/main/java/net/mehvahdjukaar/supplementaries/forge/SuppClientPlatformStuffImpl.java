@@ -17,6 +17,10 @@ public class SuppClientPlatformStuffImpl {
         return SupplementariesForgeClient.getStaticNoiseShader();
     }
 
+    public static ShaderInstance getEntityOffsetShader() {
+        return SupplementariesForgeClient.getEntityOffsetShader();
+    }
+
     public static ISlider createSlider(int x, int y, int width, int height, Component prefix, Component suffix,
                                        double minValue, double maxValue, double currentValue, double stepSize, int precision, boolean drawString) {
         return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);

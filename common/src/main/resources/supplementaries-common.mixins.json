@@ -49,6 +49,7 @@
     "ZombieHorseMixin"
   ],
   "client": [
+    "AgeableListAccessor",
     "BlockBehaviourPlanterMixin",
     "BookViewScreenMixin",
     "CameraMixin",
@@ -62,10 +63,12 @@
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",
     "MapTextureMixin",
+    "ModelPartMixin",
     "MouseHandlerMixin",
     "PageButtonMixin",
     "ParrotLayerMixin",
     "ParrotMixin",
+    "PartDefinitionMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",
     "UndeadHorseRenderMixin",

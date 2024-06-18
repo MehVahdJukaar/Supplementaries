@@ -5,20 +5,16 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 
 
 public class FallingLiquidParticle extends TextureSheetParticle {
-    private final Fluid fluid;
 
-    private FallingLiquidParticle(ClientLevel world, double x, double y, double z, Fluid fluid) {
+    private FallingLiquidParticle(ClientLevel world, double x, double y, double z) {
         super(world, x, y, z);
         this.setSize(0.01F, 0.01F);
         this.gravity = 0.06F;
-        this.fluid = fluid;
-        this.lifetime = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
+        this.lifetime = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
     }
 
     public ParticleRenderType getRenderType() {
@@ -41,7 +37,7 @@ public class FallingLiquidParticle extends TextureSheetParticle {
                 this.zd *= 0.98F;
                 BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (fluidstate.getType() == this.fluid && this.y < (blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (!fluidstate.isEmpty() && this.y < (blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
             }
@@ -62,7 +58,6 @@ public class FallingLiquidParticle extends TextureSheetParticle {
     }
 
 
-
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         protected final SpriteSet spriteSet;
 
@@ -72,8 +67,8 @@ public class FallingLiquidParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double r, double g, double b) {
-            FallingLiquidParticle fallingparticle = new FallingLiquidParticle(worldIn, x, y, z, Fluids.WATER);
-            fallingparticle.setColor((float)r, (float)g, (float)b);
+            FallingLiquidParticle fallingparticle = new FallingLiquidParticle(worldIn, x, y, z);
+            fallingparticle.setColor((float) r, (float) g, (float) b);
             fallingparticle.pickSprite(this.spriteSet);
             return fallingparticle;
         }

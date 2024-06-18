@@ -144,7 +144,9 @@ public class ModRegistry {
             .stacksTo(1)));
 
     public static final Supplier<Block> LUNCH_BASKET = regBlock(LUNCH_BASKET_NAME, () -> new LunchBoxBlock(
-            BlockBehaviour.Properties.copy(Blocks.CHEST)
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_YELLOW)
+                    .sound(SoundType.BAMBOO)
                     .strength(1, 1)));
 
     public static final Supplier<BlockEntityType<LunchBoxBlockTile>> LUNCH_BASKET_TILE = regTile(

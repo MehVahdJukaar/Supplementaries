@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -1111,6 +1110,12 @@ public class CommonConfigs {
                     .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag"));
             builder.pop();
 
+            builder.push("throwable_slimeballs");
+            THROWABLE_SLIMEBALLS = feature(builder);
+            SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
+                    .define("overlay", true);
+            builder.pop();
+
             builder.pop();
         }
 
@@ -1152,6 +1157,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BAD_LUCK_CAT;
         public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
         public static final Supplier<Boolean> ITEM_LORE;
+        public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
+        public static final Supplier<Boolean> SLIME_OVERLAY;
 
     }
 

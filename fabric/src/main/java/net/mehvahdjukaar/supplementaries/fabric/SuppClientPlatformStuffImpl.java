@@ -22,4 +22,8 @@ public class SuppClientPlatformStuffImpl {
         return new ModSlider(x,y,width, height, prefix,suffix, minValue, maxValue, currentValue);
     }
 
+    public static ShaderInstance getEntityOffsetShader() {
+        return null;
+    }
+
 }
