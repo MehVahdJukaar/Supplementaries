@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.capabilities;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;

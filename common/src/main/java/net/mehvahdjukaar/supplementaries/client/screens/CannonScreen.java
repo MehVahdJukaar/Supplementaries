@@ -155,7 +155,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             if (this.isHovered())
                 x += this.width;
 
-            guiGraphics.blit(ModTextures.CANNON_GUI_TECTURE, this.getX(), this.getY(), x, y, this.width, this.height);
+            guiGraphics.blit(ModTextures.CANNON_GUI_TEXTURE, this.getX(), this.getY(), x, y, this.width, this.height);
         }
     }
 

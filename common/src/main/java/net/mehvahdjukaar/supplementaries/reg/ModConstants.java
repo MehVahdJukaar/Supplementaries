@@ -10,6 +10,7 @@ public final class ModConstants {
     public static final String FALLING_ASH_NAME = "falling_ash";
     public static final String FALLING_SACK_NAME = "falling_sack";
     public static final String THROWABLE_BRICK_NAME = "brick_projectile";
+    public static final String THROWABLE_SLIMEBALL_NAME = "slimeball_projectile";
     public static final String BOMB_NAME = "bomb";
     public static final String BOMB_BLUE_NAME = "bomb_blue";
     public static final String BOMB_SPIKY_NAME = "bomb_spiky";

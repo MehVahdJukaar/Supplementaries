@@ -148,9 +148,6 @@ public class ClientRegistry {
         //map markers
         ModMapMarkersClient.init();
 
-        //overlay
-        //SlimedGuiOverlay.register();
-
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
         MenuScreens.register(ModMenuTypes.VARIABLE_SIZE.get(), VariableSizeContainerScreen::new);
         MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);

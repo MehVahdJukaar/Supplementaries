@@ -67,12 +67,17 @@ public class ModEntities {
     //brick
     public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(20));
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+
+    //slimeball
+    public static final Supplier<EntityType<SlimeBallEntity>> THROWABLE_SLIMEBALL = regEntity(THROWABLE_SLIMEBALL_NAME, () ->
+            EntityType.Builder.<SlimeBallEntity>of(SlimeBallEntity::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
 
     //bomb
     public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(20));
+                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
 
     //bomb
     public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->

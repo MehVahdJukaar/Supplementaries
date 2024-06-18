@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -40,6 +41,7 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -158,15 +160,10 @@ public class ServerEventsForge {
         var level = event.getLevel();
         if (level instanceof ServerLevel serverLevel) {
             ServerEvents.onEntityLoad(event.getEntity(), serverLevel);
-        }else{
+        } else {
             ClientEvents.onEntityLoad(event.getEntity(), event.getLevel());
         }
     }
-
-
-
-
-
 
 
     //TODO: add these on fabric
@@ -242,6 +239,21 @@ public class ServerEventsForge {
                     cat.getVariant() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
                     event.getSource().getEntity() instanceof LivingEntity p) {
                 p.addEffect(new MobEffectInstance(MobEffects.UNLUCK, 20 * 60 * 5));
+            }
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+
+        if (CommonConfigs.Tweaks.SLIME_OVERLAY.get()) {
+            ISlimeable slimed = (ISlimeable) event.getEntity();
+            int t = slimed.supp$getSlimedTicks();
+            if (t > 0) {
+                slimed.supp$setSlimedTicks(t - 1);
+            }else if(event.getEntity().level().random.nextFloat()<0.1){
+                slimed.supp$setSlimedTicks(400);
             }
         }
     }

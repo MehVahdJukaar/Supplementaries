@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
@@ -49,6 +50,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
     public ThrowableBrickEntity(Level worldIn, double x, double y, double z) {
         super(ModEntities.THROWABLE_BRICK.get(), x, y, z, worldIn);
+    }
+
+    @Override
+    protected Component getTypeName() {
+        return this.getItem().getDisplayName();
     }
 
     @Override
@@ -100,6 +106,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
                 var p = FakePlayerManager.get(BRICK_PLAYER, level);
                 p.setItemInHand(InteractionHand.MAIN_HAND, Items.IRON_PICKAXE.getDefaultInstance());
                 if (level.getBlockState(pos).is(ModTags.BRICK_BREAKABLE_POTS)) {
+                    //TODO: why is fake player here? cant just use normalplayer like with cannonballs?
                     level.destroyBlock(pos, true, p);
                 } else {
                     breakGlass(pos, 6, p);

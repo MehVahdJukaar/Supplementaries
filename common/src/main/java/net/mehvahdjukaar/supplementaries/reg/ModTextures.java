@@ -24,6 +24,7 @@ public class ModTextures {
     public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block_side");
     public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
 
+
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("block/bellows");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
@@ -86,10 +87,11 @@ public class ModTextures {
     public static final ResourceLocation PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/present_gui.png");
     public static final ResourceLocation PRESENT_EMPTY_GUI_TEXTURE = Supplementaries.res("textures/gui/present_empty_gui.png");
     public static final ResourceLocation TRAPPED_PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/trapped_present_gui.png");
-    public static final ResourceLocation CANNON_GUI_TECTURE = Supplementaries.res("textures/gui/cannon_gui.png");
+    public static final ResourceLocation CANNON_GUI_TEXTURE = Supplementaries.res("textures/gui/cannon_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
     public static final ResourceLocation CANNON_ICONS_TEXTURE = Supplementaries.res("textures/gui/cannon_icons.png");
+    public static final ResourceLocation QUIVER_HUD = Supplementaries.res("textures/gui/quiver_hud.png");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

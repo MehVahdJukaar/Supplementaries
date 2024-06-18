@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +15,7 @@ public abstract class MouseScrollMixin {
             method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z",
     shift = At.Shift.BEFORE),   cancellable = true)
     public void onScroll(long windowPointer, double xOffset, double yOffset, CallbackInfo ci, double d0){
-        if(SelectableContainerItemHud.isActive() && SelectableContainerItemHud.onMouseScrolled(d0)){
+        if(SelectableContainerItemHud.INSTANCE.isActive() && SelectableContainerItemHud.INSTANCE.onMouseScrolled(d0)){
             ci.cancel();
         }
     }

@@ -25,31 +25,30 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
                        float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks,
                        float netHeadYaw, float headPitch) {
 
-        if (entity instanceof ISlimeable s && s.supp$getSlimedTicks()) {
-            int i = entity.tickCount;
+        if (!(entity instanceof ISlimeable s)) return;
 
-            float f = (((float) (i % 2000L) + partialTicks) / 2000.0F);
-            float f1 = 0.5f + Mth.sin((float) (f * Math.PI)) * 0.3f;
+        int slimeTicks = s.supp$getSlimedTicks();
 
-            int width = 64;
-            int height = 64;
-            if (this.getParentModel() instanceof AgeableListAccessor al) {
-                for (var v : al.invokeBodyParts()) {
-                    IModelPartExtension part = (IModelPartExtension) (Object) v;
-                    height = part.supp$getTextHeight();
-                    width = part.supp$getTextWidth();
-                }
+        float maxFade = 60;
+        float alpha = slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
+
+        int width = 64;
+        int height = 64;
+        if (this.getParentModel() instanceof AgeableListAccessor al) {
+            for (var v : al.invokeBodyParts()) {
+                IModelPartExtension part = (IModelPartExtension) (Object) v;
+                height = part.supp$getTextHeight();
+                width = part.supp$getTextWidth();
             }
-
-            VertexConsumer consumer = buffer.getBuffer(SlimedRenderType.get(width, height));
-
-
-            float alpha = f1;
-            poseStack.pushPose();
-            this.getParentModel().renderToBuffer(poseStack, consumer, packedLight,
-                    LivingEntityRenderer.getOverlayCoords(entity, 0.0F),
-                    1.0F, 1, 1.0F, alpha);
-            poseStack.popPose();
         }
+
+        VertexConsumer consumer = buffer.getBuffer(SlimedRenderType.get(width, height));
+
+        poseStack.pushPose();
+        this.getParentModel().renderToBuffer(poseStack, consumer, packedLight,
+                LivingEntityRenderer.getOverlayCoords(entity, 0.0F),
+                1.0F, 1, 1.0F, alpha);
+        poseStack.popPose();
     }
 }
+

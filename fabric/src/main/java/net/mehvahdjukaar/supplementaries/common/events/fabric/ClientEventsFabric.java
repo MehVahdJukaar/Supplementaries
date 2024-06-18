@@ -8,8 +8,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
-import net.mehvahdjukaar.supplementaries.client.fabric.SelectableContainerItemHudImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -62,6 +63,7 @@ public class ClientEventsFabric {
 
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
+        SlimedOverlayHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
 
         if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
@@ -69,7 +71,7 @@ public class ClientEventsFabric {
                     Minecraft.getInstance().getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
-            if (keyDown) SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
         }
     }
 }

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,11 +36,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         super(ModRegistry.PULLEY_BLOCK_TILE.get(), pos, state);
     }
 
-    //no need since it doesn't display stuff
-    @Override
-    public boolean needsToUpdateClientWhenChanged() {
-        return false;
-    }
 
     @Override
     public void updateTileOnInventoryChanged() {
@@ -64,8 +60,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PulleyContainerMenu(id, player, this);
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new PulleyContainerMenu(i, inventory, this);
     }
 
     @Override
@@ -200,4 +196,15 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
     }
 
+
+    //no need since it doesn't display stuff
+    @Override
+    public boolean needsToUpdateClientWhenChanged() {
+        return false;
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return null;
+    }
 }

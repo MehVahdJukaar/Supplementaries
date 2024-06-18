@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.forge;
 
-import com.teamabnormals.blueprint.core.mixin.FallingBlockEntityMixin;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,7 +9,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 public class CannonChargeOverlayImpl extends CannonChargeHud implements IGuiOverlay {
 
     public CannonChargeOverlayImpl() {
-        super(Minecraft.getInstance(), Minecraft.getInstance().getItemRenderer());
+        super(Minecraft.getInstance());
     }
 
     @Override

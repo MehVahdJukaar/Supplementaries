@@ -94,7 +94,7 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
         }
         //create from item
 
-
+//TODO: thrown bricks behavior here or somwhere
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
         projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
 

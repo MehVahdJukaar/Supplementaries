@@ -1,7 +1,7 @@
-package net.mehvahdjukaar.supplementaries.client.forge;
+package net.mehvahdjukaar.supplementaries.client.hud.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -13,15 +13,19 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
-public class SelectableContainerItemHudImpl implements IGuiOverlay {
-
-    protected Minecraft minecraft;
+public class SelectableContainerItemHudImpl extends SelectableContainerItemHud implements IGuiOverlay {
 
     public SelectableContainerItemHudImpl() {
-        this.minecraft = Minecraft.getInstance();
+        super(Minecraft.getInstance());
     }
 
-    public static void drawHighlight(Minecraft mc, GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
+    public static SelectableContainerItemHud makeInstance() {
+        return new SelectableContainerItemHudImpl();
+    }
+
+
+    @Override
+    public void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
 
         MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().getStyleModifier());
@@ -51,7 +55,8 @@ public class SelectableContainerItemHudImpl implements IGuiOverlay {
 
     @Override
     public void render(ForgeGui forgeGui, GuiGraphics arg, float f, int i, int j) {
-        SelectableContainerItemHud.render(minecraft, arg, f, i, j);
+        this.render(arg, f, i, j);
     }
+
 
 }

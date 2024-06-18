@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
@@ -97,9 +98,9 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
-            if (player instanceof ServerPlayer) {
+            if (player instanceof ServerPlayer sp) {
                 if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
-                    player.openMenu(tile);
+                    PlatHelper.openCustomMenu(sp, tile, pos);
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide());
         }

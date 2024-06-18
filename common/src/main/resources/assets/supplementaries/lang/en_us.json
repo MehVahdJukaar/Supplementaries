@@ -239,6 +239,7 @@
   "enchantment.supplementaries.stasis.desc": "Allows Slingshots projectiles to ignore gravity",
 
   "entity.supplementaries.brick_projectile": "Brick Projectile",
+  "entity.supplementaries.slimeball_projectile": "Slimeball Projectile",
   "entity.supplementaries.dispenser_minecart": "Minecart with Dispenser",
   "entity.supplementaries.falling_ash": "Falling Ash",
   "entity.supplementaries.falling_lantern": "Falling Lantern",
@@ -249,6 +250,7 @@
   "entity.supplementaries.rope_arrow": "Rope Arrow",
   "entity.supplementaries.slingshot_projectile": "Slingshot Projectile",
   "entity.supplementaries.cannonball": "Cannonball",
+  "entity.supplementaries.throwable_brick": "Brick Projectile",
 
   "filled_map.adventure": "Adventurer Map",
   "filled_map.antique": "Weathered Map",

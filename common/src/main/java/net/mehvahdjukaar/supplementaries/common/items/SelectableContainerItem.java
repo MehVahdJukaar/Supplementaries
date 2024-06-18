@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.ChatFormatting;
@@ -133,7 +133,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                SelectableContainerItemHud.setUsingItem(SlotReference.hand(player, hand));
+                SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(player, hand));
             }
             this.playRemoveOneSound(player);
             player.startUsingItem(hand);
@@ -149,7 +149,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            SelectableContainerItemHud.setUsingItem(SlotReference.EMPTY);
+            SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.EMPTY);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());

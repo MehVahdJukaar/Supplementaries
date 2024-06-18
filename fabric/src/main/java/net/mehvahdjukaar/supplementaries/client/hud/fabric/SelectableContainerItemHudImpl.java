@@ -1,7 +1,7 @@
-package net.mehvahdjukaar.supplementaries.client.fabric;
+package net.mehvahdjukaar.supplementaries.client.hud.fabric;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -10,17 +10,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public class SelectableContainerItemHudImpl {
+public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
 
     public static final SelectableContainerItemHudImpl INSTANCE = new SelectableContainerItemHudImpl();
 
-    protected Minecraft minecraft;
-
-    public SelectableContainerItemHudImpl() {
-        this.minecraft = Minecraft.getInstance();
+    public static SelectableContainerItemHud makeInstance() {
+        return INSTANCE;
     }
 
-    public static void drawHighlight(Minecraft mc, GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
+    public SelectableContainerItemHudImpl() {
+        super(Minecraft.getInstance());
+    }
+
+    @Override
+    public void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
         MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().color);
         if (selectedArrow.hasCustomHoverName()) {
@@ -42,10 +45,9 @@ public class SelectableContainerItemHudImpl {
         RenderSystem.disableBlend();
     }
 
-
     public void render(GuiGraphics graphics, float partialTicks) {
-        var w = this.minecraft.getWindow();
-        SelectableContainerItemHud.render(minecraft, graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
+        var w = this.mc.getWindow();
+        this.render(graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
 }

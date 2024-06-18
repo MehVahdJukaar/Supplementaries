@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
@@ -35,6 +35,6 @@ public abstract class MouseHandlerMixin {
     )
     protected void onMoveMouse(long windowPointer, double xpos, double ypos, CallbackInfo ci) {
         double deltaX = xpos - this.xpos;
-        SelectableContainerItemHud.ohMouseMoved(deltaX);
+        SelectableContainerItemHud.INSTANCE.ohMouseMoved(deltaX);
     }
 }

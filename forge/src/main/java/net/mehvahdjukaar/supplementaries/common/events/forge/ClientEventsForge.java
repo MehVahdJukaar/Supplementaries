@@ -3,11 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.client.forge.SelectableContainerItemHudImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
@@ -25,11 +25,9 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -52,7 +50,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.stream.Collectors;
@@ -123,6 +120,9 @@ public class ClientEventsForge {
 
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
                 new CannonChargeOverlayImpl());
+
+        event.registerBelow(VanillaGuiOverlay.FROSTBITE.id(), "slimed_overlay",
+                new SlimedOverlayHudImpl());
     }
 
     @SubscribeEvent
@@ -154,9 +154,9 @@ public class ClientEventsForge {
                 && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
             int a = event.getAction();
             if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
-                SelectableContainerItemHud.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
             } else if (a == InputConstants.RELEASE) {
-                SelectableContainerItemHud.setUsingKeybind(SlotReference.EMPTY);
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY);
             }
         }
 
@@ -168,7 +168,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (SelectableContainerItemHud.onMouseScrolled(event.getScrollDelta())) {
+        if (SelectableContainerItemHud.INSTANCE.onMouseScrolled(event.getScrollDelta())) {
             event.setCanceled(true);
         }
         if (CannonController.isActive()) {

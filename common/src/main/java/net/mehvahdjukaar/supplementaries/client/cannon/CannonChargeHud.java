@@ -5,25 +5,22 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class CannonChargeHud extends Gui {
+public abstract class CannonChargeHud {
 
-    private final Minecraft minecraft;
+    private final Minecraft mc;
 
-    protected CannonChargeHud(Minecraft minecraft, ItemRenderer itemRenderer) {
-        super(minecraft, itemRenderer);
-        this.minecraft = minecraft;
+    protected CannonChargeHud(Minecraft minecraft) {
+        this.mc = minecraft;
     }
 
     public void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
-        if (!minecraft.options.hideGui && CannonController.isActive()) {
+        if (!mc.options.hideGui && CannonController.isActive()) {
 
             setupOverlayRenderState();
             ResourceLocation texture = ModTextures.CANNON_ICONS_TEXTURE;
@@ -108,13 +105,13 @@ public abstract class CannonChargeHud extends Gui {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         String s = String.valueOf(power);
-        int i1 = (screenWidth - this.getFont().width(s)) / 2;
+        int i1 = (screenWidth - mc.font.width(s)) / 2;
         int j1 = screenHeight - 31 - 4;
-        graphics.drawString(this.getFont(), s, i1 + 1, j1, 0, false);
-        graphics.drawString(this.getFont(), s, i1 - 1, j1, 0, false);
-        graphics.drawString(this.getFont(), s, i1, j1 + 1, 0, false);
-        graphics.drawString(this.getFont(), s, i1, j1 - 1, 0, false);
-        graphics.drawString(this.getFont(), s, i1, j1, color, false);
+        graphics.drawString(mc.font, s, i1 + 1, j1, 0, false);
+        graphics.drawString(mc.font, s, i1 - 1, j1, 0, false);
+        graphics.drawString(mc.font, s, i1, j1 + 1, 0, false);
+        graphics.drawString(mc.font, s, i1, j1 - 1, 0, false);
+        graphics.drawString(mc.font, s, i1, j1, color, false);
     }
 
     private static void renderCrossHair(GuiGraphics graphics, int screenWidth, int screenHeight, ResourceLocation texture) {
@@ -149,7 +146,7 @@ public abstract class CannonChargeHud extends Gui {
     private void renderSlot(GuiGraphics guiGraphics, int x, int y, Player player, ItemStack itemStack, int seed) {
         if (!itemStack.isEmpty()) {
             guiGraphics.renderItem(player, itemStack, x, y, seed);
-            guiGraphics.renderItemDecorations(this.minecraft.font, itemStack, x, y);
+            guiGraphics.renderItemDecorations(this.mc.font, itemStack, x, y);
         }
     }
 

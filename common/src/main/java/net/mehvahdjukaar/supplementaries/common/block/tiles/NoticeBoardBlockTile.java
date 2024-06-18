@@ -172,8 +172,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new NoticeBoardContainerMenu(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return new NoticeBoardContainerMenu(id, inventory, this);
     }
 
     @Override

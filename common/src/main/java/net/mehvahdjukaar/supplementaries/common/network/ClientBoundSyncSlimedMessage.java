@@ -2,13 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 
 
-public record ClientBoundSyncSlimedInk(int id, int duration) implements Message {
+public record ClientBoundSyncSlimedMessage(int id, int duration) implements Message {
 
-    public ClientBoundSyncSlimedInk(FriendlyByteBuf buffer) {
+    public ClientBoundSyncSlimedMessage(FriendlyByteBuf buffer) {
           this(buffer.readVarInt(), buffer.readVarInt());
     }
 

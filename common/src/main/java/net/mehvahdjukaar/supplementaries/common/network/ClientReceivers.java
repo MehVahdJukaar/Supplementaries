@@ -337,7 +337,7 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncSlimed(ClientBoundSyncSlimedInk message) {
+    public static void handleSyncSlimed(ClientBoundSyncSlimedMessage message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.id());
             if (e instanceof ISlimeable s) {

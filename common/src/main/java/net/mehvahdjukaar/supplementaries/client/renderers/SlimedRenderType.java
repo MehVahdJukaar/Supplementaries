@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.RenderType;
@@ -29,9 +30,11 @@ public class SlimedRenderType extends RenderType {
         }
     }
 
+    //will have few entries
+    private static final Int2ObjectArrayMap<RenderType> TYPES = new Int2ObjectArrayMap<>();
 
     public static RenderType get(int width, int height) {
-        return create("slimed",
+        return TYPES.computeIfAbsent((width << 16) | (height & 0xFFFF), k -> create("slimed",
                 DefaultVertexFormat.NEW_ENTITY,
                 VertexFormat.Mode.QUADS,
                 256,
@@ -45,6 +48,6 @@ public class SlimedRenderType extends RenderType {
                         .setDepthTestState(EQUAL_DEPTH_TEST)
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setTexturingState(new OffsetTexturing(width, height))
-                        .createCompositeState(false));
+                        .createCompositeState(false)));
     }
 }

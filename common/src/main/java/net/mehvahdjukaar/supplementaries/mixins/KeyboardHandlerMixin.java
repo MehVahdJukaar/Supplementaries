@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.client.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.client.KeyboardHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public abstract class KeyboardHandlerMixin {
                     shift = At.Shift.BEFORE),
             cancellable = true)
     protected void onKeyPressCancellable(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
-        if (SelectableContainerItemHud.onKeyPressed(key, action, modifiers)) {
+        if (SelectableContainerItemHud.INSTANCE.onKeyPressed(key, action, modifiers)) {
             ci.cancel();
         }
     }
