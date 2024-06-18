@@ -1,19 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
-import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
@@ -25,16 +16,9 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
-import net.minecraft.client.model.SkullModel;
-import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
-import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,87 +30,28 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.stream.Collectors;
 
 public class ClientEventsForge {
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(ClientEventsForge.class);
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ClientEventsForge::onAddLayers);
-        bus.addListener(ClientEventsForge::onPackReload);
-        bus.addListener(ClientEventsForge::onAddGuiLayers);
-        bus.addListener(ClientEventsForge::onRegisterSkullModels);
     }
 
-    public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {
-        event.registerSkullModel(EndermanSkullBlock.TYPE,
-                new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
-                Supplementaries.res("textures/entity/enderman_head.png"));
-    }
+    private static boolean hasOptifine;
+    private static boolean firstScreenShown;
 
-
-    @SuppressWarnings("unchecked")
-    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skinType : event.getSkins()) {
-            var renderer = event.getSkin(skinType);
-            if (renderer != null) {
-                renderer.addLayer(new QuiverLayer(renderer, false));
-                RenderLayerParent model = renderer;
-                renderer.addLayer(new JarredHeadLayer<>(model, event.getEntityModels()));
-            }
+    @SubscribeEvent
+    public static void onScreenDrawPost(ScreenEvent.Init.Post event) {
+        if (!firstScreenShown && event.getScreen() instanceof TitleScreen) {
+            ClientEvents.onFirstScreen(event.getScreen());
+            firstScreenShown = true;
         }
-        var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
-        if (skeletonRenderer != null) {
-            skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
-        }
-        var strayRenderer = event.getRenderer(EntityType.STRAY);
-        if (strayRenderer != null) {
-            strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
-        }
-
-
-        //adds to all entities
-        var entityTypes = ImmutableList.copyOf(
-                ForgeRegistries.ENTITY_TYPES.getValues().stream()
-                        .filter(DefaultAttributes::hasSupplier)
-                        .filter(e -> (e != EntityType.ENDER_DRAGON))
-                        .map(entityType -> (EntityType<LivingEntity>) entityType)
-                        .collect(Collectors.toList()));
-
-        entityTypes.forEach((entityType -> {
-            var r = event.getRenderer(entityType);
-            if (r != null &&  !((Object)r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
-        }));
-
-        //player skins
-        for (String skinType : event.getSkins()) {
-            var r = event.getSkin(skinType);
-            if (r != null) r.addLayer(new SlimedLayer(r));
-        }
-    }
-
-
-    public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
-                new SelectableContainerItemHudImpl());
-
-        event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
-                new CannonChargeOverlayImpl());
-
-        event.registerBelow(VanillaGuiOverlay.FROSTBITE.id(), "slimed_overlay",
-                new SlimedOverlayHudImpl());
     }
 
     @SubscribeEvent
-    public static void itemTooltip(ItemTooltipEvent event) {
+    public static void onItemTooltip(ItemTooltipEvent event) {
         if (event.getEntity() != null) {
             ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
         }
@@ -134,14 +59,14 @@ public class ClientEventsForge {
 
 
     @SubscribeEvent
-    public static void screenInit(ScreenEvent.Init.Post event) {
+    public static void onScreenInit(ScreenEvent.Init.Post event) {
         if (CompatHandler.CONFIGURED) {
             ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
         }
     }
 
     @SubscribeEvent
-    public static void clientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientEndTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             ClientEvents.onClientTick(Minecraft.getInstance());
         }

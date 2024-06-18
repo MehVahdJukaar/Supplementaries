@@ -1,47 +1,52 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.Util;
-import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.model.SkullModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SupplementariesForgeClient {
-
-    private static boolean hasOptifine;
-    private static boolean firstScreenShown;
 
     @SubscribeEvent
     public static void setup(final FMLClientSetupEvent event) {
         //  event.enqueueWork(ClientRegistry::setup);
         VibeChecker.checkVibe();
-
-        MinecraftForge.EVENT_BUS.addListener(SupplementariesForgeClient::handleDrawScreenEventPost);
-
     }
 
-    public static void handleDrawScreenEventPost(ScreenEvent.Init.Post event) {
-        if (!firstScreenShown && event.getScreen() instanceof TitleScreen) {
-                ClientEvents.onFirstScreen(event.getScreen());
-            firstScreenShown = true;
-        }
-    }
 
     private static ShaderInstance staticNoiseShader;
     private static ShaderInstance entityOffsetShader;
@@ -75,6 +80,70 @@ public class SupplementariesForgeClient {
             Supplementaries.LOGGER.error("Failed to parse shader: " + e);
         }
     }
+
+    @SubscribeEvent
+    public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {
+        event.registerSkullModel(EndermanSkullBlock.TYPE,
+                new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
+                Supplementaries.res("textures/entity/enderman_head.png"));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @SubscribeEvent
+    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skinType : event.getSkins()) {
+            var renderer = event.getSkin(skinType);
+            if (renderer != null) {
+                renderer.addLayer(new QuiverLayer(renderer, false));
+                RenderLayerParent model = renderer;
+                renderer.addLayer(new JarredHeadLayer<>(model, event.getEntityModels()));
+            }
+        }
+        var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
+        if (skeletonRenderer != null) {
+            skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
+        }
+        var strayRenderer = event.getRenderer(EntityType.STRAY);
+        if (strayRenderer != null) {
+            strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
+        }
+
+
+        //adds to all entities
+        var entityTypes = ImmutableList.copyOf(
+                ForgeRegistries.ENTITY_TYPES.getValues().stream()
+                        .filter(DefaultAttributes::hasSupplier)
+                        .filter(e -> (e != EntityType.ENDER_DRAGON))
+                        .map(entityType -> (EntityType<LivingEntity>) entityType)
+                        .collect(Collectors.toList()));
+
+        entityTypes.forEach((entityType -> {
+            var r = event.getRenderer(entityType);
+            if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
+        }));
+
+        //player skins
+        for (String skinType : event.getSkins()) {
+            var r = event.getSkin(skinType);
+            if (r != null) r.addLayer(new SlimedLayer(r));
+        }
+    }
+
+
+    @SubscribeEvent
+    public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
+                new SelectableContainerItemHudImpl());
+
+        event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
+                new CannonChargeOverlayImpl());
+
+        event.registerBelow(VanillaGuiOverlay.FROSTBITE.id(), "slimed_overlay",
+                new SlimedOverlayHudImpl());
+    }
+
 
     private abstract static class RenderTypeAccessor extends RenderType {
         protected static final ShaderStateShard STATIC_NOISE_SHARD = new ShaderStateShard(SupplementariesForgeClient::getStaticNoiseShader);
