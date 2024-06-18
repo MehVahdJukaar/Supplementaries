@@ -34,6 +34,9 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");
+    public static final Supplier<SoundEvent> PRESENT_STEP = regSound("block.present.step");
+    public static final Supplier<SoundEvent> PRESENT_HIT = regSound("block.present.hit");
+    public static final Supplier<SoundEvent> PRESENT_FALL = regSound("block.present.fall");
     public static final Supplier<SoundEvent> PRESENT_OPEN = regSound("block.present.open");
     public static final Supplier<SoundEvent> PRESENT_PACK = regSound("block.present.pack");
 
@@ -43,8 +46,10 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> ROPE_BREAK = regSound("block.rope.break");
     public static final Supplier<SoundEvent> ROPE_PLACE = regSound("block.rope.place");
-    public static final Supplier<SoundEvent> ROPE_SLIDE = regSound("block.rope.slide");
     public static final Supplier<SoundEvent> ROPE_STEP = regSound("block.rope.step");
+    public static final Supplier<SoundEvent> ROPE_HIT = regSound("block.rope.hit");
+    public static final Supplier<SoundEvent> ROPE_FALL = regSound("block.rope.fall");
+    public static final Supplier<SoundEvent> ROPE_SLIDE = regSound("block.rope.slide");
 
     public static final Supplier<SoundEvent> BUBBLE_POP = regSound("block.bubble_block.break");
     public static final Supplier<SoundEvent> BUBBLE_PLACE = regSound("block.bubble_block.place");
@@ -61,7 +66,6 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLIDY_BLOCK_FALL = regSound("block.slidy_block.fall");
     public static final Supplier<SoundEvent> SLIDY_BLOCK_STEP = regSound("block.slidy_block.step");
     public static final Supplier<SoundEvent> SLIDY_BLOCK_SLIDE = regSound("block.slidy_block.slide");
-
 
 
     public static final Supplier<SoundEvent> LUNCH_BASKET_OPEN = regSound("item.lunch_basket.open");
@@ -116,10 +120,10 @@ public class ModSounds {
 
     public static final ModSoundType PRESENT = new ModSoundType(1.0F, 1.0F,
             PRESENT_BREAK,
-            () -> SoundEvents.WOOL_STEP,
+            PRESENT_STEP,
             PRESENT_PLACE,
-            () -> SoundEvents.WOOL_HIT,
-            () -> SoundEvents.WOOL_FALL);
+            PRESENT_HIT,
+            PRESENT_FALL);
 
     public static final ModSoundType SACK = new ModSoundType(1.0F, 1.0F,
             SACK_BREAK,
@@ -132,8 +136,8 @@ public class ModSounds {
             ROPE_BREAK,
             ROPE_STEP,
             ROPE_PLACE,
-            ROPE_STEP,
-            () -> SoundEvents.WOOL_FALL);
+            ROPE_HIT,
+            ROPE_FALL);
 
 
     public static RegSupplier<SoundEvent> regSound(String name) {

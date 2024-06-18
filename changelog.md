@@ -29,3 +29,4 @@
 - Fixed some dupes with falling urns
 - added cannon map marker
 - fixed quill maps not supporting vanilla decorations properly
+- new present sounds

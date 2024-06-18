@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
@@ -43,8 +44,14 @@ public class SoapItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+            s.supp$setSlimedTicks(0);
+            playEffectsAndConsume(stack, player, player);
+            return InteractionResultHolder.success(stack);
+        }
         if (!hasBeenEatenBefore(player, level)) {
-            ItemStack itemstack = player.getItemInHand(hand);
+            ItemStack itemstack = stack;
             if (player.canEat(true)) {
                 player.startUsingItem(hand);
                 return InteractionResultHolder.consume(itemstack);
@@ -52,7 +59,7 @@ public class SoapItem extends Item {
                 return InteractionResultHolder.fail(itemstack);
             }
         } else {
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
+            return InteractionResultHolder.pass(stack);
         }
     }
 
@@ -101,32 +108,47 @@ public class SoapItem extends Item {
                 success = true;
             }
         }
-        else if(entity instanceof TamableAnimal ta && ta.isOwnedBy(player)){
-            if(entity instanceof Wolf wolf){
+
+        if (entity instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
+            if (entity instanceof Wolf wolf) {
                 wolf.setCollarColor(DyeColor.RED);
                 wolf.isWet = true;
+                //TODO: test on servers
                 //wolf.level.broadcastEntityEvent(wolf, (byte)8);
             }
             ta.setOrderedToSit(true);
-            if(level.isClientSide){
+            if (level.isClientSide) {
                 var p = entity instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
-                level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(),0,0,0);
+                level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(), 0, 0, 0);
             }
             success = true;
         }
 
-        if(success){
-            level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
-            if(level.isClientSide) {
-                ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
-                        UniformInt.of(2, 3), 0);
+        if (entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+            s.supp$setSlimedTicks(0);
+            if (!level.isClientSide) {
+
             }
+            success = true;
+        }
 
-            if (!player.getAbilities().instabuild) stack.shrink(1);
-
+        if (success) {
+            //TODO: custom sound?
+            playEffectsAndConsume(stack, player, entity);
             return true;
         }
         return false;
+    }
+
+    private static void playEffectsAndConsume(ItemStack stack, Player player, Entity entity) {
+        Level level = player.level();
+        level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+        if (level.isClientSide) {
+            ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
+                    UniformInt.of(2, 3), 0);
+        }
+
+        if (!player.getAbilities().instabuild) stack.shrink(1);
     }
 
 }
