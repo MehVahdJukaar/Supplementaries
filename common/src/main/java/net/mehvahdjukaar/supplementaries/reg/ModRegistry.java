@@ -147,7 +147,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_YELLOW)
                     .sound(SoundType.BAMBOO)
-                    .strength(1, 1)));
+                    .instabreak()));
 
     public static final Supplier<BlockEntityType<LunchBoxBlockTile>> LUNCH_BASKET_TILE = regTile(
             LUNCH_BASKET_NAME, () -> PlatHelper.newBlockEntityType(

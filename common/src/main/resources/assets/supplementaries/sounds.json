@@ -12,6 +12,31 @@
   },
 
 
+  "entity.brick.throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitle.supplementaries.brick.throw"
+  },
+  "entity.slimeball.throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitle.supplementaries.slimeball.throw"
+  },
+
+  "entity.slimeball.land": {
+    "sounds": [
+      "mob/slime/small1",
+      "mob/slime/small2",
+      "mob/slime/small3",
+      "mob/slime/small4",
+      "mob/slime/small5"
+    ],
+    "subtitle": "subtitles.entity.generic.small_fall"
+  },
+
+
   "block.clock.tick_1": {
     "subtitle": "subtitle.supplementaries.clock_tick",
     "sounds": [

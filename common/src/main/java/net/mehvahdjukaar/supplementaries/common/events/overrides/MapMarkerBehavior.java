@@ -14,7 +14,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
-class MapMarkerBehavior implements ItemUseOnBlockOverride {
+class MapMarkerBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean isEnabled() {

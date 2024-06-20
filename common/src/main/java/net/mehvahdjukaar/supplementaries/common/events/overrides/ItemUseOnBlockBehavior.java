@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.Nullable;
 
-interface ItemUseOnBlockOverride extends ItemUseOverride {
+interface ItemUseOnBlockBehavior extends ItemUseBehavior {
 
 
     /**

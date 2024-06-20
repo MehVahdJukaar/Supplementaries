@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-interface ItemUseOverride {
+interface ItemUseBehavior {
 
 
     boolean isEnabled();

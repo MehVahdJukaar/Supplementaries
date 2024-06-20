@@ -341,7 +341,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.id());
             if (e instanceof ISlimeable s) {
-                s.supp$setSlimedTicks(message.duration());
+                s.supp$setSlimedTicks(message.duration(), false);
             }
         });
     }

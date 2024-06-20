@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-class SoapBehavior implements ItemUseOnBlockOverride {
+class SoapBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean altersWorld() {

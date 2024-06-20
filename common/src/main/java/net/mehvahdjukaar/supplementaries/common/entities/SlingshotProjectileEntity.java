@@ -38,7 +38,6 @@ import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
@@ -151,7 +150,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
         //can only place when first hits
-        if (this.touchedGround) return;
+        if (this.isInBlock) return;
         Entity owner = this.getOwner();
         boolean success;
         Level level = level();
@@ -246,7 +245,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void tick() {
 
         // if has stasis
-        if (this.isNoPhysics()) {
+        if (this.isNoGravity()) {
             int loyaltyLevel = this.entityData.get(ID_LOYALTY);
             Entity owner = this.getOwner();
             if (loyaltyLevel > 0 && this.isAcceptableReturnOwner(owner)) {
@@ -275,7 +274,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public void playerTouch(Player playerEntity) {
-        if (this.isNoPhysics() || this.touchedGround) {
+        if (this.isNoGravity() || this.isInBlock) {
 
             boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
 
@@ -294,14 +293,14 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     public boolean hasReachedEndOfLife() {
         if (this.isNoGravity() && this.getDeltaMovement().lengthSqr() < 0.005) return true;
-        return super.hasReachedEndOfLife() && !this.isNoPhysics();
+        return super.hasReachedEndOfLife() && !this.isNoGravity();
     }
 
     @Override
     public void reachedEndOfLife() {
         if (this.entityData.get(ID_LOYALTY) != 0 && this.isAcceptableReturnOwner(this.getOwner())) {
-            this.setNoPhysics(true);
-            this.groundTime = 0;
+            this.setNoGravity(true);
+            this.inBlockTime = 0;
         } else {
             this.spawnAtLocation(this.getItem(), 0.1f);
             super.reachedEndOfLife();
@@ -311,7 +310,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected void updateRotation() {
 
-        if (!this.isNoPhysics()) {
+        if (!this.isNoGravity()) {
             this.xRotO = this.getXRot();
             this.yRotO = this.getYRot();
             this.setXRot(this.getXRot() + xRotInc);
@@ -324,8 +323,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     //TODO: trails for bombs
     @Override
-    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
-        if (!this.isNoPhysics()) {
+    public void spawnTrailParticles() {
+        Vec3 oldPos = new Vec3(xo, yo, zo);
+        Vec3 newPos = this.position();
+        if (!this.isNoGravity()) {
             double d = this.getDeltaMovement().length();
             if (this.tickCount > 1 && d * this.tickCount > 1.5) {
                 if (this.isNoGravity()) {
@@ -345,9 +346,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     double interval = 4 / (d * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
                         this.particleCooldown -= interval;
-                        double x = currentPos.x;
-                        double y = currentPos.y;//+ this.getBbHeight() / 2d;
-                        double z = currentPos.z;
+                        double x = oldPos.x;
+                        double y = oldPos.y;//+ this.getBbHeight() / 2d;
+                        double z = oldPos.z;
                         this.level().addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
                     }
                 }
@@ -356,8 +357,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     }
 
     @Override
-    public float getDeceleration() {
-        return this.isNoGravity() ? (float) (double) CommonConfigs.Tools.SLINGSHOT_DECELERATION.get() : super.getDeceleration();
+    protected float getInertia() {
+        return this.isNoGravity() ? (float) (double) CommonConfigs.Tools.SLINGSHOT_DECELERATION.get() : super.getInertia();
     }
 
     @Override

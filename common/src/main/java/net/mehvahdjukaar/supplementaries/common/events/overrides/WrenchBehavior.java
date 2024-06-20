@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
 //needed to suppress block actions, so we can always rotate a block even if for example it would open an inventory normally
-class WrenchBehavior implements ItemUseOnBlockOverride {
+class WrenchBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean altersWorld() {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -77,6 +78,10 @@ public class SoapBlock extends Block {
                     //PACKET HERE
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
                     level.blockEvent(pPos, state.getBlock(), 0, 0);
+
+                    if (!level.isClientSide && entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+                        s.supp$setSlimedTicks(0, true);
+                    }
                 }
             }
         }

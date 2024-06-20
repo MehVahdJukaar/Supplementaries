@@ -12,7 +12,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
-class CompassItemBehavior implements ItemUseOverride {
+class CompassItemBehavior implements ItemUseBehavior {
 
     @Override
     public boolean isEnabled() {

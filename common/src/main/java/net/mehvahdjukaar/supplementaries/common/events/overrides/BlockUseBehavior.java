@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-interface BlockUseOverride {
+interface BlockUseBehavior {
 
     /**
      * Used for permission checks on flan compat

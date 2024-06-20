@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 
-class AntiqueInkBehavior implements ItemUseOnBlockOverride {
+class AntiqueInkBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean altersWorld() {

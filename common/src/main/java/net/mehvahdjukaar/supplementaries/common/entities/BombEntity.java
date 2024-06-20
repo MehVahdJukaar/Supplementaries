@@ -159,21 +159,20 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    public void spawnTrailParticles(Vec3 currentPos, Vec3 newPos) {
+    public void spawnTrailParticles() {
+        Vec3 newPos =  this.position();
         if (this.active && this.tickCount > 1) {
-            double x = currentPos.x;
-            double y = currentPos.y;
-            double z = currentPos.z;
-            double dx = newPos.x - x;
-            double dy = newPos.y - y;
-            double dz = newPos.z - z;
+
+            double dx = newPos.x - xo;
+            double dy = newPos.y - yo;
+            double dz = newPos.z - zo;
             int s = 4;
             for (int i = 0; i < s; ++i) {
                 double j = i / (double) s;
                 this.level().addParticle(ParticleTypes.SMOKE,
-                        x - dx * j,
-                        0.25 + y - dy * j,
-                        z - dz * j,
+                        xo - dx * j,
+                        0.25 + yo - dy * j,
+                        zo - dz * j,
                         0, 0.02, 0);
             }
         }

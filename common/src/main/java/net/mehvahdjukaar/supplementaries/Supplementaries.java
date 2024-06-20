@@ -94,12 +94,12 @@ public class Supplementaries {
     }
 
     public static void error() {
-        if(PlatHelper.isDev()) {
+        if (PlatHelper.isDev()) {
             LOGGER.error("This should not happen");
         }
     }
 
-    public static void error(String message, Object... params){
+    public static void error(String message, Object... params) {
         error();
         LOGGER.error(message, params);
     }
@@ -108,6 +108,7 @@ public class Supplementaries {
     // flute pacifier
     // wolf howl
 
+    // vampires mummy cript necromancer curse stuff, skull trap block (nether fortess like big overworld boss)
     // warp fly and warper block
     // randomize enchant for quiver and lunch boxes
     // dispensers shoow quiver content

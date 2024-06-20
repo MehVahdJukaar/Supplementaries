@@ -12,7 +12,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
-class WrittenBookHackBehavior implements ItemUseOnBlockOverride {
+class WrittenBookHackBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean altersWorld() {

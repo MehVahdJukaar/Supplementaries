@@ -450,6 +450,8 @@
   "painting.supplementaries.bombs.title": "Bombs",
 
   "structure.supplementaries.way_sign": "Way Sign",
+  "subtitle.supplementaries.slimeball.throw": "Slimeball flies",
+  "subtitle.supplementaries.brick.throw": "Brick flies",
   "subtitle.supplementaries.bellows.blow": "Bellows blows",
   "subtitle.supplementaries.bellows.retract": "Bellows contracts",
   "subtitle.supplementaries.bomb": "Bomb explodes",

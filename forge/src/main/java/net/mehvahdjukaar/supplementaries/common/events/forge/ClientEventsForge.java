@@ -151,13 +151,6 @@ public class ClientEventsForge {
         }
     }
 
-
-    public static void onPackReload(TextureStitchEvent.Post event) {
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-            AltimeterItemRenderer.onReload();
-        }
-    }
-
     @SubscribeEvent
     public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
         if (CannonController.isActive()) {

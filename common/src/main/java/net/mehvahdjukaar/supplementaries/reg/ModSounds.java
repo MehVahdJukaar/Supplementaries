@@ -32,6 +32,11 @@ public class ModSounds {
     public static final Supplier<SoundEvent> WRENCH_HIT = regSound("item.wrench.hit");
     public static final Supplier<SoundEvent> WRENCH_FAIL = regSound("item.wrench.fail");
 
+    public static final Supplier<SoundEvent> SLIMEBALL_LAND = regSound("entity.slimeball.land");
+    public static final Supplier<SoundEvent> SLIMEBALL_THROW = regSound("entity.slimeball.throw");
+    public static final Supplier<SoundEvent> BRICK_THROW = regSound("entity.brick.throw");
+
+
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");
     public static final Supplier<SoundEvent> PRESENT_STEP = regSound("block.present.step");

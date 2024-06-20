@@ -158,4 +158,9 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     @Override
     protected void updateRotation() {
     }
+
+    @Override
+    public float getDefaultShootVelocity() {
+        return 0.8f;
+    }
 }

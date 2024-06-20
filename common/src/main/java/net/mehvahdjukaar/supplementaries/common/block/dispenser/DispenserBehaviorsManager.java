@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
@@ -73,6 +74,9 @@ public class DispenserBehaviorsManager {
         }
         if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+        }
+        if (CommonConfigs.Tools.LUNCH_BOX_ENABLED.get()) {
+            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.LUNCH_BASKET.get());
         }
         if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
             DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
@@ -145,6 +149,7 @@ public class DispenserBehaviorsManager {
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         boolean jar = CommonConfigs.Functional.JAR_ENABLED.get();
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
+        boolean slimeball = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
 
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {
@@ -157,6 +162,9 @@ public class DispenserBehaviorsManager {
                     }
                     if (key && i instanceof KeyItem) {
                         DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
+                    }
+                    if (slimeball && SuppClientPlatformStuff.isSlimeball(i)) {
+                        DispenserHelper.registerCustomBehavior(new ThrowableSlimeballBehavior(i));
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);

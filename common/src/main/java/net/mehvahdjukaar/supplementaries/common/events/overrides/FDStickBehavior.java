@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 
-class FDStickBehavior implements BlockUseOverride {
+class FDStickBehavior implements BlockUseBehavior {
 
     @Override
     public boolean altersWorld() {

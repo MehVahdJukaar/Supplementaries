@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -43,8 +46,12 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     }
 
     @Override
-    public void supp$setSlimedTicks(int slimed) {
+    public void supp$setSlimedTicks(int slimed, boolean sync) {
         this.supp$slimedTicks = slimed;
+        if (sync && !this.level().isClientSide) {
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(this,
+                    new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
+        }
     }
 
     @Shadow
@@ -57,10 +64,13 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @Nullable
     public abstract MobEffectInstance getEffect(MobEffect pPotion);
 
-    @Inject(method = "getJumpBoostPower", at = @At("RETURN"), cancellable = true)
-    private void suppl$checkOverencumbered(CallbackInfoReturnable<Float> cir) {
+    @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
+    private float suppl$checkOverencumbered(float original) {
         var effect = this.getEffect(ModRegistry.OVERENCUMBERED.get());
-        if (effect != null && effect.getAmplifier() > 0) cir.setReturnValue(cir.getReturnValue() - 0.1f);
+        if ((effect != null && effect.getAmplifier() > 0) || (this.supp$getSlimedTicks() > 0 && CommonConfigs.Tweaks.SLIME_JUMP.get())) {
+            original -= 0.1f;
+        }
+        return original;
     }
 
     @SuppressWarnings("ConstantConditions")

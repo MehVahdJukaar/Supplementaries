@@ -356,6 +356,7 @@ public class ClientRegistry {
         //entities
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+        event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         if (ClientConfigs.Items.CANNONBALL_3D.get()) {
             event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
         } else {

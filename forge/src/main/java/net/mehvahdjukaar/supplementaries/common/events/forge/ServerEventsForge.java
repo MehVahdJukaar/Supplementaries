@@ -251,9 +251,7 @@ public class ServerEventsForge {
             ISlimeable slimed = (ISlimeable) event.getEntity();
             int t = slimed.supp$getSlimedTicks();
             if (t > 0) {
-                slimed.supp$setSlimedTicks(t - 1);
-            }else if(event.getEntity().level().random.nextFloat()<0.001){
-                slimed.supp$setSlimedTicks(400);
+                slimed.supp$setSlimedTicks(t - 1, false);
             }
         }
     }

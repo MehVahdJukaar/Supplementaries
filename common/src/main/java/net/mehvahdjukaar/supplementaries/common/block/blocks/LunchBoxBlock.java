@@ -40,33 +40,37 @@ import java.util.List;
 
 public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
+    public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE = box(2, 0, 2, 14, 9, 14);
+    private static final VoxelShape SHAPE = box(2, 0, 2, 14, 7, 14);
+    private static final VoxelShape SHAPE_HANGING = box(2, 4, 2, 14, 11, 14);
 
     public LunchBoxBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(OPEN, false));
+                .setValue(OPEN, false)
+                .setValue(HANGING, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(OPEN, FACING);
+        builder.add(HANGING, FACING, OPEN);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context)
-                .setValue(FACING, context.getHorizontalDirection().getOpposite());
+                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(HANGING, context.getClickedFace() == Direction.DOWN);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        return state.getValue(HANGING) ?  SHAPE_HANGING : SHAPE;
     }
 
     @Nullable

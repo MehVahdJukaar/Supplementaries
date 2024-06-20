@@ -6,6 +6,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 public class SuppClientPlatformStuffImpl {
 
@@ -24,6 +26,10 @@ public class SuppClientPlatformStuffImpl {
 
     public static ShaderInstance getEntityOffsetShader() {
         return null;
+    }
+
+    public static boolean isSlimeball(Item item) {
+        return item == Items.SLIME_BALL;
     }
 
 }

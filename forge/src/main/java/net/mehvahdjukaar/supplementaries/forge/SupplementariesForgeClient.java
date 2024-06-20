@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.Util;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +31,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterShadersEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -119,10 +122,14 @@ public class SupplementariesForgeClient {
                         .map(entityType -> (EntityType<LivingEntity>) entityType)
                         .collect(Collectors.toList()));
 
-        entityTypes.forEach((entityType -> {
-            var r = event.getRenderer(entityType);
-            if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
-        }));
+        try {
+            entityTypes.forEach((entityType -> {
+                var r = event.getRenderer(entityType);
+                if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
+            }));
+        }catch (Exception e){
+            Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
+        }
 
         //player skins
         for (String skinType : event.getSkins()) {
@@ -131,6 +138,13 @@ public class SupplementariesForgeClient {
         }
     }
 
+
+    @SubscribeEvent
+    public static void onPackReload(TextureStitchEvent.Post event) {
+        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
+            AltimeterItemRenderer.onReload();
+        }
+    }
 
     @SubscribeEvent
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {

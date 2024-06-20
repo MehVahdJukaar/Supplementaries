@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,17 +48,16 @@ public class SoapItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0);
+            s.supp$setSlimedTicks(0, true);
             playEffectsAndConsume(stack, player, player);
             return InteractionResultHolder.success(stack);
         }
         if (!hasBeenEatenBefore(player, level)) {
-            ItemStack itemstack = stack;
             if (player.canEat(true)) {
                 player.startUsingItem(hand);
-                return InteractionResultHolder.consume(itemstack);
+                return InteractionResultHolder.consume(stack);
             } else {
-                return InteractionResultHolder.fail(itemstack);
+                return InteractionResultHolder.fail(stack);
             }
         } else {
             return InteractionResultHolder.pass(stack);
@@ -99,18 +100,18 @@ public class SoapItem extends Item {
     }
 
     //needed because some entities dont fire the normal method so we use event instead
-    public static boolean interactWithEntity(ItemStack stack, Player player, Entity entity, InteractionHand hand) {
+    public static boolean interactWithEntity(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         Level level = player.level();
         boolean success = false;
-        if (entity instanceof Sheep s) {
+        if (target instanceof Sheep s) {
             if (s.getColor() != DyeColor.WHITE) {
                 s.setColor(DyeColor.WHITE);
                 success = true;
             }
         }
 
-        if (entity instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
-            if (entity instanceof Wolf wolf) {
+        if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
+            if (target instanceof Wolf wolf) {
                 wolf.setCollarColor(DyeColor.RED);
                 wolf.isWet = true;
                 //TODO: test on servers
@@ -118,23 +119,20 @@ public class SoapItem extends Item {
             }
             ta.setOrderedToSit(true);
             if (level.isClientSide) {
-                var p = entity instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
-                level.addParticle(p, entity.getX(), entity.getEyeY(), entity.getZ(), 0, 0, 0);
+                var p = target instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
+                level.addParticle(p, target.getX(), target.getEyeY(), target.getZ(), 0, 0, 0);
             }
             success = true;
         }
 
-        if (entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0);
-            if (!level.isClientSide) {
-
-            }
+        if (target instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+            s.supp$setSlimedTicks(0, true);
             success = true;
         }
 
         if (success) {
             //TODO: custom sound?
-            playEffectsAndConsume(stack, player, entity);
+            playEffectsAndConsume(stack, player, target);
             return true;
         }
         return false;

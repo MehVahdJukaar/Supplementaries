@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "supplementaries:block/lunch_basket",
+	"parent": "supplementaries:block/lunch_basket_hanging",
 	"textures": {
 		"1": "supplementaries:block/lunch_basket_top_open",
 		"2": "supplementaries:block/lunch_basket_bottom",

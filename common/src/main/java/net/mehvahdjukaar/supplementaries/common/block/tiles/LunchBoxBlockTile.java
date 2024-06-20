@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -57,7 +58,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     protected void updateBlockState(BlockState state, boolean open) {
-        this.level.setBlock(this.getBlockPos(), state.setValue(SafeBlock.OPEN, open), 3);
+        this.level.setBlock(this.getBlockPos(), state.setValue(LunchBoxBlock.OPEN, open), 3);
     }
 
     @Override

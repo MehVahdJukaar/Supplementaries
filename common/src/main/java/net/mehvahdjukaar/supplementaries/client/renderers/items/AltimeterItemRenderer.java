@@ -55,6 +55,10 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
 
         var pair = MODEL_CACHE.getOrDefault(dimension, MODEL_CACHE.get(Level.OVERWORLD));
+        if(pair == null) {
+            Supplementaries.error();
+            return;
+        }
         TextureAtlasSprite sprite = pair.getFirst();
         int textureH = sprite.contents().height();
 

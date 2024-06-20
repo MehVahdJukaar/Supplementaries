@@ -1114,6 +1114,10 @@ public class CommonConfigs {
             THROWABLE_SLIMEBALLS = feature(builder);
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("overlay", true);
+            SLIME_JUMP = builder.comment("Thrown slimeballs will shortly nerf the player jump height. Disable if you don't want this effect as it can be quite powerful")
+                    .define("hinders_jump", true);
+            SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
+                    .define("duration", 300, 0, 1000);
             builder.pop();
 
             builder.pop();
@@ -1159,6 +1163,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ITEM_LORE;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
         public static final Supplier<Boolean> SLIME_OVERLAY;
+        public static final Supplier<Boolean> SLIME_JUMP;
+        public static final Supplier<Integer> SLIME_DURATION;
 
     }
 

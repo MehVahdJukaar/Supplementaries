@@ -37,8 +37,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     //for collisions we should ignored since they were handled by the other entity
     private final List<CannonBallEntity> justCollidedWith = new ArrayList<>();
 
-    public CannonBallEntity(Level world, Player playerIn) {
-        super(ModEntities.CANNONBALL.get(), playerIn, world);
+    public CannonBallEntity(LivingEntity thrower) {
+        super(ModEntities.CANNONBALL.get(), thrower, thrower.level());
         this.maxAge = 300;
         this.blocksBuilding = true;
     }
@@ -248,6 +248,11 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
     @Override
     public boolean isPushable() {
+        return true;
+    }
+
+    @Override
+    public boolean collidesWithBlocks() {
         return true;
     }
 }

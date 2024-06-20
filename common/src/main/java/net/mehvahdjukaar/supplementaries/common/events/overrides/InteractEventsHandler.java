@@ -41,12 +41,12 @@ public class InteractEventsHandler {
 
     //equivalent to Item.useOnBlock to the item itself (called before that though)
     //high priority
-    private static final Map<Item, ItemUseOnBlockOverride> ITEM_USE_ON_BLOCK_HP = new IdentityHashMap<>();
-    private static final Map<Item, ItemUseOnBlockOverride> ITEM_USE_ON_BLOCK = new IdentityHashMap<>();
+    private static final Map<Item, ItemUseOnBlockBehavior> ITEM_USE_ON_BLOCK_HP = new IdentityHashMap<>();
+    private static final Map<Item, ItemUseOnBlockBehavior> ITEM_USE_ON_BLOCK = new IdentityHashMap<>();
     //equivalent to Item.use
-    private static final Map<Item, ItemUseOverride> ITEM_USE = new IdentityHashMap<>();
+    private static final Map<Item, ItemUseBehavior> ITEM_USE = new IdentityHashMap<>();
     //equivalent to Block.use
-    private static final Map<Block, BlockUseOverride> BLOCK_USE = new IdentityHashMap<>();
+    private static final Map<Block, BlockUseBehavior> BLOCK_USE = new IdentityHashMap<>();
 
     public static boolean hasBlockPlacementAssociated(Item item) {
         var v = ITEM_USE_ON_BLOCK.getOrDefault(item, ITEM_USE_ON_BLOCK_HP.get(item));
@@ -66,14 +66,15 @@ public class InteractEventsHandler {
         BLOCK_USE.clear();
 
         //registers event stuff
-        List<ItemUseOnBlockOverride> itemUseOnBlockHP = new ArrayList<>();
-        List<ItemUseOnBlockOverride> itemUseOnBlock = new ArrayList<>();
-        List<ItemUseOverride> itemUse = new ArrayList<>();
-        List<BlockUseOverride> blockUse = new ArrayList<>();
+        List<ItemUseOnBlockBehavior> itemUseOnBlockHP = new ArrayList<>();
+        List<ItemUseOnBlockBehavior> itemUseOnBlock = new ArrayList<>();
+        List<ItemUseBehavior> itemUse = new ArrayList<>();
+        List<BlockUseBehavior> blockUse = new ArrayList<>();
 
         blockUse.add(new FDStickBehavior());
 
         itemUse.add(new ThrowableBricksBehavior());
+        itemUse.add(new ThrowableSlimeballBehavior());
         itemUse.add(new ClockItemBehavior());
         itemUse.add(new CompassItemBehavior());
 
@@ -93,19 +94,19 @@ public class InteractEventsHandler {
 
             //block items don't work here
 
-            for (ItemUseOnBlockOverride b : itemUseOnBlock) {
+            for (ItemUseOnBlockBehavior b : itemUseOnBlock) {
                 if (b.appliesToItem(i)) {
                     ITEM_USE_ON_BLOCK.put(i, b);
                     continue outer;
                 }
             }
-            for (ItemUseOverride b : itemUse) {
+            for (ItemUseBehavior b : itemUse) {
                 if (b.appliesToItem(i)) {
                     ITEM_USE.put(i, b);
                     continue outer;
                 }
             }
-            for (ItemUseOnBlockOverride b : itemUseOnBlockHP) {
+            for (ItemUseOnBlockBehavior b : itemUseOnBlockHP) {
                 if (b.appliesToItem(i)) {
                     ITEM_USE_ON_BLOCK_HP.put(i, b);
                     continue outer;
@@ -113,7 +114,7 @@ public class InteractEventsHandler {
             }
         }
         for (Block block : BuiltInRegistries.BLOCK) {
-            for (BlockUseOverride b : blockUse) {
+            for (BlockUseBehavior b : blockUse) {
                 if (b.appliesToBlock(block)) {
                     BLOCK_USE.put(block, b);
                     break;
@@ -126,7 +127,7 @@ public class InteractEventsHandler {
                                                         InteractionHand hand, BlockHitResult hit) {
         Item item = stack.getItem();
 
-        ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK_HP.get(item);
+        ItemUseOnBlockBehavior override = ITEM_USE_ON_BLOCK_HP.get(item);
         if (override != null && override.isEnabled()) {
             if (CompatHandler.FLAN && override.altersWorld() && !FlanCompat.canPlace(player, hit.getBlockPos())) {
                 return InteractionResult.PASS;
@@ -146,7 +147,7 @@ public class InteractEventsHandler {
         Item item = stack.getItem();
 
 
-        ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
+        ItemUseOnBlockBehavior override = ITEM_USE_ON_BLOCK.get(item);
         BlockPos pos = hit.getBlockPos();
 
         boolean canAlter = Utils.mayPerformBlockAction(player, pos, stack) && (!CompatHandler.FLAN || FlanCompat.canPlace(player, pos));
@@ -164,7 +165,7 @@ public class InteractEventsHandler {
         if (!player.isShiftKeyDown()) {
             BlockState state = level.getBlockState(pos);
 
-            BlockUseOverride o = BLOCK_USE.get(state.getBlock());
+            BlockUseBehavior o = BLOCK_USE.get(state.getBlock());
             if (o != null && o.isEnabled()) {
                 if (o.altersWorld() && !canAlter) {
                     return InteractionResult.PASS;
@@ -192,7 +193,7 @@ public class InteractEventsHandler {
             Player player, Level level, InteractionHand hand, ItemStack stack) {
         Item item = stack.getItem();
 
-        ItemUseOverride override = ITEM_USE.get(item);
+        ItemUseBehavior override = ITEM_USE.get(item);
         if (override != null && override.isEnabled()) {
             var ret = override.tryPerformingAction(level, player, hand, stack, null);
             return switch (ret) {
@@ -208,12 +209,12 @@ public class InteractEventsHandler {
     public static void addOverrideTooltips(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
         Item item = itemStack.getItem();
 
-        ItemUseOnBlockOverride override = ITEM_USE_ON_BLOCK.get(item);
+        ItemUseOnBlockBehavior override = ITEM_USE_ON_BLOCK.get(item);
         if (override != null && override.isEnabled()) {
             MutableComponent t = override.getTooltip();
             if (t != null) components.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
         } else {
-            ItemUseOverride o = ITEM_USE.get(item);
+            ItemUseBehavior o = ITEM_USE.get(item);
             if (o != null && o.isEnabled()) {
                 MutableComponent t = o.getTooltip();
                 if (t != null) components.add(t.withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
