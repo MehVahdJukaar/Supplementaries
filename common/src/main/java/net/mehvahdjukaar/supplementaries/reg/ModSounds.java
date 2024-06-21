@@ -36,6 +36,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLIMEBALL_THROW = regSound("entity.slimeball.throw");
     public static final Supplier<SoundEvent> BRICK_THROW = regSound("entity.brick.throw");
 
+    public static final Supplier<SoundEvent> SOAP_WASH = regSound("item.soap.wash");
 
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");

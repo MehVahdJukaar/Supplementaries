@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.fluids;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.SoulFiredCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -215,9 +217,14 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         // same logic as fire block
         if (isOnFire(state)) {
             if (!entity.fireImmune()) {
-                entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
-                if (entity.getRemainingFireTicks() == 0) {
-                    entity.setSecondsOnFire(8);
+
+                if(CompatHandler.SOUL_FIRED){
+                    SoulFiredCompat.setOnFire(entity, 8);
+                }else{
+                    entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
+                    if (entity.getRemainingFireTicks() == 0) {
+                        entity.setSecondsOnFire(8);
+                    }
                 }
             }
             // normal fire damage

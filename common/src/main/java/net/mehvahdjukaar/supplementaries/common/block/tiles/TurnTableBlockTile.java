@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +55,7 @@ public class TurnTableBlockTile extends BlockEntity {
                 //play particle with block event
                 level.blockEvent(pos, state.getBlock(), 0, 0);
                 level.gameEvent(null, GameEvent.BLOCK_CHANGE, targetPos);
-                level.playSound(null, targetPos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+                level.playSound(null, targetPos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
             }
 
             tile.cooldown = TurnTableBlock.getPeriod(state);

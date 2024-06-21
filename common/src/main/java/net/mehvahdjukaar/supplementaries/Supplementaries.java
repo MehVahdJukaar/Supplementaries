@@ -25,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -103,6 +104,10 @@ public class Supplementaries {
         error();
         LOGGER.error(message, params);
     }
+
+    // test sounds and particles on server
+    // test sculk
+    // test dispenser and present stuff
 
     // yes this is where I write crap. deal with it XD
     // flute pacifier

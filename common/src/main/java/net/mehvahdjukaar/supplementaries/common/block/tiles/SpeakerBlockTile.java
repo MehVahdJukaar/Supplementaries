@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
+import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected, IOnePlayerGui {
+public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected, IOnePlayerInteractable {
     private UUID owner = null;
 
     private Component message = Component.empty();
@@ -175,8 +175,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
-        this.validatePlayerWhoMayEdit(level, worldPosition);
-        if (player.getUUID().equals(this.getPlayerWhoMayEdit())) {
+        if (this.isEditingPlayer(player)) {
             this.acceptClientMessages(player, filteredText);
             this.setPlayerWhoMayEdit(null);
             return true;

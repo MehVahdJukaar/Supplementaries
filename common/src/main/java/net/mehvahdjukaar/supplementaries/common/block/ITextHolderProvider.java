@@ -17,7 +17,7 @@ import java.util.List;
 
 
 //replicates what SignBlock does + more
-public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable {
+public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, IWaxable {
 
     TextHolder getTextHolder(int ind);
 
@@ -36,7 +36,7 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
             return true;
         }
         boolean success = false;
-        for(int i = 0; i<this.textHoldersCount(); i++){
+        for (int i = 0; i < this.textHoldersCount(); i++) {
             var text = getTextHolder(i);
 
             if (!text.isEmpty(null)) {
@@ -44,10 +44,10 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
                 success = true;
             }
         }
-        if(success){
-            if(this instanceof BlockEntity be){
+        if (success) {
+            if (this instanceof BlockEntity be) {
                 be.setChanged();
-                level.sendBlockUpdated(pos, state,state, 3);
+                level.sendBlockUpdated(pos, state, state, 3);
             }
             return true;
         }
@@ -55,8 +55,7 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
     }
 
     default boolean tryAcceptingClientText(BlockPos pos, ServerPlayer player, List<List<FilteredText>> filteredText) {
-        this.validatePlayerWhoMayEdit(player.level(), pos);
-        if (!this.isWaxed() && player.getUUID().equals(this.getPlayerWhoMayEdit())) {
+        if (!this.isWaxed() && this.isEditingPlayer(player)) {
             for (int i = 0; i < filteredText.size(); i++) {
                 var holder = this.getTextHolder(i);
                 holder.acceptClientMessages(player, filteredText.get(i));
@@ -79,7 +78,7 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
                 return false;
             }
         }
-        return IOnePlayerGui.super.tryOpeningEditGui(player, pos);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos);
     }
 
     //calls all interfaces methods
@@ -103,7 +102,7 @@ public interface ITextHolderProvider extends IOnePlayerGui, IWashable, IWaxable 
             return InteractionResult.CONSUME;
         }
         return InteractionResult.SUCCESS;
-       // return InteractionResult.PASS;
+        // return InteractionResult.PASS;
     }
 
 }

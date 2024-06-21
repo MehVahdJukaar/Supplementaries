@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
 import java.lang.ref.WeakReference;
@@ -21,7 +22,6 @@ public class SuppClientPlatformStuff {
 
     @ExpectPlatform
     public static ShaderInstance getNoiseShader() {
-        LunchBoxBlock b;
         throw new ArrayStoreException();
     }
 

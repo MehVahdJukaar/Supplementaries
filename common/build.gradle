@@ -41,6 +41,7 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
+    modImplementation("curse.maven:soul-fire-d-662413:5448803")
 
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")

@@ -3,10 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Objects;
@@ -51,7 +54,7 @@ public class ServerBoundSetPresentPacket implements Message {
 
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof PresentBlockTile present) {
             //TODO: sound here
-
+            SignEditScreen
             present.updateState(this.packed, this.recipient, this.sender, this.description);
 
             BlockState state = level.getBlockState(pos);

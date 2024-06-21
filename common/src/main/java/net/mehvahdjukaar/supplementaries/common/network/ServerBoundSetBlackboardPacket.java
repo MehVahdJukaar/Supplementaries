@@ -5,8 +5,8 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
@@ -38,17 +38,16 @@ public class ServerBoundSetBlackboardPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-
-        // server level
-        Level level = Objects.requireNonNull(context.getSender()).level();
+        Player sender = context.getSender();
+        Level level = Objects.requireNonNull(sender).level();
 
         BlockPos pos = this.pos;
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
-            level.playSound(null, this.pos, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
-            board.setPixels(this.pixels);
-            //updates client
-            //set changed also sends a block update
-            board.setChanged();
+            if (board.tryAcceptingClientPixels((ServerPlayer) sender, this.pixels)) {
+                //updates client
+                //set changed also sends a block update
+                board.setChanged();
+            }
         }
     }
 }

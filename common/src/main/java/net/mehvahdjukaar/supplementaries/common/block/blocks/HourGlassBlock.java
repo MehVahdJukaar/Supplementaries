@@ -8,11 +8,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.HourGlassBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -49,7 +49,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
 
     public HourGlassBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
+        super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP).setValue(LIGHT_LEVEL, 0)
                 .setValue(WATERLOGGED, false));
     }
@@ -85,9 +85,9 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
         if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
 
             if (player.isShiftKeyDown() && player.getItemInHand(handIn).isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
+                worldIn.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1, 1);
                 if (!worldIn.isClientSide) {
                     worldIn.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
-                    worldIn.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1, 1);
                     return InteractionResult.CONSUME;
                 }
                 return InteractionResult.SUCCESS;

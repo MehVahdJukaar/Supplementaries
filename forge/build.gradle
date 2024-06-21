@@ -150,6 +150,8 @@ dependencies {
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
     modImplementation("curse.maven:curios-309927:5296876")
+    modImplementation("curse.maven:soul-fire-d-662413:5448803")
+    modImplementation("curse.maven:cobweb-968456:5441209")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     modImplementation("curse.maven:quark-243121:5378961")

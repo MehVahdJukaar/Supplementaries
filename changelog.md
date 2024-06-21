@@ -30,3 +30,5 @@
 - added cannon map marker
 - fixed quill maps not supporting vanilla decorations properly
 - new present sounds
+- changed slingshot particle
+- changed many sounds to have their own sound event with their own subtitles

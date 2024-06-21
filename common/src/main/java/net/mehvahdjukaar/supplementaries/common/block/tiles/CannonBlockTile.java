@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class CannonBlockTile extends OpeneableContainerBlockEntity {
+public class CannonBlockTile extends OpeneableContainerBlockEntity implements IOnePlayerInteractable {
 
 
     private float pitch = 0;
@@ -48,6 +49,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     @Nullable
     private UUID playerWhoIgnitedUUID = null;
+
+    @Nullable
+    private UUID controllingPlayer = null;
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
@@ -205,10 +209,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
         return Component.translatable("gui.supplementaries.cannon");
     }
 
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new CannonContainerMenu(id, player, this);
-    }
 
     @Override
     protected void updateBlockState(BlockState state, boolean b) {
@@ -319,8 +319,33 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity {
 
     @Nullable
     private Player getControllingPlayer() {
-        if (this.playerWhoIgnitedUUID == null) return null;
-        return level.getPlayerByUUID(this.playerWhoIgnitedUUID);
+        UUID uuid = this.controllingPlayer;
+        if (uuid == null && playerWhoIgnitedUUID != null) {
+            uuid = playerWhoIgnitedUUID;
+        }
+        if (uuid == null) return null;
+        return level.getPlayerByUUID(uuid);
+    }
+
+    @Override
+    public void setPlayerWhoMayEdit(@Nullable UUID uuid) {
+        this.controllingPlayer = uuid;
+    }
+
+    @Override
+    public UUID getPlayerWhoMayEdit() {
+        return controllingPlayer;
+    }
+
+
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
+        return new CannonContainerMenu(id, player, this);
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos blockPos, Player player) {
+
     }
 
 

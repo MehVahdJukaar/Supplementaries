@@ -43,7 +43,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
         double d1 = (double) this.worldPosition.getY() + 1;
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
 
-        this.level.playSound(null, d0, d1, d2, ModSounds.SACK_OPEN.get(), SoundSource.BLOCKS, 1,
+        this.level.playSound(null, d0, d1, d2, ModSounds.LUNCH_BASKET_OPEN.get(), SoundSource.BLOCKS, 1,
                 this.level.random.nextFloat() * 0.1F + 0.95F);
     }
 
@@ -52,7 +52,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
         double d0 = (double) this.worldPosition.getX() + 0.5D;
         double d1 = (double) this.worldPosition.getY() + 1;
         double d2 = (double) this.worldPosition.getZ() + 0.5D;
-        this.level.playSound(null, d0, d1, d2, ModSounds.SACK_OPEN.get(), SoundSource.BLOCKS, 1,
+        this.level.playSound(null, d0, d1, d2, ModSounds.LUNCH_BASKET_CLOSE.get(), SoundSource.BLOCKS, 1,
                 this.level.random.nextFloat() * 0.1F + 0.8F);
     }
 

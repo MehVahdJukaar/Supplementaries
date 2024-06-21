@@ -2,17 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -138,14 +138,15 @@ public class SoapItem extends Item {
         return false;
     }
 
+    //TODO: test client side
     private static void playEffectsAndConsume(ItemStack stack, Player player, Entity entity) {
         Level level = player.level();
-        level.playSound(player, entity, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+        level.playSound(player, entity, ModSounds.SOAP_WASH.get(), SoundSource.PLAYERS, 1.0F,
+                0.9f + level.random.nextFloat() * 0.3f);
         if (level.isClientSide) {
             ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
                     UniformInt.of(2, 3), 0);
         }
-
         if (!player.getAbilities().instabuild) stack.shrink(1);
     }
 

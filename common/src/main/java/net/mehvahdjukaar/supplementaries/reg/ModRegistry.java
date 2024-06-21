@@ -13,7 +13,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.OverencumberedEffect;
+import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
+import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -73,6 +74,9 @@ public class ModRegistry {
     //effects
     public static final Supplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
             res("overencumbered"), OverencumberedEffect::new);
+
+    public static final Supplier<MobEffect> FLAMMABLE = RegHelper.registerEffect(
+            res("flammable"), FlammableEffect::new);
 
 
     //red merchant

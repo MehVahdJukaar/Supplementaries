@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
+import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -65,7 +66,9 @@ public class FiniteFluidBucket extends BucketItem {
                 level.destroyBlock(pos, true);
             }
 
-            if (!level.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
+            BlockState newState = content.defaultFluidState().createLegacyBlock()
+                    .setValue(FlammableLiquidBlock.LEVEL, 16 - capacity);
+            if (!level.setBlock(pos, newState, 11) && !blockstate.getFluidState().isSource()) {
                 return false;
             } else {
                 this.playEmptySound(arg, level, pos);

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -26,6 +27,7 @@ public class LumiseneBottleItem extends FiniteFluidBucket {
     private static final FoodProperties LUMISENE_FOOD = new FoodProperties.Builder()
             .nutrition(0).saturationMod(0).alwaysEat()
             .effect(() -> new MobEffectInstance(MobEffects.GLOWING, 100, 1), 1)
+            .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.get(), 200, 1), 1)
             .build();
 
     public LumiseneBottleItem(Supplier<? extends FiniteFluid> supplier, Properties builder, int capacity) {
@@ -70,12 +72,12 @@ public class LumiseneBottleItem extends FiniteFluidBucket {
 
     @Override
     public SoundEvent getDrinkingSound() {
-        return SoundEvents.HONEY_DRINK;
+        return SoundEvents.GENERIC_DRINK;
     }
 
     @Override
     public SoundEvent getEatingSound() {
-        return SoundEvents.HONEY_DRINK;
+        return SoundEvents.GENERIC_DRINK;
     }
 
     @Override

@@ -8,7 +8,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:torchflower"
+      "item": "minecraft:glow_berries"
     },
     {
       "item": "minecraft:glow_berries"

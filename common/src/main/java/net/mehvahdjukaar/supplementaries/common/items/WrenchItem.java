@@ -132,7 +132,7 @@ public class WrenchItem extends Item {
                     dir.get3DDataValue(),
                     0.71, shiftDown ? 1 : -1);
         }
-        level.playSound(player, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 0.6F);
+        level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
         level.playSound(player, player, SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.4F);
 
     }

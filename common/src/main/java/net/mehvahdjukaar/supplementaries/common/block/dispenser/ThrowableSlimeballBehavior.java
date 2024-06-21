@@ -38,7 +38,8 @@ class ThrowableSlimeballBehavior extends DispenserHelper.AdditionalDispenserBeha
     @Override
     protected void playSound(BlockSource source, boolean success) {
         source.getLevel().playSound(null, source.x() + 0.5, source.y() + 0.5, source.z() + 0.5,
-                ModSounds.SLIMEBALL_THROW.get(), SoundSource.NEUTRAL, 0.5F, 0.4F / (source.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
+                ModSounds.SLIMEBALL_THROW.get(), SoundSource.NEUTRAL, 0.5F,
+                0.4F / (source.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
     }
 
     protected Projectile getProjectileEntity(Level worldIn, Position position, ItemStack stackIn) {

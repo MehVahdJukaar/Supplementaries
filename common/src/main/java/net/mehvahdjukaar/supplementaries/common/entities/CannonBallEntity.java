@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SlimeBlock;
@@ -94,12 +93,15 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
     }
 
-    private void playDestroyEffects() {
-        for (int i = 0; i < 8; ++i) {
-            this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem()),
-                    this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+    @Override
+    public void handleEntityEvent(byte id) {
+        super.handleEntityEvent(id);
+        if (id == 3) {
+            for (int i = 0; i < 8; ++i) {
+                this.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, this.getItem()),
+                        this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+            }
         }
-        this.playSound(SoundEvents.METAL_BREAK, 1.0F, 1.5F);
     }
 
     @Override
@@ -140,8 +142,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                 ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
             }
 
-            if (this.getDeltaMovement().length() < 0.4 || exploded == 0) {
-                playDestroyEffects();
+            if (this.getDeltaMovement().length() < 0.4 || exploded == 0 && !level().isClientSide) {
+                this.playSound(SoundEvents.METAL_BREAK, 1.0F, 1.5F);
+                this.level().broadcastEntityEvent(this, (byte) 3);
                 this.discard();
             }
 
@@ -169,7 +172,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
             this.setDeltaMovement(newVel);
             SoundType soundType = hitBlock.getSoundType();
-            this.playSound(soundType.getFallSound(), soundType.volume*1.5f, soundType.getPitch());
+            this.playSound(soundType.getFallSound(), soundType.volume * 1.5f, soundType.getPitch());
             return true;
         }
         return false;

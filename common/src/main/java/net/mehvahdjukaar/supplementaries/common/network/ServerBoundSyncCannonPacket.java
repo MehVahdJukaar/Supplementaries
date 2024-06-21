@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 
 import java.util.Objects;
 
@@ -49,12 +50,15 @@ public class ServerBoundSyncCannonPacket implements Message {
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level level = player.level();
         float maxDist = 7;
-        // validate position. Anti cheat
-        if(pos.distToCenterSqr(player.position()) > maxDist*maxDist){
+        SignBlockEntity
+        //TODO: add player who may edit or other checks to validate this!! same for al other C2S packets
+        // validate position. Anti cheat. doesn't vanilla do this for signs?
+        if (pos.distToCenterSqr(player.position()) > maxDist * maxDist) {
             return;
         }
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon) {
             cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
+            cannon.setChanged();
         } else {
             Supplementaries.error(); //should not happen
         }

@@ -4,9 +4,10 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerGui;
+import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -16,6 +17,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
-        IOnePlayerGui, IWaxable, IExtraModelDataProvider {
+        IOnePlayerInteractable, IWaxable, IExtraModelDataProvider {
 
     public static final ModelDataKey<Key> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
@@ -282,5 +286,18 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
+    }
+
+    public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
+        if (this.isEditingPlayer(player)) {
+            level.playSound(null, this.worldPosition, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
+            this.setPixels(this.pixels);
+            this.setPlayerWhoMayEdit(null);
+            return true;
+        } else {
+            Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
+                    player.getName().getString());
+        }
+        return false;
     }
 }

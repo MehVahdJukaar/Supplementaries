@@ -26,6 +26,7 @@ public class CompatHandler {
     public static final boolean GOATED = isLoaded("goated");
     public static final boolean IMMEDIATELY_FAST = isLoaded("immediatelyfast");
     public static final boolean CONFIGURED = isLoaded("configured");
+    public static final boolean SOUL_FIRED = isLoaded("soul_fire_d");
     public static final boolean OREGANIZED = isLoaded("oreganized");
     public static final boolean CREATE = isLoaded("create");
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
@@ -117,6 +118,7 @@ public class CompatHandler {
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
+        if (SOUL_FIRED) SoulFiredCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

@@ -313,6 +313,10 @@ public class ModCreativeTabs {
                 ModConstants.LUMISENE_NAME,
                 ModFluids.LUMISENE_BUCKET);
 
+        after(e, Items.HONEY_BOTTLE, CreativeModeTabs.FOOD_AND_DRINKS,
+                ModConstants.LUMISENE_NAME,
+                ModFluids.LUMISENE_BOTTLE);
+
         after(e, Items.FIREWORK_ROCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.CONFETTI_POPPER_NAME,
                 ModRegistry.CONFETTI_POPPER);

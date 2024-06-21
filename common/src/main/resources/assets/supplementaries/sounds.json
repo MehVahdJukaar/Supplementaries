@@ -16,13 +16,13 @@
     "sounds": [
       "random/bow"
     ],
-    "subtitle": "subtitle.supplementaries.brick.throw"
+    "subtitle": "subtitles.supplementaries.brick.throw"
   },
   "entity.slimeball.throw": {
     "sounds": [
       "random/bow"
     ],
-    "subtitle": "subtitle.supplementaries.slimeball.throw"
+    "subtitle": "subtitles.supplementaries.slimeball.throw"
   },
 
   "entity.slimeball.land": {
@@ -35,16 +35,24 @@
     ],
     "subtitle": "subtitles.entity.generic.small_fall"
   },
-
+  "item.slimeball.hit": {
+    "sounds": [
+      "random/bowhit1",
+      "random/bowhit2",
+      "random/bowhit3",
+      "random/bowhit4"
+    ],
+    "subtitle": "subtitles.supplementaries.slimeball.hit"
+  },
 
   "block.clock.tick_1": {
-    "subtitle": "subtitle.supplementaries.clock_tick",
+    "subtitle": "subtitles.supplementaries.clock_tick",
     "sounds": [
       "supplementaries:block/clock_tick_1"
     ]
   },
   "block.clock.tick_2": {
-    "subtitle": "subtitle.supplementaries.clock_tick",
+    "subtitle": "subtitles.supplementaries.clock_tick",
     "sounds": [
       "supplementaries:block/clock_tick_2"
     ]
@@ -52,7 +60,7 @@
 
 
   "block.turntable.cat": {
-    "subtitle": "subtitle.supplementaries.turntable.cat",
+    "subtitle": "subtitles.supplementaries.turntable.cat",
     "sounds": [
       {
         "name": "supplementaries:block/tom",
@@ -61,16 +69,51 @@
     ]
   },
 
+  "block.generic.turn": {
+      "subtitle": "subtitles.supplementaries.generic.block.turn",
+      "sounds": [
+        {
+          "pitch": 0.6,
+          "name":"entity/itemframe/rotate_item1"
+        },
+        {
+          "pitch": 0.6,
+          "name":"entity/itemframe/rotate_item2"
+        },
+        {
+          "pitch": 0.6,
+          "name":"entity/itemframe/rotate_item3"
+        },
+        {
+          "pitch": 0.6,
+          "name":"entity/itemframe/rotate_item4"
+        }
+      ]
+  },
+
+  "entity.glow_item_frame.rotate_item": {
+    "sounds": [
+
+    ],
+    "subtitle": "subtitles.entity.glow_item_frame.rotate_item"
+  },
+
+  "item.soap.wash": {
+    "subtitle": "subtitles.supplementaries.soap.wash",
+    "sounds": [
+      "supplementaries:item/soap_wash"
+    ]
+  },
 
   "item.lunch_basket.open": {
-    "subtitle": "subtitle.supplementaries.lunch_basket.open",
+    "subtitle": "subtitles.supplementaries.lunch_basket.open",
     "sounds": [
       "supplementaries:item/basket_open_0",
       "supplementaries:item/basket_open_1"
     ]
   },
   "item.lunch_basket.close": {
-    "subtitle": "subtitle.supplementaries.lunch_basket.close",
+    "subtitle": "subtitles.supplementaries.lunch_basket.close",
     "sounds": [
       "supplementaries:item/basket_open_0",
       "supplementaries:item/basket_open_1"
@@ -86,7 +129,7 @@
 
 
   "item.confetti_popper": {
-    "subtitle": "subtitle.supplementaries.confetti_popper",
+    "subtitle": "subtitles.supplementaries.confetti_popper",
     "sounds": [
       "supplementaries:item/confetti_popper_0",
       "supplementaries:item/confetti_popper_1",
@@ -96,7 +139,7 @@
 
 
   "block.gunpowder.ignite": {
-    "subtitle": "subtitle.supplementaries.gunpowder.ignite",
+    "subtitle": "subtitles.supplementaries.gunpowder.ignite",
     "sounds": [
       "supplementaries:block/fizzle"
     ]
@@ -104,7 +147,7 @@
 
 
   "item.bomb": {
-    "subtitle": "subtitle.supplementaries.bomb",
+    "subtitle": "subtitles.supplementaries.bomb",
     "sounds": [
       "supplementaries:item/bomb_explosion_0",
       "supplementaries:item/bomb_explosion_1",
@@ -121,7 +164,7 @@
         "stream": true
       }
     ],
-    "subtitle": "subtitle.supplementaries.music.pancake"
+    "subtitle": "subtitles.supplementaries.music.pancake"
   },
 
 
@@ -182,7 +225,7 @@
       "supplementaries:block/slidy_block_slide_1",
       "supplementaries:block/slidy_block_slide_2"
     ],
-    "subtitle": "subtitles.block.generic.footsteps"
+    "subtitle": "subtitles.supplementaries.generic.block.move"
   },
 
 
@@ -208,7 +251,7 @@
     "sounds": [
       "supplementaries:block/sack_open"
     ],
-    "subtitle": "subtitle.supplementaries.sack.open"
+    "subtitle": "subtitles.supplementaries.sack.open"
   },
 
 
@@ -257,7 +300,7 @@
     "subtitle": "subtitles.block.generic.hit"
   },
   "block.rope.slide": {
-    "subtitle": "subtitle.supplementaries.rope.slide",
+    "subtitle": "subtitles.supplementaries.rope.slide",
     "sounds": [
       "supplementaries:block/rope_slide"
     ]
@@ -271,7 +314,7 @@
       "supplementaries:block/bubble_pop_2",
       "supplementaries:block/bubble_pop_3"
     ],
-    "subtitle": "subtitle.supplementaries.bubble.pop"
+    "subtitle": "subtitles.supplementaries.bubble.pop"
   },
   "block.bubble_block.place": {
     "sounds": [
@@ -280,14 +323,14 @@
       "supplementaries:block/bubble_place_2",
       "supplementaries:block/bubble_place_3"
     ],
-    "subtitle": "subtitle.supplementaries.bubble.blow"
+    "subtitle": "subtitles.supplementaries.bubble.blow"
   },
 
   "item.bubble_blower": {
     "sounds": [
       "supplementaries:item/bubble_blow"
     ],
-    "subtitle": "subtitle.supplementaries.bubble.blow"
+    "subtitle": "subtitles.supplementaries.bubble.blow"
   },
 
 
@@ -331,13 +374,13 @@
     "subtitle": "subtitles.block.generic.hit"
   },
   "block.present.open": {
-    "subtitle": "subtitle.supplementaries.present.open",
+    "subtitle": "subtitles.supplementaries.present.open",
     "sounds": [
       "supplementaries:block/present_open"
     ]
   },
   "block.present.pack": {
-    "subtitle": "subtitle.supplementaries.present.pack",
+    "subtitle": "subtitles.supplementaries.present.pack",
     "sounds": [
       "supplementaries:block/present_pack"
     ]
@@ -345,7 +388,7 @@
 
 
   "block.crank": {
-    "subtitle": "subtitle.supplementaries.crank.turn",
+    "subtitle": "subtitles.supplementaries.crank.turn",
     "sounds": [
       "supplementaries:block/crank"
     ]
@@ -369,61 +412,61 @@
     "subtitle": "subtitles.block.generic.break"
   },
   "block.jar.cookie": {
-    "subtitle": "subtitle.supplementaries.jar.cookie",
+    "subtitle": "subtitles.supplementaries.jar.cookie",
     "sounds": [
       "supplementaries:block/jar_cookie"
     ]
   },
   "block.bellows.retract": {
-    "subtitle": "subtitle.supplementaries.bellows.retract",
+    "subtitle": "subtitles.supplementaries.bellows.retract",
     "sounds": [
       "supplementaries:block/bellows_retract"
     ]
   },
   "block.bellows.blow": {
-    "subtitle": "subtitle.supplementaries.bellows.blow",
+    "subtitle": "subtitles.supplementaries.bellows.blow",
     "sounds": [
       "supplementaries:block/bellows_blow"
     ]
   },
   "block.globe.spin": {
-    "subtitle": "subtitle.supplementaries.globe.spin",
+    "subtitle": "subtitles.supplementaries.globe.spin",
     "sounds": [
       "supplementaries:block/globe_spin"
     ]
   },
   "block.faucet.turn": {
-    "subtitle": "subtitle.supplementaries.faucet.turn",
+    "subtitle": "subtitles.supplementaries.faucet.turn",
     "sounds": [
       "supplementaries:block/faucet"
     ]
   },
   "item.slingshot.charge_0": {
-    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "subtitle": "subtitles.supplementaries.slingshot.charge",
     "sounds": [
       "supplementaries:item/slingshot_charge_0"
     ]
   },
   "item.slingshot.charge_1": {
-    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "subtitle": "subtitles.supplementaries.slingshot.charge",
     "sounds": [
       "supplementaries:item/slingshot_charge_1"
     ]
   },
   "item.slingshot.charge_3": {
-    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "subtitle": "subtitles.supplementaries.slingshot.charge",
     "sounds": [
       "supplementaries:item/slingshot_charge_3"
     ]
   },
   "item.slingshot.charge_2": {
-    "subtitle": "subtitle.supplementaries.slingshot.charge",
+    "subtitle": "subtitles.supplementaries.slingshot.charge",
     "sounds": [
       "supplementaries:item/slingshot_charge_2"
     ]
   },
   "item.slingshot.release": {
-    "subtitle": "subtitle.supplementaries.slingshot.release",
+    "subtitle": "subtitles.supplementaries.slingshot.release",
     "sounds": [
       "supplementaries:item/slingshot_release"
     ]
@@ -443,7 +486,7 @@
     ]
   },
   "block.rotate": {
-    "subtitle": "subtitle.supplementaries.rotate_block",
+    "subtitle": "subtitles.supplementaries.rotate_block",
     "sounds": [
       {
         "name": "minecraft:entity/itemframe/rotate_item1",
@@ -464,7 +507,7 @@
     ]
   },
   "item.wrench.rotate": {
-    "subtitle": "subtitle.supplementaries.wrench.rotate",
+    "subtitle": "subtitles.supplementaries.wrench.rotate",
     "sounds": [
       {
         "name": "item/spyglass/use",
@@ -489,7 +532,7 @@
     ]
   },
   "item.wrench.fail": {
-    "subtitle": "subtitle.supplementaries.wrench.fail",
+    "subtitle": "subtitles.supplementaries.wrench.fail",
     "sounds": [
       {
         "name": "item/spyglass/stop",
