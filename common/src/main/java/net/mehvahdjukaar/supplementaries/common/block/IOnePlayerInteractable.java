@@ -8,23 +8,30 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public interface IOnePlayerGui extends IScreenProvider {
+// Interface for blocks that can be edited by one player at a time
+public interface IOnePlayerInteractable {
 
     void setPlayerWhoMayEdit(@Nullable UUID uuid);
 
     UUID getPlayerWhoMayEdit();
 
-
     //call before access
-    default void validatePlayerWhoMayEdit(Level level, BlockPos pos) {
+    default boolean isEditingPlayer(Player player) {
+        Level level = ((BlockEntity) this).getLevel();
+        BlockPos pos = ((BlockEntity) this).getBlockPos();
+        if (level == null) return false;
         UUID uuid = this.getPlayerWhoMayEdit();
         if (uuid != null && playerIsTooFarAwayToEdit(level, pos, uuid)) {
             this.setPlayerWhoMayEdit(null);
+            return false;
         }
+
+        return uuid != null && uuid.equals(player.getUUID());
     }
 
 
@@ -43,15 +50,15 @@ public interface IOnePlayerGui extends IScreenProvider {
             // open gui (edit sign with empty hand)
             this.setPlayerWhoMayEdit(player.getUUID());
 
-            if (shouldUseContainerMenu() && this instanceof MenuProvider mp) {
+            if (this instanceof IScreenProvider sp) {
+                sp.sendOpenGuiPacket(player.level(), pos, player);
+                return false;
+            }
+            if (this instanceof MenuProvider mp) {
                 PlatHelper.openCustomMenu(player, mp, pos);
-            } else this.sendOpenGuiPacket(player.level(), pos, player);
-            return true;
+                return true;
+            }
         }
-        return false;
-    }
-
-    default boolean shouldUseContainerMenu() {
         return false;
     }
 }
