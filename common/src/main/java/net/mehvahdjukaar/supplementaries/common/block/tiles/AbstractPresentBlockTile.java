@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
 

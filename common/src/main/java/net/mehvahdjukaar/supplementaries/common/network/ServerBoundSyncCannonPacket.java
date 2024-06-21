@@ -50,7 +50,7 @@ public class ServerBoundSyncCannonPacket implements Message {
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level level = player.level();
         float maxDist = 7;
-        SignBlockEntity
+
         //TODO: add player who may edit or other checks to validate this!! same for al other C2S packets
         // validate position. Anti cheat. doesn't vanilla do this for signs?
         if (pos.distToCenterSqr(player.position()) > maxDist * maxDist) {

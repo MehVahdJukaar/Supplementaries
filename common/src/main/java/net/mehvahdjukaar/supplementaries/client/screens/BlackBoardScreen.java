@@ -64,7 +64,7 @@ public class BlackBoardScreen extends Screen {
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                !this.tile.playerIsTooFarAwayToEdit(tile.getLevel(), tile.getBlockPos(), this.minecraft.player.getUUID());
+                !this.tile.isEditingPlayer(this.minecraft.player);
     }
 
     public byte getSelectedColor() {

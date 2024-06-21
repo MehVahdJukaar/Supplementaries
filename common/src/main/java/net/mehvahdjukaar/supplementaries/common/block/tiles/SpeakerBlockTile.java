@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
@@ -12,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected, IOnePlayerInteractable {
+public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerProtected, IOnePlayerInteractable, IScreenProvider {
     private UUID owner = null;
 
     private Component message = Component.empty();
@@ -208,6 +210,11 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
+        SpeakerBlockScreen.open(this);
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
         SpeakerBlockScreen.open(this);
     }
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider, IScreenProvider {
     public static final int MAX_LINES = 3;
 
     public final TextHolder textHolder;

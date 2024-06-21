@@ -65,12 +65,12 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
         if (canScroll()) {
             lineIndex = lineIndex - amount;
 
-            while (lineIndex<0)lineIndex+=totalLines;
+            while (lineIndex < 0) lineIndex += totalLines;
 
-            while(lineIndex>=messages[textHolderIndex].length){
-                lineIndex-=messages[textHolderIndex].length;
-                textHolderIndex+=1;
-                textHolderIndex%=messages.length;
+            while (lineIndex >= messages[textHolderIndex].length) {
+                lineIndex -= messages[textHolderIndex].length;
+                textHolderIndex += 1;
+                textHolderIndex %= messages.length;
             }
             textInputUtil.setCursorToEnd();
         }
@@ -104,7 +104,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                !this.tile.playerIsTooFarAwayToEdit(tile.getLevel(), tile.getBlockPos(), this.minecraft.player.getUUID());
+                !this.tile.isEditingPlayer(this.minecraft.player);
     }
 
     @Override
@@ -116,8 +116,8 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     @Override
     public void removed() {
         // send new text to the server
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
-                    this.tile.getBlockPos(), this.messages));
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
+                this.tile.getBlockPos(), this.messages));
     }
 
 

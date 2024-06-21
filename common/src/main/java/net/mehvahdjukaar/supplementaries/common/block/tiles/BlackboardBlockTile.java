@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
-        IOnePlayerInteractable, IWaxable, IExtraModelDataProvider {
+        IOnePlayerInteractable, IScreenProvider, IWaxable, IExtraModelDataProvider {
 
     public static final ModelDataKey<Key> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 

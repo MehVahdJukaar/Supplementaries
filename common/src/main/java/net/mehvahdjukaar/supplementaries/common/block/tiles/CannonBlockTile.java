@@ -343,10 +343,5 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return new CannonContainerMenu(id, player, this);
     }
 
-    @Override
-    public void openScreen(Level level, BlockPos blockPos, Player player) {
-
-    }
-
 
 }

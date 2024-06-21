@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
@@ -45,7 +46,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected, IScreenProvider {
 
     public static final ModelDataKey<Boolean> FRAMED_KEY = ModBlockProperties.FRAMED;
     public static final ModelDataKey<Boolean> SLIM_KEY = ModBlockProperties.SLIM;
@@ -151,6 +152,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player) {
+        SignPostScreen.open(this);
+    }
+
+    @Override
+    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
         SignPostScreen.open(this);
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -22,31 +23,36 @@ public interface IOnePlayerInteractable {
 
     //call before access
     default boolean isEditingPlayer(Player player) {
-        Level level = ((BlockEntity) this).getLevel();
-        BlockPos pos = ((BlockEntity) this).getBlockPos();
-        if (level == null) return false;
+        validateEditingPlayer();
         UUID uuid = this.getPlayerWhoMayEdit();
-        if (uuid != null && playerIsTooFarAwayToEdit(level, pos, uuid)) {
-            this.setPlayerWhoMayEdit(null);
-            return false;
-        }
-
         return uuid != null && uuid.equals(player.getUUID());
     }
 
-
-    default boolean playerIsTooFarAwayToEdit(Level level, BlockPos pos, UUID uUID) {
-        Player player = level.getPlayerByUUID(uUID);
-        return player == null || player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0;
-    }
-
     default boolean isOtherPlayerEditing(Player player) {
+        validateEditingPlayer();
         UUID uuid = this.getPlayerWhoMayEdit();
         return uuid != null && !uuid.equals(player.getUUID());
     }
 
-    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos) {
-        if (Utils.mayBuild(player, pos) && !this.isOtherPlayerEditing(player)) {
+
+    private void validateEditingPlayer() {
+        Level level = ((BlockEntity) this).getLevel();
+        BlockPos pos = ((BlockEntity) this).getBlockPos();
+        if (level == null) {
+            this.setPlayerWhoMayEdit(null);
+            return;
+        }
+        UUID uuid = this.getPlayerWhoMayEdit();
+        if (uuid == null) return;
+
+        Player player = level.getPlayerByUUID(uuid);
+        if (player == null || player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0) {
+            this.setPlayerWhoMayEdit(null);
+        }
+    }
+
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+        if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
             // open gui (edit sign with empty hand)
             this.setPlayerWhoMayEdit(player.getUUID());
 

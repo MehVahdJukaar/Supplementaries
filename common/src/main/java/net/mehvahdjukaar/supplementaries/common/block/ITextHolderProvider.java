@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
+import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,6 +9,7 @@ import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,14 +73,14 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
 
 
     @Override
-    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos) {
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
         boolean filtering = player.isTextFilteringEnabled();
         for (int i = 0; i < this.textHoldersCount(); i++) {
             if (!this.getTextHolder(i).hasEditableText(filtering)) {
                 return false;
             }
         }
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
     }
 
     //calls all interfaces methods
@@ -98,7 +100,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
             return result;
         }
         if (player instanceof ServerPlayer serverPlayer &&
-                this.tryOpeningEditGui(serverPlayer, pos)) {
+                this.tryOpeningEditGui(serverPlayer, pos, player.getItemInHand(hand))) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.SUCCESS;
