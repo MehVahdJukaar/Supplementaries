@@ -24,7 +24,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -70,6 +69,9 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         var data = getData(stack);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
+            if (food.isEmpty()) {
+                return InteractionResultHolder.fail(stack);
+            }
             if (food.isEdible()) {
                 if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
                     player.startUsingItem(hand);
@@ -107,7 +109,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Nullable
     @ForgeOverride
-    public  FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
+    public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
         var data = getData(stack);
         if (data.canEatFrom()) {
             return SuppPlatformStuff.getFoodProperties(data.getSelected(), entity);

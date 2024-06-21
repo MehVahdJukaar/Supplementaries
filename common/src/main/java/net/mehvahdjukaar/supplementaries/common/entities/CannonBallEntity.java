@@ -5,15 +5,11 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +17,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SlimeBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -143,11 +138,10 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             }
 
             if (this.getDeltaMovement().length() < 0.4 || exploded == 0 && !level().isClientSide) {
-                this.playSound(SoundEvents.METAL_BREAK, 1.0F, 1.5F);
+                this.playSound(ModSounds.CANNONBALL_BREAK.get(), 1.0F, 1.5F);
                 this.level().broadcastEntityEvent(this, (byte) 3);
                 this.discard();
             }
-
         }
     }
 
@@ -171,8 +165,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         if (shouldBounce) {
             Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
             this.setDeltaMovement(newVel);
-            SoundType soundType = hitBlock.getSoundType();
-            this.playSound(soundType.getFallSound(), soundType.volume * 1.5f, soundType.getPitch());
+            this.playSound(ModSounds.CANNONBALL_BOUNCE.get(), 1 * 1.5f, 1);
             return true;
         }
         return false;
@@ -185,7 +178,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
         // elastic collision with some loss
         float lossFactor = target instanceof LivingEntity le ? 0.1f : 0.8f;
-        float cannonballDensity = 10f; //denser than other entities
+        float cannonballDensity = 8f; //denser than other entities
         float m2 = (float) target.getBoundingBox().getSize() * (target instanceof CannonBallEntity ? cannonballDensity : 0);
         float m1 = (float) this.getBoundingBox().getSize() * cannonballDensity;
         Vector3f v2i = target.getDeltaMovement().toVector3f();
@@ -197,7 +190,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 4;
+            float dmgMult = 3 ; //TODO: config
             if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), (float) lostEnergy * dmgMult)) {
                 elasticity = Mth.sqrt(1 - lossFactor);
             }
@@ -227,6 +220,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
         if (target instanceof CannonBallEntity c) {
             c.justCollidedWith.add(this);
+            this.playSound(ModSounds.CANNONBALL_BOUNCE.get(), 1 * 1.5f, 1);
         }
     }
 

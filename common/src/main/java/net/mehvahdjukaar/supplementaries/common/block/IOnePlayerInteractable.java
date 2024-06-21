@@ -23,6 +23,10 @@ public interface IOnePlayerInteractable {
 
     //call before access
     default boolean isEditingPlayer(Player player) {
+        //player who may edit is a server side concept. here we just check if player is close by
+        if (player.level().isClientSide) {
+            return isCloseEnoughToEdit(player);
+        }
         validateEditingPlayer();
         UUID uuid = this.getPlayerWhoMayEdit();
         return uuid != null && uuid.equals(player.getUUID());
@@ -37,7 +41,6 @@ public interface IOnePlayerInteractable {
 
     private void validateEditingPlayer() {
         Level level = ((BlockEntity) this).getLevel();
-        BlockPos pos = ((BlockEntity) this).getBlockPos();
         if (level == null) {
             this.setPlayerWhoMayEdit(null);
             return;
@@ -46,9 +49,14 @@ public interface IOnePlayerInteractable {
         if (uuid == null) return;
 
         Player player = level.getPlayerByUUID(uuid);
-        if (player == null || player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0) {
+        if (player == null || isCloseEnoughToEdit(player)) {
             this.setPlayerWhoMayEdit(null);
         }
+    }
+
+    private boolean isCloseEnoughToEdit(Player player) {
+        BlockPos pos = ((BlockEntity) this).getBlockPos();
+        return player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0;
     }
 
     default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {

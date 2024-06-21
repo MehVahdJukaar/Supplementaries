@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,8 +15,6 @@ public class ModSounds {
 
     public static void init() {
     }
-
-    ;
 
     //these are the names in sound.json. not actual location. this is so a sound event can play multiple sounds
     public static final Supplier<SoundEvent> TOM = regSound("block.turntable.cat");
@@ -32,7 +31,11 @@ public class ModSounds {
     public static final Supplier<SoundEvent> WRENCH_HIT = regSound("item.wrench.hit");
     public static final Supplier<SoundEvent> WRENCH_FAIL = regSound("item.wrench.fail");
 
-    public static final Supplier<SoundEvent> SLIMEBALL_LAND = regSound("entity.slimeball.land");
+    public static final Supplier<SoundEvent> CANNONBALL_BREAK = regSound("entity.cannonball.break");
+    public static final Supplier<SoundEvent> CANNONBALL_BOUNCE = regSound("entity.cannonball.bounce");
+
+    public static final Supplier<SoundEvent> SLIMEBALL_LAND = regSound("entity.slimeball.bounce");
+    public static final Supplier<SoundEvent> SLIMEBALL_HIT = regSound("entity.slimeball.hit");
     public static final Supplier<SoundEvent> SLIMEBALL_THROW = regSound("entity.slimeball.throw");
     public static final Supplier<SoundEvent> BRICK_THROW = regSound("entity.brick.throw");
 

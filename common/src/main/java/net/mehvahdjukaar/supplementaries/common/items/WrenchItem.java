@@ -69,7 +69,8 @@ public class WrenchItem extends Item {
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         pAttacker.level().playSound(null, pTarget,
-                SoundEvents.ANVIL_PLACE, pAttacker.getSoundSource(), 0.5F, 1.8F);
+                ModSounds.WRENCH_HIT.get(), pAttacker.getSoundSource(), 1,
+                0.9f + pAttacker.getRandom().nextFloat() * 0.2f);
 
         pStack.hurtAndBreak(1, pAttacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;

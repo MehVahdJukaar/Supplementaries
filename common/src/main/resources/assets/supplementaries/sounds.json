@@ -1,5 +1,4 @@
 {
-
   "block.note_block.imitate.enderman": {
     "sounds": [
       {
@@ -10,8 +9,56 @@
     ],
     "subtitle": "subtitles.entity.enderman.teleport"
   },
-
-
+  "entity.cannonball.break": {
+    "sounds": [
+      "block/copper/break1",
+      "block/copper/break2",
+      "block/copper/break3",
+      "block/copper/break4"
+    ],
+    "subtitle": "subtitles.supplementaries.cannonball.break"
+  },
+  "entity.cannonball.bounce": {
+    "sounds": [
+      {
+        "name": "block/netherite/break1",
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break1",
+        "pitch": 0.9,
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break2",
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break2",
+        "pitch": 0.9,
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break3",
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break3",
+        "pitch": 0.9,
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break4",
+        "volume": 0.95
+      },
+      {
+        "name": "block/netherite/break4",
+        "pitch": 0.9,
+        "volume": 0.95
+      }
+    ],
+    "subtitle": "subtitles.supplementaries.cannonball.bounce"
+  },
   "entity.brick.throw": {
     "sounds": [
       "random/bow"
@@ -24,8 +71,7 @@
     ],
     "subtitle": "subtitles.supplementaries.slimeball.throw"
   },
-
-  "entity.slimeball.land": {
+  "entity.slimeball.bounce": {
     "sounds": [
       "mob/slime/small1",
       "mob/slime/small2",
@@ -33,7 +79,7 @@
       "mob/slime/small4",
       "mob/slime/small5"
     ],
-    "subtitle": "subtitles.entity.generic.small_fall"
+    "subtitle": "subtitles.supplementaries.slimeball.bounce"
   },
   "item.slimeball.hit": {
     "sounds": [
@@ -44,7 +90,6 @@
     ],
     "subtitle": "subtitles.supplementaries.slimeball.hit"
   },
-
   "block.clock.tick_1": {
     "subtitle": "subtitles.supplementaries.clock_tick",
     "sounds": [
@@ -57,8 +102,6 @@
       "supplementaries:block/clock_tick_2"
     ]
   },
-
-
   "block.turntable.cat": {
     "subtitle": "subtitles.supplementaries.turntable.cat",
     "sounds": [
@@ -68,43 +111,38 @@
       }
     ]
   },
-
   "block.generic.turn": {
-      "subtitle": "subtitles.supplementaries.generic.block.turn",
-      "sounds": [
-        {
-          "pitch": 0.6,
-          "name":"entity/itemframe/rotate_item1"
-        },
-        {
-          "pitch": 0.6,
-          "name":"entity/itemframe/rotate_item2"
-        },
-        {
-          "pitch": 0.6,
-          "name":"entity/itemframe/rotate_item3"
-        },
-        {
-          "pitch": 0.6,
-          "name":"entity/itemframe/rotate_item4"
-        }
-      ]
+    "subtitle": "subtitles.supplementaries.generic.block.turn",
+    "sounds": [
+      {
+        "pitch": 0.6,
+        "name": "entity/itemframe/rotate_item1"
+      },
+      {
+        "pitch": 0.6,
+        "name": "entity/itemframe/rotate_item2"
+      },
+      {
+        "pitch": 0.6,
+        "name": "entity/itemframe/rotate_item3"
+      },
+      {
+        "pitch": 0.6,
+        "name": "entity/itemframe/rotate_item4"
+      }
+    ]
   },
-
   "entity.glow_item_frame.rotate_item": {
     "sounds": [
-
     ],
     "subtitle": "subtitles.entity.glow_item_frame.rotate_item"
   },
-
   "item.soap.wash": {
     "subtitle": "subtitles.supplementaries.soap.wash",
     "sounds": [
       "supplementaries:item/soap_wash"
     ]
   },
-
   "item.lunch_basket.open": {
     "subtitle": "subtitles.supplementaries.lunch_basket.open",
     "sounds": [
@@ -126,8 +164,6 @@
       "supplementaries:item/basket_insert_1"
     ]
   },
-
-
   "item.confetti_popper": {
     "subtitle": "subtitles.supplementaries.confetti_popper",
     "sounds": [
@@ -136,16 +172,12 @@
       "supplementaries:item/confetti_popper_2"
     ]
   },
-
-
   "block.gunpowder.ignite": {
     "subtitle": "subtitles.supplementaries.gunpowder.ignite",
     "sounds": [
       "supplementaries:block/fizzle"
     ]
   },
-
-
   "item.bomb": {
     "subtitle": "subtitles.supplementaries.bomb",
     "sounds": [
@@ -155,8 +187,6 @@
       "supplementaries:item/bomb_explosion_3"
     ]
   },
-
-
   "music.pancake": {
     "sounds": [
       {
@@ -166,8 +196,6 @@
     ],
     "subtitle": "subtitles.supplementaries.music.pancake"
   },
-
-
   "block.slidy_block.break": {
     "sounds": [
       "supplementaries:block/slidy_block_place_0",
@@ -227,8 +255,6 @@
     ],
     "subtitle": "subtitles.supplementaries.generic.block.move"
   },
-
-
   "block.sack.break": {
     "sounds": [
       "supplementaries:block/sack_break_0",
@@ -253,8 +279,6 @@
     ],
     "subtitle": "subtitles.supplementaries.sack.open"
   },
-
-
   "block.rope.break": {
     "sounds": [
       "supplementaries:block/rope_break_0",
@@ -305,8 +329,6 @@
       "supplementaries:block/rope_slide"
     ]
   },
-
-
   "block.bubble_block.break": {
     "sounds": [
       "supplementaries:block/bubble_pop_0",
@@ -325,15 +347,12 @@
     ],
     "subtitle": "subtitles.supplementaries.bubble.blow"
   },
-
   "item.bubble_blower": {
     "sounds": [
       "supplementaries:item/bubble_blow"
     ],
     "subtitle": "subtitles.supplementaries.bubble.blow"
   },
-
-
   "block.present.place": {
     "sounds": [
       "supplementaries:block/present_place_0",
@@ -385,8 +404,6 @@
       "supplementaries:block/present_pack"
     ]
   },
-
-
   "block.crank": {
     "subtitle": "subtitles.supplementaries.crank.turn",
     "sounds": [
@@ -503,6 +520,15 @@
       {
         "name": "minecraft:entity/itemframe/rotate_item4",
         "pitch": 0.6
+      }
+    ]
+  },
+  "item.wrench.hit": {
+    "sounds": [
+      {
+        "volume": 0.5,
+        "pitch": 1.8,
+        "name": "random/anvil_land"
       }
     ]
   },

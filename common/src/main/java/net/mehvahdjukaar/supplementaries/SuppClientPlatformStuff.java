@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
+import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,6 @@ public class SuppClientPlatformStuff {
     public static ShaderInstance getNoiseShader() {
         throw new ArrayStoreException();
     }
-
 
     @ExpectPlatform
     public static ShaderInstance getEntityOffsetShader() {

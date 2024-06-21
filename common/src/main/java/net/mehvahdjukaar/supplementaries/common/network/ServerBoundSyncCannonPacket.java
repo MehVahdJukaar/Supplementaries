@@ -3,12 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
 
 import java.util.Objects;
 
@@ -49,19 +50,13 @@ public class ServerBoundSyncCannonPacket implements Message {
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level level = player.level();
-        float maxDist = 7;
 
-        //TODO: add player who may edit or other checks to validate this!! same for al other C2S packets
-        // validate position. Anti cheat. doesn't vanilla do this for signs?
-        if (pos.distToCenterSqr(player.position()) > maxDist * maxDist) {
-            return;
+        if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
+                cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
+                cannon.setChanged();
+                return;
         }
-        if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon) {
-            cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
-            cannon.setChanged();
-        } else {
-            Supplementaries.error(); //should not happen
-        }
+        Supplementaries.error(); //should not happen
     }
 
 }

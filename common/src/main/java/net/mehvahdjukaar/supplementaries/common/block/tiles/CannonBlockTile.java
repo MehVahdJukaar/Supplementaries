@@ -245,7 +245,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void use(Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.isSecondaryUseActive()) {
+
             if (player instanceof ServerPlayer serverPlayer) {
+                this.setPlayerWhoMayEdit(serverPlayer.getUUID());
                 //  startControlling(serverPlayer);
             } else CannonController.startControlling(this);
         } else if (player instanceof ServerPlayer sp) {
