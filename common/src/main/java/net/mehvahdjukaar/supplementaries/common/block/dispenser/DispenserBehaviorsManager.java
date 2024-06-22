@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
@@ -163,7 +164,7 @@ public class DispenserBehaviorsManager {
                     if (key && i instanceof KeyItem) {
                         DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
                     }
-                    if (slimeball && SuppClientPlatformStuff.isSlimeball(i)) {
+                    if (slimeball && SuppPlatformStuff.isSlimeball(i)) {
                         DispenserHelper.registerCustomBehavior(new ThrowableSlimeballBehavior(i));
                     }
                 } catch (Exception e) {

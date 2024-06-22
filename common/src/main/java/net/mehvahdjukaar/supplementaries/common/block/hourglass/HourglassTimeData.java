@@ -9,6 +9,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,6 +33,21 @@ public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, 
             StrOpt.of(ResourceLocation.CODEC, "texture").forGetter(p -> p.texture),
             StrOpt.of(ExtraCodecs.POSITIVE_INT, "ordering", 0).forGetter(p -> p.ordering)
     ).apply(instance, HourglassTimeData::new));
+
+    public static final Codec<HourglassTimeData> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("items").forGetter(p -> p.dusts.stream()
+                    .map(Holder::value)
+                    .toList()),
+            ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
+            StrOpt.of(Codec.intRange(0, 15), "light_level", 0).forGetter(p -> p.light),
+            StrOpt.of(ResourceLocation.CODEC, "texture").forGetter(p -> p.texture),
+            StrOpt.of(ExtraCodecs.POSITIVE_INT, "ordering", 0).forGetter(p -> p.ordering)
+    ).apply(instance, HourglassTimeData::fromNetwork));
+
+    private static HourglassTimeData fromNetwork(List<Item> items, Integer integer, Integer integer1, Optional<ResourceLocation> resourceLocation, Integer integer2) {
+        return new HourglassTimeData(HolderSet.direct( items.stream().map(BuiltInRegistries.ITEM::wrapAsHolder).toList()),
+                integer, integer1, resourceLocation, integer2);
+    }
 
     public ResourceLocation computeTexture(ItemStack i, Level world) {
         Minecraft mc = Minecraft.getInstance();

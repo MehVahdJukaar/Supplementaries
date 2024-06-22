@@ -44,8 +44,8 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         super(type, world);
     }
 
-    public ThrowableBrickEntity(Level worldIn, LivingEntity throwerIn) {
-        super(ModEntities.THROWABLE_BRICK.get(), throwerIn, worldIn);
+    public ThrowableBrickEntity(LivingEntity throwerIn) {
+        super(ModEntities.THROWABLE_BRICK.get(), throwerIn, throwerIn.level());
     }
 
     public ThrowableBrickEntity(Level worldIn, double x, double y, double z) {

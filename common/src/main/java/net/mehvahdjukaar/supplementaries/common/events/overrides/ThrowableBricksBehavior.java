@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -42,7 +43,7 @@ class ThrowableBricksBehavior implements ItemUseBehavior {
                 ModSounds.BRICK_THROW.get(), SoundSource.NEUTRAL, 0.5F,
                 0.4F / (player.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!world.isClientSide) {
-            ThrowableBrickEntity projectile = new ThrowableBrickEntity(world, player);
+            CannonBallEntity projectile = new CannonBallEntity(player);
             projectile.setItem(stack);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
                     projectile.getDefaultShootVelocity(), 1.0F);

@@ -31,7 +31,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
         for (int i = 0; i < size; i++) {
             CompoundTag tag = buf.readNbt();
             if (tag != null) {
-                DataResult<HourglassTimeData> r = HourglassTimeData.CODEC.parse(RegistryOps.create(
+                DataResult<HourglassTimeData> r = HourglassTimeData.NETWORK_CODEC.parse(RegistryOps.create(
                         NbtOps.INSTANCE, Utils.hackyGetRegistryAccess()), tag);
                 r.result().ifPresent(hourglass::add);
             }
@@ -42,7 +42,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeInt(this.hourglass.size());
         for (var entry : this.hourglass) {
-            DataResult<Tag> r = HourglassTimeData.CODEC.encodeStart(RegistryOps.create(
+            DataResult<Tag> r = HourglassTimeData.NETWORK_CODEC.encodeStart(RegistryOps.create(
                     NbtOps.INSTANCE, Utils.hackyGetRegistryAccess()), entry);
             if (r.result().isPresent()) {
                 buf.writeNbt((CompoundTag) r.result().get());

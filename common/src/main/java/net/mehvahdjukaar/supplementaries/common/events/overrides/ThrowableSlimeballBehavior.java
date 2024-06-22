@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -37,7 +38,7 @@ class ThrowableSlimeballBehavior implements ItemUseBehavior {
 
     @Override
     public boolean appliesToItem(Item item) {
-        return SuppClientPlatformStuff.isSlimeball(item);
+        return SuppPlatformStuff.isSlimeball(item);
     }
 
     @Override

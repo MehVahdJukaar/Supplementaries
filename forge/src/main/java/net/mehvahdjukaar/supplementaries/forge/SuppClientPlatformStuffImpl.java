@@ -28,8 +28,4 @@ public class SuppClientPlatformStuffImpl {
         return new ModSlider(x, y, width, height, prefix, suffix, minValue, maxValue, currentValue, stepSize, precision, drawString);
     }
 
-    public static boolean isSlimeball(Item item) {
-        return item.builtInRegistryHolder().is(Tags.Items.SLIMEBALLS);
-    }
-
 }

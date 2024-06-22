@@ -75,8 +75,8 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         this.setDeltaMovement(newVel);
         //this.setPos(this.position().add(surfaceNormal.x * 0.1f, surfaceNormal.y * 0.1f, surfaceNormal.z * 0.1f));
 
-        this.hasImpulse = true;
         if (!level().isClientSide) {
+            this.hasImpulse = true;
             this.playSound(ModSounds.SLIMEBALL_LAND.get(), 1.5f, 1);
             this.level().broadcastEntityEvent(this, (byte) 3);
             if (hits > 3) {

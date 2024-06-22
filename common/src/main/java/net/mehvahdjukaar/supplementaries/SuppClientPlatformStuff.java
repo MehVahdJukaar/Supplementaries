@@ -37,10 +37,4 @@ public class SuppClientPlatformStuff {
         throw new AssertionError();
     }
 
-    //use c tag
-    @Deprecated(forRemoval = true)
-    @ExpectPlatform
-    public static boolean isSlimeball(Item item) {
-        throw new AssertionError();
-    }
 }

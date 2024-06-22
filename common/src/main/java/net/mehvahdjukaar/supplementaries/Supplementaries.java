@@ -26,6 +26,10 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -227,14 +231,11 @@ public class Supplementaries {
     //bubble sound for bellows
     //bundle sound for sacks
 
-    //todo: fix projectile hitbox being a single point on y = 0
     //divining rod
     //add chain knot
 
     //enderman hold block in rain
     //horizontal shearable ropes
-
-    //TODO: more flywheel stuff
 
     //TODO: improve feather particle
 
@@ -242,8 +243,6 @@ public class Supplementaries {
 
     //TODO: fix JER loot tables percentages
 
-    //GLOBE inv model
-    //TODO: goblet & jars dynamic baked model
     //ghast fireball mob griefing
 
 
@@ -251,7 +250,7 @@ public class Supplementaries {
 
     //TODO: bugs: bell ropes(add to flywheel instance), brewing stand colors(?)
 
-    //TODO: mod ideas: particle block, blackboard banners and flags, lantern holding
+    //TODO: mod ideas: particle block, blackboard banners and flags
 
     //TODO: add stick window loggable clipping
 
@@ -260,8 +259,6 @@ public class Supplementaries {
     //add shift middle click to swap to correct tool
 
     //mod idea: blackboard banners and flags with villager
-
-    //throwable slimeballs
 
     //simple mode for doors and trapdoors
 
@@ -285,10 +282,6 @@ public class Supplementaries {
     //TODO: way signs as villages pieces
 
     //small honey slime in cage
-
-    //idea: Increase range of enchantment table
-
-    //IRON gate connected model
 
     //hud mod. armor broken hud, items offhadn crafting
 

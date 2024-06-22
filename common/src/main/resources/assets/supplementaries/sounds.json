@@ -502,8 +502,25 @@
       "supplementaries:block/cannon_fizzle"
     ]
   },
+  "block.blackboard.draw": {
+    "sounds": [
+      {
+        "pitch": 0.8,
+        "name": "ui/cartography_table/drawmap1"
+      },
+      {
+        "pitch": 0.8,
+        "name": "ui/cartography_table/drawmap2"
+      },
+      {
+        "pitch": 0.8,
+        "name": "ui/cartography_table/drawmap3"
+      }
+    ],
+    "subtitle": "subtitles.supplementaries.blackboard.draw"
+  },
   "block.rotate": {
-    "subtitle": "subtitles.supplementaries.rotate_block",
+    "subtitle": "subtitles.supplementaries.generic.block.rotate",
     "sounds": [
       {
         "name": "minecraft:entity/itemframe/rotate_item1",
@@ -558,7 +575,6 @@
     ]
   },
   "item.wrench.fail": {
-    "subtitle": "subtitles.supplementaries.wrench.fail",
     "sounds": [
       {
         "name": "item/spyglass/stop",

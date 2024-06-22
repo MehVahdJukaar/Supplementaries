@@ -25,10 +25,6 @@ public class ModFluidsImpl {
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
             super(16, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
-
-            if (PlatHelper.getPhysicalSide().isClient()) {
-                FluidRenderHandlerRegistry.INSTANCE.register(this, new LumiseneFluidRendererImpl());
-            }
         }
 
     }

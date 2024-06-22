@@ -87,7 +87,7 @@ public class CannonBallExplosion extends Explosion {
         FluidState fluidState = level.getFluidState(pos);
 
         boolean canPropagateExplosion = false;
-        if (blockState.isSolid()) {
+        if (!blockState.isAir()) {
             Optional<Float> optional = damageCalculator.getBlockExplosionResistance(this, level, pos, blockState, fluidState);
             if (optional.isPresent()) {
                 float resistance = (optional.get() + 0.3F) * 0.3F;

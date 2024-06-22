@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -85,26 +88,31 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof FlowerBoxBlockTile tile && tile.isAccessibleBy(player)) {
-            int ind;
-
-            Direction dir = state.getValue(FACING);
-            Vec3 v = hit.getLocation();
-            v = v.subtract(pos.getX() - 1d, 0, pos.getZ() - 1d);
-
-            if (dir.getAxis() == Direction.Axis.X) {
-                double normalizedZ = Math.abs((v.z) % 1d);
-                if (v.z >= 2) ind = 2;
-                else ind = (int) (normalizedZ / (1 / 3d));
-                if (dir.getStepX() < 0) ind = 2 - ind;
-            } else {
-                double normalizedX = Math.abs((v.x) % 1d);
-                if (v.x >= 2) ind = 2;
-                else ind = (int) (normalizedX / (1 / 3d));
-                if (dir.getStepZ() > 0) ind = 2 - ind;
-            }
+            int ind = getIndex(state, pos, hit);
             return tile.interact(player, handIn, ind);
         }
         return InteractionResult.PASS;
+    }
+
+    private static int getIndex(BlockState state, BlockPos pos, BlockHitResult hit) {
+        int ind;
+
+        Direction dir = state.getValue(FACING);
+        Vec3 v = hit.getLocation();
+        v = v.subtract(pos.getX() - 1d, 0, pos.getZ() - 1d);
+
+        if (dir.getAxis() == Direction.Axis.X) {
+            double normalizedZ = Math.abs((v.z) % 1d);
+            if (v.z >= 2) ind = 2;
+            else ind = (int) (normalizedZ / (1 / 3d));
+            if (dir.getStepX() < 0) ind = 2 - ind;
+        } else {
+            double normalizedX = Math.abs((v.x) % 1d);
+            if (v.x >= 2) ind = 2;
+            else ind = (int) (normalizedX / (1 / 3d));
+            if (dir.getStepZ() > 0) ind = 2 - ind;
+        }
+        return ind;
     }
 
     @Nullable
@@ -138,5 +146,17 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockUtil.addOptionalOwnership(placer, world, pos);
+    }
+
+
+    @ForgeOverride
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+        if (target instanceof BlockHitResult hit && hit.getDirection() == Direction.UP) {
+            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+                ItemStack i = tile.getItem(getIndex(state, pos, hit));
+                if (!i.isEmpty()) return i;
+            }
+        }
+        return super.getCloneItemStack(world, pos, state);
     }
 }

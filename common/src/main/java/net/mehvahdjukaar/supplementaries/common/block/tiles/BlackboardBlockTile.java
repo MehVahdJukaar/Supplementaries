@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -291,8 +292,9 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
         if (this.isEditingPlayer(player)) {
-            level.playSound(null, this.worldPosition, SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.BLOCKS, 1, 0.8f);
-            this.setPixels(this.pixels);
+            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
+                    SoundSource.BLOCKS, 1, 1);
+            this.setPixels(pixels);
             this.setPlayerWhoMayEdit(null);
             return true;
         } else {

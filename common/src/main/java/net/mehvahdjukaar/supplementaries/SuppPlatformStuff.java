@@ -4,6 +4,8 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmInstance;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.Level;
@@ -68,7 +71,7 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static float getDownfall(Biome biome){
+    public static float getDownfall(Biome biome) {
         throw new AssertionError();
     }
 
@@ -99,6 +102,18 @@ public class SuppPlatformStuff {
 
     @ExpectPlatform
     public static SoundType getSoundType(BlockState blockState, BlockPos pos, Level level, Entity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static void setParticlePos(BlockParticleOption blockParticleOption, BlockPos pos) {
+        throw new AssertionError();
+    }
+
+    //use c tag
+    @Deprecated(forRemoval = true)
+    @ExpectPlatform
+    public static boolean isSlimeball(Item item) {
         throw new AssertionError();
     }
 }

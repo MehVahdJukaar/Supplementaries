@@ -27,6 +27,8 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
 
+    public static final Supplier<SoundEvent> BLACKBOARD_DRAW = regSound("block.blackboard.draw");
+
     public static final Supplier<SoundEvent> WRENCH_ROTATE = regSound("item.wrench.rotate");
     public static final Supplier<SoundEvent> WRENCH_HIT = regSound("item.wrench.hit");
     public static final Supplier<SoundEvent> WRENCH_FAIL = regSound("item.wrench.fail");

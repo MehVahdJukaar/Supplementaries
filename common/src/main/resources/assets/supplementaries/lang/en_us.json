@@ -458,9 +458,11 @@
 
   "structure.supplementaries.way_sign": "Way Sign",
 
-  "subtitles.supplementaries.generic.block.moves": "Block moves",
-  "subtitles.supplementaries.generic.block.rotates": "Block rotates",
+  "subtitles.supplementaries.generic.block.move": "Block moves",
+  "subtitles.supplementaries.generic.block.rotate": "Block rotates",
   "subtitles.supplementaries.soap.wash": "Soap washing",
+  "subtitles.supplementaries.blackboard.draw": "Blackboard drawn on",
+  "subtitles.supplementaries.cannonball.break": "Cannonball breaks",
   "subtitles.supplementaries.cannonball.bounce": "Cannonball bounces",
   "subtitles.supplementaries.slimeball.bounce": "Slimeball bounces",
   "subtitles.supplementaries.slimeball.throw": "Slimeball flies",

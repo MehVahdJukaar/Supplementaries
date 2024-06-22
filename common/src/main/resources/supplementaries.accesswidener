@@ -16,7 +16,7 @@ accessible field net/minecraft/world/level/block/AbstractCauldronBlock interacti
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 
-#render type todo remove
+#TODO: remove
 accessible method net/minecraft/world/entity/Entity collide (Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
 
 #piston stuff

@@ -28,8 +28,4 @@ public class SuppClientPlatformStuffImpl {
         return null;
     }
 
-    public static boolean isSlimeball(Item item) {
-        return item == Items.SLIME_BALL;
-    }
-
 }
