@@ -39,12 +39,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
 
     //for collisions we should ignored since they were handled by the other entity
     private final List<CannonBallEntity> justCollidedWith = new ArrayList<>();
-    private int hits = 0; //bounces
+    private int bounces = 0; //bounces
 
     public CannonBallEntity(LivingEntity thrower) {
         super(ModEntities.CANNONBALL.get(), thrower, thrower.level());
@@ -64,13 +65,13 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putInt("hits", this.hits);
+        tag.putInt("bounces", this.bounces);
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.hits = compound.getInt("hits");
+        this.bounces = compound.getInt("bounces");
     }
 
 
@@ -185,8 +186,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     private boolean maybeBounce(BlockHitResult hit) {
-        if (hits >= 3) return false;
-        hits++;
+        if (bounces >= 3) return false;
+        bounces++;
 
         Direction hitDirection = hit.getDirection();
         BlockPos pos = hit.getBlockPos();
@@ -207,7 +208,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             float bounceCosAngle = Mth.cos(75 * Mth.DEG_TO_RAD);
             shouldBounce = cosAngle < bounceCosAngle;
         }
-        if (shouldBounce) {
+        if (shouldBounce || true) {
             Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
             this.setDeltaMovement(newVel);
             this.hasImpulse = true;
@@ -406,18 +407,21 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             //if raytrace didn't find a hit and pos is different it means we hit something that not directly infront of us.. this is ugly
             Vec3 diff = newMovement.subtract(movement);
 
+            //need to set here so BB is correct for collision
+            newPos = collidedPos;
+            this.setPos(newPos.x, newPos.y - this.getEyeHeight(), newPos.z);
+
             if (hitResult.getType() == HitResult.Type.MISS) {
                 if (diff.lengthSqr() > (0.01 * 0.01)) {
                     //hit face must be the direction in which we didn't move the most
                     Direction hitFace = Direction.getNearest(diff.x, diff.y, diff.z);
                     //super hacky
-                    hitResult = findCornerHitResult(pos.add(newMovement), hitFace, 2/16f);
+                    hitResult = findCornerHitResult(collidedPos, hitFace, 2 / 16f);
                 }
             }
-            newPos = collidedPos;
         }
         //this is actually eye pos
-        this.setPos(newPos.x, newPos.y - this.getEyeHeight(), newPos.z);
+        else this.setPos(newPos.x, newPos.y - this.getEyeHeight(), newPos.z);
 
         // update movement and particles
         float deceleration = this.isInWater() ? this.getWaterInertia() : this.getInertia();
@@ -480,10 +484,34 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     private BlockHitResult findCornerHitResult(Vec3 newPos, Direction dir, float margin) {
-        float halfWidth = this.getBbWidth() *1;
+        float halfWidth = this.getBbWidth() * 0.5f;
         Vec3 step = new Vec3(dir.getOpposite().step());
         Vec3 center = newPos.add(step.scale(halfWidth));
         Set<Vec3> vertices = new HashSet<>();
+
+
+        AABB orBB = this.makeBoundingBox();
+        float f = 0.9f;
+        AABB aabb = orBB
+                .move(step.scale(halfWidth))
+                .deflate(step.x * halfWidth * 2 * 0.8f,
+                        step.y * halfWidth * 2 * 0.8f,
+                        step.z * halfWidth * 2 * 0.8f);
+        Set<BlockPos> collided = new HashSet<>();
+        for(var v : BlockPos.betweenClosed(BlockPos.containing(aabb.minX, aabb.minY, aabb.minZ),
+                BlockPos.containing(aabb.maxX, aabb.maxY, aabb.maxZ) )){
+            collided.add(v.immutable());
+        }
+        for (var p : collided) {
+            BlockState state = level().getBlockState(p);
+            VoxelShape collisionShape = state.getCollisionShape(level(), p);
+            for (var box : collisionShape.move(p.getX(), p.getY(), p.getZ()).toAabbs()) {
+                if (box.intersects(aabb)) {
+                    return new BlockHitResult(newPos, dir, p, false);
+                }
+            }
+        }
+
 
         if (dir.getAxis() == Direction.Axis.X) {
             vertices.add(new Vec3(-0, -halfWidth, -halfWidth));
@@ -513,6 +541,21 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                 return bi;
             }
         }
+        //if all that fails (somehow) we just get a random one in front of the hit face
+        AABB frontBox = this.getBoundingBox().move(step.scale(halfWidth * 2)); //box in front of hit face
+        Set<BlockPos> list = new HashSet<>(BlockPos.betweenClosedStream(frontBox).toList());
+        // bullshit code for fences
+        list.add(BlockPos.containing(newPos.add(step.scale(margin))).below());
+        for (var p : list) {
+            BlockState state = level.getBlockState(p);
+            if (state.getCollisionShape(level, p).isEmpty()) continue;
+            return new BlockHitResult(newPos, dir, p, false);
+        }
+
+
+        //error
         return new BlockHitResult(newPos, dir, BlockPos.containing(newPos.add(step.scale(margin))), true);
     }
+
+
 }

@@ -24,7 +24,7 @@ import org.joml.Vector3f;
 
 public class SlimeBallEntity extends ImprovedProjectileEntity {
 
-    private int hits = 0;
+    private int bounces = 0;
 
     public SlimeBallEntity(Level world, double x, double y, double z) {
         super(ModEntities.THROWABLE_SLIMEBALL.get(), x, y, z, world);
@@ -41,13 +41,13 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putInt("hits", this.hits);
+        tag.putInt("bounces", this.bounces);
     }
 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.hits = compound.getInt("hits");
+        this.bounces = compound.getInt("bounces");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        hits++;
+        bounces++;
         Direction hitDirection = result.getDirection();
 
         Vec3 velocity = this.getDeltaMovement();
@@ -79,7 +79,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
             this.hasImpulse = true;
             this.playSound(ModSounds.SLIMEBALL_LAND.get(), 1.5f, 1);
             this.level().broadcastEntityEvent(this, (byte) 3);
-            if (hits > 3) {
+            if (bounces > 3) {
                 this.discard();
             }
         }
