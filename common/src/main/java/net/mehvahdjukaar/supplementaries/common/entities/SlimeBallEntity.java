@@ -67,12 +67,16 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         Direction hitDirection = result.getDirection();
 
         Vec3 velocity = this.getDeltaMovement();
+
         Vector3f surfaceNormal = hitDirection.step();
 
         Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
         float conservedEnergy = 0.75f;
         newVel = newVel.scale(conservedEnergy);
         this.setDeltaMovement(newVel);
+        //adds distance that was eaten up by collision
+        double missingDistance = velocity.subtract(this.position().subtract(new Vec3(xo, yo, zo))).length();
+        this.setPos(this.position().add(newVel.normalize().scale(missingDistance)));
         //this.setPos(this.position().add(surfaceNormal.x * 0.1f, surfaceNormal.y * 0.1f, surfaceNormal.z * 0.1f));
 
         if (!level().isClientSide) {

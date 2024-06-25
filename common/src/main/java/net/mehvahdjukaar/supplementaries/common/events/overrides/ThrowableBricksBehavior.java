@@ -46,7 +46,8 @@ class ThrowableBricksBehavior implements ItemUseBehavior {
             CannonBallEntity projectile = new CannonBallEntity(player);
             projectile.setItem(stack);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
-                    projectile.getDefaultShootVelocity(), 1.0F);
+                    projectile.getDefaultShootVelocity() , 1.0F);
+            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(3));
             world.addFreshEntity(projectile);
         }
         

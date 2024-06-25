@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
@@ -33,18 +34,21 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
-import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.Iterator;
 import java.util.function.Supplier;
 
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
@@ -158,6 +162,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         super.tick();
     }
 
+
     @Override
     public void spawnTrailParticles() {
         Vec3 newPos =  this.position();
@@ -211,10 +216,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
-        Vec3 vector3d = hit.getLocation().subtract(this.getX(), this.getY(), this.getZ());
-        this.setDeltaMovement(vector3d);
-        Vec3 vector3d1 = vector3d.normalize().scale(getGravity());
-        this.setPosRaw(this.getX() - vector3d1.x, this.getY() - vector3d1.y, this.getZ() - vector3d1.z);
+        this.setDeltaMovement(Vec3.ZERO);
     }
 
     @Override
@@ -442,5 +444,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             };
         }
     }
+
+
+
 
 }

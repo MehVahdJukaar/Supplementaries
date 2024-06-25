@@ -76,8 +76,9 @@ public class CannonBallExplosion extends Explosion {
                        List<BlockPos> toExplode,
                        Set<BlockPos> visited,
                        Queue<BlockPos> toVisit) {
+
         float r = this.radius + level.random.nextFloat();
-        if (center.distanceToSqr(pos.getCenter()) > (r * r))
+        if (!pos.equals(centerPos) && center.distanceToSqr(pos.getCenter()) > (r * r))
             return;
         if (!level.isInWorldBounds(pos) || visited.contains(pos))
             return;
