@@ -202,7 +202,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
-        if (toInsert.getItem().canFitInsideContainerItems()) return false;
+        if (!toInsert.getItem().canFitInsideContainerItems()) return false;
         var animation = toInsert.getItem().getUseAnimation(toInsert);
         return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }

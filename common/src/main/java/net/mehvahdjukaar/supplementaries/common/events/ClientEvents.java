@@ -96,6 +96,8 @@ public class ClientEvents {
         if (newScreen != screen) Minecraft.getInstance().setScreen(newScreen);
     }
 
+    private static boolean hasAppliedCustomShader = false;
+
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
         if (minecraft.isPaused() || minecraft.level == null) return;
@@ -122,9 +124,11 @@ public class ClientEvents {
             }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
-            } else if (newShader == null && current != null && (EFFECTS_PER_ITEM.containsValue(current) ||
+                hasAppliedCustomShader = true;
+            } else if (hasAppliedCustomShader && newShader == null && current != null && (EFFECTS_PER_ITEM.containsValue(current) ||
                     (CompatHandler.GOATED && current.equals(ClientRegistry.BARBARIC_RAGE_SHADER)))) {
                 renderer.shutdownEffect();
+                hasAppliedCustomShader = false;
             }
         }
 

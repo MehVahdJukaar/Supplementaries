@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SlingshotParticle extends TextureSheetParticle {
 
@@ -16,7 +19,7 @@ public class SlingshotParticle extends TextureSheetParticle {
 
         this.quadSize *= 1F;
         //longer
-        this.lifetime = (int) (10.0D / (this.random.nextFloat() * 0.3D + 0.7D));
+        this.lifetime = (int) (8.0D / (this.random.nextFloat() * 0.3D + 0.7D));
         this.hasPhysics = false;
 
         this.pickSprite(sprites);
@@ -24,17 +27,25 @@ public class SlingshotParticle extends TextureSheetParticle {
 
     @Override
     public float getQuadSize(float partialTicks) {
-        float d = (this.age+ partialTicks) / (float) this.lifetime ;
-        return Mth.lerp(d, this.quadSize, this.quadSize * 5.8f);
+        float d = (this.age + partialTicks) / (float) this.lifetime;
+        return Mth.lerp(d, this.quadSize, this.quadSize * 5.2f);
     }
 
     @Override
     public void tick() {
         super.tick();
-        //crazy hyperbole instead of normal parabula. idk
+        //crazy hyperbole instead of normal line. idk
         float d = this.age / (float) this.lifetime;
-        final float p = MthUtils.PHI;
-        this.alpha = p + 1 / (d - p);
+        //final float p = MthUtils.PHI;
+        //this.alpha = p + 1 / (d - p);
+        this.alpha = 1 - d;
+
+        BlockPos pos = BlockPos.containing(this.x, this.y, this.z);
+        VoxelShape shape = this.level.getBlockState(pos)
+                .getCollisionShape(level, pos);
+        if(!shape.isEmpty() && shape.toAabbs().contains(this.getBoundingBox())){
+            this.remove();
+        }
     }
 
     @Override

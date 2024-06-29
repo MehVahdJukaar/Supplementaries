@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -40,9 +39,8 @@ public class ModFluidsImpl {
     }
 
     public static Item createLumiseneBottle() {
-
-        return new LumiseneBottleItem(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
-                .craftRemainder(Items.GLASS_BOTTLE), MAX_LAYERS / 4);
+        return new LumiseneBottleItem(new Item.Properties().stacksTo(1)
+                .craftRemainder(Items.GLASS_BOTTLE));
     }
 
     public static FiniteFluid createLumisene() {

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -57,6 +58,7 @@ public class Supplementaries {
     public static void commonInit() {
         Credits.fetchFromServer();
         CommonConfigs.init();
+
         PlatHelper.getPhysicalSide().ifClient(ClientConfigs::init);
 
         ModNetwork.init();

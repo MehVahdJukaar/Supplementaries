@@ -15,7 +15,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class SelectableContainerItemHudImpl extends SelectableContainerItemHud implements IGuiOverlay {
 
-    public SelectableContainerItemHudImpl() {
+    protected SelectableContainerItemHudImpl() {
         super(Minecraft.getInstance());
     }
 

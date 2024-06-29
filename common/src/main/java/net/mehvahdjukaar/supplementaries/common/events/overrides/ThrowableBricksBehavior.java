@@ -43,11 +43,12 @@ class ThrowableBricksBehavior implements ItemUseBehavior {
                 ModSounds.BRICK_THROW.get(), SoundSource.NEUTRAL, 0.5F,
                 0.4F / (player.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!world.isClientSide) {
-            CannonBallEntity projectile = new CannonBallEntity(player);
+            var projectile = new ThrowableBrickEntity(player);
             projectile.setItem(stack);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
                     projectile.getDefaultShootVelocity() , 1.0F);
-            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(3));
+            //TODO:fix accuracy speed and drag of all these
+            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1));
             world.addFreshEntity(projectile);
         }
         

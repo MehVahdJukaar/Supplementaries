@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
@@ -13,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;

@@ -127,7 +127,7 @@ public class SupplementariesForgeClient {
                 var r = event.getRenderer(entityType);
                 if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
             }));
-        }catch (Exception e){
+        } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
         }
 
@@ -149,7 +149,7 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
-                new SelectableContainerItemHudImpl());
+                (SelectableContainerItemHudImpl) SelectableContainerItemHudImpl.INSTANCE);
 
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
                 new CannonChargeOverlayImpl());

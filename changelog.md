@@ -31,4 +31,5 @@
 - fixed quill maps not supporting vanilla decorations properly
 - new present sounds
 - changed slingshot particle
+- wind vanes compat for wilder wild
 - changed many sounds to have their own sound event with their own subtitles

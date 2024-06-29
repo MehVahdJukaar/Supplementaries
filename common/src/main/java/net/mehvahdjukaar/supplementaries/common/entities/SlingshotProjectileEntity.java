@@ -189,8 +189,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
                 Player fakePlayer = FakePlayerManager.getDefault(this, player);
 
+                BlockPlaceContext context = new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit);
                 success = ItemsUtil.place(item,
-                        new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit)).consumesAction();
+                        context).consumesAction();
             }
         }
         if (success) {
@@ -324,8 +325,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void spawnTrailParticles() {
         super.spawnTrailParticles();
         if (!this.isNoGravity()) {
-            double d = this.getDeltaMovement().length();
-            if (this.tickCount > 1 && d * this.tickCount > 1.5) {
+            double speed = this.getDeltaMovement().length();
+            if (this.tickCount > 1 && speed * this.tickCount > 1.5) {
                 if (this.isNoGravity()) {
 
                     Vec3 rot = new Vec3(0.325, 0, 0).yRot(this.tickCount * 0.32f);
@@ -340,7 +341,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     movement = movement.scale(0.25);
                     this.level().addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
                 } else {
-                    double interval = 4 / (d * 0.95 + 0.05);
+                    //TODO: make these properly equally spaced
+                    double interval = 3 / (speed * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
                         this.particleCooldown -= interval;
                         double x = getX();

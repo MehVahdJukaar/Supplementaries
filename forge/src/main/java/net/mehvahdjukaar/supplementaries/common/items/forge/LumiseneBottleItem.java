@@ -14,15 +14,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
-public class LumiseneBottleItem extends FiniteFluidBucket {
+public class LumiseneBottleItem extends Item {
 
     private static final FoodProperties LUMISENE_FOOD = new FoodProperties.Builder()
             .nutrition(0).saturationMod(0).alwaysEat()
@@ -30,9 +27,10 @@ public class LumiseneBottleItem extends FiniteFluidBucket {
             .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.get(), 200, 1), 1)
             .build();
 
-    public LumiseneBottleItem(Supplier<? extends FiniteFluid> supplier, Properties builder, int capacity) {
-        super(supplier, builder.food(LUMISENE_FOOD), capacity);
+    public LumiseneBottleItem(Properties properties) {
+        super(properties.food(LUMISENE_FOOD));
     }
+
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
