@@ -1,12 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -24,6 +27,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -243,17 +247,18 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return new int[]{side.getAxis().isHorizontal() ? 1 : 0};
     }
 
-    public void use(Player player, InteractionHand hand, BlockHitResult hit) {
+    @Override
+    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
         if (player.isSecondaryUseActive()) {
-
-            if (player instanceof ServerPlayer serverPlayer) {
-                this.setPlayerWhoMayEdit(serverPlayer.getUUID());
-                //  startControlling(serverPlayer);
-            } else CannonController.startControlling(this);
-        } else if (player instanceof ServerPlayer sp) {
-            PlatHelper.openCustomMenu(sp, this, worldPosition);
+            //same as super but sends custom packet
+            if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
+                // open gui (edit sign with empty hand)
+                this.setPlayerWhoMayEdit(player.getUUID());
+                    ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
+            }
+            return true;
         }
-
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
     }
 
     public void ignite(@Nullable Player controllingPlayer) {

@@ -150,7 +150,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
         //can only place when first hits
-        if (this.isInBlock) return;
         Entity owner = this.getOwner();
         boolean success;
         Level level = level();
@@ -274,7 +273,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public void playerTouch(Player playerEntity) {
-        if (this.isNoGravity() || this.isInBlock) {
+        if (this.isNoGravity() || this.isStuck) {
 
             boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
 
@@ -300,7 +299,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     public void reachedEndOfLife() {
         if (this.entityData.get(ID_LOYALTY) != 0 && this.isAcceptableReturnOwner(this.getOwner())) {
             this.setNoGravity(true);
-            this.inBlockTime = 0;
+            this.stuckTime = 0;
         } else {
             this.spawnAtLocation(this.getItem(), 0.1f);
             super.reachedEndOfLife();
@@ -321,11 +320,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         }
     }
 
-    //TODO: trails for bombs
     @Override
     public void spawnTrailParticles() {
-        Vec3 oldPos = new Vec3(xo, yo, zo);
-        Vec3 newPos = this.position();
+        super.spawnTrailParticles();
         if (!this.isNoGravity()) {
             double d = this.getDeltaMovement().length();
             if (this.tickCount > 1 && d * this.tickCount > 1.5) {
@@ -336,9 +333,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     Vec3 movement = this.getDeltaMovement();
                     Vec3 offset = MthUtils.changeBasisN(movement, rot);
 
-                    double px = newPos.x + offset.x;
-                    double py = newPos.y + offset.y; //+ this.getBbHeight() / 2d;
-                    double pz = newPos.z + offset.z;
+                    double px = getX() + offset.x;
+                    double py = getEyeY() + offset.y;
+                    double pz = getZ() + offset.z;
 
                     movement = movement.scale(0.25);
                     this.level().addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
@@ -346,9 +343,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     double interval = 4 / (d * 0.95 + 0.05);
                     if (this.particleCooldown > interval) {
                         this.particleCooldown -= interval;
-                        double x = oldPos.x;
-                        double y = oldPos.y;//+ this.getBbHeight() / 2d;
-                        double z = oldPos.z;
+                        double x = getX();
+                        double y = getEyeY();
+                        double z = getZ();
                         this.level().addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
                     }
                 }

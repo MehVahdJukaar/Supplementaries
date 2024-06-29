@@ -16,6 +16,7 @@ import java.util.List;
 
 public class ConfettiParticle extends TextureSheetParticle {
 
+    //TODO: wilder wild compat here
     // yes we sample 36 perlin noises per tick per particle
     protected static final PerlinSimplexNoise X_NOISE = noise(58637214);
     protected static final PerlinSimplexNoise Z_NOISE = noise(823917);

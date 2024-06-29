@@ -26,8 +26,13 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.WitherSkull;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.logging.log4j.LogManager;
@@ -88,7 +93,6 @@ public class Supplementaries {
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
-
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"));
             } catch (Exception e) {
@@ -109,6 +113,7 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
+    // test blackboard cannon and other 1 player containers in mutliplayer
     // test sounds and particles on server
     // test sculk
     // test dispenser and present stuff

@@ -46,8 +46,10 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:4754433")
     modImplementation ("net.mehvahdjukaar:moonlight:${rootProject.moonlight_version}")
     //modImplementation("curse.maven:immediatelyfast-686911:4937545")
-    modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge") // Get latest version from releases
+    modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
+    modImplementation("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
+    modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
 
 }
 

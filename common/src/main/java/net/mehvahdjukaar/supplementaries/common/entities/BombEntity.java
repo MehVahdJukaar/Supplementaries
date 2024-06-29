@@ -217,6 +217,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
         this.setDeltaMovement(Vec3.ZERO);
+        this.setOnGround(true);
     }
 
     @Override

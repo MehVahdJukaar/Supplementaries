@@ -63,6 +63,7 @@ public class CannonController {
     }
 
     public static void turnOff() {
+        sync(false, true);
         cannon = null;
         lastCameraYaw = 0;
         lastCameraPitch = 0;
@@ -71,6 +72,12 @@ public class CannonController {
         if (lastCameraType != null) {
             Minecraft.getInstance().options.setCameraType(lastCameraType);
         }
+    }
+
+    private static void sync(boolean fire, boolean stopControlling) {
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
+                fire, cannon.getBlockPos(), stopControlling));
     }
 
     public static boolean isActive() {
@@ -187,9 +194,7 @@ public class CannonController {
 
     public static void onPlayerAttack() {
         if (cannon != null && cannon.readyToFire()) {
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                    cannon.getYaw(),
-                    cannon.getPitch(), cannon.getPowerLevel(), true, cannon.getBlockPos()));
+            sync(true, false);
         }
     }
 
@@ -223,9 +228,7 @@ public class CannonController {
                 pos.distToCenterSqr(player.position()) < maxDist * maxDist) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                        cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                        false, cannon.getBlockPos()));
+                sync(false, false);
             }
         } else turnOff();
     }

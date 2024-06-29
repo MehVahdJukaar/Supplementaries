@@ -113,7 +113,6 @@ public class RopeHelper {
         } else if (state.is(ModRegistry.PULLEY_BLOCK.get())
                 && level.getBlockEntity(pos) instanceof PulleyBlockTile te && !te.isEmpty()) {
             return te.rotateIndirect(null, InteractionHand.MAIN_HAND, ropeBlock, moveUpDir, true);
-            //TODO: rrmove thse param
         } else {
             //if (dist == 0) return false;
             BlockPos up = pos.relative(moveUpDir.getOpposite());

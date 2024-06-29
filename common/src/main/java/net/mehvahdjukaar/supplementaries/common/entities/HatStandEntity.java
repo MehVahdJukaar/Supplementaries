@@ -625,6 +625,5 @@ public class HatStandEntity extends LivingEntity {
         toilets.forEach(h -> h.setSkibidiIfInCauldron(player));
     }
 
-
 }
 

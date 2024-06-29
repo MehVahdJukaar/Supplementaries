@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -72,7 +73,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return isSlotUnlocked(index) && MiscUtils.isAllowedInShulker(stack, this.getLevel());
+        return isSlotUnlocked(index) && LunchBoxItem.canAcceptItem(stack);
     }
 
     @Override

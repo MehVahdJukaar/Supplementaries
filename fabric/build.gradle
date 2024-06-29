@@ -59,6 +59,8 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
     //modImplementation("curse.maven:cyanide-541676:4824161")
+    modImplementation("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
+    modImplementation("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
 
     modImplementation("curse.maven:immediatelyfast-686911:4937544")
     modImplementation("org.uiutils:uiutils")

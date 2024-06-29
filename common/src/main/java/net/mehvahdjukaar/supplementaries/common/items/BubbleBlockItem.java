@@ -16,7 +16,6 @@ public class BubbleBlockItem extends BlockItem implements ICustomItemRendererPro
         super(block, properties);
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public Supplier<ItemStackRenderer> getRendererFactory() {
         return BubbleBlockItemRenderer::new;

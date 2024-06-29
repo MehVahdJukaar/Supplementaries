@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -19,6 +20,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SlimeBlock;
@@ -41,13 +43,13 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
     public CannonBallEntity(LivingEntity thrower) {
         super(ModEntities.CANNONBALL.get(), thrower, thrower.level());
-        this.maxAge = 600;
+        this.maxAge = 6000;
         this.blocksBuilding = true;
     }
 
     public CannonBallEntity(EntityType<CannonBallEntity> type, Level level) {
         super(type, level);
-        this.maxAge = 600;
+        this.maxAge = 6000;
 
         this.blocksBuilding = true;
     }
@@ -70,10 +72,23 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         return ModRegistry.CANNONBALL.get().asItem();
     }
 
+    private int cc = 0;
+
     @Override
     public void tick() {
-        super.tick();
-        justCollidedWith.clear();
+        this.tickCount++;
+        if (tickCount % 60 == 0 || true) {
+            cc++;
+            super.tick();
+            justCollidedWith.clear();
+            if (!level().isClientSide) {
+                double dist = this.position().subtract(new Vec3(xo, yo, zo)).length();
+                if (dist > 0) {
+                    double speed = this.getDeltaMovement().length();
+                }
+            }
+            //  if (cc >= 12) discard();
+        }
     }
 
     @Override
@@ -134,11 +149,10 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
+
         if (maybeBounce(result)) {
             return;
         }
-        // set pos as if we didnt collide at all since we'll break the block infront
-        //   this.setPos(new Vec3(xo, yo, zo).add(this.getDeltaMovement()));
 
         if (!level().isClientSide) {
             float radius = 1.1f;
@@ -150,7 +164,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             float scaling = 5;
             float maxAmount = (float) (vel * vel * scaling);
 
-            Vec3 loc = result.getLocation();
+            //centered on cannonball so we always get rid of all blocks around it so we can move freely next tick
+            Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
@@ -163,19 +178,29 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             if (exploded != 0) {
                 double speedUsed = exploded / maxAmount;
-                this.setDeltaMovement(movement.scale(1 - speedUsed));
+                double factor = 1 - speedUsed;
+                if (factor <= 0 || factor > 1) {
+                    Supplementaries.error();
+                }
+                this.setDeltaMovement(movement.scale(factor));
                 Message message = ClientBoundExplosionPacket.cannonball(exp, this);
 
                 ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
-            } else {
-                int aa = 1;
             }
             this.hasImpulse = true;
 
-            if (this.getDeltaMovement().length() < 0.4 || exploded == 0) {
+            if (this.getDeltaMovement().lengthSqr() < (0.2 * 0.2) || exploded == 0) {
                 this.playSound(ModSounds.CANNONBALL_BREAK.get(), 1.0F, 1.5F);
                 this.level().broadcastEntityEvent(this, (byte) 3);
                 this.discard();
+            } else {
+                // advance until we go as far as we would have gone had we not had any collisions
+                Vec3 targetPos = new Vec3(xo, yo, zo).add(this.movementOld);
+                Vec3 missingMovement = targetPos.subtract(this.position());
+                //this is a recursive call!
+                if (missingMovement.lengthSqr() > 0.01 * 0.01) {
+                    this.move(MoverType.SELF, missingMovement);
+                }
             }
         }
     }
@@ -318,11 +343,5 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     public boolean isPushable() {
         return true;
     }
-
-    @Override
-    public boolean collidesWithBlocks() {
-        return true;
-    }
-
 
 }

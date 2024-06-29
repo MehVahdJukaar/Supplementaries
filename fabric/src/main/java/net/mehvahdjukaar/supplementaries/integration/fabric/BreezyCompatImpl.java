@@ -4,7 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 public class BreezyCompatImpl {
-    public static float getWindDirection(BlockPos pos, Level level) {
+    public static float getWindAngle(BlockPos pos, Level level) {
         return 90;
     }
+
 }

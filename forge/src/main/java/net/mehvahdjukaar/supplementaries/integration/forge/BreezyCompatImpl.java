@@ -6,11 +6,12 @@ import net.minecraft.world.level.Level;
 
 public class BreezyCompatImpl {
 
-    public static float getWindDirection(BlockPos pos, Level level) {
+    public static float getWindAngle(BlockPos pos, Level level) {
         var data = BreezyNetworking.CLIENT_CACHE;
         if (data != null) {
-            return (float) data.getWindAtHeight(pos.getY(), level);
+            return (float) data.getWindAtHeight(pos.getY(), level) - 90;
         }
         return 90;
     }
+
 }

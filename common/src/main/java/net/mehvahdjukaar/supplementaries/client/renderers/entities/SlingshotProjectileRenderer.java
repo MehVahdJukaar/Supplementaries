@@ -39,8 +39,6 @@ public class SlingshotProjectileRenderer<T extends SlingshotProjectileEntity & I
         if (entity.tickCount < 2 && this.entityRenderDispatcher.camera.getPosition().distanceToSqr(entity.position()) < MIN_CAMERA_DISTANCE_SQUARED) {
             return;
         }
-        //centers everything to hitbox y = 0 (rendered hitbox will be lowered)
-        poseStack.translate(0, -entity.getBbHeight() / 2f, 0);
 
         poseStack.pushPose();
         poseStack.translate(0, 0.25, 0);

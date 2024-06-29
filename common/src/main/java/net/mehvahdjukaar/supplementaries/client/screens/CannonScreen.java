@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -61,18 +62,23 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     private void onManeuverPressed(Button button) {
         CannonController.startControlling(tile);
-        this.onClose();
+        //dont sync cannon and dont clear owner
+        super.onClose();
     }
 
     @Override
     public void onClose() {
         super.onClose();
+        syncCannon();
+    }
+
+    private void syncCannon() {
         //sync tile regardless. Uses custom packet why not
         float yaw = this.yawSelector.getNumber();
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                yaw, pitch, power, false, this.tile.getBlockPos()
+                yaw, pitch, power, false, this.tile.getBlockPos(), true
         ));
         //update client immediately too
         this.tile.syncAttributes(yaw, pitch, power, false, minecraft.player);

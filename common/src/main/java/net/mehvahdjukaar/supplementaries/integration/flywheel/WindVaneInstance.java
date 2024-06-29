@@ -7,12 +7,16 @@ import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.hardcoded.ModelPart;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.util.AnimationTickHolder;
+import com.jozufozu.flywheel.vanilla.BellInstance;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmInstance;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.level.block.entity.BellBlockEntity;
 
 public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> implements DynamicInstance {
 
@@ -57,7 +61,6 @@ public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> imp
     }
 
     private ModelData makeCenterInstance() {
-        Material<ModelData> m =   this.getTransformMaterial();
         Material<ModelData> material = this.materialManager.defaultCutout().material(Materials.TRANSFORMED);
         return material
                 .model("chicken_" + this.blockEntity.getType(), this::makeModel).createInstance();

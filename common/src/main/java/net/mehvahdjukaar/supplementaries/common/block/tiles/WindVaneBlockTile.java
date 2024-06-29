@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.frozenblock.wilderwild.mod_compat.FrozenLibIntegration;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BreezyCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.WilderWildCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +32,7 @@ public class WindVaneBlockTile extends BlockEntity {
     }
 
     public float getYaw(float partialTicks) {
-        return  Mth.lerp(partialTicks, prevYaw, yaw);
+        return Mth.lerp(partialTicks, prevYaw, yaw);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
@@ -56,7 +58,11 @@ public class WindVaneBlockTile extends BlockEntity {
             float newYaw = (float) (maxAngle1 * Mth.sin((float) (tp * ((t * b / period1) % 360)))
                     + maxAngle2 * Mth.sin((float) (tp * ((t * b / period2) % 360))));
 
-             newYaw += CompatHandler.BREEZY ? BreezyCompat.getWindDirection(pPos, pLevel) : 90;
+            if (CompatHandler.WILDER_WILD) {
+                newYaw += WilderWildCompat.getWindAngle(pPos, pLevel);
+            } else if (CompatHandler.BREEZY) {
+                newYaw += BreezyCompat.getWindAngle(pPos, pLevel);
+            }
 
             tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
 

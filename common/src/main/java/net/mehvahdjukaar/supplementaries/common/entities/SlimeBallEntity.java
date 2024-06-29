@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -76,7 +78,9 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         this.setDeltaMovement(newVel);
         //adds distance that was eaten up by collision
         double missingDistance = velocity.subtract(this.position().subtract(new Vec3(xo, yo, zo))).length();
-        this.setPos(this.position().add(newVel.normalize().scale(missingDistance)));
+        Vec3 missingVel = newVel.normalize().scale(missingDistance);
+        this.move(MoverType.SELF, missingVel);
+        //this.setPos(this.position().add(missingVel));
         //this.setPos(this.position().add(surfaceNormal.x * 0.1f, surfaceNormal.y * 0.1f, surfaceNormal.z * 0.1f));
 
         if (!level().isClientSide) {
@@ -118,13 +122,12 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     }
 
     @Override
-    public boolean collidesWithBlocks() {
-        return true;
-    }
-
-
-    @Override
     public float getDefaultShootVelocity() {
         return 0.92f;
+    }
+
+    @Override
+    public boolean canHarmOwner() {
+        return true;
     }
 }

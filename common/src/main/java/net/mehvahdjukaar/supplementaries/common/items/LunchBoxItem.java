@@ -201,9 +201,10 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
     }
 
-    private static boolean canAcceptItem(ItemStack toInsert) {
-        var anim = toInsert.getItem().getUseAnimation(toInsert);
-        return anim == UseAnim.DRINK || anim == UseAnim.EAT;
+    public static boolean canAcceptItem(ItemStack toInsert) {
+        if (toInsert.getItem().canFitInsideContainerItems()) return false;
+        var animation = toInsert.getItem().getUseAnimation(toInsert);
+        return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }
 
     public interface Data extends AbstractData {

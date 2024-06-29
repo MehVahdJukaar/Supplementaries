@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 public class BreezyCompat {
 
     @ExpectPlatform
-    public static float getWindDirection(BlockPos pos, Level level) {
+    public static float getWindAngle(BlockPos pos, Level level) {
         throw new AssertionError();
     }
 }

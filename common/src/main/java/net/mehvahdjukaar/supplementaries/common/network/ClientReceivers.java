@@ -4,8 +4,10 @@ import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -342,6 +344,14 @@ public class ClientReceivers {
             Entity e = l.getEntity(message.id());
             if (e instanceof ISlimeable s) {
                 s.supp$setSlimedTicks(message.duration(), false);
+            }
+        });
+    }
+
+    public static void handleCannonControlPacket(ClientBoundControlCannonPacket message) {
+        withLevelDo(l -> {
+            if (l.getBlockEntity(message.pos()) instanceof CannonBlockTile te) {
+                CannonController.startControlling(te);
             }
         });
     }
