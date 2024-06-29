@@ -96,7 +96,6 @@ public class ClientEvents {
         if (newScreen != screen) Minecraft.getInstance().setScreen(newScreen);
     }
 
-    private static boolean hasAppliedCustomShader = false;
 
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
@@ -110,10 +109,22 @@ public class ClientEvents {
         isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.getBlock() instanceof AbstractRopeBlock rb && !rb.hasConnection(Direction.UP, state) &&
                 (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
 
+        applyMobHeadShaders(p);
+
+        CannonController.onClientTick(minecraft);
+    }
+
+    private static String currentlyAppliedMobShader = null;
+
+    private static void applyMobHeadShaders(Player p) {
         if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get() && !p.isSpectator()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
             String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
+            if (current == null && currentlyAppliedMobShader != null) {
+                currentlyAppliedMobShader = null; //clear when something else unsets it
+                return;
+            }
 
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
@@ -124,15 +135,12 @@ public class ClientEvents {
             }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
-                hasAppliedCustomShader = true;
-            } else if (hasAppliedCustomShader && newShader == null && current != null && (EFFECTS_PER_ITEM.containsValue(current) ||
-                    (CompatHandler.GOATED && current.equals(ClientRegistry.BARBARIC_RAGE_SHADER)))) {
+                currentlyAppliedMobShader = newShader;
+            } else if (!currentlyAppliedMobShader.equals(current) && newShader == null) {
                 renderer.shutdownEffect();
-                hasAppliedCustomShader = false;
+                currentlyAppliedMobShader = null;
             }
         }
-
-        CannonController.onClientTick(minecraft);
     }
 
     private static boolean shouldHaveGoatedEffect(Player p, Item item) {
