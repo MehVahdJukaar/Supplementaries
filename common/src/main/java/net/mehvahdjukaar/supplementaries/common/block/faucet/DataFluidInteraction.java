@@ -13,13 +13,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import java.util.Optional;
 
 //Data defined fluid interaction
-public record DataFluidInteraction(RuleTest target, SoftFluidStack softFluid, int amount,
+public record DataFluidInteraction(RuleTest target, SoftFluidStack softFluid,
                                    Optional<BlockState> output) implements FaucetSource.BlState {
 
     public static final Codec<DataFluidInteraction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RuleTest.CODEC.fieldOf("target").forGetter(DataFluidInteraction::target),
             SoftFluidStack.CODEC.fieldOf("fluid").forGetter(DataFluidInteraction::softFluid),
-            ExtraCodecs.POSITIVE_INT.optionalFieldOf("amount", 1).forGetter(DataFluidInteraction::amount),
             BlockState.CODEC.optionalFieldOf("replace_with").forGetter(DataFluidInteraction::output)
     ).apply(instance, DataFluidInteraction::new));
 
