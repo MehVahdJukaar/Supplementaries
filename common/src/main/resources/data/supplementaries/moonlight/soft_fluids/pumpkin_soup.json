@@ -8,11 +8,22 @@
       "empty": "minecraft:bowl",
       "capacity": 2
     }
+    {
+      "filled": [
+        "miners_delight:pumpkin_soup_cup"
+      ],
+      "empty": "miners_delight:copper_cup",
+      "capacity": 1
+    }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": 2,
     "item": "farmersdelight:pumpkin_soup"
+  },
+    "food": {
+    "divider": 1,
+    "item":  "miners_delight:pumpkin_soup_cup"
   },
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
