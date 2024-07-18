@@ -7,7 +7,7 @@
       ],
       "empty": "minecraft:bowl",
       "capacity": 2
-    }
+    },
     {
       "filled": [
         "miners_delight:pumpkin_soup_cup"
@@ -21,7 +21,7 @@
     "divider": 2,
     "item": "farmersdelight:pumpkin_soup"
   },
-    "food": {
+  "food": {
     "divider": 1,
     "item":  "miners_delight:pumpkin_soup_cup"
   },
