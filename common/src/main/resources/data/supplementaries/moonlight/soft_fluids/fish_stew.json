@@ -7,8 +7,8 @@
       ],
       "empty": "minecraft:bowl",
       "capacity": "BOWL"
-    }
-        {
+    },
+    {
       "filled": [
         "miners_delight:fish_stew_cup"
       ],
@@ -21,7 +21,7 @@
     "divider": "BOWL",
     "item": "farmersdelight:fish_stew"
   },
-    "food": {
+  "food": {
     "divider": "1",
     "item": "miners_delight:fish_stew_cup"
   },
