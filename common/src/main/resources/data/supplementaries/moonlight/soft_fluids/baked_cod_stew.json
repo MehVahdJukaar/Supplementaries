@@ -7,7 +7,7 @@
       ],
       "empty": "minecraft:bowl",
       "capacity": "BOWL"
-    }
+    },
     {
       "filled": [
         "miners_delight:baked_cod_stew_cup"

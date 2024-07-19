@@ -7,8 +7,8 @@
       ],
       "empty": "minecraft:bowl",
       "capacity": "BOWL"
-    }
-     {
+    },
+    {
       "filled": [
         "miners_delight:vegetable_soup_cup"
       ],
@@ -21,7 +21,7 @@
     "divider": "BOWL",
     "item": "farmersdelight:vegetable_soup"
   },
-    "food": {
+  "food": {
     "divider": "1",
     "item": "miners_delight:vegetable_soup_cup"
   },
