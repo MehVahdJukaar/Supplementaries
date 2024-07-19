@@ -1,0 +1,19 @@
+{
+  "color": "#E0AF79",
+  "containers": [
+    {
+      "filled": [
+        "farmersrespite:strong_apple_cider"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": "BOTTLE"
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "item": "farmersrespite:strong_apple_cider"
+  },
+  "from_mod": "farmersrespite",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.farmersrespite.strong_apple_cider"
+}
