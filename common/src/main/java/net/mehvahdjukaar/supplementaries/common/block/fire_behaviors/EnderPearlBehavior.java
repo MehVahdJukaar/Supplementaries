@@ -17,7 +17,7 @@ public class EnderPearlBehavior extends GenericProjectileBehavior {
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 pos, Vec3 facing,
                         float power, float drag, int inaccuracy, @Nullable Player owner) {
         BlockSource source = new BlockSourceImpl(level, BlockPos.containing(pos));
-        Projectile pearl = PearlMarker.getPearlToDispenseAndPlaceMarker(source);
+        Projectile pearl = PearlMarker.createPearlToDispenseAndPlaceMarker(source, pos);
 
         pearl.shoot(facing.x, facing.y, facing.z, -drag * power, inaccuracy);
 

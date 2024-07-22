@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
-import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
@@ -58,7 +57,7 @@ public class DispenserBehaviorsManager {
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
-            DispenserHelper.registerCustomBehavior(new EnderPearlBehavior());
+            DispenserHelper.registerCustomBehavior(new ThrowableEnderPearlBehavior());
         }
         if (CommonConfigs.Redstone.DISPENSER_MINECART_ENABLED.get()) {
             DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);

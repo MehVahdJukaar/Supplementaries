@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -258,10 +259,12 @@ public class PearlMarker extends Entity {
     }
 
 
-    public static ThrownEnderpearl getPearlToDispenseAndPlaceMarker(BlockSource source) {
+    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
         Level level = source.getLevel();
         BlockPos pos = source.getPos();
         ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
+        pearl.setPos(pearlPos.x(), pearlPos.y(), pearlPos.z());
+
         if (source instanceof MovingBlockSource<?> movingBlockSource) {
             pearl.setOwner(movingBlockSource.getMinecartEntity());
         } else {

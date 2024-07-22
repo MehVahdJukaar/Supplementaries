@@ -26,7 +26,6 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-
         Holder.Reference<EntityType<?>> id = ResourceArgument.getSummonableEntityType(context, "entity");
 
         CapturedMobHandler.addCommandMob(id.key().location().toString());

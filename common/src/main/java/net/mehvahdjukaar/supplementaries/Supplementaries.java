@@ -124,7 +124,7 @@ public class Supplementaries {
     // yes this is where I write crap. deal with it XD
     // flute pacifier
     // wolf howl
-
+//add wind mod compat
     // vampires mummy cript necromancer curse stuff, skull trap block (nether fortess like big overworld boss)
     // warp fly and warper block
     // randomize enchant for quiver and lunch boxes

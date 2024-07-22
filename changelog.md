@@ -32,4 +32,5 @@
 - new present sounds
 - changed slingshot particle
 - wind vanes compat for wilder wild
+- improved dispenser projectiles behaviors (slimeballs ender pears and bricks) to fail when a solid face block is placed against the dispenser, falling back on existing behaviors
 - changed many sounds to have their own sound event with their own subtitles
