@@ -4,15 +4,29 @@
   "artist": "Plantkillable",
   "supporters": {
     "toffanelly": {
-      "has_globe": "true"
+      "has_globe": true
     },
     "NotHypherionSA": {},
     "anon": {},
     "FishSupreme": {
+      "has_globe": true,
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
-    "LeonKappa": {
+    "ZzamZ34" : {
+      "has_statue": true,
+      "uuid":"ab19a9e6-7e51-451f-9b55-259e18cb82b9"
+    },
+    "LeonKappa": {},
+    "Wash": {},
+    "ithan": {},
+    "EGOtm" : {
+      "has_statue": true,
+      "uuid": "d5569700-83e6-4cd4-915f-dfe7c649b69b"
+    },
+    "supermarshadow":{
+      "uuid": "5bfc50f2-5059-4fea-878e-6ab90a366033",
+      "has_statue": true
     },
     "Artkek": {
       "has_statue": true,
@@ -23,7 +37,10 @@
       "uuid": "5bfc50f2-5059-4fea-878e-6ab90a366033",
       "has_statue": true
     },
-    "Synthestra": {},
+    "Synthestra": {
+      "uuid": "948cdb5c-9ba3-4ba9-96e7-ff97daff63ea",
+      "has_statue": true
+    },
     "n7": {
       "uuid": "5f7b3c4e-34bd-435f-b3f2-491fba2eb554",
       "has_statue": true
@@ -32,7 +49,7 @@
       "uuid": "f8f525b7-2dd2-41b9-98cb-9a2f974e8349",
       "has_statue": true,
       "has_globe": true
-    },  
+    },
     "Azrod_dovahkiin": {
       "uuid": "171ccd8a-3afe-4788-806d-ee643fe33a9c",
       "has_statue": true
@@ -42,8 +59,14 @@
       "has_statue": true
     },
     "CakeTaco": {
+      "has_globe": true,
       "has_statue": true,
       "uuid": "cf722cd7-c93e-4de9-811b-77d146f146c8"
+    },
+    "Dausora": {
+      "has_statue": true,
+      "has_globe": true,
+      "uuid": "c465a603-d705-4857-b2b4-6a1dd6424178"
     },
     "Wofrion": {
       "has_statue": true,
@@ -64,10 +87,9 @@
       "has_globe": true
     },
     "AlfaTheseus": {
-       "uuid": "babc893f-664a-4ab7-9793-6abbe8b88700",
-       "has_statue": true
-
-},
+      "uuid": "babc893f-664a-4ab7-9793-6abbe8b88700",
+      "has_statue": true
+    },
     "MetalBox47": {},
     "PwnimuS": {
       "uuid": "eb21318d-471a-4f08-b061-85bb55917e45",
@@ -76,6 +98,10 @@
     "Mia Lemon": {},
     "Freshah": {
       "uuid": "5bd642df-4640-4f84-bc57-50e7dad39a39",
+      "has_statue": true
+    },
+    "toennito": {
+      "uuid": "72097862-9ecb-4434-b5f7-bd592f5b146e",
       "has_statue": true
     },
     "LaughHappy": {},
@@ -109,6 +135,17 @@
     },
     "E_Y_E_": {
       "has_globe": true
+    },
+    "MORTHRIN":{
+      "has_statue": true,
+      "uuid": "5fff49c9-77e7-40c7-b2d3-c63c48113075"
+    },
+    "chu":{
+      "has_globe": true
+    },
+    "OutrightWings":{
+      "has_statue": true,
+      "uuid": "37d77f71-6ff7-4c23-9f61-d8b270450eb9"
     },
     "Wais": {
       "has_globe": true
@@ -151,8 +188,8 @@
   "music_and_sounds": [
     "Partyp",
     "Cydian",
-    "Rapsmary",
     "DemiMark",
+    "Rapsmary",
     "Piero",
     "zapsplat.com"
   ],
