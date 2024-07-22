@@ -90,16 +90,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        var newState = super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
-
-        if (GunpowderBlock.isFireSource(neighborState)) {
-            newState = newState.setValue(AGE, 1);
-        }
-        return newState;
-    }
-
-    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
         if (!level.isClientSide) {
@@ -146,6 +136,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         return isOnFire(state);
     }
 
+    // TODO :remove this
     public static boolean isOnFire(BlockState state) {
         return state.getValue(AGE) > 0;
     }
@@ -218,9 +209,9 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         if (isOnFire(state)) {
             if (!entity.fireImmune()) {
 
-                if(CompatHandler.SOUL_FIRED){
+                if (CompatHandler.SOUL_FIRED) {
                     SoulFiredCompat.setOnFire(entity, 8);
-                }else{
+                } else {
                     entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
                     if (entity.getRemainingFireTicks() == 0) {
                         entity.setSecondsOnFire(8);
@@ -248,26 +239,58 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        level.scheduleTick(pos, this, getFireTickDelay(level.random));
-        if (level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK) && isOnFire(state)) {
+        if (level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
 
-            int age = state.getValue(AGE);
-            int layers = state.getValue(LEVEL);
-            int ageAdd = random.nextInt(3) / 2;
-            int ageIncrease = Math.min(15, age + ageAdd);
-            if (age != ageIncrease) {
-                state = state.setValue(AGE, ageIncrease);
-                level.setBlock(pos, state, 4);
+            if (!isOnFire(state)) {
+                // validate if it can lit up
+                for (Direction dir : Direction.values()) {
+                    if (dir == Direction.DOWN) continue;
+                    if (GunpowderBlock.isFireSource(level, pos.relative(dir))) {
+                        this.setLitUp(state, level, pos, true);
+                    }
+                }
+            } else {
+
+                int age = state.getValue(AGE);
+
+                //increase fire growth
+                if (age < 4) {
+                    level.scheduleTick(pos, this, getReactToFireDelay());
+                    level.setBlockAndUpdate(pos, state.setValue(AGE, age + 1));
+                    return;
+                }
+
+                level.scheduleTick(pos, this, getFireTickDelay(level.random));
+
+                //tick normal fire
+
+                int layers = state.getValue(LEVEL);
+
+                if (age == 15) {
+                    if (layers == 15) {
+                        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                        return;
+                    }
+                    level.setBlockAndUpdate(pos, state.setValue(LEVEL, layers + 1));
+                    return;
+                }
+
+                int ageAdd = random.nextInt(3)/2;
+                int ageIncrease = Math.min(15, age + ageAdd);
+                if (age != ageIncrease) {
+                    state = state.setValue(AGE, ageIncrease);
+                    level.setBlock(pos, state, 4);
+                }
+
+                //  if (age == 15 && random.nextInt(4) == 0 && !SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
+                //      level.removeBlock(pos, false);
+                //      return;
+                //  }
+
+                boolean burnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
+                int k = burnout ? -50 : 0;
+                BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
             }
-
-            //  if (age == 15 && random.nextInt(4) == 0 && !SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
-            //      level.removeBlock(pos, false);
-            //      return;
-            //  }
-
-            boolean burnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
-            int k = burnout ? -50 : 0;
-            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
         }
 
     }

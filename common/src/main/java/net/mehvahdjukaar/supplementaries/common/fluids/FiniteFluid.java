@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -111,10 +112,13 @@ public abstract class FiniteFluid extends Fluid {
             }
 
 
-            FluidState myNewState = makeState(currentAmount - map.size());
-            BlockState blockstate = myNewState.createLegacyBlock();
-            level.setBlock(pos, blockstate, 2);
-            level.updateNeighborsAt(pos, blockstate.getBlock());
+            if(!map.isEmpty()) {
+                FluidState myNewState = makeState(currentAmount - map.size());
+                BlockState blockstate = blockState.setValue(BlockStateProperties.LEVEL,
+                        myNewState.createLegacyBlock().getValue(BlockStateProperties.LEVEL));
+                level.setBlock(pos, blockstate, 2);
+                level.updateNeighborsAt(pos, blockstate.getBlock());
+            }
         }
     }
 

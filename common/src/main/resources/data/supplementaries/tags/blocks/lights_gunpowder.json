@@ -3,6 +3,7 @@
     "#minecraft:fire",
     "supplementaries:blaze_rod",
     "minecraft:magma_block",
-    "minecraft:lava"
+    "minecraft:lava",
+    "supplementaries:lumisene"
   ]
 }

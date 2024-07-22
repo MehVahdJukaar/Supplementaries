@@ -5,6 +5,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -114,6 +115,7 @@ public class CannonBallExplosion extends Explosion {
 
     @Override
     public void finalizeExplosion(boolean spawnParticles) {
+        if (level.isClientSide) ClientEvents.onExplosion(this);
         if (spawnParticles) {
             this.level.addParticle(ParticleTypes.EXPLOSION, this.x, this.y, this.z, 1.0, 0.0, 0.0);
         }

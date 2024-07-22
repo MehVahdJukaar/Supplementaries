@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
@@ -87,6 +88,7 @@ public class BombExplosion extends Explosion {
         boolean interactsWithBlocks = this.interactsWithBlocks();
 
         if (this.level.isClientSide) {
+            ClientEvents.onExplosion(this);
             this.level.playLocalSound(this.x, this.y, this.z, ModSounds.BOMB_EXPLOSION.get(), SoundSource.BLOCKS, bombType.volume(), (1.2F + (this.level.random.nextFloat() - this.level.random.nextFloat()) * 0.2F), false);
 
             if (spawnParticles) {

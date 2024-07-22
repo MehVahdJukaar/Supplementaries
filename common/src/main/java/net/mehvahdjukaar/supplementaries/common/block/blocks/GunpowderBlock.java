@@ -471,20 +471,23 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isFireSource(BlockState state) {
+    public static boolean isFireSource(BlockState state, BlockGetter level, BlockPos pos) {
         Block b = state.getBlock();
         if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
         if (state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) && state.hasProperty(BlockStateProperties.LIT)) {
             return state.getValue(BlockStateProperties.LIT);
         }
-        return state.is(ModTags.LIGHTS_GUNPOWDER);
+        if(state.is(ModTags.LIGHTS_GUNPOWDER)){
+            return !(state.getBlock() instanceof ILightable l) || l.isLitUp(state, level, pos);
+        }
+        return false;
     }
 
     public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
-        return isFireSource(state);
+        return isFireSource(state, world, pos);
     }
 
     //TODO: this is not working

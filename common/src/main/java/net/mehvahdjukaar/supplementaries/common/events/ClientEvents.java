@@ -38,6 +38,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -105,12 +106,9 @@ public class ClientEvents {
 
         Player p = minecraft.player;
         if (p == null) return;
-        BlockState state = p.getFeetBlockState();
-        isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.getBlock() instanceof AbstractRopeBlock rb && !rb.hasConnection(Direction.UP, state) &&
-                (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
 
+        checkIfOnRope(p);
         applyMobHeadShaders(p);
-
         CannonController.onClientTick(minecraft);
     }
 
@@ -136,7 +134,7 @@ public class ClientEvents {
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
                 currentlyAppliedMobShader = newShader;
-            } else if (!currentlyAppliedMobShader.equals(current) && newShader == null) {
+            } else if (current != null && !current.equals(currentlyAppliedMobShader)) {
                 renderer.shutdownEffect();
                 currentlyAppliedMobShader = null;
             }
@@ -166,6 +164,11 @@ public class ClientEvents {
         return isOnRope;
     }
 
+    private static void checkIfOnRope(Player p) {
+        BlockState state = p.getFeetBlockState();
+        isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.getBlock() instanceof AbstractRopeBlock rb && !rb.hasConnection(Direction.UP, state) &&
+                (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
+    }
 
     public static void onEntityLoad(Entity entity, Level clientLevel) {
         if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
@@ -175,4 +178,9 @@ public class ClientEvents {
     }
 
 
+    public static void onExplosion(Explosion explosion) {
+        //  if(ClientConfigs.Tweaks.EXPLOSION_SHAKE.get()) {
+//
+        //      }
+    }
 }

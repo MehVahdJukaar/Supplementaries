@@ -22,6 +22,7 @@
     "EvokerMixin",
     "ExplorationMapFunctionMixin",
     "ExplorationMapSerializerMixin",
+    "ExplosionMixin",
     "FallingBlockEntityMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
