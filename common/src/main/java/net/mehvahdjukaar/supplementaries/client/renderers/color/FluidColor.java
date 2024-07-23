@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class FluidColor implements BlockColor, ItemColor {
+public record FluidColor(boolean flowing) implements BlockColor, ItemColor {
 
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tint) {
@@ -21,7 +21,7 @@ public class FluidColor implements BlockColor, ItemColor {
             if (level.getBlockEntity(pos) instanceof ISoftFluidTankProvider bh) {
                 if (tint == 1) {
                     var tank = bh.getSoftFluidTank();
-                    return tank.getCachedStillColor(level, pos);
+                    return flowing ? tank.getCachedFlowingColor(level, pos) : tank.getCachedStillColor(level, pos);
                 }
             }
         }
@@ -33,8 +33,8 @@ public class FluidColor implements BlockColor, ItemColor {
         CompoundTag fluidHolder = itemStack.getTagElement("FluidHolder");
         Level level = Minecraft.getInstance().level;
         if (fluidHolder != null && level != null) {
-           SoftFluidStack stack = SoftFluidStack.load(fluidHolder);
-            return stack.getStillColor(level, null);
+            SoftFluidStack stack = SoftFluidStack.load(fluidHolder);
+            return flowing ? stack.getFlowingColor(level, null) : stack.getStillColor(level, null);
         }
         return 0;
     }

@@ -13,9 +13,10 @@
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
-    "ZzamZ34" : {
+    "ZAM" : {
       "has_statue": true,
-      "uuid":"ab19a9e6-7e51-451f-9b55-259e18cb82b9"
+      "uuid":"ab19a9e6-7e51-451f-9b55-259e18cb82b9",
+      "has_globe": true
     },
     "LeonKappa": {},
     "Wash": {},
@@ -32,10 +33,6 @@
       "has_statue": true,
       "uuid": "77e6fa0a-992b-48b3-9383-9490f4cdd1e7",
       "has_globe": true
-    },
-    "supermarshadow":{
-      "uuid": "5bfc50f2-5059-4fea-878e-6ab90a366033",
-      "has_statue": true
     },
     "Synthestra": {
       "uuid": "948cdb5c-9ba3-4ba9-96e7-ff97daff63ea",

@@ -13,17 +13,13 @@
         "miners_delight:baked_cod_stew_cup"
       ],
       "empty": "miners_delight:copper_cup",
-      "capacity": "1"
+      "capacity": "BOTTLE"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": "BOWL",
     "item": "farmersdelight:baked_cod_stew"
-  },
-    "food": {
-    "divider": "1",
-    "item": "miners_delight:baked_cod_stew_cup"
   },
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid"

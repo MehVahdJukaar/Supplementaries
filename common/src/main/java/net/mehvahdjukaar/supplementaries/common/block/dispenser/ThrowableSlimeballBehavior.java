@@ -30,8 +30,8 @@ class ThrowableSlimeballBehavior extends ProjectileBehavior {
     }
 
     @Override
-    protected Projectile getProjectileEntity(Level worldIn, Position position, ItemStack stackIn) {
-        return new SlimeBallEntity(worldIn, position.x(), position.y(), position.z());
+    protected Projectile getProjectileEntity(BlockSource source, Position position, ItemStack stackIn) {
+        return new SlimeBallEntity(source.getLevel(), position.x(), position.y(), position.z());
     }
 
     //TODO: standardize these

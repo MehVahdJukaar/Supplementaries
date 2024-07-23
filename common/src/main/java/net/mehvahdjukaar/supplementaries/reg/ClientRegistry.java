@@ -472,7 +472,7 @@ public class ClientRegistry {
         event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());
         event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
-        event.register(new FluidColor(), ModRegistry.GOBLET.get(), ModRegistry.JAR.get());
+        event.register(new FluidColor(false), ModRegistry.GOBLET.get(), ModRegistry.JAR.get());
     }
 
     @EventCalled

@@ -2,22 +2,21 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "supplementaries:block/clock_front",
-		"1": "supplementaries:block/clock_side",
-		"2": "supplementaries:block/clock_back",
+		"1": "supplementaries:block/clock_side_2",
 		"particle": "supplementaries:block/clock_side"
 	},
 	"elements": [
 		{
 			"from": [0, 0, 1],
-			"to": [16, 16, 16],
+			"to": [16, 16, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [23, 8, 23]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"east": {"uv": [1, 0, 16, 16], "texture": "#1", "cullface": "east"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "south"},
-				"west": {"uv": [1, 0, 16, 16], "texture": "#1", "cullface": "west"},
-				"up": {"uv": [1, 16, 16, 0], "rotation": 180, "texture": "#1", "cullface": "up"},
-				"down": {"uv": [1, 16, 16, 0], "rotation": 180, "texture": "#1", "cullface": "down"}
+				"east": {"uv": [1, 0, 15, 16], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [1, 0, 15, 16], "texture": "#1", "cullface": "west"},
+				"up": {"uv": [1, 16, 15, 0], "rotation": 180, "texture": "#1", "cullface": "up"},
+				"down": {"uv": [1, 16, 15, 0], "rotation": 180, "texture": "#1", "cullface": "down"}
 			}
 		},
 		{
@@ -27,6 +26,18 @@
 			"faces": {
 				"north": {"uv": [7, 7, 9, 9], "texture": "#0", "cullface": "north"},
 				"east": {"uv": [7, 7, 8, 9], "texture": "#0"},
+				"west": {"uv": [8, 7, 9, 9], "texture": "#0"},
+				"up": {"uv": [7, 7, 9, 8], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [7, 8, 9, 9], "rotation": 180, "texture": "#0"}
+			}
+		},
+		{
+			"from": [7, 7, 15],
+			"to": [9, 9, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, 15, 23]},
+			"faces": {
+				"east": {"uv": [7, 7, 8, 9], "texture": "#0"},
+				"south": {"uv": [7, 7, 9, 9], "texture": "#0", "cullface": "south"},
 				"west": {"uv": [8, 7, 9, 9], "texture": "#0"},
 				"up": {"uv": [7, 7, 9, 8], "rotation": 180, "texture": "#0"},
 				"down": {"uv": [7, 8, 9, 9], "rotation": 180, "texture": "#0"}
@@ -63,12 +74,5 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [0, 1,
-		{
-			"name": "group",
-			"origin": [15.5, 10, 8.2],
-			"children": []
-		}
-	]
+	}
 }

@@ -102,7 +102,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
         boolean r = this.tryExtract(level, pos, state, true) != 0;
         this.updateLight();
-        requestModelReload();
+        this.requestModelReload();
         return r;
     }
 

@@ -13,17 +13,13 @@
         "miners_delight:chicken_soup_cup"
       ],
       "empty": "miners_delight:copper_cup",
-      "capacity": "1"
+      "capacity": "BOTTLE"
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "food": {
     "divider": "BOWL",
     "item": "farmersdelight:chicken_soup"
-  },
-  "food": {
-    "divider": "1",
-    "item": "miners_delight:chicken_soup_cup"
   },
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid"

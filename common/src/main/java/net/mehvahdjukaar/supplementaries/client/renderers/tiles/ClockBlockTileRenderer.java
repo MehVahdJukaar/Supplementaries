@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -54,8 +55,18 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         poseStack.pushPose();
         poseStack.translate(0.5d, 0.5d, 0.5d);
         poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
-        poseStack.scale(-1,-1,1);
+        poseStack.scale(-1, -1, 1);
 
+        renderHands(tile, partialTicks, poseStack, combinedLightIn, combinedOverlayIn, builder);
+        if (tile.getBlockState().getValue(ClockBlock.TWO_FACED)) {
+            poseStack.mulPose(RotHlpr.Y180);
+            renderHands(tile, partialTicks, poseStack, combinedLightIn, combinedOverlayIn, builder);
+        }
+
+        poseStack.popPose();
+    }
+
+    private void renderHands(ClockBlockTile tile, float partialTicks, PoseStack poseStack, int combinedLightIn, int combinedOverlayIn, VertexConsumer builder) {
         //hours
         poseStack.pushPose();
 
@@ -73,8 +84,6 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         poseStack.translate(0, -1.5, -0.5 + 0.04166667);
 
         this.minuteHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
-
-        poseStack.popPose();
 
         poseStack.popPose();
     }

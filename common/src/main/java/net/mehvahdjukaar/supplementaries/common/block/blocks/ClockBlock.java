@@ -27,9 +27,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -43,12 +43,20 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
+    protected static final VoxelShape SHAPE_NORTH_2 = Block.box(0, 0, 1, 16, 16, 15);
+    protected static final VoxelShape SHAPE_SOUTH_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_EAST_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.EAST);
+    protected static final VoxelShape SHAPE_WEST_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.WEST);
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HOUR = ModBlockProperties.HOUR;
+    public static final BooleanProperty TWO_FACED = ModBlockProperties.TWO_FACED;
 
     public ClockBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(TWO_FACED, false)
+                .setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
 
     public static void displayCurrentHour(Level world, Player player) {
@@ -79,6 +87,10 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
+        if (player.getItemInHand(handIn).is(this.asItem()) && !player.isSecondaryUseActive() &&
+                hit.getDirection() == state.getValue(FACING).getOpposite() && !state.getValue(TWO_FACED)) {
+            return super.use(state, worldIn, pos, player, handIn, hit);
+        }
         if (worldIn.isClientSide()) {
             displayCurrentHour(worldIn, player);
         }
@@ -95,20 +107,35 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(WATERLOGGED, flag).setValue(FACING, context.getHorizontalDirection().getOpposite());
+        BlockState oldState = context.getLevel().getBlockState(context.getClickedPos());
+        if (oldState.is(this)) {
+            return oldState.setValue(TWO_FACED, true);
+        } else {
+            return super.getStateForPlacement(context)
+                    .setValue(FACING, context.getHorizontalDirection().getOpposite());
+        }
     }
+
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            default -> SHAPE_NORTH;
-            case SOUTH -> SHAPE_SOUTH;
-            case EAST -> SHAPE_EAST;
-            case WEST -> SHAPE_WEST;
-        };
+        if (state.getValue(TWO_FACED)) {
+            return switch (state.getValue(FACING)) {
+                default -> SHAPE_NORTH_2;
+                case SOUTH -> SHAPE_SOUTH_2;
+                case EAST -> SHAPE_EAST_2;
+                case WEST -> SHAPE_WEST_2;
+            };
+        } else {
+            return switch (state.getValue(FACING)) {
+                default -> SHAPE_NORTH;
+                case SOUTH -> SHAPE_SOUTH;
+                case EAST -> SHAPE_EAST;
+                case WEST -> SHAPE_WEST;
+            };
+        }
     }
 
     @Nullable
@@ -129,7 +156,8 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HOUR, FACING, WATERLOGGED);
+        super.createBlockStateDefinition(builder);
+        builder.add(HOUR, FACING, TWO_FACED);
     }
 
     @Override
@@ -159,5 +187,11 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return Utils.getTicker(pBlockEntityType, ModRegistry.CLOCK_BLOCK_TILE.get(), ClockBlockTile::tick);
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+        return !useContext.isSecondaryUseActive() && useContext.getClickedFace() == state.getValue(FACING).getOpposite() &&
+                useContext.getItemInHand().is(this.asItem()) && !state.getValue(TWO_FACED);
     }
 }
