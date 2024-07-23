@@ -1,0 +1,18 @@
+{
+  "global_conditions": [
+    {
+      "flag": "cannon",
+      "type": "supplementaries:flag"
+    }
+  ],
+  "type": "simple",
+  "max_trades": 12,
+  "price": {
+    "id": "minecraft:emerald",
+    "Count": 4
+  },
+  "offer": {
+    "id": "supplementaries:cannon",
+    "Count": 1
+  }
+}

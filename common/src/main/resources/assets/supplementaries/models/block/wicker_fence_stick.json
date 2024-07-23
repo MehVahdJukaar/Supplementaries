@@ -1,8 +1,9 @@
 {
+	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "supplementaries:block/stick",
-		"particle": "supplementaries:block/wicker_fence",
-		"post": "supplementaries:block/wicker_fence"
+		"1": "supplementaries:block/wicker_fence_top",
+		"particle": "supplementaries:block/wicker_fence_side",
+		"post": "supplementaries:block/wicker_fence_side"
 	},
 	"elements": [
 		{
@@ -13,8 +14,8 @@
 				"east": {"uv": [7, 0, 9, 16], "texture": "#post"},
 				"south": {"uv": [7, 0, 9, 16], "texture": "#post"},
 				"west": {"uv": [7, 0, 9, 16], "texture": "#post"},
-				"up": {"uv": [0, 0, 2, 2], "texture": "#1", "cullface": "up"},
-				"down": {"uv": [0, 0, 2, 2], "texture": "#1", "cullface": "down"}
+				"up": {"uv": [7, 7, 9, 9], "texture": "#1", "cullface": "up"},
+				"down": {"uv": [7, 7, 9, 9], "texture": "#1", "cullface": "down"}
 			}
 		}
 	]
