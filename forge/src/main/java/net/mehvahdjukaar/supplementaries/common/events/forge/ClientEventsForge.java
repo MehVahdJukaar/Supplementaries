@@ -2,9 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
-import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
@@ -17,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -127,12 +125,17 @@ public class ClientEventsForge {
         }
     }
 
+    static boolean mutex = false;
+
     @SubscribeEvent
     public static void onPlayerDeath(ScreenEvent.Opening event) {
-        if (event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs
+        if (!mutex && event.getNewScreen() instanceof DeathScreen && event.getCurrentScreen() instanceof ChatScreen cs
                 && ClientConfigs.Tweaks.DEATH_CHAT.get()) {
+            //in case some mod were to somehow open a death screen from methods below
+            mutex = true;
             cs.charTyped((char) GLFW.GLFW_KEY_MINUS, 0);
             cs.keyPressed(GLFW.GLFW_KEY_ENTER, 0, 0);
+            mutex = false;
         }
     }
 
