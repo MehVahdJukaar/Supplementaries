@@ -1,55 +1,79 @@
 # Supplementaries Team License
-Version 1.0, July 2024
+Version 1.1, July 2024
 
 Copyright (c) 2024 Supplementaries Team.  All Rights Reserved.
 
+This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this software and/or its associated files.
+
+By using the software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
+
+
+## 1. Definitions
+
+Definitions
+For the purposes of this Agreement, the following definitions apply:
+
+- **Our Sources** refers to copies of the Software or its associated files obtained directly from the owners. This includes files available on the owners' official CurseForge or Modrinth project pages.
+
+- **Compete** refers to any project or software offering similar functionality, features, or services as the Software and targeting the same or a similar user base. This includes, but is not limited to, software that directly substitutes or mirrors one or more functionalities of the Software
+
+## 2. Grant of License
 
 Permissions are hereby granted below to any person having a copy of
 this software and/or its associated files:
 
-### Usage
-You may use the software for both private and public purposes.  The software must be downloaded from **Our Sources** and may be used as a library or integrated with your code as either a soft or hard dependency.
+### 2.1 Usage
+The Software may be used for both private and public purposes as well integrated with your code as either a soft or hard dependency provided that it is downloaded from "Our Sources". 
 
-### Copying
-You may copy the software for private use or to contribute to the software. 
-You may also copy and utilize part of this software code in your own project provided that you:
-- provide adequate credits to the authors.
-- your own project does not **Compete** with this software.
+### 2.2 Copying
+The Software may be copied for private use or to contribute to its development.
+The Licensee may incorporate part of this Software code into their own projects provided that:
+- Appropriate credit is given to the original authors of the Software.
+- The Licensee's project does not "Compete" with the Software.
 
-### Modification
-You may only modify the software for private use or to contribute to the software.
+### 2.3 Modification
+The Software may be modified for private use or to contribute to its development.
 
-### Distributing
-You may only distribute this software for private use.  You may not publish this software.
+### 2.3 Publishing
+Public distribution or publication of the Software, in whole or in part, is strictly prohibited without the express written permission of the authors.
 
-### Sub-Licensing
-Sub-Licensing the software is not allowed.
+### 2.4 Sharing
+The Licensee is permitted to share the Software privately with a limited number of individuals, such as friends or family members, provided that:
 
-### Selling
-Selling this software and/or its associated files is not allowed.
+- The sharing is done without any form of commercial gain or compensation.
+- The Software is not made publicly available or accessible to the general public.
+- The recipients of the Software agree to abide by the terms and conditions of this Agreement.
 
-### Attribution
-You must provide explicit credits to this software authors in any public media, such as web pages or videos, that primarily focuses on the content of this software.
-Credits must include a link back to this software's source.
+### 2.5 Sub-Licensing
+The Licensee shall not, under any circumstances, sub-license, lease, rent, or otherwise transfer rights to the Software, in whole or in part, to any third party.
 
+### 2.6 Selling
+The sale of the Software, including its associated files, is strictly prohibited.
 
-## Modpack Clarification
-Permission is granted for Modpacks to use this software.
-The software used must be an unmodified copy obtained from **Our Sources** and cannot be bundled in the modpack directly as this would violate the redistribution clause.
-Explicit credits are not required.
+## 3 Attribution
+Any public media produced by the Licensee (such as web pages or videos) that primarily focuses on the content of this Software must include explicit credits to the authors of the Software.
+Credits must include a link back to the source of the Software.
+The Licensee may not claim ownership of the Software or its associated files.
 
-## Definition of Our Sources:
-**Our Sources** refers to copies of this software or its associated files obtained directly from the owners. This only includes files from our CurseForge or Modrinth pages of the respective projects.
+## 5 Modpack Clarification
+Permission is granted for the Software to be used in Modpacks, provided that:
 
-## Definition of Compete
-**Compete** refers to any project or software that offers similar functionality, features, or services as this software and is intended for the same or similar user base. This includes, but is not limited to, software that directly substitutes or mirrors one or more of the functionality of this software.
+- The Software used is an unmodified copy obtained from "Our Sources."
+- The Software is not directly bundled in the Modpack, as this would violate the redistribution clause.
+- Explicit credits within the Modpack are not required.
 
-## Modification Clause
-If all authors were to become unreachable for more than one year, this software license shall be considered as Public Domain.
+## 4 Contributions
+By submitting contributions (including but not limited to code, documentation, bug fixes, or feature enhancements) to the Software, the contributor ("Contributor") agrees to the following terms:
 
-## Disclaimer
+- **License Grant**: The Contributor hereby grants the Owner a perpetual, irrevocable, worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, perform, and display such contributions, in whole or in part, in any form, medium, or technology now known or later developed. The Owner is also granted the right to sublicense these contributions as part of the Software.
+- **Warranty of Rights**: The Contributor represents and warrants that they have the right to make the contributions and that such contributions do not infringe on any third-party rights.
+
+## 6 Modification Clause
+In the event that all authors of the Software were to become unreachable for a period exceeding one year, this license shall automatically convert to a Public Domain status.
+
+## 7 Disclaimer of Warranty
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-## Inclusion of Notices
+## 8 Inclusion of Notices
 The above copyright notice and these permission notices must be included in all copies or substantial portions of the Software.
