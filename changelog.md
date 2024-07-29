@@ -33,5 +33,6 @@
 - changed slingshot particle
 - you can now have a 2 faced clock block
 - wind vanes compat for wilder wild
+- fixed an issue with FD stick logged tomatoes compat
 - improved dispenser projectiles behaviors (slimeballs ender pears and bricks) to fail when a solid face block is placed against the dispenser, falling back on existing behaviors
 - changed many sounds to have their own sound event with their own subtitles

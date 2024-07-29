@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:stick","required":false}
+    {"id":"supplementaries:rope","required":false}
   ]
 }

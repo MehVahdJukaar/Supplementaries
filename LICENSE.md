@@ -8,10 +8,9 @@ This License Agreement is made between the author(s) of the Software and any per
 By using the software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
 
 ## 0. Summary
-This license allows nearly all uses for personal purposes, including modification and private sharing from official sources.
-Public use is permitted with proper credit to the authors.
-The license protects authors' rights while maintaining some open-source qualities, such as accepting contributions and allowing code integration in non-competing projects.
-Redistribution and commercial use are prohibited. 
+This license allows nearly all uses for personal purposes, including modification and private sharing from official sources. 
+The license protects authors' rights while maintaining some open-source qualities, such as accepting contributions and allowing code integration in non-competing projects. 
+Public use is permitted with proper credit to the authors. Public redistribution and commercial use are prohibited.
 
 ## 1. Definitions
 

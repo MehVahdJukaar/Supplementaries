@@ -41,6 +41,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 import vectorwing.farmersdelight.common.tag.ModTags;
@@ -70,24 +71,24 @@ public class FarmersDelightCompat {
     }
 
 
-    public static boolean tryTomatoLogging(ServerLevel level, BlockPos pos) {
+    @Nullable
+    public static BlockState getTomatoLoggedReplacement(ServerLevel level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         if (isTomatoVineClimbingConfigOn()) {
             BlockState toPlace;
             if (state.is(ModRegistry.ROPE.get())) {
                 toPlace = ROPE_TOMATO.get().defaultBlockState();
                 toPlace = Block.updateFromNeighbourShapes(toPlace, level, pos);
-                level.setBlock(pos, toPlace, 3);
-                return true;
+                return toPlace;
             } else if (state.is(ModRegistry.STICK_BLOCK.get())) {
                 toPlace = STICK_TOMATOES.get().defaultBlockState();
-                level.setBlock(pos, toPlace, 3);
-                return true;
+               return toPlace;
             }
         }
-        return false;
+        return null;
     }
 
+    @Contract
     @ExpectPlatform
     public static boolean isTomatoVineClimbingConfigOn() {
         throw new AssertionError();
@@ -106,28 +107,7 @@ public class FarmersDelightCompat {
 
         @Override
         public void attemptRopeClimb(ServerLevel level, BlockPos pos, RandomSource random) {
-            if (random.nextFloat() < 0.3F) {
-                BlockPos posAbove = pos.above();
-                BlockState stateAbove = level.getBlockState(posAbove);
-                boolean canClimb = stateAbove.is(ModTags.ROPES);
-                if (canClimb) {
-                    int vineHeight;
-                    for (vineHeight = 1; level.getBlockState(pos.below(vineHeight)).getBlock() instanceof TomatoVineBlock; ++vineHeight) {
-                    }
-
-                    if (vineHeight < 3) {
-                        BlockState toPlace;
-                        if (stateAbove.is(ModRegistry.ROPE.get())) {
-                            toPlace = ROPE_TOMATO.get().withPropertiesOf(stateAbove);
-                        } else if (stateAbove.is(ModRegistry.STICK_BLOCK.get())) {
-                            toPlace = STICK_TOMATOES.get().withPropertiesOf(stateAbove);
-                        } else {
-                            toPlace = CompatObjects.TOMATO_CROP.get().defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true);
-                        }
-                        level.setBlockAndUpdate(posAbove, toPlace);
-                    }
-                }
-            }
+       super.attemptRopeClimb(level, pos, random);
         }
 
         @Override
