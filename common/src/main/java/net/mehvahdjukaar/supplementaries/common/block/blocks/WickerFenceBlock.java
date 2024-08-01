@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,12 +32,17 @@ public class WickerFenceBlock extends WaterBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final Map<BlockState, VoxelShape> shapeByIndex;
     private final Map<BlockState, VoxelShape> collisionShapeByIndex;
-    private static final VoxelShape POST_TEST = Block.box(7.0, 0.0, 7.0, 9.0, 16.0, 9.0);
     private static final VoxelShape NORTH_TEST = Block.box(7.0, 0.0, 0.0, 9.0, 16.0, 9.0);
     private static final VoxelShape SOUTH_TEST = Block.box(7.0, 0.0, 7.0, 9.0, 16.0, 16.0);
     private static final VoxelShape WEST_TEST = Block.box(0.0, 0.0, 7.0, 9.0, 16.0, 9.0);
     private static final VoxelShape EAST_TEST = Block.box(7.0, 0.0, 7.0, 16.0, 16.0, 9.0);
 
+    public static final Map<Direction, EnumProperty<WallSide>> PROPERTY_BY_DIRECTION = ImmutableMap.copyOf(Util.make(Maps.newEnumMap(Direction.class), enumMap -> {
+        enumMap.put(Direction.NORTH, NORTH_WALL);
+        enumMap.put(Direction.EAST, EAST_WALL);
+        enumMap.put(Direction.SOUTH, SOUTH_WALL);
+        enumMap.put(Direction.WEST, WEST_WALL);
+    }));
 
     public WickerFenceBlock(BlockBehaviour.Properties properties) {
         super(properties);

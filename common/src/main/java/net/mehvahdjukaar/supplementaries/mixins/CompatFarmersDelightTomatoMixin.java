@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -41,9 +42,9 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
         }
     }
 
-    @ModifyReturnValue(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
-    public boolean supp$tomatoLoggingCompat2(boolean original, BlockState state) {
-        return original || state.getBlock() instanceof TomatoVineBlock;
+    @WrapOperation(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
+    public boolean supp$tomatoLoggingCompat2(BlockState state, Block block, Operation<Boolean> operation) {
+        return state.getBlock() instanceof TomatoVineBlock || operation.call(state, block);
     }
 
 }

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
@@ -61,14 +62,10 @@ public class JarBakedModel implements CustomBakedModel {
                 builder.setTint(1);
                 var poseStack = new PoseStack();
                 poseStack.translate(0.5, yOffset, 0.5);
-                try {
-                    builder.setAutoBuild(quads::add);
-                } catch (Exception ignored) {
-                }
+                builder.setAutoBuild(quads::add);
                 VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
                         height * amount,
                         0, -1);
-
                 //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
             }
             if (!SINGLE_PASS) return quads;

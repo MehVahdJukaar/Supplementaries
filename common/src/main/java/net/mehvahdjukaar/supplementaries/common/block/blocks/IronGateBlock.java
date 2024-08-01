@@ -167,19 +167,17 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
 
-    public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState returnValue) {
-        boolean altered = false;
+    public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState original) {
         for (Direction d : Direction.Plane.HORIZONTAL) {
             BooleanProperty prop = CrossCollisionBlock.PROPERTY_BY_DIRECTION.get(d);
-            if (!returnValue.getValue(prop)) {
+            if (!original.getValue(prop)) {
                 BlockState blockState = level.getBlockState(clickedPos.relative(d));
                 if (blockState.getBlock() instanceof FenceGateBlock &&
                         blockState.getValue(FenceGateBlock.FACING).getAxis() != d.getAxis()) {
-                    altered = true;
-                    returnValue = returnValue.setValue(prop, true);
+                    original = original.setValue(prop, true);
                 }
             }
         }
-        return altered ? returnValue : null;
+        return original;
     }
 }

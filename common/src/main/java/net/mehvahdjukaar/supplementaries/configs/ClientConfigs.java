@@ -257,9 +257,9 @@ public class ClientConfigs {
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
-            TEST1 = builder.comment("ignore this").define("test1", 0f, -10, 10);
-            TEST2 = builder.comment("ignore this").define("test2", 0f, -10, 10);
-            TEST3 = builder.comment("ignore this").define("test3", 0f, -10, 10);
+            TEST1 = builder.comment("ignore this").define("test1", 0d, -10, 10);
+            TEST2 = builder.comment("ignore this").define("test2", 0d, -10, 10);
+            TEST3 = builder.comment("ignore this").define("test3", 0d, -10, 10);
             builder.pop();
         }
     }

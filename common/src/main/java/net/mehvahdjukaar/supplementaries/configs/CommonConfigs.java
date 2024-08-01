@@ -664,7 +664,7 @@ public class CommonConfigs {
             builder.push("urn");
             URN_ENABLED = feature(builder);
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
-                    .define("critter_spawn_chance", 0.01f, 0, 1);
+                    .define("critter_spawn_chance", 0.01d, 0, 1);
             URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("cave_urns", true);
             builder.pop();
 
@@ -689,7 +689,7 @@ public class CommonConfigs {
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
-                    .define("fire_power", 0.6f, 0, 5);
+                    .define("fire_power", 0.6d, 0, 5);
             CANNON_FUSE_TIME = builder.comment("Time for a cannon to fire a projectile after it has been lit up")
                     .define("fuse_time", 40, 0, 500);
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
@@ -885,7 +885,7 @@ public class CommonConfigs {
             builder.push("slingshot");
             SLINGSHOT_ENABLED = feature(builder);
             SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier. Affect the initial projectile speed")
-                    .define("range_multiplier", 1f, 0, 5);
+                    .define("range_multiplier", 1d, 0, 5);
             SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
                     .define("charge_time", 20, 0, 100);
             SLINGSHOT_DECELERATION = builder.comment("Deceleration for the stasis projectile")
