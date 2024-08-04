@@ -120,6 +120,7 @@ subprojects {
             }
         }
     }
+
 }
 
 allprojects {
@@ -129,7 +130,7 @@ allprojects {
 
     archivesBaseName = rootProject.mod_id
     version = rootProject.mod_version
-    group = rootProject.maven_group
+    group = rootProject.mod_group_id
     required_moonlight_version = rootProject.required_moonlight_version
 
     repositories {
@@ -138,8 +139,9 @@ allprojects {
             dirs 'mods'
         }
 
-        mavenLocal()
+        mavenCentral()
 
+        mavenLocal()
 
         maven { url "https://maven.parchmentmc.org" }
 
@@ -176,10 +178,55 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = rootProject.java_version
     }
 
     java {
         withSourcesJar()
     }
 }
+
+ext{
+    replaceProperties = [
+            minecraft_version    : minecraft_version,
+            minecraft_min_version: minecraft_min_version,
+            minecraft_max_version: minecraft_max_version,
+            pack_format_number   : pack_format_number,
+
+            mod_id               : mod_id,
+            mod_name             : mod_name,
+            mod_version          : mod_version,
+            mod_license          : mod_license,
+            mod_authors          : mod_authors,
+            mod_description      : mod_description,
+            mod_credits          : mod_credits,
+            mod_homepage         : mod_homepage,
+            mod_github           : mod_github,
+
+            neo_version          : neo_version,
+            neo_version_range    : neo_version_range,
+            loader_version_range : loader_version_range,
+    ]
+}
+
+
+task buildAndPublishAll {
+    dependsOn ':clean'
+    dependsOn ':build'
+    dependsOn ':forge:curseforge'
+    dependsOn ':forge:modrinth'
+    dependsOn ':fabric:curseforge'
+    dependsOn ':fabric:modrinth'
+}
+
+buildAndPublishAll.group = 'build'
+buildAndPublishAll.description = 'Runs clean, build, and publish forge and fabric'
+
+task buildAndPublishAllM {
+    dependsOn buildAndPublishAll
+    dependsOn ':publishToMavenLocal'
+}
+
+buildAndPublishAllM.group = 'build'
+buildAndPublishAllM.description = 'Runs clean, build, publish forge and fabric and uploads to maven local'
+

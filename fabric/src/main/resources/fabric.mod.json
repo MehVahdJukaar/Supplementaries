@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "supplementaries",
-  "version": "${version}",
-  "name": "Supplementaries",
-  "description": "Many functional and useful Vanilla+ blocks",
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
-    "MehVahdJukaar, Plantkillable"
+    "${mod_authors}"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/supplementaries",
-    "sources": "https://github.com/MehVahdJukaar/Supplementaries"
+    "homepage": "${mod_homepage}",
+    "sources": "${mod_github}"
   },
-  "license": "ARR",
+  "license": "${mod_license}",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
@@ -42,8 +42,8 @@
     "${mod_id}-common.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.20",
+    "fabric": ">=0.92.0+1.20.1",
+    "minecraft": ">=${minecraft_min_version} <${minecraft_max_version}",
     "moonlight": ">=${required_moonlight_version}"
   },
   "suggests": {

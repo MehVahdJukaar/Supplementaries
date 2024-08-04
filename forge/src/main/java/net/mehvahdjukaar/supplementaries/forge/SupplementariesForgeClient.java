@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.forge;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.mehvahdjukaar.moonlight.api.fluids.ModFlowingFluid;
+import net.mehvahdjukaar.moonlight.core.mixins.forge.SelfExtraModelDataProvider;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
@@ -27,6 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -48,6 +51,7 @@ public class SupplementariesForgeClient {
     public static void setup(final FMLClientSetupEvent event) {
         //  event.enqueueWork(ClientRegistry::setup);
         VibeChecker.checkVibe();
+        LootTableReference
     }
 
 

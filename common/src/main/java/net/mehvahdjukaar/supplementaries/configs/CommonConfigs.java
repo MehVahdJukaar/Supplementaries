@@ -594,7 +594,7 @@ public class CommonConfigs {
                     .define("slide_on_fall", true);
             ROPE_OVERRIDE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
                     .define("rope_override", Supplementaries.res("rope"));
-            ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes")
+            ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
             builder.pop();
 

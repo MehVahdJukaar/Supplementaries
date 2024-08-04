@@ -208,6 +208,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         this.load(pkt.getTag());
     }
     */
+
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
