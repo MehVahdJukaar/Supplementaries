@@ -1,7 +1,7 @@
 {
   "animation": {
     "frametime": 1,
-    "interpolate": true,
+    "interpolate": false,
     "frames": [
     ]
   }

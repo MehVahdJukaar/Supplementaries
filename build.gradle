@@ -178,7 +178,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = rootProject.java_version
+        options.release = rootProject.java_version.toInteger()
     }
 
     java {
@@ -202,10 +202,12 @@ ext{
             mod_credits          : mod_credits,
             mod_homepage         : mod_homepage,
             mod_github           : mod_github,
+            update_url           : update_url,
 
             neo_version          : neo_version,
             neo_version_range    : neo_version_range,
             loader_version_range : loader_version_range,
+            required_moonlight_version : required_moonlight_version
     ]
 }
 

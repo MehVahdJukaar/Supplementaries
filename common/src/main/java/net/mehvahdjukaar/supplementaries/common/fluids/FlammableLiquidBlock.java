@@ -51,13 +51,22 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     public final VoxelShape[] interactionShapes;
 
-    public FlammableLiquidBlock(Supplier<? extends FiniteFluid> supplier, Properties arg) {
-        super(supplier, arg.lightLevel((state) -> state.getValue(AGE) > 0 ? 15 : 0));
+    public FlammableLiquidBlock(Supplier<? extends FiniteFluid> supplier, Properties arg, int baseLight) {
+        super(supplier, arg.lightLevel((state) -> state.getValue(AGE) > baseLight ? 15 : 0));
         this.interactionShapes = IntStream.range(0, 16)
                 .mapToObj(i -> box(0, 0, 0, 16, Math.max(0, 15 * (1 - i / (float) this.maxLevel)), 16))
                 .toArray(VoxelShape[]::new);
     }
 
+    @Override
+    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return 0;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

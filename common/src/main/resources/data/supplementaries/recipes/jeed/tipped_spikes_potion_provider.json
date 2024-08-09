@@ -1,0 +1,14 @@
+{
+  "global_conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "jeed"
+    }
+  ],
+  "type": "jeed:potion_provider",
+  "providers": [
+    {
+      "item": "supplementaries:bamboo_spikes_tipped"
+    }
+  ]
+}

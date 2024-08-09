@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg.forge;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRendererImpl;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -53,12 +55,13 @@ public class ModFluidsImpl {
             .fallDistanceModifier(1)
             .canExtinguish(false)
             .motionScale(0)
+            .lightLevel(4)
             .supportsBoating(true)
             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
             .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
-            .density(3000)
-            .viscosity(6000)) {
+            .density(500)
+            .viscosity(100)) {
 
         public @Nullable BlockPathTypes getBlockPathType(FluidState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, boolean canFluidLog) {
             return canFluidLog ? super.getBlockPathType(state, level, pos, mob, true) : null;
@@ -76,24 +79,17 @@ public class ModFluidsImpl {
     }
 
 
+
+
     public static class LumiseneFluid extends FiniteFluid {
         public LumiseneFluid() {
             super(MAX_LAYERS, ModFluids.LUMISENE_BLOCK, ModFluids.LUMISENE_BUCKET);
         }
 
+
         @Override
         public FluidType getFluidType() {
             return LUMISENE_FLUID_TYPE.get();
-        }
-    }
-
-    public static void messWithFluidH(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Float> cir) {
-        //  if(fluidState.isEmpty())cir.setReturnValue(1f);
-        if (fluid.isSame(fluidState.getType())) {
-            BlockState aboveState = level.getBlockState(pos.above());
-            if (aboveState.getFluidState().is(ModFluids.LUMISENE_FLUID.get())) {
-                cir.setReturnValue(1f);
-            }
         }
     }
 
@@ -102,5 +98,33 @@ public class ModFluidsImpl {
         // if (fluid == ModFluidsImpl.LUMISENE_FLUID.get()) {
     }
 
+
+    public static int messWithFluidLight(int original, Fluid fluid) {
+        if (fluid == ModFluids.LUMISENE_FLUID.get()) {
+
+            return Math.max(200, original);
+        }
+        return original;
+    }
+
+
+    public static int messWithFluidLight(BlockAndTintGetter level, BlockPos pos, Operation<Integer> original) {
+        if (level.getFluidState(pos).is(ModFluids.LUMISENE_FLUID.get())) {
+            int i = level.getBrightness(LightLayer.SKY, pos);
+            int j = level.getBrightness(LightLayer.BLOCK, pos);
+            BlockState state = level.getBlockState(pos);
+            int k = 10;//state.getLightEmission(level, pos);
+            if (j < k) {
+                j = k;
+            }
+
+            return i << 20 | j << 4;
+        }
+        return original.call(level, pos);
+    }
+
+    public static int getLumiseneFakeLightEmission() {
+        return 15;
+    }
 
 }

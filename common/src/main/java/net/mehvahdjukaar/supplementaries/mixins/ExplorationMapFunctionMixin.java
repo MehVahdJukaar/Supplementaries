@@ -52,7 +52,7 @@ public abstract class ExplorationMapFunctionMixin implements IExplorationFunctio
 
     @Shadow
     @Final
-    private MapDecoration.Type mapDecoration;
+    MapDecoration.Type mapDecoration;
 
     @Shadow
     @Final

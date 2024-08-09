@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.Util;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -51,7 +52,6 @@ public class SupplementariesForgeClient {
     public static void setup(final FMLClientSetupEvent event) {
         //  event.enqueueWork(ClientRegistry::setup);
         VibeChecker.checkVibe();
-        LootTableReference
     }
 
 

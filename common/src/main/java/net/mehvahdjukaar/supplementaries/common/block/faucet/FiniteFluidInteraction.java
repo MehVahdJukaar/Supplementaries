@@ -18,7 +18,7 @@ public class FiniteFluidInteraction implements FaucetTarget.Fluid, FaucetSource.
             int oldLayers = 0;
             if (existing.getType().isSame(vanillaF)) {
                 oldLayers = existing.getAmount();
-            } else if (!existing.isEmpty()) {
+            } else if (!existing.isEmpty() || !level.getBlockState(pos).isAir()) {
                 return null;
             }
             int maxLayers = ff.getLayersPerBlock();

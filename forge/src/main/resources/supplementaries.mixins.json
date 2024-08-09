@@ -9,6 +9,8 @@
     "ChatMixin",
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
+    "EmbeddiumFluidRendererMixin",
+    "LevelRendererMixin",
     "LiquidBlockRendererMixin"
   ],
   "mixins": [
@@ -23,14 +25,14 @@
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
     "self.SelfLunchBoxItemMixin",
+    "self.SelfOpenableContainerMixin",
     "self.SelfPlanterMixin",
     "self.SelfQuiverItemMixin",
     "self.SelfSafeMixin",
     "self.SelfSlingshotMixin",
     "self.SelfSoapItemMixin",
     "self.SelfSpeakerBlockTileMixin",
-    "self.SelfWrenchMixin",
-    "self.SelfOpenableContainerMixin"
+    "self.SelfWrenchMixin"
   ],
   "injectors": {
     "defaultRequire": 1

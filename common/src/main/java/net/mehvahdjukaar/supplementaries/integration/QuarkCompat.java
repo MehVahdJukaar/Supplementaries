@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
@@ -246,4 +245,15 @@ public class QuarkCompat {
         return item;
     }
 
+    private static Boolean oldFenceValue = null;
+
+    public static void disableFenceGateStuff() {
+        oldFenceValue = DoubleDoorOpeningModule.enableFenceGates;
+    }
+
+    public static void enableFenceGateStuff() {
+        if (oldFenceValue != null) {
+            DoubleDoorOpeningModule.enableFenceGates = oldFenceValue;
+        }
+    }
 }

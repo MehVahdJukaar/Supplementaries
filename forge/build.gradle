@@ -27,7 +27,8 @@ configurations {
 
 
 processResources {
-    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta', 'update.json']) {
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta', 'update.json']) {
         expand rootProject.ext.replaceProperties + [project: project]
     }
 }
@@ -133,9 +134,9 @@ dependencies {
     modImplementation("curse.maven:cobweb-968456:5441209")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:5378961")
+    modImplementation("curse.maven:quark-243121:5594847")
 
-    modImplementation("curse.maven:zeta-968868:5254672")
+    modImplementation("curse.maven:zeta-968868:5597406")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")
@@ -174,6 +175,7 @@ dependencies {
     modImplementation("curse.maven:citadel-331936:4786380")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("curse.maven:cyanide-541676:4824162")
+    modImplementation("curse.maven:embeddium-908741:5566632")
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")
 

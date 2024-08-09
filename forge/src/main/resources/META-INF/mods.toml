@@ -19,56 +19,22 @@ issueTrackerURL = "${mod_github}/issues"
     credits = "${mod_credits}"
     description = '''${mod_description}'''
     modUrl = "${mod_homepage}"
+    updateJSONURL = "${update_url}"
     itemIcon = "supplementaries:globe" #catalogue icon
 
-[[dependencies.${mod_id}]]
+[[dependencies.supplementaries]]
     modId = "forge"
-    type = "required"
+    mandatory = true
     versionRange = "${neo_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.supplementaries]]
     modId = "minecraft"
-    type = "required"
+    mandatory = true
     versionRange = "[${minecraft_min_version},${minecraft_max_version})"
     ordering = "NONE"
     side = "CLIENT"
-
-
-
-
-
-[[mods]]
-    modId = "${mod_id}"
-    version = "${version}"
-    displayName = "Supplementaries"
-    logoFile = "icon.png"
-    authors = "MehVahdJukaar, Plantkillable"
-    credits = "Put a book named 'credits' inside a notice board"
-
-    updateJSONURL = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/1.20/forge/update.json"
-    modUrl = "https://www.curseforge.com/minecraft/mc-mods/supplementaries"
-
-    description = '''Many functional and useful Vanilla+ blocks'''
-
-[modproperties.supplementaries]
-    catalogueItemIcon = "supplementaries:globe" #catalogue icon
-    configuredBackground = "supplementaries:textures/block/blackstone_tiles.png"
-
-[[dependencies.supplementaries]]
-    modId = "forge"
-    mandatory = true
-    versionRange = "[47.0.19,)"
-    ordering = "NONE"
-    side = "BOTH"
-
-[[dependencies.supplementaries]]
-    modId = "minecraft"
-    mandatory = true
-    versionRange = "[1.20,)"
-    ordering = "NONE"
-    side = "BOTH"
 
 [[dependencies.supplementaries]]
     modId = "moonlight"
@@ -89,12 +55,5 @@ issueTrackerURL = "${mod_github}/issues"
     mandatory = false
     versionRange = "[1.19-3.4-404,]"
     ordering = "AFTER"
-    side = "BOTH"
-
-[[dependencies.supplementaries]]
-    modId = "rubidium"
-    mandatory = false
-    versionRange = "[0.6.0,)"
-    ordering = "NONE"
     side = "BOTH"
 

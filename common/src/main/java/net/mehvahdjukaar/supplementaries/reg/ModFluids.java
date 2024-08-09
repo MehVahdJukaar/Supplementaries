@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
@@ -41,8 +42,10 @@ public class ModFluids {
                                 .noCollission()
                                 .randomTicks()
                                 .noLootTable()
+                                .hasPostProcess((state, level, pos) -> true)
                                 .sound(SoundType.EMPTY)
-                                .strength(100.0F)));
+                                .strength(100.0F),
+                0));
 
         LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),
                 ModFluids::createLumiseneBucket);
