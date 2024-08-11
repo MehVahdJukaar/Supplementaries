@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.CreeperPartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.ProjectileWeaponOverlayRenderer;
@@ -93,6 +94,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     public static final ModelLayerLocation ENDERMAN_HEAD_MODEL = loc("enderman_head");
+    public static final ModelLayerLocation PARTY_CREEPER_MODEL = loc("party_creeper");
     public static final ModelLayerLocation CANNON_MODEL = loc("cannon");
     public static final ModelLayerLocation WIND_VANE_MODEL = loc("wind_vane");
     public static final ModelLayerLocation BUNTING_MODEL = loc("bunting");
@@ -497,6 +499,7 @@ public class ClientRegistry {
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(ENDERMAN_HEAD_MODEL, EndermanSkullModel::createMesh);
+        event.register(PARTY_CREEPER_MODEL, CreeperPartyHatLayer::createMesh);
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);

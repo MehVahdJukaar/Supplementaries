@@ -31,7 +31,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
     }
 
     @Inject(method = "finalizeSpawn", at = @At("TAIL"))
-    public void finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
+    public void supp$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && CommonConfigs.Tools.QUIVER_ENABLED.get()) {
             if (random.nextFloat() < CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get() * difficulty.getSpecialMultiplier()) {
                 ((IQuiverEntity) this).supplementaries$setQuiver(
@@ -43,7 +43,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
     @Inject(method = "performRangedAttack", at = @At(value = "INVOKE_ASSIGN",
             target = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;getArrow(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/projectile/AbstractArrow;",
             shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void consumeQuiverArrow(LivingEntity target, float velocity, CallbackInfo ci, ItemStack arrow) {
+    public void supp$consumeQuiverArrow(LivingEntity target, float velocity, CallbackInfo ci, ItemStack arrow) {
         if (this instanceof IQuiverEntity quiverEntity) {
             var quiver = quiverEntity.supplementaries$getQuiver();
             //ignore offhand as it has priority over quiver

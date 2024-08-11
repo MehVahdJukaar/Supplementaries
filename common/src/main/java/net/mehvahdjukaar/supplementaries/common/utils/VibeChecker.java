@@ -51,6 +51,7 @@ public class VibeChecker {
     }
 
     private static void clientStuff() {
+        if (PlatHelper.isDev()) return;
         for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet()) {
             if (!Sheets.BANNER_MATERIALS.containsKey(v)) {
                 var a = new ArrayList<>(BuiltInRegistries.BANNER_PATTERN.registryKeySet());

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
@@ -36,19 +36,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TntBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.*;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Iterator;
 import java.util.function.Supplier;
 
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
@@ -165,7 +161,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public void spawnTrailParticles() {
-        Vec3 newPos =  this.position();
+        Vec3 newPos = this.position();
         if (this.active && this.tickCount > 1) {
 
             double dx = newPos.x - xo;
@@ -358,7 +354,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         public void spawnExtraParticles(double x, double y, double z, Level level) {
             switch (this) {
                 case BLUE -> {
-                    spawnParticleInASphere(level, x, y, z, ParticleTypes.FLAME, 40, 0.4f);
+                    //TODO: change all this
+                    ParticleUtil. spawnParticleInASphere(level, x, y, z, ()->ParticleTypes.FLAME, 40, 0.4f,
+                            0.01f, 0.15f);
                 }
                 case SPIKY -> {
                     RandomSource random = level.getRandom();
@@ -372,24 +370,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                             level.addParticle(p, x, y, z, dx, dy, dz);
                         }
                     } else {
-                        spawnParticleInASphere(level, x, y, z, ParticleTypes.CRIT, 100, 5f);
+                        ParticleUtil.spawnParticleInASphere(level, x, y, z, () -> ParticleTypes.CRIT, 100, 5f,
+                                0.01f, 0.15f);
                     }
                 }
-            }
-        }
-
-        private void spawnParticleInASphere(Level level, double x, double y, double z, ParticleOptions type, int amount, float speed) {
-            double azimuthIncrement = Math.PI * (3 - Math.sqrt(5)); // Golden angle
-
-            for (int i = 0; i < amount; i++) {
-                double inclination = Math.acos(1 - (2 * (i + 0.5) / amount)); // Angle from the pole
-                double azimuth = azimuthIncrement * i; // Rotation around the axis
-
-                double vx = speed * Math.sin(inclination) * Math.cos(azimuth);
-                double vy = speed * Math.sin(inclination) * Math.sin(azimuth);
-                double vz = speed * Math.cos(inclination);
-
-                level.addParticle(type, x, y, z, vx, vy, vz);
             }
         }
 
@@ -445,8 +429,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             };
         }
     }
-
-
 
 
 }

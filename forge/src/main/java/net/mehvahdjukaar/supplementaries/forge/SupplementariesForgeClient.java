@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.CreeperPartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
@@ -16,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRen
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.Util;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -23,6 +25,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -30,6 +33,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -134,6 +138,9 @@ public class SupplementariesForgeClient {
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
         }
+
+        var creeperRenderer = event.getRenderer(EntityType.CREEPER);
+        creeperRenderer.addLayer(new CreeperPartyHatLayer(creeperRenderer, event.getEntityModels()));
 
         //player skins
         for (String skinType : event.getSkins()) {

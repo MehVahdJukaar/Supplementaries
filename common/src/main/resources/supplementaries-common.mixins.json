@@ -16,6 +16,7 @@
     "CatSitOnBlockGoalMixin",
     "ComparatorBlockMixin",
     "CompatFarmersDelightTomatoMixin",
+    "CreeperMixin",
     "CrossbowItemRopeMixin",
     "EndermanMixin",
     "EntityMixin",

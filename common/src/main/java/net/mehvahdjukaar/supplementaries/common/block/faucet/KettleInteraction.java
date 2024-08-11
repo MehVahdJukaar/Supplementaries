@@ -1,5 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
-
+/*
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.integration.FarmersRespriteCompat;
@@ -45,3 +45,4 @@ class KettleInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
         return null;
     }
 }
+*/

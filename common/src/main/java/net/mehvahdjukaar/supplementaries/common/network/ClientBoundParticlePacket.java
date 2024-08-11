@@ -50,7 +50,7 @@ public class ClientBoundParticlePacket implements Message {
         this.dir = null;
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData, Vec3 direction) {
+    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData, @Nullable Vec3 direction) {
         this.pos = pos;
         this.id = id;
         this.extraData = extraData;
@@ -103,7 +103,8 @@ public class ClientBoundParticlePacket implements Message {
         DISPENSER_MINECART,
         FLINT_BLOCK_IGNITE,
         WAX_ON,
-        CONFETTI
+        CONFETTI,
+        CONFETTI_EXPLOSION
     }
 
 }

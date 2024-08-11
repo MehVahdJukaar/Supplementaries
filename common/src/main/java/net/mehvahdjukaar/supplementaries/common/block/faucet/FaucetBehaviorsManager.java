@@ -78,7 +78,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         FaucetBlockTile.registerInteraction(new MudInteraction());
         FaucetBlockTile.registerInteraction(new ContainerItemInteraction());
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
-        if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
+        //if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
     }
 
 

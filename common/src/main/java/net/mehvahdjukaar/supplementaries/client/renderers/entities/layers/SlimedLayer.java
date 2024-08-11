@@ -37,6 +37,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
                 IModelPartExtension part = (IModelPartExtension) (Object) v;
                 height = part.supp$getTextHeight();
                 width = part.supp$getTextWidth();
+                break;
             }
         } else if (model instanceof HierarchicalModel<?> m) {
             IModelPartExtension part = (IModelPartExtension) (Object) m.root();

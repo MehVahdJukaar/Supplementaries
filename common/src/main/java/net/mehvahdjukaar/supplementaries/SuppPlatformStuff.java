@@ -116,4 +116,5 @@ public class SuppPlatformStuff {
     public static boolean isSlimeball(Item item) {
         throw new AssertionError();
     }
+
 }

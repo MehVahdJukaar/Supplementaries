@@ -163,7 +163,7 @@ dependencies {
     modCompileOnly("curse.maven:mutil-351914:3941314")
     modCompileOnly("curse.maven:breezy-690628:5439507")
     modCompileOnly("curse.maven:geckolib-388172:4064451")
-    modCompileOnly("curse.maven:farmers-respite-551453:4081312")
+    modCompileOnly("curse.maven:farmers-respite-551453:5543547")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
     modImplementation("curse.maven:emi-580555:5032425")

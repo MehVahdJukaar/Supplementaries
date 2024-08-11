@@ -10,9 +10,11 @@ import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
+import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -33,6 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -170,10 +173,14 @@ public class ClientEvents {
                 (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
     }
 
+    //TODO: this isnt ideal. Improve
     public static void onEntityLoad(Entity entity, Level clientLevel) {
         if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
             //ask server to send quiver data
             ModNetwork.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
+        }
+        if (entity instanceof IPartyCreeper && entity instanceof Creeper c) {
+            ModNetwork.CHANNEL.sendToServer(new SyncPartyCreeperPacket(c));
         }
     }
 

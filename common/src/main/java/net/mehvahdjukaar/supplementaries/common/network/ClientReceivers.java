@@ -9,10 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestion
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
@@ -178,6 +175,19 @@ public class ClientReceivers {
                     l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
                             SoundSource.PLAYERS, 1.0f, l.random.nextFloat() * 0.2F + 0.8F, false);
                 }
+                case CONFETTI_EXPLOSION -> {
+                    int radius = message.extraData;
+                    ParticleUtil.spawnParticleInASphere(l, message.pos.x, message.pos.y + 1, message.pos.z,
+                            () -> l.random.nextInt(6) == 0 ?
+                                    ModParticles.STREAMER_PARTICLE.get() :
+                                    ModParticles.CONFETTI_PARTICLE.get(), radius * 40,
+                            radius / 9f,
+                            0.05f, 0.15f * radius / 3
+                    );
+                    //same volume as explosion code
+                    l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
+                            SoundSource.HOSTILE, 4, l.random.nextFloat() * 0.2F + 0.5F, false);
+                }
             }
         });
     }
@@ -248,6 +258,15 @@ public class ClientReceivers {
             Entity e = l.getEntity(message.entityID);
             if (e instanceof IQuiverEntity qe) {
                 qe.supplementaries$setQuiver(message.on ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
+            }
+        });
+    }
+
+    public static void handleSyncPartyCreeper(SyncPartyCreeperPacket message){
+        withLevelDo(l -> {
+            Entity e = l.getEntity(message.entityID);
+            if (e instanceof IPartyCreeper le) {
+                le.supplementaries$setFestive(message.on);
             }
         });
     }
