@@ -64,7 +64,7 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void supp$readPartyCreeperData(CompoundTag compound, CallbackInfo ci) {
-        if (compound.contains("Quiver")) {
+        if (compound.contains("Party")) {
             this.supplementaries$setFestive(compound.getBoolean("Party"));
         }
     }

@@ -15,12 +15,12 @@ public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements 
 
     @Override
     public ResourceLocation getFlowingTexture() {
-        return SINGLE_TEXTURE;
+        return SINGLE_FLOWING_TEXTURE;
     }
 
     @Override
     public ResourceLocation getStillTexture() {
-        return SINGLE_TEXTURE;
+        return SINGLE_STILL_TEXTURE;
     }
 
     @Override

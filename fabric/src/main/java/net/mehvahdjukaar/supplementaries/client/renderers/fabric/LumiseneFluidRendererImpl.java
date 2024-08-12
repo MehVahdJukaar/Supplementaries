@@ -26,8 +26,8 @@ public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements 
     @Override
     public void reloadTextures(TextureAtlas textureAtlas) {
         single = new TextureAtlasSprite[]{
-                textureAtlas.getSprite(SINGLE_TEXTURE),
-                textureAtlas.getSprite(SINGLE_TEXTURE)
+                textureAtlas.getSprite(SINGLE_STILL_TEXTURE),
+                textureAtlas.getSprite(SINGLE_STILL_TEXTURE)
         };
         multiple = new TextureAtlasSprite[4][][];
         for (int x = 0; x < 4; x++) {

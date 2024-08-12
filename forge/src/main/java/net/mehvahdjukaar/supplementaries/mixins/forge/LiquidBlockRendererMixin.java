@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.fluids.FiniteLiquidBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.forge.ModFluidsImpl;
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
@@ -26,15 +23,9 @@ public class LiquidBlockRendererMixin {
        return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
     }
 
-    @Inject(method = "calculateAverageHeight",
-            at = @At("HEAD"), cancellable = true)
-    public void supplementaries$modifyLumiseneHeight(BlockAndTintGetter level, Fluid fluid, float g, float h, float i, BlockPos pos, CallbackInfoReturnable<Float> cir) {
-        ModFluidsImpl.messWithAvH(level, fluid, g, h, i, pos, cir);
-    }
-
     @WrapOperation(method = "getLightColor",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;getLightColor(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;)I"))
     public int supplementaries$modifyLumiseneLight(BlockAndTintGetter level, BlockPos pos, Operation<Integer> original) {
-        return ModFluidsImpl.messWithFluidLight(level, pos, original);
+        return ModFluidsImpl.getLumiseneFaceLight(level, pos, original);
     }
 }

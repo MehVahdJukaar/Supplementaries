@@ -16,7 +16,7 @@ public abstract class LevelRendererMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getLightEmission(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)I"))
     private static int supp$modifyLumiseneLight(int light, @Local(argsOnly = true) BlockState state) {
         if (light < 15 && state.is(ModFluids.LUMISENE_BLOCK.get())) {
-            return Math.max(light, ModFluidsImpl.getLumiseneFakeLightEmission());
+            return Math.max(light, ModFluidsImpl.LUMISENE_FAKE_LIGHT_EMISSION);
         }
         return light;
     }
