@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.forge;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.LumiseneFluidRenderer;
+import net.mehvahdjukaar.supplementaries.client.LumiseneFluidRenderProperties;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.joml.Vector3f;
 
-public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements IClientFluidTypeExtensions {
+public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProperties implements IClientFluidTypeExtensions {
 
     @Override
     public ResourceLocation getFlowingTexture() {
@@ -30,7 +30,7 @@ public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements 
 
     @Override
     public Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-        return new Vector3f(1F, 0.8F, 0.01F);
+        return new Vector3f(1F, 246/255f, 208/255f);
     }
 
     @Override

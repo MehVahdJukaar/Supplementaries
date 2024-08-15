@@ -4,22 +4,26 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRendererImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRenderPropertiesImpl;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
+import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.common.items.forge.FiniteFluidBucket;
 import net.mehvahdjukaar.supplementaries.common.items.forge.LumiseneBottleItem;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -27,7 +31,6 @@ import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -36,7 +39,7 @@ public class ModFluidsImpl {
 
     protected static final int MAX_LAYERS = 16;
 
-    public static final int LUMISENE_FAKE_LIGHT_EMISSION = 10;// quad emissivity and actual light value for the block. Lumisene does not propagate light (like magma blocks)
+    public static final int LUMISENE_FAKE_LIGHT_EMISSION = 11;// quad emissivity and actual light value for the block. Lumisene does not propagate light (like magma blocks)
 
     public static BucketItem createLumiseneBucket() {
         return new FiniteFluidBucket(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
@@ -71,7 +74,7 @@ public class ModFluidsImpl {
         }
 
         public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-            consumer.accept(new LumiseneFluidRendererImpl());
+            consumer.accept(new LumiseneFluidRenderPropertiesImpl());
         }
     });
 
@@ -91,6 +94,22 @@ public class ModFluidsImpl {
         @Override
         public FluidType getFluidType() {
             return LUMISENE_FLUID_TYPE.get();
+        }
+
+        @Override
+        protected void animateTick(Level level, BlockPos pos, FluidState state, RandomSource random) {
+            super.animateTick(level, pos, state, random);
+            if (random.nextInt(12) == 0) {
+                BlockState blockState = level.getBlockState(pos);
+                if (blockState.getBlock() instanceof FlammableLiquidBlock fb &&
+                        !fb.isLitUp(blockState, level, pos)) {
+                    level.addParticle(ModParticles.SPARKLE_PARTICLE.get(),
+                            pos.getX() + random.nextDouble(),
+                            pos.getY() + getOwnHeight(state) + 1 / 32f,
+                            pos.getZ() + random.nextDouble(),
+                            0, 0, 0);
+                }
+            }
         }
     }
 

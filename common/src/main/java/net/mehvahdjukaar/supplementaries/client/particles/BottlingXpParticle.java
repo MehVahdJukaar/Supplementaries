@@ -30,6 +30,7 @@ public class BottlingXpParticle extends TextureSheetParticle {
         this.lifetime = (int)(Math.random() * 8.0D) + 5;
     }
 
+    @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }

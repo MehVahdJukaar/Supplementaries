@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
-    public static final IntegerProperty LEVEL = BlockStateProperties.LEVEL;
+    public static final IntegerProperty MISSING_LEVELS = BlockStateProperties.LEVEL;
 
     private final List<FluidState> stateCache;
     private final FiniteFluid fluid;
@@ -48,7 +48,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
         this.maxLevel = fluid.maxLayers;
         assert maxLevel <= 16;
         this.stateCache = Lists.newArrayList();
-        this.registerDefaultState((this.stateDefinition.any()).setValue(LEVEL, 0));
+        this.registerDefaultState((this.stateDefinition.any()).setValue(MISSING_LEVELS, 0));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        int i = state.getValue(LEVEL);
+        int i = state.getValue(MISSING_LEVELS);
         if (!this.fluidStateCacheInitialized) {
             this.initFluidStateCache();
         }
@@ -79,7 +79,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return context.isAbove(STABLE_SHAPE, pos, true) && state.getValue(LEVEL) == 0 && context.canStandOnFluid(level.getFluidState(pos.above()), state.getFluidState()) ? STABLE_SHAPE : Shapes.empty();
+        return context.isAbove(STABLE_SHAPE, pos, true) && state.getValue(MISSING_LEVELS) == 0 && context.canStandOnFluid(level.getFluidState(pos.above()), state.getFluidState()) ? STABLE_SHAPE : Shapes.empty();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LEVEL);
+        builder.add(MISSING_LEVELS);
     }
 
     @Override

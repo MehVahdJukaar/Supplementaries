@@ -1,8 +1,5 @@
 package net.mehvahdjukaar.supplementaries.reg.fabric;
 
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.client.renderers.fabric.LumiseneFluidRendererImpl;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.world.item.BucketItem;
@@ -10,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluids;
 
 public class ModFluidsImpl {
+
     public static BucketItem createLumiseneBucket() {
         return new BucketItem(Fluids.WATER, new Item.Properties());
     }

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.mehvahdjukaar.supplementaries.client.LumiseneFluidRenderer;
+import net.mehvahdjukaar.supplementaries.client.LumiseneFluidRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public class LumiseneFluidRendererImpl extends LumiseneFluidRenderer implements FluidRenderHandler {
+public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProperties implements FluidRenderHandler {
 
     private TextureAtlasSprite[] single;
     private TextureAtlasSprite[][][] multiple;

@@ -67,7 +67,7 @@ public class FiniteFluidBucket extends BucketItem {
             }
 
             BlockState newState = content.defaultFluidState().createLegacyBlock()
-                    .setValue(FlammableLiquidBlock.LEVEL, 16 - capacity);
+                    .setValue(FlammableLiquidBlock.MISSING_LEVELS, 16 - capacity);
             if (!level.setBlock(pos, newState, 11) && !blockstate.getFluidState().isSource()) {
                 return false;
             } else {

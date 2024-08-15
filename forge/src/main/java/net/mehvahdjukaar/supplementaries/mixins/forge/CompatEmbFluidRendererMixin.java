@@ -29,21 +29,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
 @Mixin(FluidRenderer.class)
-public abstract class EmbeddiumFluidRendererMixin {
-
-    @Shadow
-    @Final
-    private int[] quadColors;
-
-    @Shadow
-    @Final
-    private ChunkColorWriter colorEncoder;
+public abstract class CompatEmbFluidRendererMixin {
 
     @Shadow
     @Final
     private QuadLightData quadLightData;
 
     @WrapOperation(method = "fluidHeight", remap = false,
+            require = 0,
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/material/Fluid;isSame(Lnet/minecraft/world/level/material/Fluid;)Z"))
     public boolean supplementaries$modifyLumiseneHeight(Fluid instance, Fluid above, Operation<Boolean> original) {
@@ -51,6 +44,7 @@ public abstract class EmbeddiumFluidRendererMixin {
     }
 
     @Inject(method = "updateQuad",
+            require = 0,
             at = @At(value = "INVOKE",
                     shift = At.Shift.AFTER,
                     target = "Lme/jellysquid/mods/sodium/client/model/color/ColorProvider;getColors(Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
@@ -79,6 +73,7 @@ public abstract class EmbeddiumFluidRendererMixin {
     }*/
 
     @ModifyArg(method = "render", remap = false,
+            require = 0,
             at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/LightPipelineProvider;getLighter(Lme/jellysquid/mods/sodium/client/model/light/LightMode;)Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;"))
     public LightMode supplementaries$modifyLumiseneLight(LightMode lightMode, @Local Fluid fluid) {
         if (fluid == ModFluids.LUMISENE_FLUID.get()) {

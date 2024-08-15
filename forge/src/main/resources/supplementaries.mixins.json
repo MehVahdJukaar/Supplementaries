@@ -9,7 +9,7 @@
     "ChatMixin",
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
-    "EmbeddiumFluidRendererMixin",
+    "CompatEmbFluidRendererMixin",
     "LevelRendererMixin",
     "LiquidBlockRendererMixin"
   ],

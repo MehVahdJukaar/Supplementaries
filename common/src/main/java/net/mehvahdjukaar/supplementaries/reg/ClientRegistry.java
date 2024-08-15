@@ -311,6 +311,7 @@ public class ClientRegistry {
         event.register(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(), BombExplosionEmitterParticle.Factory::new);
         event.register(ModParticles.BOMB_SMOKE_PARTICLE.get(), BombSmokeParticle.Factory::new);
         event.register(ModParticles.BOTTLING_XP_PARTICLE.get(), BottlingXpParticle.Factory::new);
+        event.register(ModParticles.SPARKLE_PARTICLE.get(), SparkleParticle.Factory::new);
         event.register(ModParticles.FEATHER_PARTICLE.get(), FeatherParticle.Factory::new);
         event.register(ModParticles.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         event.register(ModParticles.STASIS_PARTICLE.get(), StasisParticle.Factory::new);

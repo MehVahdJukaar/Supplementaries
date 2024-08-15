@@ -112,7 +112,7 @@ public abstract class FiniteFluid extends Fluid {
             }
 
 
-            if(!map.isEmpty()) {
+            if (!map.isEmpty()) {
                 FluidState myNewState = makeState(currentAmount - map.size());
                 BlockState blockstate = blockState.setValue(BlockStateProperties.LEVEL,
                         myNewState.createLegacyBlock().getValue(BlockStateProperties.LEVEL));
@@ -126,10 +126,12 @@ public abstract class FiniteFluid extends Fluid {
         return this.defaultFluidState().setValue(LEVEL, level);
     }
 
-    protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction,
-                            FluidState fluidState) {
+    protected void spreadTo(LevelAccessor level, BlockPos pos, BlockState blockState, Direction direction, FluidState fluidState) {
         if (blockState.getBlock() instanceof LiquidBlockContainer container) {
             container.placeLiquid(level, pos, blockState, fluidState);
+        } else if (blockState.getFluidState().is(this)) {
+            level.setBlock(pos, blockState.setValue(BlockStateProperties.LEVEL,
+                    fluidState.createLegacyBlock().getValue(BlockStateProperties.LEVEL)), 3);
         } else {
             if (!blockState.isAir()) {
                 this.beforeDestroyingBlock(level, pos, blockState);

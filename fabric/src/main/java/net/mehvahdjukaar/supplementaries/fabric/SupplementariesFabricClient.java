@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.DifferentProspectiveItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.fabric.LumiseneFluidRendererImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.fabric.LumiseneFluidRenderPropertiesImpl;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
@@ -39,7 +39,7 @@ public class SupplementariesFabricClient implements ClientModInitializer {
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.QUIVER_ITEM.get(),
                 new DifferentProspectiveItemRenderer(ClientRegistry.QUIVER_2D_MODEL, ClientRegistry.QUIVER_3D_MODEL));
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.LUMISENE_FLUID.get(), new LumiseneFluidRendererImpl());
+        FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.LUMISENE_FLUID.get(), new LumiseneFluidRenderPropertiesImpl());
 
     }
 

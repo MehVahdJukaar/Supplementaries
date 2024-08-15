@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BuntingBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -19,6 +18,10 @@ public class BuntingItem extends Item {
         super(properties);
     }
 
+    @Override
+    public ItemStack getDefaultInstance() {
+        return getColored(DyeColor.WHITE);
+    }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {

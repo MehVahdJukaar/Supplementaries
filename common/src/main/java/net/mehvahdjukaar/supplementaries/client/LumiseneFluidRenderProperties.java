@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 
-public class LumiseneFluidRenderer {
+public class LumiseneFluidRenderProperties {
 
     protected static final ResourceLocation UNDERWATER_TEXTURE = Supplementaries.res("textures/block/lumisene_underwater.png");
     protected static final ResourceLocation SINGLE_STILL_TEXTURE = Supplementaries.res("block/lumisene/lumisene");

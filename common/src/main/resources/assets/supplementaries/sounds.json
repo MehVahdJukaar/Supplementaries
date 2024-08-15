@@ -81,12 +81,12 @@
     ],
     "subtitle": "subtitles.supplementaries.slimeball.bounce"
   },
-  "item.slimeball.hit": {
+  "entity.slimeball.hit": {
     "sounds": [
-      "random/bowhit1",
-      "random/bowhit2",
-      "random/bowhit3",
-      "random/bowhit4"
+      "supplementaries:item/slimeball_splat_0",
+      "supplementaries:item/slimeball_splat_1",
+      "supplementaries:item/slimeball_splat_2",
+      "supplementaries:item/slimeball_splat_3"
     ],
     "subtitle": "subtitles.supplementaries.slimeball.hit"
   },

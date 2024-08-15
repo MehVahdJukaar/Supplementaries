@@ -124,6 +124,8 @@ public class Supplementaries {
     // test dispenser and present stuff
     // soap slidy block slides
 
+    // recipe for sus sand and gravel
+    // mod/module for hud overlay compass and spyglass
     // bucket shoot from cannon
     // spyglass camera
     // yes this is where I write crap. deal with it XD

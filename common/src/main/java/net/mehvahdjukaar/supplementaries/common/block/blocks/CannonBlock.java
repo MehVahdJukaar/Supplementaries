@@ -186,6 +186,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        var litUpAction = this.interactWithPlayer(state, level, pos, player, hand);
+        if (litUpAction != InteractionResult.PASS) return litUpAction;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if(player instanceof ServerPlayer sp){
                 tile.tryOpeningEditGui(sp, pos, player.getItemInHand(hand));

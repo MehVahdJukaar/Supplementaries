@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -65,14 +67,19 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        bounces++;
         Direction hitDirection = result.getDirection();
+        Vector3f surfaceNormal = hitDirection.step();
+        Vec3 velocity = this.getDeltaMovement();
+        Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
 
+        bounce(newVel);
+    }
+
+    private void bounce(Vec3 newVel) {
+        bounces++;
         Vec3 velocity = this.getDeltaMovement();
 
-        Vector3f surfaceNormal = hitDirection.step();
 
-        Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
         float conservedEnergy = 0.75f;
         newVel = newVel.scale(conservedEnergy);
         this.setDeltaMovement(newVel);
@@ -91,7 +98,6 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
                 this.discard();
             }
         }
-
     }
 
     @Override
@@ -111,6 +117,17 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
         Entity entity = result.getEntity();
+        if( entity instanceof Player p && p.isBlocking()){
+            Vec3 hit = result.getLocation();
+            Vec3 entityView = p.getViewVector(1.0F);
+            Vec3 normal = hit.vectorTo(p.position()).normalize();
+            normal = new Vec3(normal.x, 0.0, normal.z);
+            if (normal.dot(entityView) < 0.0) {
+
+                bounce(this.getDeltaMovement().scale(-1));
+                return;
+            }
+        }
         if (entity instanceof ISlimeable s) {
             //sets on both but also sends packet just because lmao
             s.supp$setSlimedTicks(CommonConfigs.Tweaks.SLIME_DURATION.get(), true);

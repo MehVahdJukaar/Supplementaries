@@ -286,11 +286,11 @@ public class ModCreativeTabs {
                 ModConstants.SLIDY_BLOCK_NAME,
                 ModRegistry.SLIDY_BLOCK);
 
-        after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
-                ModConstants.BUNTING_NAME,
-                ModRegistry.BUNTING);
 
         if (CommonConfigs.isEnabled(ModConstants.BUNTING_NAME)) {
+            e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.BANNERS),
+                    BuntingItem.getColored(DyeColor.WHITE));
+
             e.addAfter(CreativeModeTabs.COLORED_BLOCKS, i -> i.is(ItemTags.BANNERS),
                     Arrays.stream(DyeColor.values()).map(BuntingItem::getColored)
                             .toArray(ItemStack[]::new));
