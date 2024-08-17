@@ -19,8 +19,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import org.jetbrains.annotations.Nullable;
@@ -105,6 +107,20 @@ public class CommonConfigs {
 
     public static double getRedMerchantSpawnMultiplier() {
         return Tools.BOMB_ENABLED.get() ? General.RED_MERCHANT_SPAWN_MULTIPLIER.get() : 0;
+    }
+
+    public enum SlimedJumpMode {
+        NEVER, ALWAYS, NORMAL_DIFFICULTY, HARD_DIFFICULTY;
+
+        public boolean isOn(Level level) {
+            var diff = level.getDifficulty();
+            return switch (this) {
+                case NEVER -> false;
+                case ALWAYS -> true;
+                case NORMAL_DIFFICULTY -> diff == Difficulty.NORMAL || diff == Difficulty.HARD;
+                case HARD_DIFFICULTY -> diff == Difficulty.HARD;
+            };
+        }
     }
 
     public enum Hands {
@@ -1110,14 +1126,18 @@ public class CommonConfigs {
                     .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag"));
             builder.pop();
 
-            builder.push("throwable_slimeballs");
-            THROWABLE_SLIMEBALLS = feature(builder);
+            builder.push("slimed_effect");
+            SLIMED_EFFECT = feature(builder);
+            THROWABLE_SLIMEBALLS = builder.comment("Allow slimeballs to be thrown")
+                    .define("throwable_slimeballs", true);
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("overlay", true);
-            SLIME_JUMP = builder.comment("Thrown slimeballs will shortly nerf the player jump height. Disable if you don't want this effect as it can be quite powerful")
-                    .define("hinders_jump", true);
+            HINDERS_JUMP = builder.comment("Thrown slimeballs will shortly nerf the player jump height. Disable if you don't want this effect as it can be quite powerful")
+                    .define("hinders_jump", SlimedJumpMode.NORMAL_DIFFICULTY);
             SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
                     .define("duration", 300, 0, 1000);
+            SLIMED_PER_SIZE =builder.comment("Chance that a slime mob will apply slimed effect on successful attack. Multiplied by the slime size")
+                            .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();
 
             builder.pop();
@@ -1161,9 +1181,11 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BAD_LUCK_CAT;
         public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
         public static final Supplier<Boolean> ITEM_LORE;
+        public static final Supplier<Boolean> SLIMED_EFFECT;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
         public static final Supplier<Boolean> SLIME_OVERLAY;
-        public static final Supplier<Boolean> SLIME_JUMP;
+        public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
+        public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
 
     }

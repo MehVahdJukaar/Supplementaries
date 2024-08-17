@@ -42,7 +42,7 @@ public abstract class CannonChargeHud {
         // trajectory icons
 
         int iconLeft = screenWidth / 2 + 96;
-        int iconTop = screenHeight / 2 + 105;
+        int iconTop = screenHeight - 22;
         int iconW = 14;
         int iconU = CannonController.shootingMode.ordinal() * iconW;
         graphics.blit(texture, iconLeft, iconTop, iconU, 42, iconW, iconW);
@@ -96,10 +96,10 @@ public abstract class CannonChargeHud {
         byte power = CannonController.cannon.getPowerLevel();
 
         int color = switch (power) {
-            default -> 0xffcc00;
             case 2 -> 0xffaa00;
             case 3 -> 0xff8800;
             case 4 -> 0xff6600;
+            default -> 0xffcc00;
         };
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

@@ -27,8 +27,9 @@ public abstract class SlimedOverlayHud {
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             graphics.setColor(1.0F, 1.0F, 1.0F, alpha);
+            int slide = (int) (screenHeight / 4f * (1 - alpha));
             graphics.blit(ModTextures.SLIME_GUI_OVERLAY, 0, 0, -90, 0.0F, 0.0F,
-                    screenWidth, screenHeight, screenWidth, screenHeight);
+                    screenWidth, screenHeight + slide, screenWidth, screenHeight + slide);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
             graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);

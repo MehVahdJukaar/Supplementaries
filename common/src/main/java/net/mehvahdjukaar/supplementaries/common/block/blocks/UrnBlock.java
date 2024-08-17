@@ -34,10 +34,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SandBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -269,6 +266,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock {
             for (var e : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(ModTags.URN_SPAWN)) {
                 list.add(e.value());
             }
+
             if (!list.isEmpty()) {
                 var e = list.get(level.getRandom().nextInt(list.size()));
                 Entity entity = e.create(level);

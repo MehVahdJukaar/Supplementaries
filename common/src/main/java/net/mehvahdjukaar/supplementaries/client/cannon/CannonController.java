@@ -62,7 +62,7 @@ public class CannonController {
                 mc.options.keyAttack.getTranslatedKeyMessage()), false);
     }
 
-    public static void turnOff() {
+    public static void stopControllingAndSync() {
         sync(false, true);
         cannon = null;
         lastCameraYaw = 0;
@@ -172,9 +172,10 @@ public class CannonController {
         if (mc.screen != null) return;
         Options options = mc.options;
         if (options.keyShift.matches(key, action)) {
-            turnOff();
+            stopControllingAndSync();
         } else if (options.keyInventory.matches(key, action)) {
             ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+
             //Minecraft.getInstance().player.openMenu()
         } else if (options.keyJump.matches(key, action)) {
             if (trajectory != null && trajectory.gravity() != 0) {
@@ -230,7 +231,7 @@ public class CannonController {
                 needsToUpdateServer = false;
                 sync(false, false);
             }
-        } else turnOff();
+        } else stopControllingAndSync();
     }
 
 }

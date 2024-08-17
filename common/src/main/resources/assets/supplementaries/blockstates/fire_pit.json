@@ -1,10 +1,16 @@
 {
   "variants": {
-    "hanging=false": {
+    "hanging=false,lit=true": {
       "model": "supplementaries:block/fire_pit"
     },
-    "hanging=true": {
+    "hanging=true,lit=true": {
       "model": "supplementaries:block/fire_pit_hanging"
+    },
+    "hanging=false,lit=false": {
+      "model": "supplementaries:block/fire_pit_off"
+    },
+    "hanging=true,lit=false": {
+      "model": "supplementaries:block/fire_pit_hanging_off"
     }
   }
 }

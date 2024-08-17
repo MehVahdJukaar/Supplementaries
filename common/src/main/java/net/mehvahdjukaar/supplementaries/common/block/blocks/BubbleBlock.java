@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -69,7 +68,7 @@ public class BubbleBlock extends Block implements EntityBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (CommonConfigs.Tools.BUBBLE_BREAK.get() && level instanceof ServerLevel serverLevel) {
-            breakBubble(serverLevel, pos,state);
+            breakBubble(serverLevel, pos, state);
         }
     }
 
@@ -79,9 +78,9 @@ public class BubbleBlock extends Block implements EntityBlock {
         playBreakSound(state, level, pos, player);
     }
 
-    private void playBreakSound(BlockState state, Level level, BlockPos pos, Player player){
+    private void playBreakSound(BlockState state, Level level, BlockPos pos, Player player) {
         SoundType soundtype = state.getSoundType();
-        level.playSound(player,pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+        level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 
     @ForgeOverride
@@ -106,7 +105,7 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (CommonConfigs.Tools.BUBBLE_BREAK.get()) level.scheduleTick(pos, this, 5);
+        if (canPopBubble(entity)) level.scheduleTick(pos, this, 5);
         super.stepOn(level, pos, state, entity);
     }
 
@@ -114,13 +113,20 @@ public class BubbleBlock extends Block implements EntityBlock {
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float v) {
         super.fallOn(level, state, pos, entity, v);
         if (!level.isClientSide && CommonConfigs.Tools.BUBBLE_BREAK.get()) {
-            if(entity instanceof LivingEntity le && CommonConfigs.Tools.BUBBLE_FEATHER_FALLING.get() &&
-                    EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION,le)!=0){
-                return;
+            if (canPopBubble(entity)) {
+                if (v > 3) breakBubble((ServerLevel) level, pos, state);
+                else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
             }
-            if (v > 3) breakBubble((ServerLevel) level, pos, state);
-            else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
         }
+    }
+
+    protected boolean canPopBubble(Entity entity) {
+        if (!CommonConfigs.Tools.BUBBLE_BREAK.get()) return false;
+        if (entity instanceof LivingEntity le) {
+            return !CommonConfigs.Tools.BUBBLE_FEATHER_FALLING.get() ||
+                    EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION, le) == 0;
+        }
+        return true;
     }
 
     @Override

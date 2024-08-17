@@ -55,7 +55,7 @@ public class ServerBoundSyncCannonPacket implements Message {
         Level level = player.level();
 
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
-            cannon.syncAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
+            cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
             cannon.setChanged();
             if (stopControlling) {
                 cannon.setPlayerWhoMayEdit(null);

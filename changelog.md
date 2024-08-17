@@ -17,6 +17,7 @@
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox
+- Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions
 - Playing a flute will make parrots dance (in cages and on shoulder too)
@@ -30,6 +31,8 @@
 - added cannon map marker
 - fixed quill maps not supporting vanilla decorations properly
 - new present sounds
+- (fabric fix) redstone wire will only connect to back of a relayer
+- fixed overencumbered tag not taking stack tag into account
 - changed slingshot particle
 - you can now have a 2 faced clock block
 - wind vanes compat for wilder wild

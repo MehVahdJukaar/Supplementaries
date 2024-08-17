@@ -64,7 +64,7 @@ public class SackItem extends BlockItem {
         if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
-               ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
+                ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
             }
         }
     }
@@ -128,6 +128,7 @@ public class SackItem extends BlockItem {
             }
             return 0;
         } else if (slotItem.is(ModTags.OVERENCUMBERING)) {
+            if (slotItem.hasTag()) return 1;
             return slotItem.getCount() / (float) slotItem.getMaxStackSize();
         }
         return 0;

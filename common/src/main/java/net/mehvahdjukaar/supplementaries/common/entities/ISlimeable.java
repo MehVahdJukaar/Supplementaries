@@ -11,7 +11,7 @@ public interface ISlimeable {
 
     static float getAlpha(LivingEntity le, float partialTicks) {
         float slimeTicks = ((ISlimeable) le).supp$getSlimedTicks()  - partialTicks;
-        float maxFade = 60;
+        float maxFade = 70;
         return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
     }
 

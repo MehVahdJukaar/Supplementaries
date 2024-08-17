@@ -4,7 +4,7 @@
 	"textures": {
 		"1": "supplementaries:block/fire_pit_side",
 		"2": "supplementaries:block/fire_pit_bottom",
-		"particle": "supplementaries:block/fire_pit_top"
+		"particle": "supplementaries:block/fire_pit_top_off"
 	},
 	"elements": [
 		{

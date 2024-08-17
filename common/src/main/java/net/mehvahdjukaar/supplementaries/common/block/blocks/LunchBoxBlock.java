@@ -64,7 +64,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return super.getStateForPlacement(context)
-                .setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(FACING, context.getHorizontalDirection())
                 .setValue(HANGING, context.getClickedFace() == Direction.DOWN);
     }
 

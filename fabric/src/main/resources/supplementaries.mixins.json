@@ -18,7 +18,8 @@
     "CropBlockMixin",
     "CrossbowMixin",
     "MobBucketItemAccessor",
-    "PlayerProjectileMixin"
+    "PlayerProjectileMixin",
+    "RedstoneWireBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

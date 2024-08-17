@@ -5,8 +5,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -17,7 +15,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -69,19 +66,13 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     @Override
     public void onClose() {
         super.onClose();
-        syncCannon();
-    }
-
-    private void syncCannon() {
-        //sync tile regardless. Uses custom packet why not
         float yaw = this.yawSelector.getNumber();
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                yaw, pitch, power, false, this.tile.getBlockPos(), true
-        ));
         //update client immediately too
-        this.tile.syncAttributes(yaw, pitch, power, false, minecraft.player);
+        this.tile.setAttributes(yaw, pitch, power, false, minecraft.player);
+        //this auto syncs
+        CannonController.stopControllingAndSync();
     }
 
     private int getActualPower() {
@@ -125,11 +116,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         graphics.drawString(this.font, wantedPower + "x", 37, 25, color, false);
     }
 
-    @Override
     public boolean keyPressed(int key, int a, int b) {
-        if (key == 256) {
-            this.minecraft.player.closeContainer();
-        }
         return super.keyPressed(key, a, b);
     }
 

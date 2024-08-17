@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicResourcePack;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
@@ -131,6 +133,7 @@ public class Supplementaries {
     // yes this is where I write crap. deal with it XD
     // flute pacifier
     // wolf howl
+    // cow bells
 //add wind mod compat
     // vampires mummy cript necromancer curse stuff, skull trap block (nether fortess like big overworld boss)
     // warp fly and warper block

@@ -67,8 +67,15 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
     private float suppl$checkOverencumbered(float original) {
         var effect = this.getEffect(ModRegistry.OVERENCUMBERED.get());
-        if ((effect != null && effect.getAmplifier() > 0) || (this.supp$getSlimedTicks() > 0 && CommonConfigs.Tweaks.SLIME_JUMP.get())) {
+        if ((effect != null && effect.getAmplifier() > 0)) {
             original -= 0.1f;
+        }
+        // yes they stack
+        if(this.supp$getSlimedTicks() > 0){
+            var mode = CommonConfigs.Tweaks.HINDERS_JUMP.get();
+            if(mode.isOn(this.level())){
+                original -= 0.1f;
+            }
         }
         return original;
     }

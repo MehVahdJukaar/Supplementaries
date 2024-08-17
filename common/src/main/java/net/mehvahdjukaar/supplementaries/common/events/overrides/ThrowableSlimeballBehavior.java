@@ -1,25 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
-import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SnowballItem;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +20,8 @@ class ThrowableSlimeballBehavior implements ItemUseBehavior {
 
     @Override
     public boolean isEnabled() {
-        return CommonConfigs.Tweaks.THROWABLE_SLIMEBALLS.get();
+        return CommonConfigs.Tweaks.SLIMED_EFFECT.get() &&
+                CommonConfigs.Tweaks.THROWABLE_SLIMEBALLS.get();
     }
 
     @Nullable

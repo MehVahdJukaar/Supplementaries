@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +23,7 @@ public class Test extends FlammableLiquidBlock {
 
     @Override
     protected int getReactToFireDelay() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -51,6 +52,7 @@ public class Test extends FlammableLiquidBlock {
             return;
         }
 
+        if(true)return;
         if (stage == FireStage.RAGING) {
             level.scheduleTick(pos, this, getFireTickDelay(level.random));
 
