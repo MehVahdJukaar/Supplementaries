@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
+import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.SoulFiredCompat;
 import net.minecraft.core.BlockPos;
@@ -102,9 +104,9 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
-        if (!level.isClientSide) {
+        if (level instanceof ServerLevel sl) {
             // doesn't set off immediately
-            level.scheduleTick(pos, this, getReactToFireDelay());
+            MiscUtils.scheduleTickOverridingExisting(sl, pos, this, getReactToFireDelay());
         }
     }
 
@@ -112,9 +114,9 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moving) {
         // super also calls schedule fluid tick. unrelated to fire
         super.onPlace(state, world, pos, oldState, moving);
-        if (!oldState.is(state.getBlock()) && !world.isClientSide) {
+        if (!oldState.is(state.getBlock()) && world instanceof ServerLevel sl) {
             //doesn't ignite immediately
-            world.scheduleTick(pos, this, getReactToFireDelay());
+            MiscUtils.scheduleTickOverridingExisting(sl, pos, this, getReactToFireDelay());
         }
     }
 
@@ -139,8 +141,8 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         //extra can light up checks
         if (shouldNotHaveFire(state, pos, level)) return false;
         var success = ILightable.super.lightUp(player, state, pos, level, fireSourceType);
-        if (success && !level.isClientSide()) {
-            level.scheduleTick(pos, this, getReactToFireDelay());
+        if (success && level instanceof ServerLevel sl) {
+            MiscUtils.scheduleTickOverridingExisting(sl, pos, this, getReactToFireDelay());
         }
         return success;
     }
@@ -281,7 +283,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         // super.tick(state, level, pos, random);
         if (stage == FireStage.RISING) {
             level.setBlock(pos, state.setValue(AGE, age + 1), 3);
-            level.scheduleTick(pos, this, getReactToFireDelay());
+            MiscUtils.scheduleTickOverridingExisting(level, pos, this, getReactToFireDelay());
             return;
         }
 
@@ -346,8 +348,8 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
         public static FireStage fromAge(int age) {
             if (age == 0) return OFF;
-            if (age < 4) return RISING;
-            return RAGING;
+            else if (age < 4) return RISING;
+            else return RAGING;
         }
     }
 

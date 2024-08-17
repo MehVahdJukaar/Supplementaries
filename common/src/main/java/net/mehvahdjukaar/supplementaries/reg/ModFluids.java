@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
-import net.mehvahdjukaar.supplementaries.common.fluids.Test;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
@@ -33,7 +32,7 @@ public class ModFluids {
         LUMISENE_FLUID = registerFluid(ModConstants.LUMISENE_NAME, ModFluids::createLumisene);
 
         LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res(ModConstants.LUMISENE_NAME),
-                () -> new Test(LUMISENE_FLUID,
+                () -> new FlammableLiquidBlock(LUMISENE_FLUID,
                         BlockBehaviour.Properties.of()
                                 .replaceable()
                                 .instabreak()
@@ -41,11 +40,10 @@ public class ModFluids {
                                 .pushReaction(PushReaction.DESTROY)
                                 .liquid()
                                 .noCollission()
-                                .randomTicks()
                                 .noLootTable()
                                 .hasPostProcess((state, level, pos) -> true)
                                 .sound(SoundType.EMPTY)
-                                .strength(100.0F),
+                                .strength(0,100.0F),
                 0));
 
         LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),

@@ -1,11 +1,10 @@
 {
-
-  "textures": {
-    "particle": "supplementaries:block/crank_base",
-    "1": "supplementaries:block/crank_base"
-  },
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
+	"textures": {
+		"1": "supplementaries:block/crank_base",
+		"particle": "supplementaries:block/crank_base"
+	},
 	"elements": [
 		{
 			"from": [2, 2, 14],
@@ -25,6 +24,7 @@
 		{
 			"name": "group",
 			"origin": [10, 8, 10],
+			"color": 0,
 			"children": [0]
 		}
 	]

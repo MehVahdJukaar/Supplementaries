@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.supplementaries.common.fluids.Test;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;

@@ -230,10 +230,11 @@ public class AshLayerBlock extends FallingBlock {
     @EventCalled
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
         double chance = CommonConfigs.Building.ASH_BURN_CHANCE.get();
-        if (chance != 0) {
-            BlockState state = event.getState();
-            LevelAccessor level = event.getLevel();
-            BlockPos pos = event.getPos();
+        BlockState state = event.getState();
+        LevelAccessor level = event.getLevel();
+        BlockPos pos = event.getPos();
+        //no ash from empty collision ones
+        if (chance != 0 && !state.getCollisionShape(event.getLevel(), event.getPos()).isEmpty()) {
 
             //IW stuff
             if (event.getFinalState() != null) return;

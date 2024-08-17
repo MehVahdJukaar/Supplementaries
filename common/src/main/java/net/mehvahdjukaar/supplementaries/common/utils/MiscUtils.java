@@ -7,13 +7,17 @@ import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.ticks.ScheduledTick;
 
 import java.util.Calendar;
 import java.util.function.Supplier;
@@ -144,5 +148,15 @@ public class MiscUtils {
         return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
     }
 
+    // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
+    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos,  Block block, int delay){
+        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long)delay, level.nextSubTickCount());
+
+        long l = ChunkPos.asLong(tick.pos());
+
+       var container = level.getBlockTicks().allContainers.get(l);
+       container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
+       container.schedule(tick);
+    }
 
 }
