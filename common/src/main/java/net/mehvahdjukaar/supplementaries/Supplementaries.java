@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEnti
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
+import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
@@ -126,6 +127,7 @@ public class Supplementaries {
     // test dispenser and present stuff
     // soap slidy block slides
 
+    // dispenser and lumisene stuff
     // recipe for sus sand and gravel
     // mod/module for hud overlay compass and spyglass
     // bucket shoot from cannon

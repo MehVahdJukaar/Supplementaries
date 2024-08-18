@@ -4,10 +4,13 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.forge.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.forge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,6 +24,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -141,6 +146,14 @@ public class SuppPlatformStuffImpl {
 
     public static boolean isSlimeball(Item item) {
         return item.builtInRegistryHolder().is(Tags.Items.SLIMEBALLS);
+    }
+
+    public static boolean canCatchFire(Level level, BlockPos below, Direction direction) {
+        return ((FireBlock) Blocks.FIRE).canCatchFire(level, below, direction);
+    }
+
+    public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
+       ((FireBlockAccessor) Blocks.FIRE).invokeTryCatchFire(level, pos, chance, random, age, direction);
     }
 
 }

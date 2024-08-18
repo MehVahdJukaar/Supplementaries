@@ -7,14 +7,15 @@
   "client": [
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
+    "CompatEmbFluidRendererMixin",
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
-    "CompatEmbFluidRendererMixin",
     "LevelRendererMixin",
     "LiquidBlockRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",
+    "FireBlockAccessor",
     "FriendlyByteBufMixin",
     "LivingEntityMixin",
     "MobBucketItemAccessor",

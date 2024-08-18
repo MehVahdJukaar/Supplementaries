@@ -10,14 +10,17 @@ import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
 import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
 import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.FluidRenderer;
 import me.jellysquid.mods.sodium.client.world.WorldSlice;
+import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.forge.ModFluidsImpl;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import org.embeddedt.embeddium.render.chunk.ChunkColorWriter;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -53,7 +56,22 @@ public abstract class CompatEmbFluidRendererMixin {
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
-            ModFluidsImpl.embeddiumAlterLumiseneFluidFaceLight(light);
+
+            int minLight = ModFluidsImpl.LUMISENE_FAKE_LIGHT_EMISSION - 3;
+            for (int j = 0; j < light.lm.length; j++) {
+                int l = light.lm[j];
+                int bl = LightTexture.block(l);
+                int sl = LightTexture.sky(l);
+                if (bl < minLight) {
+                    bl = minLight;
+                }
+                // this removes smooth lighting from lights lower than me
+                light.lm[j] = LightTexture.pack(bl, sl);
+
+                // no shading on emissive stuff!
+                //TODO: this cant be correct! without however stuff is shader when against blocks
+                light.br[j] = 1.0F;
+            }
         }
     }
 

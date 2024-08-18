@@ -17,6 +17,7 @@
     "BushBlockMixin",
     "CropBlockMixin",
     "CrossbowMixin",
+    "FireBlockAccessor",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",
     "RedstoneWireBlockMixin"

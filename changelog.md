@@ -17,6 +17,8 @@
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox
+- Fixed a very rare crash with quivers and server players
+- Ash can no longer spawn from non solid blocks
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions

@@ -997,7 +997,7 @@ public class ModRegistry {
     );
 
     //gunpowder block
-    public static final Supplier<Block> GUNPOWDER_BLOCK = regWithItem(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
+    public static final Supplier<Block> GUNPOWDER_BLOCK = regBlock(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
             BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
 
     //fire pit

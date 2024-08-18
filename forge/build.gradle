@@ -114,8 +114,8 @@ dependencies {
 
 
 
-    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
-    modImplementation("curse.maven:selene-499980:5619074")
+    modImplementation("net.mehvahdjukaar:moonlight-forge:1.20-2.12.15a")
+    //modImplementation("curse.maven:selene-499980:5619074")
     modImplementation("curse.maven:farmers-delight-398521:5051242")
 
     modRuntimeOnly("curse.maven:modernfix-790626:4599348")

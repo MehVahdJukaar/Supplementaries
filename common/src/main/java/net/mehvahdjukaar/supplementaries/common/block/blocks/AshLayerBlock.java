@@ -231,10 +231,11 @@ public class AshLayerBlock extends FallingBlock {
     public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
         double chance = CommonConfigs.Building.ASH_BURN_CHANCE.get();
         BlockState state = event.getState();
-        LevelAccessor level = event.getLevel();
-        BlockPos pos = event.getPos();
-        //no ash from empty collision ones
-        if (chance != 0 && !state.getCollisionShape(event.getLevel(), event.getPos()).isEmpty()) {
+
+        //no ash from non-solid blocks
+        if (chance != 0 && state.isSolid()) {
+            LevelAccessor level = event.getLevel();
+            BlockPos pos = event.getPos();
 
             //IW stuff
             if (event.getFinalState() != null) return;
@@ -246,9 +247,11 @@ public class AshLayerBlock extends FallingBlock {
             if (count > 0) {
                 int layers = Mth.clamp(level.getRandom().nextInt(count), 1, 8);
                 if (layers != 0) {
-                    ((ServerLevel) level).sendParticles(ModParticles.ASH_PARTICLE.get(), pos.getX() + 0.5D,
-                            pos.getY() + 0.5D, pos.getZ() + 0.5D, 10 + layers,
-                            0.5D, 0.5D, 0.5D, 0.0D);
+                    if (level instanceof ServerLevel sl) {
+                        sl.sendParticles(ModParticles.ASH_PARTICLE.get(), pos.getX() + 0.5D,
+                                pos.getY() + 0.5D, pos.getZ() + 0.5D, 10 + layers,
+                                0.5D, 0.5D, 0.5D, 0.0D);
+                    }
                     event.setFinalState(ModRegistry.ASH_BLOCK.get().defaultBlockState()
                             .setValue(AshLayerBlock.LAYERS, layers));
                 }

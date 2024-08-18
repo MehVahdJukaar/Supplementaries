@@ -14,6 +14,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -75,7 +76,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
 
 
     @Override
-    public void supplementaries$setQuiver(ItemStack quiver) {
+    public void supplementaries$setQuiver(@NotNull ItemStack quiver) {
         this.supplementaries$quiverForRenderer = quiver;
     }
 

@@ -6,10 +6,13 @@ import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
+import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -116,5 +119,14 @@ public class SuppPlatformStuffImpl {
     @Deprecated(forRemoval = true)
     public static boolean isSlimeball(Item item) {
         return item == Items.SLIME_BALL;
+    }
+
+
+    public static boolean canCatchFire(Level level, BlockPos pos, Direction direction) {
+        return ((FireBlockAccessor) Blocks.FIRE).invokeCanBurn(level.getBlockState(pos));
+    }
+
+    public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
+        ((FireBlockAccessor) Blocks.FIRE).invokeCheckBurnOut(level, pos, chance, random, age);
     }
 }

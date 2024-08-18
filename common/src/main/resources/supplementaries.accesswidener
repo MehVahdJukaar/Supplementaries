@@ -16,8 +16,12 @@ accessible field net/minecraft/world/level/block/AbstractCauldronBlock interacti
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 
+# schedule tick
 accessible field net/minecraft/world/ticks/LevelTicks allContainers Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
-
+# fire delegate
+accessible method net/minecraft/world/level/block/FireBlock getIgniteOdds (Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)I
+accessible method net/minecraft/world/level/block/FireBlock getStateWithAge (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/block/state/BlockState;
+accessible method net/minecraft/world/level/block/FireBlock isNearRain (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z
 #piston stuff
 accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity lastTicked J
 accessible field net/minecraft/world/level/block/piston/PistonMovingBlockEntity progressO F

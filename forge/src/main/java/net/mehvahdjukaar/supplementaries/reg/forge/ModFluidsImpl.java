@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg.forge;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
+import me.jellysquid.mods.sodium.client.world.WorldSlice;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRenderPropertiesImpl;
@@ -128,17 +129,5 @@ public class ModFluidsImpl {
         return original.call(level, pos);
     }
 
-    public static void embeddiumAlterLumiseneFluidFaceLight(QuadLightData light) {
-        int minLight = LUMISENE_FAKE_LIGHT_EMISSION - 3;
-        for (int j = 0; j < light.lm.length; j++) {
-            int l = light.lm[j];
-            int bl = LightTexture.block(l);
-            int sl = LightTexture.sky(l);
-            if (bl < minLight) {
-                bl = minLight;
-            }
-            light.lm[j] = LightTexture.pack(bl, sl);
-        }
-    }
 
 }

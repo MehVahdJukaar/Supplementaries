@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.fluids;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
-import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -37,6 +39,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -82,21 +85,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         return RenderShape.MODEL;
     }
 
-
-    //TODO: check fabric
-
-    @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        if (face.getAxis().isVertical()) return 0;
-        return 60;
-    }
-
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        if (face.getAxis().isVertical()) return 0;
-        return 300;
-    }
-
     @ForgeOverride
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
@@ -133,7 +121,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        return interactWithPlayer(state, worldIn, pos, player, handIn);
+        return this.interactWithPlayer(state, worldIn, pos, player, handIn);
     }
 
     @Override
@@ -147,8 +135,10 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         return success;
     }
 
+    //TODO: in fire check
     public static boolean shouldNotHaveFire(BlockState state, BlockPos pos, LevelAccessor levelAccessor) {
-        return state.getValue(MISSING_LEVELS) < 5 || //its inverted
+        return
+                //state.getValue(MISSING_LEVELS) < 5 || //its inverted
                 levelAccessor.getFluidState(pos.above()).is(state.getFluidState().getType());
     }
 
@@ -189,7 +179,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        interactWithProjectile(level, state, projectile, pos);
+        this.interactWithProjectile(level, state, projectile, pos);
     }
 
     @Override
@@ -205,23 +195,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             }
         }
         return state.setValue(AGE, shouldBeOnFire ? 1 : 0);
-    }
-
-    @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (!isLitUp(state, level, pos)) return;
-        if (random.nextInt(24) == 0) {
-            level.playLocalSound((double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
-        }
-
-        int age = state.getValue(AGE);
-        double baseY = Math.max((age + 1) / 5, 1) * 0.5f;
-        for (int i = 0; i < 3; ++i) {
-            double x = (double) pos.getX() + random.nextDouble();
-            double y = (double) pos.getY() + random.nextDouble() * 0.25 + baseY;
-            double z = (double) pos.getZ() + random.nextDouble();
-            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0);
-        }
     }
 
     @Override
@@ -261,6 +234,44 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         super.playerWillDestroy(level, pos, state, player);
     }
 
+
+    // fire block stuff
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (!isLitUp(state, level, pos)) return;
+        if (random.nextInt(24) == 0) {
+            level.playLocalSound(
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5,
+                    SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS,
+                    1.0F + random.nextFloat(),
+                    random.nextFloat() * 0.7F + 0.3F, false);
+        }
+
+        int age = state.getValue(AGE);
+        double baseY = Math.max((age + 1) / 5, 1) * 0.5f;
+        for (int i = 0; i < 3; ++i) {
+            double x = (double) pos.getX() + random.nextDouble();
+            double y = (double) pos.getY() + random.nextDouble() * 0.25 + baseY;
+            double z = (double) pos.getZ() + random.nextDouble();
+            level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0);
+        }
+
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
+            if (SuppPlatformStuff.canCatchFire(level, pos.relative(direction), direction)) {
+                for (int i = 0; i < 2; ++i) {
+                    var step = direction.step();
+                    double x = pos.getX() + 0.5 + step.x * 0.5 + (step.x == 0 ? (random.nextDouble() - 0.5) : (-step.x * random.nextDouble() * 0.1));
+                    double y = pos.getY() + 0.5 + step.y * 0.5 + (step.y == 0 ? (random.nextDouble() - 0.5) : (-step.y * random.nextDouble() * 0.1));
+                    double z = pos.getZ() + 0.5 + step.z * 0.5 + (step.z == 0 ? (random.nextDouble() - 0.5) : (-step.z * random.nextDouble() * 0.1));
+                    level.addParticle(ParticleTypes.LARGE_SMOKE, x, y, z, 0.0, 0.0, 0.0);
+                }
+            }
+        }
+    }
+
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (!level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) return;
@@ -287,60 +298,115 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             return;
         }
 
+        if (stage == FireStage.DYING) {
+            int missingLayers = state.getValue(MISSING_LEVELS);
+            // remove block/ turn to fire
+            if (missingLayers == 15) {
+                // cant remove block or liquid would be left behind
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                if (SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
+                    // replace with fire block if it has flammable below. Since we cant burn down
+                    int newAge = random.nextInt(8);
+                    level.setBlock(pos, getFireDelegate().getStateWithAge(level, pos, newAge), 3);
+                }
+                return;
+            }
+            // burns down. Starts at raging age
+            level.setBlockAndUpdate(pos, state.setValue(MISSING_LEVELS, missingLayers + 1)
+                    .setValue(AGE, 4));
+            level.scheduleTick(pos, this, getFireTickDelay(level.random));
+            return;
+        }
+
         if (stage == FireStage.RAGING) {
             level.scheduleTick(pos, this, getFireTickDelay(level.random));
 
             //tick normal fire
-
-            int layers = state.getValue(MISSING_LEVELS);
-            if (age == 15) {
-                if (layers == 15) {
-                    level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                    return;
-                }
-                level.setBlockAndUpdate(pos, state.setValue(MISSING_LEVELS, layers + 1));
-                return;
-            }
-
             int ageAdd = random.nextInt(3) / 2;
             int ageIncrease = Math.min(15, age + ageAdd);
             if (age != ageIncrease) {
                 state = state.setValue(AGE, ageIncrease);
-                level.setBlock(pos, state, 4);
+                level.setBlock(pos, state, Block.UPDATE_INVISIBLE);
             }
 
-            //  if (age == 15 && random.nextInt(4) == 0 && !SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
-            //      level.removeBlock(pos, false);
-            //      return;
-            //  }
 
-            boolean burnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
-            int k = burnout ? -50 : 0;
-            BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+            burnStuffAroundLikeFire(state, level, pos, random, age);
         }
 
 
     }
 
-    @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // calls fluid random tick
-        super.randomTick(state, level, pos, random);
+    //TODO: add fire spread speed
 
-        // hack to burn blocks around like lava does. we could also movethis into tick instead like fire
-        if (isLitUp(state, level, pos)) {
-            Blocks.LAVA.randomTick(Blocks.LAVA.defaultBlockState(), level, pos, random);
+    @ForgeOverride
+    public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return isLitUp(state, level, pos) ? 0 : 60;
+        //high chance to have fire. Cant burn however
+    }
+
+
+    // Mimics what FireBlock .tick does
+    private static void burnStuffAroundLikeFire(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, int age) {
+        boolean increaseFireBurnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
+        int extraChance = increaseFireBurnout ? -50 : 0;
+        SuppPlatformStuff.tryBurningByFire(level, pos.east(), 300 + extraChance, random, age, Direction.WEST);
+        SuppPlatformStuff.tryBurningByFire(level, pos.west(), 300 + extraChance, random, age, Direction.EAST);
+        SuppPlatformStuff.tryBurningByFire(level, pos.above(), 250 + extraChance, random, age, Direction.DOWN);
+        SuppPlatformStuff.tryBurningByFire(level, pos.north(), 300 + extraChance, random, age, Direction.SOUTH);
+        SuppPlatformStuff.tryBurningByFire(level, pos.south(), 300 + extraChance, random, age, Direction.NORTH);
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+        if (true) return;
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dz = -1; dz <= 1; ++dz) {
+                for (int dy = -1; dy <= 4; ++dy) {
+                    if (dx == 0 && dy == 0 && dz == 0) continue;
+                    int chance = 100;
+                    if (dy > 1) {
+                        chance += (dy - 1) * 100;
+                    }
+
+                    mutableBlockPos.setWithOffset(pos, dx, dy, dz);
+                    FireBlock fireBlock = getFireDelegate();
+                    int igniteOdds = fireBlock.getIgniteOdds(level, mutableBlockPos);
+                    // purposefully cant ignite other lumisene next to it. would look bad
+                    boolean isLumisene = false;
+                    if (igniteOdds == 0 && (dy != 0 || (dx != 0 && dz != 0))) {
+                        // same as mixin
+                        BlockState nextState = level.getBlockState(pos);
+                        if (state.getBlock() instanceof FlammableLiquidBlock) {
+                            igniteOdds = PlatHelper.getFireSpreadSpeed(nextState, level, pos, Direction.UP);
+                            isLumisene = true;
+                        }
+                    }
+                    if (igniteOdds > 0) {
+                        int i2 = (igniteOdds + 40 + level.getDifficulty().getId() * 7) / (age + 30);
+                        if (increaseFireBurnout) {
+                            i2 /= 2;
+                        }
+
+                        if (i2 > 0 && random.nextInt(chance) <= i2 && (!level.isRaining() || !fireBlock.isNearRain(level, mutableBlockPos))) {
+                            int newAge = Math.min(15, age + random.nextInt(5) / 4);
+
+                            if (isLumisene && level.getBlockState(pos).getBlock() instanceof FlammableLiquidBlock fl) {
+                                fl.lightUp(null, state, pos, level, FireSourceType.FIRE_CHANGE);
+                            } else {
+                                // sets fire block
+                                level.setBlock(mutableBlockPos, fireBlock.getStateWithAge(level, mutableBlockPos, newAge), 3);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    @Override
-    public boolean isRandomlyTicking(BlockState state) {
-        return true;
+    private static @NotNull FireBlock getFireDelegate() {
+        return (FireBlock) Blocks.FIRE;
     }
 
 
     public enum FireStage {
-        OFF, RISING, RAGING;
+        OFF, RISING, RAGING, DYING;
 
         public boolean isBurning() {
             return this != OFF;
@@ -348,6 +414,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
         public static FireStage fromAge(int age) {
             if (age == 0) return OFF;
+            if (age == 15) return DYING;
             else if (age < 4) return RISING;
             else return RAGING;
         }

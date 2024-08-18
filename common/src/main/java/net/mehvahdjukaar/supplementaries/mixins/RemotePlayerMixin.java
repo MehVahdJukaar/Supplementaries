@@ -19,9 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class RemotePlayerMixin extends Player implements IQuiverPlayer {
 
     @Unique
-    private SlotReference supplementaries$quiverSlotForHUD;
+    private SlotReference supplementaries$quiverSlotForHUD = SlotReference.EMPTY;
     @Unique
-    private ItemStack supplementaries$quiverForRenderer;
+    private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
 
     protected RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);

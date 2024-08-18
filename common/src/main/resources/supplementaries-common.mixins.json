@@ -25,6 +25,7 @@
     "ExplorationMapSerializerMixin",
     "ExplosionMixin",
     "FallingBlockEntityMixin",
+    "FireBlockMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
