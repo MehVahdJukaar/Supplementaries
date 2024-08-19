@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -63,7 +62,11 @@ public class CannonController {
     }
 
     public static void stopControllingAndSync() {
-        sync(false, true);
+        CannonBlockTile.sync(cannon, false, true);
+        stopControlling();
+    }
+
+    public static void stopControlling() {
         cannon = null;
         lastCameraYaw = 0;
         lastCameraPitch = 0;
@@ -72,12 +75,6 @@ public class CannonController {
         if (lastCameraType != null) {
             Minecraft.getInstance().options.setCameraType(lastCameraType);
         }
-    }
-
-    private static void sync(boolean fire, boolean stopControlling) {
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
-                cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                fire, cannon.getBlockPos(), stopControlling));
     }
 
     public static boolean isActive() {
@@ -195,7 +192,7 @@ public class CannonController {
 
     public static void onPlayerAttack() {
         if (cannon != null && cannon.readyToFire()) {
-            sync(true, false);
+            CannonBlockTile.sync(cannon, true, false);
         }
     }
 
@@ -229,9 +226,11 @@ public class CannonController {
                 pos.distToCenterSqr(player.position()) < maxDist * maxDist) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
-                sync(false, false);
+                CannonBlockTile.sync(cannon, false, false);
             }
-        } else stopControllingAndSync();
+        } else {
+            stopControllingAndSync();
+        }
     }
 
 }

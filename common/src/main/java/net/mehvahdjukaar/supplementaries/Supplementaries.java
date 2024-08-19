@@ -127,6 +127,7 @@ public class Supplementaries {
     // test dispenser and present stuff
     // soap slidy block slides
 
+    // gunpowder lights up lumisene
     // dispenser and lumisene stuff
     // recipe for sus sand and gravel
     // mod/module for hud overlay compass and spyglass

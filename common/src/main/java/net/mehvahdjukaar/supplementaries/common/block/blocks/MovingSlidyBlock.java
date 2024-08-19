@@ -48,7 +48,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
     public static void move(BlockState state, Level level, BlockPos pos, Direction direction, BlockPos neighborPos) {
         BlockState newState = ModRegistry.MOVING_SLIDY_BLOCK.get().defaultBlockState()
                 .setValue(MovingSlidyBlock.FACING, direction);
-        level.setBlock(neighborPos, newState, 67);
+        level.setBlock(neighborPos, newState, 3);
         BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state, direction);
         level.setBlockEntity(be);
 

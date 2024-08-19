@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -18,9 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -77,6 +76,10 @@ public class InteractEventsHandler {
         itemUse.add(new ThrowableSlimeballBehavior());
         itemUse.add(new ClockItemBehavior());
         itemUse.add(new CompassItemBehavior());
+        LightUpLumiseneLiquidBehavior liquidHack = new LightUpLumiseneLiquidBehavior();
+        // needs to be on both as neither is called if the other is.
+        itemUse.add(liquidHack);
+        itemUseOnBlock.add(liquidHack);
 
         itemUseOnBlockHP.add(new AntiqueInkBehavior());
         itemUseOnBlockHP.add(new SoapBehavior());
@@ -97,7 +100,6 @@ public class InteractEventsHandler {
             for (ItemUseOnBlockBehavior b : itemUseOnBlock) {
                 if (b.appliesToItem(i)) {
                     ITEM_USE_ON_BLOCK.put(i, b);
-                    continue outer;
                 }
             }
             for (ItemUseBehavior b : itemUse) {
@@ -199,8 +201,8 @@ public class InteractEventsHandler {
             return switch (ret) {
                 case CONSUME -> InteractionResultHolder.consume(stack);
                 case SUCCESS -> InteractionResultHolder.success(stack);
-                default -> InteractionResultHolder.pass(stack);
                 case FAIL -> InteractionResultHolder.fail(stack);
+                default -> InteractionResultHolder.pass(stack);
             };
         }
         return InteractionResultHolder.pass(stack);

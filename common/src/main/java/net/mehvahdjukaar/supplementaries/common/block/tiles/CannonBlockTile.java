@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -346,4 +347,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
 
+    public static void sync(CannonBlockTile cannon, boolean fire, boolean removeOwner) {
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+                cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
+                fire, cannon.getBlockPos(), removeOwner));
+    }
 }

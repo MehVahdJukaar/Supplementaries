@@ -71,8 +71,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         byte power = this.powerSelector.getPower();
         //update client immediately too
         this.tile.setAttributes(yaw, pitch, power, false, minecraft.player);
-        //this auto syncs
-        CannonController.stopControllingAndSync();
+        CannonBlockTile.sync(this.tile, false, true);
     }
 
     private int getActualPower() {
@@ -82,7 +81,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     @Override
     public void slotChanged(AbstractContainerMenu container, int slot, ItemStack stack) {
         if (slot == 0) {
-
         }
     }
 
