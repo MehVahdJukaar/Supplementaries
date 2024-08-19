@@ -50,6 +50,7 @@ public class ServerBoundSyncCannonPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
+
         // server world
         ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
         Level level = player.level();
@@ -60,6 +61,10 @@ public class ServerBoundSyncCannonPacket implements Message {
             if (stopControlling) {
                 cannon.setPlayerWhoMayEdit(null);
             }
+            //now update all clients
+            level.sendBlockUpdated(pos, cannon.getBlockState(), cannon.getBlockState(), 3);
+
+
             return;
         }
         Supplementaries.error(); //should not happen

@@ -1,18 +1,15 @@
 package net.mehvahdjukaar.supplementaries.reg.forge;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
-import me.jellysquid.mods.sodium.client.world.WorldSlice;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRenderPropertiesImpl;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
-import net.mehvahdjukaar.supplementaries.common.items.forge.FiniteFluidBucket;
+import net.mehvahdjukaar.supplementaries.common.items.forge.LumiseneBucketItem;
 import net.mehvahdjukaar.supplementaries.common.items.forge.LumiseneBottleItem;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -43,7 +40,7 @@ public class ModFluidsImpl {
     public static final int LUMISENE_FAKE_LIGHT_EMISSION = 11;// quad emissivity and actual light value for the block. Lumisene does not propagate light (like magma blocks)
 
     public static BucketItem createLumiseneBucket() {
-        return new FiniteFluidBucket(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
+        return new LumiseneBucketItem(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
                 .craftRemainder(Items.BUCKET), MAX_LAYERS);
     }
 

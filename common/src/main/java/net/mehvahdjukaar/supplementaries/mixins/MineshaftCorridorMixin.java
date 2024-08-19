@@ -20,7 +20,7 @@ public abstract class MineshaftCorridorMixin {
     }
 
     @Inject(method = "fillColumnBetween", at = @At("HEAD"), cancellable = true)
-    private static void addRope(WorldGenLevel level, BlockState state, BlockPos.MutableBlockPos pos, int minY, int maxY, CallbackInfo ci) {
+    private static void supp$addRope(WorldGenLevel level, BlockState state, BlockPos.MutableBlockPos pos, int minY, int maxY, CallbackInfo ci) {
         if(state.getBlock() == Blocks.CHAIN && minY > MineshaftElevatorPiece.getRopeCutout()){
             BlockState ropeState = MineshaftElevatorPiece.getMineshaftRope();
             if(ropeState != null) {

@@ -33,6 +33,8 @@
 - added cannon map marker
 - fixed quill maps not supporting vanilla decorations properly
 - new present sounds
+- fixed mob head effects not clearing properly
+- mob head effects will now only work in first person
 - (fabric fix) redstone wire will only connect to back of a relayer
 - fixed overencumbered tag not taking stack tag into account
 - changed slingshot particle

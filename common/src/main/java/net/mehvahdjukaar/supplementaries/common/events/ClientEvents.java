@@ -24,6 +24,7 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -111,13 +112,13 @@ public class ClientEvents {
         if (p == null) return;
 
         checkIfOnRope(p);
-        applyMobHeadShaders(p);
+        applyMobHeadShaders(p, minecraft);
         CannonController.onClientTick(minecraft);
     }
 
     private static String currentlyAppliedMobShader = null;
 
-    private static void applyMobHeadShaders(Player p) {
+    private static void applyMobHeadShaders(Player p, Minecraft mc) {
         if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get() && !p.isSpectator()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
@@ -130,14 +131,18 @@ public class ClientEvents {
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
             Item item = stack.getItem();
-            String newShader = EFFECTS_PER_ITEM.get(item);
+            String newShader;
+            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+                newShader = EFFECTS_PER_ITEM.get(item);
+            } else newShader = null;
+
             if (newShader == null && shouldHaveGoatedEffect(p, item)) {
                 newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
             }
             if (newShader != null && !newShader.equals(current)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
                 currentlyAppliedMobShader = newShader;
-            } else if (current != null && !current.equals(currentlyAppliedMobShader)) {
+            } else if (current != null && (!current.equals(currentlyAppliedMobShader) || newShader == null)) {
                 renderer.shutdownEffect();
                 currentlyAppliedMobShader = null;
             }

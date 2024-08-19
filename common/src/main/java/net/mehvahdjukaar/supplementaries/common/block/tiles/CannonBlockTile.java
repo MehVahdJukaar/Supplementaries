@@ -250,7 +250,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
                 // open gui (edit sign with empty hand)
                 this.setPlayerWhoMayEdit(player.getUUID());
-                    ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
+                ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
             }
             return true;
         }
@@ -262,10 +262,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
-        //update other clients
-        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+
+        //particles
         this.level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
         this.playerWhoIgnitedUUID = controllingPlayer != null ? controllingPlayer.getUUID() : null;
+
+        this.setChanged();
+        //update other clients
+        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
@@ -347,7 +351,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
 
-    public static void sync(CannonBlockTile cannon, boolean fire, boolean removeOwner) {
+    public static void syncToServer(CannonBlockTile cannon, boolean fire, boolean removeOwner) {
         ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
                 cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
                 fire, cannon.getBlockPos(), removeOwner));

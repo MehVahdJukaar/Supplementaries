@@ -56,7 +56,7 @@ public interface IOnePlayerInteractable {
 
     private boolean isCloseEnoughToEdit(Player player) {
         BlockPos pos = ((BlockEntity) this).getBlockPos();
-        return player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > 64.0;
+        return player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > (8*8);
     }
 
     default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {

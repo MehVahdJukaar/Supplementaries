@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
+import net.frozenblock.wilderwild.mixin.projectile.ThrownPotionMixin;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
@@ -7,12 +8,15 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
 import net.minecraft.client.player.Input;
+import net.minecraft.client.telemetry.TelemetryProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -61,12 +65,15 @@ public class CannonController {
                 mc.options.keyAttack.getTranslatedKeyMessage()), false);
     }
 
-    public static void stopControllingAndSync() {
-        CannonBlockTile.sync(cannon, false, true);
+    // only works if we are already controlling
+    private static void stopControllingAndSync() {
+        if (cannon == null) return;
+        CannonBlockTile.syncToServer(cannon, false, true);
         stopControlling();
     }
 
     public static void stopControlling() {
+        if (cannon == null) return;
         cannon = null;
         lastCameraYaw = 0;
         lastCameraPitch = 0;
@@ -106,8 +113,9 @@ public class CannonController {
             lastCameraPitch = camera.getXRot();
             lastZoomOut = (float) camera.getMaxZoom(4);
 
+            float horizontalOffset = -1;
 
-            camera.move(-lastZoomOut, 0, -1);
+            camera.move(-lastZoomOut, 0, horizontalOffset);
 
             yawIncrease = 0;
             pitchIncrease = 0;
@@ -116,7 +124,7 @@ public class CannonController {
             // find hit result
             Vec3 lookDir2 = new Vec3(camera.getLookVector());
             float maxRange = 128;
-            Vec3 actualCameraPos = camera.getPosition();
+            Vec3 actualCameraPos = camera.getPosition().add(lookDir2.normalize());
             Vec3 endPos = actualCameraPos.add(lookDir2.scale(maxRange));
 
             hit = level.clip(new ClipContext(actualCameraPos, endPos,
@@ -137,21 +145,25 @@ public class CannonController {
                     restraints.minPitch(), restraints.maxPitch());
 
             if (trajectory != null) {
-                float followSpeed = 0.25f;
-                //TODO: improve
-                cannon.setRestrainedPitch(Mth.rotLerp(1, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
-
-                float yaw = wantedCannonYaw * Mth.RAD_TO_DEG;//  Mth.rotLerp(1, cannon.getYaw(1), wantedCannonYaw * Mth.RAD_TO_DEG);
-                float prevYaw = cannon.getYaw(0);
-                //overshoots since we are setting this every render tick. Calculates the next tick yaw
-                float deltaYaw = Mth.wrapDegrees(yaw - prevYaw);
-                yaw = prevYaw + deltaYaw / partialTick;
-                cannon.setRestrainedYaw(yaw);
+                setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
             }
 
             return true;
         }
         return false;
+    }
+
+    private static void setCannonAngles(float partialTick, float wantedCannonYawDeg) {
+        float followSpeed = 0.125f;
+        //TODO: improve
+        cannon.setRestrainedPitch(Mth.rotLerp(followSpeed, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
+
+        float prevYaw = cannon.getYaw(0);
+        //overshoots since we are setting this every render tick. Calculates the next tick yaw
+        // double wrap? needed. don't ask why. IDK
+        float deltaYaw = Mth.wrapDegrees(wantedCannonYawDeg - prevYaw);
+        float predictedNextYaw = prevYaw + Mth.wrapDegrees(deltaYaw / partialTick);
+        cannon.setRestrainedYaw(predictedNextYaw);
     }
 
 
@@ -192,7 +204,7 @@ public class CannonController {
 
     public static void onPlayerAttack() {
         if (cannon != null && cannon.readyToFire()) {
-            CannonBlockTile.sync(cannon, true, false);
+            CannonBlockTile.syncToServer(cannon, true, false);
         }
     }
 
@@ -226,7 +238,7 @@ public class CannonController {
                 pos.distToCenterSqr(player.position()) < maxDist * maxDist) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
-                CannonBlockTile.sync(cannon, false, false);
+                CannonBlockTile.syncToServer(cannon, false, false);
             }
         } else {
             stopControllingAndSync();
