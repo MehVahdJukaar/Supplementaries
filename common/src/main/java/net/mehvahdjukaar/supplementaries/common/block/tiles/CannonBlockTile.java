@@ -182,7 +182,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setRestrainedYaw(float yaw) {
         Restraint r = this.getPitchAndYawRestrains();
-        this.yaw = Mth.wrapDegrees(Mth.clamp(yaw, r.minYaw, r.maxYaw));
+        this.yaw =  Mth.wrapDegrees(yaw);// Mth.clamp(Mth.wrapDegrees(yaw), r.minYaw, r.maxYaw);
     }
 
     public record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {

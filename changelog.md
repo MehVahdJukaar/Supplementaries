@@ -31,8 +31,13 @@
 - improved turn table and wrench rotation logic fixing some bugs and inconsistencies
 - Fixed some dupes with falling urns
 - added cannon map marker
+- slingshot can shoot buckets
+- slingshot can shoot damaging projectiles in a tag
 - fixed quill maps not supporting vanilla decorations properly
 - new present sounds
+- new crank textures and model
+- new gold door, trapdoor and hourglass textures
+- new faucet texture and model
 - fixed mob head effects not clearing properly
 - mob head effects will now only work in first person
 - (fabric fix) redstone wire will only connect to back of a relayer

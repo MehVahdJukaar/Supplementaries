@@ -210,6 +210,9 @@ public class ModRegistry {
             TRAPPED_PRESENT_NAME, () -> PlatHelper.newBlockEntityType(
                     TrappedPresentBlockTile::new, TRAPPED_PRESENTS.values().stream().map(Supplier::get).toArray(Block[]::new)));
 
+    // awnings
+
+    public static final Map<DyeColor, Supplier<Block>> AWNINGS = RegUtils.registerAwnings(AWNING_NAME);
 
     //decoration blocks
 
@@ -1024,7 +1027,8 @@ public class ModRegistry {
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
                     .isSuffocating(NEVER)
-                    .forceSolidOff()
+                    //.forceSolidOff()
+                    .forceSolidOn()
                     .isRedstoneConductor(NEVER)
                     .isViewBlocking(NEVER)
                     .noOcclusion()

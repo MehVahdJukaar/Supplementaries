@@ -475,6 +475,7 @@ public class CommonConfigs {
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
+            AWNING_ENABLED = feature(builder, ModConstants.AWNING_NAME);
             //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -582,6 +583,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
         public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
+        public static final Supplier<Boolean> AWNING_ENABLED;
 
         public static final Supplier<Boolean> HAT_STAND_ENABLED;
         public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;
@@ -908,6 +910,13 @@ public class CommonConfigs {
                     .define("stasis_deceleration", 0.9625, 0.1, 1);
             UNRESTRICTED_SLINGSHOT = builder.comment("Allow enderman to intercept any slingshot projectile")
                     .define("unrestricted_enderman_intercept", true);
+            SLINGSHOT_BUCKETS = builder.comment("Allows buckets to be thrown by slingshots. Thrown buckets will place their content when they land")
+                    .define("allow_buckets", true
+                    );
+            SLINGSHOT_DAMAGEABLE_DAMAGE = builder.comment("Damage that items in the 'supplementaries:slingshot_damageable' tag will deal. Scales with thrown speed. Tag is empty by default.")
+                    .define("damageable_damage", 0.5, 0, 100);
+
+            //TODO: fix these
             SLINGSHOT_POTIONS = builder.comment("Allows splash potions to be thrown by slingshots")
                     .define("allow_splash_potions", false);
             SLINGSHOT_BOMBS = builder.comment("Allows bombs to be thrown by slingshots")
@@ -958,6 +967,8 @@ public class CommonConfigs {
         public static final Supplier<Double> SLINGSHOT_DECELERATION;
         public static final Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
         public static final Supplier<Boolean> SLINGSHOT_POTIONS;
+        public static final Supplier<Boolean> SLINGSHOT_BUCKETS;
+        public static final Supplier<Double> SLINGSHOT_DAMAGEABLE_DAMAGE;
         public static final Supplier<Boolean> SLINGSHOT_BOMBS;
         public static final Supplier<Boolean> SLINGSHOT_FIRECHARGE;
         public static final Supplier<Boolean> SLINGSHOT_SNOWBALL;

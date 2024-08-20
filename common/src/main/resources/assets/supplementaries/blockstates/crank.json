@@ -3,22 +3,22 @@
 {
     "multipart": [
         {   "when": { "facing": "north" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "uvlock": true}    
+            "apply": { "model": "supplementaries:block/crank/crank_base"}
         },
         {   "when": { "facing": "east" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 90, "uvlock": true }
+            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 90 }
         },
         {   "when": { "facing": "south" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 180, "uvlock": true }
+            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 180 }
         },
         {   "when": { "facing": "west" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 270, "uvlock": true }
+            "apply": { "model": "supplementaries:block/crank/crank_base", "y": 270 }
         },
         {   "when": { "facing": "up" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "x": 270, "uvlock": true }
+            "apply": { "model": "supplementaries:block/crank/crank_base", "x": 270 }
         },
         {   "when": { "facing": "down" },
-            "apply": { "model": "supplementaries:block/crank/crank_base", "x": 90, "uvlock": true }
+            "apply": { "model": "supplementaries:block/crank/crank_base", "x": 90 }
         },
         {   "when": { "facing": "north", "power":0 },
         	"apply": { "model": "supplementaries:block/crank/crank_handle_0" }

@@ -153,19 +153,33 @@ public class CannonController {
         return false;
     }
 
-    private static void setCannonAngles(float partialTick, float wantedCannonYawDeg) {
-        float followSpeed = 0.125f;
+    private static void setCannonAngles(float partialTick, float targetYawDeg) {
+        float followSpeed = 1;
         //TODO: improve
         cannon.setRestrainedPitch(Mth.rotLerp(followSpeed, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
 
+        targetYawDeg =Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
         float prevYaw = cannon.getYaw(0);
         //overshoots since we are setting this every render tick. Calculates the next tick yaw
         // double wrap? needed. don't ask why. IDK
-        float deltaYaw = Mth.wrapDegrees(wantedCannonYawDeg - prevYaw);
-        float predictedNextYaw = prevYaw + Mth.wrapDegrees(deltaYaw / partialTick);
-        cannon.setRestrainedYaw(predictedNextYaw);
+        float predictedNextYaw = prevYaw + Mth.wrapDegrees((targetYawDeg - prevYaw) / partialTick);;
+        float ddd = (targetYawDeg - prevYaw) / partialTick;
+        predictedNextYaw = prevYaw +ud(ddd);
+
+        cannon.setRestrainedYaw(targetYawDeg);
+
+
+        float newYaw=cannon.getYaw(partialTick);
+
+        float aa = Mth.wrapDegrees(targetYawDeg);
+        if(Mth.abs(aa- newYaw)>0.01){
+            int bb = 1;
+        }
     }
 
+    public static float ud(float a){
+        return a;
+    }
 
     public static void onPlayerRotated(double yawAdd, double pitchAdd) {
         float scale = 0.2f;

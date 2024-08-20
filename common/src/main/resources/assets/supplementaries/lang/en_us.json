@@ -231,6 +231,8 @@
   "death.attack.supplementaries.xp_extracting.player": "%1$s extracted too much while fighting %2$s",
   "death.attack.supplementaries.cannonball": "%1$s was blasted to bits",
   "death.attack.supplementaries.cannonball.player": "%1$s was blasted to bits by %2$s",
+  "death.attack.supplementaries.slingshot": "%1$s was stoned to death by %2$s",
+  "death.attack.supplementaries.slingshot.item": "%1$s was stoned to death by %2$s using %3$s",
 
   "effect.supplementaries.overencumbered": "Overencumbered",
   "effect.supplementaries.overencumbered.description": "Prevents sprinting. Further levels reduce jump height hinder walking speed respectively",

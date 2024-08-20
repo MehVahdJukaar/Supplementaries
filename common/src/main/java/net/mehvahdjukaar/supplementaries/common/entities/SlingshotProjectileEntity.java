@@ -13,9 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -27,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -131,9 +130,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
+        ItemStack stack = this.getItem();
         if (!trySplashPotStuff() &&
                 entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
-            Item item = this.getItem().getItem();
+            Item item = stack.getItem();
             if (item instanceof BlockItem bi) {
                 Block block = bi.getBlock();
                 if (block.builtInRegistryHolder().is(BlockTags.ENDERMAN_HOLDABLE) || CommonConfigs.Tools.UNRESTRICTED_SLINGSHOT.get()) {
@@ -143,6 +143,17 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     }
                 }
             }
+        }
+
+        if (stack.is(ModTags.SLINGSHOT_DAMAGEABLE)) {
+            //TODO: finish this
+            float speed = (float)this.getDeltaMovement().length();
+            double baseDamage = CommonConfigs.Tools.SLINGSHOT_DAMAGEABLE_DAMAGE.get();
+            // max damage same as arrows
+            int damage = Mth.ceil(Mth.clamp((double)speed * baseDamage, 0.0, 2.147483647E9));
+            entityRayTraceResult.getEntity().hurt(ModDamageSources.slingshot(this, this.getOwner()), damage);
+
+            this.kill();
         }
     }
 

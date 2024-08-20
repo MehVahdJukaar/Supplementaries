@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -80,15 +81,17 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (random.nextInt(10) == 0) {
-            level.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.6F, false);
+        if (state.getValue(LIT)) {
+            if (random.nextInt(10) == 0) {
+                level.playLocalSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.6F, false);
+            }
+            for (int i = 0; i < 3; ++i) {
+                double x = pos.getX() + 0.5 + Mth.randomBetween(random, -0.25f, 0.25f);
+                double y = pos.getY() + random.nextDouble() * 0.5 + 6 / 16f;
+                double z = pos.getZ() + 0.5 + Mth.randomBetween(random, -0.25f, 0.25f);
+                level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.0, 0.0);
+            }
         }
-    }
-
-
-    public static void spawnSmokeParticles(Level level, BlockPos pos) {
-        RandomSource random = level.getRandom();
-        level.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5D + random.nextDouble() / 2.0D * (random.nextBoolean() ? 1 : -1), pos.getY() + 0.4D, pos.getZ() + 0.5D + random.nextDouble() / 2.0D * (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
     }
 
     @Override

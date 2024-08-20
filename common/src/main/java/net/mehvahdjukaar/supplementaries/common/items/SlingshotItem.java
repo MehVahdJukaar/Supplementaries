@@ -191,6 +191,12 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             if (i instanceof FireChargeItem) {
                 return CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get();
             }
+            if (i instanceof BucketItem) {
+                return CommonConfigs.Tools.SLINGSHOT_BUCKETS.get();
+            }
+            if (s.is(ModTags.SLINGSHOT_DAMAGEABLE)) {
+                return true;
+            }
             return !(i instanceof DispensibleContainerItem || s.is(ModTags.SLINGSHOT_BLACKLIST)) &&
                     i instanceof BlockItem ||
                     AdditionalItemPlacementsAPI.hasBehavior(i) ||
@@ -266,18 +272,5 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             //matrixStack.mulPose(Axis.YN.rotationDegrees((float)k * 45.0F));
         }
     }
-
-
-    public static void animateCrossbowCharge(ModelPart offHand, ModelPart mainHand, LivingEntity entity, boolean right) {
-
-        //mainHand.xRot = -0.97079635F;
-        offHand.xRot = mainHand.xRot;
-        float f = CrossbowItem.getChargeDuration(entity.getUseItem());
-        float f1 = Mth.clamp(entity.getTicksUsingItem(), 0.0F, f);
-        float f2 = f1 / f;
-        offHand.yRot = Mth.lerp(f2, 0.4F, 0.85F) * (right ? 1 : -1);
-        offHand.xRot = Mth.lerp(f2, offHand.xRot, (-(float) Math.PI / 2F));
-    }
-
 
 }

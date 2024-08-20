@@ -10,6 +10,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,7 @@ public class ModDamageSources {
     private static final DataObjectReference<DamageType> PLAYER_BOMB = new DataObjectReference<>(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
     private static final DataObjectReference<DamageType> CANNONBALL = new DataObjectReference<>(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
     private static final DataObjectReference<DamageType> PLAYER_CANNONBALL = new DataObjectReference<>(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
+    private static final DataObjectReference<DamageType> SLINGSHOT = new DataObjectReference<>(Supplementaries.res("slingshot"), Registries.DAMAGE_TYPE);
 
     public static DamageSource spikePlayer(Player player) {
         return new SpikePlayerDamageSource(SPIKE.getHolder(), player);
@@ -38,8 +40,13 @@ public class ModDamageSources {
         return new DamageSource(shooter != null && projectile != null ? PLAYER_BOMB.getHolder() : BOMB.getHolder(), projectile, shooter);
     }
 
+    //TODO: why a player damage source here?
     public static DamageSource cannonBallExplosion(@Nullable Entity projectile, @Nullable Entity shooter) {
         return new DamageSource(shooter != null && projectile != null ? PLAYER_CANNONBALL.getHolder() : CANNONBALL.getHolder(), projectile, shooter);
+    }
+
+    public static DamageSource slingshot(@Nullable Entity projectile, @Nullable Entity shooter) {
+        return new DamageSource(SLINGSHOT.getHolder(), projectile, shooter);
     }
 
     public static class SpikePlayerDamageSource extends DamageSource {

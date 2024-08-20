@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
@@ -223,5 +224,25 @@ public class RegUtils {
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
         }
+    }
+
+    public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
+
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
+            String name = baseName + "_" + color.getName();
+            Supplier<Block> block = regBlock(name, () -> new AwningBlock(color,
+                    BlockBehaviour.Properties.of()
+                            .ignitedByLava()
+                            .mapColor(color.getMapColor())
+                            .strength(1.0F)
+                            .noOcclusion()
+                            .sound(SoundType.WOOD))
+            );
+            map.put(color, block);
+
+            regItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        }
+        return map;
     }
 }

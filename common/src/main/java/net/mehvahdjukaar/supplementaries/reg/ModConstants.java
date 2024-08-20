@@ -36,6 +36,7 @@ public final class ModConstants {
     public static final String LUMISENE_NAME = "lumisene";
     public static final String PRESENT_NAME = "present";
     public static final String TRAPPED_PRESENT_NAME = "trapped_present";
+    public static final String AWNING_NAME = "awning";
     public static final String PLANTER_NAME = "planter";
     public static final String PEDESTAL_NAME = "pedestal";
     public static final String NOTICE_BOARD_NAME = "notice_board";

@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
@@ -15,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotPr
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
+import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -51,6 +54,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -68,7 +72,7 @@ import java.util.Optional;
 
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
-    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new HashMap<>();
+    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
     private static final IFireItemBehavior DEFAULT =
             new AlternativeBehavior(new GenericProjectileBehavior(), new SlingshotProjectileBehavior());
 
@@ -100,6 +104,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             return tile;
         }
         return null;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, Fluid fluid) {
+        return false;
     }
 
     @Override

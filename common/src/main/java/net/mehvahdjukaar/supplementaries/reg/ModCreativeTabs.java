@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
