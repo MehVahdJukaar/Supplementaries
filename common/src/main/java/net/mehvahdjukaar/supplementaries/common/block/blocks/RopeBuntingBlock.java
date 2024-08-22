@@ -45,7 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRotatable {
+//TODO: maybe stick buntings?
+public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, IRotatable {
 
     public static final EnumProperty<ModBlockProperties.Bunting> NORTH = ModBlockProperties.NORTH_BUNTING;
     public static final EnumProperty<ModBlockProperties.Bunting> SOUTH = ModBlockProperties.SOUTH_BUNTING;
@@ -63,7 +64,7 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
 
     public final Map<BlockState, BlockState> buntingToRope = new Object2ObjectOpenHashMap<>();
 
-    public BuntingBlock(Properties properties) {
+    public RopeBuntingBlock(Properties properties) {
         super(properties);
         for (BlockState state : this.stateDefinition.getPossibleStates()) {
             BlockState state1 = state;
@@ -290,7 +291,7 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
     }
 
     public static BlockState fromRope(BlockState state) {
-        BuntingBlock block = ModRegistry.BUNTING_BLOCK.get();
+        RopeBuntingBlock block = ModRegistry.BUNTING_BLOCK.get();
         BlockState s = block.withPropertiesOf(state);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             s = block.setConnection(dir, s, ((RopeBlock) state.getBlock()).hasConnection(dir, state));
@@ -302,7 +303,7 @@ public class BuntingBlock extends AbstractRopeBlock implements EntityBlock, IRot
         RopeBlock block = ModRegistry.ROPE.get();
         BlockState s = block.withPropertiesOf(state);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
-            s = block.setConnection(dir, s, ((BuntingBlock) state.getBlock()).hasConnection(dir, state));
+            s = block.setConnection(dir, s, ((RopeBuntingBlock) state.getBlock()).hasConnection(dir, state));
         }
         return s;
     }

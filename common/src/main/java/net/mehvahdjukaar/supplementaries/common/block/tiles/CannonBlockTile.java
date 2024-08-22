@@ -177,12 +177,23 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setRestrainedPitch(float pitch) {
         Restraint r = this.getPitchAndYawRestrains();
-        this.pitch = Mth.wrapDegrees(Mth.clamp(pitch, r.minPitch, r.maxPitch));
+        this.pitch = Mth.clamp(Mth.wrapDegrees(pitch), r.minPitch, r.maxPitch);
     }
 
     public void setRestrainedYaw(float yaw) {
         Restraint r = this.getPitchAndYawRestrains();
-        this.yaw =  Mth.wrapDegrees(yaw);// Mth.clamp(Mth.wrapDegrees(yaw), r.minYaw, r.maxYaw);
+        this.yaw = Mth.clamp(Mth.wrapDegrees(yaw), r.minYaw, r.maxYaw);
+    }
+
+    // sets both prev and current yaw. Only makes sense to be called from render thread
+    public void setRenderYaw(float yaw) {
+        setRestrainedYaw(yaw);
+        this.prevYaw = this.yaw;
+    }
+
+    public void setRenderPitch(float pitch) {
+        setRestrainedPitch(pitch);
+        this.prevPitch = this.pitch;
     }
 
     public record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {

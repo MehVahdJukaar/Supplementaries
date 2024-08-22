@@ -328,7 +328,6 @@ public class CommonConfigs {
             builder.pop();
 
 
-
             builder.push("gravel_bricks");
             GRAVEL_BRICKS_ENABLED = feature(builder);
             builder.pop();
@@ -452,6 +451,15 @@ public class CommonConfigs {
                     .define("unrestricted", false);
             builder.pop();
 
+            builder.push("awnings");
+            AWNING_ENABLED = feature(builder);
+            AWNING_SLANT = builder.comment("Allows having slanted awnings. Disabled if you feel its cursed.")
+                    .define("slant", true);
+            AWNING_FALL_THROUGH = builder.comment("Allows entities to fall through awnings, when shifting.")
+                    .define("shift_through", true);
+            builder.pop();
+
+
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
@@ -475,7 +483,6 @@ public class CommonConfigs {
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
-            AWNING_ENABLED = feature(builder, ModConstants.AWNING_NAME);
             //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
@@ -584,6 +591,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
         public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
         public static final Supplier<Boolean> AWNING_ENABLED;
+        public static final Supplier<Boolean> AWNING_SLANT;
+        public static final Supplier<Boolean> AWNING_FALL_THROUGH;
 
         public static final Supplier<Boolean> HAT_STAND_ENABLED;
         public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;
@@ -625,7 +634,7 @@ public class CommonConfigs {
                     .define("drink_from_jar", false);
             JAR_ITEM_DRINK = builder.comment("Allows the player to directly drink from jar items")
                     .define("drink_from_jar_item", false);
-            JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size. Tinted jars can accept hostile mbos too")
+            JAR_AUTO_DETECT = builder.comment("Dynamically allows all small mobs inside jars depending on their hitbox size")
                     .define("jar_auto_detect", false);
             JAR_CAPTURE = builder.comment("Allow Jars to capture small mobs")
                     .define("jar_capture", true);
@@ -647,6 +656,8 @@ public class CommonConfigs {
                     .define("persistent_mobs", false);
             CAGE_HEALTH_THRESHOLD = builder.comment("Health percentage under which mobs will be allowed to be captured by cages and jars. Leave at 100 to accept any health level")
                     .define("health_threshold", 100, 1, 100);
+            CAGE_TAMED = builder.comment("When on, if a mob is tameable, it will only be capturable when tamed.")
+                    .define("require_taming", true);
             builder.pop();
 
             builder.push("safe");
@@ -729,8 +740,8 @@ public class CommonConfigs {
             builder.push(ModConstants.LUMISENE_NAME);
 
             LUMISENE_ENABLED = feature(builder);
-        //    LUMISENE_SPREAD_SPEED = builder.comment("Speed at which lumisene spreads")
-          //          .define("spread_speed", 0.1f, 0, 1);
+            //    LUMISENE_SPREAD_SPEED = builder.comment("Speed at which lumisene spreads")
+            //          .define("spread_speed", 0.1f, 0, 1);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -771,6 +782,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CAGE_AUTO_DETECT;
         public static final Supplier<Boolean> CAGE_PERSISTENT_MOBS;
         public static final Supplier<Integer> CAGE_HEALTH_THRESHOLD;
+        public static final Supplier<Boolean> CAGE_TAMED;
 
         public static final Supplier<Boolean> SOAP_ENABLED;
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
@@ -1147,8 +1159,8 @@ public class CommonConfigs {
                     .define("hinders_jump", SlimedJumpMode.NORMAL_DIFFICULTY);
             SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
                     .define("duration", 300, 0, 1000);
-            SLIMED_PER_SIZE =builder.comment("Chance that a slime mob will apply slimed effect on successful attack. Multiplied by the slime size")
-                            .define("chance_per_slime_size", 0.15d, 0, 1);
+            SLIMED_PER_SIZE = builder.comment("Chance that a slime mob will apply slimed effect on successful attack. Multiplied by the slime size")
+                    .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();
 
             builder.pop();

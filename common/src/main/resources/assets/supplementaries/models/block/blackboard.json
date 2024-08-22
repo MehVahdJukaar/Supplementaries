@@ -1,9 +1,4 @@
 {
   "loader": "supplementaries:blackboard",
-  "frame": "supplementaries:block/blackboard_frame",
-  "textures": {
-    "particle": "supplementaries:block/blackboard_side",
-    "black": "supplementaries:block/blackboard_black",
-    "white": "supplementaries:block/blackboard_white"
-  }
+  "frame": "supplementaries:block/blackboard_frame"
 }

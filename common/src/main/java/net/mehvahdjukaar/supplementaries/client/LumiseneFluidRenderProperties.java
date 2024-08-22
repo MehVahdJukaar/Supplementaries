@@ -9,7 +9,7 @@ import net.minecraft.world.level.material.FluidState;
 
 public class LumiseneFluidRenderProperties {
 
-    protected static final ResourceLocation UNDERWATER_TEXTURE = Supplementaries.res("textures/block/lumisene_underwater.png");
+    protected static final ResourceLocation UNDERWATER_TEXTURE = Supplementaries.res("textures/block/lumisene/lumisene_underwater.png");
     protected static final ResourceLocation SINGLE_STILL_TEXTURE = Supplementaries.res("block/lumisene/lumisene");
     protected static final ResourceLocation SINGLE_FLOWING_TEXTURE = Supplementaries.res("block/lumisene/lumisene_flowing");
     protected static final ResourceLocation[][] STILL_TEXTURES =

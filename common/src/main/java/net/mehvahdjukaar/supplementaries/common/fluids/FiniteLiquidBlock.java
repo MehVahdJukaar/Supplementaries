@@ -10,15 +10,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -31,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 // diff property means we need a diff class
-public class FiniteLiquidBlock extends Block implements BucketPickup {
+public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBlockContainer {
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     public static final IntegerProperty MISSING_LEVELS = BlockStateProperties.LEVEL;
@@ -195,4 +193,18 @@ public class FiniteLiquidBlock extends Block implements BucketPickup {
         return this.fluid.getPickupSound();
     }
 
+    @Override
+    public boolean canPlaceLiquid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return fluid == this.fluid;
+    }
+
+    @Override
+    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
+        //top up and eventually spread around
+        int currentLevel = state.getValue(MISSING_LEVELS);
+        // top up
+        //TODO: improve and spread to sides
+        level.setBlock(pos, state.setValue(MISSING_LEVELS, fluidState.createLegacyBlock().getValue(MISSING_LEVELS)), 3);
+        return false;
+    }
 }

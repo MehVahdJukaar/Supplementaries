@@ -1,24 +1,172 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlimeBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
-public class AwningBlock extends Block implements IColored {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AwningBlock extends WaterBlock implements IColored {
+
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
+    public static final BooleanProperty SLANTED = ModBlockProperties.SLANTED;
+    protected static final VoxelShape BOTTOM_AABB = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    protected static final VoxelShape TOP_AABB = Block.box(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
+
     private final DyeColor color;
 
     public AwningBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
+        this.registerDefaultState(this.defaultBlockState()
+                .setValue(BOTTOM, false)
+                .setValue(SLANTED, false)
+                .setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+        return !state.canSurvive(level, currentPos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos behind = pos.relative(direction.getOpposite());
+        BlockState behindState = level.getBlockState(behind);
+        if (behindState.is(this)) {
+            if (!state.getValue(SLANTED)) return false;
+            return behindState.getValue(FACING).getAxis() == direction.getAxis();
+        }
+        return behindState.isSolid() || behindState.is(this);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(BOTTOM) ? BOTTOM_AABB : TOP_AABB;
+    }
+
+    @Override
+    public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
+        if (adjacentBlockState.is(this) && adjacentBlockState.getValue(BOTTOM) == state.getValue(BOTTOM) &&
+                adjacentBlockState.getValue(FACING) == state.getValue(FACING)) {
+            return true;
+        }
+        return super.skipRendering(state, adjacentBlockState, side);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Boolean bottom = state.getValue(BOTTOM);
+        if (CommonConfigs.Building.AWNING_FALL_THROUGH.get()) {
+            if (context.isDescending() || !context.isAbove(bottom ? TOP_AABB : BOTTOM_AABB,
+                    bottom ? pos.below() : pos, false)) {
+                return Shapes.empty();
+            }
+        }
+
+        return super.getCollisionShape(state, level, pos, context);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(SLANTED);
+        builder.add(FACING);
+        builder.add(BOTTOM);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockState = super.getStateForPlacement(context);
+        Direction face = context.getClickedFace();
+        LevelReader level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Direction[] directions = context.getNearestLookingDirections();
+
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction opposite = direction.getOpposite();
+
+                boolean slanted = false;
+                boolean bottom = face != Direction.DOWN &&
+                        (face == Direction.UP || !(context.getClickLocation().y - pos.getY() > 0.5));
+
+                List<BlockPos> behindPos = new ArrayList<>();
+                behindPos.add(pos.relative(direction));
+                if (!bottom) behindPos.add(pos.relative(direction).above());
+                if (!CommonConfigs.Building.AWNING_SLANT.get()) {
+                    behindPos.clear();
+                }
+                for (int i = 0; i < behindPos.size(); i++) {
+                    BlockState behindState = level.getBlockState(behindPos.get(i));
+                    if (behindState.is(this) &&
+                            //behindState.getValue(SLANTED) &&
+                            behindState.getValue(FACING).getAxis() == direction.getAxis()) {
+                        bottom = i == 0;
+                        slanted = true;
+                        break;
+                    }
+                }
+
+                blockState = blockState
+                        .setValue(BOTTOM, bottom)
+                        .setValue(SLANTED, slanted)
+                        .setValue(FACING, opposite);
+                if (blockState.canSurvive(level, pos)) {
+                    return blockState;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
 
@@ -36,26 +184,30 @@ public class AwningBlock extends Block implements IColored {
         if (entity.isSuppressingBounce()) {
             super.updateEntityAfterFallOn(level, entity);
         } else {
-            this.bounceUp(entity);
-        }
-    }
-
-    private void bounceUp(Entity entity) {
-        Vec3 vec3 = entity.getDeltaMovement();
-        if (vec3.y < 0.0) {
-            double d = entity instanceof LivingEntity ? 1.0 : 0.8;
-            entity.setDeltaMovement(vec3.x, -vec3.y * d, vec3.z);
         }
     }
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        double d = Math.abs(entity.getDeltaMovement().y);
-        if (d < 0.1 && !entity.isSteppingCarefully()) {
-            double e = 0.4 + d * 0.2;
-            entity.setDeltaMovement(entity.getDeltaMovement().multiply(e, 1.0, e));
-        }
+        if (!entity.isSteppingCarefully()) {
+            Vec3 movement = entity.getDeltaMovement();
+            if (movement.y < -0.32f) { //for step height when falling from another awning
+                Direction dir = state.getValue(FACING);
+                Vector3f normal = new Vector3f(0, 1, 0);
+                if (state.getValue(SLANTED)) {
+                    double angleDeg = ClientConfigs.Blocks.AWNINGS_ANGLE.get();
+                    normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
+                }
+                normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
 
+                Vector3f newMovement = movement.toVector3f().reflect(normal);
+                entity.setDeltaMovement(new Vec3(newMovement));
+            }
+            //we need to stop movement downwards. do what update entity after fall on does
+            else {
+                entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0, 0.0, 1.0));
+            }
+        }
         super.stepOn(level, pos, state, entity);
     }
 
@@ -63,4 +215,20 @@ public class AwningBlock extends Block implements IColored {
     public @Nullable DyeColor getColor() {
         return color;
     }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (player.getItemInHand(hand).isEmpty() && CommonConfigs.Building.AWNING_SLANT.get()) {
+            level.setBlock(pos, state.cycle(SLANTED), 3);
+            boolean isSlanted = state.getValue(SLANTED);
+            //TODO: proper sound event
+            level.playSound(player, pos, SoundEvents.WOOL_PLACE,
+                    SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
+            level.gameEvent(player, isSlanted ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
 }

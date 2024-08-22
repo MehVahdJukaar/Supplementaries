@@ -206,6 +206,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.LUNCH_BASKET.get(), RenderType.cutout());
         ClientHelper.registerRenderType(ModRegistry.CRYSTAL_DISPLAY.get(), RenderType.cutout());
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
+        ModRegistry.AWNINGS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), RenderType.cutout()));
 
         ClientHelper.registerRenderType(ModFluids.LUMISENE_BLOCK.get(), RenderType.cutout());
         ClientHelper.registerFluidRenderType(ModFluids.LUMISENE_FLUID.get(), RenderType.translucent());
@@ -432,6 +433,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("blackboard"), new NestedModelLoader("frame", BlackboardBakedModel::new));
         event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
+        event.register(Supplementaries.res("awning"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
         event.register(Supplementaries.res("book_pile"), BookPileModel::new);
         event.register(Supplementaries.res("bunting"), BuntingsBakedModel::new);

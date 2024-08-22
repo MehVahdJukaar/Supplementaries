@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ public class BuntingItem extends Item {
         if (state.is(ModRegistry.ROPE.get())) {
             BlockHitResult hit = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, false);
             //we must place valid state immediately
-            BlockState s = BuntingBlock.fromRope(state, hit);
+            BlockState s = RopeBuntingBlock.fromRope(state, hit);
             if (s != null) {
                 level.setBlockAndUpdate(pos, s);
                 var ret = s.use(level, context.getPlayer(), context.getHand(), hit);

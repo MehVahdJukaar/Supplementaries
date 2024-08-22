@@ -135,7 +135,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
 
-            if (entity instanceof TamableAnimal pet && (!pet.isTame() || !pet.isOwnedBy(player))) {
+            if (CommonConfigs.Functional.CAGE_TAMED.get() && entity instanceof TamableAnimal pet && (!pet.isTame() || !pet.isOwnedBy(player))) {
                 return false;
             }
 

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -308,6 +309,9 @@ public class ClientConfigs {
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
         public static final Supplier<Double> ROPE_WOBBLE_PERIOD;
 
+        public static final Supplier<Double> AWNINGS_ANGLE;
+
+
         static {
 
             ConfigBuilder builder = builderReference.get();
@@ -423,6 +427,12 @@ public class ClientConfigs {
                     .define("wobbling_amplitude", 1.2d, 0, 20);
             ROPE_WOBBLE_PERIOD = builder.comment("Period of rope wobbling effect")
                     .define("wobbling_period", 12d, 0.01, 200);
+            builder.pop();
+
+            builder.push("awnings");
+            AWNINGS_ANGLE = builder.comment("Angle of slanted awnings")
+                    .define("angle", Math.toDegrees(Math.atan(16f / 6f)), 0.0, 90.0);
+
             builder.pop();
 
             builder.pop();

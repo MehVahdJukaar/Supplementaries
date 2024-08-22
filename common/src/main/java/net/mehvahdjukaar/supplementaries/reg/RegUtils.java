@@ -234,10 +234,11 @@ public class RegUtils {
             Supplier<Block> block = regBlock(name, () -> new AwningBlock(color,
                     BlockBehaviour.Properties.of()
                             .ignitedByLava()
+                            .forceSolidOff()
                             .mapColor(color.getMapColor())
                             .strength(1.0F)
                             .noOcclusion()
-                            .sound(SoundType.WOOD))
+                            .sound(SoundType.WOOL))
             );
             map.put(color, block);
 

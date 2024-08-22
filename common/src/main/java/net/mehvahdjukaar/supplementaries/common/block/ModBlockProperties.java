@@ -54,6 +54,7 @@ public class ModBlockProperties {
     public static final BooleanProperty ROTATING = BooleanProperty.create("rotating");
     public static final BooleanProperty ON_PRESSURE_PLATE = BooleanProperty.create("on_pressure_plate");
     public static final BooleanProperty TWO_FACED = BooleanProperty.create("two_faced");
+    public static final BooleanProperty SLANTED = BooleanProperty.create("slanted");
 
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);

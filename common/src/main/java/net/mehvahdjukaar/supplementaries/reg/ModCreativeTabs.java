@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
@@ -288,12 +289,21 @@ public class ModCreativeTabs {
                 ModRegistry.SLIDY_BLOCK);
 
 
+        after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.AWNING_NAME,
+                ModRegistry.AWNINGS.values().toArray(Supplier[]::new));
+
+        after(e, ItemTags.BANNERS, CreativeModeTabs.COLORED_BLOCKS,
+                ModConstants.AWNING_NAME,
+                ModRegistry.AWNINGS.values().toArray(Supplier[]::new));
+
+
         if (CommonConfigs.isEnabled(ModConstants.BUNTING_NAME)) {
             e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.BANNERS),
                     BuntingItem.getColored(DyeColor.WHITE));
 
             e.addAfter(CreativeModeTabs.COLORED_BLOCKS, i -> i.is(ItemTags.BANNERS),
-                    Arrays.stream(DyeColor.values()).map(BuntingItem::getColored)
+                     BlocksColorAPI.SORTED_COLORS.stream().map(BuntingItem::getColored)
                             .toArray(ItemStack[]::new));
         }
 

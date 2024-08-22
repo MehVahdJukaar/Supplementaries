@@ -5,7 +5,7 @@ import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -30,7 +30,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,7 +55,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         if (charges > 0) {
 
             int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
-            if (ench > 0){
+            if (ench > 0) {
                 return this.deployBubbleBlock(itemstack, level, player, hand);
             }
 
@@ -70,29 +69,35 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     //bubble block
     @SuppressWarnings("UnsafePlatformOnlyCall")
     private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        HitResult result = player.getAbilities().instabuild ? Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY) :
-                Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, 2.6);
+        HitResult result = player.pick(ForgeHelper.getReachDistance(player), 1, true);
 
         if (result instanceof BlockHitResult hitResult) {
             BlockPos pos = hitResult.getBlockPos();
+
+
             BlockState first = level.getBlockState(pos);
             if (!first.canBeReplaced()) {
                 pos = pos.relative(hitResult.getDirection());
             }
             first = level.getBlockState(pos);
             if (first.canBeReplaced()) {
-                BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
 
-                if(CompatHandler.FLAN && !FlanCompat.canPlace(player, pos)){
+                // manual check as we are raytracing to find pos
+                if (!level.mayInteract(player, pos) || !player.mayUseItemAt(pos, hitResult.getDirection(), stack)) {
                     return InteractionResultHolder.fail(stack);
                 }
 
-                if (!level.isClientSide) {
-                    level.setBlockAndUpdate(pos, bubble);
-                    SoundType soundtype = bubble.getSoundType();
-                    level.playSound(null, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
+                if (CompatHandler.FLAN && !FlanCompat.canPlace(player, pos)) {
+                    return InteractionResultHolder.fail(stack);
                 }
+
+                BlockState bubble = ModRegistry.BUBBLE_BLOCK.get().defaultBlockState();
+
+
+                level.setBlockAndUpdate(pos, bubble);
+                SoundType soundtype = bubble.getSoundType();
+                level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+
                 if (!(player.getAbilities().instabuild)) {
                     int max = this.getMaxDamage(stack);
                     this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Tools.BUBBLE_BLOWER_COST.get()));

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.frozenblock.wilderwild.mixin.projectile.ThrownPotionMixin;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
@@ -8,15 +7,12 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.screens.controls.KeyBindsScreen;
 import net.minecraft.client.player.Input;
-import net.minecraft.client.telemetry.TelemetryProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -157,27 +153,11 @@ public class CannonController {
         float followSpeed = 1;
         //TODO: improve
         cannon.setRestrainedPitch(Mth.rotLerp(followSpeed, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
-
-        targetYawDeg =Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-        float prevYaw = cannon.getYaw(0);
-        //overshoots since we are setting this every render tick. Calculates the next tick yaw
-        // double wrap? needed. don't ask why. IDK
-        float predictedNextYaw = prevYaw + Mth.wrapDegrees((targetYawDeg - prevYaw) / partialTick);;
-        float ddd = (targetYawDeg - prevYaw) / partialTick;
-        predictedNextYaw = prevYaw +ud(ddd);
-
-        cannon.setRestrainedYaw(targetYawDeg);
-
-
-        float newYaw=cannon.getYaw(partialTick);
-
-        float aa = Mth.wrapDegrees(targetYawDeg);
-        if(Mth.abs(aa- newYaw)>0.01){
-            int bb = 1;
-        }
+        //targetYawDeg = Mth.rotLerp(1, cannon.getYaw(0), targetYawDeg);
+        cannon.setRenderYaw(targetYawDeg);
     }
 
-    public static float ud(float a){
+    public static float ud(float a) {
         return a;
     }
 

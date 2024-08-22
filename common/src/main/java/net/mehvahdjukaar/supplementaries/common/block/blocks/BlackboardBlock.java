@@ -89,10 +89,10 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
-            default -> SHAPE_NORTH;
             case SOUTH -> SHAPE_SOUTH;
             case EAST -> SHAPE_EAST;
             case WEST -> SHAPE_WEST;
+            default -> SHAPE_NORTH;
         };
     }
 
@@ -220,11 +220,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
         }
     }
 
-
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, flag);
+        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nullable

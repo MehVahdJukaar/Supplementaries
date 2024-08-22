@@ -69,9 +69,9 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     public float @Nullable [] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
         int color = getJarLiquidColor(pos, world);
         if (color == -1) return null;
-        float r =  (color >> 16 & 255) / 255.0F;
-        float g =  (color >> 8 & 255) / 255.0F;
-        float b =  (color & 255) / 255.0F;
+        float r = (color >> 16 & 255) / 255.0F;
+        float g = (color >> 8 & 255) / 255.0F;
+        float b = (color & 255) / 255.0F;
         return new float[]{r, g, b};
     }
 
@@ -86,7 +86,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
                 }
                 return InteractionResult.sidedSuccess(worldIn.isClientSide);
             }
-            if(CommonConfigs.Functional.JAR_CAPTURE.get()) {
+            if (CommonConfigs.Functional.JAR_CAPTURE.get()) {
                 return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
             }
         }

@@ -36,8 +36,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CANNONBALL_BREAK = regSound("entity.cannonball.break");
     public static final Supplier<SoundEvent> CANNONBALL_BOUNCE = regSound("entity.cannonball.bounce");
 
+    public static final Supplier<SoundEvent> SLIME_SPLAT = regSound("entity.slimed");
     public static final Supplier<SoundEvent> SLIMEBALL_LAND = regSound("entity.slimeball.bounce");
-    public static final Supplier<SoundEvent> SLIMEBALL_HIT = regSound("entity.slimeball.hit");
     public static final Supplier<SoundEvent> SLIMEBALL_THROW = regSound("entity.slimeball.throw");
     public static final Supplier<SoundEvent> BRICK_THROW = regSound("entity.brick.throw");
 

@@ -411,7 +411,7 @@ public class ModRegistry {
 
     //buntings
     public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
-    public static final Supplier<BuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new BuntingBlock(
+    public static final Supplier<RopeBuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
             BlockBehaviour.Properties.copy(ROPE.get()).dropsLike(ROPE.get())));
 
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(

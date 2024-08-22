@@ -1,0 +1,9 @@
+{
+  "loader": "supplementaries:awning",
+  "textures": {
+    "particle": "supplementaries:block/awnings/awning_purple",
+    "top": "supplementaries:block/awnings/awning_purple",
+    "side": "supplementaries:block/awnings/awning_purple_side"
+  },
+  "height": 1
+}

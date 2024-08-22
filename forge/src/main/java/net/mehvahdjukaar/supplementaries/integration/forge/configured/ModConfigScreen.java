@@ -64,6 +64,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("cave urns", ModRegistry.URN.get());
         addIcon("structures", Items.BRICKS);
         addIcon("soap", ModRegistry.SOAP.get());
+        addIcon("awnings", ModRegistry.AWNINGS.get(DyeColor.RED).get());
         addIcon("mob head tweaks", Items.SKELETON_SKULL);
         addIcon("lantern tweaks", Items.LANTERN);
         addIcon("conditional sign registration", Items.BARRIER);

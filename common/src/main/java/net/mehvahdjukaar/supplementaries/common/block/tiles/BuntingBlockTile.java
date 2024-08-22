@@ -6,9 +6,8 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -75,11 +74,11 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     public void updateTileOnInventoryChanged() {
         BlockState state = getBlockState();
         if (this.isEmpty()) {
-            level.setBlockAndUpdate(worldPosition, BuntingBlock.toRope(state));
+            level.setBlockAndUpdate(worldPosition, RopeBuntingBlock.toRope(state));
         } else {
             BlockState state2 = state;
             for (Direction dir : Direction.Plane.HORIZONTAL) {
-                var prop = BuntingBlock.HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir);
+                var prop = RopeBuntingBlock.HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir);
                 var old = state2.getValue(prop);
                 boolean isEmpty = this.getItem(dir.get2DDataValue()).isEmpty();
                 state2 = state2.setValue(prop, isEmpty ? (old == ModBlockProperties.Bunting.NONE ? ModBlockProperties.Bunting.NONE : ModBlockProperties.Bunting.ROPE) :
@@ -125,7 +124,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
-                BuntingBlock.canSupportBunting(getBlockState(), index);
+                RopeBuntingBlock.canSupportBunting(getBlockState(), index);
     }
 
     @Override
