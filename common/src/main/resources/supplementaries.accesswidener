@@ -16,6 +16,9 @@ accessible field net/minecraft/world/level/block/AbstractCauldronBlock interacti
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 
+# awning model hack
+mutable field net/minecraft/client/renderer/block/model/BlockElement rotation Lnet/minecraft/client/renderer/block/model/BlockElementRotation;
+
 # schedule tick
 accessible field net/minecraft/world/ticks/LevelTicks allContainers Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 # fire delegate
