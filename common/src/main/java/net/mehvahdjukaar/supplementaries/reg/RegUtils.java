@@ -11,9 +11,11 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
@@ -228,6 +230,17 @@ public class RegUtils {
 
     public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
+        Supplier<Block> defAwning = regBlock(baseName, () -> new AwningBlock(null,
+                BlockBehaviour.Properties.of()
+                        .ignitedByLava()
+                        .forceSolidOff()
+                        .mapColor(MapColor.SAND)
+                        .strength(1.0F)
+                        .noOcclusion()
+                        .sound(SoundType.WOOL))
+        );
+        map.put(null, defAwning);
+        regItem(baseName, () -> new BlockItem(defAwning.get(), new Item.Properties()));
 
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();

@@ -1,0 +1,32 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/thin_block",
+	"textures": {
+		"1": "supplementaries:block/awnings/awning",
+		"particle": "supplementaries:block/awnings/awning_blue",
+		"up": "supplementaries:block/awnings/awning_side"
+	},
+	"elements": [
+		{
+			"from": [0, 4, 0],
+			"to": [16, 8, 0],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#up", "cullface": "north"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#up"}
+			}
+		},
+		{
+			"from": [0, 8, 0],
+			"to": [16, 8, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 6, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 0], "texture": "#1"},
+				"east": {"uv": [0, 0, 16, 0], "texture": "#1"},
+				"south": {"uv": [0, 0, 16, 0], "texture": "#1"},
+				"west": {"uv": [0, 0, 16, 0], "texture": "#1"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		}
+	]
+}

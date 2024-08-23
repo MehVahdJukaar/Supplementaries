@@ -457,6 +457,9 @@ public class CommonConfigs {
                     .define("slant", true);
             AWNING_FALL_THROUGH = builder.comment("Allows entities to fall through awnings, when shifting.")
                     .define("shift_through", true);
+            AWNINGS_BOUNCE_ANGLE = builder.comment("Bouncing angle of slanted awnings")
+                    .define("angle", Math.toDegrees(Math.atan(16f / 6f)), 0.0, 90.0);
+
             builder.pop();
 
 
@@ -593,6 +596,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> AWNING_ENABLED;
         public static final Supplier<Boolean> AWNING_SLANT;
         public static final Supplier<Boolean> AWNING_FALL_THROUGH;
+        public static final Supplier<Double> AWNINGS_BOUNCE_ANGLE;
 
         public static final Supplier<Boolean> HAT_STAND_ENABLED;
         public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;

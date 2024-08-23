@@ -92,6 +92,7 @@ public class ClientReceivers {
     public static void handleSpawnBlockParticlePacket(ClientBoundParticlePacket message) {
         withLevelDo(l -> {
             //bubble blow
+            final RandomSource ran = l.random;
             switch (message.id) {
                 case BUBBLE_BLOW -> {
                     ParticleUtil.spawnParticlesOnBlockFaces(l, BlockPos.containing(message.pos),
@@ -126,13 +127,13 @@ public class ClientReceivers {
                     double d28 = message.pos.z + k2 * 0.6D;
 
                     for (int i3 = 0; i3 < 10; ++i3) {
-                        double d4 = l.random.nextDouble() * 0.2D + 0.01D;
-                        double d6 = d18 + j1 * 0.01D + (l.random.nextDouble() - 0.5D) * k2 * 0.5D;
-                        double d8 = d24 + j2 * 0.01D + (l.random.nextDouble() - 0.5D) * j2 * 0.5D;
-                        double d30 = d28 + k2 * 0.01D + (l.random.nextDouble() - 0.5D) * j1 * 0.5D;
-                        double d9 = j1 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d10 = j2 * d4 + l.random.nextGaussian() * 0.01D;
-                        double d11 = k2 * d4 + l.random.nextGaussian() * 0.01D;
+                        double d4 = ran.nextDouble() * 0.2D + 0.01D;
+                        double d6 = d18 + j1 * 0.01D + (ran.nextDouble() - 0.5D) * k2 * 0.5D;
+                        double d8 = d24 + j2 * 0.01D + (ran.nextDouble() - 0.5D) * j2 * 0.5D;
+                        double d30 = d28 + k2 * 0.01D + (ran.nextDouble() - 0.5D) * j1 * 0.5D;
+                        double d9 = j1 * d4 + ran.nextGaussian() * 0.01D;
+                        double d10 = j2 * d4 + ran.nextGaussian() * 0.01D;
+                        double d11 = k2 * d4 + ran.nextGaussian() * 0.01D;
                         l.addParticle(ParticleTypes.SMOKE, d6, d8, d30, d9, d10, d11);
                     }
                 }
@@ -163,9 +164,9 @@ public class ClientReceivers {
                     float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
                     for (int j = 0; j < 60; ++j) {
 
-                        Vector3f facingDir = randomizeVector(l.random, dir, spread)
-                                .mul(scale * Mth.nextFloat(l.random, 0.3f, 0.7f));
-                        SimpleParticleType p = l.random.nextInt(6) == 0 ?
+                        Vector3f facingDir = randomizeVector(ran, dir, spread)
+                                .mul(scale * Mth.nextFloat(ran, 0.3f, 0.7f));
+                        SimpleParticleType p = ran.nextInt(6) == 0 ?
                                 ModParticles.STREAMER_PARTICLE.get() :
                                 ModParticles.CONFETTI_PARTICLE.get();
                         l.addParticle(p, pos.x, pos.y, pos.z,
@@ -173,12 +174,12 @@ public class ClientReceivers {
                     }
 
                     l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
-                            SoundSource.PLAYERS, 1.0f, l.random.nextFloat() * 0.2F + 0.8F, false);
+                            SoundSource.PLAYERS, 1.0f, ran.nextFloat() * 0.2F + 0.8F, false);
                 }
                 case CONFETTI_EXPLOSION -> {
                     int radius = message.extraData;
                     ParticleUtil.spawnParticleInASphere(l, message.pos.x, message.pos.y + 1, message.pos.z,
-                            () -> l.random.nextInt(6) == 0 ?
+                            () -> ran.nextInt(6) == 0 ?
                                     ModParticles.STREAMER_PARTICLE.get() :
                                     ModParticles.CONFETTI_PARTICLE.get(), radius * 40,
                             radius / 9f,
@@ -186,10 +187,30 @@ public class ClientReceivers {
                     );
                     //same volume as explosion code
                     l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
-                            SoundSource.HOSTILE, 4, l.random.nextFloat() * 0.2F + 0.5F, false);
+                            SoundSource.HOSTILE, 4, ran.nextFloat() * 0.2F + 0.5F, false);
+                }
+                case FEATHER -> {
+                    int amount = message.extraData == null ? 1 : message.extraData;
+                    double dy = Mth.clamp((0.03 * message.dir.y / 7f), 0.03, 0.055);
+                    for (int i = 0; i < amount; i++) {
+                        l.addParticle(ModParticles.FEATHER_PARTICLE.get(),
+                                message.pos.x + ran.nextGaussian() * 0.35,
+                                message.pos.y,
+                                message.pos.z + ran.nextGaussian() * 0.35,
+                                ran.nextGaussian() * 0.007,
+                                dy * 0.5,
+                                ran.nextGaussian() * 0.007
+                        );
+                    }
                 }
             }
         });
+    }
+
+
+    //triangle distribution?
+    private double r(RandomSource random, double a) {
+        return a * (random.nextFloat() + random.nextFloat() - 1);
     }
 
     public static Vector3f randomizeVector(RandomSource random, Vec3 mean, float spread) {
@@ -262,7 +283,7 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncPartyCreeper(SyncPartyCreeperPacket message){
+    public static void handleSyncPartyCreeper(SyncPartyCreeperPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.entityID);
             if (e instanceof IPartyCreeper le) {
@@ -362,8 +383,13 @@ public class ClientReceivers {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.id());
             if (e instanceof ISlimeable s) {
+                int old = s.supp$getSlimedTicks();
                 s.supp$setSlimedTicks(message.duration(), false);
+                if(old <= 0 && message.duration() > 0) {
+                    e.playSound(ModSounds.SLIME_SPLAT.get(), 1, 1);
+                }
             }
+
         });
     }
 

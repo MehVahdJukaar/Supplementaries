@@ -48,13 +48,8 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
 
     @Override
     public void supp$setSlimedTicks(int slimed, boolean sync) {
-        int old  = this.supp$slimedTicks;
         this.supp$slimedTicks = slimed;
         if (sync && !this.level().isClientSide) {
-            if(old <=0){
-                // play sound
-                this.playSound(ModSounds.SLIME_SPLAT.get(), 1, 1);
-            }
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(this,
                     new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
         }

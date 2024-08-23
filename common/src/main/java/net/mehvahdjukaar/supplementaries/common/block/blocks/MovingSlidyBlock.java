@@ -51,6 +51,8 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.setBlock(neighborPos, newState, 3);
         BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state, direction);
         level.setBlockEntity(be);
+        //needed on server since we are setting tile manually
+        level.sendBlockUpdated(neighborPos, newState, newState, Block.UPDATE_ALL);
 
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
                 .defaultBlockState().setValue(BlockStateProperties.FACING, direction), Block.UPDATE_ALL);

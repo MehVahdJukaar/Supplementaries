@@ -29,7 +29,7 @@ public class SoapWashableHelper {
                 tryChangingColor(level, pos, state) ||
                 tryUnoxidise(level, pos, state)) {
             if (level instanceof ServerLevel serverLevel) {
-                ModNetwork.CHANNEL.sendToAllClientPlayersInRange(serverLevel, pos, 64,
+                ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(serverLevel, pos,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.BUBBLE_CLEAN));
             }
             return true;

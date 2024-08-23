@@ -43,7 +43,7 @@ public interface IWaxable {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
-                ModNetwork.CHANNEL.sendToAllClientPlayersInRange(level, pos, 64,
+                ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, pos,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.WAX_ON));
             }
 

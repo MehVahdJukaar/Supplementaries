@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.*;
 
 import java.util.TreeMap;
@@ -35,7 +38,7 @@ public class FeatherBlock extends Block {
 
         while (y < 1) {
             COLLISIONS.put(y, Shapes.box(0, 0, 0, 1, y, 1));
-            i *= 1.131;
+            i *= 1.131f;
             y += i;
         }
         COLLISIONS.put(1f, Shapes.block());
@@ -53,13 +56,10 @@ public class FeatherBlock extends Block {
             if (height > 2) {
                 world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
             }
-        } else {
-            for (int i = 0; i < Math.min(6, height * 0.8); i++) {
-                RandomSource random = world.getRandom();
-                double dy = Mth.clamp((0.03 * height / 7f), 0.03, 0.055);
-                world.addParticle(ModParticles.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.35),
-                        entity.getY(), entity.getZ() + r(random, 0.35), r(random, 0.007), dy * 0.5, r(random, 0.007));
-            }
+            double amount = Math.min(6, height * 0.8);
+            ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(world, pos,
+                    new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Type.FEATHER, (int) amount,
+                            new Vec3(0, height, 0)));
         }
     }
 
@@ -79,24 +79,22 @@ public class FeatherBlock extends Block {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos blockPos, Entity entity) {
-        if (level.isClientSide) {
+        if (!level.isClientSide) {
             if (!(entity instanceof LivingEntity) || entity.getFeetBlockState().is(this)) {
-
 
                 RandomSource random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextInt(10) == 0) {
                     double dy = 0.005;
-                    level.addParticle(ModParticles.FEATHER_PARTICLE.get(), entity.getX() + r(random, 0.15), entity.getY(), entity.getZ() + r(random, 0.15), 0, dy, 0);
+
+                    ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, blockPos,
+                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Type.FEATHER, 1,
+                                    new Vec3(0, dy, 0)));
                 }
             }
         }
     }
 
-    //triangle distribution?
-    private double r(RandomSource random, double a) {
-        return a * (random.nextFloat() + random.nextFloat() - 1);
-    }
 
     @Override
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {

@@ -4,7 +4,6 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -69,6 +68,8 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        if(true)return true ;
+
         Direction direction = state.getValue(FACING);
         BlockPos behind = pos.relative(direction.getOpposite());
         BlockState behindState = level.getBlockState(behind);
@@ -195,7 +196,7 @@ public class AwningBlock extends WaterBlock implements IColored {
                 Direction dir = state.getValue(FACING);
                 Vector3f normal = new Vector3f(0, 1, 0);
                 if (state.getValue(SLANTED)) {
-                    double angleDeg = ClientConfigs.Blocks.AWNINGS_ANGLE.get();
+                    double angleDeg = CommonConfigs.Building.AWNINGS_BOUNCE_ANGLE.get();
                     normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
                 }
                 normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
@@ -214,6 +215,11 @@ public class AwningBlock extends WaterBlock implements IColored {
     @Override
     public @Nullable DyeColor getColor() {
         return color;
+    }
+
+    @Override
+    public boolean supportsBlankColor() {
+        return true;
     }
 
     @Override

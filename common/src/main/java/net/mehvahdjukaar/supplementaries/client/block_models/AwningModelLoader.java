@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -60,6 +61,7 @@ public class AwningModelLoader implements CustomModelLoader {
                 SimpleBakedModel.Builder modelBuilder = new SimpleBakedModel.Builder(modelHack, ItemOverrides.EMPTY, true);
                 modelBuilder.particle(particleTexture);
 
+
                 BakedQuadBuilder quadBuilder = BakedQuadBuilder.create(topTexture, rotation.getRotation());
 
                 double angleRad = Math.toRadians(ClientConfigs.Blocks.AWNINGS_ANGLE.get());
@@ -87,6 +89,25 @@ public class AwningModelLoader implements CustomModelLoader {
 
                 poseStack.popPose();
 
+
+                poseStack.pushPose();
+                poseStack.translate(1, -2/16f, -1/16f);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+                quadBuilder.setAutoBuild(modelBuilder::addUnculledFace);
+                VertexUtil.addCube(quadBuilder, poseStack,  2/16f,1,0, 0);
+
+                poseStack.popPose();
+
+                poseStack.pushPose();
+                poseStack.translate(1, -7/16f, -15/16f+0.002f);
+                poseStack.mulPose(Axis.ZP.rotationDegrees(90));
+                quadBuilder.setAutoBuild(modelBuilder::addUnculledFace);
+                VertexUtil.addCube(quadBuilder, poseStack,  2/16f,1,0, 0);
+
+                poseStack.popPose();
+
+                poseStack.pushPose();
+
                 float zFightOffset = 0.001f;
                 float extraH = (float) (zFightOffset / tan);
                 float stretch = 0.001f; // to get rid of little seams
@@ -104,6 +125,11 @@ public class AwningModelLoader implements CustomModelLoader {
                         255, 255, 255, 255, 0, 0);
                 quad = quadBuilder.build();
                 modelBuilder.addCulledFace(quad.getDirection(), quad);
+
+                poseStack.popPose();
+
+
+
 
                 return modelBuilder.build();
             }

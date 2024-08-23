@@ -2,11 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.supplementaries.common.items.ConfettiPopperItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -48,6 +50,7 @@ public class CrankBlock extends WaterBlock {
 
     public CrankBlock(Properties properties) {
         super(properties);
+
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
     }
 
@@ -75,16 +78,21 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
+    public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        if (id == 0) {
+            if (level.isClientSide) addParticle(state, level, pos, ParticleTypes.SMOKE);
+            return true;
+        }
+        return super.triggerEvent(state, level, pos, id, param);
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.isClientSide) {
-            Direction direction = state.getValue(FACING).getOpposite();
-            double d0 = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
-            double d1 = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
-            double d2 = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
-            worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0, 0, 0);
-            return InteractionResult.SUCCESS;
-        } else {
+        if (!worldIn.isClientSide) {
+            //send particles
+            worldIn.blockEvent(pos, this, 0, 0);
+
             boolean ccw = player.isShiftKeyDown();
             this.activate(state, worldIn, pos, ccw);
             float f = 0.55f + state.getValue(POWER) * 0.04f; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
@@ -99,8 +107,8 @@ public class CrankBlock extends WaterBlock {
                     ((PulleyBlock) backState.getBlock()).windPulley(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
                 }
             }
-            return InteractionResult.CONSUME;
         }
+        return InteractionResult.sidedSuccess(worldIn.isClientSide);
     }
 
     public void activate(BlockState state, Level world, BlockPos pos, boolean ccw) {
@@ -148,23 +156,28 @@ public class CrankBlock extends WaterBlock {
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(POWER) > 0 && rand.nextFloat() < 0.25F) {
-            Direction direction = stateIn.getValue(FACING).getOpposite();
-            double d0 = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
-            double d1 = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
-            double d2 = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
-            worldIn.addParticle(new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+            addParticle(stateIn, worldIn, pos, new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f));
         }
+    }
+
+    private static void addParticle(BlockState stateIn, Level worldIn, BlockPos pos,
+                                    ParticleOptions particle) {
+        Direction direction = stateIn.getValue(FACING).getOpposite();
+        double x = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
+        double y = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
+        double z = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
+        worldIn.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
-            default -> SHAPE_SOUTH;
             case NORTH -> SHAPE_NORTH;
             case WEST -> SHAPE_WEST;
             case EAST -> SHAPE_EAST;
             case UP -> SHAPE_UP;
             case DOWN -> SHAPE_DOWN;
+            default -> SHAPE_SOUTH;
         };
     }
 

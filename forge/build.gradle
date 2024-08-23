@@ -113,9 +113,9 @@ dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
 
 
-    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
-    //modImplementation("curse.maven:selene-499980:5619074")
-    modImplementation("curse.maven:farmers-delight-398521:5051242")
+    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    modImplementation("curse.maven:selene-499980:5651445")
+    modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 
     modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     modRuntimeOnly("curse.maven:spark-361579:4738952")
@@ -123,29 +123,29 @@ dependencies {
 
     modCompileOnly("curse.maven:jei-238222:3928388")
     modImplementation ("curse.maven:configured-457570:5180900")
-    modRuntimeOnly ("curse.maven:amendments-896746:5135692")
+    modRuntimeOnly ("curse.maven:amendments-896746:5467925")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
-    modImplementation("curse.maven:curios-309927:5296876")
-    modImplementation("curse.maven:soul-fire-d-662413:5448803")
-    modImplementation("curse.maven:cobweb-968456:5441209")
+    modCompileOnly("curse.maven:curios-309927:5296876")
+    modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
+    modCompileOnly("curse.maven:cobweb-968456:5441209")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:5594847")
+    modCompileOnly("curse.maven:quark-243121:5594847")
 
-    modImplementation("curse.maven:zeta-968868:5597406")
+    modCompileOnly("curse.maven:zeta-968868:5597406")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")
-    modImplementation("curse.maven:waystones-245755:4749833")
+    modCompileOnly("curse.maven:waystones-245755:4749833")
     modImplementation("curse.maven:goated-805646:4802277")
-    modImplementation("curse.maven:enchanted-book-redesign-348076:4693221")
+    modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
-    modImplementation("curse.maven:balm-531761:4757228")
+    modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
@@ -153,7 +153,7 @@ dependencies {
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
-    modImplementation("curse.maven:decorative-blocks-362528:5010279")
+    modCompileOnly("curse.maven:decorative-blocks-362528:5010279")
     modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
     modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("curse.maven:biomes-o-plenty-220318:4602163")
@@ -171,7 +171,7 @@ dependencies {
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
-    modImplementation("curse.maven:citadel-331936:4786380")
+    modCompileOnly("curse.maven:citadel-331936:4786380")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("curse.maven:cyanide-541676:4824162")
     modImplementation("curse.maven:embeddium-908741:5566632")
