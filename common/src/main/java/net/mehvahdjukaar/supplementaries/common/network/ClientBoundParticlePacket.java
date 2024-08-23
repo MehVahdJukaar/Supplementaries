@@ -104,7 +104,8 @@ public class ClientBoundParticlePacket implements Message {
         FLINT_BLOCK_IGNITE,
         WAX_ON,
         CONFETTI,
-        CONFETTI_EXPLOSION
+        CONFETTI_EXPLOSION,
+        FEATHER
     }
 
 }

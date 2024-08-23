@@ -1,0 +1,28 @@
+{
+  "jars": [
+    {
+      "identifier": {
+        "group": "com.tterrag.registrate",
+        "artifact": "Registrate"
+      },
+      "version": {
+        "range": "[MC1.19.3-1.1.10,)",
+        "artifactVersion": "MC1.20-1.3.3"
+      },
+      "path": "META-INF/jarjar/Registrate-MC1.20-1.3.3.jar",
+      "isObfuscated": false
+    },
+    {
+      "identifier": {
+        "group": "com.jozufozu.flywheel",
+        "artifact": "flywheel-forge-1.20"
+      },
+      "version": {
+        "range": "[0.6.9,0.6.10)",
+        "artifactVersion": "0.6.9-4"
+      },
+      "path": "META-INF/jarjar/flywheel-forge-1.20-0.6.9-4.jar",
+      "isObfuscated": false
+    }
+  ]
+}

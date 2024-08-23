@@ -58,6 +58,6 @@ public interface IRopeConnection {
         if(upState.getBlock() instanceof  IRopeConnection ropeConnection){
             return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
         }
-        return Block.canSupportCenter(world, pos, Direction.DOWN) || upState.is(ModTags.ROPE_SUPPORT_TAG);
+        return (Block.canSupportCenter(world, pos, Direction.DOWN) && upState.isSolid()) || upState.is(ModTags.ROPE_SUPPORT_TAG);
     }
 }
