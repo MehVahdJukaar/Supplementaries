@@ -11,11 +11,9 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
@@ -195,7 +193,7 @@ public class RegUtils {
                 BlockBehaviour.Properties.of()
                         .mapColor(MapColor.WOOD)
                         .pushReaction(PushReaction.DESTROY)
-                        .strength(1.0F)
+                        .strength(0.5F)
                         .sound(ModSounds.PRESENT)));
         map.put(null, block);
         regItem(baseName, () -> itemFactory.apply(block.get(), new Item.Properties()));
@@ -206,7 +204,8 @@ public class RegUtils {
             Supplier<Block> bb = regBlock(name, () -> presentFactory.apply(color,
                     BlockBehaviour.Properties.of()
                             .mapColor(color.getMapColor())
-                            .strength(1.0F)
+                            .pushReaction(PushReaction.DESTROY)
+                            .strength(0.5F)
                             .sound(ModSounds.PRESENT))
             );
             map.put(color, bb);
@@ -233,7 +232,6 @@ public class RegUtils {
         Supplier<Block> defAwning = regBlock(baseName, () -> new AwningBlock(null,
                 BlockBehaviour.Properties.of()
                         .ignitedByLava()
-                        .forceSolidOff()
                         .mapColor(MapColor.SAND)
                         .strength(1.0F)
                         .noOcclusion()
@@ -247,7 +245,6 @@ public class RegUtils {
             Supplier<Block> block = regBlock(name, () -> new AwningBlock(color,
                     BlockBehaviour.Properties.of()
                             .ignitedByLava()
-                            .forceSolidOff()
                             .mapColor(color.getMapColor())
                             .strength(1.0F)
                             .noOcclusion()

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:awning"
+    },
+    {
+      "tag": "forge:dyes/magenta"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:awning_magenta",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ]
+}

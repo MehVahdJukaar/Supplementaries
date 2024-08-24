@@ -38,6 +38,8 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class AwningBlock extends WaterBlock implements IColored {
@@ -45,8 +47,10 @@ public class AwningBlock extends WaterBlock implements IColored {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
     public static final BooleanProperty SLANTED = ModBlockProperties.SLANTED;
-    protected static final VoxelShape BOTTOM_AABB = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
-    protected static final VoxelShape TOP_AABB = Block.box(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
+    protected static final VoxelShape BOTTOM_INTERACTION = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    protected static final VoxelShape BOTTOM_COLLISION = Block.box(0.0, 1.0, 0.0, 16.0, 8.0, 16.0);
+    protected static final VoxelShape TOP_INTERACTION = Block.box(0.0, 8.0, 0.0, 16.0, 16.0, 16.0);
+    protected static final VoxelShape TOP_COLLISION = Block.box(0.0, 9.0, 0.0, 16.0, 16.0, 16.0);
 
     private final DyeColor color;
 
@@ -68,21 +72,33 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        if(true)return true ;
 
         Direction direction = state.getValue(FACING);
         BlockPos behind = pos.relative(direction.getOpposite());
         BlockState behindState = level.getBlockState(behind);
-        if (behindState.is(this)) {
-            if (!state.getValue(SLANTED)) return false;
-            return behindState.getValue(FACING).getAxis() == direction.getAxis();
-        }
-        return behindState.isSolid() || behindState.is(this);
-    }
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(BOTTOM) ? BOTTOM_AABB : TOP_AABB;
+        if (behindState.isSolid()) return true;
+
+        if (behindState.getBlock() instanceof AwningBlock) {
+            if (!behindState.getValue(SLANTED)) {
+                return true;
+            }
+            if (behindState.getValue(SLANTED) && state.getValue(BOTTOM)) {
+                return true;
+            }
+        }
+
+        BlockState behindAbove = level.getBlockState(behind.above());
+        if (behindAbove.getBlock() instanceof AwningBlock) {
+            if (behindAbove.getValue(SLANTED)) {
+                return true;
+            }
+        }
+        BlockState left = level.getBlockState(pos.relative(direction.getClockWise()));
+        BlockState right = level.getBlockState(pos.relative(direction.getCounterClockWise()));
+        if (left.isSolid() || right.isSolid()) return true;
+
+        return false;
     }
 
     @Override
@@ -94,10 +110,20 @@ public class AwningBlock extends WaterBlock implements IColored {
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(BOTTOM) ? BOTTOM_COLLISION : TOP_COLLISION;
+    }
+
+    @Override
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Boolean bottom = state.getValue(BOTTOM);
         if (CommonConfigs.Building.AWNING_FALL_THROUGH.get()) {
-            if (context.isDescending() || !context.isAbove(bottom ? TOP_AABB : BOTTOM_AABB,
+            if (context.isDescending() || !context.isAbove(bottom ? TOP_COLLISION : BOTTOM_COLLISION,
                     bottom ? pos.below() : pos, false)) {
                 return Shapes.empty();
             }
@@ -120,13 +146,25 @@ public class AwningBlock extends WaterBlock implements IColored {
         Direction face = context.getClickedFace();
         LevelReader level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        Direction[] directions = context.getNearestLookingDirections();
+        List<Direction> directions = new LinkedList<>(Arrays.stream(context.getNearestLookingDirections()).toList());
+        BlockState clickedOn = level.getBlockState(pos.relative(face.getOpposite()));
+        boolean slanted = false;
+
+        if (clickedOn.getBlock() instanceof AwningBlock) {
+            Direction dir = clickedOn.getValue(FACING).getOpposite();
+            if (context.getNearestLookingDirection() == dir) {
+                directions.remove(dir);
+                directions.add(0, dir);
+                if (clickedOn.getValue(SLANTED)) {
+                    slanted = true;
+                }
+            }
+        }
 
         for (Direction direction : directions) {
             if (direction.getAxis().isHorizontal()) {
                 Direction opposite = direction.getOpposite();
 
-                boolean slanted = false;
                 boolean bottom = face != Direction.DOWN &&
                         (face == Direction.UP || !(context.getClickLocation().y - pos.getY() > 0.5));
 
@@ -136,10 +174,11 @@ public class AwningBlock extends WaterBlock implements IColored {
                 if (!CommonConfigs.Building.AWNING_SLANT.get()) {
                     behindPos.clear();
                 }
+
                 for (int i = 0; i < behindPos.size(); i++) {
                     BlockState behindState = level.getBlockState(behindPos.get(i));
                     if (behindState.is(this) &&
-                            //behindState.getValue(SLANTED) &&
+                            behindState.getValue(SLANTED) &&
                             behindState.getValue(FACING).getAxis() == direction.getAxis()) {
                         bottom = i == 0;
                         slanted = true;

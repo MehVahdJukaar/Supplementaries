@@ -205,6 +205,7 @@ public class SpecialRecipeDisplays {
 
     private static List<CraftingRecipe> createItemLoreRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
+
         String group = "item_lore";
 
         ItemStack output = new ItemStack(Items.SLIME_BALL);
@@ -215,6 +216,24 @@ public class SpecialRecipeDisplays {
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SLIME_BALL), Ingredient.of(tag));
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "item_lore_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
+    private static List<CraftingRecipe> createRemoveLoreRecipe(){
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "remove_lore";
+
+        ItemStack output = new ItemStack(Items.COCOA_BEANS);
+        ItemStack soap = new ItemStack(ModRegistry.SOAP.get());
+        var c = Component.literal("Stinky!");
+        ItemStack input = output.copy();
+        ItemLoreRecipe.addLore(c, input);
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(soap));
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "remove_lore_display");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
         recipes.add(recipe);
 
@@ -389,7 +408,10 @@ public class SpecialRecipeDisplays {
             if(CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED){
                 registry.accept(makeSackColoringRecipes());
             }
-            registry.accept(createItemLoreRecipe());
+            if(CommonConfigs.Tweaks.ITEM_LORE.get()) {
+                registry.accept(createItemLoreRecipe());
+                registry.accept(createRemoveLoreRecipe());
+            }
             if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
                 registry.accept(createSoapCleanRecipe());
                 if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {

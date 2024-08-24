@@ -10,6 +10,7 @@
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
+- added a recipe to clear item lore
 - trapped presents will hide their names
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks

@@ -309,8 +309,6 @@ public class ClientConfigs {
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
         public static final Supplier<Double> ROPE_WOBBLE_PERIOD;
 
-        public static final Supplier<Double> AWNINGS_ANGLE;
-
 
         static {
 
@@ -429,11 +427,6 @@ public class ClientConfigs {
                     .define("wobbling_period", 12d, 0.01, 200);
             builder.pop();
 
-            builder.push("awnings");
-            AWNINGS_ANGLE = builder.comment("Angle of slanted awnings")
-                    .define("angle", Math.toDegrees(Math.atan(16f / 6f)), 0.0, 90.0);
-
-            builder.pop();
 
             builder.pop();
         }

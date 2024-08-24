@@ -3,6 +3,7 @@
   "values": [
     "supplementaries:sack",
     "#supplementaries:trapped_presents",
-    "#supplementaries:presents"
+    "#supplementaries:presents",
+    "supplementaries:awnings"
   ]
 }

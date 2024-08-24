@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,7 @@ public class ItemLoreRecipe extends CustomRecipe {
 
         ItemStack nameTag = null;
         ItemStack item = null;
+        boolean isSoap = false;
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
@@ -34,6 +36,12 @@ public class ItemLoreRecipe extends CustomRecipe {
                     return false;
                 }
                 nameTag = stack;
+            } else if (stack.is(ModRegistry.SOAP.get())) {
+                if (nameTag != null) {
+                    return false;
+                }
+                isSoap = true;
+                nameTag = stack;
             } else if (!stack.isEmpty()) {
                 if (item != null) {
                     return false;
@@ -41,39 +49,59 @@ public class ItemLoreRecipe extends CustomRecipe {
                 item = stack;
             }
         }
-        return nameTag != null && item != null;
+        return nameTag != null && item != null && (!isSoap || hasLore(item));
     }
 
     @Override
     public ItemStack assemble(CraftingContainer craftingContainer, RegistryAccess registryAccess) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack nameTag = ItemStack.EMPTY;
+        ItemStack soap = ItemStack.EMPTY;
         for (int i = 0; i < craftingContainer.getContainerSize(); ++i) {
             var s = craftingContainer.getItem(i);
             if (s.getItem() == Items.NAME_TAG) {
                 nameTag = s;
+            } else if (s.is(ModRegistry.SOAP.get())) {
+                soap = s;
             } else if (!s.isEmpty()) {
                 itemstack = s;
             }
-            if (!nameTag.isEmpty() && !itemstack.isEmpty()) break;
         }
+        ItemStack result = itemstack.copyWithCount(1);
 
-        Component lore = nameTag.getHoverName();
-        ItemStack result = itemstack.copy();
-        result.setCount(1);
-        addLore(lore, result);
+        if (!soap.isEmpty()) {
+            removeLore(result);
+        } else {
+            Component lore = nameTag.getHoverName();
+            addLore(lore, result);
+        }
         return result;
     }
 
-    public static void addLore(Component lore, ItemStack result) {
-        CompoundTag tag = result.getOrCreateTag();
-        if (tag.contains("display")) {
-            tag = tag.getCompound("display");
-        } else {
-            var t = new CompoundTag();
-            tag.put("display", t);
-            tag = t;
+
+    public static boolean hasLore(ItemStack item) {
+        CompoundTag display = item.getTagElement("display");
+        if (display != null) {
+            return display.contains("Lore");
         }
+        return false;
+    }
+
+    public static void removeLore(ItemStack item) {
+        CompoundTag display = item.getTagElement("display");
+        if (display != null) {
+            display.remove("Lore");
+            if (display.isEmpty()) {
+                item.removeTagKey("display");
+            }
+            if (item.getOrCreateTag().isEmpty()) {
+                item.setTag(null);
+            }
+        }
+    }
+
+    public static void addLore(Component lore, ItemStack result) {
+        CompoundTag tag = result.getOrCreateTagElement("display");
 
         ListTag list;
         if (tag.getTagType("Lore") == 9) {

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "1 1"
+  ],
+  "key": {
+    "0": {
+      "tag": "minecraft:light_gray_carpet"
+    },
+    "1": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "supplementaries:awning_light_gray",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "forge:not",
+        "value": {
+            "type": "supplementaries:flag",
+            "flag": "flax"
+        }
+    }
+  ]
+}

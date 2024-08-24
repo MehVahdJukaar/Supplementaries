@@ -451,7 +451,7 @@ public class CommonConfigs {
                     .define("unrestricted", false);
             builder.pop();
 
-            builder.push("awnings");
+            builder.push(ModConstants.AWNING_NAME);
             AWNING_ENABLED = feature(builder);
             AWNING_SLANT = builder.comment("Allows having slanted awnings. Disabled if you feel its cursed.")
                     .define("slant", true);
