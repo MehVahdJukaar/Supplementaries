@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

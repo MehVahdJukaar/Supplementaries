@@ -3,18 +3,17 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -108,34 +107,32 @@ public class WrenchItem extends Item {
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, itemstack);
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                } else {
-                    //only plays them on local client. might want to change this
-                    playTurningEffects(pos, shiftDown, dir, level, player);
                 }
+                playTurningEffects(pos, shiftDown, dir, level, player);
                 itemstack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
 
                 return InteractionResult.sidedSuccess(level.isClientSide);
             } else {
-                if (level.isClientSide) {
-                    level.playSound(context.getPlayer(), player,
-                            ModSounds.WRENCH_FAIL.get(), SoundSource.PLAYERS, 1.4F, 0.8F);
-                }
+                level.playSound(context.getPlayer(), player,
+                        ModSounds.WRENCH_FAIL.get(), SoundSource.PLAYERS, 1.4F, 0.8F);
             }
         }
         return InteractionResult.FAIL;
     }
 
     public static void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
-        if (ClientConfigs.Items.WRENCH_PARTICLES.get()) {
-            if (dir == Direction.DOWN) shiftDown = !shiftDown;
-            level.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
-                    pos.getX() + 0.5D, pos.getY() + 0.5, pos.getZ() + 0.5D,
-                    dir.get3DDataValue(),
-                    0.71, shiftDown ? 1 : -1);
+        if (!level.isClientSide) {
+            if (dir == Direction.DOWN) {
+                dir = dir.getOpposite();
+            }
+            if (shiftDown) dir = dir.getOpposite();
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(player,
+                    new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Type.WRENCH_ROTATION,
+                            dir.get3DDataValue()));
         }
+        //called for both so we play sound immediately here
         level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-        level.playSound(player, player, SoundEvents.SPYGLASS_USE, SoundSource.PLAYERS, 1.0F, 1.4F);
-
+        level.playSound(player, player, ModSounds.WRENCH_ROTATE.get(), SoundSource.PLAYERS, 1.0F, 1.4F);
     }
 
 

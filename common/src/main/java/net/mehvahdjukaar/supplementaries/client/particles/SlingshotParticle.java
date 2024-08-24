@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.particles;
 
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.BlockPos;

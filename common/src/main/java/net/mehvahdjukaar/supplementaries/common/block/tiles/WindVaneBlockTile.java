@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.frozenblock.wilderwild.mod_compat.FrozenLibIntegration;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.WindVaneBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BreezyCompat;

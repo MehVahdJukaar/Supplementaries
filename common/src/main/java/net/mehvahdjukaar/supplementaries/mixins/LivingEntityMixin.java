@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMes
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;

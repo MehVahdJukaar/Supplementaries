@@ -44,7 +44,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
-import vectorwing.farmersdelight.common.tag.ModTags;
 
 import java.util.List;
 import java.util.function.Supplier;

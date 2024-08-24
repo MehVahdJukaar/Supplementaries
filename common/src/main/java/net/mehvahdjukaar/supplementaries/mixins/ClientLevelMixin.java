@@ -20,7 +20,7 @@ public class ClientLevelMixin {
     private Minecraft minecraft;
 
     @Inject(method = "addPlayer", at = @At("RETURN"))
-    private void addRopeSoundInstance(int playerId, AbstractClientPlayer playerEntity, CallbackInfo ci) {
+    private void supp$addRopeSoundInstance(int playerId, AbstractClientPlayer playerEntity, CallbackInfo ci) {
         if (CommonConfigs.Functional.ROPE_SLIDE.get())
             this.minecraft.getSoundManager().queueTickingSound(new RopeSlideSoundInstance(playerEntity));
     }

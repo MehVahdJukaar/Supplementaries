@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BubbleBlockItemRenderer;

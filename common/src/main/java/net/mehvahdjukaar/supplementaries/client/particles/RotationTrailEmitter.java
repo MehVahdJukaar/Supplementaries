@@ -54,11 +54,6 @@ public class RotationTrailEmitter extends NoRenderParticle {
                                        double direction, double radius, double angularVelocity) {
 
             Direction dir = Direction.from3DDataValue((int) direction);
-            if (dir == Direction.DOWN) {
-                angularVelocity *= -1;
-                dir = dir.getOpposite();
-            }
-
             return new RotationTrailEmitter(world, centerX, centerY, centerZ,
                     dir, radius, angularVelocity);
 

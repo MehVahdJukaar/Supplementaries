@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.MerchantResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.Merchant;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class RedMerchantMenu extends AbstractContainerMenu {

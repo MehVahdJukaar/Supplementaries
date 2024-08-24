@@ -229,10 +229,13 @@ public class TurnTableBlock extends Block implements EntityBlock {
                 Direction dir = state.getValue(TurnTableBlock.FACING);
                 BlockPos front = pos.relative(dir);
 
+                if (state.getValue(INVERTED)) {
+                    dir = dir.getOpposite();
+                }
                 world.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
                         front.getX() + 0.5D, front.getY() + 0.5, front.getZ() + 0.5D,
                         dir.get3DDataValue(),
-                        0.71, (state.getValue(INVERTED) ? 1 : -1));
+                        0.71, -1);
             }
             return true;
         }

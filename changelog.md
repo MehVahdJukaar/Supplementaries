@@ -14,9 +14,11 @@
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players
 - trapped presents will hide their names
+- plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
 - fixed a rare issue with enderman heads
+- fixed wrench particles and sounds not showing for other players
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox

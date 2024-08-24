@@ -14,8 +14,6 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.awt.*;
-
 public class GravelBricksBlock extends Block {
 
     private static final VoxelShape SHAPE_HACK = Block.box(0, 0.01, 0, 16, 16, 16);

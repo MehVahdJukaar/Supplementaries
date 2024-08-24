@@ -51,7 +51,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZAttachCapabilities;
 
 import java.util.function.Supplier;
 

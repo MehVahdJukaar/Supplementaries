@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,7 @@ public abstract class BlockBehaviourPlanterMixin {
     public void getOffset(BlockGetter level, BlockPos pos, BlockBehaviour.OffsetFunction offsetFunction, CallbackInfoReturnable<Vec3> cir) {
         //null check for world since some mods like to throw a null world here...
         if (level != null && cir.getReturnValue() != Vec3.ZERO &&
-                !level.isOutsideBuildHeight(pos.getY() - 2) && level instanceof RenderChunkRegion) {
+                !level.isOutsideBuildHeight(pos.getY() - 2)) {
             int b = 1;
             if (this.getBlock() instanceof DoublePlantBlock && ((BlockBehaviour.BlockStateBase) (Object) this).getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 b = 2;

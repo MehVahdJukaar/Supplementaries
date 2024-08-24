@@ -105,7 +105,8 @@ public class ClientBoundParticlePacket implements Message {
         WAX_ON,
         CONFETTI,
         CONFETTI_EXPLOSION,
-        FEATHER
+        FEATHER,
+        WRENCH_ROTATION
     }
 
 }

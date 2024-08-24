@@ -207,6 +207,14 @@ public class ClientReceivers {
                         );
                     }
                 }
+                case WRENCH_ROTATION -> {
+                    if (ClientConfigs.Items.WRENCH_PARTICLES.get()) {
+                        l.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
+                                message.pos.x(), message.pos.y(),message.pos.z(),
+                                message.extraData,
+                                0.71, -1);
+                    }
+                }
             }
         });
     }

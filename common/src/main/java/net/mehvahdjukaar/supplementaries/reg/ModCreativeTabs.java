@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
-import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -490,9 +489,9 @@ public class ModCreativeTabs {
                 ModConstants.ASH_NAME,
                 ModRegistry.ASH_BLOCK);
 
-        add(e, CreativeModeTabs.SPAWN_EGGS,
-                ModConstants.RED_MERCHANT_NAME,
-                ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
+       // add(e, CreativeModeTabs.SPAWN_EGGS,
+        //        ModConstants.RED_MERCHANT_NAME,
+        //        ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
 
         before(e, Items.BRICKS, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.ASH_BRICKS_NAME,
