@@ -200,7 +200,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
             var noteList = e.getValue();
             //can store max 4 notes in signed int
             for (int i = 0; i < Math.min(4, noteList.size()); i++) {
-                notes += noteList.get(i) * Math.pow(100, i);
+                notes += (int) (noteList.get(i) * Math.pow(100, i));
             }
             treeMap.put((int) (e.getKey() - start), notes);
         }
@@ -252,8 +252,8 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         saveRecordedSong(song);
 
         //temporarily adds the song
-        SONGS.clear();
-        SONGS.put(name, song);
+        //SONGS.clear();
+        //SONGS.put(name, song);
 
         if (!level.isClientSide) {
             ModNetwork.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));

@@ -13,6 +13,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,11 +21,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.util.Objects;
+
 public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
 
 
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState) {
-        super(pos, blockState);
+        super(pos, blockState, ModRegistry.SLIDY_BLOCK.get().defaultBlockState(), Direction.SOUTH, true, false);
     }
 
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState, Direction direction, boolean extending, boolean isSourcePiston) {
@@ -79,8 +82,23 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             if (t.progress >= 1.0F) {
                 t.progress = 1.0F;
 
-                if(level.getBlockState(pos.below()).is(BlockTags.ICE)){
-                    MovingSlidyBlock.maybeMove(movedState, level, pos, t.getDirection());
+                Direction direction = t.getDirection();
+                if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
+                    MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
+                }
+                if (level.getBlockState(pos.below()).is(ModRegistry.SOAP_BLOCK.get())) {
+
+                    // we want to run this on both sides so same random!
+                    // if we don't animation will look a bit glitchy even tho we are sending a packet too
+                    RandomSource randomSource = level.random;
+                    int rand = randomSource.nextInt(3);
+                    Direction randomDir = switch (rand) {
+                        case 0 -> direction.getClockWise();
+                        case 1 -> direction.getCounterClockWise();
+                        default -> direction;
+                    };
+                    randomDir = direction;
+                    MovingSlidyBlock.maybeMove(movedState, level, pos, randomDir);
                 }
             }
         }
@@ -95,8 +113,6 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
         if (belowState.isAir()) return;
         ParticleOptions opt = new BlockParticleOption(ParticleTypes.BLOCK, belowState);
         switch (dir) {
-            default -> {
-            }
             case NORTH ->
                     level.addParticle(opt, pos.getX() + rand.nextFloat(), pos.getY(), pos.getZ() - this.progress + 2,
                             0.0D, 0.0D, 0.0D);
@@ -109,6 +125,8 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             case EAST ->
                     level.addParticle(opt, pos.getX() + this.progress - 1, pos.getY(), pos.getZ() + rand.nextFloat(),
                             0.0D, 0.0D, 0.0D);
+            default -> {
+            }
         }
     }
 }

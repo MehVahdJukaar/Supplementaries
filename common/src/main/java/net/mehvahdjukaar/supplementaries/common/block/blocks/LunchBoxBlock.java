@@ -22,6 +22,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -102,7 +103,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            if (!level.isClientSide && player.isCreative()) {
+            if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
                 ItemStack itemstack = new ItemStack(this);
                 saveTileToItem(itemstack, tile);
 
