@@ -85,7 +85,7 @@ public class FeatherBlock extends Block {
                 RandomSource random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextInt(10) == 0) {
-                    double dy = 0.005;
+                    double dy = 0.001;
 
                     ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, blockPos,
                             new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Type.FEATHER, 1,

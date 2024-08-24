@@ -96,14 +96,12 @@ public class AwningBlock extends WaterBlock implements IColored {
         }
         BlockState left = level.getBlockState(pos.relative(direction.getClockWise()));
         BlockState right = level.getBlockState(pos.relative(direction.getCounterClockWise()));
-        if (left.isSolid() || right.isSolid()) return true;
-
-        return false;
+        return left.isSolid() || right.isSolid();
     }
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if (adjacentBlockState.is(this) && !state.getValue(SLANTED)) {
+        if (side.getAxis().isHorizontal() && adjacentBlockState.is(this) && !state.getValue(SLANTED)) {
             return adjacentBlockState.getValue(BOTTOM) == state.getValue(BOTTOM);
         }
         return super.skipRendering(state, adjacentBlockState, side);

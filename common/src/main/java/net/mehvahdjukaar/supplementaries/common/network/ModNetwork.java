@@ -16,6 +16,7 @@ public class ModNetwork {
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSendKnockbackPacket.class, ClientBoundSendKnockbackPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncAntiqueInk.class, ClientBoundSyncAntiqueInk::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncSongsPacket.class, ClientBoundSyncSongsPacket::new)
+            .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSetSlidingBlockEntityPacket.class, ClientBoundSetSlidingBlockEntityPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncHourglassPacket.class, ClientBoundSyncHourglassPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSyncCapturedMobsPacket.class, ClientBoundSyncCapturedMobsPacket::new)
             .register(NetworkDir.PLAY_TO_CLIENT, ClientBoundSetSongPacket.class, ClientBoundSetSongPacket::new)
@@ -49,5 +50,6 @@ public class ModNetwork {
             .build();
 
 
-    public static void init(){}
+    public static void init() {
+    }
 }

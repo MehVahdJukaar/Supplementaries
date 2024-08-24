@@ -7,7 +7,9 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
@@ -41,8 +43,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -204,6 +208,20 @@ public class ClientReceivers {
                     }
                 }
             }
+        });
+    }
+
+    public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {
+        withLevelDo(l -> {
+            if(!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity)){
+                //l.setBlock(m.pos(), m.state(),Block.UPDATE_ALL_IMMEDIATE);
+            }
+            BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(m.pos(), m.state(), m.movedState(), m.direction());
+          //  l.setBlockEntity(be);
+
+            l.setBlock(m.pos().relative(m.direction().getOpposite()), ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
+                    .defaultBlockState().setValue(BlockStateProperties.FACING, m.direction()), Block.UPDATE_ALL_IMMEDIATE);
+
         });
     }
 
@@ -385,7 +403,7 @@ public class ClientReceivers {
             if (e instanceof ISlimeable s) {
                 int old = s.supp$getSlimedTicks();
                 s.supp$setSlimedTicks(message.duration(), false);
-                if(old <= 0 && message.duration() > 0) {
+                if (old <= 0 && message.duration() > 0) {
                     e.playSound(ModSounds.SLIME_SPLAT.get(), 1, 1);
                 }
             }
