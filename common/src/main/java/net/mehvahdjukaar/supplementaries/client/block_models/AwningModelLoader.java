@@ -25,21 +25,23 @@ public class AwningModelLoader implements CustomModelLoader {
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
         BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
 
-        JsonArray ja = GsonHelper.getAsJsonArray(json, "elements");
-        for (int j = 0; j < ja.size() && j < modelHack.getElements().size(); ++j) {
-            BlockElement element = modelHack.getElements().get(j);
-            JsonElement elementJson = ja.get(j);
-            if (elementJson instanceof JsonObject jo) {
-                JsonElement rot = jo.get("extra_rotation");
-                if (rot != null) {
-                    element.rotation = new BlockElementRotation(
-                            element.rotation.origin(), element.rotation.axis(),
-                            element.rotation.angle() + rot.getAsFloat(), element.rotation.rescale()
-                    );
+        if (json.has("elements")) {
+            JsonArray ja = GsonHelper.getAsJsonArray(json, "elements");
+            for (int j = 0; j < ja.size() && j < modelHack.getElements().size(); ++j) {
+                BlockElement element = modelHack.getElements().get(j);
+                JsonElement elementJson = ja.get(j);
+                if (elementJson instanceof JsonObject jo) {
+                    JsonElement rot = jo.get("extra_rotation");
+                    if (rot != null) {
+                        element.rotation = new BlockElementRotation(
+                                element.rotation.origin(), element.rotation.axis(),
+                                element.rotation.angle() - rot.getAsFloat(), element.rotation.rescale()
+                        );
+                    }
                 }
             }
-
         }
+
         return new CustomGeometry() {
             @Override
             public CustomBakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation resourceLocation) {
@@ -48,6 +50,12 @@ public class AwningModelLoader implements CustomModelLoader {
 
             @Override
             public BakedModel bakeModel(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState transform, ResourceLocation location) {
+                // resolve model and fix parent texture map as fore doesn't do that. if a child has parent of custom geometry, just THAT will be baked
+                var parent = modelBaker.getModel(location);
+                if (parent instanceof BlockModel bm) {
+                    // super hacky
+                    modelHack.textureMap.putAll(bm.textureMap);
+                }
                 return modelHack.bake(modelBaker, spriteGetter, transform, location);
             }
         };

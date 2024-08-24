@@ -1,9 +1,8 @@
 {
-  "loader": "supplementaries:awning",
+  "parent": "supplementaries:block/awnings/bottom_slanted",
   "textures": {
-    "particle": "supplementaries:block/awnings/awning_white",
-    "top": "supplementaries:block/awnings/awning_white",
-    "side": "supplementaries:block/awnings/awning_white_side"
-  },
-  "height": 0.5
+    "1": "supplementaries:block/awnings/awning_white",
+    "up": "supplementaries:block/awnings/awning_white_side",
+    "particle": "supplementaries:block/awnings/awning_white"
+  }
 }

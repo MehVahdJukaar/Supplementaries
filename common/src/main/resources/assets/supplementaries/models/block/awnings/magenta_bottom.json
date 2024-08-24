@@ -1,27 +1,8 @@
 {
-	"credit": "Made with Blockbench",
-	"parent": "block/thin_block",
-	"textures": {
-		"1": "supplementaries:block/awnings/awning_magenta",
-		"up": "supplementaries:block/awnings/awning_magenta_side",
-		"particle": "supplementaries:block/awnings/awning_magenta"
-	},
-	"elements": [
-		{
-			"from": [0, 8, 0],
-			"to": [16, 8, 16],
-			"faces": {
-				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"}
-			}
-		},
-		{
-			"from": [0, 4, 0],
-			"to": [16, 8, 0],
-			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#up", "cullface": "north"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#up"}
-			}
-		}
-	]
+  "parent": "supplementaries:block/awnings/bottom",
+  "textures": {
+    "1": "supplementaries:block/awnings/awning_magenta",
+    "up": "supplementaries:block/awnings/awning_magenta_side",
+    "particle": "supplementaries:block/awnings/awning_magenta"
+  }
 }

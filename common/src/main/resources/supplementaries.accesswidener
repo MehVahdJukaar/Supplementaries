@@ -18,6 +18,7 @@ accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/worl
 
 # awning model hack
 mutable field net/minecraft/client/renderer/block/model/BlockElement rotation Lnet/minecraft/client/renderer/block/model/BlockElementRotation;
+accessible field net/minecraft/client/renderer/block/model/BlockModel textureMap Ljava/util/Map;
 
 # schedule tick
 accessible field net/minecraft/world/ticks/LevelTicks allContainers Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;

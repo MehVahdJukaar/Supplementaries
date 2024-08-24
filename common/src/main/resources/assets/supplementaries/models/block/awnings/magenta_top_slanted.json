@@ -1,9 +1,8 @@
 {
-  "loader": "supplementaries:awning",
+  "parent": "supplementaries:block/awnings/top_slanted",
   "textures": {
-    "particle": "supplementaries:block/awnings/awning_magenta",
-    "top": "supplementaries:block/awnings/awning_magenta",
-    "side": "supplementaries:block/awnings/awning_magenta_side"
-  },
-  "height": 1
+    "1": "supplementaries:block/awnings/awning_magenta",
+    "up": "supplementaries:block/awnings/awning_magenta_side",
+    "particle": "supplementaries:block/awnings/awning_magenta"
+  }
 }
