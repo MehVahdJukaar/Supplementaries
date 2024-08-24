@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.Advancement;
@@ -15,7 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,11 +46,6 @@ public class SoapItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0, true);
-            playEffectsAndConsume(stack, player, player);
-            return InteractionResultHolder.success(stack);
-        }
         if (!hasBeenEatenBefore(player, level)) {
             if (player.canEat(true)) {
                 player.startUsingItem(hand);
@@ -99,18 +93,19 @@ public class SoapItem extends Item {
         return false;
     }
 
-    //needed because some entities dont fire the normal method so we use event instead
+    //needed because some entities don't fire the normal method so we use event instead
+    @EventCalled
     public static boolean interactWithEntity(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         Level level = player.level();
         boolean success = false;
-        if (target instanceof Sheep s) {
-            if (s.getColor() != DyeColor.WHITE) {
-                s.setColor(DyeColor.WHITE);
-                success = true;
-            }
-        }
 
-        if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
+        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+            s.supp$setSlimedTicks(0, true);
+            success = true;
+        } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
+            s.setColor(DyeColor.WHITE);
+            success = true;
+        } else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
             if (target instanceof Wolf wolf) {
                 wolf.setCollarColor(DyeColor.RED);
                 wolf.isWet = true;
@@ -118,34 +113,32 @@ public class SoapItem extends Item {
                 //wolf.level.broadcastEntityEvent(wolf, (byte)8);
             }
             ta.setOrderedToSit(true);
-            if (level.isClientSide) {
+            if (level instanceof ServerLevel serverLevel) {
+                // extra particles for these mobs
                 var p = target instanceof Cat ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.HEART;
-                level.addParticle(p, target.getX(), target.getEyeY(), target.getZ(), 0, 0, 0);
+                serverLevel.sendParticles(p, target.getX(), target.getEyeY(), target.getZ(), 1,
+                        0, 0, 0, 0);
             }
             success = true;
         }
 
-        if (target instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0, true);
-            success = true;
-        }
-
         if (success) {
-            //TODO: custom sound?
             playEffectsAndConsume(stack, player, target);
             return true;
         }
         return false;
     }
 
-    //TODO: test client side
     private static void playEffectsAndConsume(ItemStack stack, Player player, Entity entity) {
         Level level = player.level();
+        // called on both sides so we pass the player
         level.playSound(player, entity, ModSounds.SOAP_WASH.get(), SoundSource.PLAYERS, 1.0F,
                 0.9f + level.random.nextFloat() * 0.3f);
-        if (level.isClientSide) {
-            ParticleUtil.spawnParticleOnBoundingBox(entity.getBoundingBox(), level, ModParticles.SUDS_PARTICLE.get(),
-                    UniformInt.of(2, 3), 0);
+        if (!level.isClientSide) {
+            // spawn particles
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity,
+                    new ClientBoundParticlePacket(entity.blockPosition(),
+                            ClientBoundParticlePacket.Type.BUBBLE_CLEAN_ENTITY));
         }
         if (!player.getAbilities().instabuild) stack.shrink(1);
     }

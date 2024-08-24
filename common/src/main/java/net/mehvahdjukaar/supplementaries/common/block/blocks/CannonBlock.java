@@ -228,11 +228,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos,
+                           LevelAccessor world, FireSourceType fireSourceType) {
         if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if (tile.readyToFire()) {
                 if (!world.isClientSide()) {
-                    tile.ignite(null);
+                    tile.ignite(player);
                     this.playLightUpSound(world, pos, fireSourceType);
                 }
 

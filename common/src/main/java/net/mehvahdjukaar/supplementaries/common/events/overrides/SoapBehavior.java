@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.overrides;
 import net.mehvahdjukaar.supplementaries.common.utils.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +46,7 @@ class SoapBehavior implements ItemUseOnBlockBehavior {
 
                 level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
-                level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, pos, ModSounds.SOAP_WASH.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);

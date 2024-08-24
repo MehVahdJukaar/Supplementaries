@@ -69,7 +69,9 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     //bubble block
     @SuppressWarnings("UnsafePlatformOnlyCall")
     private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        HitResult result = player.pick(ForgeHelper.getReachDistance(player), 1, true);
+        double reachDistance = ForgeHelper.getReachDistance(player);
+        if (!player.isCreative()) reachDistance = Math.min(2, reachDistance);
+        HitResult result = player.pick(reachDistance, 1, true);
 
         if (result instanceof BlockHitResult hitResult) {
             BlockPos pos = hitResult.getBlockPos();

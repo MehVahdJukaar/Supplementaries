@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicResourcePack;
 import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
@@ -40,6 +41,7 @@ import net.minecraft.world.item.ItemFrameItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.logging.log4j.LogManager;
@@ -121,12 +123,15 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
-    // test death messages
-    // test blackboard cannon and other 1 player containers in mutliplayer
-    // test sounds and particles on server
+    // slimeball sound
+    // bunting soap
+    // wrench sound rotatio and particles
+    // planter plant offset
+
+
     // test sculk
     // test dispenser and present stuff
-    // soap slidy block slides
+    // soap slidy block slides!!!
 
     // gunpowder lights up lumisene
     // dispenser and lumisene stuff
@@ -142,9 +147,8 @@ public class Supplementaries {
     // vampires mummy cript necromancer curse stuff, skull trap block (nether fortess like big overworld boss)
     // warp fly and warper block
     // randomize enchant for quiver and lunch boxes
-    // dispensers shoow quiver content
+    // dispensers shoot quiver content
     // bundle and quiver dispenser interaction
-    // zombie villagers spawn away from center. biome spawn
     // fletching table quiver fill
     // emi world interaction (ash)
     // raycon mod

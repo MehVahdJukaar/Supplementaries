@@ -19,6 +19,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -268,7 +269,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
     }
 
-    public void ignite(@Nullable Player controllingPlayer) {
+    public void ignite(@Nullable Entity entityWhoIgnited) {
         if (this.getProjectile().isEmpty()) return;
 
         // called from server when firing
@@ -276,7 +277,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         //particles
         this.level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
-        this.playerWhoIgnitedUUID = controllingPlayer != null ? controllingPlayer.getUUID() : null;
+        this.playerWhoIgnitedUUID = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
 
         this.setChanged();
         //update other clients
@@ -306,7 +307,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
         } else {
             if (this.shootProjectile()) {
-                Player p = getControllingPlayer();
+                Player p = getPlayerWhoFired();
                 if (p == null || !p.isCreative()) {
                     ItemStack fuel = this.getFuel();
                     fuel.shrink(this.powerLevel);
@@ -331,12 +332,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
         return behavior.fire(projectile.copy(), (ServerLevel) level, worldPosition, 0.5f,
-                facing, getFirePower(), getTrajectoryData().drag(), 0, getControllingPlayer());
+                facing, getFirePower(), getTrajectoryData().drag(), 0, getPlayerWhoFired());
     }
 
 
     @Nullable
-    private Player getControllingPlayer() {
+    private Player getPlayerWhoFired() {
         UUID uuid = this.controllingPlayer;
         if (uuid == null && playerWhoIgnitedUUID != null) {
             uuid = playerWhoIgnitedUUID;

@@ -86,6 +86,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     private static final GameProfile SPIKE_PLAYER = new GameProfile(UUID.randomUUID(), "Spike Fake Player");
+
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
             ServerPlayer fakePlayer = (ServerPlayer) FakePlayerManager.get(SPIKE_PLAYER, level);

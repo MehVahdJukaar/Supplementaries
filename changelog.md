@@ -18,6 +18,8 @@
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox
+- fixed soap interaction not spawning bubble particles on servers
+- fixed soap cleaning being able to clean multiple things at once
 - Fixed a very rare crash with quivers and server players
 - Ash can no longer spawn from non solid blocks
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
