@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -17,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
@@ -46,7 +49,7 @@ import java.util.Map;
 import java.util.Optional;
 
 //TODO: maybe stick buntings?
-public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, IRotatable {
+public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, IRotatable, IWashable {
 
     public static final EnumProperty<ModBlockProperties.Bunting> NORTH = ModBlockProperties.NORTH_BUNTING;
     public static final EnumProperty<ModBlockProperties.Bunting> SOUTH = ModBlockProperties.SOUTH_BUNTING;
@@ -200,7 +203,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
-            Optional<Direction> closest = findClosestConnection(state, pos, hit);
+            Optional<Direction> closest = findClosestConnection(state, pos, hit.getLocation());
             if (closest.isPresent()) return tile.interact(player, handIn, closest.get().get2DDataValue());
         }
         return InteractionResult.PASS;
@@ -208,7 +211,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
 
     @ForgeOverride
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        Optional<Direction> closest = findClosestConnection(state, pos, target);
+        Optional<Direction> closest = findClosestConnection(state, pos, target.getLocation());
         if (world.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
             ItemStack held = tile.getItem(closest.get().get2DDataValue());
             if (!held.isEmpty()) return held.copy();
@@ -221,10 +224,9 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         return ModRegistry.ROPE_ITEM.get().getDefaultInstance();
     }
 
-    private static Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, HitResult hit) {
+    private static Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, Vec3 hit) {
 
-        Vector3f hitPos = hit.getLocation()
-                .subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
+        Vector3f hitPos = hit.subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
 
         List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
                 .filter(dir -> ((AbstractRopeBlock) state.getBlock()).hasConnection(dir, state)).toList();
@@ -285,7 +287,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     @Nullable
     public static BlockState fromRope(BlockState state, BlockHitResult hit) {
         var s = fromRope(state);
-        Optional<Direction> closest = findClosestConnection(state, hit.getBlockPos(), hit);
+        Optional<Direction> closest = findClosestConnection(state, hit.getBlockPos(), hit.getLocation());
         return closest.map(direction -> s.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(direction),
                 ModBlockProperties.Bunting.BUNTING)).orElse(null);
     }
@@ -309,4 +311,16 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     }
 
 
+    @Override
+    public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
+        Optional<Direction> closest = findClosestConnection(state, pos, hitVec);
+        if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
+            ItemStack held = tile.getItem(closest.get().get2DDataValue());
+            if (!held.isEmpty()){
+                BuntingItem.setColor(held, DyeColor.WHITE);
+                return true;
+            }
+        }
+        return false;
+    }
 }

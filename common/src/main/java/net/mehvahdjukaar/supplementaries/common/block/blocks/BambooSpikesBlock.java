@@ -268,7 +268,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+    public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         if (state.getValue(TIPPED)) {
             if (!level.isClientSide) {
                 var te = level.getBlockEntity(pos);

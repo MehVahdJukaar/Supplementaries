@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
@@ -105,6 +106,8 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
+    // slidy block bullshit
+
     // slimeball sound
     // bunting soap
     // awning attachment
@@ -161,7 +164,6 @@ public class Supplementaries {
     // luck makes crit happen
     // death marke off map
     // fisherman fish
-    // middle click flower box stuff
     // more trades to villagers (planter)
     // villager that fishes. shepard that shears
     // soap washes trims
@@ -176,14 +178,11 @@ public class Supplementaries {
     //more flywheel stuff
     //Fix doormat highlight text box
     //steal from quark backpack
-    //quark bubble hollow log and grates
-    //blackboard gui to add color
     //wind mechanic mod with kite, paper lanterns...
 
     //hat + present jack in the box anim
 //potion flask that works liqui quiver/big pot storage
     //group rally ping map aylas
-    //identity hasmap vs object2objecthasmap
     //quark pipes projectiles
     //villagers regen health and trades when sleeping. malus otherwise
     //enchantment durability bar
@@ -319,11 +318,7 @@ public class Supplementaries {
 
     //ash auto bonemeal, improve bubbles
 
-    //better badlands kindling gunpowder compat (whenevr it updates lol)
     //better fodder pathfinding
-    //TODO fix randomium recipe jei extensin
-
-    //blackboard otline gui+
 
     //soap signs & finish notice board dye (add dye interface)
     //snow real magic compat

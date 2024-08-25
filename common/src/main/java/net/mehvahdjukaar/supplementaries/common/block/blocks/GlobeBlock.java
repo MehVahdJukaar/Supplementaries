@@ -45,6 +45,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -232,7 +233,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
-    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+    public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
             if (tile.isSepia()) {
                 level.setBlockAndUpdate(pos, ModRegistry.GLOBE.get().withPropertiesOf(state));

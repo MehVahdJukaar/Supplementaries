@@ -82,6 +82,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
+    public TextHolder getTextHolderAt(Vec3 hit) {
+        return getClickedSign(hit).text;
+    }
+
+    @Override
     public int textHoldersCount() {
         return 2;
     }

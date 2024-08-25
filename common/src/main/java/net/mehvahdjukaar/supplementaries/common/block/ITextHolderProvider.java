@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -26,24 +27,26 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
         return getTextHolder(0);
     }
 
+    default TextHolder getTextHolderAt(Vec3 hit) {
+        return getTextHolder();
+    }
+
     default int textHoldersCount() {
         return 1;
     }
 
     @Override
-    default boolean tryWash(Level level, BlockPos pos, BlockState state) {
+    default boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         if (this.isWaxed()) {
             this.setWaxed(false);
             return true;
         }
         boolean success = false;
-        for (int i = 0; i < this.textHoldersCount(); i++) {
-            var text = getTextHolder(i);
+        var text = getTextHolderAt(hitVec);
 
-            if (!text.isEmpty(null)) {
-                text.clear();
-                success = true;
-            }
+        if (!text.isEmpty(null)) {
+            text.clear();
+            success = true;
         }
         if (success) {
             if (this instanceof BlockEntity be) {
