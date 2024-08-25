@@ -1,0 +1,20 @@
+{
+  "color": "#E24334",
+  "containers": [
+    {
+      "filled": [
+        "farmersrespite:strong_melon_juice"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": "BOTTLE"
+    }
+  ],
+  "flowing_texture": "minecraft:block/water_flow",
+  "food": {
+    "divider": 1,
+    "item": "farmersrespite:strong_melon_juice"
+  },
+  "from_mod": "farmersrespite",
+  "still_texture": "minecraft:block/water_still",
+  "translation_key": "item.farmersrespite.strong_melon_juice"
+}
