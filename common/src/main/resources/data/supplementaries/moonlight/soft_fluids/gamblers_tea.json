@@ -1,0 +1,20 @@
+{
+    "color": "#342727",
+    "containers": [
+      {
+        "filled": [
+          "farmersrespite:gamblers_tea"
+        ],
+        "empty": "minecraft:glass_bottle",
+        "capacity": "BOTTLE"
+      }
+    ],
+    "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
+    "food": {
+      "divider": 1,
+      "item": "farmersrespite:gamblers_tea"
+    },
+    "id": "farmersrespite:gamblers_tea",
+    "still_texture": "moonlight:block/soft_fluids/soup_liquid",
+    "translation_key": "item.farmersrespite.gamblers_tea"
+  }

@@ -1,0 +1,20 @@
+{
+  "color": "#8f563b",
+  "containers": [
+    {
+      "filled": [
+        "farmersrespite:strong_hot_cocoa"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": "BOTTLE"
+    }
+  ],
+  "flowing_texture": "moonlight:block/soft_fluids/milk_liquid",
+  "food": {
+    "divider": 1,
+    "item": "farmersrespite:strong_hot_cocoa"
+  },
+  "from_mod": "farmersrespite",
+  "still_texture": "moonlight:block/soft_fluids/milk_liquid",
+  "translation_key": "item.farmersrespite.strong_hot_cocoa"
+}
