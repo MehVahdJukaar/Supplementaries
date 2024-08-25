@@ -39,7 +39,7 @@ class SoapBehavior implements ItemUseOnBlockBehavior {
     public InteractionResult tryPerformingAction(Level level, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
         BlockPos pos = hit.getBlockPos();
-        if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos))) {
+        if (SoapWashableHelper.tryWash(level, pos, level.getBlockState(pos), hit.getLocation())) {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (!player.getAbilities().instabuild) stack.shrink(1);
 

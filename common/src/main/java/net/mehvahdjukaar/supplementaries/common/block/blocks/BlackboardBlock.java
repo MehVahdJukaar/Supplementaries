@@ -250,7 +250,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     }
 
     @Override
-    public boolean tryWash(Level level, BlockPos pos, BlockState state) {
+    public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
             if (state.getValue(GLOWING)) {
                 level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));

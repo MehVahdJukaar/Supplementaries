@@ -18,13 +18,14 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class SoapWashableHelper {
 
     //support: waxed, forge waxed, copper, IW stuff
-    public static boolean tryWash(Level level, BlockPos pos, BlockState state) {
+    public static boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
 
-        if (tryWashWithInterface(level, pos, state) ||
+        if (tryWashWithInterface(level, pos, state, hitVec) ||
                 tryCleaningSign(level, pos, state) ||
                 tryChangingColor(level, pos, state) ||
                 tryUnoxidise(level, pos, state)) {
@@ -109,7 +110,7 @@ public class SoapWashableHelper {
         return null;
     }
 
-    private static boolean tryWashWithInterface(Level level, BlockPos pos, BlockState state) {
+    private static boolean tryWashWithInterface(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         IWashable cap;
         Block b = state.getBlock();
         if (b instanceof IWashable soapWashable) {
@@ -128,7 +129,7 @@ public class SoapWashableHelper {
             }
         }
         if (cap != null) {
-            return cap.tryWash(level, pos, state);
+            return cap.tryWash(level, pos, state, hitVec);
         }
         return false;
     }
