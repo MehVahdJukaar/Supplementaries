@@ -14,7 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 //TODO: move to ML
-//same as vanilla but doesnt need to be from Hierarchical Model
+//same as vanilla (from some class i forgot the name of) but doesnt need to be from Hierarchical Model
+//why is vanilla so dumb
 public class GenericAnimationStuff {
 
     private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();

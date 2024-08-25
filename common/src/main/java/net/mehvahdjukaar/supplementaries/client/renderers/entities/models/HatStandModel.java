@@ -16,7 +16,6 @@ import org.joml.Vector4f;
 
 public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRootModel {
 
-
     private final ModelPart basePlate;
     private final ModelPart neck;
     private final ModelPart neckJoint;

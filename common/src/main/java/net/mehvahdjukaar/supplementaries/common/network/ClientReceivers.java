@@ -409,13 +409,8 @@ public class ClientReceivers {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.id());
             if (e instanceof ISlimeable s) {
-                int old = s.supp$getSlimedTicks();
                 s.supp$setSlimedTicks(message.duration(), false);
-                if (old <= 0 && message.duration() > 0) {
-                    e.playSound(ModSounds.SLIME_SPLAT.get(), 1, 1);
-                }
             }
-
         });
     }
 

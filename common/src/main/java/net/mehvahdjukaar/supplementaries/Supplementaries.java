@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -106,6 +107,33 @@ public class Supplementaries {
 
     // slimeball sound
     // bunting soap
+    // awning attachment
+    // awning against other awning culling
+    // awning clipping top
+    // soap block clearing  slime
+    // slime use bubble
+    // soap item not owkring at all with slime
+    // soap item not working on buntings
+    // enable fire spread angain
+    // slingshot bucket
+    // alemdnts lanterns sync
+    // confetti sculk sensor
+    // hourglass sculk
+    // present open sculk
+    // bumping inot lantern sculk
+    // fire charge speed up when fired from present
+    // flute constant signal when sung
+    // fire pit farmes delight tag
+    // fire pit boling cauldron
+    // cauldron fire pi8t boling
+    // model for fire pit off hanging
+    // cauldon extinguish fire from removing campfire
+    // bewing stand cant put potions in cauldron
+    // cauldron model with no potion missing texture
+    // fauce messes up cauldron conversion
+    // lumisene cauldron with particles
+    // wrenching stuff game event
+    // brewing stand doesnt change color
 
     // test sculk
     // test dispenser and present stuff

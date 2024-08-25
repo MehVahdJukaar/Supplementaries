@@ -355,7 +355,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         SuppPlatformStuff.tryBurningByFire(level, pos.north(), 300 + extraChance, random, age, Direction.SOUTH);
         SuppPlatformStuff.tryBurningByFire(level, pos.south(), 300 + extraChance, random, age, Direction.NORTH);
         BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-        if (true) return;
+
         for (int dx = -1; dx <= 1; ++dx) {
             for (int dz = -1; dz <= 1; ++dz) {
                 for (int dy = -1; dy <= 4; ++dy) {

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMes
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
@@ -46,11 +47,17 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     }
 
     @Override
-    public void supp$setSlimedTicks(int slimed, boolean sync) {
-        this.supp$slimedTicks = slimed;
+    public void supp$setSlimedTicks(int slimeTicks, boolean sync) {
+        int old = this.supp$getSlimedTicks();
+        this.supp$slimedTicks = slimeTicks;
         if (sync && !this.level().isClientSide) {
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(this,
                     new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
+            if (old <= 0 && slimeTicks > 0) {
+                //send packet
+                level().playSound(null, this.getX(), this.getY(), this.getZ(),
+                        ModSounds.SLIME_SPLAT.get(), this.getSoundSource(), 1, 1);
+            }
         }
     }
 
@@ -71,9 +78,9 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
             original -= 0.1f;
         }
         // yes they stack
-        if(this.supp$getSlimedTicks() > 0){
+        if (this.supp$getSlimedTicks() > 0) {
             var mode = CommonConfigs.Tweaks.HINDERS_JUMP.get();
-            if(mode.isOn(this.level())){
+            if (mode.isOn(this.level())) {
                 original -= 0.1f;
             }
         }
