@@ -13,19 +13,23 @@
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
-    "ZAM" : {
+    "yutonishiogi": {
+      "uuid": "0c952629-7a55-45d0-a412-8e1e98500ed3",
+      "has_statue": true
+    },
+    "ZAM": {
       "has_statue": true,
-      "uuid":"ab19a9e6-7e51-451f-9b55-259e18cb82b9",
+      "uuid": "ab19a9e6-7e51-451f-9b55-259e18cb82b9",
       "has_globe": true
     },
     "LeonKappa": {},
     "Wash": {},
     "ithan": {},
-    "EGOtm" : {
+    "EGOtm": {
       "has_statue": true,
       "uuid": "d5569700-83e6-4cd4-915f-dfe7c649b69b"
     },
-    "supermarshadow":{
+    "supermarshadow": {
       "uuid": "5bfc50f2-5059-4fea-878e-6ab90a366033",
       "has_statue": true
     },
@@ -133,14 +137,14 @@
     "E_Y_E_": {
       "has_globe": true
     },
-    "MORTHRIN":{
+    "MORTHRIN": {
       "has_statue": true,
       "uuid": "5fff49c9-77e7-40c7-b2d3-c63c48113075"
     },
-    "chu":{
+    "chu": {
       "has_globe": true
     },
-    "OutrightWings":{
+    "OutrightWings": {
       "has_statue": true,
       "uuid": "37d77f71-6ff7-4c23-9f61-d8b270450eb9"
     },
