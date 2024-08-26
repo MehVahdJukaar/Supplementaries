@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.client.particles.SudsParticle;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
@@ -12,6 +14,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
+import net.mehvahdjukaar.supplementaries.common.items.BubbleBlowerItem;
+import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
@@ -26,7 +30,9 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -109,16 +115,8 @@ public class Supplementaries {
 
     // slidy block bullshit
 
-    // slimeball sound
-    // bunting soap
     // awning attachment
-    // awning against other awning culling
-    // awning clipping top
     // soap block clearing  slime
-    // slime use bubble
-    // soap item not owkring at all with slime
-    // soap item not working on buntings
-    // enable fire spread angain
     // slingshot bucket
     // alemdnts lanterns sync
     // confetti sculk sensor
@@ -126,11 +124,9 @@ public class Supplementaries {
     // present open sculk
     // bumping inot lantern sculk
     // fire charge speed up when fired from present
-    // flute constant signal when sung
     // fire pit farmes delight tag
     // fire pit boling cauldron
     // cauldron fire pi8t boling
-    // model for fire pit off hanging
     // cauldon extinguish fire from removing campfire
     // bewing stand cant put potions in cauldron
     // cauldron model with no potion missing texture

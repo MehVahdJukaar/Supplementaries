@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FluteItem extends InstrumentItem implements IThirdPersonAnimationProvider,
+public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimationProvider,
         IThirdPersonSpecialItemRenderer, IFirstPersonAnimationProvider {
 
     public FluteItem(Properties properties) {
@@ -78,6 +79,7 @@ public class FluteItem extends InstrumentItem implements IThirdPersonAnimationPr
     }*/
 
     //now called from forge event
+    @EventCalled
     public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         if (!(target instanceof LivingEntity)) return false;
         CompoundTag c = stack.getTagElement("Pet");

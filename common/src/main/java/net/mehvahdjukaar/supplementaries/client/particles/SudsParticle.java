@@ -8,9 +8,11 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 
-//idk whats going on in here anymore
 public class SudsParticle extends BubbleBlockParticle {
+
+    protected static final int POP_FRAMES = 4;
 
     private final double additionalSize;
 
@@ -39,9 +41,27 @@ public class SudsParticle extends BubbleBlockParticle {
 
     @Override
     public void tick() {
-        if (this.age > 6) this.hasPhysics = true;
+        if (this.age > 6) {
+            this.hasPhysics = true;
+        }
         super.tick();
         this.setColorForAge();
+    }
+
+    @Override
+    public void move(double x, double y, double z) {
+        super.move(x, y, z);
+        if (hasPhysics && this.age < this.lifetime - POP_FRAMES) {
+            Vec3 myPos = new Vec3(this.x, this.y, this.z);
+            Vec3 wantedPos = new Vec3(this.xo + x, this.yo + y, this.zo + z);
+            if (myPos.distanceToSqr(wantedPos) > 0.000001) {
+                // collided with any block. pop. It fragile
+                this.age = this.lifetime - POP_FRAMES;
+                this.xd = 0;
+                this.yd = 0;
+                this.zd = 0;
+            }
+        }
     }
 
     @Override
@@ -49,10 +69,9 @@ public class SudsParticle extends BubbleBlockParticle {
         int i = this.lifetime - this.age;
         int s = 2;
         if (i < 3 * s) {
-            int popParticleLen = 4;
             int j = Math.max(i, 0) / s;
             int popTime = 30;
-            this.setSprite(this.sprites.get((int) (popTime * (3f - j) / (popParticleLen - 1f)), popTime));
+            this.setSprite(this.sprites.get((int) (popTime * (3f - j) / (POP_FRAMES - 1f)), popTime));
             if (gravity != 0) {
                 level.playLocalSound(x, y, z, ModSounds.BUBBLE_POP.get(), SoundSource.BLOCKS, 0.15f,
                         2f - this.quadSize * 0.2f, false);
@@ -73,7 +92,6 @@ public class SudsParticle extends BubbleBlockParticle {
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ,
                                        double pXSpeed, double pYSpeed, double pZSpeed) {
             RandomSource r = pLevel.random;
-            //TODO: add randomness here
             return new SudsParticle(pLevel, pX, pY, pZ,
                     pXSpeed + ((0.5 - r.nextFloat()) * 0.04),
                     pYSpeed + ((0.5 - r.nextFloat()) * 0.04),

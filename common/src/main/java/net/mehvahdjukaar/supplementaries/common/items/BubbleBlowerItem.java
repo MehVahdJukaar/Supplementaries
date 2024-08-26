@@ -33,6 +33,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -207,6 +208,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                     1.0F, MthUtils.nextWeighted(level.random, 0.20f) + 0.95f);
         }
         if (level.isClientSide) {
+            // runs for other players as well. I think
             Vec3 v = entity.getViewVector(0).normalize();
             double x = entity.getX() + v.x;
             double y = entity.getEyeY() + v.y - 0.12;
@@ -218,6 +220,10 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
             double dz = v.z + ((0.5 - r.nextFloat()) * 0.08);
 
             level.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
+        }else{
+            if (remainingUseDuration % 10 == 0) {
+                level.gameEvent(entity, GameEvent.INSTRUMENT_PLAY, entity.position());
+            }
         }
     }
 

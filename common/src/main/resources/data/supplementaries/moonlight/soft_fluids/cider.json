@@ -6,7 +6,7 @@
         "simplefarming:cider"
       ],
       "empty": "minecraft:glass_bottle",
-      "capacity": 1
+      "capacity": "BOTTLE"
     }
   ],
   "flowing_texture": "minecraft:block/water_flow",

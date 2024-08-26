@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClientBoundParticlePacket implements Message {
 
-    public final Type id;
+    public final Type type;
     @Nullable
     public final Vec3 pos;
     @Nullable
@@ -20,7 +20,7 @@ public class ClientBoundParticlePacket implements Message {
     public final Vec3 dir;
 
     public ClientBoundParticlePacket(FriendlyByteBuf buffer) {
-        this.id = buffer.readEnum(Type.class);
+        this.type = buffer.readEnum(Type.class);
         if (buffer.readBoolean()) {
             this.extraData = buffer.readInt();
         } else this.extraData = null;
@@ -28,45 +28,47 @@ public class ClientBoundParticlePacket implements Message {
             this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         } else {
             this.pos = null;
-        }if(buffer.readBoolean()) {
+        }
+        if (buffer.readBoolean()) {
             this.dir = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-        }else{
+        } else {
             this.dir = null;
         }
     }
 
-    public ClientBoundParticlePacket(BlockPos pos, Type id) {
-        this(Vec3.atCenterOf(pos), id);
+    public ClientBoundParticlePacket(BlockPos pos, Type type) {
+        this(Vec3.atCenterOf(pos), type);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type id) {
-        this(pos, id, null);
+    public ClientBoundParticlePacket(Vec3 pos, Type type) {
+        this(pos, type, null);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData) {
+    public ClientBoundParticlePacket(Vec3 pos, Type type, Integer extraData) {
+        this(pos, type, extraData, null);
+    }
+
+    public ClientBoundParticlePacket(Vec3 pos, Type type, Integer extraData, @Nullable Vec3 direction) {
         this.pos = pos;
-        this.id = id;
-        this.extraData = extraData;
-        this.dir = null;
-    }
-
-    public ClientBoundParticlePacket(Vec3 pos, Type id, Integer extraData, @Nullable Vec3 direction) {
-        this.pos = pos;
-        this.id = id;
+        this.type = type;
         this.extraData = extraData;
         this.dir = direction;
     }
 
-    public ClientBoundParticlePacket(Entity entity, Type id) {
+    public ClientBoundParticlePacket(Entity entity, Type type) {
+        this(entity, type, null);
+    }
+
+    public ClientBoundParticlePacket(Entity entity, Type type, Vec3 dir) {
         this.extraData = entity.getId();
-        this.id = id;
+        this.type = type;
         this.pos = null;
-        this.dir = null;
+        this.dir = dir;
     }
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buffer) {
-        buffer.writeEnum(this.id);
+        buffer.writeEnum(this.type);
         if (extraData != null) {
             buffer.writeBoolean(true);
             buffer.writeInt(extraData);
@@ -100,6 +102,7 @@ public class ClientBoundParticlePacket implements Message {
         BUBBLE_BLOW,
         BUBBLE_CLEAN,
         BUBBLE_CLEAN_ENTITY,
+        BUBBLE_EAT,
         DISPENSER_MINECART,
         FLINT_BLOCK_IGNITE,
         WAX_ON,

@@ -13,10 +13,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
-public abstract class InstrumentItem extends Item {
+public abstract class SongInstrumentItem extends Item {
 
-    protected InstrumentItem(Properties pProperties) {
+    protected SongInstrumentItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -43,6 +44,9 @@ public abstract class InstrumentItem extends Item {
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
         if (!level.isClientSide) {
             SongsManager.playRandomSong(stack, this, entity, getUseDuration(stack) - remainingUseDuration);
+            if (remainingUseDuration % 10 == 0) {
+                level.gameEvent(entity, GameEvent.INSTRUMENT_PLAY, entity.position());
+            }
         }
     }
 

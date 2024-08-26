@@ -12,7 +12,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
-import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -117,7 +117,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     //called on server only
-    public static void playRandomSong(ItemStack stack, InstrumentItem instrument, LivingEntity entity,
+    public static void playRandomSong(ItemStack stack, SongInstrumentItem instrument, LivingEntity entity,
                                       long timeSinceStarted) {
         UUID id = entity.getUUID();
         Song song;
@@ -144,13 +144,13 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         playSong(instrument, entity, song, timeSinceStarted);
     }
 
-    public static boolean playSong(InstrumentItem instrumentItem, LivingEntity entity, String sandstorm,
+    public static boolean playSong(SongInstrumentItem instrumentItem, LivingEntity entity, String sandstorm,
                                    long timeSinceStarted) {
         return playSong(instrumentItem, entity, SONGS.getOrDefault(sandstorm, Song.EMPTY), timeSinceStarted);
     }
 
     //server controls everything here
-    public static boolean playSong(InstrumentItem instrument, LivingEntity entity, Song song, long timeSinceStarted) {
+    public static boolean playSong(SongInstrumentItem instrument, LivingEntity entity, Song song, long timeSinceStarted) {
         boolean played = false;
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);

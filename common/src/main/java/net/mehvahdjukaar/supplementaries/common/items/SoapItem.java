@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -31,7 +29,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 public class SoapItem extends Item {
 
@@ -46,10 +43,16 @@ public class SoapItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        // clean self
+        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+            s.supp$setSlimedTicks(0, true);
+            playEffectsAndConsume(stack, player, player);
+            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+        }
         if (!hasBeenEatenBefore(player, level)) {
             if (player.canEat(true)) {
                 player.startUsingItem(hand);
-                return InteractionResultHolder.consume(stack);
+                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
             } else {
                 return InteractionResultHolder.fail(stack);
             }
@@ -60,20 +63,11 @@ public class SoapItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
-        if (pLevel.isClientSide) {
-            Vec3 v = entity.getViewVector(0).normalize();
-            double x = entity.getX() + v.x;
-            double y = entity.getEyeY() + v.y - 0.12;
-            double z = entity.getZ() + v.z;
-            for (int j = 0; j < 4; j++) {
-                RandomSource r = entity.getRandom();
-                v = v.scale(0.1 + r.nextFloat() * 0.1f);
-                double dx = v.x + ((0.5 - r.nextFloat()) * 0.9);
-                double dy = v.y + ((0.5 - r.nextFloat()) * 0.06);
-                double dz = v.z + ((0.5 - r.nextFloat()) * 0.9);
 
-                pLevel.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
-            }
+        if (!pLevel.isClientSide) {
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+                    new ClientBoundParticlePacket(entity,
+                            ClientBoundParticlePacket.Type.BUBBLE_EAT, entity.getViewVector(1)));
         }
         return super.finishUsingItem(pStack, pLevel, entity);
     }
@@ -99,7 +93,7 @@ public class SoapItem extends Item {
         Level level = player.level();
         boolean success = false;
 
-        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
+        if (target instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
             s.supp$setSlimedTicks(0, true);
             success = true;
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
@@ -136,7 +130,7 @@ public class SoapItem extends Item {
                 0.9f + level.random.nextFloat() * 0.3f);
         if (!level.isClientSide) {
             // spawn particles
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity,
+            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                     new ClientBoundParticlePacket(entity.blockPosition(),
                             ClientBoundParticlePacket.Type.BUBBLE_CLEAN_ENTITY));
         }

@@ -27,6 +27,8 @@
 - fixed soap cleaning being able to clean multiple things at once
 - Fixed a very rare crash with quivers and server players
 - Ash can no longer spawn from non solid blocks
+- suds particles will break when in contact with a block
+- playing flute and using bubble blower will emit sculk vibrations
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions

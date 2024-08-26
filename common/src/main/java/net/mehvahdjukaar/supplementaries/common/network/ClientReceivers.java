@@ -14,7 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.items.InstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
@@ -97,7 +97,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             //bubble blow
             final RandomSource ran = l.random;
-            switch (message.id) {
+            switch (message.type) {
                 case BUBBLE_BLOW -> {
                     ParticleUtil.spawnParticlesOnBlockFaces(l, BlockPos.containing(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),
@@ -120,6 +120,22 @@ public class ClientReceivers {
                             ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l,
                                     ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
                         }
+                    }
+                }
+                case BUBBLE_EAT -> {
+                    var entity = l.getEntity(message.extraData);
+
+                    Vec3 v = message.dir.normalize();
+                    double x = entity.getX() + v.x;
+                    double y = entity.getEyeY() + v.y - 0.12;
+                    double z = entity.getZ() + v.z;
+                    for (int j = 0; j < 4; j++) {
+                        v = v.scale(0.1 + ran.nextFloat() * 0.1f);
+                        double dx = v.x + ((0.5 - ran.nextFloat()) * 0.9);
+                        double dy = v.y + ((0.5 - ran.nextFloat()) * 0.06);
+                        double dz = v.z + ((0.5 - ran.nextFloat()) * 0.9);
+
+                        l.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
                     }
                 }
                 case DISPENSER_MINECART -> {
@@ -210,7 +226,7 @@ public class ClientReceivers {
                 case WRENCH_ROTATION -> {
                     if (ClientConfigs.Items.WRENCH_PARTICLES.get()) {
                         l.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
-                                message.pos.x(), message.pos.y(),message.pos.z(),
+                                message.pos.x(), message.pos.y(), message.pos.z(),
                                 message.extraData,
                                 0.71, -1);
                     }
@@ -221,11 +237,11 @@ public class ClientReceivers {
 
     public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {
         withLevelDo(l -> {
-            if(!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity)){
+            if (!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity)) {
                 //l.setBlock(m.pos(), m.state(),Block.UPDATE_ALL_IMMEDIATE);
             }
             BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(m.pos(), m.state(), m.movedState(), m.direction());
-          //  l.setBlockEntity(be);
+            //  l.setBlockEntity(be);
 
             l.setBlock(m.pos().relative(m.direction().getOpposite()), ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
                     .defaultBlockState().setValue(BlockStateProperties.FACING, m.direction()), Block.UPDATE_ALL_IMMEDIATE);
@@ -270,11 +286,11 @@ public class ClientReceivers {
     public static void handlePlaySongNotesPacket(ClientBoundPlaySongNotesPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.entityID);
-            if (e instanceof Player p && p.getUseItem().getItem() instanceof InstrumentItem instrumentItem) {
+            if (e instanceof Player p && p.getUseItem().getItem() instanceof SongInstrumentItem instrumentItem) {
                 for (int note : message.notes) {
                     if (note > 0) {
                         //always plays a sound for local player. this is because this method is called on client side for other clients aswell
-                        //and playground only plays if the given player is the local one
+                        //and playsound only plays if the given player is the local one
                         l.playSound(Minecraft.getInstance().player, p.getX(), p.getY(), p.getZ(),
                                 instrumentItem.getSound(), SoundSource.PLAYERS,
                                 instrumentItem.getVolume(), instrumentItem.getPitch(note));

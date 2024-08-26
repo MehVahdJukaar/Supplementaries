@@ -1,0 +1,21 @@
+{
+  "containers": [
+    {
+      "filled": [
+        "supplementaries:lumisene_bottle"
+      ],
+      "empty": "minecraft:glass_bottle",
+      "capacity": "BOTTLE"
+    },
+    {
+        "filled": [
+            "supplementaries:lumisene_bucket"
+        ],
+        "empty": "minecraft:bucket",
+        "capacity": "BUCKET"
+    }
+  ],
+  "flowing_texture": "supplementaries:block/lumisene/lumisene_flowing",
+  "still_texture": "supplementaries:block/lumisene/lumisene",
+  "translation_key": "block.supplementaries.lumisene"
+}

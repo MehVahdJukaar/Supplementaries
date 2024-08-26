@@ -254,16 +254,15 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
                 if (!canSupportBunting(newState, index)) {
                     if (level instanceof Level l) popItem(l, pos, item, facing);
                     tile.setItem(index, ItemStack.EMPTY);
-                    newState =  newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.NONE);
-                }else{
-                    newState =  newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.BUNTING);
+                    newState = newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.NONE);
+                } else {
+                    newState = newState.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(facing), ModBlockProperties.Bunting.BUNTING);
                 }
             }
             if (tile.isEmpty()) newState = toRope(newState);
         }
         return newState;
     }
-
 
 
     public void popItem(Level level, BlockPos pos, ItemStack stack, Direction dir) {
@@ -316,8 +315,12 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         Optional<Direction> closest = findClosestConnection(state, pos, hitVec);
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
             ItemStack held = tile.getItem(closest.get().get2DDataValue());
-            if (!held.isEmpty()){
+            if (!held.isEmpty() && BuntingItem.getColor(held) != DyeColor.WHITE) {
                 BuntingItem.setColor(held, DyeColor.WHITE);
+                // set again just in case
+                tile.setItem(closest.get().get2DDataValue(), held);
+                tile.setChanged();
+                level.sendBlockUpdated(pos, state, state, 3);
                 return true;
             }
         }
