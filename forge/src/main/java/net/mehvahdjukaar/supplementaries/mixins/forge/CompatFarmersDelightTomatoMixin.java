@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.forge;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 
 @Pseudo
-@Mixin(targets = "vectorwing.farmersdelight.common.block.TomatoVineBlock")
+@Mixin(TomatoVineBlock.class)
 public abstract class CompatFarmersDelightTomatoMixin extends Block {
 
     protected CompatFarmersDelightTomatoMixin(Properties arg) {

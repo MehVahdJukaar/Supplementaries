@@ -115,16 +115,18 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         BlockState backState = level.getBlockState(behind);
         this.tempFluidHolder.clear();
         if (backState.isAir()) return 0;
-
         Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
 
         //tile interactions
         BlockEntity tileBack = level.getBlockEntity(behind);
+
         if (tileBack != null) {
             filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack, justVisual);
+
             if (filledAmount != null) return filledAmount;
         }
+
         if (!this.isConnectedBelow() && !justVisual &&
                 (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() ||
                         CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {

@@ -54,6 +54,7 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
                     if (brewingStand.canPlaceItem(i, filledItem)) {
                         brewingStand.setItem(i, filled.getFirst().copy());
                         tile.setChanged();
+                        level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
                         return filled.getSecond().getAmount();
                     } else brewingStand.setItem(i, stack);
                 }

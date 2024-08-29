@@ -64,7 +64,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public static final BooleanProperty CONNECTED = ModBlockProperties.CONNECTED;
 
     public FaucetBlock(Properties properties) {
-        super(properties.lightLevel(s->s.getValue(LIGHT_LEVEL)));
+        super(properties.lightLevel(s -> s.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(CONNECTED, false).setValue(FACING, Direction.NORTH)
                 .setValue(ENABLED, false).setValue(POWERED, false)
                 .setValue(HAS_WATER, false).setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, 0));
@@ -74,17 +74,17 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (state.getValue(CONNECTED)) {
             return switch (state.getValue(FACING)) {
-                default -> SHAPE_NORTH_JAR;
                 case SOUTH -> SHAPE_SOUTH_JAR;
                 case EAST -> SHAPE_EAST_JAR;
                 case WEST -> SHAPE_WEST_JAR;
+                default -> SHAPE_NORTH_JAR;
             };
         } else {
             return switch (state.getValue(FACING)) {
-                default -> SHAPE_NORTH;
                 case SOUTH -> SHAPE_SOUTH;
                 case EAST -> SHAPE_EAST;
                 case WEST -> SHAPE_WEST;
+                default -> SHAPE_NORTH;
             };
         }
     }
@@ -135,7 +135,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     @ForgeOverride
     public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-        if ( world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
+        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
             boolean water = tile.updateContainedFluidVisuals(level, pos, state);
             if (state.getValue(HAS_WATER) != water) {
                 level.setBlock(pos, state.setValue(HAS_WATER, water), 2);
@@ -148,7 +148,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         else if (downState.is(ModTags.FAUCET_CONNECTION_BLACKLIST)) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_WHITELIST)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
-        return world instanceof Level  level && FluidsUtil.hasFluidHandler(level, pos, dir);
+        return world instanceof Level level && FluidsUtil.hasFluidHandler(level, pos, dir);
     }
 
     @Override

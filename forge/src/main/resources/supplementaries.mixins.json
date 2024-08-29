@@ -15,6 +15,7 @@
   ],
   "mixins": [
     "ChunkHolderMixin",
+    "CompatFarmersDelightTomatoMixin",
     "FireBlockAccessor",
     "FriendlyByteBufMixin",
     "LivingEntityMixin",
