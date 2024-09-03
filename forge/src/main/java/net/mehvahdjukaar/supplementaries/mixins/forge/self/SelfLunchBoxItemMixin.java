@@ -36,7 +36,6 @@ public abstract class SelfLunchBoxItemMixin extends SelectableContainerItem<Quiv
             baseTag = baseTag.copy();
             baseTag.put("LunchBoxCap", c.serializeNBT());
         }
-        Supplementaries.test(baseTag);
         return baseTag;
     }
 
@@ -50,7 +49,6 @@ public abstract class SelfLunchBoxItemMixin extends SelectableContainerItem<Quiv
                 c.deserializeNBT(capTag);
             }
         }
-        Supplementaries.test2(stack, tag);
         stack.setTag(tag);
     }
 

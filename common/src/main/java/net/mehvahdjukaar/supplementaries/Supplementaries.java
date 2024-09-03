@@ -119,15 +119,6 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
-    public static void test(CompoundTag baseTag) {
-        int aa = 1;
-    }
-
-    public static void test2(ItemStack stack, @Nullable CompoundTag tag) {
-        float aa = 1;
-    }
-
-
     // slidy block bullshit
 
     // test config saving
@@ -144,7 +135,6 @@ public class Supplementaries {
     // cauldron fire pi8t boling
     // cauldon extinguish fire from removing campfire
     // bewing stand cant put potions in cauldron
-    // cauldron model with no potion missing texture
     // fauce messes up cauldron conversion
     // lumisene cauldron with particles
     // wrenching stuff game event

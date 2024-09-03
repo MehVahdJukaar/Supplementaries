@@ -98,9 +98,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
                     0.3F, 1.6F + player.level().getRandom().nextFloat() * 0.3F);
         }
 
-        if (!player.level().isClientSide) {
-            data.switchMode();
-        }
+        data.switchMode();
 
         return true;
     }

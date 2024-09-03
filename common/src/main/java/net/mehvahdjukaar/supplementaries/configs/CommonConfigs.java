@@ -750,8 +750,17 @@ public class CommonConfigs {
             builder.push(ModConstants.LUMISENE_NAME);
 
             LUMISENE_ENABLED = feature(builder);
-            //    LUMISENE_SPREAD_SPEED = builder.comment("Speed at which lumisene spreads")
-            //          .define("spread_speed", 0.1f, 0, 1);
+            builder.push(ModConstants.LUMISENE_BOTTLE_NAME);
+            LUMISENE_BOTTLE = feature(builder
+                    .comment("Enables lumisene bottles and the flammable effect and lumisene bottles. Turn off if you think its over the top and doesnt match with existing effects")
+            );
+            FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect")
+                    .gameRestart()
+                    .define("flammable_duration", 300, 0, 10000);
+            GLOWING_DURATION = builder.comment("Duration of the glowing effect")
+                    .gameRestart()
+                    .define("glowing_duration", 200, 0, 10000);
+            builder.pop();
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -814,6 +823,9 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FODDER_ENABLED;
 
         public static final Supplier<Boolean> LUMISENE_ENABLED;
+        public static final Supplier<Boolean> LUMISENE_BOTTLE;
+        public static final Supplier<Integer> FLAMMABLE_DURATION;
+        public static final Supplier<Integer> GLOWING_DURATION;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;

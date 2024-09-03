@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,8 +24,8 @@ public class LumiseneBottleItem extends Item {
 
     private static final FoodProperties LUMISENE_FOOD = new FoodProperties.Builder()
             .nutrition(0).saturationMod(0).alwaysEat()
-            .effect(() -> new MobEffectInstance(MobEffects.GLOWING, 100, 1), 1)
-            .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.get(), 200, 1), 1)
+            .effect(() -> new MobEffectInstance(MobEffects.GLOWING, CommonConfigs.Functional.GLOWING_DURATION.get(), 1), 1)
+            .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 1), 1)
             .build();
 
     public LumiseneBottleItem(Properties properties) {
@@ -47,7 +48,7 @@ public class LumiseneBottleItem extends Item {
         if (stack.isEmpty()) {
             return new ItemStack(Items.GLASS_BOTTLE);
         } else {
-            if (livingEntity instanceof Player player && !((Player) livingEntity).getAbilities().instabuild) {
+            if (livingEntity instanceof Player player  && !player.getAbilities().instabuild) {
                 ItemStack itemStack = new ItemStack(Items.GLASS_BOTTLE);
                 if (!player.getInventory().add(itemStack)) {
                     player.drop(itemStack, false);

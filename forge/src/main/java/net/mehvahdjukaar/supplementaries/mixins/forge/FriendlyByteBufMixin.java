@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge;
 
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +16,8 @@ public abstract class FriendlyByteBufMixin {
     @Shadow public abstract FriendlyByteBuf writeItemStack(ItemStack par1, boolean par2);
 
     @Inject(method = "writeItemStack", at = @At(value = "HEAD"), remap = false, cancellable = true)
-    public void sendCapsFromCreative(ItemStack stack, boolean useShareTag, CallbackInfoReturnable<FriendlyByteBuf> cir) {
-        if (!useShareTag && stack.getItem() == ModRegistry.QUIVER_ITEM.get()) {
+    public void supp$sendCapsFromCreative(ItemStack stack, boolean useShareTag, CallbackInfoReturnable<FriendlyByteBuf> cir) {
+        if (!useShareTag && stack.getItem() instanceof SelectableContainerItem<?>) {
             cir.setReturnValue(this.writeItemStack(stack, true)); //thanks forge
         }
     }
