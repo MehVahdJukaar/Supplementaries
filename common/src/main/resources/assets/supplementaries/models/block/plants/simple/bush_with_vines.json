@@ -1,0 +1,40 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"flower": "supplementaries:block/plants/simple/potted_rose_bush",
+		"vines": "supplementaries:block/plants/simple/potted_rose_bush_vine"
+	},
+	"elements": [
+		{
+			"from": [0, 2, 8],
+			"to": [16, 12, 8],
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 16, 16], "texture": "#flower"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#flower"}
+			}
+		},
+		{
+			"from": [0, 2, 8],
+			"to": [16, 12, 8],
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 16, 16], "texture": "#flower"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#flower"}
+			}
+		},
+		{
+			"from": [-0.25, -1.25, 4.75],
+			"to": [16.25, 3.25, 11.25],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 6]},
+			"faces": {
+				"north": {"uv": [0, 12, 16, 16], "texture": "#vines"},
+				"east": {"uv": [0, 8, 6, 12], "texture": "#vines"},
+				"south": {"uv": [0, 12, 16, 16], "texture": "#vines"},
+				"west": {"uv": [0, 8, 6, 12], "texture": "#vines"},
+				"up": {"uv": [0, 0, 16, 6], "texture": "#vines"}
+			}
+		}
+	]
+}

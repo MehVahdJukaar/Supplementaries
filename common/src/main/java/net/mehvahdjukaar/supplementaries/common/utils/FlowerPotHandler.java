@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -48,6 +49,7 @@ public class FlowerPotHandler {
     //flower box stuff
 
     private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
+    private static final Map<Item, ResourceLocation> SPECIAL_TALL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
 
     /**
      * for mods: use this or #Link(IFlowerModelProvider) to register plants that go into a flower box and have a custom model
@@ -59,7 +61,14 @@ public class FlowerPotHandler {
         SPECIAL_FLOWER_BOX_FLOWERS.put(item, model);
     }
 
-    private static void registerCompatFlower(String itemRes) {
+    /**
+     * Same as above but just used for the "simple" mode. Ideally this just contains tall flowers
+     */
+    public static void registerCustomSimpleFlower(Item item, ResourceLocation model) {
+        SPECIAL_TALL_FLOWER_BOX_FLOWERS.put(item, model);
+    }
+
+    private static void registerFlower(String itemRes) {
         var id = new ResourceLocation(itemRes);
         var opt = BuiltInRegistries.ITEM.getOptional(id);
         if (opt.isPresent()) {
@@ -67,6 +76,12 @@ public class FlowerPotHandler {
             CUSTOM_MODELS.add(res);
             registerCustomFlower(opt.get(), res);
         }
+    }
+
+    private static void registerSimpleFlower(Item item) {
+        ResourceLocation res = Supplementaries.res("block/plants/simple/" + Utils.getID(item).getPath());
+        CUSTOM_MODELS.add(res);
+        registerCustomSimpleFlower(item, res);
     }
 
     //to manually add
@@ -164,13 +179,20 @@ public class FlowerPotHandler {
 
         //flower box
 
-        toAdd.forEach(FlowerPotHandler::registerCompatFlower);
+        toAdd.forEach(FlowerPotHandler::registerFlower);
+
+
+        List<Item> tallFlowers = List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
+                Items.TWISTING_VINES, Items.PEONY, Items.TALL_GRASS, Items.LARGE_FERN, Items.PITCHER_PLANT);
+        tallFlowers.forEach(FlowerPotHandler::registerSimpleFlower);
 
     }
 
     @Nullable
     public static ResourceLocation getSpecialFlowerModel(Item i) {
-        ResourceLocation res = SPECIAL_FLOWER_BOX_FLOWERS.get(i);
+        ResourceLocation res = CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get() ?
+                SPECIAL_TALL_FLOWER_BOX_FLOWERS.get(i) :
+                SPECIAL_FLOWER_BOX_FLOWERS.get(i);
 
         if (res != null) return res;
 

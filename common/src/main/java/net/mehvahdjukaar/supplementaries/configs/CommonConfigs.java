@@ -462,6 +462,12 @@ public class CommonConfigs {
 
             builder.pop();
 
+            builder.push(ModConstants.FLOWER_BOX_NAME);
+            FLOWER_BOX_ENABLED = feature(builder);
+            FLOWER_BOX_SIMPLE_MODE = builder.comment("Makes so flower boxes can only contain one tall flower item per block")
+                    .define("simple_mode", true);
+            builder.pop();
+
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
@@ -480,7 +486,6 @@ public class CommonConfigs {
             RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
             FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
             STATUE_ENABLED = feature(builder, ModConstants.STATUE_NAME);
-            FLOWER_BOX_ENABLED = feature(builder, ModConstants.FLOWER_BOX_NAME);
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
@@ -585,6 +590,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> DOORMAT_ENABLED;
 
         public static final Supplier<Boolean> FLOWER_BOX_ENABLED;
+        public static final Supplier<Boolean> FLOWER_BOX_SIMPLE_MODE;
 
         public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
 

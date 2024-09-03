@@ -1,33 +1,49 @@
 {
   "variants": {
-    "facing=north,floor=false": {
+    "facing=north,face=wall": {
       "model": "supplementaries:block/flower_box"
     },
-    "facing=east,floor=false": {
+    "facing=east,face=wall": {
       "model": "supplementaries:block/flower_box",
       "y": 90
     },
-    "facing=south,floor=false": {
+    "facing=south,face=wall": {
       "model": "supplementaries:block/flower_box",
       "y": 180
     },
-    "facing=west,floor=false": {
+    "facing=west,face=wall": {
       "model": "supplementaries:block/flower_box",
       "y": 270
     },
-    "facing=north,floor=true": {
+    "facing=north,face=floor": {
       "model": "supplementaries:block/flower_box_floor"
     },
-    "facing=east,floor=true": {
+    "facing=east,face=floor": {
       "model": "supplementaries:block/flower_box_floor",
       "y": 90
     },
-    "facing=south,floor=true": {
+    "facing=south,face=floor": {
       "model": "supplementaries:block/flower_box_floor",
       "y": 180
     },
-    "facing=west,floor=true": {
+    "facing=west,face=floor": {
       "model": "supplementaries:block/flower_box_floor",
+      "y": 270
+    },
+
+    "facing=north,face=ceiling": {
+      "model": "supplementaries:block/flower_box_ceiling"
+    },
+    "facing=east,face=ceiling": {
+      "model": "supplementaries:block/flower_box_ceiling",
+      "y": 90
+    },
+    "facing=south,face=ceiling": {
+      "model": "supplementaries:block/flower_box_ceiling",
+      "y": 180
+    },
+    "facing=west,face=ceiling": {
+      "model": "supplementaries:block/flower_box_ceiling",
       "y": 270
     }
   }

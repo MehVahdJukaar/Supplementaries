@@ -1,0 +1,27 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"flower": "supplementaries:block/plants/simple/potted_rose_bush"
+	},
+	"elements": [
+		{
+			"from": [0, 2, 8],
+			"to": [16, 12, 8],
+			"rotation": {"angle": 22.5, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 16, 16], "texture": "#flower"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#flower"}
+			}
+		},
+		{
+			"from": [0, 2, 8],
+			"to": [16, 12, 8],
+			"rotation": {"angle": -22.5, "axis": "y", "origin": [8, 2, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 16, 16], "texture": "#flower"},
+				"south": {"uv": [0, 6, 16, 16], "texture": "#flower"}
+			}
+		}
+	]
+}

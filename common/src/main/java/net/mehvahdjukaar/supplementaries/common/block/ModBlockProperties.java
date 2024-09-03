@@ -42,7 +42,7 @@ public class ModBlockProperties {
     public static final BooleanProperty AXIS_Y = BooleanProperty.create("axis_y");
     public static final BooleanProperty AXIS_X = BooleanProperty.create("axis_x");
     public static final BooleanProperty AXIS_Z = BooleanProperty.create("axis_z");
-    public static final BooleanProperty FLOOR = BooleanProperty.create("floor");
+    public static final BooleanProperty FLOWER_BOX_ATTACHMENT = BooleanProperty.create("floor");
     public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");

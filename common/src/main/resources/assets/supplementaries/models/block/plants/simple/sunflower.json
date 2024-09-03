@@ -1,0 +1,7 @@
+{
+	"parent": "supplementaries:block/plants/simple/bush",
+	"ambientocclusion": false,
+	"textures": {
+		"flower": "supplementaries:block/plants/simple/potted_sunflower"
+	}
+}

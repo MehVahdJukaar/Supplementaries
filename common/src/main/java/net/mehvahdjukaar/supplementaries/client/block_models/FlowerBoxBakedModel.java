@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
@@ -22,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
@@ -69,7 +71,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 //no idea what these do anymore
                 poseStack.translate(-0.3125, 0, 0);
 
-                if (state.getValue(FlowerBoxBlock.FLOOR)) {
+                if (state.getValue(FlowerBoxBlock.ATTACHMENT) != AttachFace.WALL) {
                     poseStack.translate(0, 0, -0.3125);
                 }
 
@@ -86,7 +88,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                         poseStack.translate(0.5 * i, 0, 0);
 
                         if (flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)) {
-                            poseStack.translate(scale/4f, 0, scale/4f);
+                            poseStack.translate(scale / 4f, 0, scale / 4f);
                         }
                         this.addBlockToModel(i, quads, flower, poseStack, side, rand);
                         if (flower.hasProperty(DoublePlantBlock.HALF)) {
@@ -127,6 +129,12 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
             poseStack.scale(0.6249f, 0.6249f, 0.6249f);
         } else {
             poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
+            // very ugly aa
+            if(CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) {
+                poseStack.scale(1 / 0.625f, 1 / 0.625f, 1 / 0.625f);
+
+            }
+
         }
         Matrix4f matrix = poseStack.last().pose();
         poseStack.popPose();

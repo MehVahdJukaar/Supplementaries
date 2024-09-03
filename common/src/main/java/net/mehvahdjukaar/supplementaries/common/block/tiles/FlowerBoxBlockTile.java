@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -63,7 +64,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     public void setItem(int slot, ItemStack stack) {
         super.setItem(slot, stack);
         if (this.level instanceof ServerLevel) {
-            this.setBlockFromitem(slot, stack.getItem());
+            this.setBlockFromItem(slot, stack.getItem());
             int newLight = Math.max(Math.max(ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition),
                             ForgeHelper.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
                     ForgeHelper.getLightEmission(this.getHeldBlock(2), level, worldPosition));
@@ -89,12 +90,12 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
 
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
-            setBlockFromitem(n, item);
+            setBlockFromItem(n, item);
         }
         this.requestModelReload();
     }
 
-    private void setBlockFromitem(int n, Item item) {
+    private void setBlockFromItem(int n, Item item) {
         Block b = null;
         if (item instanceof BlockItem bi) {
             b = bi.getBlock();
@@ -121,7 +122,11 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (this.getItem(index).isEmpty()) {
-            return (stack.getItem() instanceof BlockItem && stack.is(ModTags.FLOWER_BOX_PLANTABLE)) || FlowerPotHandler.hasSpecialFlowerModel(stack.getItem());
+            if (FlowerPotHandler.hasSpecialFlowerModel(stack.getItem())) {
+                return true;
+            }
+            if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) return false;
+            return (stack.getItem() instanceof BlockItem && stack.is(ModTags.FLOWER_BOX_PLANTABLE));
         }
         return false;
     }

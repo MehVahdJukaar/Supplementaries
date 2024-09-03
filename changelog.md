@@ -14,6 +14,11 @@
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players
 - trapped presents will hide their names
+- by default, flower boxes will now only accept double flowers
+- double flowers in flower boxes will have a new model
+- you can enable the old mode in the configs
+- flower boxes can now only exist when against a solid block
+- flower boxes can be hung from ceilings
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks

@@ -32,9 +32,12 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.violetmoon.quark.base.Quark;
 
 
 public class Supplementaries {
@@ -115,6 +118,7 @@ public class Supplementaries {
 
     // slidy block bullshit
 
+    // lumisene on fire cauldron
     // awning attachment
     // soap block clearing  slime
     // slingshot bucket

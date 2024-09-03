@@ -1,0 +1,4 @@
+{
+	"loader": "supplementaries:flower_box",
+	"box": "supplementaries:block/flower_box_ceiling_model"
+}
