@@ -118,6 +118,7 @@ public class Supplementaries {
 
     // slidy block bullshit
 
+    // damn config wont save with screen
     // lumisene on fire cauldron
     // awning attachment
     // soap block clearing  slime

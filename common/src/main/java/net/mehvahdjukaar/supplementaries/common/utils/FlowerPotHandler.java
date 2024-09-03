@@ -183,6 +183,7 @@ public class FlowerPotHandler {
 
 
         List<Item> tallFlowers = List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
+                Items.VINE, Items.GLOW_BERRIES,
                 Items.TWISTING_VINES, Items.PEONY, Items.TALL_GRASS, Items.LARGE_FERN, Items.PITCHER_PLANT);
         tallFlowers.forEach(FlowerPotHandler::registerSimpleFlower);
 

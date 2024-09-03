@@ -141,6 +141,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
         BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
                 .applyingTransform(matrix)
+                .applyingShade(false)
+                .applyingAmbientOcclusion(true)
                 .applyingTintIndex(index);
 
         quads.addAll(transformer.transformAll(mimicQuads));
@@ -153,7 +155,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
     @Override
     public boolean useAmbientOcclusion() {
-        return false;
+        return true;
     }
 
     @Override

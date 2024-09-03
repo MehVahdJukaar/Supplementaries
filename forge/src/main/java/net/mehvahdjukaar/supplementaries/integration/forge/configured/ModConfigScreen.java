@@ -113,7 +113,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         if (this.config.getFileName().contains("common")) {
             //TODO: fix. this work but shouldnt be needed and might break servers
             //TODO: configured should have something for this
-            ConfigUtils.clientRequestServerConfigReload();
+          //  ConfigUtils.clientRequestServerConfigReload();
         }
     }
 

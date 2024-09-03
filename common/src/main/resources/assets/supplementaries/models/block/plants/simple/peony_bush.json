@@ -1,8 +1,0 @@
-{
-	"parent": "supplementaries:block/plants/simple/bush_with_vines",
-	"ambientocclusion": false,
-	"textures": {
-		"flower": "supplementaries:block/plants/simple/potted_peony_bush",
-		"vines": "supplementaries:block/plants/simple/potted_peony_bush_vine"
-	}
-}
