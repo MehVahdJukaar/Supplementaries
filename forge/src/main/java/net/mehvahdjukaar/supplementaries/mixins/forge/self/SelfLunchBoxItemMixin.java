@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.forge.self;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
@@ -7,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.items.forge.LunchBoxItemImpl;
 import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,6 +36,7 @@ public abstract class SelfLunchBoxItemMixin extends SelectableContainerItem<Quiv
             baseTag = baseTag.copy();
             baseTag.put("LunchBoxCap", c.serializeNBT());
         }
+        Supplementaries.test(baseTag);
         return baseTag;
     }
 
@@ -42,11 +45,12 @@ public abstract class SelfLunchBoxItemMixin extends SelectableContainerItem<Quiv
         if (tag != null && tag.contains("LunchBoxCap")) {
             CompoundTag capTag = tag.getCompound("LunchBoxCap");
             tag.remove("LunchBoxCap");
-            var cap = QuiverItemImpl.getQuiverData(stack);
-            if (cap instanceof QuiverItemImpl.Cap c) {
+            var cap = LunchBoxItemImpl.getLunchBoxData(stack);
+            if (cap instanceof LunchBoxItemImpl.Cap c) {
                 c.deserializeNBT(capTag);
             }
         }
+        Supplementaries.test2(stack, tag);
         stack.setTag(tag);
     }
 

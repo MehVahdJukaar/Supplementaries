@@ -90,8 +90,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     public boolean onLeftClick(ItemStack stack, Player player, InteractionHand hand) {
         var data = getData(stack);
         boolean open = data.canEatFrom();
-        data.switchMode();
-
         if (open) {
             player.playSound(ModSounds.LUNCH_BASKET_CLOSE.get(),
                     0.3F, 1F + player.level().getRandom().nextFloat() * 0.3F);
@@ -99,6 +97,11 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             player.playSound(ModSounds.LUNCH_BASKET_OPEN.get(),
                     0.3F, 1.6F + player.level().getRandom().nextFloat() * 0.3F);
         }
+
+        if (!player.level().isClientSide) {
+            data.switchMode();
+        }
+
         return true;
     }
 

@@ -134,8 +134,8 @@ dependencies {
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     modCompileOnly("curse.maven:quark-243121:5594847")
-
     modCompileOnly("curse.maven:zeta-968868:5597406")
+    //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")

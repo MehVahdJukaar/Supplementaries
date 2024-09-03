@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.Direction;
@@ -84,12 +85,14 @@ public class LunchBoxItemImpl {
             return selectedSlot;
         }
 
+        @Override
         public void setSelectedSlot(int selectedSlot) {
             if (!stacks.get(selectedSlot).isEmpty()) {
                 this.selectedSlot = selectedSlot;
             }
         }
 
+        @Override
         public boolean cycle(int slotsMoved) {
             int originalSlot = this.selectedSlot;
             int maxSlots = this.stacks.size();

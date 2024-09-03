@@ -31,12 +31,16 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.particle.BubbleParticle;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.base.Quark;
 
 
@@ -113,6 +117,14 @@ public class Supplementaries {
     public static void error(String message, Object... params) {
         error();
         LOGGER.error(message, params);
+    }
+
+    public static void test(CompoundTag baseTag) {
+        int aa = 1;
+    }
+
+    public static void test2(ItemStack stack, @Nullable CompoundTag tag) {
+        float aa = 1;
     }
 
 
