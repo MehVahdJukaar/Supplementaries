@@ -2,7 +2,7 @@
 	"parent": "supplementaries:block/plants/simple/bush_with_vines",
 	"ambientocclusion": false,
 	"textures": {
-		"flower": "supplementaries:block/plants/simple/potted_vine_vine",
-		"vines": "supplementaries:block/plants/simple/potted_vine_vine_vine"
+		"flower": "supplementaries:block/plants/simple/potted_vine",
+		"vines": "supplementaries:block/plants/simple/potted_vine_vine"
 	}
 }

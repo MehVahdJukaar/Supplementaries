@@ -101,7 +101,8 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if (side.getAxis().isHorizontal() && adjacentBlockState.is(this) && !state.getValue(SLANTED)) {
+        if (side.getAxis().isHorizontal() && adjacentBlockState.getBlock() instanceof AwningBlock &&
+                !state.getValue(SLANTED)) {
             return adjacentBlockState.getValue(BOTTOM) == state.getValue(BOTTOM);
         }
         return super.skipRendering(state, adjacentBlockState, side);
@@ -109,7 +110,7 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(BOTTOM) ? BOTTOM_COLLISION : TOP_COLLISION;
+        return state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
     }
 
     @Override
@@ -175,7 +176,7 @@ public class AwningBlock extends WaterBlock implements IColored {
 
                 for (int i = 0; i < behindPos.size(); i++) {
                     BlockState behindState = level.getBlockState(behindPos.get(i));
-                    if (behindState.is(this) &&
+                    if (behindState.getBlock() instanceof AwningBlock &&
                             behindState.getValue(SLANTED) &&
                             behindState.getValue(FACING).getAxis() == direction.getAxis()) {
                         bottom = i == 0;

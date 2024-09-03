@@ -64,8 +64,9 @@ public class SoapBlock extends Block {
     @Override
     public void stepOn(Level level, BlockPos pPos, BlockState state, Entity entity) {
         RandomSource rand = level.random;
+        double slipChance = 0.14;
         if ((!level.isClientSide || entity instanceof LocalPlayer) && !entity.isSteppingCarefully()) {
-            if (rand.nextFloat() < 0.14) {
+            if (rand.nextFloat() < slipChance) {
                 var m = entity.getDeltaMovement();
                 m.subtract(0, m.y, 0);
                 if (m.lengthSqr() > 0.0008) {
@@ -78,12 +79,13 @@ public class SoapBlock extends Block {
                     //PACKET HERE
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
                     level.blockEvent(pPos, state.getBlock(), 0, 0);
-
-                    if (!level.isClientSide && entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-                        s.supp$setSlimedTicks(0, true);
-                    }
                 }
             }
+        }
+        if (!level.isClientSide && entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0 &&
+                rand.nextFloat() < slipChance) {
+            s.supp$setSlimedTicks(0, true);
+            level.blockEvent(pPos, state.getBlock(), 0, 0);
         }
     }
 /*
