@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
+import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.SoulFiredCompat;
@@ -217,6 +218,8 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             }
             // normal fire damage
             entity.hurt(level.damageSources().inFire(), 1);
+        } else if (entity.isOnFire()) {
+            this.lightUp(entity, state, pos, level, FireSourceType.FLAMING_ARROW);
         }
         super.entityInside(state, level, pos, entity);
     }
@@ -284,7 +287,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 if (dir == Direction.DOWN) continue;
                 if (GunpowderBlock.isFireSource(level, pos.relative(dir))) {
                     //plays sound too
-                    this.lightUp(null, state, pos, level, FireSourceType.FIRE_CHANGE);
+                    this.lightUp(null, state, pos, level, FireSourceType.FLAMING_ARROW);
                     return;
                 }
             }
@@ -388,7 +391,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                             int newAge = Math.min(15, age + random.nextInt(5) / 4);
 
                             if (isLumisene && level.getBlockState(pos).getBlock() instanceof FlammableLiquidBlock fl) {
-                                fl.lightUp(null, state, pos, level, FireSourceType.FIRE_CHANGE);
+                                fl.lightUp(null, state, pos, level, FireSourceType.FLAMING_ARROW);
                             } else {
                                 // sets fire block
                                 level.setBlock(mutableBlockPos, fireBlock.getStateWithAge(level, mutableBlockPos, newAge), 3);
