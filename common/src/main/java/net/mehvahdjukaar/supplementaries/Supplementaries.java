@@ -128,21 +128,13 @@ public class Supplementaries {
     // test config saving
     // lumisene on fire cauldron
     // slingshot bucket
-    // alemdnts lanterns sync
     // confetti sculk sensor
     // hourglass sculk
     // present open sculk
     // bumping inot lantern sculk
     // fire charge speed up when fired from present
-    // fire pit farmes delight tag
-    // fire pit boling cauldron
-    // cauldron fire pi8t boling
-    // cauldon extinguish fire from removing campfire
-    // bewing stand cant put potions in cauldron
-    // fauce messes up cauldron conversion
     // lumisene cauldron with particles
     // wrenching stuff game event
-    // brewing stand doesnt change color
 
     // test sculk
     // test dispenser and present stuff

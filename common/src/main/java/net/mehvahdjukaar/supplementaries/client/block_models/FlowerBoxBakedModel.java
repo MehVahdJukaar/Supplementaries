@@ -18,9 +18,11 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -44,8 +46,17 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         this.rotation = rotation;
     }
 
+    private final ThreadLocal<BlockPos> posHack = ThreadLocal.withInitial(() -> BlockPos.ZERO);
+
+    @Override
+    public ExtraModelData getModelData(@NotNull ExtraModelData tileData, BlockPos pos, BlockState state, BlockAndTintGetter level) {
+        posHack.set(pos);
+        return tileData;
+    }
+
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+        BlockPos pos = posHack.get();
         List<BakedQuad> quads = new ArrayList<>();
 
         //box
@@ -80,6 +91,11 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
 
                 poseStack.translate(0.5, 0.5, 1);
 
+                float offset = ((pos.getX() + pos.getZ()) % 2 == 0) ? 0.001f : -0.001f;
+                if (state.getValue(FlowerBoxBlock.FACING).getAxisDirection() == Direction.AxisDirection.POSITIVE) {
+                    offset = -offset;
+                }
+                poseStack.translate(offset, offset, offset);
 
                 for (int i = 0; i < 3; i++) {
                     BlockState flower = flowers[i];
@@ -90,10 +106,10 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                         if (flower.hasProperty(BlockStateProperties.FLOWER_AMOUNT)) {
                             poseStack.translate(scale / 4f, 0, scale / 4f);
                         }
-                        this.addBlockToModel(i, quads, flower, poseStack, side, rand);
+                        this.addBlockToModel(i, quads, flower, pos, poseStack, side, rand);
                         if (flower.hasProperty(DoublePlantBlock.HALF)) {
                             poseStack.translate(0, scale, 0);
-                            this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), poseStack, side, rand);
+                            this.addBlockToModel(i, quads, flower.setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), pos, poseStack, side, rand);
                         }
                         poseStack.popPose();
                     }
@@ -106,7 +122,9 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         return quads;
     }
 
-    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state, PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
+    private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state,
+                                 BlockPos pos,
+                                 PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
 
         BakedModel model;
         //for special flowers
@@ -130,9 +148,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         } else {
             poseStack.translate(-0.5f, -0.5f + 3 / 16f, -0.5f);
             // very ugly aa
-            if(CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) {
+            if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) {
                 poseStack.scale(1 / 0.625f, 1 / 0.625f, 1 / 0.625f);
-
             }
 
         }
