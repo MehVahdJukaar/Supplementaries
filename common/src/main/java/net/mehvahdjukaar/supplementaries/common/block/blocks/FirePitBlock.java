@@ -66,7 +66,10 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
-        super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
+        stateIn = super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
+        if(facing == Direction.UP){
+            stateIn = stateIn.setValue(HANGING, IRopeConnection.isSupportingCeiling(currentPos.above(), level));
+        }
         return getDir(stateIn).getOpposite() == facing && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
 

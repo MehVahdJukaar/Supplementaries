@@ -131,7 +131,7 @@ public class SoapItem extends Item {
         if (!level.isClientSide) {
             // spawn particles
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
-                    new ClientBoundParticlePacket(entity.blockPosition(),
+                    new ClientBoundParticlePacket(entity,
                             ClientBoundParticlePacket.Type.BUBBLE_CLEAN_ENTITY));
         }
         if (!player.getAbilities().instabuild) stack.shrink(1);

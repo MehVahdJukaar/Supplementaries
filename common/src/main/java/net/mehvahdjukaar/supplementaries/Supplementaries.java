@@ -121,6 +121,10 @@ public class Supplementaries {
 
     // slidy block bullshit
 
+    // awning connection
+    // fire pit falling amendments
+    // fire pit connecton
+    // awnings solid for signs and banners
     // test config saving
     // lumisene on fire cauldron
     // slingshot bucket

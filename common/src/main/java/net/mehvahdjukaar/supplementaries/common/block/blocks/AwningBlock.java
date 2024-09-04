@@ -72,7 +72,6 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-
         Direction direction = state.getValue(FACING);
         BlockPos behind = pos.relative(direction.getOpposite());
         BlockState behindState = level.getBlockState(behind);
@@ -111,6 +110,11 @@ public class AwningBlock extends WaterBlock implements IColored {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
+        return state.getValue(BOTTOM) ? BOTTOM_COLLISION : TOP_COLLISION;
     }
 
     @Override
