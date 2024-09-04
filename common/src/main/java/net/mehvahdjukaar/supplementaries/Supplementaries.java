@@ -25,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHa
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
@@ -123,7 +124,6 @@ public class Supplementaries {
 
     // awning connection
     // fire pit falling amendments
-    // fire pit connecton
     // awnings solid for signs and banners
     // test config saving
     // lumisene on fire cauldron

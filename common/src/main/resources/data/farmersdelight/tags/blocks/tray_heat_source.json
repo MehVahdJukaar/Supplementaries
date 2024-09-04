@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:blaze_rod_block","required":false}
+    {"id":"supplementaries:blaze_rod_block","required":false},
+    {"id":"supplementaries:fire_pit","required":false}
   ]
 }

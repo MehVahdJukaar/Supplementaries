@@ -182,9 +182,12 @@ public class FlowerPotHandler {
         toAdd.forEach(FlowerPotHandler::registerFlower);
 
 
-        List<Item> tallFlowers = List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
-                Items.VINE, Items.GLOW_BERRIES,
-                Items.TWISTING_VINES, Items.PEONY, Items.TALL_GRASS, Items.LARGE_FERN, Items.PITCHER_PLANT);
+        List<Item> tallFlowers = new ArrayList<>(List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
+                Items.VINE, Items.GLOW_BERRIES, Items.SWEET_BERRIES,
+                Items.TWISTING_VINES, Items.PEONY, Items.LARGE_FERN, Items.PITCHER_PLANT));
+        if (CompatHandler.QUARK) {
+            tallFlowers.add(Items.TALL_GRASS);
+        }
         tallFlowers.forEach(FlowerPotHandler::registerSimpleFlower);
 
     }

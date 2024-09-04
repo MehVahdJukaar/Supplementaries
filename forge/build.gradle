@@ -123,7 +123,7 @@ dependencies {
 
     modCompileOnly("curse.maven:jei-238222:3928388")
     modImplementation ("curse.maven:configured-457570:5180900")
-    modRuntimeOnly ("curse.maven:amendments-896746:5467925")
+    modRuntimeOnly ("curse.maven:amendments-896746:5692774")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
