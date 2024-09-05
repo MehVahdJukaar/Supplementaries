@@ -53,7 +53,7 @@ public class Credits implements Serializable {
 
 
     private Credits(Map<String, Supporter> supporters, List<String> artists, List<String> translators, List<String> mod_compat,
-                   List<String> sounds, List<String> others) {
+                    List<String> sounds, List<String> others) {
         this.supporters = supporters;
         this.otherArtists = artists;
         this.translators = translators;
@@ -68,7 +68,8 @@ public class Credits implements Serializable {
         addSpecialPlayer("Plantkillable", true, true, true, "720f165c-b066-4113-9622-63fc63c65696", "Capobianco");
         addSpecialPlayer("Agrona", true, true, false, (UUID) null, "Pancake", "Pancakes");
 
-        this.supporters.forEach((n, s) -> addSpecialPlayer(n, false, s.has_globe, s.has_statue, s.uuid));
+        this.supporters.forEach((n, s) -> addSpecialPlayer(n, false, s.has_globe, s.has_statue, s.uuid,
+                s.alias));
     }
 
     private void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {
@@ -88,14 +89,14 @@ public class Credits implements Serializable {
             ResourceLocation texture = new ResourceLocation(Supplementaries.MOD_ID, "textures/entity/globes/globe_" + name + ".png");
             globes.put(name, texture);
             for (String n : alias) {
-                globes.put(n.toLowerCase(Locale.ROOT), texture);
+                if (n != null) globes.put(n.toLowerCase(Locale.ROOT), texture);
             }
         }
         Pair<UUID, String> p = Pair.of(onlineId, name);
         if (hasStatue) {
             statues.put(name, p);
             for (String n : alias) {
-                statues.put(n.toLowerCase(Locale.ROOT), p);
+                if (n != null) statues.put(n.toLowerCase(Locale.ROOT), p);
             }
         }
     }
@@ -117,19 +118,19 @@ public class Credits implements Serializable {
         builder.append("""
                 §6
                 §lSupplementaries
-
-
-
-
+                
+                
+                
+                
                 §4Author:§r
                 +
                 §0MehVahdJukaar
-
+                
                 §4Artist:§r
-
+                
                 §0Plantkillable
-                                
-                                
+                
+                
                 """);
 
         builder.append("""
@@ -208,18 +209,22 @@ public class Credits implements Serializable {
     private static final class Supporter {
 
         private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                        StrOpt.of(UUIDUtil.STRING_CODEC, "uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
-                        StrOpt.of(Codec.BOOL, "has_statue", false).forGetter(p -> p.has_statue), StrOpt.of(Codec.BOOL, "has_globe", false).forGetter(p -> p.has_globe))
-                .apply(i, Supporter::new));
+                StrOpt.of(UUIDUtil.STRING_CODEC, "uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
+                StrOpt.of(Codec.BOOL, "has_statue", false).forGetter(p -> p.has_statue),
+                StrOpt.of(Codec.BOOL, "has_globe", false).forGetter(p -> p.has_globe),
+                StrOpt.of(Codec.STRING, "alias").forGetter(p -> Optional.ofNullable(p.alias))
+        ).apply(i, Supporter::new));
 
         private final @Nullable UUID uuid;
+        private final @Nullable String alias;
         private final boolean has_statue;
         private final boolean has_globe;
 
-        private Supporter(Optional<UUID> uuid, boolean has_statue, boolean has_globe) {
+        private Supporter(Optional<UUID> uuid, boolean has_statue, boolean has_globe, Optional<String> alias) {
             this.uuid = uuid.orElse(null);
             this.has_statue = has_statue;
             this.has_globe = has_globe;
+            this.alias = alias.orElse(null);
         }
     }
 
