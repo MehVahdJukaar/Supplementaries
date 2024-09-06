@@ -100,9 +100,13 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        if (side.getAxis().isHorizontal() && adjacentBlockState.getBlock() instanceof AwningBlock &&
-                !state.getValue(SLANTED)) {
-            return adjacentBlockState.getValue(BOTTOM) == state.getValue(BOTTOM);
+        if (side.getAxis().isHorizontal() && !state.getValue(SLANTED) &&
+                adjacentBlockState.getBlock() instanceof AwningBlock &&
+                adjacentBlockState.getValue(BOTTOM) == state.getValue(BOTTOM)) {
+            if (adjacentBlockState.getValue(SLANTED)) {
+                return state.getValue(FACING) != adjacentBlockState.getValue(FACING);
+            }
+            return true;
         }
         return super.skipRendering(state, adjacentBlockState, side);
     }

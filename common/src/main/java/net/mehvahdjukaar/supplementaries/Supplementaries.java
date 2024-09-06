@@ -33,10 +33,17 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.gui.screens.inventory.BookEditScreen;
 import net.minecraft.client.particle.BubbleParticle;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ServerPacketListener;
+import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -122,6 +129,12 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
+    // slidy block bullshit
+
+    // click glow ink in cauldron
+    // confetti canno sound from distance
+    // wall lantern LOD is broken when on a solid block. sides are culled away
+    // faucet pulling stuff game event
     // awning connection
     // fire pit falling amendments
     // test config saving

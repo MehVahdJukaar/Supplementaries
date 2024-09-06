@@ -330,7 +330,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
         // power from 1 to 4
         float soundPitch = 1.3f - power * 0.1f;
-        float soundVolume = 1.2f + power * 0.6f;
+        float soundVolume = 2f + power * 0.6f;
         level.playLocalSound(pos, ModSounds.CANNON_FIRE.get(), SoundSource.BLOCKS,
                 soundVolume, soundPitch, false);
     }
