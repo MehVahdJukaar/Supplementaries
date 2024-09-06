@@ -1,0 +1,15 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sus_recipes"
+    }
+  ],
+  "type": "supplementaries:sus_crafting",
+  "ingredient": {
+    "item": "minecraft:sand"
+  },
+  "result": {
+    "item": "minecraft:suspicious_sand"
+  }
+}

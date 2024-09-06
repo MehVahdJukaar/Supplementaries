@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
@@ -26,30 +26,14 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
-
-    private static List<CraftingRecipe> createAntiqueMapSoapRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
-        String group = "supplementaries.antique_map_clean";
-
-        ItemStack antique = new ItemStack(Items.FILLED_MAP);
-        antique.setHoverName(Component.translatable("filled_map.antique"));
-        AntiqueInkItem.setAntiqueInk(antique, true);
-
-        Ingredient soap = Ingredient.of(new ItemStack(ModRegistry.SOAP.get()));
-
-        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(antique), soap);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_map_clean_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, new ItemStack(Items.FILLED_MAP), inputs);
-        recipes.add(recipe);
-
-        return recipes;
-    }
 
 
     private static List<CraftingRecipe> createAntiqueMapRecipe() {
@@ -223,7 +207,7 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<CraftingRecipe> createRemoveLoreRecipe(){
+    private static List<CraftingRecipe> createRemoveLoreRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
         String group = "remove_lore";
 
@@ -241,6 +225,29 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
+    private static List<CraftingRecipe> createSusRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+
+        String group = "sus_crafting";
+        List<Block> blocks = new ArrayList<>();
+        if(CommonConfigs.Tweaks.SUS_RECIPES.get()){
+            blocks.add(Blocks.SAND);
+            blocks.add(Blocks.GRAVEL);
+        }
+        if(CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()){
+            blocks.add(ModRegistry.GRAVEL_BRICKS.get());
+        }
+
+        for (Block block : blocks) {
+            ItemStack output = new ItemStack(Items.SLIME_BALL);
+            ItemStack input = new ItemStack(block);
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(Items.NAME_TAG));
+            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, Utils.getID(output.getItem()).getPath());
+            ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
+            recipes.add(recipe);
+        }
+        return recipes;
+    }
 
     private static List<CraftingRecipe> createBubbleBlowerChargeRecipe() {
         List<CraftingRecipe> recipes = new ArrayList<>();
@@ -406,25 +413,24 @@ public class SpecialRecipeDisplays {
                 registry.accept(createAntiqueMapRecipe());
                 registry.accept(createAntiqueBookRecipe());
             }
-            if(CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED){
+            if (CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED) {
                 registry.accept(makeSackColoringRecipes());
             }
-            if(CommonConfigs.Tweaks.ITEM_LORE.get()) {
+            if (CommonConfigs.Tweaks.ITEM_LORE.get()) {
                 registry.accept(createItemLoreRecipe());
                 registry.accept(createRemoveLoreRecipe());
             }
             if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
                 registry.accept(createSoapCleanRecipe());
-                if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                    //registry.accept(createAntiqueMapSoapRecipe());
-                }
             }
             if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
                 registry.accept(makePresentColoringRecipes());
-                if(CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
+                if (CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
                     registry.accept(makeTrappedPresentRecipes());
                 }
             }
+            registry.accept(createSusRecipe());
+
         } else if (category == RecipeBookCategories.CRAFTING_BUILDING_BLOCKS) {
             if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {
                 registry.accept(createBlackboardDuplicate());

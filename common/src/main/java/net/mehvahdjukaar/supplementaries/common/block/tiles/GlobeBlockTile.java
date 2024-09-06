@@ -19,12 +19,14 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_SEPIA_TEXTURE;
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_TEXTURE;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
+    private static final Pair<Model, @Nullable ResourceLocation> DEFAULT_DATA = Pair.of(Model.GLOBE, null);
 
     private final boolean sepia;
 
@@ -34,7 +36,8 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     private Component customName;
     private float yaw = 0;
     private float prevYaw = 0;
-    private Pair<Model, @Nullable ResourceLocation> renderData = Pair.of(Model.GLOBE, null);
+    private Pair<Model, @Nullable ResourceLocation> renderData = DEFAULT_DATA;
+
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
@@ -42,7 +45,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     public int getFaceRot() {
-        return (3-getBlockState().getValue(GlobeBlock.ROTATION)) * 90;
+        return (3 - getBlockState().getValue(GlobeBlock.ROTATION)) * 90;
     }
 
     public float getRotation(float partialTicks) {
@@ -50,6 +53,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         return Mth.lerp(partialTicks, prevYaw + face, yaw + face);
     }
 
+    @NotNull
     public Pair<Model, ResourceLocation> getRenderData() {
         return renderData;
     }
@@ -74,8 +78,10 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
                             GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
-            this.renderData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
-        } else this.renderData = Pair.of(Model.GLOBE, null);
+            var customData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
+            if (customData != null) this.renderData = customData;
+            else this.renderData = DEFAULT_DATA;
+        } else this.renderData = DEFAULT_DATA;
     }
 
     @Override
@@ -119,7 +125,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         int face = ((this.getFaceRot() - inc) + 360) % 360;
         this.yaw = (this.yaw + spin + inc);
         this.prevYaw = (this.prevYaw + spin + inc);
-        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(GlobeBlock.ROTATION, 3-face / 90));
+        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(GlobeBlock.ROTATION, 3 - face / 90));
         this.setChanged();
     }
 

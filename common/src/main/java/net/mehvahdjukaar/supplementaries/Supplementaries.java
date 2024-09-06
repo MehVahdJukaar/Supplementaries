@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.client.particles.SudsParticle;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
@@ -19,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.common.items.FluteItem;
 import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -120,29 +122,20 @@ public class Supplementaries {
         LOGGER.error(message, params);
     }
 
-    // slidy block bullshit
-
     // awning connection
     // fire pit falling amendments
-    // awnings solid for signs and banners
     // test config saving
     // lumisene on fire cauldron
     // slingshot bucket
-    // confetti sculk sensor
     // hourglass sculk
     // present open sculk
-    // bumping inot lantern sculk
     // fire charge speed up when fired from present
     // lumisene cauldron with particles
-    // wrenching stuff game event
 
     // test sculk
     // test dispenser and present stuff
-    // soap slidy block slides!!!
 
-    // gunpowder lights up lumisene
     // dispenser and lumisene stuff
-    // recipe for sus sand and gravel
     // mod/module for hud overlay compass and spyglass
     // bucket shoot from cannon
     // spyglass camera
@@ -177,6 +170,7 @@ public class Supplementaries {
     //Fix doormat highlight text box
     //steal from quark backpack
     //wind mechanic mod with kite, paper lanterns...
+    //dispenser brick use same texture
 
     //hat + present jack in the box anim
 //potion flask that works liqui quiver/big pot storage
@@ -199,13 +193,11 @@ public class Supplementaries {
     //sack on head gives blindness
     //enderman animation teleport mod
     // cat loaf mod
-    //dispenser brick use same texture
 
 //cheap map recie and altimeter stuff
     //safe shulker recipe broken as it deletes items inside
     //sleep tight beds infested in mansion
     //dynamic candy bag with just tile
-    //async setup stuff
     //HH cookies in sacks
     //farmland smarter farmers rich soil
 //item frame opt mod

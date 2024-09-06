@@ -16,6 +16,8 @@ public class ModRecipes {
     }
 
     //recipes
+    public static final Supplier<RecipeSerializer<SusRecipe>> SUS_CRAFTING = RegHelper.registerRecipeSerializer(
+            Supplementaries.res("sus_crafting"), SusRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<BlackboardDuplicateRecipe>> BLACKBOARD_DUPLICATE = reg(
             "blackboard_duplicate", BlackboardDuplicateRecipe::new);
     public static final Supplier<RecipeSerializer<TippedBambooSpikesRecipe>> BAMBOO_SPIKES_TIPPED = reg(

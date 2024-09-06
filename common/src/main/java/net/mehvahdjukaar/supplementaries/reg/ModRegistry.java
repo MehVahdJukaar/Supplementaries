@@ -883,10 +883,7 @@ public class ModRegistry {
 
     // gravel bricks
     public static final Supplier<Block> GRAVEL_BRICKS = regWithItem(GRAVEL_BRICKS_NAME, () -> new GravelBricksBlock(
-            BlockBehaviour.Properties.of()
-                    .instrument(NoteBlockInstrument.BASEDRUM)
-                    .mapColor(Blocks.GRAVEL.defaultMapColor())
-                    .strength(1, 0.2f)
+            BlockBehaviour.Properties.copy(Blocks.GRAVEL)
                     .sound(SoundType.STONE)
     ));
 

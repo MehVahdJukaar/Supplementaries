@@ -42,7 +42,8 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
         }
     }
 
-    @WrapOperation(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
+    @WrapOperation(method = "attemptRopeClimb",
+            remap = false, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
     public boolean supp$tomatoLoggingCompat2(BlockState state, Block block, Operation<Boolean> operation) {
         return state.getBlock() instanceof TomatoVineBlock || operation.call(state, block);
     }
