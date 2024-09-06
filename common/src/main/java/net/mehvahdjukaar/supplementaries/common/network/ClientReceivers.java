@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosio
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -46,7 +47,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -237,15 +237,17 @@ public class ClientReceivers {
 
     public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {
         withLevelDo(l -> {
+            // only updates it if client doesnt already have it, means if tile code run from server only
             if (!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity)) {
-                //l.setBlock(m.pos(), m.state(),Block.UPDATE_ALL_IMMEDIATE);
+
+                BlockPos pos = m.pos();
+                l.setBlock(m.pos(), m.state(), Block.UPDATE_MOVE_BY_PISTON);
+                Direction direction = m.direction();
+                MovingSlidyBlockEntity be = MovingSlidyBlock.newMovingBlockEntity(pos, m.state(), m.movedState(), direction);
+                l.setBlockEntity(be);
+                // dont you ask me why this is here. it makes the animation smooth. no clue why needed
+                //be.addOffset(-(float) (double) CommonConfigs.Building.SLIDY_BLOCK_SPEED.get());
             }
-            BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(m.pos(), m.state(), m.movedState(), m.direction());
-            //  l.setBlockEntity(be);
-
-            l.setBlock(m.pos().relative(m.direction().getOpposite()), ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
-                    .defaultBlockState().setValue(BlockStateProperties.FACING, m.direction()), Block.UPDATE_ALL_IMMEDIATE);
-
         });
     }
 

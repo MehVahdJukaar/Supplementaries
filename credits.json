@@ -24,7 +24,8 @@
     "ZAM": {
       "has_statue": true,
       "uuid": "ab19a9e6-7e51-451f-9b55-259e18cb82b9",
-      "has_globe": true
+      "has_globe": true,
+      "alias": "Death Star"
     },
     "LeonKappa": {},
     "Wash": {},
@@ -153,6 +154,7 @@
       "uuid": "37d77f71-6ff7-4c23-9f61-d8b270450eb9"
     },
     "Wais": {
+      "alias": "Snow Globe",
       "has_globe": true
     },
     "MylesTheChild": {
