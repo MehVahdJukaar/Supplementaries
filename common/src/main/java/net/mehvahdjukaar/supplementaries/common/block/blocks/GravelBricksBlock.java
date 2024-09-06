@@ -33,7 +33,8 @@ public class GravelBricksBlock extends Block {
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         super.fallOn(level, state, pos, entity, fallDistance);
-        if (!entity.isSteppingCarefully() && hasEnergyToBreak(entity)) {
+        if (!level.isClientSide && !entity.isSteppingCarefully() && fallDistance > 0.2
+        && hasEnergyToBreak(entity)) {
             level.destroyBlock(pos, false, entity);
             if (level.getBlockEntity(pos) instanceof Container tile) {
                 Containers.dropContents(level, pos, tile);
@@ -44,18 +45,19 @@ public class GravelBricksBlock extends Block {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (hasEnergyToBreak(entity)) {
-            level.destroyBlock(pos, false, entity);
-            if (level.getBlockEntity(pos) instanceof Container tile) {
-                Containers.dropContents(level, pos, tile);
-            }
-        }
+      if(!level.isClientSide) {
+          // gg. we cant keep velocity into account. unless we want to have player authoritative over it as its velocity isnt synced all the times
+          if (entity.yo <entity.getY() && hasEnergyToBreak(entity)) {
+              level.destroyBlock(pos, false, entity);
+              if (level.getBlockEntity(pos) instanceof Container tile) {
+                  Containers.dropContents(level, pos, tile);
+              }
+          }
+      }
         super.entityInside(state, level, pos, entity);
     }
 
     private static boolean hasEnergyToBreak(Entity entity) {
-        double s = entity.getDeltaMovement().y;
-        double e = s * s * 5;
-        return e > 0.5;
+       return entity.getBoundingBox().getSize() > 0.5;
     }
 }

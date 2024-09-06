@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -84,6 +85,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                 Direction direction = t.getDirection();
                 if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
                     MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
+                    level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
                 }
                 if (level.getBlockState(pos.below()).is(ModRegistry.SOAP_BLOCK.get()) && !level.isClientSide) {
 
@@ -97,6 +99,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                     for (Direction randomDir : dirs) {
                         if (MovingSlidyBlock.maybeMove(movedState, level, pos, randomDir)) {
                             level.blockEvent(pos.below(), ModRegistry.SOAP_BLOCK.get(), 0, 0);
+                            level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
                             break;
                         }
                     }
