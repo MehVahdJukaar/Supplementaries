@@ -401,7 +401,7 @@ public class ClientRegistry {
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
-        event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), PistonHeadRenderer::new);
+        event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
     }
 
     @EventCalled

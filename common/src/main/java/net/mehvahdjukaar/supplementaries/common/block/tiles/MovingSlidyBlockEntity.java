@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -24,7 +26,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
 
 
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState) {
-        super(pos, blockState, ModRegistry.SLIDY_BLOCK.get().defaultBlockState(), Direction.SOUTH, true, false);
+        super(pos, blockState);
     }
 
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState, Direction direction, boolean extending, boolean isSourcePiston) {
@@ -83,19 +85,21 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                 if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
                     MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
                 }
-                if (level.getBlockState(pos.below()).is(ModRegistry.SOAP_BLOCK.get())) {
+                if (level.getBlockState(pos.below()).is(ModRegistry.SOAP_BLOCK.get()) && !level.isClientSide) {
 
-                    // we want to run this on both sides so same random!
-                    // if we don't animation will look a bit glitchy even tho we are sending a packet too
-                    RandomSource randomSource = level.random;
-                    int rand = randomSource.nextInt(3);
-                    Direction randomDir = switch (rand) {
-                        case 0 -> direction.getClockWise();
-                        case 1 -> direction.getCounterClockWise();
-                        default -> direction;
-                    };
-                    randomDir = direction;
-                    MovingSlidyBlock.maybeMove(movedState, level, pos, randomDir);
+                    // we are rolling a dice here so we can only run on server
+                    // catch is that animation will look a bit glitchy even tho we are sending a packet too
+                    ObjectArrayList<Direction> dirs = ObjectArrayList.of(
+                            direction.getClockWise(),
+                            direction.getCounterClockWise(),
+                            direction);
+                    Util.shuffle(dirs, level.random);
+                    for (Direction randomDir : dirs) {
+                        if (MovingSlidyBlock.maybeMove(movedState, level, pos, randomDir)) {
+                            level.blockEvent(pos.below(), ModRegistry.SOAP_BLOCK.get(), 0, 0);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -125,5 +129,10 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             default -> {
             }
         }
+    }
+
+    public void addOffset(float offset) {
+        this.progressO = this.progress;
+        this.progress += offset;
     }
 }

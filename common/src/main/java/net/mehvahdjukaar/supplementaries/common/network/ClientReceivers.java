@@ -46,7 +46,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -237,15 +236,14 @@ public class ClientReceivers {
 
     public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {
         withLevelDo(l -> {
-            if (!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity)) {
-                //l.setBlock(m.pos(), m.state(),Block.UPDATE_ALL_IMMEDIATE);
+            if(!(l.getBlockEntity(m.pos()) instanceof MovingSlidyBlockEntity a)) {
+
+                BlockPos pos = m.pos();
+                l.setBlock(m.pos(), m.state(), Block.UPDATE_MOVE_BY_PISTON);
+                Direction direction = m.direction();
+                MovingSlidyBlockEntity be = MovingSlidyBlock.newMovingBlockEntity(pos, m.state(), m.movedState(), direction);
+                l.setBlockEntity(be);
             }
-            BlockEntity be = MovingSlidyBlock.newMovingBlockEntity(m.pos(), m.state(), m.movedState(), m.direction());
-            //  l.setBlockEntity(be);
-
-            l.setBlock(m.pos().relative(m.direction().getOpposite()), ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
-                    .defaultBlockState().setValue(BlockStateProperties.FACING, m.direction()), Block.UPDATE_ALL_IMMEDIATE);
-
         });
     }
 

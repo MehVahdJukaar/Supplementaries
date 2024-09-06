@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSetSlidingBlo
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -14,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
@@ -44,8 +47,8 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.destroyBlock(neighborPos, true);
 
         // called on both sides because it becomes smoother
+        MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
         if (!level.isClientSide) {
-            MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
             level.playSound(null, pos, ModSounds.SLIDY_BLOCK_SLIDE.get(), SoundSource.BLOCKS,
                     1.0F, 1.1F + level.random.nextFloat() * 0.15F);
         }
@@ -56,23 +59,25 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         BlockState newState = ModRegistry.MOVING_SLIDY_BLOCK.get().defaultBlockState()
                 .setValue(MovingSlidyBlock.FACING, direction);
 
-        level.setBlock(neighborPos, newState, Block.UPDATE_ALL_IMMEDIATE);
+        level.setBlock(neighborPos, newState, UPDATE_ALL);
         var be = MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state, direction);
         level.setBlockEntity(be);
-        // pistons usually call this from both sides. here sometimes we dont... we must use a custom packet since tile is set manually
 
+        if(!level.isClientSide) {
+             ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, neighborPos,
+                   new ClientBoundSetSlidingBlockEntityPacket(be));
+        }
+
+        //pistons usually call this from both sides. here sometimes we dont... we must use a custom packet since tile is set manually
 
         level.removeBlock(pos, true);
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
-                .defaultBlockState().setValue(BlockStateProperties.FACING, direction), Block.UPDATE_NEIGHBORS);
+               .defaultBlockState().setValue(BlockStateProperties.FACING, direction), 3);
 
-
-        ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, neighborPos,
-                new ClientBoundSetSlidingBlockEntityPacket(be));
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new MovingSlidyBlockEntity(pos, state);
+        return null;
     }
 }
