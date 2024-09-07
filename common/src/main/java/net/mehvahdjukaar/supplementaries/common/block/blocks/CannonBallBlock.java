@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CannonBallBlock extends WaterBlock {
@@ -17,10 +19,25 @@ public class CannonBallBlock extends WaterBlock {
     // jojo reference?
     public static final IntegerProperty BALLS = ModBlockProperties.BALLS;
 
+    public static final VoxelShape SHAPE_1 = Block.box(4, 4, 4, 12, 5, 12);
+    public static final VoxelShape SHAPE_2 = Block.box(2, 2, 2, 14, 5, 14);
+    public static final VoxelShape SHAPE_3 = Block.box(0, 0, 0, 16, 5, 16);
+    public static final VoxelShape SHAPE_4 = Block.box(0, 0, 0, 16, 10, 16);
+
     public CannonBallBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState((this.stateDefinition.any().setValue(BALLS, 1))
                 .setValue(WATERLOGGED, false));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(BALLS)) {
+            case 2 -> SHAPE_2;
+            case 3 -> SHAPE_3;
+            case 4 -> SHAPE_4;
+            default -> SHAPE_1;
+        };
     }
 
     @Override

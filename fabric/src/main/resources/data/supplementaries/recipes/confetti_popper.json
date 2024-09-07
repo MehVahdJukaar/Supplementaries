@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "020",
+    " 0 "
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:paper"
+    },
+    "2": {
+      "item": "minecraft:gunpowder"
+    },
+    "1": {
+      "tag": "c:dyes"
+    }
+  },
+  "result": {
+    "item": "supplementaries:confetti_popper",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "confetti_popper"
+    }
+  ]
+}
