@@ -1,0 +1,15 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "gravel_bricks"
+    }
+  ],
+  "type": "supplementaries:sus_crafting",
+  "ingredient": {
+    "item": "supplementaries:gravel_bricks"
+  },
+  "result": {
+    "item": "supplementaries:suspicious_gravel_bricks"
+  }
+}

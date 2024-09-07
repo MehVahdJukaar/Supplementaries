@@ -45,6 +45,8 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("item lore", Items.NAME_TAG);
         addIcon("timber frame", ModRegistry.TIMBER_BRACE_ITEM.get());
         addIcon("bottle xp", Items.EXPERIENCE_BOTTLE);
+        addIcon("sus recipes", Items.SUSPICIOUS_SAND);
+        addIcon("slimed effect", Items.SLIME_BALL);
         addIcon("map tweaks", Items.FILLED_MAP);
         addIcon("initialization", ModRegistry.COG_BLOCK.get());
         addIcon("zombie horse", Items.ZOMBIE_HORSE_SPAWN_EGG);

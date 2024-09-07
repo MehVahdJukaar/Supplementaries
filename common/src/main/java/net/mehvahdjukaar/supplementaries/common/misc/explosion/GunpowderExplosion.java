@@ -4,8 +4,10 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
@@ -72,7 +74,7 @@ public class GunpowderExplosion extends Explosion {
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
         BlockState s = level.getBlockState(pos);
         if (s.canBeReplaced() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
-            if (this.hasFlammableNeighbours(pos) || ForgeHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
+            if (this.hasFlammableNeighbours(pos) || PlatHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
                     || newFire.getBlock() != Blocks.FIRE) {
                 this.level.setBlockAndUpdate(pos, newFire);
             }
@@ -96,7 +98,7 @@ public class GunpowderExplosion extends Explosion {
     private void explodeBlock(int i, int j, int k) {
         BlockPos pos = new BlockPos(i, j, k);
         FluidState fluidstate = this.level.getFluidState(pos);
-        if (fluidstate.getType() == Fluids.EMPTY) {
+        if (fluidstate.getType() == Fluids.EMPTY || fluidstate.getType() == ModFluids.LUMISENE_FLUID.get()) {
             BlockState state = this.level.getBlockState(pos);
             Block block = state.getBlock();
 
@@ -109,8 +111,8 @@ public class GunpowderExplosion extends Explosion {
                 }
             }
             //lights up burnable blocks
-            if (block instanceof ILightable lightable) {
-                lightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
+            if (block instanceof ILightable iLightable) {
+                iLightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
             } else if (canLight(state)) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
                 ILightable.FireSourceType.FLAMING_ARROW.play(level, pos);

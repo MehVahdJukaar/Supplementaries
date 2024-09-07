@@ -1,3 +1,19 @@
+New features:
+- cannon
+- cannonball
+- throwable slimeballs and slimed effect (from slimes)
+- buntings, placeable on ropes
+- awnings, can be used and tilted
+- sus gravel brick, land or jump to break
+- sus stuff recipes
+- lumisene, very flammable
+- slidy block, it slides. try it on soap and ice
+- confetti and party creeper
+- lunch boxes. click to switch mode
+- probably other stuff I forgot
+
+
+Bug Fixes:
 - fixed faucet fluid dupe
 - fixed blackboard item renderer
 - improved quiver logic to use mouse sensitivity

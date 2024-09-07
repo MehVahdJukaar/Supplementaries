@@ -328,7 +328,7 @@ public class CommonConfigs {
             builder.pop();
 
 
-            builder.push("gravel_bricks");
+            builder.push(ModConstants.GRAVEL_BRICKS_NAME);
             GRAVEL_BRICKS_ENABLED = feature(builder);
             builder.pop();
 
@@ -458,7 +458,7 @@ public class CommonConfigs {
             AWNING_FALL_THROUGH = builder.comment("Allows entities to fall through awnings, when shifting.")
                     .define("shift_through", true);
             AWNINGS_BOUNCE_ANGLE = builder.comment("Bouncing angle of slanted awnings")
-                    .define("angle", Math.toDegrees(Math.atan(16f / 6f)), 0.0, 90.0);
+                    .define("angle", Math.toDegrees(Math.atan(16d / 6d)), 0.0, 90.0);
 
             builder.pop();
 
@@ -1171,6 +1171,11 @@ public class CommonConfigs {
                     .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag"));
             builder.pop();
 
+            builder.push("sus_recipes");
+            SUS_RECIPES = feature(builder
+                    .comment("Adds recipes to craft suspicious gravel and suspicious sand"));
+            builder.pop();
+
             builder.push("slimed_effect");
             SLIMED_EFFECT = feature(builder);
             THROWABLE_SLIMEBALLS = builder.comment("Allow slimeballs to be thrown")
@@ -1226,6 +1231,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BAD_LUCK_CAT;
         public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
         public static final Supplier<Boolean> ITEM_LORE;
+        public static final Supplier<Boolean> SUS_RECIPES;
         public static final Supplier<Boolean> SLIMED_EFFECT;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
         public static final Supplier<Boolean> SLIME_OVERLAY;
