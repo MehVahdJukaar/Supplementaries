@@ -131,6 +131,9 @@ public class Supplementaries {
 
     // slidy block bullshit
 
+    // lock cannon while its firing
+    // cannon rotated while firing is imprecise
+    //cannon teleporting error + particles
     // click glow ink in cauldron
     // confetti canno sound from distance
     // wall lantern LOD is broken when on a solid block. sides are culled away

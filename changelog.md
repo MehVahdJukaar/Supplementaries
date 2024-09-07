@@ -27,6 +27,7 @@ Bug Fixes:
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
 - added a recipe to clear item lore
+- fixed dispenser ender pearl not having proper particles and not updating the dispenser properly
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players
 - trapped presents will hide their names

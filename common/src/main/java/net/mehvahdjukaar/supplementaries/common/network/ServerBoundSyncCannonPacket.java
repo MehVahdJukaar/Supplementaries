@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.EnderPearlBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -64,10 +65,10 @@ public class ServerBoundSyncCannonPacket implements Message {
             //now update all clients
             level.sendBlockUpdated(pos, cannon.getBlockState(), cannon.getBlockState(), 3);
 
-
             return;
         }
-        Supplementaries.error(); //should not happen
+        // could happen if cannon is broken
+        //Supplementaries.error(); //should not happen
     }
 
 }

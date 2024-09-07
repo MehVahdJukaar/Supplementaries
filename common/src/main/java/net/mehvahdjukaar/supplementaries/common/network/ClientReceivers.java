@@ -21,7 +21,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosio
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -229,6 +228,21 @@ public class ClientReceivers {
                                 message.pos.x(), message.pos.y(), message.pos.z(),
                                 message.extraData,
                                 0.71, -1);
+                    }
+                }
+                case PEARL_TELEPORT -> {
+                    // same as teleport
+                    Vec3 start = message.pos;
+                    Vec3 end = message.dir;
+                    for (int j = 0; j < 64; ++j) {
+                        double delta = ran.nextDouble();
+                        float f = (ran.nextFloat() - 0.5F) * 0.2F;
+                        float f1 = (ran.nextFloat() - 0.5F) * 0.2F;
+                        float f2 = (ran.nextFloat() - 0.5F) * 0.2F;
+                        double dx = Mth.lerp(delta, end.x(), start.x()) + (ran.nextDouble() - 0.5D);
+                        double dy = Mth.lerp(delta, end.y(), start.y()) + (ran.nextDouble() - 0.5D) - 0.5f;
+                        double dz = Mth.lerp(delta, end.z(), start.z()) + (ran.nextDouble() - 0.5D);
+                        l.addParticle(ParticleTypes.PORTAL, dx, dy, dz, f, f1, f2);
                     }
                 }
             }

@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -168,13 +171,17 @@ public class PearlMarker extends Entity {
                 BlockState state = level.getBlockState(fromPos);
                 BlockEntity blockEntity = level.getBlockEntity(fromPos);
                 if (isValidBlockEntity(blockEntity)) {
-                    BlockPos toPos = hitResult.getBlockPos().relative(hitResult.getDirection());
+                    Direction direction = hitResult.getDirection();
+                    BlockPos toPos = hitResult.getBlockPos().relative(direction);
                     if (level.getBlockState(toPos).canBeReplaced()) {
                         CompoundTag nbt = blockEntity.saveWithoutMetadata();
                         blockEntity.setRemoved();
 
+                        BlockState newState = getLandingState(state, toPos, direction, level);
                         if (level.setBlockAndUpdate(fromPos, Blocks.AIR.defaultBlockState()) &&
-                                level.setBlockAndUpdate(toPos, setLandingState(hitResult, state))) {
+                                level.setBlockAndUpdate(toPos, newState)) {
+                            // gets rid of triggered state of dispenser
+                            newState.neighborChanged(level, toPos, level.getBlockState(toPos.below()).getBlock(), toPos.below(), true);
 
                             BlockEntity dstEntity = level.getBlockEntity(toPos);
                             if (isValidBlockEntity(dstEntity)) {
@@ -185,11 +192,12 @@ public class PearlMarker extends Entity {
                         }
 
                     }
-                    this.setTeleportPos(toPos);
-                    level.broadcastEntityEvent(this, (byte) 92);
-                    //level.broadcastEntityEvent(this, (byte) 46);
-                    super.teleportTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5);
+                    ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+                            new ClientBoundParticlePacket(fromPos.getCenter(),
+                                    ClientBoundParticlePacket.Type.PEARL_TELEPORT,
+                                    0, toPos.getCenter()));
 
+                    super.teleportTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5);
                 }
             }
 
@@ -198,49 +206,18 @@ public class PearlMarker extends Entity {
             event = null;
         } else {
             super.teleportTo(pX, pY, pZ);
+            Supplementaries.error();
         }
     }
 
     @NotNull
-    private static BlockState setLandingState(BlockHitResult hitResult, BlockState state) {
-        Direction dir = hitResult.getDirection();
-        return state.setValue(DispenserBlock.FACING, dir);
+    private static BlockState getLandingState(BlockState state, BlockPos pos, Direction direction, Level level) {
+        return Block.updateFromNeighbourShapes(
+                state.setValue(DispenserBlock.FACING, direction), level, pos);
     }
 
     private static boolean isValidBlockEntity(BlockEntity blockEntity) {
         return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity;
-    }
-
-    public BlockPos getTeleportPos() {
-        return this.entityData.get(TELEPORT_POS);
-    }
-
-    public void setTeleportPos(BlockPos pos) {
-        this.entityData.set(TELEPORT_POS, pos);
-    }
-
-    @Override
-    public void handleEntityEvent(byte pId) {
-        if (pId == 92) {
-            Level level = level();
-            if (level.isClientSide) {
-                RandomSource random = level.random;
-                //smort
-                BlockPos end = this.getTeleportPos();
-                BlockPos start = this.blockPosition();
-                for (int j = 0; j < 64; ++j) {
-                    double d0 = random.nextDouble();
-                    float f = (random.nextFloat() - 0.5F) * 0.2F;
-                    float f1 = (random.nextFloat() - 0.5F) * 0.2F;
-                    float f2 = (random.nextFloat() - 0.5F) * 0.2F;
-                    double d1 = Mth.lerp(d0, end.getX(), start.getX()) + (random.nextDouble() - 0.5D) + 0.5D;
-                    double d2 = Mth.lerp(d0, end.getY(), start.getY()) + random.nextDouble() - 0.5D;
-                    double d3 = Mth.lerp(d0, end.getZ(), start.getZ()) + (random.nextDouble() - 0.5D) + 0.5D;
-                    level.addParticle(ParticleTypes.PORTAL, d1, d2, d3, f, f1, f2);
-                }
-            }
-        }
-        super.handleEntityEvent(pId);
     }
 
     @Override

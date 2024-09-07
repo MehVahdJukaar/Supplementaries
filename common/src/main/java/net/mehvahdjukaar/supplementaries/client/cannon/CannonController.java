@@ -50,11 +50,14 @@ public class CannonController {
     protected static boolean showsTrajectory = true;
 
     public static void startControlling(CannonBlockTile tile) {
-        cannon = tile;
         firstTick = true;
-        shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
         Minecraft mc = Minecraft.getInstance();
-        lastCameraType = mc.options.getCameraType();
+
+        if(cannon == null) {
+            cannon = tile;
+            shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
+            lastCameraType = mc.options.getCameraType();
+        } //if not it means we entered from manouver mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         mc.gui.setOverlayMessage(Component.translatable("message.supplementaries.cannon_maneuver",
                 mc.options.keyShift.getTranslatedKeyMessage(),
