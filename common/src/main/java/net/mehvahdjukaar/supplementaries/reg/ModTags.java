@@ -82,6 +82,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> EATS_FODDER = entityTag("eats_fodder");
     public static final TagKey<EntityType<?>> ROTATABLE = entityTag("rotatable");
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
+    public static final TagKey<EntityType<?>> AWNING_BLACKLIST = entityTag("cant_bounce_off_awnings");
 
     public static final TagKey<Enchantment> CURSES_BLACKLIST = enchTag("curses_blacklist");
     //features

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -14,10 +15,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -67,6 +68,11 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         super.onHitBlock(result);
         Direction hitDirection = result.getDirection();
         Vector3f surfaceNormal = hitDirection.step();
+        BlockState hitState = level().getBlockState(result.getBlockPos());
+        if(hitDirection == Direction.UP && hitState.getBlock() instanceof AwningBlock){
+            surfaceNormal = AwningBlock.getNormalVector(hitState);
+        }
+
         Vec3 velocity = this.getDeltaMovement();
         Vec3 newVel = new Vec3(velocity.toVector3f().reflect(surfaceNormal));
 
@@ -90,12 +96,16 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
 
         if (!level().isClientSide) {
             this.hasImpulse = true;
+            addParticleEffects();
             this.playSound(ModSounds.SLIMEBALL_LAND.get(), 1.5f, 1);
-            this.level().broadcastEntityEvent(this, (byte) 3);
             if (bounces > 3) {
                 this.discard();
             }
         }
+    }
+
+    private void addParticleEffects() {
+        this.level().broadcastEntityEvent(this, (byte) 3);
     }
 
     @Override
@@ -115,10 +125,10 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
         Entity entity = result.getEntity();
-        if( entity instanceof Player p && p.isBlocking()){
+        if(entity instanceof LivingEntity le && le.isBlocking()){
             Vec3 hit = result.getLocation();
-            Vec3 entityView = p.getViewVector(1.0F);
-            Vec3 normal = hit.vectorTo(p.position()).normalize();
+            Vec3 entityView = le.getViewVector(1.0F);
+            Vec3 normal = hit.vectorTo(le.position()).normalize();
             normal = new Vec3(normal.x, 0.0, normal.z);
             if (normal.dot(entityView) < 0.0) {
 
@@ -126,12 +136,16 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
                 return;
             }
         }
-        if (entity instanceof ISlimeable s) {
+        if (entity instanceof ISlimeable s && entity instanceof LivingEntity le  && le.attackable()) {
             //sets on both but also sends packet just because lmao
             s.supp$setSlimedTicks(CommonConfigs.Tweaks.SLIME_DURATION.get(), true);
         }
-        if (entity instanceof EndCrystal) {
+        else if (entity instanceof EndCrystal) {
             entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0);
+        }else {
+            //somehow allows entity event to be received before entity is broken
+            this.hasImpulse = true;
+            addParticleEffects();
         }
         this.discard();
     }

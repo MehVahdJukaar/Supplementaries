@@ -31,11 +31,13 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -240,7 +242,6 @@ public class RegUtils {
         );
         map.put(null, defAwning);
         regItem(baseName, () -> new BlockItem(defAwning.get(), new Item.Properties()));
-
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName + "_" + color.getName();
             Supplier<Block> block = regBlock(name, () -> new AwningBlock(color,

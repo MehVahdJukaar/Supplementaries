@@ -53,7 +53,7 @@ public class CannonController {
         firstTick = true;
         Minecraft mc = Minecraft.getInstance();
 
-        if(cannon == null) {
+        if (cannon == null) {
             cannon = tile;
             shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
@@ -119,32 +119,36 @@ public class CannonController {
             yawIncrease = 0;
             pitchIncrease = 0;
 
+            //TODO: no perfect solution exist: add config
+            if (!cannon.isFiring()) {
 
-            // find hit result
-            Vec3 lookDir2 = new Vec3(camera.getLookVector());
-            float maxRange = 128;
-            Vec3 actualCameraPos = camera.getPosition().add(lookDir2.normalize());
-            Vec3 endPos = actualCameraPos.add(lookDir2.scale(maxRange));
 
-            hit = level.clip(new ClipContext(actualCameraPos, endPos,
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
+                // find hit result
+                Vec3 lookDir2 = new Vec3(camera.getLookVector());
+                float maxRange = 128;
+                Vec3 actualCameraPos = camera.getPosition().add(lookDir2.normalize());
+                Vec3 endPos = actualCameraPos.add(lookDir2.scale(maxRange));
 
-            Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
-            //rotate so we can work in 2d
-            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-            target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
+                hit = level.clip(new ClipContext(actualCameraPos, endPos,
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
-            // calculate the yaw of target. no clue why its like this
-            float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
+                Vec3 targetVector = hit.getLocation().subtract(cannon.getBlockPos().getCenter());
+                //rotate so we can work in 2d
+                Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
+                target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
 
-            var restraints = cannon.getPitchAndYawRestrains();
-            var ballistic = cannon.getTrajectoryData();
-            trajectory = CannonTrajectory.findBest(target,
-                    ballistic.gravity(), ballistic.drag(), cannon.getFirePower(), shootingMode,
-                    restraints.minPitch(), restraints.maxPitch());
+                // calculate the yaw of target. no clue why its like this
+                float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
-            if (trajectory != null) {
-                setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
+                var restraints = cannon.getPitchAndYawRestrains();
+                var ballistic = cannon.getTrajectoryData();
+                trajectory = CannonTrajectory.findBest(target,
+                        ballistic.gravity(), ballistic.drag(), cannon.getFirePower(), shootingMode,
+                        restraints.minPitch(), restraints.maxPitch());
+
+                if (trajectory != null) {
+                    setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
+                }
             }
 
             return true;
@@ -156,7 +160,7 @@ public class CannonController {
         float followSpeed = 1;
         //TODO: improve
         cannon.setRestrainedPitch(Mth.rotLerp(followSpeed, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
-        //targetYawDeg = Mth.rotLerp(1, cannon.getYaw(0), targetYawDeg);
+        // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
         cannon.setRenderYaw(targetYawDeg);
     }
 

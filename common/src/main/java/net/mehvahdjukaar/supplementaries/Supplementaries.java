@@ -42,12 +42,15 @@ import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.levelgen.blockpredicates.SolidPredicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -128,15 +131,11 @@ public class Supplementaries {
         error();
         LOGGER.error(message, params);
     }
-
-    // slidy block bullshit
-
+    // urns spawning ontop of non solid stuff like sculk
+    // check teleport game event
     // lock cannon while its firing
     // cannon rotated while firing is imprecise
-    //cannon teleporting error + particles
     // click glow ink in cauldron
-    // confetti canno sound from distance
-    // wall lantern LOD is broken when on a solid block. sides are culled away
     // faucet pulling stuff game event
     // awning connection
     // fire pit falling amendments

@@ -4,6 +4,8 @@ import com.google.gson.*;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomGeometry;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomModelLoader;
+import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -24,7 +26,10 @@ public class AwningModelLoader implements CustomModelLoader {
     @Override
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
         BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
-
+        if(!SuppClientPlatformStuff.hasFixedAO()){
+            // vanilla AO code is so shit, full of bugs
+            json.addProperty("ambientocclusion", false);
+        }
         if (json.has("elements")) {
             JsonArray ja = GsonHelper.getAsJsonArray(json, "elements");
             for (int j = 0; j < ja.size() && j < modelHack.getElements().size(); ++j) {

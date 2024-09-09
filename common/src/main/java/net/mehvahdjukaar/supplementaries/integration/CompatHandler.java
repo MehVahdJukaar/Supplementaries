@@ -19,6 +19,8 @@ public class CompatHandler {
 
     public static final boolean AMENDMENTS = isLoaded("amendments");
     public static final boolean QUARK = isLoaded("quark");
+    public static final boolean SODIUM = isLoaded("sodium");
+    public static final boolean EMBEDDIUM = isLoaded("embeddium");
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
     public static final boolean EMI = isLoaded("emi");

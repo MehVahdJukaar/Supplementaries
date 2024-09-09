@@ -116,7 +116,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
         boolean isPowered = world.hasNeighborSignal(pos);
         if (world instanceof ServerLevel serverLevel && isPowered && state.getValue(PACKED)
                 && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
-            tile.detonate(serverLevel, pos);
+            tile.detonate(serverLevel, pos, null);
         }
     }
 

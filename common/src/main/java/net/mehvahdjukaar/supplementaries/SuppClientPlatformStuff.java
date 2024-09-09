@@ -30,4 +30,9 @@ public class SuppClientPlatformStuff {
         throw new AssertionError();
     }
 
+    @ExpectPlatform
+    public static boolean hasFixedAO(){
+        throw new AssertionError();
+    }
+
 }

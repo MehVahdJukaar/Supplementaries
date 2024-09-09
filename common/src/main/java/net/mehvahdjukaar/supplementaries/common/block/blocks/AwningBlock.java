@@ -4,7 +4,9 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -12,6 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,6 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -123,20 +127,21 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
+        return  state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        Boolean bottom = state.getValue(BOTTOM);
+
+        boolean bottom = state.getValue(BOTTOM);
         if (CommonConfigs.Building.AWNING_FALL_THROUGH.get()) {
             if (context.isDescending() || !context.isAbove(bottom ? TOP_COLLISION : BOTTOM_COLLISION,
                     bottom ? pos.below() : pos, false)) {
-                return Shapes.empty();
+               return Shapes.empty();
             }
         }
-
         return super.getCollisionShape(state, level, pos, context);
+
     }
 
     @Override
@@ -227,7 +232,7 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public void updateEntityAfterFallOn(BlockGetter level, Entity entity) {
-        if (entity.isSuppressingBounce()) {
+        if (entity.isSuppressingBounce() || entity.getType().is(ModTags.AWNING_BLACKLIST)) {
             super.updateEntityAfterFallOn(level, entity);
         } else {
         }
@@ -235,16 +240,10 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.isSteppingCarefully()) {
+        if (!entity.isSuppressingBounce() && !entity.getType().is(ModTags.AWNING_BLACKLIST)) {
             Vec3 movement = entity.getDeltaMovement();
             if (movement.y < -0.32f) { //for step height when falling from another awning
-                Direction dir = state.getValue(FACING);
-                Vector3f normal = new Vector3f(0, 1, 0);
-                if (state.getValue(SLANTED)) {
-                    double angleDeg = CommonConfigs.Building.AWNINGS_BOUNCE_ANGLE.get();
-                    normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
-                }
-                normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
+                Vector3f normal = getNormalVector(state);
 
                 Vector3f newMovement = movement.toVector3f().reflect(normal);
                 entity.setDeltaMovement(new Vec3(newMovement));
@@ -255,6 +254,20 @@ public class AwningBlock extends WaterBlock implements IColored {
             }
         }
         super.stepOn(level, pos, state, entity);
+    }
+
+    public static @NotNull Vector3f getNormalVector(BlockState state) {
+        if (!state.getValue(SLANTED)){
+            return new Vector3f(0, 1, 0);
+        }
+        Direction dir = state.getValue(FACING);
+        Vector3f normal = new Vector3f(0, 1, 0);
+        if (state.getValue(SLANTED)) {
+            double angleDeg = CommonConfigs.Building.AWNINGS_BOUNCE_ANGLE.get();
+            normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
+        }
+        normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
+        return normal;
     }
 
     @Override

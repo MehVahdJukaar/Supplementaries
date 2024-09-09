@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,10 @@ public class SuppClientPlatformStuffImpl {
 
     public static ShaderInstance getEntityOffsetShader() {
         return null;
+    }
+
+    public static boolean hasFixedAO() {
+        return CompatHandler.SODIUM || CompatHandler.EMBEDDIUM;
     }
 
 }

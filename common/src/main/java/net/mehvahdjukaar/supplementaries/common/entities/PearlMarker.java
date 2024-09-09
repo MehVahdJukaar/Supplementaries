@@ -5,7 +5,9 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.MovingBlockSource;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -14,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -22,8 +23,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -104,18 +103,18 @@ public class PearlMarker extends Entity {
         if (!dead) {
             BlockPos pos = blockPosition();
             BlockState state = level.getBlockState(pos);
-            if (!(state.getBlock() instanceof DispenserBlock || state.getBlock() instanceof CannonBlock)) {
+            if (!(isValidBlock(state))) {
                 PistonMovingBlockEntity piston = null;
                 boolean didOffset = false;
 
                 BlockEntity tile = level.getBlockEntity(pos);
-                if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p)) {
+                if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p.getMovedState())) {
                     piston = p;
                 } else for (Direction d : Direction.values()) {
                     BlockPos offPos = pos.relative(d);
                     tile = level.getBlockEntity(offPos);
 
-                    if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p)) {
+                    if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p.getMovedState())) {
                         piston = p;
                         break;
                     }
@@ -138,9 +137,9 @@ public class PearlMarker extends Entity {
     }
 
     @NotNull
-    private static boolean isValidBlock(PistonMovingBlockEntity p) {
-        Block b = p.getMovedState().getBlock();
-        return b instanceof DispenserBlock || b instanceof CannonBlock;
+    private static boolean isValidBlock(BlockState p) {
+        Block b = p.getBlock();
+        return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
     }
 
 
@@ -212,12 +211,14 @@ public class PearlMarker extends Entity {
 
     @NotNull
     private static BlockState getLandingState(BlockState state, BlockPos pos, Direction direction, Level level) {
-        return Block.updateFromNeighbourShapes(
-                state.setValue(DispenserBlock.FACING, direction), level, pos);
+        if(state.hasProperty(DispenserBlock.FACING)) {
+            state = state.setValue(DispenserBlock.FACING, direction);
+        }
+        return Block.updateFromNeighbourShapes(state, level, pos);
     }
 
     private static boolean isValidBlockEntity(BlockEntity blockEntity) {
-        return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity;
+        return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity || blockEntity instanceof TrappedPresentBlockTile;
     }
 
     @Override

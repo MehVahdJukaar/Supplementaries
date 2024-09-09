@@ -33,7 +33,8 @@
                   -1,
                   0
                 ],
-                "type": "minecraft:solid"
+                "direction": "up",
+                "type": "minecraft:has_sturdy_face"
               }
             ],
             "type": "minecraft:all_of"

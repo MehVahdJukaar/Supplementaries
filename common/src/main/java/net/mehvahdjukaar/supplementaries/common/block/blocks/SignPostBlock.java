@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,9 +47,9 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-
+        ItemStack itemstack = player.getItemInHand(handIn);
+        if(itemstack.getItem() instanceof SignPostItem) return InteractionResult.PASS;
         if (level instanceof ServerLevel serverLevel) {
-            ItemStack itemstack = player.getItemInHand(handIn);
             if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
                 return tile.handleInteraction(state, serverLevel, pos, player, handIn, hit, itemstack);
             }

@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EndRodBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 
 public class SignPostItem extends WoodBasedItem {
@@ -111,10 +112,10 @@ public class SignPostItem extends WoodBasedItem {
                 world.sendBlockUpdated(blockpos, state, state, 3);
 
                 SoundType soundtype = this.getBlockType().getSound();
-                world.playSound(null, blockpos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-
+                world.playSound(player, blockpos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                world.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
                 if (!context.getPlayer().isCreative()) itemstack.shrink(1);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.sidedSuccess(world.isClientSide);
             }
         }
         return InteractionResult.PASS;

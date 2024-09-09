@@ -26,6 +26,7 @@ Bug Fixes:
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
+- improved urns spawning
 - added a recipe to clear item lore
 - fixed dispenser ender pearl not having proper particles and not updating the dispenser properly
 - fixed feather block particles not showing for other players
@@ -36,6 +37,7 @@ Bug Fixes:
 - you can enable the old mode in the configs
 - flower boxes can now only exist when against a solid block
 - flower boxes can be hung from ceilings
+- trapped presents can now correctly dispense ender pearls
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
@@ -51,6 +53,7 @@ Bug Fixes:
 - Ash can no longer spawn from non solid blocks
 - suds particles will break when in contact with a block
 - playing flute and using bubble blower will emit sculk vibrations
+- placing sign post will emit sculk vibrations
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions
