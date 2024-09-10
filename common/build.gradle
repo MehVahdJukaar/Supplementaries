@@ -6,6 +6,11 @@ loom {
     accessWidenerPath = file("src/main/resources/supplementaries.accesswidener")
 }
 
+shadowJar {
+    zip64 true
+
+}
+
 dependencies {
 
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies

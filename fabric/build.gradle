@@ -86,6 +86,8 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
+
+    zip64 true
 }
 
 remapJar {
