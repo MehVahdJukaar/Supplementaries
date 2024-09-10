@@ -50,6 +50,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -185,6 +186,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
                     if (level.getBlockEntity(pos) instanceof BambooSpikesBlockTile te) {
                         if (te.interactWithEntity(le, level)) {
                             level.setBlock(pos, state.setValue(BambooSpikesBlock.TIPPED, false), 3);
+                            level.gameEvent(entityIn, GameEvent.BLOCK_CHANGE, pos);
                         }
                     }
                 }
@@ -209,7 +211,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         ItemStack stack = player.getItemInHand(handIn);
 
         if (stack.getItem() instanceof LingeringPotionItem) {
-            if (tryAddingPotion(state, worldIn, pos, PotionUtils.getPotion(stack))) {
+            if (tryAddingPotion(state, worldIn, pos, PotionUtils.getPotion(stack), player)) {
                 if (!player.isCreative())
                     player.setItemInHand(handIn, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
             }
@@ -249,17 +251,18 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
         if (fluid.is( BuiltInSoftFluids.POTION.get()) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
-            return tryAddingPotion(state, world, pos, PotionUtils.getPotion(fluid.getTag()));
+            return tryAddingPotion(state, world, pos, PotionUtils.getPotion(fluid.getTag()), null);
         }
         return false;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Potion potion) {
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Potion potion, @Nullable Entity adder) {
         world.setBlock(pos, state.setValue(TIPPED, true), 0);
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {
             world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
             world.setBlock(pos, state.setValue(TIPPED, true), 3);
+            world.gameEvent(adder, GameEvent.BLOCK_CHANGE, pos);
             return true;
         }
         if (te != null) te.setRemoved();

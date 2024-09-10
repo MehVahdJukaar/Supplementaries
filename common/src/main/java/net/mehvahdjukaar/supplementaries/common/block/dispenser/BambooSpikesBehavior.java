@@ -26,7 +26,7 @@ class BambooSpikesBehavior extends DispenserHelper.AdditionalDispenserBehavior {
         BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof BambooSpikesBlock) {
-            if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, PotionUtils.getPotion(stack))) {
+            if (BambooSpikesBlock.tryAddingPotion(state, world, blockpos, PotionUtils.getPotion(stack), null)) {
                 return InteractionResultHolder.success(new ItemStack(Items.GLASS_BOTTLE));
             }
             return InteractionResultHolder.fail(stack);

@@ -191,7 +191,7 @@ public class AwningBlock extends WaterBlock implements IColored {
                     BlockState behindState = level.getBlockState(behindPos.get(i));
                     if (behindState.getBlock() instanceof AwningBlock &&
                             behindState.getValue(SLANTED) &&
-                            behindState.getValue(FACING).getAxis() == direction.getAxis()) {
+                            behindState.getValue(FACING) == direction.getOpposite()) {
                         bottom = i == 0;
                         slanted = true;
                         break;

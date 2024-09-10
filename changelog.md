@@ -53,7 +53,7 @@ Bug Fixes:
 - Ash can no longer spawn from non solid blocks
 - suds particles will break when in contact with a block
 - playing flute and using bubble blower will emit sculk vibrations
-- placing sign post will emit sculk vibrations
+- placing sign post will emit sculk vibrations. So will tipped spikes
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions
