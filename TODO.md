@@ -1,5 +1,6 @@
 # Supplementaries
 
+- waxable dispenser behavior
 - dispensers shoot quiver content
 - bundle and quiver dispenser interaction
 - faucets not working with water

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.FluidContainerList;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -21,7 +22,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -31,7 +31,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,28 +38,29 @@ import java.util.Set;
 
 public class DispenserBehaviorsManager {
 
+    public static void init(){
+        RegHelper.addDispenserBehaviorRegistration(DispenserBehaviorsManager::registerBehaviors);
+    }
 
-    //hacky. uses default tags to register stuff like bricks and fluids. wont properly work with reloads
-    //TODO: make a reload safe dispenser map for these
-    public static void registerBehaviors(RegistryAccess registryAccess) {
+    public static void registerBehaviors(DispenserHelper.Event event) {
         boolean isForge = PlatHelper.getPlatform().isForge();
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
-        for (SoftFluid f : SoftFluidRegistry.getRegistry(registryAccess)) {
-            registerFluidBehavior(f);
+        for (SoftFluid f : SoftFluidRegistry.getRegistry(event.getRegistryAccess())) {
+            registerFluidBehavior(f, event);
         }
 
         if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
-            DispenserHelper.registerCustomBehavior(new PancakeBehavior(Items.HONEY_BOTTLE));
+            event.register(new PancakeBehavior(Items.HONEY_BOTTLE));
             // DispenserBlock.registerBehavior(ModRegistry.PANCAKE.get(), new PancakeDiscBehavior());
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
-            DispenserHelper.registerCustomBehavior(new ThrowableEnderPearlBehavior());
+            event.register(new ThrowableEnderPearlBehavior());
         }
         if (CommonConfigs.Redstone.DISPENSER_MINECART_ENABLED.get()) {
-            DispenserBlock.registerBehavior(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
+            event.register(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
         }
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
             DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
@@ -70,67 +70,67 @@ public class DispenserBehaviorsManager {
                     return stack;
                 }
             };
-            DispenserBlock.registerBehavior(ModRegistry.ENDERMAN_SKULL_ITEM.get(), armorBehavior);
+            event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), armorBehavior);
         }
         if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.FODDER.get());
+            event.registerPlaceBlock(ModRegistry.FODDER.get());
         }
         if (CommonConfigs.Tools.LUNCH_BOX_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.LUNCH_BASKET.get());
+            event.registerPlaceBlock(ModRegistry.LUNCH_BASKET.get());
         }
         if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BUBBLE_BLOCK.get());
+            event.registerPlaceBlock(ModRegistry.BUBBLE_BLOCK.get());
         }
         if (CommonConfigs.Functional.SACK_ENABLED.get()) {
             for (var s : SackBlock.SACK_BLOCKS) {
-                DispenserHelper.registerPlaceBlockBehavior(s);
+                event.registerPlaceBlock(s);
             }
         }
         if (CommonConfigs.Functional.JAR_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.JAR_ITEM.get());
-            DispenserHelper.registerCustomBehavior(new AddItemToInventoryBehavior(Items.COOKIE));
+            event.registerPlaceBlock(ModRegistry.JAR_ITEM.get());
+            event.register(new AddItemToInventoryBehavior(Items.COOKIE));
         }
-        DispenserHelper.registerCustomBehavior(new FlintAndSteelBehavior(Items.FLINT_AND_STEEL));
+        event.register(new FlintAndSteelBehavior(Items.FLINT_AND_STEEL));
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_ITEM.get());
+            event.registerPlaceBlock(ModRegistry.BAMBOO_SPIKES_ITEM.get());
         }
         if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
-            DispenserHelper.registerPlaceBlockBehavior(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-            DispenserHelper.registerCustomBehavior(new BambooSpikesBehavior(Items.LINGERING_POTION));
+            event.registerPlaceBlock(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
+            event.register(new BambooSpikesBehavior(Items.LINGERING_POTION));
         }
         if (isForge) {
-            DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
+            event.register(new FakePlayerUseItemBehavior(ModRegistry.SOAP.get()));
         }
 
         if (CommonConfigs.Tools.POPPER_ENABLED.get()) {
-            DispenserHelper.registerCustomBehavior(
+            event.register(
                     new FireBehaviorProxy(ModRegistry.CONFETTI_POPPER.get(),
                             new PopperBehavior(), 0.7f, 1, false));
         }
 
         if (CommonConfigs.Tweaks.THROWABLE_BRICKS_ENABLED.get()) {
             BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.BRICKS).iterator().forEachRemaining(h ->
-                    DispenserHelper.registerCustomBehavior(new ThrowableBricksBehavior(h.value()))
+                    event.register(new ThrowableBricksBehavior(h.value()))
             );
         }
         //bomb
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             //default behaviors for modded items
             var bombBehavior = new BombsBehavior();
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM.get(), bombBehavior);
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_ITEM_ON.get(), bombBehavior);
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM.get(), bombBehavior);
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_BLUE_ITEM_ON.get(), bombBehavior);
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM.get(), bombBehavior);
-            DispenserBlock.registerBehavior(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_ITEM.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_ITEM_ON.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_BLUE_ITEM.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_BLUE_ITEM_ON.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_SPIKY_ITEM.get(), bombBehavior);
+            event.register(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
         }
         //gunpowder
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
-            DispenserHelper.registerCustomBehavior(new GunpowderBehavior(Items.GUNPOWDER));
+            event.register(new GunpowderBehavior(Items.GUNPOWDER));
         }
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
 
-            DispenserBlock.registerBehavior(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
+            event.register(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
                 protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
                     CompoundTag com = stack.getTag();
                     int charges = stack.getMaxDamage();
@@ -155,16 +155,16 @@ public class DispenserBehaviorsManager {
             for (Item i : BuiltInRegistries.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
-                        DispenserHelper.registerCustomBehavior(new FishBucketJarBehavior(i));
+                        event.register(new FishBucketJarBehavior(i));
                     }
                     if (isForge && axe && i instanceof AxeItem) {
-                        DispenserHelper.registerCustomBehavior(new FakePlayerUseItemBehavior(i));
+                        event.register(new FakePlayerUseItemBehavior(i));
                     }
                     if (key && i instanceof KeyItem) {
-                        DispenserHelper.registerCustomBehavior(new KeyBehavior(i));
+                        event.register(new KeyBehavior(i));
                     }
                     if (slimeball && SuppPlatformStuff.isSlimeball(i)) {
-                        DispenserHelper.registerCustomBehavior(new ThrowableSlimeballBehavior(i));
+                        event.register(new ThrowableSlimeballBehavior(i));
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);
@@ -174,19 +174,19 @@ public class DispenserBehaviorsManager {
     }
 
     //TODO: addback
-    public static void registerFluidBehavior(SoftFluid f) {
+    public static void registerFluidBehavior(SoftFluid f, DispenserHelper.Event event) {
         Set<Item> itemSet = new HashSet<>();
         Collection<FluidContainerList.Category> categories = f.getContainerList().getCategories();
         for (FluidContainerList.Category c : categories) {
             Item empty = c.getEmptyContainer();
             //prevents registering stuff twice
             if (empty != Items.AIR && !itemSet.contains(empty)) {
-                DispenserHelper.registerCustomBehavior(new FillFluidHolderBehavior(empty));
+                event.register(new FillFluidHolderBehavior(empty));
                 itemSet.add(empty);
             }
             for (Item full : c.getFilledItems()) {
                 if (full != Items.AIR && !itemSet.contains(full)) {
-                    DispenserHelper.registerCustomBehavior(new FillFluidHolderBehavior(full));
+                    event.register(new FillFluidHolderBehavior(full));
                     itemSet.add(full);
                 }
             }
