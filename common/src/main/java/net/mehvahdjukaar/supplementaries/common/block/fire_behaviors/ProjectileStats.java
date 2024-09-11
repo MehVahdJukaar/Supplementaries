@@ -1,12 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
-import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.world.entity.projectile.Snowball;
-import net.minecraft.world.entity.projectile.ThrownEgg;
-import net.minecraft.world.item.EggItem;
-import net.minecraft.world.item.TridentItem;
-
 public class ProjectileStats {
 
     // same as ender pearl & egg
@@ -27,22 +20,24 @@ public class ProjectileStats {
     record ExtraData(float inaccuracy, float dispenserInaccuracy, float dispenserInitialSpeed) {
     }
 
-    float CANNON_SPEED_MULT = 1;
-    float CANON_INACCURACY = 0;
+    public static float CANNON_SPEED_MULT = 1;
+    public static float CANON_INACCURACY = 0;
 
-    // same as snowballs
-    float SLIMEBALL_GRAVITY = 0.03f;
-    float SLIMEBALL_SPEED = 1.5f;
+    public static float PRESENT_SPEED_MULT = 0.25f;
+    public static float PRESENT_INACCURACY = 1;
 
-    float BOMB_GRAVITY = 0.04f;
-    float BOMB_SPEED = 1.2f;
+    // same as snowballs. actually a bit slower
+    public static float SLIMEBALL_GRAVITY = 0.03f;
+    public static float SLIMEBALL_SPEED = 1.25f;
 
-    float BRICKS_GRAVIY = 0.05f;
-    float BRICKS_SPEED = 1;
+    public static float BOMB_GRAVITY = 0.04f;
+    public static float BOMB_SPEED = 1.25f;
 
-    float CANNONBALL_GRAVITY = 0.1f;
-    float CANNONBALL_SPEED = 1.2f;
+    public static float BRICKS_GRAVITY = 0.05f;
+    public static float BRICKS_SPEED = 1;
+
+    public static float CANNONBALL_GRAVITY = 0.035f;
+    public static float CANNONBALL_SPEED = 0.9f;
     // throwable bricks
     //
-
 }

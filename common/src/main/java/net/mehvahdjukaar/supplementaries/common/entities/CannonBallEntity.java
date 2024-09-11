@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -73,23 +74,20 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         return ModRegistry.CANNONBALL.get().asItem();
     }
 
-    private int cc = 0;
-
     @Override
     public void tick() {
-        this.tickCount++;
-        if (tickCount % 60 == 0 || true) {
-            cc++;
-            super.tick();
-            justCollidedWith.clear();
-            if (!level().isClientSide) {
-                double dist = this.position().subtract(new Vec3(xo, yo, zo)).length();
-                if (dist > 0) {
-                    double speed = this.getDeltaMovement().length();
-                }
-            }
-            //  if (cc >= 12) discard();
-        }
+        super.tick();
+        justCollidedWith.clear();
+    }
+
+    @Override
+    protected float getGravity() {
+        return ProjectileStats.CANNONBALL_GRAVITY;
+    }
+
+    @Override
+    public float getDefaultShootVelocity() {
+        return ProjectileStats.CANNONBALL_SPEED;
     }
 
     @Override

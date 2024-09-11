@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -37,30 +38,33 @@ public class BombItem extends Item {
 
     @Override
     public Rarity getRarity(ItemStack stack) {
-        return type== BombEntity.BombType.BLUE ? Rarity.EPIC : Rarity.RARE;
+        return type == BombEntity.BombType.BLUE ? Rarity.EPIC : Rarity.RARE;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
 
-        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        ItemStack itemstack = player.getItemInHand(handIn);
 
-        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (worldIn.random.nextFloat() * 0.4F + 0.8F));
-        playerIn.getCooldowns().addCooldown(this, 30);
-        if (!worldIn.isClientSide) {
-            BombEntity bombEntity = new BombEntity(worldIn, playerIn, type);
-            float pitch = -10;//playerIn.isSneaking()?0:-20;
-            bombEntity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), pitch, 1.25F, 0.9F);
-            worldIn.addFreshEntity(bombEntity);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.random.nextFloat() * 0.4F + 0.8F));
+        if (CommonConfigs.Tools.BOMB_COOLDOWN.get()) {
+            player.getCooldowns().addCooldown(this, 30);
+        }
+        if (!level.isClientSide) {
+            BombEntity bombEntity = new BombEntity(level, player, type);
+            float pitch = -10;//player.isSneaking()?0:-20;
+            bombEntity.shootFromRotation(player, player.getXRot(), player.getYRot(),
+                    pitch, bombEntity.getDefaultShootVelocity(), 1);
+            level.addFreshEntity(bombEntity);
         }
 
-        playerIn.awardStat(Stats.ITEM_USED.get(this));
-        if (!playerIn.getAbilities().instabuild) {
+        player.awardStat(Stats.ITEM_USED.get(this));
+        if (!player.getAbilities().instabuild) {
             itemstack.shrink(1);
 
         }
 
-        return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
 

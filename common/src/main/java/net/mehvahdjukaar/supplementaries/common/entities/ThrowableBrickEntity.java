@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -161,6 +162,11 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
     @Override
     public float getDefaultShootVelocity() {
-        return 0.8f;
+        return ProjectileStats.BRICKS_SPEED;
+    }
+
+    @Override
+    protected float getGravity() {
+        return ProjectileStats.BRICKS_GRAVITY;
     }
 }

@@ -926,6 +926,8 @@ public class CommonConfigs {
                     .define("break_blocks", BombEntity.BreakingMode.WEAK);
             BOMB_FUSE = builder.comment("Put here any number other than 0 to have your bombs explode after a certain amount of ticks instead than on contact")
                     .define("bomb_fuse", 0, 0, 100000);
+            BOMB_COOLDOWN = builder.comment("Enable bomb item cooldown")
+                    .define("cooldown", true);
             builder.push("blue_bomb");
             BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .define("explosion_radius", 5.15, 0.1, 10);
@@ -1011,6 +1013,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BOMB_ENABLED;
         public static final Supplier<Double> BOMB_RADIUS;
         public static final Supplier<Integer> BOMB_FUSE;
+        public static final Supplier<Boolean> BOMB_COOLDOWN;
         public static final Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
         public static final Supplier<Double> BOMB_BLUE_RADIUS;
         public static final Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;

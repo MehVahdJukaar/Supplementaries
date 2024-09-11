@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -217,11 +218,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    public float getGravity() {
-        return 0.05F;
-    }
-
-    @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
         Level level = level();
@@ -245,6 +241,16 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     protected void updateRotation() {
+    }
+
+    @Override
+    public float getDefaultShootVelocity() {
+        return ProjectileStats.BOMB_SPEED;
+    }
+
+    @Override
+    public float getGravity() {
+        return ProjectileStats.BOMB_GRAVITY;
     }
 
     //createMiniExplosion
@@ -421,11 +427,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         @Override
         public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
             return switch (type.breakMode()) {
-                default -> false;
                 case ALL -> true;
                 case WEAK -> state.canBeReplaced(Fluids.WATER) ||
                         state.is(ModTags.BOMB_BREAKABLE) ||
                         state.getBlock() instanceof TntBlock;
+                default -> false;
             };
         }
     }
