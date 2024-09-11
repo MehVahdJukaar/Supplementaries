@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 
 public class DispenserBehaviorsManager {
 
-    public static void init() {
+    public static void init(){
         RegHelper.addDispenserBehaviorRegistration(DispenserBehaviorsManager::registerBehaviors);
     }
 
