@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -16,7 +15,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
@@ -42,7 +40,7 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
     private int watchTime;
 
     public EndermanSkullBlockTile(BlockPos blockPos, BlockState blockState) {
-        super( blockPos, blockState);
+        super(blockPos, blockState);
     }
 
     @Override
@@ -94,7 +92,8 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
             fakeEnderman.lookAt(player, 360, 360);
             ItemStack itemstack = player.getItemBySlot(EquipmentSlot.HEAD);
             if (!SuppPlatformStuff.isEndermanMask(fakeEnderman, player, itemstack)) {
-                HitResult result = Utils.rayTrace(player, level, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, 64.0);
+
+                HitResult result = player.pick(64.0, 1, false);
                 if (result instanceof BlockHitResult hit && hit.getBlockPos().equals(pos) &&
                         isLookingAtFace(pos, state, result.getLocation(), hit.getDirection())) {
                     return true;

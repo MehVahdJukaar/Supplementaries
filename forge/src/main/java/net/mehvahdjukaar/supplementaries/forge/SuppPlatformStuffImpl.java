@@ -12,6 +12,8 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -154,6 +157,13 @@ public class SuppPlatformStuffImpl {
 
     public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
        ((FireBlockAccessor) Blocks.FIRE).invokeTryCatchFire(level, pos, chance, random, age, direction);
+    }
+
+
+    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+        var r = ForgeHooks.onItemRightClick(player, hand);
+        if(r == null)r = InteractionResult.PASS;
+        return new InteractionResultHolder<>(r, player.getItemInHand(hand));
     }
 
 }

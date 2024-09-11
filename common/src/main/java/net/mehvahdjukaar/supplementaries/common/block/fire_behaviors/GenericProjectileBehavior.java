@@ -2,19 +2,21 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.moonlight.core.misc.DummyWorld;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +32,18 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
         }
         Entity proj = createEntity(projectile, level, Vec3.ZERO);
         if (proj != null) {
+            double speed = proj.getDeltaMovement().length();
+            if(speed == 0 && proj instanceof AbstractArrow){
+                //TODO;
+                speed = 2; //crossbow is 3..
+            }
+
             proj.setDeltaMovement(1, 0, 0);
             proj.tick();
             var newMovement = proj.getDeltaMovement();
             float drag = (float) newMovement.x;
             float gravity = (float) -newMovement.y;
-            return new Data(drag, gravity);
+            return new Data(drag, gravity, (float) speed);
         }
         return IBallistic.LINE;
     }
@@ -77,15 +85,18 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
 
     @Nullable
     protected Entity createEntity(ItemStack projectile, Level level, Vec3 facing) {
-        //we could hae subclassed here...
+        //we could have subclassed here...
         ProjectileTestLevel testLevel = ProjectileTestLevel.get();
 
+        //TODO: remove this
         if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(testLevel);
         if (projectile.is(ModRegistry.CANNONBALL_ITEM.get())) return ModEntities.CANNONBALL.get().create(testLevel);
 
-        Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, level);
-        fakePlayer.setXRot((float) getPitch(facing));
-        fakePlayer.setYRot((float) getYaw(facing));
+        // fake player living in fake level
+        Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, testLevel);
+
+        fakePlayer.setXRot((float) MthUtils.getPitch(facing));
+        fakePlayer.setYRot((float) MthUtils.getYaw(facing));
 
         testLevel.setup();
 
@@ -94,24 +105,27 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
         }
         //create from item
 
-//TODO: thrown bricks behavior here or somwhere
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
-        projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
+
+        var eventResult = SuppPlatformStuff.fireItemUseEvent(fakePlayer, InteractionHand.MAIN_HAND);
+        if(!eventResult.getResult().consumesAction()) {
+            projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
+        }
 
         return testLevel.projectile;
     }
 
-    protected static class ProjectileTestLevel extends DummyWorld {
+    protected static class ProjectileTestLevel extends FakeLevel {
 
         protected static ProjectileTestLevel get() {
-            return ProjectileTestLevel.getCachedInstance("cannon_test_level", ProjectileTestLevel::new);
+            return FakeLevel.get("cannon_test_level", false, ProjectileTestLevel::new);
         }
 
         @Nullable
         private Entity projectile = null;
 
-        public ProjectileTestLevel() {
-            super(false, false);
+        public ProjectileTestLevel(boolean clientSide, String id) {
+            super(clientSide, id);
         }
 
         public void setup() {
@@ -123,18 +137,6 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
             this.projectile = entity;
             return true;
         }
-    }
-
-    @Deprecated(forRemoval = true)
-    //in degrees
-    public static double getPitch(Vec3 vec3) {
-        return -Math.toDegrees(Math.asin(vec3.y));
-    }
-
-    @Deprecated(forRemoval = true)
-    // in degrees
-    public static double getYaw(Vec3 vec3) {
-        return Math.toDegrees(Math.atan2(-vec3.x, vec3.z));
     }
 
 }

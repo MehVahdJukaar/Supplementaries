@@ -180,7 +180,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        this.interactWithProjectile(level, state, projectile, pos);
+        this.interactWithEntity(level, state, projectile, pos);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity instanceof Projectile projectile) {
-            interactWithProjectile(level, state, projectile, pos);
+            this.interactWithEntity(level, state, projectile, pos);
         }
         // same logic as fire block
         if (isLitUp(state, level, pos)) {

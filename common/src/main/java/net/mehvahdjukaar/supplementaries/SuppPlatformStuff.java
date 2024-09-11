@@ -7,6 +7,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -127,4 +129,10 @@ public class SuppPlatformStuff {
     public static boolean canCatchFire(Level level, BlockPos pos, Direction direction) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand){
+        throw new AssertionError();
+    }
+
 }

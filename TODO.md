@@ -131,6 +131,7 @@
 
 # Polytone
 
+- lightmap affecting night visonwhen it shouldnt
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
 

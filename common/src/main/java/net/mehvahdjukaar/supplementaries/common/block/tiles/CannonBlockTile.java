@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -46,8 +48,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     private int fuseTimer = 0;
     private byte powerLevel = 1;
 
-    @Nullable
-    private IBallistic.Data trajectoryData;
+    private IBallistic.Data trajectoryData = IBallistic.LINE;
+    private Item trajectoryFor = Items.AIR;
 
     @Nullable
     private UUID playerWhoIgnitedUUID = null;
@@ -77,13 +79,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = tag.getInt("fuse_timer");
         this.powerLevel = tag.getByte("fire_power");
-        this.trajectoryData = null;
     }
 
     @Override
     public void setChanged() {
         super.setChanged();
-        this.trajectoryData = null;
+        //this.trajectoryData = null;
     }
 
     private void computeTrajectoryData() {
@@ -94,6 +95,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         } else {
             this.trajectoryData = IBallistic.LINE;
         }
+        if(trajectoryData == null) {
+            Supplementaries.error();
+        }
+        trajectoryFor = proj.getItem();
     }
 
     public boolean readyToFire() {
@@ -141,7 +146,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     public IBallistic.Data getTrajectoryData() {
-        if (trajectoryData == null) computeTrajectoryData();
+        if (trajectoryFor != getProjectile().getItem()){
+            computeTrajectoryData();
+        }
         return trajectoryData;
     }
 

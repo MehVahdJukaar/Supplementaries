@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,8 @@ public class PopperBehavior implements IFireItemBehavior {
         ClientBoundParticlePacket packet = new ClientBoundParticlePacket(firePos,
                 ClientBoundParticlePacket.Type.CONFETTI, (int) power, direction);
         ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos), packet);
+
+        level.gameEvent(owner, GameEvent.EXPLODE, firePos);
         return true;
     }
 

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.particles.SudsParticle;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
@@ -74,6 +75,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
+        //TODO: fire lunch box item use events
         Credits.fetchFromServer();
         CommonConfigs.init();
 
@@ -103,6 +105,7 @@ public class Supplementaries {
         WeatheredMap.init();
         ColoredMapHandler.init();
         MapLightHandler.init();
+        DispenserBehaviorsManager.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 

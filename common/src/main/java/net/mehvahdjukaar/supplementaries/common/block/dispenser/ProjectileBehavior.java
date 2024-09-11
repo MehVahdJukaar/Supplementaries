@@ -26,7 +26,8 @@ abstract class ProjectileBehavior extends DispenserHelper.AdditionalDispenserBeh
         Position dispensePosition = DispenserBlock.getDispensePosition(source);
         Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
         BlockPos frontPos = source.getPos().relative(direction);
-        if (world.getBlockState(frontPos).isFaceSturdy(world, frontPos, direction.getOpposite())) {
+        //this will make it so stuff can only shoot when no collision block is in front so we can run other behaviors too
+        if (!world.getBlockState(frontPos).getCollisionShape(world, frontPos).isEmpty()) {
             return InteractionResultHolder.fail(stack);
         }
         Projectile projectileEntity = this.getProjectileEntity(source, dispensePosition,  stack);

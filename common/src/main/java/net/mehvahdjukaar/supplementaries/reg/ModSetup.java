@@ -118,8 +118,6 @@ public class ModSetup {
                 }
             }
 
-            //stuff that needs tags
-            DispenserBehaviorsManager.registerBehaviors(registryAccess);
 
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }

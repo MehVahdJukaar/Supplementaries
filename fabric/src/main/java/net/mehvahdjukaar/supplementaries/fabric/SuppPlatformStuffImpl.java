@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -13,6 +14,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -128,5 +131,9 @@ public class SuppPlatformStuffImpl {
 
     public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
         ((FireBlockAccessor) Blocks.FIRE).invokeCheckBurnOut(level, pos, chance, random, age);
+    }
+
+    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+        return UseItemCallback.EVENT.invoker().interact(player, player.level(), hand);
     }
 }
