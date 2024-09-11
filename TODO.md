@@ -191,6 +191,7 @@
 - bell animation and in hand ring
 -
 - netherite key broken
+- plaques broken
 - slyglass hotkey
 
 - test sculk
