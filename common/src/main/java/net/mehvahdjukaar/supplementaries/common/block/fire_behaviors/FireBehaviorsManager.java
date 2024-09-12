@@ -22,8 +22,8 @@ public class FireBehaviorsManager {
         IFireItemBehavior firework = new FireworkBehavior();
         IFireItemBehavior enderPearl = new EnderPearlBehavior();
         IFireItemBehavior popper = new PopperBehavior();
-        IFireItemBehavior fireBall = new SimpleProjectileBehavior<>(EntityType.SMALL_FIREBALL);
-        IFireItemBehavior cannonBall = new SimpleProjectileBehavior<>(ModEntities.CANNONBALL.get());
+        IFireItemBehavior fireBall = new SimpleProjectileBehavior<>(EntityType.SMALL_FIREBALL, ProjectileStats.FIREBALL_SPEED);
+        IFireItemBehavior cannonBall = new SimpleProjectileBehavior<>(ModEntities.CANNONBALL.get(), ProjectileStats.CANNONBALL_SPEED);
 
         for (Item i : BuiltInRegistries.ITEM) {
             if (i instanceof BlockItem bi && bi.getBlock() instanceof TntBlock) {

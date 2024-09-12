@@ -67,8 +67,6 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
 
         float angle = (11.25f) * Mth.DEG_TO_RAD;
         switch (books) {
-            default -> {
-            }
             case 4 -> {
                 poseStack.translate(-6 / 16f, 0, 0);
                 renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
@@ -94,6 +92,8 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
                 renderBook(poseStack, buffer, light, overlay, visualBooks.get(1), 0, angle);
             }
             case 1 -> renderBook(poseStack, buffer, light, overlay, visualBooks.get(0));
+            default -> {
+            }
         }
     }
 

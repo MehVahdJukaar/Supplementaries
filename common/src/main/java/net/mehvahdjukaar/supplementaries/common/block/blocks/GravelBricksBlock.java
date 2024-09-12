@@ -4,6 +4,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,7 +35,7 @@ public class GravelBricksBlock extends Block {
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         super.fallOn(level, state, pos, entity, fallDistance);
-        if (!level.isClientSide && !entity.isSteppingCarefully() && fallDistance > 0.2
+        if (!level.isClientSide && !entity.isSteppingCarefully() && fallDistance > 3
         && hasEnergyToBreak(entity)) {
             level.destroyBlock(pos, false, entity);
             if (level.getBlockEntity(pos) instanceof Container tile) {
@@ -58,6 +60,6 @@ public class GravelBricksBlock extends Block {
     }
 
     private static boolean hasEnergyToBreak(Entity entity) {
-       return entity.getBoundingBox().getSize() > 0.5;
+       return entity.getBoundingBox().getSize() > 0.5 && (entity instanceof LivingEntity || entity instanceof FallingBlockEntity);
     }
 }

@@ -10,14 +10,18 @@ import org.jetbrains.annotations.Nullable;
 public class SimpleProjectileBehavior<T extends Projectile> extends GenericProjectileBehavior {
 
     private final EntityType<T> entityType;
+    private final float initialSpeed;
 
-    public SimpleProjectileBehavior(EntityType<T> entityType) {
+    public SimpleProjectileBehavior(EntityType<T> entityType, float initialSpeed) {
         this.entityType = entityType;
+        this.initialSpeed = initialSpeed;
     }
 
     @Override
     protected @Nullable Entity createEntity(ItemStack stack, ProjectileTestLevel testLevel, Vec3 facing) {
-        return entityType.create(testLevel);
+        var e = entityType.create(testLevel);
+        e.setDeltaMovement(facing.normalize().scale(initialSpeed));
+        return e;
     }
 }
 

@@ -52,4 +52,11 @@ public class ProjectileStats {
 
     public static float CANNONBALL_GRAVITY = 0.035f;
     public static float CANNONBALL_SPEED = 0.9f;
+
+    // todo: check thee last
+    public static float SLINGSHOT_GRAVITY = 0.03f;
+    public static float SLINGSHOT_SPEED = 1.5f;
+
+    public static final float FIREBALL_SPEED = 1.5f;
+
 }

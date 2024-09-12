@@ -1,5 +1,6 @@
 # Supplementaries
 
+- bellows broken by water
 - soap and wax dispenser behaviors
 - bomb breaking presents
 - waxable dispenser behavior

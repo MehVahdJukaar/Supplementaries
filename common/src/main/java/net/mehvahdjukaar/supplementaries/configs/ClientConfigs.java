@@ -102,7 +102,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
                     .define("stasis_block_outline", true);
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
-                    .defineColor("block_outline_color", 0xffffff66);
+                    .defineColor("block_outline_color", -1);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
                     .define("projectile_scale", 0.5, 0, 1);
             builder.pop();

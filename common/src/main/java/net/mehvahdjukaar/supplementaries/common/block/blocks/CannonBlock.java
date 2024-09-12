@@ -9,10 +9,7 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SimpleProjectileBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -70,7 +67,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
     private static final Supplier<IFireItemBehavior> DEFAULT = Suppliers.memoize(() ->
             new AlternativeBehavior(new GenericProjectileBehavior(),
-                    new SimpleProjectileBehavior<>(ModEntities.SLINGSHOT_PROJECTILE.get())));
+                    new SimpleProjectileBehavior<>(ModEntities.SLINGSHOT_PROJECTILE.get(), ProjectileStats.SLINGSHOT_SPEED)));
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);

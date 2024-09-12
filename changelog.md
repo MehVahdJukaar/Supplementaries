@@ -29,6 +29,8 @@ Bug Fixes:
 - blackboard undo button**
 - improved urns spawning
 - added a recipe to clear item lore
+- fixe many issues with slingshot projectiles
+- slingshots can now shoot buckets
 - fixed dispenser ender pearl not having proper particles and not updating the dispenser properly
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players

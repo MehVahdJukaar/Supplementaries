@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -83,6 +84,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
 
+    // facing is likely not needed
     @Nullable
     protected Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
 
