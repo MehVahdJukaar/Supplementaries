@@ -42,6 +42,7 @@ public class ModRecipes {
             "trapped_present", TrappedPresentRecipe::new);
     public static final Supplier<RecipeSerializer<ItemLoreRecipe>> ITEM_LORE = reg(
             "item_lore", ItemLoreRecipe::new);
+    public static final Supplier<RecipeSerializer<SafeRecipe>> SAFE = reg("safe", SafeRecipe::new);
 
 
     private static <T extends CraftingRecipe> Supplier<RecipeSerializer<T>> reg(String name, SimpleCraftingRecipeSerializer.Factory<T> factory) {

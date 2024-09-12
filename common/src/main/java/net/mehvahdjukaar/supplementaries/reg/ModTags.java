@@ -71,6 +71,8 @@ public class ModTags {
     public static final TagKey<Item> QUIVER_BLACKLIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
 
+    public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
+
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");
@@ -110,6 +112,10 @@ public class ModTags {
     }
     private static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, Supplementaries.res(name));
+    }
+
+    private static TagKey<Item> MCitemTag(String name) {
+        return TagKey.create(Registries.ITEM, new ResourceLocation(name));
     }
 
     private static TagKey<Block> blockTag(String name) {

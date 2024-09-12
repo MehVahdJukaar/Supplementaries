@@ -40,6 +40,12 @@ public class DispenserBehaviorsManager {
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
+        if(CommonConfigs.Tweaks.BUNDLE_DISPENSER.get()){
+            event.register(new EmptyBundleItemBehavior(Items.BUNDLE));
+            event.register(new EmptyContainerItemBehavior(ModRegistry.LUNCH_BASKET_ITEM.get()));
+            event.register(new EmptyContainerItemBehavior(ModRegistry.QUIVER_ITEM.get()));
+        }
+
         if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
             event.register(new PancakeBehavior(Items.HONEY_BOTTLE));
         }

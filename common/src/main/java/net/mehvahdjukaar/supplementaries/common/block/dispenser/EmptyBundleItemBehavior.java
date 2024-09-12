@@ -20,11 +20,11 @@ class EmptyBundleItemBehavior extends DispenserHelper.AdditionalDispenserBehavio
 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-        Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-        Position position = DispenserBlock.getDispensePosition(source);
-
          var removed =  BundleItem.removeOne(stack);
          if(removed.isPresent()) {
+             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+             Position position = DispenserBlock.getDispensePosition(source);
+
              ItemStack extracted = removed.get();
              ItemStack toSpit = extracted.split(1);
              DefaultDispenseItemBehavior.spawnItem(source.getLevel(), toSpit, 6, direction, position);

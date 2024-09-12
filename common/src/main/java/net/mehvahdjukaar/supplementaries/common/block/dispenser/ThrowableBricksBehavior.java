@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockSource;
@@ -27,13 +28,12 @@ class ThrowableBricksBehavior extends ProjectileBehavior {
 
     @Override
     protected float getProjectileInaccuracy() {
-        return 7.0F;
+        return ProjectileStats.BRICKS_DISPENSER_INACCURACY;
     }
 
-    //TODO: fix throwable bricks rendering glitchyness
     @Override
     protected float getProjectileVelocity() {
-        return 0.8F;
+        return ProjectileStats.BRICKS_DISPENSER_SPEED;
     }
 
 }

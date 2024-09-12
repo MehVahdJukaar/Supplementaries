@@ -1068,6 +1068,8 @@ public class CommonConfigs {
                     .define("axe_strip", true);
             ENDER_PEAR_DISPENSERS = builder.comment("Enables shooting ender pearls with dispensers")
                     .define("shoot_ender_pearls", true);
+            BUNDLE_DISPENSER = builder.comment("Enables extracting bundles items with dispensers")
+                    .define("extract_from_bundles", true);
             builder.pop();
 
             //throwable bricks
@@ -1201,6 +1203,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> APPLE_DISENCHANT;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
+        public static final Supplier<Boolean> BUNDLE_DISPENSER;
         public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
         public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
         public static final Supplier<Boolean> PLACEABLE_STICKS;

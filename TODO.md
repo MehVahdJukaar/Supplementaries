@@ -1,17 +1,12 @@
 # Supplementaries
 
 - waxable dispenser behavior
-- dispensers shoot quiver content
-- bundle and quiver dispenser interaction
-- faucets not working with water
 - fire pit falling amendments
 - test config saving
 - lumisene on fire cauldron
 - dispenser and lumisene stuff
-- lumisene bottle fluid in cauldrons
 - slingshot bucket
 - lumisene burns in nether
-- hourglass sculk
 - present open sculk
 - rope pull down candle holders and lanterns
 - fire charge speed up when fired from present
@@ -39,7 +34,6 @@
 - blue bomb charge animation and sound (total overhaul, sound or smoke bomb)
 - rope like quark chain stuff pull puston blocks
 - flammable blocks with tile (notice board and timber) burn forever
-- slimeballa nd thrown bricks out of presents and cannons
 - faucet pulling stuff game event
 - ash auto bonemeal, improve bubbles
 - better fodder pathfinding
@@ -48,10 +42,8 @@
 - create moving dynamic blocks like rope knot
 - emi world interaction (ash)
 - wrench rotation overlay
-- squishy piston launcher. also rework them and fix on servers
 - ash makes mobs jump
 - clicking on cage with lead will put the leashed animal inside
-- safe shulker recipe broken as it deletes items inside
 - more flywheel stuff
 - Fix doormat highlight text box
 - brush remove 1 layer ash or snow
@@ -59,6 +51,7 @@
 
 # Amendments
 
+- wall lantern quad order inverted . visible when embeddum is on
 - rope bell doesnt work
 - make bell connectto the side
 - hanging signs dont work with antique ink
@@ -79,6 +72,7 @@
 
 # Snowy Spirit
 
+- snowy spirit eat code server side with entity event for particles
 - new ginger tegure and sound
 - gumdrop entities
 - finish gingerbead golem
@@ -151,6 +145,7 @@
 
 # Random Ideas
 
+- rework spring launcher into gust emitter
 - telescope
 - meteors
 - nautilus mob and block
@@ -266,17 +261,12 @@
 - add shift middle click to swap to correct tool
 - mod idea: blackboard banners and flags with villager
 - simple mode for doors and trapdoors
-- animated pulley texture
 -
 - TODO: faucets create sprout
 -
 - randomium item particle when drop
--
 - TODO: xp bottling whose cost depends on player total xp
 - golden carrots to breed baby pignis
 - TODO: credist screen
--
-- small honey slime in cage
--
 - hud mod. armor broken hud, items offhadn crafting
 - snow real magic compat

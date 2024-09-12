@@ -1,16 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "tag": "minecraft:shulker_boxes"
-    },
-    {
-      "item": "minecraft:netherite_ingot"
-    }
-  ],
-  "result": {
-    "item": "supplementaries:safe"
-  },
+  "type": "supplementaries:safe",
   "conditions": [
     {
       "type": "supplementaries:flag",

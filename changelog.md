@@ -10,6 +10,7 @@ New features:
 - slidy block, it slides. try it on soap and ice
 - confetti and party creeper
 - lunch boxes. click to switch mode
+- dispensers can empty bundles, quivers and lunch boxes
 - probably other stuff I forgot
 
 
@@ -37,6 +38,7 @@ Bug Fixes:
 - you can enable the old mode in the configs
 - flower boxes can now only exist when against a solid block
 - flower boxes can be hung from ceilings
+- safe crafting recipe correctly retains items in shulker boxes
 - trapped presents can now correctly dispense ender pearls
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
@@ -54,6 +56,7 @@ Bug Fixes:
 - suds particles will break when in contact with a block
 - playing flute and using bubble blower will emit sculk vibrations
 - placing sign post will emit sculk vibrations. So will tipped spikes
+- using lock blocks and hourglass will also emit sculk vibrations
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions

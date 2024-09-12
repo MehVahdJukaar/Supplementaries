@@ -15,6 +15,9 @@
       "capacity": "BUCKET"
     }
   ],
+  "equivalent_fluids": [
+    "supplementaries:lumisene"
+  ],
   "flowing_texture": "supplementaries:block/lumisene/lumisene_flowing",
   "still_texture": "supplementaries:block/lumisene/lumisene",
   "translation_key": "block.supplementaries.lumisene"

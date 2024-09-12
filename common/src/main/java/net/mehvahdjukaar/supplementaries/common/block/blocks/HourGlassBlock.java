@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -80,14 +81,15 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
 
             if (player.isShiftKeyDown() && player.getItemInHand(handIn).isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
-                worldIn.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1, 1);
-                if (!worldIn.isClientSide) {
-                    worldIn.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
+                level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1, 1);
+                if (!level.isClientSide) {
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+                    level.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
                     return InteractionResult.CONSUME;
                 }
                 return InteractionResult.SUCCESS;
@@ -102,8 +104,8 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING).getAxis()) {
             case Z -> SHAPE_Z;
-            default -> SHAPE_Y;
             case X -> SHAPE_X;
+            default -> SHAPE_Y;
         };
     }
 
