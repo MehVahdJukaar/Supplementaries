@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -20,6 +22,8 @@ public class FireBehaviorsManager {
         IFireItemBehavior firework = new FireworkBehavior();
         IFireItemBehavior enderPearl = new EnderPearlBehavior();
         IFireItemBehavior popper = new PopperBehavior();
+        IFireItemBehavior fireBall = new SimpleProjectileBehavior<>(EntityType.SMALL_FIREBALL);
+        IFireItemBehavior cannonBall = new SimpleProjectileBehavior<>(ModEntities.CANNONBALL.get());
 
         for (Item i : BuiltInRegistries.ITEM) {
             if (i instanceof BlockItem bi && bi.getBlock() instanceof TntBlock) {
@@ -37,6 +41,11 @@ public class FireBehaviorsManager {
 
         TrappedPresentBlock.registerBehavior(Items.ENDER_PEARL, enderPearl);
         CannonBlock.registerBehavior(Items.ENDER_PEARL, enderPearl);
+
+        TrappedPresentBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
+        CannonBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
+
+        CannonBlock.registerBehavior(ModRegistry.CANNONBALL.get(), cannonBall);
 
         TrappedPresentBlock.registerBehavior(Items.FIREWORK_ROCKET, firework);
         CannonBlock.registerBehavior(Items.FIREWORK_ROCKET, firework);

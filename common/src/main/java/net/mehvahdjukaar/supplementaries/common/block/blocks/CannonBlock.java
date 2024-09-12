@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -10,9 +12,10 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotProjectileBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SimpleProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -65,8 +68,9 @@ import java.util.Optional;
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
-    private static final IFireItemBehavior DEFAULT =
-            new AlternativeBehavior(new GenericProjectileBehavior(), new SlingshotProjectileBehavior());
+    private static final Supplier<IFireItemBehavior> DEFAULT = Suppliers.memoize(() ->
+            new AlternativeBehavior(new GenericProjectileBehavior(),
+                    new SimpleProjectileBehavior<>(ModEntities.SLINGSHOT_PROJECTILE.get())));
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
@@ -86,7 +90,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
-        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
+        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT.get());
     }
 
     @Nullable
@@ -190,7 +194,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         var litUpAction = this.interactWithPlayer(state, level, pos, player, hand);
         if (litUpAction != InteractionResult.PASS) return litUpAction;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-            if(player instanceof ServerPlayer sp){
+            if (player instanceof ServerPlayer sp) {
                 tile.tryOpeningEditGui(sp, pos, player.getItemInHand(hand));
             }
             return InteractionResult.sidedSuccess(level.isClientSide());

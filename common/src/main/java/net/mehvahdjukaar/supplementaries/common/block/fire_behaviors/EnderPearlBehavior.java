@@ -15,13 +15,13 @@ import org.jetbrains.annotations.Nullable;
 public class EnderPearlBehavior extends GenericProjectileBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 pos, Vec3 facing,
-                        float power, float drag, int inaccuracy, @Nullable Player owner) {
+    public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 pos, Vec3 facing,
+                        float scaledPower, int inaccuracy, @Nullable Player owner) {
         BlockSource source = new BlockSourceImpl(level, BlockPos.containing(pos));
         Projectile pearl = owner != null ? new ThrownEnderpearl(level, owner) :
                 PearlMarker.createPearlToDispenseAndPlaceMarker(source, pos);
 
-        pearl.shoot(facing.x, facing.y, facing.z, drag * power, inaccuracy);
+        pearl.shoot(facing.x, facing.y, facing.z, scaledPower, inaccuracy);
 
         pearl.setPos(pos);
         level.addFreshEntity(pearl);

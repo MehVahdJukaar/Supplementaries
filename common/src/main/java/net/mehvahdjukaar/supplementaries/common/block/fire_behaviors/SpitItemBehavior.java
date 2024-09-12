@@ -11,7 +11,7 @@ public class SpitItemBehavior implements IFireItemBehavior {
 
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction,
-                        float power, float drag, int inaccuracy, @Nullable Player owner) {
+                        float power, int inaccuracy, @Nullable Player owner) {
 
 
         ItemEntity itementity = new ItemEntity(level, firePos.x(), firePos.y(), firePos.z(), stack);

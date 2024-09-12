@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class SpawnEggBehavior implements IFireItemBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, float drag, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
         EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack.getTag());
         try {
             Entity e = spawnMob(type, level, firePos, direction, power, stack);

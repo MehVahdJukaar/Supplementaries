@@ -87,6 +87,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setYRot(this.random.nextFloat() * 360);
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
+
+        this.maxStuckTime = 0;
     }
 
     //client factory
@@ -147,10 +149,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
         if (stack.is(ModTags.SLINGSHOT_DAMAGEABLE)) {
             //TODO: finish this
-            float speed = (float)this.getDeltaMovement().length();
+            float speed = (float) this.getDeltaMovement().length();
             double baseDamage = CommonConfigs.Tools.SLINGSHOT_DAMAGEABLE_DAMAGE.get();
             // max damage same as arrows
-            int damage = Mth.ceil(Mth.clamp((double)speed * baseDamage, 0.0, 2.147483647E9));
+            int damage = Mth.ceil(Mth.clamp((double) speed * baseDamage, 0.0, 2.147483647E9));
             entityRayTraceResult.getEntity().hurt(ModDamageSources.slingshot(this, this.getOwner()), damage);
 
             this.kill();
@@ -187,6 +189,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             }
 
             //block override. mimic forge event that would have called these
+            //we cant call all forge events unfortunately otherwise we could ater the world as if player was there and not just place extra blocks
             InteractionResult overrideResult = InteractEventsHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
             if (overrideResult.consumesAction()) {
                 success = true;
@@ -285,8 +288,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public void playerTouch(Player playerEntity) {
-        if (this.isNoGravity() || this.isStuck) {
-
+        if (this.hasLeftOwner() && (this.isNoGravity() || this.isStuck)) {
             boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
 
             Level level = this.level();

@@ -1,13 +1,15 @@
 # Supplementaries
 
+- soap and wax dispenser behaviors
+- bomb breaking presents
 - waxable dispenser behavior
 - fire pit falling amendments
 - test config saving
 - lumisene on fire cauldron
-- dispenser and lumisene stuff
 - slingshot bucket
 - lumisene burns in nether
 - present open sculk
+- blackboard draw sculk
 - rope pull down candle holders and lanterns
 - fire charge speed up when fired from present
 - lumisene cauldron with particles
@@ -51,6 +53,7 @@
 
 # Amendments
 
+- cauldron bottle conversion from dispensers
 - wall lantern quad order inverted . visible when embeddum is on
 - rope bell doesnt work
 - make bell connectto the side

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class SkibidiBehavior extends SpawnEggBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, float drag, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
         EntityType<HatStandEntity> type = ModEntities.HAT_STAND.get();
         try {
             HatStandEntity e = spawnMob(type, level, firePos, firePos, power, stack);

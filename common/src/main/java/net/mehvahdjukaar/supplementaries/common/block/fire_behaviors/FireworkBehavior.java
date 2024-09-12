@@ -13,7 +13,7 @@ public class FireworkBehavior implements IFireItemBehavior {
 
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction,
-                        float power, float drag, int inaccuracy, @Nullable Player owner) {
+                        float power, int inaccuracy, @Nullable Player owner) {
 
         FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level, stack,
                 firePos.x(), firePos.y(), firePos.z(), true);
