@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
+
 public class ProjectileStats {
 
     // same as ender pearl & egg
@@ -55,8 +57,8 @@ public class ProjectileStats {
 
     // todo: check thee last
     public static float SLINGSHOT_GRAVITY = 0.03f;
-    public static float SLINGSHOT_SPEED = 1.5f;
+    public static float SLINGSHOT_SPEED = 0.9f;
 
-    public static final float FIREBALL_SPEED = 1.5f;
+    public static final float FIREBALL_SPEED = 1;
 
 }

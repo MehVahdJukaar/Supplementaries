@@ -36,7 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -61,6 +60,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     public FaucetBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
     }
+
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
@@ -172,25 +172,25 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     //sf->ff/sf
-    private Integer tryFillingBlockBelow(FluidOffer fluid) {
+    private Integer tryFillingBlockBelow(FluidOffer offer) {
         BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);
 
         for (var bi : TARGET_BLOCK_INTERACTIONS) {
-            Integer res = bi.fill(level, below, belowState, fluid.fluid(), fluid.minAmount());
+            Integer res = bi.fill(level, below, belowState, offer);
             if (res != null) return res;
         }
 
         BlockEntity tileBelow = level.getBlockEntity(below);
         if (tileBelow != null) {
             for (var bi : TARGET_TILE_INTERACTIONS) {
-                Integer res = bi.fill(level, below, tileBelow, fluid.fluid(), fluid.minAmount());
+                Integer res = bi.fill(level, below, tileBelow, offer);
                 if (res != null) return res;
             }
         }
         FluidState fluidState = belowState.getFluidState();
         for (var bi : TARGET_FLUID_INTERACTIONS) {
-            Integer res = bi.fill(level, below, fluidState, fluid.fluid(), fluid.minAmount());
+            Integer res = bi.fill(level, below, fluidState, offer);
             if (res != null) return res;
         }
 
@@ -300,14 +300,14 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             throw new UnsupportedOperationException("Unsupported faucet interaction class: " + interaction.getClass().getSimpleName());
     }
 
-    public static <T> void removeDataInteractions(Collection<T> interactions) {
-        for (var v : interactions) {
-            if (v instanceof FaucetTarget<?> fs) {
-                BLOCK_INTERACTIONS.remove(fs);
-            } else if (v instanceof FaucetItemSource fs) {
-                ITEM_INTERACTIONS.remove(fs);
-            }
-        }
+    public static void clearBehaviors() {
+        BLOCK_INTERACTIONS.clear();
+        TILE_INTERACTIONS.clear();
+        SOURCE_FLUID_INTERACTIONS.clear();
+        ITEM_INTERACTIONS.clear();
+        TARGET_BLOCK_INTERACTIONS.clear();
+        TARGET_TILE_INTERACTIONS.clear();
+        TARGET_FLUID_INTERACTIONS.clear();
     }
 
 }

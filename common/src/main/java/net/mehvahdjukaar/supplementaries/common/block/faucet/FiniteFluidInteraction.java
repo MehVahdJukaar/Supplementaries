@@ -12,8 +12,9 @@ import org.jetbrains.annotations.Nullable;
 public class FiniteFluidInteraction implements FaucetTarget.Fluid, FaucetSource.Fluid {
 
     @Override
-    public Integer fill(Level level, BlockPos pos, FluidState existing, SoftFluidStack fluid, int minAmount) {
-        var vanillaF = fluid.getVanillaFluid();
+    public Integer fill(Level level, BlockPos pos, FluidState existing, FluidOffer offer) {
+        //ignores min amount. voids overwritten fluid if just some can be added
+        var vanillaF = offer.fluid().getVanillaFluid();
         if (vanillaF instanceof FiniteFluid ff) {
             int oldLayers = 0;
             if (existing.getType().isSame(vanillaF)) {
@@ -24,13 +25,13 @@ public class FiniteFluidInteraction implements FaucetTarget.Fluid, FaucetSource.
             int maxLayers = ff.getLayersPerBlock();
             int missingLayers = maxLayers - oldLayers;
             if (missingLayers <= 0) return 0; // exit and no further processing
-            // 1 block = 1 bucket = 4 bottles
+            // 1 block = 1 filleBucket = 4 bottles
             float offerLayers = bottlesToLayers(ff, 1); //consumes 1 bottle at a time
 
             float extraLayers = Math.min(missingLayers, offerLayers);
             float consumed = layersToBottles(ff, extraLayers);
             level.setBlockAndUpdate(pos, ff.makeState((int) (oldLayers + extraLayers)).createLegacyBlock());
-            return Math.min(Mth.floor(consumed), fluid.getCount());
+            return Math.min(Mth.floor(consumed), offer.fluid().getCount());
         }
         return null;
     }

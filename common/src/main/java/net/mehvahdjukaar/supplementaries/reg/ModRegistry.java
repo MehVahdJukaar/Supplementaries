@@ -609,6 +609,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
                     .mapColor(MapColor.COLOR_BROWN)
                     .isViewBlocking(NEVER)
+                    .forceSolidOn()
                     .isRedstoneConductor(NEVER)
                     .dynamicShape()
                     .strength(3f, 3f)

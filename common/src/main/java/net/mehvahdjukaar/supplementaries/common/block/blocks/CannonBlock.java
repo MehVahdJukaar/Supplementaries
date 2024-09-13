@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -9,10 +7,12 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.*;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -65,9 +65,8 @@ import java.util.Optional;
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
-    private static final Supplier<IFireItemBehavior> DEFAULT = Suppliers.memoize(() ->
-            new AlternativeBehavior(new GenericProjectileBehavior(),
-                    new SimpleProjectileBehavior<>(ModEntities.SLINGSHOT_PROJECTILE.get(), ProjectileStats.SLINGSHOT_SPEED)));
+    private static final IFireItemBehavior DEFAULT = new AlternativeBehavior(
+            new GenericProjectileBehavior(), new SlingshotBehavior());
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
@@ -87,7 +86,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
-        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT.get());
+        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
     }
 
     @Nullable

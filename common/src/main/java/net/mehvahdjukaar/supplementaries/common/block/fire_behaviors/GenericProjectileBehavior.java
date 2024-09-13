@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -30,7 +31,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.isEmpty()) {
             return IBallisticBehavior.LINE;
         }
-        Entity proj = createEntity(projectile, ProjectileTestLevel.get(), Vec3.ZERO);
+        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1,0,0));
         if (proj != null) {
             double speed = proj.getDeltaMovement().length();
             if(speed == 0 && proj instanceof AbstractArrow){
@@ -51,7 +52,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
                         Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
-        Entity entity = createEntity(stack, ProjectileTestLevel.get(), facing);
+        Entity entity = createEntity(stack, ProjectileTestLevel.get(level.registryAccess()), facing);
 
         if (entity != null) {
 
@@ -113,16 +114,16 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     protected static class ProjectileTestLevel extends FakeLevel {
 
-        protected static ProjectileTestLevel get() {
+        protected static ProjectileTestLevel get(RegistryAccess ra) {
             // always server sie even on client as projectiles entities wont get fire on client
-            return FakeLevel.get("cannon_test_level", false, ProjectileTestLevel::new);
+            return FakeLevel.get("cannon_test_level", false, ProjectileTestLevel::new, ra);
         }
 
         @Nullable
         private Entity projectile = null;
 
-        public ProjectileTestLevel(boolean clientSide, String id) {
-            super(clientSide, id);
+        public ProjectileTestLevel(boolean clientSide, String id, RegistryAccess ra) {
+            super(clientSide, id, ra);
         }
 
         public void setup() {

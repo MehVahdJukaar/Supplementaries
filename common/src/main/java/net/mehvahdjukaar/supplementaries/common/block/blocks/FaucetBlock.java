@@ -26,10 +26,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -145,6 +142,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     private boolean canConnect(BlockState downState, LevelAccessor world, BlockPos pos, Direction dir) {
         if (downState.getBlock() instanceof JarBlock) return true;
+        else if(downState.getBlock() instanceof AbstractCauldronBlock) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_BLACKLIST)) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_WHITELIST)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;

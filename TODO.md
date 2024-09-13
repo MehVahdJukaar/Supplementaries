@@ -1,13 +1,10 @@
 # Supplementaries
 
-- bellows broken by water
+- faucet connets down in amendmnets cauldron
 - soap and wax dispenser behaviors
-- bomb breaking presents
 - waxable dispenser behavior
-- fire pit falling amendments
 - test config saving
 - lumisene on fire cauldron
-- slingshot bucket
 - lumisene burns in nether
 - present open sculk
 - blackboard draw sculk
@@ -15,7 +12,6 @@
 - fire charge speed up when fired from present
 - lumisene cauldron with particles
 - re test all faucet interactions
-- pedestal spin is bugged
 - client side bellows jump
 - hat stand wobble not synced
 - check particle collision with blocks
@@ -54,6 +50,10 @@
 
 # Amendments
 
+- fluid offer ignoring min amount
+- faucet behaviors update on data reload
+- dye cauldon 1.21
+- finish 1.21 (fire damage, event..)
 - cauldron bottle conversion from dispensers
 - wall lantern quad order inverted . visible when embeddum is on
 - rope bell doesnt work
@@ -61,7 +61,6 @@
 - hanging signs dont work with antique ink
 - water cauldron update bubbling state automatically
 - boilingdamage string
-- cauldron light kevek
 - citadel lecterns
 - crafting cauldron sound
 - jukebox flat animation
@@ -122,6 +121,10 @@
 - heartstone pets with system taht keeps track in unloaded chunks
 
 
+# MmmMmmMmmMmm
+
+- crow scarecrow
+
 # Adv Frames
 
 - advancement frames not showing player name
@@ -130,12 +133,10 @@
 
 # Polytone
 
-- lightmap affecting night visonwhen it shouldnt
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
-
+- entity random model CIM
 - hex codec for colormaps
-- polytone better lightmap smoothing and wiki docs
 
 # Randomium
 - particles for randomium
@@ -143,7 +144,7 @@
 - randomium can give onl stuff already obtained by a player in survival
 
 # Wise Tree
-- Tree chat gtp
+- Tree chat gpt
 - tree splash text
 
 

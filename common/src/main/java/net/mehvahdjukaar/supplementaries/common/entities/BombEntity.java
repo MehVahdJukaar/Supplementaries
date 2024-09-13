@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
@@ -126,7 +127,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void handleEntityEvent(byte id) {
         switch (id) {
-            default -> super.handleEntityEvent(id);
             case 3 -> {
                 spawnBreakParticles();
                 this.discard();
@@ -143,6 +143,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 }
                 this.active = false;
             }
+            default -> super.handleEntityEvent(id);
         }
     }
 
@@ -224,7 +225,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         if (!level.isClientSide && !this.hasFuse) {
             boolean isInstantlyActivated = this.type.isInstantlyActivated();
             if (!isInstantlyActivated && this.changeTimer == -1) {
-                this.changeTimer = 10;
+                this.changeTimer = 5;
                 //this.setDeltaMovement(Vector3d.ZERO);
                 level.broadcastEntityEvent(this, (byte) 68);
                 level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.5f, 1.3f);

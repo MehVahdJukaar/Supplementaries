@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -17,7 +18,7 @@ public class FluidsUtil {
     }
 
     @ExpectPlatform
-    public static Integer fillFluidTank(BlockEntity tileBelow, SoftFluidStack fluidStack, int minAmount) {
+    public static Integer fillFluidTank(BlockEntity tileBelow, FluidOffer offer) {
         throw new AssertionError();
     }
 

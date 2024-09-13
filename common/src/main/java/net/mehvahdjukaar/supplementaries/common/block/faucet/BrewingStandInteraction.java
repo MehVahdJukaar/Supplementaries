@@ -43,21 +43,32 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockEntity tile, SoftFluidStack fluid, int minAmount) {
+    public Integer fill(Level level, BlockPos pos, BlockEntity tile, FluidOffer offer) {
         if (tile instanceof BrewingStandBlockEntity brewingStand) {
+            int needToPlace = offer.minAmount();
+            ItemStack[] toPlace = new ItemStack[3];
             for (int i = 0; i < 3; i++) {
+                if (needToPlace <= 0) break;
                 ItemStack stack = brewingStand.getItem(i);
-                var filled = fluid.toItem(stack, true);
+                var filled = offer.fluid().toItem(stack, true);
                 if (filled != null) {
                     ItemStack filledItem = filled.getFirst();
                     brewingStand.setItem(i, ItemStack.EMPTY);
                     if (brewingStand.canPlaceItem(i, filledItem)) {
-                        brewingStand.setItem(i, filled.getFirst().copy());
-                        tile.setChanged();
-                        level.sendBlockUpdated(pos, tile.getBlockState(), tile.getBlockState(), 3);
-                        return filled.getSecond().getAmount();
-                    } else brewingStand.setItem(i, stack);
+                        toPlace[i] = filledItem;
+                        needToPlace--;
+                    }
+                    brewingStand.setItem(i, stack);
                 }
+            }
+            if (needToPlace == 0) {
+                for (int i = 0; i < 3; i++) {
+                    if (toPlace[i] != null) {
+                        brewingStand.setItem(i, toPlace[i]);
+                    }
+                }
+                tile.setChanged();
+                return offer.minAmount();
             }
         }
         return null;

@@ -125,7 +125,7 @@ dependencies {
 
     modCompileOnly("curse.maven:jei-238222:3928388")
     modImplementation ("curse.maven:configured-457570:5180900")
-    modRuntimeOnly ("curse.maven:amendments-896746:5692774")
+    modImplementation ("curse.maven:amendments-896746:5692774")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
@@ -177,7 +177,7 @@ dependencies {
     modCompileOnly("curse.maven:citadel-331936:4786380")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("curse.maven:cyanide-541676:4824162")
-    modImplementation("curse.maven:embeddium-908741:5566632")
+    modCompileOnly("curse.maven:embeddium-908741:5566632")
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")
 
