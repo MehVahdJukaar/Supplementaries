@@ -97,7 +97,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     //------fluids------
 
-    //TODO: make it connect with pipes
     //returns true if it has water animation
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
         boolean r = this.tryExtract(level, pos, state, true) != 0;

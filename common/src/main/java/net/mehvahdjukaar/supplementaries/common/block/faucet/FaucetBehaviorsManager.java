@@ -132,7 +132,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
         protected static BlockTestLevel get(RegistryAccess ra) {
             // always server sie even on client as projectiles entities wont get fire on client
-            return FakeLevel.get("cannon_test_level", false, BlockTestLevel::new, ra);
+            return FakeLevel.get("cannon_test_level", false,ra, BlockTestLevel::new);
         }
 
         public BlockTestLevel(boolean clientSide, String id, RegistryAccess registryAccess) {

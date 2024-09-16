@@ -76,6 +76,7 @@
 # Snowy Spirit
 
 - snowy spirit eat code server side with entity event for particles
+- gingy spin attack animationa and hostiles in witch hut
 - new ginger tegure and sound
 - gumdrop entities
 - finish gingerbead golem

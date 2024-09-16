@@ -116,7 +116,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
         protected static ProjectileTestLevel get(RegistryAccess ra) {
             // always server sie even on client as projectiles entities wont get fire on client
-            return FakeLevel.get("cannon_test_level", false, ProjectileTestLevel::new, ra);
+            return FakeLevel.get("cannon_test_level", false, ra, ProjectileTestLevel::new);
         }
 
         @Nullable
