@@ -11,6 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.commands.LocateCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ChunkPos;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -246,7 +247,7 @@ public class StructureLocator {
 
         for (Holder<Structure> holder : targets) {
             //I believe this is what takes the most time to execute
-            StructureCheckResult structurecheckresult = structureManager.checkStructurePresence(chunkpos, holder.value(), skipKnown);
+            StructureCheckResult structurecheckresult = structureManager.checkStructurePresence(chunkpos, holder.value(), placement, skipKnown);
             if (structurecheckresult != StructureCheckResult.START_NOT_PRESENT) {
                 if (!skipKnown && structurecheckresult == StructureCheckResult.START_PRESENT) {
                     //for not new chunk the ones without start are grabbed too?

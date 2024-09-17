@@ -89,7 +89,6 @@ public class ModTags {
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
     public static final TagKey<EntityType<?>> AWNING_BLACKLIST = entityTag("cant_bounce_off_awnings");
 
-    public static final TagKey<Enchantment> CURSES_BLACKLIST = enchTag("curses_blacklist");
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");

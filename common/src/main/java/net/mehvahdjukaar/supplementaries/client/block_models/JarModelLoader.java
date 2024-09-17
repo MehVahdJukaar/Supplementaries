@@ -15,8 +15,8 @@ public class JarModelLoader implements CustomModelLoader {
         float width = GsonHelper.getAsFloat(json, "liquid_width") / 16f;
         float height = GsonHelper.getAsFloat(json, "liquid_max_height") / 16f;
         float y0 = GsonHelper.getAsFloat(json, "liquid_y_offset") / 16f;
-        return (modelBaker, spriteGetter, transform, location) -> {
-            var g = CustomModelLoader.parseModel(model, modelBaker, spriteGetter, transform, location);
+        return (modelBaker, spriteGetter, transform) -> {
+            var g = CustomModelLoader.parseModel(model, modelBaker, spriteGetter, transform);
             return new JarBakedModel(g, width, height, y0, transform);
         };
     }

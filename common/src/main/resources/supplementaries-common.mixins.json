@@ -7,7 +7,6 @@
   "mixins": [
     "AbstractArrowMixin",
     "AbstractHorseMixin",
-    "AbstractProjectileBehaviorAccessor",
     "AbstractSkeletonMixin",
     "BannerPatternItemMixin",
     "BowMixin",

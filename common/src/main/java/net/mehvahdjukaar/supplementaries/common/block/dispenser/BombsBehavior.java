@@ -4,12 +4,12 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileS
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-class BombsBehavior extends AbstractProjectileDispenseBehavior {
+class BombsBehavior extends ProjectileDispenseBehavior {
 
     @Override
     protected Projectile getProjectile(Level worldIn, Position position, ItemStack stackIn) {

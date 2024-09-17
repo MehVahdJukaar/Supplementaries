@@ -4,6 +4,7 @@
 
 # Soon
 
+- slimed sound for all hits not just slimed
 - polytone bow model
 - gravel bricks exploded particles
 - bomb bounce on slime blocks

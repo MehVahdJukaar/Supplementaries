@@ -142,7 +142,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return 72000;
     }
 
@@ -198,15 +198,15 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         return Optional.empty();
     }
 
-
     @Override
-    public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        D data = this.getData(pStack);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        D data = this.getData(stack);
         if (data != null) {
             int c = data.getSelectedItemCount();
             if (c != 0) {
-                pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
-                        data.getSelected().getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
+                tooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
+                        data.getSelected().getItem().getDescription(), c)
+                        .withStyle(ChatFormatting.GRAY));
             }
         }
     }

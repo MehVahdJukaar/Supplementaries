@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTil
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -15,11 +16,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -51,23 +50,9 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return getPotion(stack).getColor();
     }
 
-    public static @NotNull PotionContents getPotion(ItemStack stack) {
-        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-    }
-
     @Override
     public boolean isBarVisible(ItemStack stack) {
         return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get();
-    }
-
-    public static boolean isPotionValid(Potion potion) {
-        List<MobEffectInstance> effects = potion.getEffects();
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
-            for (var e : effects) {
-                if (e.getEffect().value().isBeneficial()) return false;
-            }
-        }
-        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     @Override
@@ -110,10 +95,21 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return makeSpikeItem(Potions.POISON);
     }
 
+    public static ItemStack makeSpikeItem(Holder<Potion> potion) {
+        return PotionContents.createItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), potion);
+    }
 
-    public static ItemStack makeSpikeItem(Potion potion) {
-        ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
-        PotionUtils.setPotion(stack, potion);
-        return stack;
+    public static boolean isPotionValid(Potion potion) {
+        List<MobEffectInstance> effects = potion.getEffects();
+        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+            for (var e : effects) {
+                if (e.getEffect().value().isBeneficial()) return false;
+            }
+        }
+        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+    }
+
+    public static @NotNull PotionContents getPotion(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 }

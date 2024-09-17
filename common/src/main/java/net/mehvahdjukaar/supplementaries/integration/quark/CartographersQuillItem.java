@@ -32,7 +32,7 @@ import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureCheckResult;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -46,7 +46,8 @@ import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
+//TODO: add back
+/*
 public class CartographersQuillItem extends PathfindersQuillItem {
 
     public static final String TAG_STRUCTURE = "targetStructure";
@@ -571,3 +572,4 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
 
 }
+*/

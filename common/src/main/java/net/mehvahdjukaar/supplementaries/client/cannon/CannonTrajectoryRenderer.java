@@ -101,12 +101,11 @@ public class CannonTrajectoryRenderer {
 
     private static void renderTargetLine(PoseStack poseStack, MultiBufferSource buffer, Vec2 target) {
         VertexConsumer consumer = buffer.getBuffer(RenderType.lines());
-        Matrix4f matrix4f = poseStack.last().pose();
-        Matrix3f matrix3f = poseStack.last().normal();
-        consumer.vertex(matrix4f, 0, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-        consumer.vertex(matrix4f, 0, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-        consumer.vertex(matrix4f, 0.01f, target.y, -target.x).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-        consumer.vertex(matrix4f, 0.01f, 0, 0).color(255, 0, 0, 255).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+        var pose = poseStack.last();
+        consumer.addVertex(pose, 0, 0, 0).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 1.0F, 0.0F);
+        consumer.addVertex(pose, 0, target.y, -target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 1.0F, 0.0F);
+        consumer.addVertex(pose, 0.01f, target.y, -target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 0.0F, 1.0F);
+        consumer.addVertex(pose, 0.01f, 0, 0).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 0.0F, 1.0F);
     }
 
 
@@ -134,14 +133,12 @@ public class CannonTrajectoryRenderer {
         for (float t = step; t < maxT; t += step) {
 
             float textureStart = d % 1;
-            consumer.vertex(matrix, -size, py, px)
-                    .color(1, 1, 1, 1.0F)
-                    .uv(0, textureStart)
-                    .endVertex();
-            consumer.vertex(matrix, size, py, px)
-                    .color(1, 1, 1, 1.0F)
-                    .uv(5 / 16f, textureStart)
-                    .endVertex();
+            consumer.addVertex(matrix, -size, py, px)
+                    .setColor(1, 1, 1, 1.0F)
+                    .setUv(0, textureStart);
+            consumer.addVertex(matrix, size, py, px)
+                    .setColor(1, 1, 1, 1.0F)
+                    .setUv(5 / 16f, textureStart);
 
             double ny = trajectory.getY(t);
             double nx = -trajectory.getX(t);
@@ -154,14 +151,12 @@ public class CannonTrajectoryRenderer {
             px = (float) nx;
 
             int alpha = (t + step >= maxT) ? 0 : 1;
-            consumer.vertex(matrix, size, py, px)
-                    .color(1f, 1f, 1f, alpha)
-                    .uv(5 / 16f, textEnd)
-                    .endVertex();
-            consumer.vertex(matrix, -size, py, px)
-                    .color(1f, 1f, 1f, alpha)
-                    .uv(0, textEnd)
-                    .endVertex();
+            consumer.addVertex(matrix, size, py, px)
+                    .setColor(1f, 1f, 1f, alpha)
+                    .setUv(5 / 16f, textEnd);
+            consumer.addVertex(matrix, -size, py, px)
+                    .setColor(1f, 1f, 1f, alpha)
+                    .setUv(0, textEnd);
         }
 
         poseStack.popPose();

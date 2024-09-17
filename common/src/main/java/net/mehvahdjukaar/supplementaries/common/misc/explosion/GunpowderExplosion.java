@@ -45,7 +45,9 @@ public class GunpowderExplosion extends Explosion {
     private float radius2;
 
     public GunpowderExplosion(Level world, Entity entity, double x, double y, double z, float size) {
-        super(world, entity, null, null, x, y, z, size, false, BlockInteraction.DESTROY);
+        super(world, entity, null, null, x, y, z, size, false,
+                BlockInteraction.DESTROY,  null, null, null);
+        //TODO: fix
         this.radius2 = size;
     }
 
@@ -73,7 +75,7 @@ public class GunpowderExplosion extends Explosion {
         BlockPos pos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
         BlockState s = level.getBlockState(pos);
-        if (s.canBeReplaced() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) {
+        if (s.canBeReplaced() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) { //TODO: change this reg value
             if (this.hasFlammableNeighbours(pos) || PlatHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
                     || newFire.getBlock() != Blocks.FIRE) {
                 this.level.setBlockAndUpdate(pos, newFire);

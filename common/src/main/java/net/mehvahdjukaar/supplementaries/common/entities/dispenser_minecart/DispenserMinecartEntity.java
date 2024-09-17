@@ -6,9 +6,10 @@ import net.mehvahdjukaar.supplementaries.mixins.AbstractProjectileBehaviorAccess
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -37,6 +38,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.Stream;
+
 //this is a mess and should extend AbstractMinecartContainer
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
 
@@ -63,13 +66,13 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     @Override
     protected void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        pCompound.put("Dispenser", this.dispenser.saveWithoutMetadata());
+        pCompound.put("Dispenser", this.dispenser.saveWithoutMetadata(level().registryAccess()));
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
-        this.dispenser.load(pCompound.getCompound("Dispenser"));
+        this.dispenser.loadWithComponents(pCompound.getCompound("Dispenser"), level().registryAccess());
     }
 
     @Override

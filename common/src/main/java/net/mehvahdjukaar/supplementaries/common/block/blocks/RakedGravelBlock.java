@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -23,14 +24,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RakedGravelBlock extends GravelBlock {
+public class RakedGravelBlock extends ColoredFallingBlock {
 
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
     public static final EnumProperty<RakeDirection> RAKE_DIRECTION = ModBlockProperties.RAKE_DIRECTION;
 
-    public RakedGravelBlock(Properties properties) {
-        super(properties);
+    public RakedGravelBlock(ColorRGBA color, Properties properties) {
+        super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH));
     }
 
@@ -142,7 +143,7 @@ public class RakedGravelBlock extends GravelBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 

@@ -56,7 +56,8 @@
               "add": false
             },
             {
-              "function": "supplementaries:curse_loot"
+              "function": "supplementaries:random_enchantment",
+              "enchantments": "#minecraft:curse"
             }
           ],
           "name": "minecraft:iron_boots"

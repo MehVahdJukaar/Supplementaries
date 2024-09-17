@@ -13,10 +13,10 @@ public class FaucetModelLoader implements CustomModelLoader {
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         var model = json.get("model");
         var liquid = json.get("liquid");
-        return (modelBaker, spriteGetter, transform, location) -> {
+        return (modelBaker, spriteGetter, transform) -> {
 
-            var g = CustomModelLoader.parseModel(model, modelBaker, spriteGetter, transform, location);
-            var l = CustomModelLoader.parseModel(liquid, modelBaker, spriteGetter, transform, location);
+            var g = CustomModelLoader.parseModel(model, modelBaker, spriteGetter, transform);
+            var l = CustomModelLoader.parseModel(liquid, modelBaker, spriteGetter, transform);
             return new FaucetBakedModel(g, l, transform);
         };
     }

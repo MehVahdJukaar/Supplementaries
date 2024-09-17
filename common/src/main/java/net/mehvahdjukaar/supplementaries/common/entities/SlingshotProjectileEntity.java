@@ -22,6 +22,8 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,6 +40,7 @@ import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
@@ -78,7 +81,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         super(ModEntities.SLINGSHOT_PROJECTILE.get(), world);
         this.maxAge = MAX_AGE;
         this.setItem(item);
-        this.setLoyalty((byte) EnchantmentHelper.getLoyalty(throwerStack));
+
+        this.setLoyalty(getLoyaltyFromItem(item));
         this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
@@ -98,15 +102,22 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.maxStuckTime = 0;
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return PlatHelper.getEntitySpawnPacket(this);
+    private byte getLoyaltyFromItem(ItemStack itemStack) {
+        Level var3 = this.level();
+        return var3 instanceof ServerLevel serverLevel
+                ? (byte)Mth.clamp(EnchantmentHelper.getTridentReturnToOwnerAcceleration(serverLevel, itemStack, this), 0, 127)
+                : 0;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(LOYALTY, (byte) 0);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return PlatHelper.getEntitySpawnPacket(this, serverEntity);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LOYALTY, (byte) 0);
     }
 
     @Override

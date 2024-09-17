@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
-import net.mehvahdjukaar.supplementaries.common.items.loot.CurseLootFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
@@ -58,8 +58,8 @@ public class ModRegistry {
     //misc entries
 
     //loot
-    public static final Supplier<LootItemFunctionType<?>> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
-            () -> new LootItemFunctionType<>(new CurseLootFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
+    public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
+            () -> new LootItemFunctionType<>(RandomEnchantFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
     public static final Supplier<LootItemFunctionType<?>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
             () -> new LootItemFunctionType<>(new RandomArrowFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
 

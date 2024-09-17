@@ -13,10 +13,10 @@ public class GobletModelLoader implements CustomModelLoader {
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         var goblet = json.get("model");
         var liquid = json.get("liquid");
-        return (modelBaker, spriteGetter, transform, location) -> {
+        return (modelBaker, spriteGetter, transform) -> {
 
-            var g = CustomModelLoader.parseModel(goblet, modelBaker, spriteGetter, transform, location);
-            var l = CustomModelLoader.parseModel(liquid, modelBaker, spriteGetter, transform, location);
+            var g = CustomModelLoader.parseModel(goblet, modelBaker, spriteGetter, transform);
+            var l = CustomModelLoader.parseModel(liquid, modelBaker, spriteGetter, transform);
             return new GobletBakedModel(g, l, transform);
         };
     }

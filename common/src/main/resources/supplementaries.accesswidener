@@ -7,15 +7,10 @@ accessible method net/minecraft/world/entity/decoration/HangingEntity setDirecti
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/level/levelgen/structure/placement/ConcentricRingsStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
-#bundle
-accessible method net/minecraft/world/item/BundleItem removeOne (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
-accessible method net/minecraft/world/item/BundleItem add (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)I
 #dispenser minecart
-accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
 accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 
-accessible field net/minecraft/world/level/block/AbstractCauldronBlock interactions Ljava/util/Map;
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 
@@ -78,9 +73,6 @@ accessible field net/minecraft/world/entity/Entity wasTouchingWater Z
 
 accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 
-#concrete
-accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/state/BlockState;
-
 #font stuff
 accessible class net/minecraft/client/gui/Font$StringRenderOutput
 accessible field net/minecraft/client/gui/Font$StringRenderOutput x F
@@ -110,9 +102,7 @@ accessible field net/minecraft/world/item/crafting/FireworkStarRecipe SHAPE_BY_I
 
 #camera stuff
 accessible method net/minecraft/client/Camera setRotation (FF)V
-accessible method net/minecraft/client/Camera move (DDD)V
 accessible method net/minecraft/client/Camera setPosition (Lnet/minecraft/world/phys/Vec3;)V
-accessible method net/minecraft/client/Camera getMaxZoom (D)D
 accessible field net/minecraft/world/entity/projectile/Projectile ownerUUID Ljava/util/UUID;
 accessible field net/minecraft/world/entity/projectile/Projectile cachedOwner Lnet/minecraft/world/entity/Entity;
 
@@ -139,4 +129,3 @@ accessible field net/minecraft/world/level/Explosion z D
 accessible field net/minecraft/world/level/Explosion damageSource Lnet/minecraft/world/damagesource/DamageSource;
 mutable field net/minecraft/world/level/Explosion damageSource Lnet/minecraft/world/damagesource/DamageSource;
 accessible field net/minecraft/world/level/Explosion blockInteraction Lnet/minecraft/world/level/Explosion$BlockInteraction;
-extendable method net/minecraft/world/level/Explosion addBlockDrops (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/BlockPos;)V

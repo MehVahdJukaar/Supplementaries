@@ -1,28 +1,26 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.Util;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
 //Needed on both sides because...
 public class ModTextures {
 
     //minecraft
-    public static final ResourceLocation WHITE_CONCRETE_TEXTURE = new ResourceLocation("minecraft:block/white_concrete_powder");
-    public static final ResourceLocation SAND_TEXTURE = new ResourceLocation("minecraft:block/sand");
-    public static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation("minecraft:block/chain");
-    public static final ResourceLocation HONEY_TEXTURE = new ResourceLocation("minecraft:block/honey_block_side");
-    public static final ResourceLocation SLIME_TEXTURE = new ResourceLocation("minecraft:block/slime_block");
+    public static final ResourceLocation WHITE_CONCRETE_TEXTURE = ResourceLocation.withDefaultNamespace("block/white_concrete_powder");
+    public static final ResourceLocation SAND_TEXTURE = ResourceLocation.withDefaultNamespace("block/sand");
+    public static final ResourceLocation CHAIN_TEXTURE = ResourceLocation.withDefaultNamespace("block/chain");
+    public static final ResourceLocation HONEY_TEXTURE = ResourceLocation.withDefaultNamespace("block/honey_block_side");
+    public static final ResourceLocation SLIME_TEXTURE = ResourceLocation.withDefaultNamespace("block/slime_block");
 
 
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
@@ -147,14 +145,7 @@ public class ModTextures {
             List.of(MAP_ICON, BANNER_PATTERN_ICON, BOOK_ICON);
 
 
-    public static final Map<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.make(() -> {
-        var map = new Object2ObjectOpenHashMap<BannerPattern, ResourceLocation>();
-        for (BannerPattern pattern : BuiltInRegistries.BANNER_PATTERN) {
-            map.put(pattern, Supplementaries.res("entity/banner/flags/" +
-                    BuiltInRegistries.BANNER_PATTERN.getKey(pattern).toShortLanguageKey().replace(":", "/").replace(".", "/")));
-        }
-        return map;
-    });
-
-
+    public static final Function<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.memoize(pattern ->
+            Supplementaries.res("entity/banner/flags/" + pattern.assetId()
+                    .toShortLanguageKey().replace(":", "/").replace(".", "/")));
 }

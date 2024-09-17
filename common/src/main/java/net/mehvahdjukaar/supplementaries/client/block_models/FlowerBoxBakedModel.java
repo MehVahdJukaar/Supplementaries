@@ -79,7 +79,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 PoseStack poseStack = new PoseStack();
 
                 Matrix4f rot = rotation.getRotation().getMatrix();
-                poseStack.mulPoseMatrix(rot);
+                poseStack.mulPose(rot);
                 //no idea what these do anymore
                 poseStack.translate(-0.3125, 0, 0);
 
