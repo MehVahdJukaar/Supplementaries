@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -138,16 +140,14 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-
         boolean bottom = state.getValue(BOTTOM);
-        if (CommonConfigs.Building.AWNING_FALL_THROUGH.get()) {
+        if (CommonConfigs.Building.AWNING_FALL_THROUGH.get() && context instanceof EntityCollisionContext) {
             if (context.isDescending() || !context.isAbove(bottom ? TOP_COLLISION : BOTTOM_COLLISION,
                     bottom ? pos.below() : pos, false)) {
                return Shapes.empty();
             }
         }
         return super.getCollisionShape(state, level, pos, context);
-
     }
 
     @Override

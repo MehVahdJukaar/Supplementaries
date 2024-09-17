@@ -1,7 +1,9 @@
 # Soon
 
--  dispenser minecraft angle and speed
 - polytone bow model
+- gravel bricks exploded particles
+- bomb bounce on slime blocks
+- awning slimeball bounce, boundy block tag for cannonbals and bombs
 
 
 # Supplementaries

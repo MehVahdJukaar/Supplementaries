@@ -291,13 +291,14 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 3; //TODO: config
+            float dmgMult = 3.5f; //TODO: config
             float amount = (float) lostEnergy * dmgMult;
+            float oldHealth = le.getHealth();
             if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);
             }
-            if (le instanceof Creeper) {
-                maybeDropDisc(le, amount);
+            if (!level().isClientSide && le instanceof Creeper && oldHealth >= le.getMaxHealth()) {
+                maybeDropDisc(le);
             }
         }
 
@@ -328,8 +329,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
     }
 
-    private void maybeDropDisc(LivingEntity le, float amount) {
-        if (!le.isAlive() && amount > 20 && CommonConfigs.Functional.AVAST_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
+    private void maybeDropDisc(LivingEntity le) {
+        if (!le.isAlive() && CommonConfigs.Functional.AVAST_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
             if (((LivingEntityAccessor) le).invokeShouldDropLoot() && this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
                 le.spawnAtLocation(ModRegistry.AVAST_DISC.get());
                 // we cant use global loot modifiers because we dont have access to damage value there
