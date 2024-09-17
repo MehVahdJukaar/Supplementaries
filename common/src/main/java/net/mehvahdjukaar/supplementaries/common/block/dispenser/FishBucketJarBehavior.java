@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.Item;
@@ -20,8 +20,8 @@ class FishBucketJarBehavior extends DispenserHelper.AdditionalDispenserBehavior 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         //this.setSuccessful(false);
-        ServerLevel world = source.getLevel();
-        BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+        ServerLevel world = source.level();
+        BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
             if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
                 if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {

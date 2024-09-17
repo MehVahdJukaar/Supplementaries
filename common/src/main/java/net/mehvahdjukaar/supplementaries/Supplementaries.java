@@ -66,7 +66,7 @@ public class Supplementaries {
     public static final Logger LOGGER = LogManager.getLogger("Supplementaries");
 
     public static ResourceLocation res(String n) {
-        return new ResourceLocation(MOD_ID, n);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, n);
     }
 
     public static String str(String n) {
@@ -81,12 +81,12 @@ public class Supplementaries {
 
         PlatHelper.getPhysicalSide().ifClient(ClientConfigs::init);
 
-        ModNetwork.init();
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 
+        ModNetwork.init();
         ModSounds.init();
         ModFluids.init();
         ModRegistry.init();
@@ -117,7 +117,7 @@ public class Supplementaries {
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
             try {
-                ClientHelper.registerOptionalTexturePack(res("darker_ropes"));
+                ClientHelper.registerOptionalTexturePack(res("darker_ropes"), false);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error(e);
             }

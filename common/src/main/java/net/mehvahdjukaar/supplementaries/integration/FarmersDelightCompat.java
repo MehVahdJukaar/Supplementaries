@@ -58,11 +58,11 @@ public class FarmersDelightCompat {
             () -> SoundEvents.GRASS_FALL);
 
     public static final Supplier<Block> ROPE_TOMATO = RegHelper.registerBlock(Supplementaries.res("rope_tomatoes"),
-            () -> new TomatoRopeBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+            () -> new TomatoRopeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
                     .forceSolidOff()));
 
     public static final Supplier<Block> STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
-            () -> new TomatoStickBlock(BlockBehaviour.Properties.copy(Blocks.WHEAT)
+            () -> new TomatoStickBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
                     .forceSolidOff()
                     .sound(STICK_TOMATO_SOUND)));
 
@@ -254,7 +254,7 @@ public class FarmersDelightCompat {
     }
 
     public static PlanterBlock makePlanterRich() {
-        return new PlanterRichBlock(BlockBehaviour.Properties.copy(Blocks.RED_TERRACOTTA)
+        return new PlanterRichBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.RED_TERRACOTTA)
                 .strength(2f, 6f)
                 .requiresCorrectToolForDrops()
                 .randomTicks(), CompatObjects.RICH_SOIL);

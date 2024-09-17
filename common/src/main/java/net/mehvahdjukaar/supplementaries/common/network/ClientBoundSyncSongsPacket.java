@@ -27,6 +27,7 @@ public class ClientBoundSyncSongsPacket implements Message {
         for (int i = 0; i < size; i++) {
             CompoundTag tag = buf.readNbt();
             if (tag != null) {
+                //TODO: stream codec there
                 var r = Song.CODEC.parse(NbtOps.INSTANCE, tag);
                 r.result().ifPresent(songs::add);
             }

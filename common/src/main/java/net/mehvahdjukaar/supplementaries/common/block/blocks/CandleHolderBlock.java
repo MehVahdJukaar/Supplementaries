@@ -23,6 +23,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -139,11 +140,6 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             return 7 + candles * 2;
         }
         return 0;
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-        return false;
     }
 
     @Override
@@ -270,10 +266,11 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add((Component.translatable("message.supplementaries.candle_holder"))
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents,
+                                TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add((Component.translatable("message.supplementaries.candle_holder"))
                 .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 

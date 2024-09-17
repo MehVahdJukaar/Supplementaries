@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers;
 
-import net.mehvahdjukaar.moonlight.api.map.markers.SimpleMapBlockMarker;
+import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.minecraft.core.BlockPos;
@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.Nullable;
 
-public class SignPostMarker extends SimpleMapBlockMarker {
+public class SignPostMarker extends SimpleMapMarker {
 
     public SignPostMarker() {
         super(ModMapMarkers.SIGN_POST_DECORATION_TYPE);

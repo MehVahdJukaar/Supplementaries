@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -23,7 +23,7 @@ class ThrowableSlimeballBehavior extends ProjectileBehavior {
 
     @Override
     protected Projectile getProjectileEntity(BlockSource source, Position position, ItemStack stackIn) {
-        return new SlimeBallEntity(source.getLevel(), position.x(), position.y(), position.z());
+        return new SlimeBallEntity(source.level(), position.x(), position.y(), position.z());
     }
 
     @Override

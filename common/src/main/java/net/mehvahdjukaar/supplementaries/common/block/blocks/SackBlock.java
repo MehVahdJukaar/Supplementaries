@@ -61,7 +61,7 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
             Block.box(6, 12, 6, 10, 13, 10), Block.box(3, 13, 3, 13, 14, 13));
 
 
-    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+    public static final ResourceLocation CONTENTS = ResourceLocation.withDefaultNamespace("contents");
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 

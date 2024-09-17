@@ -3,9 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.ThrowableBrickEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.core.BlockSource;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -19,7 +18,7 @@ class ThrowableBricksBehavior extends ProjectileBehavior {
 
     @Override
     protected Projectile getProjectileEntity(BlockSource source, Position position, ItemStack stackIn) {
-        var entity = new ThrowableBrickEntity(source.getLevel(), position.x(), position.y(), position.z());
+        var entity = new ThrowableBrickEntity(source.level(), position.x(), position.y(), position.z());
         entity.setItem(stackIn.copyWithCount(1));
         return entity;
     }

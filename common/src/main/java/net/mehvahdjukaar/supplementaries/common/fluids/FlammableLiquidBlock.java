@@ -126,7 +126,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor level, FireSourceType fireSourceType) {
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor level, FireSoundType fireSourceType) {
         //extra can light up checks
         if (shouldNotHaveFire(state, pos, level)) return false;
         var success = ILightable.super.lightUp(player, state, pos, level, fireSourceType);

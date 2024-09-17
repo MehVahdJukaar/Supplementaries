@@ -17,7 +17,7 @@ public class ModConfigSelectScreen extends FabricConfigListScreen {
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
                 Component.literal("§6Supplementaries Configs"), ModTextures.CONFIG_BACKGROUND,
-                parent, ClientConfigs.SPEC, CommonConfigs.SPEC);
+                parent, ClientConfigs.CONFIG_HOLDER, CommonConfigs.CONFIG_HOLDER);
     }
 
     @Override

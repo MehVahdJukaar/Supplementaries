@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
+//fucking mojang turned block source into a final record
+public class MovingBlockSource<T extends BlockEntity> extends BlockSource {
 
     private final Entity entity;
     private final T blockEntity;

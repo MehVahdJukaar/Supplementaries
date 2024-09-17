@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers;
 
-import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapMarker;
+import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ColoredDecoration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,15 +12,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public abstract class ColoredMarker extends MapBlockMarker<ColoredDecoration> {
+public abstract class ColoredMarker extends MLMapMarker<ColoredDecoration> {
 
     private DyeColor color = DyeColor.WHITE;
 
-    protected ColoredMarker(MapDecorationType<ColoredDecoration,?> type) {
+    protected ColoredMarker(MLMapDecorationType<ColoredDecoration,?> type) {
         super(type);
     }
 
-    protected ColoredMarker(MapDecorationType<ColoredDecoration,?> type, BlockPos pos, DyeColor color, @Nullable Component name) {
+    protected ColoredMarker(MLMapDecorationType<ColoredDecoration,?> type, BlockPos pos, DyeColor color, @Nullable Component name) {
         this(type);
         this.color = color;
         this.setName(name);

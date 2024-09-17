@@ -4,8 +4,8 @@ import net.mehvahdjukaar.moonlight.api.ModSharedVariables;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
-import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -25,7 +25,7 @@ public class ClientConfigs {
     public static void init() {
     }
 
-    public static final ConfigSpec SPEC;
+    public static final ModConfigHolder CONFIG_HOLDER;
 
     static WeakReference<ConfigBuilder> builderReference;
 
@@ -48,10 +48,9 @@ public class ClientConfigs {
         Items.init();
 
         builder.onChange(ClientConfigs::onChange);
-        SPEC = builder.buildAndRegister();
+        CONFIG_HOLDER = builder.build();
 
-
-        SPEC.loadFromFile();
+        CONFIG_HOLDER.forceLoad();
     }
 
     private static void onChange() {

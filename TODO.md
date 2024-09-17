@@ -1,3 +1,7 @@
+# 1.21
+- fix and re assing all isPathfindables
+
+
 # Soon
 
 - polytone bow model

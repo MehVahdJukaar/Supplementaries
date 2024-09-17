@@ -26,8 +26,8 @@ public class ConfigUtils {
     //called from config screen
     public static void configScreenReload(ServerPlayer player) {
         //TODO: fix configs sinking and remove this. idk why its needed
-        CommonConfigs.SPEC.loadFromFile();
-        CommonConfigs.SPEC.syncConfigsToPlayer(player);
+        CommonConfigs.CONFIG_HOLDER.loadFromFile();
+        CommonConfigs.CONFIG_HOLDER.syncConfigsToPlayer(player);
     }
 
 }

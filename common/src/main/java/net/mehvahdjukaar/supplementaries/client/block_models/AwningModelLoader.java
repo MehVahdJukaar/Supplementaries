@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
 import com.google.gson.*;
-import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomGeometry;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomModelLoader;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -26,7 +24,7 @@ public class AwningModelLoader implements CustomModelLoader {
     @Override
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
         BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
-        if(!SuppClientPlatformStuff.hasFixedAO()){
+        if (!SuppClientPlatformStuff.hasFixedAO()) {
             // vanilla AO code is so shit, full of bugs
             json.addProperty("ambientocclusion", false);
         }
@@ -46,23 +44,21 @@ public class AwningModelLoader implements CustomModelLoader {
                 }
             }
         }
+        ResourceLocation parentLocation = null;
+        if (json.has("parent")) {
+            parentLocation = ResourceLocation.tryParse(json.get("parent").getAsString());
+        }
 
-        return new CustomGeometry() {
-            @Override
-            public CustomBakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation resourceLocation) {
-                return null;
-            }
+        ResourceLocation finalParentLocation = parentLocation;
+        return (modelBaker, spriteGetter, modelState) -> {
+            // resolve model and fix parent texture map as fore doesn't do that. if a child has parent of custom geometry, just THAT will be baked
+            var parent = modelBaker.getModel(finalParentLocation);
+            if (parent instanceof BlockModel bm) {
+                // super hacky
 
-            @Override
-            public BakedModel bakeModel(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState transform, ResourceLocation location) {
-                // resolve model and fix parent texture map as fore doesn't do that. if a child has parent of custom geometry, just THAT will be baked
-                var parent = modelBaker.getModel(location);
-                if (parent instanceof BlockModel bm) {
-                    // super hacky
-                    modelHack.textureMap.putAll(bm.textureMap);
-                }
-                return modelHack.bake(modelBaker, spriteGetter, transform, location);
+                modelHack.textureMap.putAll(bm.textureMap);
             }
+            return modelHack.bake(modelBaker, spriteGetter, modelState);
         };
     }
 

@@ -79,8 +79,10 @@ public class SlingshotRendererHelper {
             f = f / f3;
             f1 = f1 / f3;
             f2 = f2 / f3;
-            pBuffer.vertex(last.pose(), (float) (e1 + pX), (float) (e2 + pY), (float) (e3 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
-            pBuffer.vertex(last.pose(), (float) (e4 + pX), (float) (e5 + pY), (float) (e6 + pZ)).color(pRed, pGreen, pBlue, pAlpha).normal(last.normal(), f, f1, f2).endVertex();
+            pBuffer.addVertex(last.pose(), (float) (e1 + pX), (float) (e2 + pY), (float) (e3 + pZ))
+                    .setColor(pRed, pGreen, pBlue, pAlpha).setNormal(last, f, f1, f2);
+            pBuffer.addVertex(last.pose(), (float) (e4 + pX), (float) (e5 + pY), (float) (e6 + pZ))
+                    .setColor(pRed, pGreen, pBlue, pAlpha).setNormal(last, f, f1, f2);
         });
     }
 

@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
@@ -40,7 +40,7 @@ public class ServerBoundCycleSelectableContainerItemPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeInt(this.amount);
         buf.writeInt(this.slot.ordinal());
         buf.writeBoolean(this.setSlot);
@@ -48,7 +48,7 @@ public class ServerBoundCycleSelectableContainerItemPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // server world
         if (itemInstance instanceof SelectableContainerItem<?> instance) {
             ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());

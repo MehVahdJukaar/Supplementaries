@@ -124,6 +124,7 @@ architectury {
 }
 
 allprojects {
+
     apply plugin: "java"
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
@@ -131,7 +132,6 @@ allprojects {
     archivesBaseName = rootProject.mod_id
     version = rootProject.mod_version
     group = rootProject.mod_group_id
-    required_moonlight_version = rootProject.required_moonlight_version
 
     repositories {
 
@@ -202,12 +202,12 @@ ext{
             mod_credits          : mod_credits,
             mod_homepage         : mod_homepage,
             mod_github           : mod_github,
-            update_url           : update_url,
 
             neo_version          : neo_version,
             neo_version_range    : neo_version_range,
             loader_version_range : loader_version_range,
-            required_moonlight_version : required_moonlight_version
+
+            moonlight_version_range : moonlight_version_range,
     ]
 }
 

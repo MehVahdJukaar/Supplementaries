@@ -9,8 +9,9 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,9 +25,9 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
 
     private static int getCachedColor(int base, int tint) {
         return switch (tint) {
-            default -> -1;
             case 1 -> CACHED_COLORS_0.get().computeIfAbsent(base, b -> getProcessedColor(base, 0));
             case 2 -> CACHED_COLORS_1.get().computeIfAbsent(base, b -> getProcessedColor(base, 1));
+            default -> -1;
         };
     }
 
@@ -53,7 +54,7 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     @Override
     public int getColor(ItemStack stack, int tint) {
         if (tint == 0) return 0xffffff;
-        return getCachedColor(PotionUtils.getColor(stack), tint);
+        return getCachedColor(stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).getColor(), tint);
     }
 
     private static int getProcessedColor(int rgb, int tint) {

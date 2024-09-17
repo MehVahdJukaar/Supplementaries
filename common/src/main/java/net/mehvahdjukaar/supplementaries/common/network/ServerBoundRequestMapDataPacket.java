@@ -1,11 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IMapDisplay;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -17,13 +18,13 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ServerBoundRequestMapDataPacket implements Message {
-    private final BlockPos pos;
-    private final UUID id;
+public record ServerBoundRequestMapDataPacket(BlockPos pos, UUID id) implements Message {
 
-    public ServerBoundRequestMapDataPacket(FriendlyByteBuf buf) {
-        this.pos = buf.readBlockPos();
-        this.id = buf.readUUID();
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundRequestMapDataPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_request_map_data"), ServerBoundRequestMapDataPacket::new);
+
+    public ServerBoundRequestMapDataPacket(RegistryFriendlyByteBuf buf) {
+        this(buf.readBlockPos(), buf.readUUID());
     }
 
     public ServerBoundRequestMapDataPacket(BlockPos pos, UUID id) {
@@ -32,15 +33,15 @@ public class ServerBoundRequestMapDataPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
         buf.writeUUID(this.id);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // server level
-        Level level = Objects.requireNonNull(context.getSender()).level();
+        Level level = Objects.requireNonNull(context.getPlayer()).level();
 
         if (level instanceof ServerLevel) {
             Player player = level.getPlayerByUUID(this.id);
@@ -61,5 +62,10 @@ public class ServerBoundRequestMapDataPacket implements Message {
             }
         }
 
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

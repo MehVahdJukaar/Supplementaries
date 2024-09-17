@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -14,8 +15,8 @@ import net.minecraft.world.item.trading.MerchantOffer;
 
 public record PresentItemListing(ModItemListing original) implements ModItemListing {
 
-    public static final Codec<PresentItemListing> CODEC = ModItemListing.CODEC.xmap(
-            PresentItemListing::new, w -> w.original).fieldOf("trade").codec();
+    public static final MapCodec<PresentItemListing> CODEC = ModItemListing.CODEC.xmap(
+            PresentItemListing::new, w -> w.original).fieldOf("trade");
 
     @Override
     public MerchantOffer getOffer(Entity entity, RandomSource random) {
@@ -37,7 +38,7 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
     }
 
     @Override
-    public Codec<? extends ModItemListing> getCodec() {
+    public MapCodec<? extends ModItemListing> getCodec() {
         return CODEC;
     }
 

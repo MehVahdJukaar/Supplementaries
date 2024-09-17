@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.tags.BlockTags;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 
 public class DispenserMinecartItem extends Item {
 
@@ -28,12 +29,13 @@ public class DispenserMinecartItem extends Item {
 
         @Override
         public ItemStack execute(BlockSource pSource, ItemStack pStack) {
-            Direction direction = pSource.getBlockState().getValue(DispenserBlock.FACING);
-            Level level = pSource.getLevel();
-            double d0 = pSource.x() +  direction.getStepX() * 1.125D;
-            double d1 = Math.floor(pSource.y()) +  direction.getStepY();
-            double d2 = pSource.z() +  direction.getStepZ() * 1.125D;
-            BlockPos blockpos = pSource.getPos().relative(direction);
+            Direction direction = pSource.state().getValue(DispenserBlock.FACING);
+            Level level = pSource.level();
+            Vec3 center = pSource.center();
+            double d0 = center.x() +  direction.getStepX() * 1.125D;
+            double d1 = Math.floor(center.y()) +  direction.getStepY();
+            double d2 = center.z() +  direction.getStepZ() * 1.125D;
+            BlockPos blockpos = pSource.pos().relative(direction);
             BlockState blockstate = level.getBlockState(blockpos);
             RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock ? ForgeHelper.getRailDirection(railBlock, blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
             double d3;
@@ -69,7 +71,7 @@ public class DispenserMinecartItem extends Item {
 
         @Override
         protected void playSound(BlockSource blockSource) {
-            blockSource.getLevel().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, blockSource.getPos(), 0);
+            blockSource.level().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, blockSource.getPos(), 0);
         }
     };
 

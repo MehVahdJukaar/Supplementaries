@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -15,27 +16,30 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record ClientBoundExplosionPacket(Type type, Vec3 pos, float power, List<BlockPos> toBlow,
+public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, float power, List<BlockPos> toBlow,
                                          @Nullable Vec3 knockback, int getId) implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundExplosionPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_explosion"), ClientBoundExplosionPacket::fromBuffer);
 
     public static ClientBoundExplosionPacket bomb(BombExplosion expl, @Nullable Player player) {
         Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(Type.BOMB, pos, expl.radius, expl.getToBlow(),
+        return new ClientBoundExplosionPacket(ExplosionType.BOMB, pos, expl.radius, expl.getToBlow(),
                 expl.getHitPlayers().get(player), expl.bombType().ordinal());
     }
 
     public static ClientBoundExplosionPacket cannonball(CannonBallExplosion expl, CannonBallEntity source) {
         Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(Type.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
+        return new ClientBoundExplosionPacket(ExplosionType.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
     }
 
     public static ClientBoundExplosionPacket gunpowder(GunpowderExplosion expl) {
         Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(Type.GUNPOWDER, pos, expl.radius, expl.getToBlow(), null, -1);
+        return new ClientBoundExplosionPacket(ExplosionType.GUNPOWDER, pos, expl.radius, expl.getToBlow(), null, -1);
     }
 
 
-    public static ClientBoundExplosionPacket fromBuffer(FriendlyByteBuf buffer) {
+    static ClientBoundExplosionPacket fromBuffer(RegistryFriendlyByteBuf buffer) {
         double x = buffer.readDouble();
         double y = buffer.readDouble();
         double z = buffer.readDouble();
@@ -56,13 +60,13 @@ public record ClientBoundExplosionPacket(Type type, Vec3 pos, float power, List<
         } else {
             knockback = null;
         }
-        Type type = buffer.readEnum(Type.class);
+        ExplosionType type = buffer.readEnum(ExplosionType.class);
         int id = buffer.readVarInt();
         return new ClientBoundExplosionPacket(type, new Vec3(x, y, z), power, toBlow, knockback, id);
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeDouble(pos.x);
         buffer.writeDouble(pos.y);
         buffer.writeDouble(pos.z);
@@ -84,16 +88,21 @@ public record ClientBoundExplosionPacket(Type type, Vec3 pos, float power, List<
             buffer.writeDouble(knockback.y);
             buffer.writeDouble(knockback.z);
         }
-        buffer.writeEnum(type);
+        buffer.writeEnum(explosionType);
         buffer.writeVarInt(getId);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         ClientReceivers.handleExplosionPacket(this);
     }
 
-    public enum Type {
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
+
+    public enum ExplosionType {
         BOMB,
         CANNONBALL,
         GUNPOWDER

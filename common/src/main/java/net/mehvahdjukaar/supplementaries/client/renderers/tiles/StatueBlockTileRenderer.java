@@ -79,7 +79,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
     public static ResourceLocation getPlayerSkinAndSlim(GameProfile gameProfile, Consumer<Boolean> slimSkinSetter) {
         if (!gameProfile.isComplete()) {
-            return new ResourceLocation("minecraft:textures/entity/steve.png");
+            return ResourceLocation.withDefaultNamespace("textures/entity/steve.png");
         } else {
             SkinManager skinManager = Minecraft.getInstance().getSkinManager();
 

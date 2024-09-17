@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -14,9 +16,12 @@ import net.minecraft.world.level.block.state.BlockState;
 public record ClientBoundSetSlidingBlockEntityPacket(BlockPos pos, BlockState state, BlockState movedState,
                                                      Direction direction) implements Message {
 
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSetSlidingBlockEntityPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_set_sliding_block_entity"), ClientBoundSetSlidingBlockEntityPacket::new);
+
     public ClientBoundSetSlidingBlockEntityPacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), buffer.readById(Block.BLOCK_STATE_REGISTRY),
-                buffer.readById(Block.BLOCK_STATE_REGISTRY), buffer.readEnum(Direction.class));
+        this(buffer.readBlockPos(), buffer.readById(Block.BLOCK_STATE_REGISTRY::byIdOrThrow),
+                buffer.readById(Block.BLOCK_STATE_REGISTRY::byIdOrThrow), buffer.readEnum(Direction.class));
     }
 
     public ClientBoundSetSlidingBlockEntityPacket(MovingSlidyBlockEntity be) {
@@ -24,15 +29,20 @@ public record ClientBoundSetSlidingBlockEntityPacket(BlockPos pos, BlockState st
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
-        buf.writeId(Block.BLOCK_STATE_REGISTRY, this.state);
-        buf.writeId(Block.BLOCK_STATE_REGISTRY, this.movedState);
+        buf.writeById(Block.BLOCK_STATE_REGISTRY::getId, this.state);
+        buf.writeById(Block.BLOCK_STATE_REGISTRY::getId, this.movedState);
         buf.writeEnum(this.direction);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         ClientReceivers.handleSetSlidingBlockEntityPacket(this);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

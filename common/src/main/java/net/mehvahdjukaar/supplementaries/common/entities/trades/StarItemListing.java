@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -22,14 +23,14 @@ import java.util.Optional;
 
 public record StarItemListing(ItemStack emeralds, ItemStack priceSecondary, int stars,
                               int maxTrades, int xp, float priceMult, int level) implements ModItemListing {
-    public static final Codec<StarItemListing> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final MapCodec<StarItemListing> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             ItemStack.CODEC.fieldOf("price").forGetter(StarItemListing::emeralds),
-            StrOpt.of(ItemStack.CODEC, "price_secondary", ItemStack.EMPTY).forGetter(StarItemListing::priceSecondary),
+            ItemStack.CODEC.optionalFieldOf( "price_secondary", ItemStack.EMPTY).forGetter(StarItemListing::priceSecondary),
             Codec.INT.fieldOf("amount").forGetter(StarItemListing::stars),
-            StrOpt.of(ExtraCodecs.POSITIVE_INT, "max_trades", 16).forGetter(StarItemListing::maxTrades),
-            StrOpt.of(ExtraCodecs.POSITIVE_INT, "xp").forGetter(s -> Optional.of(s.xp)),
-            StrOpt.of(ExtraCodecs.POSITIVE_FLOAT, "price_multiplier", 0.05f).forGetter(StarItemListing::priceMult),
-            StrOpt.of(Codec.intRange(1, 5), "level", 1).forGetter(StarItemListing::level)
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf( "max_trades", 16).forGetter(StarItemListing::maxTrades),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf( "xp").forGetter(s -> Optional.of(s.xp)),
+            ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf( "price_multiplier", 0.05f).forGetter(StarItemListing::priceMult),
+            Codec.intRange(1, 5).optionalFieldOf( "level", 1).forGetter(StarItemListing::level)
     ).apply(instance, StarItemListing::createDefault));
 
     public static StarItemListing createDefault(ItemStack price, ItemStack price2, int rockets,
@@ -52,7 +53,7 @@ public record StarItemListing(ItemStack emeralds, ItemStack priceSecondary, int 
     }
 
     @Override
-    public Codec<? extends ModItemListing> getCodec() {
+    public MapCodec<? extends ModItemListing> getCodec() {
         return CODEC;
     }
 

@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -77,17 +78,17 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        loadFromTag(compound);
-        this.loadOwner(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        loadFromTag(tag);
+        this.loadOwner(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        this.savePixels(compound);
-        this.saveOwner(compound);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.savePixels(tag);
+        this.saveOwner(tag);
     }
 
     public CompoundTag savePixels(CompoundTag compound) {
@@ -245,8 +246,8 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public Direction getDirection() {
@@ -265,7 +266,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
+    public void openScreen(Level level, BlockPos blockPos, Player player, Direction direction) {
         BlackBoardScreen.open(this);
     }
 

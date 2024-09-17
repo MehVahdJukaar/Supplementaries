@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -50,11 +49,6 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
         ITEM_SHELF_BLOCKS.add(this);
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
-        return true;
     }
 
     @ForgeOverride
@@ -132,10 +126,10 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
-            default -> SHAPE_NORTH;
             case SOUTH -> SHAPE_SOUTH;
             case EAST -> SHAPE_EAST;
             case WEST -> SHAPE_WEST;
+            default -> SHAPE_NORTH;
         };
     }
 

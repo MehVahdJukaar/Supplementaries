@@ -127,7 +127,7 @@ public class WrenchItem extends Item {
             }
             if (shiftDown) dir = dir.getOpposite();
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(player,
-                    new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Type.WRENCH_ROTATION,
+                    new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
                             dir.get3DDataValue()));
         }
         //called for both so we play sound immediately here

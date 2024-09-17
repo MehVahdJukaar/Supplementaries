@@ -1,33 +1,37 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.Map;
 import java.util.UUID;
 
 //does some on login stuff
-public class ClientBoundSendLoginPacket implements Message {
+public record ClientBoundSendLoginPacket(Map<UUID, String> usernameCache) implements Message {
 
-    public final Map<UUID, String> usernameCache;
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSendLoginPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_send_login"), ClientBoundSendLoginPacket::new);
 
-    public ClientBoundSendLoginPacket(FriendlyByteBuf buf) {
-        this.usernameCache = buf.readMap(FriendlyByteBuf::readUUID, FriendlyByteBuf::readUtf);
-    }
-
-    public ClientBoundSendLoginPacket(Map<UUID, String> usernameCache) {
-        this.usernameCache = usernameCache;
+    public ClientBoundSendLoginPacket(RegistryFriendlyByteBuf buf) {
+        this(buf.readMap(RegistryFriendlyByteBuf::readUUID, FriendlyByteBuf::readUtf));
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
-        buf.writeMap(this.usernameCache, FriendlyByteBuf::writeUUID, FriendlyByteBuf::writeUtf);
+    public void write(RegistryFriendlyByteBuf buf) {
+        buf.writeMap(this.usernameCache, RegistryFriendlyByteBuf::writeUUID, FriendlyByteBuf::writeUtf);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         ClientReceivers.handleLoginPacket(this);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

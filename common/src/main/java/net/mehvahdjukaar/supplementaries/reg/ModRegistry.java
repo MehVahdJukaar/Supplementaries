@@ -58,10 +58,10 @@ public class ModRegistry {
     //misc entries
 
     //loot
-    public static final Supplier<LootItemFunctionType> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
-            () -> new LootItemFunctionType(new CurseLootFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
-            () -> new LootItemFunctionType(new RandomArrowFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
+    public static final Supplier<LootItemFunctionType<?>> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
+            () -> new LootItemFunctionType<>(new CurseLootFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
+    public static final Supplier<LootItemFunctionType<?>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
+            () -> new LootItemFunctionType<>(new RandomArrowFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
 
     //paintings
     public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
@@ -172,7 +172,7 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                 .strength(2f, 3f)
                 .sound(SoundType.WOOD)
                 .noOcclusion();
@@ -219,14 +219,14 @@ public class ModRegistry {
     //planter
     public static final Supplier<PlanterBlock> PLANTER = regWithItem(PLANTER_NAME, () ->
             CompatHandler.FARMERS_DELIGHT ? FarmersDelightCompat.makePlanterRich() :
-                    new PlanterBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA)
+                    new PlanterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TERRACOTTA)
                             .mapColor(MapColor.TERRACOTTA_RED)
                             .strength(2f, 6f)
                     ));
 
     //pedestal
     public static final Supplier<Block> PEDESTAL = regWithItem(PEDESTAL_NAME, () -> new PedestalBlock(
-            BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
 
     public static final Supplier<BlockEntityType<PedestalBlockTile>> PEDESTAL_TILE = regTile(
             PEDESTAL_NAME, () -> PlatHelper.newBlockEntityType(
@@ -235,7 +235,7 @@ public class ModRegistry {
 
     //notice board
     public static final Supplier<Block> NOTICE_BOARD = regWithItem(NOTICE_BOARD_NAME, () -> new NoticeBoardBlock(
-                    BlockBehaviour.Properties.copy(Blocks.BARREL)),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)),
             300);
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
@@ -244,7 +244,7 @@ public class ModRegistry {
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
-            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK)
                     .pushReaction(PushReaction.BLOCK)
     ));
     public static final Supplier<BlockEntityType<SafeBlockTile>> SAFE_TILE = regTile(
@@ -275,7 +275,7 @@ public class ModRegistry {
 
     //jar
     public static final Supplier<Block> JAR = regBlock(JAR_NAME, () -> new JarBlock(
-            BlockBehaviour.Properties.copy(Blocks.GLASS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
                     .pushReaction(PushReaction.DESTROY)
                     .strength(0.5f, 1f)
                     .sound(ModSounds.JAR)
@@ -293,7 +293,7 @@ public class ModRegistry {
 
     //sack
     public static final Supplier<Block> SACK = regBlock(SACK_NAME, () -> new SackBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)
                     .mapColor(MapColor.WOOD)
                     .pushReaction(PushReaction.DESTROY)
                     .strength(0.8f)
@@ -332,7 +332,7 @@ public class ModRegistry {
             new Item.Properties().rarity(Rarity.RARE)));
 
     public static final Supplier<Block> GLOBE_SEPIA = regBlock(GLOBE_SEPIA_NAME, () -> new GlobeBlock(
-            BlockBehaviour.Properties.copy(GLOBE.get())));
+            BlockBehaviour.Properties.ofFullCopy(GLOBE.get())));
     public static final Supplier<Item> GLOBE_SEPIA_ITEM = regItem(GLOBE_SEPIA_NAME, () -> new BlockItem(GLOBE_SEPIA.get(),
             new Item.Properties().rarity(Rarity.RARE)));
 
@@ -351,17 +351,17 @@ public class ModRegistry {
                     .sound(SoundType.LANTERN),
             14, () -> ParticleTypes.FLAME));
     public static final Supplier<Block> SCONCE_WALL = regBlock("sconce_wall", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
+            BlockBehaviour.Properties.ofFullCopy(SCONCE.get())
                     .dropsLike(SCONCE.get()), () -> ParticleTypes.FLAME));
     public static final Supplier<Item> SCONCE_ITEM = regItem(SCONCE_NAME, () ->
             new StandingAndWallBlockItem(SCONCE.get(), SCONCE_WALL.get(), new Item.Properties(), Direction.DOWN));
 
     //soul
     public static final Supplier<Block> SCONCE_SOUL = regBlock(SCONCE_NAME_SOUL, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()), 10,
+            BlockBehaviour.Properties.ofFullCopy(SCONCE.get()), 10,
             () -> ParticleTypes.SOUL_FIRE_FLAME));
     public static final Supplier<Block> SCONCE_WALL_SOUL = regBlock("sconce_wall_soul", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE_SOUL.get())
+            BlockBehaviour.Properties.ofFullCopy(SCONCE_SOUL.get())
                     .dropsLike(SCONCE_SOUL.get()),
             () -> ParticleTypes.SOUL_FIRE_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_SOUL = regItem(SCONCE_NAME_SOUL, () -> new StandingAndWallBlockItem(
@@ -370,9 +370,9 @@ public class ModRegistry {
 
     //green
     public static final Supplier<Block> SCONCE_GREEN = regBlock(SCONCE_NAME_GREEN, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()), 14, ModParticles.GREEN_FLAME));
+            BlockBehaviour.Properties.ofFullCopy(SCONCE.get()), 14, ModParticles.GREEN_FLAME));
     public static final Supplier<Block> SCONCE_WALL_GREEN = regBlock("sconce_wall_green", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get())
+            BlockBehaviour.Properties.ofFullCopy(SCONCE.get())
                     .dropsLike(SCONCE_GREEN.get()), ModParticles.GREEN_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GREEN = regItem(SCONCE_NAME_GREEN, () -> new StandingAndWallBlockItem(
             SCONCE_GREEN.get(), SCONCE_WALL_GREEN.get(), new Item.Properties(), Direction.DOWN));
@@ -380,7 +380,7 @@ public class ModRegistry {
 
     //sconce lever
     public static final Supplier<Block> SCONCE_LEVER = regWithItem(SCONCE_LEVER_NAME, () -> new SconceLeverBlock(
-            BlockBehaviour.Properties.copy(SCONCE.get()),
+            BlockBehaviour.Properties.ofFullCopy(SCONCE.get()),
             () -> ParticleTypes.FLAME
     ));
 
@@ -392,14 +392,14 @@ public class ModRegistry {
 
     //rope
     public static final Supplier<RopeBlock> ROPE = regBlock(ROPE_NAME, () -> new RopeBlock(
-            BlockBehaviour.Properties.copy(Blocks.BROWN_WOOL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BROWN_WOOL)
                     .sound(ModSounds.ROPE)
                     .strength(0.25f)
                     .speedFactor(0.7f)
                     .noOcclusion()));
 
     public static final Supplier<Block> ROPE_KNOT = regBlock(ROPE_KNOT_NAME, () -> new RopeKnotBlock(
-            BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE)
                     .dynamicShape()));
 
     public static final Supplier<Item> ROPE_ITEM = regItem(ROPE_NAME, () -> new RopeItem(
@@ -412,7 +412,7 @@ public class ModRegistry {
     //buntings
     public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
     public static final Supplier<RopeBuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
-            BlockBehaviour.Properties.copy(ROPE.get()).dropsLike(ROPE.get())));
+            BlockBehaviour.Properties.ofFullCopy(ROPE.get()).dropsLike(ROPE.get())));
 
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
             "rope_buntings", () -> PlatHelper.newBlockEntityType(
@@ -420,7 +420,7 @@ public class ModRegistry {
 
     // wicker fence
     public static final Supplier<Block> WICKER_FENCE = regWithItem(WICKER_FENCE_NAME, () -> new WickerFenceBlock(
-            BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE)
                     .mapColor(MapColor.WOOD)
                     .ignitedByLava()
                     .strength(0.5f)
@@ -452,7 +452,7 @@ public class ModRegistry {
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS)
                     .pushReaction(PushReaction.DESTROY)
                     .strength(1.5f, 2f)
                     .sound(SoundType.METAL)));
@@ -463,7 +463,7 @@ public class ModRegistry {
 
     //hourglass
     public static final Supplier<Block> HOURGLASS = regWithItem(HOURGLASS_NAME, () -> new HourGlassBlock(
-            BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GOLD_BLOCK)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
                     .requiresCorrectToolForDrops()
@@ -475,7 +475,7 @@ public class ModRegistry {
 
     //item shelf
     public static final Supplier<Block> ITEM_SHELF = regWithItem(ITEM_SHELF_NAME, () -> new ItemShelfBlock(
-            BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                     .sound(SoundType.WOOD)
                     .strength(0.75f, 0.1f)
                     .noOcclusion()
@@ -488,7 +488,7 @@ public class ModRegistry {
 
     //doormat
     public static final Supplier<Block> DOORMAT = regWithItem(DOORMAT_NAME, () -> new DoormatBlock(
-            BlockBehaviour.Properties.copy(Blocks.BROWN_CARPET)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BROWN_CARPET)
                     .mapColor(MapColor.WOOD)
                     .strength(0.1F)
                     .noOcclusion()
@@ -500,13 +500,13 @@ public class ModRegistry {
 
     //magma cream block
     //public static final Supplier<Block> MAGMA_CREAM_BLOCK = regBlock(MAGMA_CREAM_BLOCK_NAME, () -> new MagmaCreamBlock(
-    //        BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)));
+    //        BlockBehaviour.Properties.ofFullCopy()(Blocks.SLIME_BLOCK)));
     //public static final Supplier<Item> MAGMA_CREAM_BLOCK_ITEM = regItem(MAGMA_CREAM_BLOCK_NAME, () -> new BlockItem(MAGMA_CREAM_BLOCK.get(),
     //        (new Item.Properties()).tab(getTab( MAGMA_CREAM_BLOCK_NAME))));
 
     //raked gravel
     public static final Supplier<Block> RAKED_GRAVEL = regWithItem(RAKED_GRAVEL_NAME, () -> new RakedGravelBlock(
-            BlockBehaviour.Properties.copy(Blocks.GRAVEL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)
                     .isViewBlocking((w, s, p) -> true)
                     .isSuffocating((w, s, p) -> true)
     ));
@@ -515,7 +515,7 @@ public class ModRegistry {
 
     //cog block
     public static final Supplier<Block> COG_BLOCK = regWithItem(COG_BLOCK_NAME, () -> new CogBlock(
-            BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK)
                     .strength(3f, 6f)
                     .sound(SoundType.COPPER)
                     .requiresCorrectToolForDrops()
@@ -523,12 +523,12 @@ public class ModRegistry {
 
     //diode block
     public static final Supplier<Block> RELAYER = regWithItem(RELAYER_NAME, () -> new RelayerBlock(
-            BlockBehaviour.Properties.copy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
     ));
 
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)
                     .sound(SoundType.METAL)
                     .pushReaction(PushReaction.BLOCK)
@@ -539,7 +539,7 @@ public class ModRegistry {
     ));
 
     public static final Supplier<Block> SPRING_LAUNCHER_HEAD = regBlock(PISTON_LAUNCHER_HEAD_NAME, () -> new SpringLauncherHeadBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)
                     .pushReaction(PushReaction.BLOCK)
                     .sound(SoundType.METAL)
@@ -548,7 +548,7 @@ public class ModRegistry {
                     .jumpFactor(1.18f)
     ));
     public static final Supplier<Block> SPRING_LAUNCHER_ARM = regBlock(PISTON_LAUNCHER_ARM_NAME, () -> new SpringLauncherArmBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .strength(50f, 50f)
                     .sound(SoundType.METAL)
                     .noOcclusion()
@@ -560,7 +560,7 @@ public class ModRegistry {
 
     //speaker Block
     public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () ->
-            new SpeakerBlock(BlockBehaviour.Properties.copy(Blocks.NOTE_BLOCK)
+            new SpeakerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK)
                     .strength(1f, 2f)
                     .sound(SoundType.WOOD)), 300);
 
@@ -570,7 +570,7 @@ public class ModRegistry {
 
     //turn table
     public static final Supplier<Block> TURN_TABLE = regWithItem(TURN_TABLE_NAME, () -> new TurnTableBlock(
-            BlockBehaviour.Properties.copy(Blocks.STONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
                     .strength(0.75f, 2f)
     ));
 
@@ -580,7 +580,7 @@ public class ModRegistry {
 
     //illuminator
     public static final Supplier<Block> REDSTONE_ILLUMINATOR = regWithItem(REDSTONE_ILLUMINATOR_NAME, () -> new RedstoneIlluminatorBlock(
-            BlockBehaviour.Properties.copy(Blocks.SEA_LANTERN)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SEA_LANTERN)
                     .isValidSpawn((s, w, p, g) -> true)
                     .strength(0.3f, 0.3f)
     ));
@@ -588,7 +588,7 @@ public class ModRegistry {
 
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
-            BlockBehaviour.Properties.copy(Blocks.BARREL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
     ), 300);
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
@@ -597,7 +597,7 @@ public class ModRegistry {
 
     //lock block
     public static final Supplier<Block> LOCK_BLOCK = regWithItem(LOCK_BLOCK_NAME, () -> new LockBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F)
                     .isRedstoneConductor((blockState, blockGetter, blockPos) -> false)
@@ -606,7 +606,7 @@ public class ModRegistry {
 
     //bellows
     public static final Supplier<Block> BELLOWS = regWithItem(BELLOWS_NAME, () -> new BellowsBlock(
-            BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                     .mapColor(MapColor.COLOR_BROWN)
                     .isViewBlocking(NEVER)
                     .forceSolidOn()
@@ -623,7 +623,7 @@ public class ModRegistry {
 
     //clock
     public static final Supplier<Block> CLOCK_BLOCK = regWithItem(CLOCK_BLOCK_NAME, () -> new ClockBlock(
-            BlockBehaviour.Properties.copy(Blocks.DARK_OAK_PLANKS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_PLANKS)
                     .strength(3f, 6f)
                     .lightLevel((state) -> 1)
     ));
@@ -634,7 +634,7 @@ public class ModRegistry {
 
     //crystal display
     public static final Supplier<Block> CRYSTAL_DISPLAY = regWithItem(CRYSTAL_DISPLAY_NAME, () -> new CrystalDisplayBlock(
-            BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)
                     .sound(SoundType.POLISHED_DEEPSLATE)
                     .strength(0.5f, 0.5f)
     ));
@@ -651,7 +651,7 @@ public class ModRegistry {
 
     //wind vane
     public static final Supplier<Block> WIND_VANE = regWithItem(WIND_VANE_NAME, () -> new WindVaneBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS)
                     .strength(5f, 6f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()
@@ -663,7 +663,7 @@ public class ModRegistry {
 
     //faucet
     public static final Supplier<Block> FAUCET = regWithItem(FAUCET_NAME, () -> new FaucetBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS)
                     .strength(3f, 4.8f)
                     .noOcclusion()
     ));
@@ -674,19 +674,19 @@ public class ModRegistry {
 
     //gold door
     public static final Supplier<Block> GOLD_DOOR = regWithItem(GOLD_DOOR_NAME, () -> new GoldDoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GOLD_BLOCK)
                     .noOcclusion()
     ));
 
     //gold trapdoor
     public static final Supplier<Block> GOLD_TRAPDOOR = regWithItem(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
-            BlockBehaviour.Properties.copy(GOLD_DOOR.get())
+            BlockBehaviour.Properties.ofFullCopy(GOLD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)
     ));
 
     //netherite doors
     public static final Supplier<Block> NETHERITE_DOOR = regBlock(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
-            BlockBehaviour.Properties.copy(Blocks.NETHERITE_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK)
                     .noOcclusion()
     ));
     public static final Supplier<Item> NETHERITE_DOOR_ITEM = regItem(NETHERITE_DOOR_NAME, () -> new BlockItem(
@@ -695,7 +695,7 @@ public class ModRegistry {
 
     //netherite trapdoor
     public static final Supplier<Block> NETHERITE_TRAPDOOR = regBlock(NETHERITE_TRAPDOOR_NAME, () -> new NetheriteTrapdoorBlock(
-            BlockBehaviour.Properties.copy(NETHERITE_DOOR.get())
+            BlockBehaviour.Properties.ofFullCopy(NETHERITE_DOOR.get())
                     .noOcclusion()
                     .isValidSpawn((a, b, c, d) -> false)
     ));
@@ -709,16 +709,16 @@ public class ModRegistry {
 
     //iron gate
     public static final Supplier<Block> IRON_GATE = regWithItem(IRON_GATE_NAME, () -> new IronGateBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS), false
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS), false
     ));
 
     //gold gate
     public static final Supplier<Block> GOLD_GATE = regWithItem(GOLD_GATE_NAME, () -> new IronGateBlock(
-            BlockBehaviour.Properties.copy(Blocks.IRON_BARS), true));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS), true));
 
     //checker block
     public static final Supplier<Block> CHECKER_BLOCK = regWithItem(CHECKER_BLOCK_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.STONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
                     .mapColor(MapColor.QUARTZ)
                     .requiresCorrectToolForDrops()
                     .strength(1.5F, 6.0F)
@@ -726,7 +726,7 @@ public class ModRegistry {
 
     //slab
     public static final Supplier<Block> CHECKER_SLAB = regWithItem(CHECKER_SLAB_NAME, () -> new SlabBlock(
-            BlockBehaviour.Properties.copy(CHECKER_BLOCK.get())
+            BlockBehaviour.Properties.ofFullCopy(CHECKER_BLOCK.get())
     ));
 
     //pancakes
@@ -735,7 +735,7 @@ public class ModRegistry {
 
     // cant be block item so we use extra placement stuff later
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
-            BlockBehaviour.Properties.copy(Blocks.CAKE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE)
                     .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .strength(0.5F)
                     .sound(SoundType.WOOL))
@@ -749,7 +749,7 @@ public class ModRegistry {
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHEAT)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
                     .noCollission()
                     .randomTicks()
                     .offsetType(BlockBehaviour.OffsetType.NONE)
@@ -763,28 +763,28 @@ public class ModRegistry {
             FLAX.get(), new Item.Properties()));
 
     public static final Supplier<Block> FLAX_WILD = regWithItem(FLAX_WILD_NAME, () -> new WildFlaxBlock(
-            BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).offsetType(BlockBehaviour.OffsetType.NONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.TALL_GRASS).offsetType(BlockBehaviour.OffsetType.NONE)
     ));
 
     //pot
     public static final Supplier<Block> FLAX_POT = regBlock("potted_flax", () -> PlatHelper.newFlowerPot(
-            () -> (FlowerPotBlock) Blocks.FLOWER_POT, FLAX, BlockBehaviour.Properties.copy(Blocks.FLOWER_POT)));
+            () -> (FlowerPotBlock) Blocks.FLOWER_POT, FLAX, BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT)));
 
     //fodder
     public static final Supplier<Block> FODDER = regWithItem(FODDER_NAME, () -> new FodderBlock(
-            BlockBehaviour.Properties.copy(Blocks.MOSS_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_BLOCK)
                     .pushReaction(PushReaction.NORMAL)
     ));
 
     //flax block
     public static final Supplier<Block> FLAX_BLOCK = regWithItem(FLAX_BLOCK_NAME, () -> new FlaxBaleBlock(
-            BlockBehaviour.Properties.copy(Blocks.HAY_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.HAY_BLOCK)
                     .mapColor(MapColor.TERRACOTTA_LIGHT_GREEN)
     ));
 
     //boat in a jar
     public static final Supplier<Block> JAR_BOAT = regWithItem(JAR_BOAT_NAME, () -> new JarBoatBlock(
-            BlockBehaviour.Properties.copy(Blocks.GLASS)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
                     .pushReaction(PushReaction.DESTROY)));
 
     public static final Supplier<BlockEntityType<JarBoatTile>> JAR_BOAT_TILE = regTile(
@@ -800,7 +800,7 @@ public class ModRegistry {
                     StructureTempBlockTile::new, STRUCTURE_TEMP.get()));
 
     public static final Supplier<Block> BLOCK_GENERATOR = regBlock(BLOCK_GENERATOR_NAME, () -> new BlockGeneratorBlock(
-            BlockBehaviour.Properties.copy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));
+            BlockBehaviour.Properties.ofFullCopy(STRUCTURE_TEMP.get()).lightLevel((s) -> 14)));
 
     public static final Supplier<BlockEntityType<BlockGeneratorBlockTile>> BLOCK_GENERATOR_TILE = regTile(
             BLOCK_GENERATOR_NAME, () -> PlatHelper.newBlockEntityType(
@@ -837,21 +837,21 @@ public class ModRegistry {
     //wattle and daub
     //frame
     public static final RegSupplier<Block> DAUB_FRAME = regWithItem(DAUB_FRAME_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(DAUB.get())
+            BlockBehaviour.Properties.ofFullCopy(DAUB.get())
     ));
     //brace
     public static final RegSupplier<Block> DAUB_BRACE = regWithItem(DAUB_BRACE_NAME, () -> new FlippedBlock(
-            BlockBehaviour.Properties.copy(DAUB.get())
+            BlockBehaviour.Properties.ofFullCopy(DAUB.get())
     ));
 
     //cross brace
     public static final RegSupplier<Block> DAUB_CROSS_BRACE = regWithItem(DAUB_CROSS_BRACE_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(DAUB.get())
+            BlockBehaviour.Properties.ofFullCopy(DAUB.get())
     ));
 
     //timber frame
     public static final RegSupplier<FrameBlock> TIMBER_FRAME = regBlock(TIMBER_FRAME_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
                 .sound(SoundType.SCAFFOLDING); //.dynamicShape()
@@ -862,7 +862,7 @@ public class ModRegistry {
 
     //timber brace
     public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
+        var p = BlockBehaviour.Properties.ofFullCopy(TIMBER_FRAME.get());
         return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
     });
     public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(
@@ -870,7 +870,7 @@ public class ModRegistry {
 
     //timber cross brace
     public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(TIMBER_FRAME.get());
+        var p = BlockBehaviour.Properties.ofFullCopy(TIMBER_FRAME.get());
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(
@@ -882,7 +882,7 @@ public class ModRegistry {
 
     //lapis bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> LAPIS_BRICKS_BLOCKS =
-            RegHelper.registerFullBlockSet(res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.copy(Blocks.LAPIS_BLOCK)
+            RegHelper.registerFullBlockSet(res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.ofFullCopy(Blocks.LAPIS_BLOCK)
                     .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F));
 
     //ashen bricks
@@ -891,13 +891,13 @@ public class ModRegistry {
 
     // gravel bricks
     public static final Supplier<Block> GRAVEL_BRICKS = regWithItem(GRAVEL_BRICKS_NAME, () -> new GravelBricksBlock(
-            BlockBehaviour.Properties.copy(Blocks.GRAVEL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)
                     .sound(SoundType.STONE)
     ));
 
     public static final Supplier<Block> SUS_GRAVEL_BRICKS = regWithItem(SUS_GRAVEL_BRICKS_NAME,
             () -> new SusGravelBricksBlock(
-                    BlockBehaviour.Properties.copy(GRAVEL_BRICKS.get())
+                    BlockBehaviour.Properties.ofFullCopy(GRAVEL_BRICKS.get())
             ));
 
     public static final Supplier<BlockEntityType<SusGravelBricksTile>> SUS_GRAVEL_BRICKS_TILE = regTile(SUS_GRAVEL_BRICKS_NAME, () ->
@@ -905,11 +905,11 @@ public class ModRegistry {
 
 
     public static final Supplier<Block> SLIDY_BLOCK = regWithItem(SLIDY_BLOCK_NAME, () -> new SlidyBlock(
-            BlockBehaviour.Properties.copy(Blocks.TUFF).sound(ModSounds.SLIDY_BLOCK)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.TUFF).sound(ModSounds.SLIDY_BLOCK)
     ));
 
     public static final Supplier<Block> MOVING_SLIDY_BLOCK = regBlock("moving_slidy_block", () -> new MovingSlidyBlock(
-            BlockBehaviour.Properties.copy(Blocks.MOVING_PISTON)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.MOVING_PISTON)
     ));
 
     public static final Supplier<BlockEntityType<MovingSlidyBlockEntity>> MOVING_SLIDY_BLOCK_TILE = regTile("moving_slidy_block", () ->
@@ -932,7 +932,7 @@ public class ModRegistry {
 
     //stone lamp
     public static final Supplier<Block> STONE_LAMP = regWithItem(STONE_LAMP_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.STONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
                     .mapColor(MapColor.COLOR_YELLOW)
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
@@ -941,7 +941,7 @@ public class ModRegistry {
 
     //blackstone lamp
     public static final Supplier<Block> BLACKSTONE_LAMP = regWithItem(BLACKSTONE_LAMP_NAME, () -> new RotatedPillarBlock(
-            BlockBehaviour.Properties.copy(Blocks.BLACKSTONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BLACKSTONE)
                     .mapColor(MapColor.COLOR_YELLOW)
                     .strength(1.5f, 6f)
                     .lightLevel((s) -> 15)
@@ -950,17 +950,17 @@ public class ModRegistry {
 
     //deepslate lamp
     public static final Supplier<Block> DEEPSLATE_LAMP = regWithItem(DEEPSLATE_LAMP_NAME, () -> new Block(
-            BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_BRICKS).lightLevel(s -> 15)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS).lightLevel(s -> 15)
     ));
 
     //end_stone lamp
     public static final Supplier<Block> END_STONE_LAMP = regWithItem(END_STONE_LAMP_NAME, () -> new EndLampBlock(
-            BlockBehaviour.Properties.copy(Blocks.END_STONE).lightLevel(s -> 15)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.END_STONE).lightLevel(s -> 15)
     ));
 
     //flower box
     public static final Supplier<Block> FLOWER_BOX = regWithItem(FLOWER_BOX_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).strength(0.5F);
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(0.5F);
         return /*CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : */new FlowerBoxBlock(p);
     });
 
@@ -969,7 +969,7 @@ public class ModRegistry {
 
     //statue
     public static final Supplier<Block> STATUE = regWithItem(STATUE_NAME, () -> new StatueBlock(
-            BlockBehaviour.Properties.copy(Blocks.STONE)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
                     .strength(2)
     ));
 
@@ -979,14 +979,14 @@ public class ModRegistry {
 
     //feather block
     public static final Supplier<Block> FEATHER_BLOCK = regWithItem(FEATHER_BLOCK_NAME, () -> new FeatherBlock(
-            BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).strength(0.5f)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).strength(0.5f)
                     .dynamicShape()
                     .noCollission()
     ));
 
     //flint block
     public static final Supplier<Block> FLINT_BLOCK = regWithItem(FLINT_BLOCK_NAME, () -> new FlintBlock(
-            BlockBehaviour.Properties.copy(Blocks.COAL_BLOCK).strength(2F, 7.5F)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.COAL_BLOCK).strength(2F, 7.5F)
     ));
 
     //sugar block
@@ -1002,11 +1002,11 @@ public class ModRegistry {
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regBlock(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-            BlockBehaviour.Properties.copy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
 
     //fire pit
     public static final Supplier<Block> FIRE_PIT = regWithItem(FIRE_PIT_NAME, () -> new FirePitBlock(1,
-            BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK).sound(SoundType.COPPER)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK).sound(SoundType.COPPER)));
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE = regBlock(BOOK_PILE_NAME, () -> new BookPileBlock(
@@ -1018,7 +1018,7 @@ public class ModRegistry {
 
     //placeable book
     public static final Supplier<Block> BOOK_PILE_H = regBlock(BOOK_PILE_H_NAME, () -> new BookPileHorizontalBlock(
-            BlockBehaviour.Properties.copy(BOOK_PILE.get())));
+            BlockBehaviour.Properties.ofFullCopy(BOOK_PILE.get())));
 
     public static final Supplier<BlockEntityType<BookPileBlockTile>> BOOK_PILE_TILE = regTile(
             BOOK_PILE_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1026,7 +1026,7 @@ public class ModRegistry {
 
     //cannon
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
-            BlockBehaviour.Properties.copy(Blocks.ANVIL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ANVIL)
                     .isSuffocating(NEVER)
                     //.forceSolidOff()
                     .forceSolidOn()
@@ -1041,7 +1041,7 @@ public class ModRegistry {
 
     //cannonball
     public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
-            BlockBehaviour.Properties.copy(Blocks.ANVIL)
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ANVIL)
                     .strength(5,6)
                     .sound(SoundType.COPPER)
                     .isSuffocating(NEVER)
@@ -1117,11 +1117,11 @@ public class ModRegistry {
 
     //enderman skull
     public static final Supplier<EndermanSkullBlock> ENDERMAN_SKULL_BLOCK = regBlock(ENDERMAN_HEAD_NAME, () ->
-            new EndermanSkullBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL)
+            new EndermanSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WITHER_SKELETON_SKULL)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<EndermanSkullWallBlock> ENDERMAN_SKULL_BLOCK_WALL = regBlock("enderman_wall_head", () ->
-            new EndermanSkullWallBlock(BlockBehaviour.Properties.copy(Blocks.WITHER_SKELETON_SKULL)
+            new EndermanSkullWallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WITHER_SKELETON_SKULL)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> ENDERMAN_SKULL_ITEM = regItem(ENDERMAN_HEAD_NAME, () ->
@@ -1134,7 +1134,7 @@ public class ModRegistry {
 
     //ash basalt
     public static final Supplier<Block> ASHEN_BASALT = regBlock("ashen_basalt", () ->
-            new AshenBasaltBlock(BlockBehaviour.Properties.copy(Blocks.BASALT))
+            new AshenBasaltBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BASALT))
     );
 
     //hat stand

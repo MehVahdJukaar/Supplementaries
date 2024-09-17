@@ -4,8 +4,8 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
-import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
+import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -24,7 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -38,7 +37,7 @@ public class CommonConfigs {
 
     private static final Map<String, Supplier<Boolean>> FEATURE_TOGGLES = new HashMap<>();
 
-    public static final ConfigSpec SPEC;
+    public static final ModConfigHolder CONFIG_HOLDER;
 
     private static final WeakReference<ConfigBuilder> builderReference;
 
@@ -47,7 +46,7 @@ public class CommonConfigs {
     private static final Supplier<Boolean> FALSE = () -> false;
 
     static {
-        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
+        ConfigBuilder builder = ConfigBuilder.create(Supplementaries.MOD_ID, ConfigType.COMMON_SYNCED);
 
         builderReference = new WeakReference<>(builder);
 
@@ -58,11 +57,10 @@ public class CommonConfigs {
         General.init();
         Tweaks.init();
 
-        builder.setSynced();
         builder.onChange(CommonConfigs::onRefresh);
 
-        SPEC = builder.buildAndRegister();
-        SPEC.loadFromFile();
+        CONFIG_HOLDER = builder.build();
+        CONFIG_HOLDER.forceLoad();
     }
 
 
@@ -717,10 +715,10 @@ public class CommonConfigs {
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
             SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
                     .defineObject("special_blocks", () -> Map.of(
-                                    BlockPredicate.create("sticky_piston"), new ResourceLocation("piston"),
-                                    BlockPredicate.create("quark:dirty_glass"), new ResourceLocation("glass"),
-                                    BlockPredicate.create("quark:dirty_glass_pane"), new ResourceLocation("glass_pane"),
-                                    BlockPredicate.create("#alexscaves:cave_paintings"), new ResourceLocation("alexscaves:smooth_limestone")
+                                    BlockPredicate.create("sticky_piston"), ResourceLocation.withDefaultNamespace("piston"),
+                                    BlockPredicate.create("quark:dirty_glass"), ResourceLocation.withDefaultNamespace("glass"),
+                                    BlockPredicate.create("quark:dirty_glass_pane"), ResourceLocation.withDefaultNamespace("glass_pane"),
+                                    BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.withDefaultNamespace("alexscaves:smooth_limestone")
                             ),
                             Codec.unboundedMap(BlockPredicate.CODEC, ResourceLocation.CODEC));
             builder.pop();
@@ -862,7 +860,7 @@ public class CommonConfigs {
                     .define("quiver_skeleton_spawn_chance", 0.03d, 0, 1);
             QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio slot")
                     .define("only_works_in_curio", false);
-            QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same type")
+            QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same explosionType")
                     .define("quiver_pickup", true);
             builder.pop();
 
@@ -1308,7 +1306,7 @@ public class CommonConfigs {
 
     //TODO: cleanup
     public static boolean isEnabled(String key) {
-        if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
+        if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
             case ModConstants.ASH_BRICK_NAME -> Building.ASH_BRICKS_ENABLED.get();
             case ModConstants.TRAPPED_PRESENT_NAME ->

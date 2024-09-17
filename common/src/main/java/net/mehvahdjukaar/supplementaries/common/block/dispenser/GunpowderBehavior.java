@@ -4,8 +4,8 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AdditionalDispenserB
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.Item;
@@ -22,10 +22,10 @@ class GunpowderBehavior extends AdditionalDispenserBehavior {
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
 
-        Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-        BlockPos blockpos = source.getPos().relative(direction);
-        Direction direction1 = source.getLevel().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
-        InteractionResult result = ItemsUtil.place(new DirectionalPlaceContext(source.getLevel(), blockpos, direction, stack, direction1),
+        Direction direction = source.state().getValue(DispenserBlock.FACING);
+        BlockPos blockpos = source.pos().relative(direction);
+        Direction direction1 = source.level().isEmptyBlock(blockpos.below()) ? direction : Direction.UP;
+        InteractionResult result = ItemsUtil.place(new DirectionalPlaceContext(source.level(), blockpos, direction, stack, direction1),
                 ModRegistry.GUNPOWDER_BLOCK.get());
         if (result.consumesAction()) return InteractionResultHolder.success(stack);
 

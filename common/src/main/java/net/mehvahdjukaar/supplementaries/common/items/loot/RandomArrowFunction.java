@@ -32,7 +32,7 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
             if (BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.QUIVER_POTION_BLACKLIST)) continue;
             boolean isNegative = false;
             for (var e : potion.getEffects()) {
-                if (!e.getEffect().isBeneficial()) {
+                if (!e.getEffect().value().isBeneficial()) {
                     isNegative = true;
                     break;
                 }

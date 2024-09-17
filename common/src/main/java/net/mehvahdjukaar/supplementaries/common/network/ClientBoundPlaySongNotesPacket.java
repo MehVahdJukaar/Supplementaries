@@ -2,35 +2,39 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.minecraft.network.FriendlyByteBuf;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.LivingEntity;
 
-public class ClientBoundPlaySongNotesPacket implements Message {
-    public final IntList notes;
-    public final int entityID;
+public record ClientBoundPlaySongNotesPacket(IntList notes, int entityID) implements Message {
 
-    public ClientBoundPlaySongNotesPacket(FriendlyByteBuf buf) {
-        this.entityID = buf.readVarInt();
-        this.notes = buf.readIntIdList();
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundPlaySongNotesPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_play_song_notes"), ClientBoundPlaySongNotesPacket::new);
+
+    public ClientBoundPlaySongNotesPacket(RegistryFriendlyByteBuf buf) {
+        this(buf.readIntIdList(), buf.readVarInt());
     }
 
     public ClientBoundPlaySongNotesPacket(IntList notes, LivingEntity player) {
-        this.entityID = player.getId();
-        this.notes = notes;
+        this(notes, player.getId());
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(this.entityID);
         buf.writeIntIdList(this.notes);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // client world
         ClientReceivers.handlePlaySongNotesPacket(this);
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

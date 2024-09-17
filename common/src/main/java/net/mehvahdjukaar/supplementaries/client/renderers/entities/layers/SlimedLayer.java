@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
 
 public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -50,7 +51,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
         poseStack.pushPose();
         model.renderToBuffer(poseStack, consumer, packedLight,
                 LivingEntityRenderer.getOverlayCoords(entity, 0.0F),
-                1.0F, 1, 1.0F, alpha);
+                FastColor.ARGB32.color((int) (alpha * 255f), 255, 255, 255));
         poseStack.popPose();
     }
 }

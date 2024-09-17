@@ -1,46 +1,41 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.level.Level;
 
-public class ServerBoundSetSpeakerBlockPacket implements Message {
-    private final BlockPos pos;
-    private final String str;
-    private final SpeakerBlockTile.Mode mode;
-    private final double volume;
+public record ServerBoundSetSpeakerBlockPacket(
+        BlockPos pos,
+        String str,
+        SpeakerBlockTile.Mode mode,
+        double volume) implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSetSpeakerBlockPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_set_speaker"), ServerBoundSetSpeakerBlockPacket::new);
 
     public ServerBoundSetSpeakerBlockPacket(FriendlyByteBuf buf) {
-        this.pos = buf.readBlockPos();
-        this.str = buf.readUtf();
-        this.mode = SpeakerBlockTile.Mode.values()[buf.readByte()];
-        this.volume = buf.readDouble();
-    }
-
-    public ServerBoundSetSpeakerBlockPacket(BlockPos pos, String str, SpeakerBlockTile.Mode mode, double volume) {
-        this.pos = pos;
-        this.str = str;
-        this.mode = mode;
-        this.volume = volume;
+        this(buf.readBlockPos(), buf.readUtf(), buf.readEnum(SpeakerBlockTile.Mode.class), buf.readDouble());
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
         buf.writeUtf(this.str);
-        buf.writeByte(this.mode.ordinal());
+        buf.writeEnum(this.mode);
         buf.writeDouble(this.volume);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // server level
-        ServerPlayer sender = (ServerPlayer) context.getSender();
+        ServerPlayer sender = (ServerPlayer) context.getPlayer();
         Level level = sender.level();
         BlockPos pos = this.pos;
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
@@ -62,5 +57,10 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
                 be.setChanged();
             }
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

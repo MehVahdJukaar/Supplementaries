@@ -94,22 +94,22 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
             String message = null;
             Block fence = postWood.getBlockOfThis("fence");
             if (fence == null) {
-                message = "Post wood type does not have a fence";
+                message = "Post wood explosionType does not have a fence";
                 fence = Blocks.AIR;
             }
             Block trapdoor = postWood.getBlockOfThis("trapdoor");
             if (trapdoor == null) {
-                message = "Post wood type does not have a trapdoor";
+                message = "Post wood explosionType does not have a trapdoor";
                 trapdoor = Blocks.AIR;
             }
             Block slab = postWood.getBlockOfThis("slab");
             if (slab == null) {
-                message = "Post wood type does not have a slab";
+                message = "Post wood explosionType does not have a slab";
                 slab = Blocks.AIR;
             }
             Block log = postWood.getBlockOfThis("stripped_log");
             if (log == null) {
-                message = "Post wood type does not have a valid stripped log";
+                message = "Post wood explosionType does not have a valid stripped log";
                 log = Blocks.AIR;
             }
             if (!(stoneSlab.getBlock() instanceof SlabBlock)) {

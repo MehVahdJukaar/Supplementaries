@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -8,6 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCa
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ import java.util.List;
 import java.util.Set;
 
 public class ClientBoundSyncCapturedMobsPacket implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSyncCapturedMobsPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_sync_captured_mobs"), ClientBoundSyncCapturedMobsPacket::new);
 
     protected final Set<DataDefinedCatchableMob> mobSet;
     @Nullable
@@ -26,7 +30,7 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
         this.fish = fish;
     }
 
-    public ClientBoundSyncCapturedMobsPacket(FriendlyByteBuf buf) {
+    public ClientBoundSyncCapturedMobsPacket(RegistryFriendlyByteBuf buf) {
         int size = buf.readInt();
         this.mobSet = new HashSet<>();
         for (int i = 0; i < size; i++) {
@@ -48,7 +52,7 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         List<CompoundTag> tags = new ArrayList<>();
         for (var entry : this.mobSet) {
             if (entry == null) {
@@ -74,10 +78,14 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         //client world
         CapturedMobHandler.acceptClientData(mobSet, fish);
         Supplementaries.LOGGER.info("Synced Captured Mobs settings");
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

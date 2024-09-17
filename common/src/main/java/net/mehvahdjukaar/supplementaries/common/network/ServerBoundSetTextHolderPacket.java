@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.level.Level;
@@ -17,6 +19,10 @@ import java.util.stream.Stream;
 
 //TODO: move to lib
 public class ServerBoundSetTextHolderPacket implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSetTextHolderPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_set_text_holder"), ServerBoundSetTextHolderPacket::new);
+
     private final BlockPos pos;
     public final String[][] textHolderLines;
 
@@ -46,7 +52,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
         buf.writeVarInt(this.textHolderLines.length);
         for (String[] l : this.textHolderLines) {
@@ -56,9 +62,9 @@ public class ServerBoundSetTextHolderPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // text filtering yay
-        ServerPlayer sender = (ServerPlayer) context.getSender();
+        ServerPlayer sender = (ServerPlayer) context.getPlayer();
 
         CompletableFuture.supplyAsync(() ->
                 Stream.of(textHolderLines)
@@ -89,4 +95,8 @@ public class ServerBoundSetTextHolderPacket implements Message {
         }
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

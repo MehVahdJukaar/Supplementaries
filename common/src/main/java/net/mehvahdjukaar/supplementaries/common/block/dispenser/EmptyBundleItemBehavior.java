@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,7 +27,7 @@ class EmptyBundleItemBehavior extends DispenserHelper.AdditionalDispenserBehavio
 
              ItemStack extracted = removed.get();
              ItemStack toSpit = extracted.split(1);
-             DefaultDispenseItemBehavior.spawnItem(source.getLevel(), toSpit, 6, direction, position);
+             DefaultDispenseItemBehavior.spawnItem(source.level(), toSpit, 6, direction, position);
 
              if(!extracted.isEmpty()){
                  BundleItem.add(stack, extracted);

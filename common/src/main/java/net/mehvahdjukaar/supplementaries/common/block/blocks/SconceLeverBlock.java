@@ -118,7 +118,7 @@ public class SconceLeverBlock extends SconceWallBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
         boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
         if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
         return ret;

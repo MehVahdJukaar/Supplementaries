@@ -112,10 +112,10 @@ public class GunpowderExplosion extends Explosion {
             }
             //lights up burnable blocks
             if (block instanceof ILightable iLightable) {
-                iLightable.lightUp(null, state, pos, this.level, ILightable.FireSourceType.FLAMING_ARROW);
+                iLightable.lightUp(null, state, pos, this.level, ILightable.FireSoundType.FLAMING_ARROW);
             } else if (canLight(state)) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
-                ILightable.FireSourceType.FLAMING_ARROW.play(level, pos);
+                ILightable.FireSoundType.FLAMING_ARROW.play(level, pos);
             }
         }
     }

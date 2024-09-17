@@ -420,7 +420,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
         boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
         if (ret) {
             //spawn particles when first lit

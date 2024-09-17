@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +12,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClientBoundParticlePacket implements Message {
 
-    public final Type type;
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundParticlePacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_particle"), ClientBoundParticlePacket::new);
+
+
+    public final Kind type;
     @Nullable
     public final Vec3 pos;
     @Nullable
@@ -19,8 +24,8 @@ public class ClientBoundParticlePacket implements Message {
     @Nullable
     public final Vec3 dir;
 
-    public ClientBoundParticlePacket(FriendlyByteBuf buffer) {
-        this.type = buffer.readEnum(Type.class);
+    public ClientBoundParticlePacket(RegistryFriendlyByteBuf buffer) {
+        this.type = buffer.readEnum(Kind.class);
         if (buffer.readBoolean()) {
             this.extraData = buffer.readInt();
         } else this.extraData = null;
@@ -36,30 +41,30 @@ public class ClientBoundParticlePacket implements Message {
         }
     }
 
-    public ClientBoundParticlePacket(BlockPos pos, Type type) {
+    public ClientBoundParticlePacket(BlockPos pos, Kind type) {
         this(Vec3.atCenterOf(pos), type);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type type) {
+    public ClientBoundParticlePacket(Vec3 pos, Kind type) {
         this(pos, type, null);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type type, Integer extraData) {
+    public ClientBoundParticlePacket(Vec3 pos, Kind type, Integer extraData) {
         this(pos, type, extraData, null);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Type type, Integer extraData, @Nullable Vec3 direction) {
+    public ClientBoundParticlePacket(Vec3 pos, Kind type, Integer extraData, @Nullable Vec3 direction) {
         this.pos = pos;
         this.type = type;
         this.extraData = extraData;
         this.dir = direction;
     }
 
-    public ClientBoundParticlePacket(Entity entity, Type type) {
+    public ClientBoundParticlePacket(Entity entity, Kind type) {
         this(entity, type, null);
     }
 
-    public ClientBoundParticlePacket(Entity entity, Type type, Vec3 dir) {
+    public ClientBoundParticlePacket(Entity entity, Kind type, Vec3 dir) {
         this.extraData = entity.getId();
         this.type = type;
         this.pos = null;
@@ -67,7 +72,7 @@ public class ClientBoundParticlePacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeEnum(this.type);
         if (extraData != null) {
             buffer.writeBoolean(true);
@@ -94,11 +99,16 @@ public class ClientBoundParticlePacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         ClientReceivers.handleSpawnBlockParticlePacket(this);
     }
 
-    public enum Type {
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
+
+    public enum Kind {
         BUBBLE_BLOW,
         BUBBLE_CLEAN,
         BUBBLE_CLEAN_ENTITY,

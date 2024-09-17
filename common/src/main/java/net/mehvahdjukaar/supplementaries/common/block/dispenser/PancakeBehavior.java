@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PancakeBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.Item;
@@ -23,8 +23,8 @@ class PancakeBehavior extends DispenserHelper.AdditionalDispenserBehavior {
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         //this.setSuccessful(false);
-        ServerLevel world = source.getLevel();
-        BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+        ServerLevel world = source.level();
+        BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof PancakeBlock block) {
             if (block.tryAcceptingFluid(world, state, blockpos, SoftFluidStack.of(BuiltInSoftFluids.HONEY.getHolder(), 1))) {

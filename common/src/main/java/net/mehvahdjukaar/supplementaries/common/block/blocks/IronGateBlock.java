@@ -34,7 +34,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     private final boolean gold;
 
     public IronGateBlock(Properties properties, boolean gold) {
-        super(properties, WoodType.OAK);
+        super(WoodType.OAK, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE));
         this.gold = gold;
     }

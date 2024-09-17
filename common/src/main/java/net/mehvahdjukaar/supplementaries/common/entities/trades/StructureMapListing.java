@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.minecraft.core.HolderSet;
@@ -33,18 +33,18 @@ public record StructureMapListing(Item cost, int minPrice, int maxPrice, ItemSta
             .xmap(either -> either.map(Function.identity(), HolderSet::direct), Either::left);
 
 
-    public static final Codec<StructureMapListing> CODEC = RecordCodecBuilder.create(i -> i.group(
+    public static final MapCodec<StructureMapListing> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                     BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(StructureMapListing::cost),
-                    StrOpt.of(ExtraCodecs.POSITIVE_INT, "price_min", 7).forGetter(StructureMapListing::minPrice),
-                    StrOpt.of(ExtraCodecs.POSITIVE_INT, "price_max", 13).forGetter(StructureMapListing::maxPrice),
-                    StrOpt.of(ItemStack.CODEC, "price_secondary", ItemStack.EMPTY).forGetter(StructureMapListing::cost2),
+                    ExtraCodecs.POSITIVE_INT.optionalFieldOf("price_min", 7).forGetter(StructureMapListing::minPrice),
+                    ExtraCodecs.POSITIVE_INT.optionalFieldOf("price_max", 13).forGetter(StructureMapListing::maxPrice),
+                    ItemStack.CODEC.optionalFieldOf("price_secondary", ItemStack.EMPTY).forGetter(StructureMapListing::cost2),
                     TARGET_CODEC.fieldOf("structure").forGetter(p -> p.structure),
-                    StrOpt.of(ExtraCodecs.POSITIVE_INT, "max_trades", 16).forGetter(StructureMapListing::maxTrades),
-                    StrOpt.of(ExtraCodecs.POSITIVE_FLOAT, "price_multiplier", 0.05f).forGetter(StructureMapListing::priceMult),
-                    StrOpt.of(Codec.intRange(1, 5), "level", 1).forGetter(StructureMapListing::level),
-                    StrOpt.of(Codec.STRING, "map_name", "").forGetter(p -> p.mapName),
-                    StrOpt.of(ColorUtils.CODEC, "map_color", 0xffffff).forGetter(p -> p.mapColor),
-                    StrOpt.of(ResourceLocation.CODEC, "map_marker", new ResourceLocation("")).forGetter(p -> p.mapMarker))
+                    ExtraCodecs.POSITIVE_INT.optionalFieldOf( "max_trades", 16).forGetter(StructureMapListing::maxTrades),
+                    ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf( "price_multiplier", 0.05f).forGetter(StructureMapListing::priceMult),
+                    Codec.intRange(1, 5).optionalFieldOf( "level", 1).forGetter(StructureMapListing::level),
+                    Codec.STRING.optionalFieldOf( "map_name", "").forGetter(p -> p.mapName),
+                    ColorUtils.CODEC.optionalFieldOf( "map_color", 0xffffff).forGetter(p -> p.mapColor),
+                    ResourceLocation.CODEC.optionalFieldOf( "map_marker", ResourceLocation.parse("")).forGetter(p -> p.mapMarker))
             .apply(i, StructureMapListing::new));
 
 
@@ -63,7 +63,7 @@ public record StructureMapListing(Item cost, int minPrice, int maxPrice, ItemSta
 
 
     @Override
-    public Codec<? extends ModItemListing> getCodec() {
+    public MapCodec<? extends ModItemListing> getCodec() {
         return CODEC;
     }
 

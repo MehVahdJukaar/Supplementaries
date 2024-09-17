@@ -73,7 +73,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getRoll(partialTicks)));
         poseStack.translate(0, -1.5, -0.5 + 0.02083333);
 
-        this.hourHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+        this.hourHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, -1);
 
         poseStack.popPose();
 
@@ -83,7 +83,7 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
         poseStack.mulPose(Axis.ZP.rotationDegrees(tile.getRollS(partialTicks)));
         poseStack.translate(0, -1.5, -0.5 + 0.04166667);
 
-        this.minuteHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+        this.minuteHand.render(poseStack, builder, combinedLightIn, combinedOverlayIn, -1);
 
         poseStack.popPose();
     }

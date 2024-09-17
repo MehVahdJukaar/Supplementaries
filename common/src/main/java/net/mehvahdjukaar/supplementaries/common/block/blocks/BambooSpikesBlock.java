@@ -36,13 +36,10 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
@@ -52,7 +49,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
@@ -226,7 +222,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return this.getSpikeItem(level.getBlockEntity(pos));
     }
 
@@ -256,7 +252,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return false;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Potion potion, @Nullable Entity adder) {
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, PotionContents potion, @Nullable Entity adder) {
         world.setBlock(pos, state.setValue(TIPPED, true), 0);
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {
@@ -289,7 +285,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     @Override
-    public void moveTick(BlockState movedState, Level level, BlockPos pos, AABB aabb, PistonMovingBlockEntity tile) {
+    public void moveTick(Level level, BlockPos pos, BlockState movedState, AABB aabb, PistonMovingBlockEntity tile) {
         boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(tile.getDirection()));
         if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, movedState, aabb, sameDir, tile);
     }

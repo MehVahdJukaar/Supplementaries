@@ -1,20 +1,16 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge {
+        //platformPackage = "forge"
+    }
 }
-
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-
-    forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
-        mixinConfig "supplementaries-common.mixins.json"
-        mixinConfig "supplementaries.mixins.json"
-    }
 }
 
 configurations {
@@ -26,9 +22,9 @@ configurations {
 }
 
 
-processResources {
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta', 'update.json']) {
+processResources {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta', 'update.json']) {
         expand rootProject.ext.replaceProperties + [project: project]
     }
 }
@@ -46,7 +42,8 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier = null
+    archiveClassifier = "neoforge"
+    atAccessWideners.add("${rootProject.mod_id}.accesswidener") // this is a path inside the mod jar
 }
 
 task updateJson {
@@ -97,25 +94,17 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    //forge "net.neoforged:forge:${minecraft_version}-${neo_version}"
-
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.6"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.3.6"))
+    neoForge "net.neoforged:neoforge:${neo_version}"
 
     implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
     implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
-    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
-
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
-
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
-
-    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:5651445")
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 

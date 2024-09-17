@@ -57,7 +57,7 @@ public class FeatherBlock extends Block {
             }
             double amount = Math.min(6, height * 0.8);
             ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(world, pos,
-                    new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Type.FEATHER, (int) amount,
+                    new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, (int) amount,
                             new Vec3(0, height, 0)));
         }
     }
@@ -87,7 +87,7 @@ public class FeatherBlock extends Block {
                     double dy = 0.001;
 
                     ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, blockPos,
-                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Type.FEATHER, 1,
+                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, 1,
                                     new Vec3(0, dy, 0)));
                 }
             }

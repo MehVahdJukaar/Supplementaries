@@ -1,46 +1,31 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.EnderPearlBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
 
-public class ServerBoundSyncCannonPacket implements Message {
-    private final float yaw;
-    private final float pitch;
-    private final byte firePower;
-    private final boolean fire;
-    private final BlockPos pos;
-    private final boolean stopControlling;
+public record ServerBoundSyncCannonPacket(
+        float yaw, float pitch, byte firePower, boolean fire, BlockPos pos, boolean stopControlling
+) implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSyncCannonPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_sync_cannon"), ServerBoundSyncCannonPacket::new);
 
     public ServerBoundSyncCannonPacket(FriendlyByteBuf buf) {
-        this.yaw = buf.readFloat();
-        this.pitch = buf.readFloat();
-        this.pos = buf.readBlockPos();
-        this.firePower = buf.readByte();
-        this.fire = buf.readBoolean();
-        this.stopControlling = buf.readBoolean();
-    }
-
-    public ServerBoundSyncCannonPacket(float yaw, float pitch, byte firePower, boolean fire, BlockPos pos,
-                                       boolean stopControlling) {
-        this.yaw = yaw;
-        this.pitch = pitch;
-        this.pos = pos;
-        this.firePower = firePower;
-        this.fire = fire;
-        this.stopControlling = stopControlling;
+        this(buf.readFloat(), buf.readFloat(), buf.readByte(),
+                buf.readBoolean(), buf.readBlockPos(), buf.readBoolean());
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeFloat(this.yaw);
         buf.writeFloat(this.pitch);
         buf.writeBlockPos(this.pos);
@@ -50,10 +35,10 @@ public class ServerBoundSyncCannonPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
 
         // server world
-        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
+        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getPlayer());
         Level level = player.level();
 
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
@@ -71,4 +56,8 @@ public class ServerBoundSyncCannonPacket implements Message {
         //Supplementaries.error(); //should not happen
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

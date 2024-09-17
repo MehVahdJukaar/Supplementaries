@@ -67,7 +67,7 @@ public class SoapItem extends Item {
         if (!pLevel.isClientSide) {
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                     new ClientBoundParticlePacket(entity,
-                            ClientBoundParticlePacket.Type.BUBBLE_EAT, entity.getViewVector(1)));
+                            ClientBoundParticlePacket.Kind.BUBBLE_EAT, entity.getViewVector(1)));
         }
         return super.finishUsingItem(pStack, pLevel, entity);
     }
@@ -132,7 +132,7 @@ public class SoapItem extends Item {
             // spawn particles
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                     new ClientBoundParticlePacket(entity,
-                            ClientBoundParticlePacket.Type.BUBBLE_CLEAN_ENTITY));
+                            ClientBoundParticlePacket.Kind.BUBBLE_CLEAN_ENTITY));
         }
         if (!player.getAbilities().instabuild) stack.shrink(1);
     }

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -21,7 +22,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -63,7 +64,8 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        if (projectile instanceof ThrownPotion potion && PotionUtils.getPotion(potion.getItem()) == Potions.WATER) {
+        if (projectile instanceof ThrownPotion potion && potion.getItem()
+                .getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).is(Potions.WATER)) {
             Entity entity = projectile.getOwner();
             boolean flag = entity == null || entity instanceof Player || PlatHelper.isMobGriefingOn(level, entity);
             if (flag) {
@@ -110,7 +112,7 @@ public class AshLayerBlock extends FallingBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathType) {
         if (pathType == PathComputationType.LAND) {
             return state.getValue(LAYERS) <= MAX_LAYERS / 2;
         }

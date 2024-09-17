@@ -2,12 +2,14 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -16,10 +18,13 @@ import net.minecraft.world.level.dimension.LevelStem;
 
 public class ClientBoundSyncAmbientLightPacket implements Message {
 
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSyncAmbientLightPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_sync_ambient_light"), ClientBoundSyncAmbientLightPacket::new);
+
     private final Object2IntMap<ResourceKey<Level>> ambientLight = new Object2IntArrayMap<>();
 
     public ClientBoundSyncAmbientLightPacket(RegistryAccess registryAccess) {
-        for (var d : registryAccess.registry(Registries.DIMENSION).get().entrySet()) {
+        for (var d : registryAccess.registryOrThrow(Registries.DIMENSION).entrySet()) {
             Object obj = d.getValue();
             //mojank shit code doesnt even respect its own contracts
             DimensionType type = null;
@@ -42,12 +47,17 @@ public class ClientBoundSyncAmbientLightPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeMap(ambientLight, FriendlyByteBuf::writeResourceKey, FriendlyByteBuf::writeVarInt);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         MapLightHandler.setAmbientLight(ambientLight);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

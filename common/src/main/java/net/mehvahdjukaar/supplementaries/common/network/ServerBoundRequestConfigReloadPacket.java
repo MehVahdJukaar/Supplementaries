@@ -1,25 +1,33 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
-public class ServerBoundRequestConfigReloadPacket implements Message {
-    public ServerBoundRequestConfigReloadPacket(FriendlyByteBuf buffer) {
-    }
+public record ServerBoundRequestConfigReloadPacket() implements Message {
 
-    public ServerBoundRequestConfigReloadPacket() {
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundRequestConfigReloadPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_request_config_reload"), ServerBoundRequestConfigReloadPacket::new);
+
+    public ServerBoundRequestConfigReloadPacket(RegistryFriendlyByteBuf buffer) {
+        this();
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf friendlyByteBuf) {
+    public void write(RegistryFriendlyByteBuf friendlyByteBuf) {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
-        ConfigUtils.configScreenReload((ServerPlayer) context.getSender());
+    public void handle(Context context) {
+        ConfigUtils.configScreenReload((ServerPlayer) context.getPlayer());
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

@@ -143,7 +143,7 @@ public class ModBlockProperties {
         public static PostType get(BlockState state, boolean needsFullHeight) {
 
             PostType type = null;
-            //if (state.getBlock().hasTileEntity(state)) return type;
+            //if (state.getBlock().hasTileEntity(state)) return explosionType;
             if (state.is(ModTags.POSTS)) {
                 if(!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
                     type = PostType.POST;

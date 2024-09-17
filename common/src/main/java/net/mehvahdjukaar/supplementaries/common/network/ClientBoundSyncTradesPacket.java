@@ -1,12 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.minecraft.network.FriendlyByteBuf;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.trading.MerchantOffers;
 
 public class ClientBoundSyncTradesPacket implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSyncTradesPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_sync_trades"), ClientBoundSyncTradesPacket::new);
+
     public final int containerId;
     public final MerchantOffers offers;
     public final int villagerLevel;
@@ -14,9 +19,9 @@ public class ClientBoundSyncTradesPacket implements Message {
     public final boolean showProgress;
     public final boolean canRestock;
 
-    public ClientBoundSyncTradesPacket(FriendlyByteBuf buf) {
+    public ClientBoundSyncTradesPacket(RegistryFriendlyByteBuf buf) {
         this.containerId = buf.readVarInt();
-        this.offers = MerchantOffers.createFromStream(buf);
+        this.offers = MerchantOffers.STREAM_CODEC.decode(buf);
         this.villagerLevel = buf.readVarInt();
         this.villagerXp = buf.readVarInt();
         this.showProgress = buf.readBoolean();
@@ -33,9 +38,9 @@ public class ClientBoundSyncTradesPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(this.containerId);
-        this.offers.writeToStream(buf);
+        MerchantOffers.STREAM_CODEC.encode(buf, this.offers);
         buf.writeVarInt(this.villagerLevel);
         buf.writeVarInt(this.villagerXp);
         buf.writeBoolean(this.showProgress);
@@ -43,8 +48,12 @@ public class ClientBoundSyncTradesPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         ClientReceivers.handleSyncTradesPacket(this);
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

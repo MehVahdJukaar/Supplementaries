@@ -17,9 +17,8 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
-import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -126,7 +125,7 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
 
             event.register(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
-                protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
+                private Projectile getProjectile(Level world, Position pos, ItemStack stack) {
                     CompoundTag com = stack.getTag();
                     int charges = stack.getMaxDamage();
                     if (com != null) {

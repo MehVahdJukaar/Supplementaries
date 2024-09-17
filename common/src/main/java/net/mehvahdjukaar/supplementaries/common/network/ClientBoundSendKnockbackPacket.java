@@ -1,45 +1,36 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.minecraft.network.FriendlyByteBuf;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 
-public class ClientBoundSendKnockbackPacket implements Message {
+public record ClientBoundSendKnockbackPacket(int id, Vec3 knockback) implements Message {
 
-    public final int id;
-    public final double knockbackX;
-    public final double knockbackY;
-    public final double knockbackZ;
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSendKnockbackPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_send_knockback"), ClientBoundSendKnockbackPacket::new);
 
-    public ClientBoundSendKnockbackPacket(Vec3 knockback, int id) {
-        this.id = id;
-        this.knockbackX = knockback.x;
-        this.knockbackY = knockback.y;
-        this.knockbackZ = knockback.z;
+    public ClientBoundSendKnockbackPacket(RegistryFriendlyByteBuf buf) {
+        this(buf.readVarInt(), buf.readVec3());
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
-        buf.writeInt(this.id);
-        buf.writeDouble(this.knockbackX);
-        buf.writeDouble(this.knockbackY);
-        buf.writeDouble(this.knockbackZ);
-
-    }
-
-    public ClientBoundSendKnockbackPacket(FriendlyByteBuf buf) {
-        this.id = buf.readInt();
-        this.knockbackX = buf.readDouble();
-        this.knockbackY = buf.readDouble();
-        this.knockbackZ = buf.readDouble();
+    public void write(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+        registryFriendlyByteBuf.writeVarInt(this.id);
+        registryFriendlyByteBuf.writeVec3(this.knockback);
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
+    public void handle(Context context) {
         // client world
         ClientReceivers.handleSendBombKnockbackPacket(this);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }
 

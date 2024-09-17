@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -43,8 +45,8 @@ public interface IWaxable {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
-                ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, pos,
-                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.WAX_ON));
+                NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, pos,
+                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.WAX_ON));
             }
 
             return InteractionResult.sidedSuccess(level.isClientSide);

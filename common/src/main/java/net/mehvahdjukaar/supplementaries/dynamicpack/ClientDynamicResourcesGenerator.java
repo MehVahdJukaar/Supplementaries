@@ -60,28 +60,28 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         ColorHelper.refreshBubbleColors(manager);
 
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
-            try (var text = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman"));
-                 var eyeText = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman_eyes"))) {
+            try (var text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
+                 var eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
                 dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head"), text, false);
                 dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
             } catch (Exception ignored) {
             }
         }
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("crossbow"), e -> {
-                e.add(new ItemOverride(new ResourceLocation("item/crossbow_rope_arrow"),
-                        List.of(new ItemOverride.Predicate(new ResourceLocation("charged"), 1f),
+            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("crossbow"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/crossbow_rope_arrow"),
+                        List.of(new ItemOverride.Predicate(ResourceLocation.withDefaultNamespace("charged"), 1f),
                                 new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
             });
         }
 
         if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("written_book"), e -> {
-                e.add(new ItemOverride(new ResourceLocation("item/written_book_tattered"),
+            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("written_book"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/written_book_tattered"),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
             });
-            RPUtils.appendModelOverride(manager, this.dynamicPack, new ResourceLocation("filled_map"), e -> {
-                e.add(new ItemOverride(new ResourceLocation("item/antique_map"),
+            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("filled_map"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/antique_map"),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
             });
         }
@@ -163,7 +163,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                         }
 
                     } catch (Exception ex) {
-                        //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
+                        //getLogger().error("Could not find sign texture for wood explosionType {}. Using plank texture : {}", wood, ex);
                     }
                 }
                 //if it failed use plank one

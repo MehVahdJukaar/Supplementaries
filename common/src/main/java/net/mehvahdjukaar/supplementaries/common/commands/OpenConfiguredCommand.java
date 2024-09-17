@@ -22,7 +22,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) {
-        if (CommonConfigs.SPEC.hasConfigScreen()) {
+        if (CommonConfigs.CONFIG_HOLDER.hasConfigScreen()) {
             if (context.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
                 ModNetwork.CHANNEL.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
             }

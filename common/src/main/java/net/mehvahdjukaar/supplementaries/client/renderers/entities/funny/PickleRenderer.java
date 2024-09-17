@@ -120,33 +120,35 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
     }
 
     @Override
-    protected void renderNameTag(AbstractClientPlayer player, Component name, PoseStack matrixStack, MultiBufferSource buffer, int p_225629_5_) {
+    protected void renderNameTag(AbstractClientPlayer player, Component displayName, PoseStack poseStack, MultiBufferSource buffer,
+                                 int packedLight, float partialTick) {
         double d0 = this.entityRenderDispatcher.distanceToSqr(player);
-        matrixStack.pushPose();
+        poseStack.pushPose();
         if (d0 < 100.0D) {
             Scoreboard scoreboard = player.getScoreboard();
             Objective objective = scoreboard.getDisplayObjective(2);
             if (objective != null) {
                 Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), objective);
-                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, p_225629_5_);
-                matrixStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
+                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), poseStack, buffer, p_225629_5_);
+                poseStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
             }
         }
 
-        super.renderNameTag(player, name, matrixStack, buffer, p_225629_5_);
-        matrixStack.popPose();
+        super.renderNameTag(player, displayName, poseStack, buffer, packedLight, partialTick);
+
+        poseStack.popPose();
     }
 
     //same as vanilla
     @Override
-    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float p_225621_3_, float p_225621_4_, float partialTicks) {
+    protected void setupRotations(AbstractClientPlayer player, PoseStack poseStack, float bob, float yBodyRot, float partialTicks, float scale) {
         float f = player.getSwimAmount(partialTicks);
         if (player.isFallFlying()) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
             float f1 = player.getFallFlyingTicks() + partialTicks;
             float inclination = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
-                matrixStack.mulPose(Axis.XP.rotationDegrees(inclination * (-90.0F - player.getXRot())));
+                poseStack.mulPose(Axis.XP.rotationDegrees(inclination * (-90.0F - player.getXRot())));
             }
 
             Vec3 vector3d = player.getViewVector(partialTicks);
@@ -156,18 +158,18 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
             if (d0 > 0.0D && d1 > 0.0D) {
                 double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                 double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;
-                matrixStack.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
+                poseStack.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
             float f3 = player.isInWater() ? -90.0F - player.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
-            matrixStack.mulPose(Axis.XP.rotationDegrees(f4));
+            poseStack.mulPose(Axis.XP.rotationDegrees(f4));
             if (player.isVisuallySwimming()) {
-                matrixStack.translate(0.0D, -0.25, 0.25);
+                poseStack.translate(0.0D, -0.25, 0.25);
             }
         } else {
-            super.setupRotations(player, matrixStack, p_225621_3_, p_225621_4_, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
         }
     }
 

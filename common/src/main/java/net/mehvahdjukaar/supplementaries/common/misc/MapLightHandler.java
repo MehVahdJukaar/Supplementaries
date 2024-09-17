@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAmbientLightPacket;
@@ -48,7 +49,7 @@ public class MapLightHandler {
     }
 
 
-    private static class Counter implements CustomMapData.DirtyCounter {
+    public static class Counter implements CustomMapData.DirtyCounter {
         private int minDirtyX = 0;
         private int maxDirtyX = 127;
         private int minDirtyZ = 0;
@@ -173,11 +174,6 @@ public class MapLightHandler {
         }
 
         @Override
-        public void loadUpdateTag(CompoundTag tag) {
-            load(tag);
-        }
-
-        @Override
         public boolean persistOnCopyOrLock() {
             return false;
         }
@@ -273,7 +269,7 @@ public class MapLightHandler {
     @ApiStatus.Internal
     public static void sendDataToClient(ServerPlayer player) {
         if (enabled) {
-            ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
+            NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
         }
     }
 

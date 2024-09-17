@@ -6,17 +6,19 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTil
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,9 +31,9 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        PotionUtils.addPotionTooltip(stack, tooltip, BambooSpikesBlockTile.POTION_MULTIPLIER);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltips, tooltipFlag);
+        getPotion(stack).addPotionTooltip(tooltips::add, BambooSpikesBlockTile.POTION_MULTIPLIER);
     }
 
     @Override
@@ -46,8 +48,11 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public int getBarColor(ItemStack stack) {
-        return PotionUtils.getColor(stack);
-        //return MathHelper.rgb(106,81,178);
+        return getPotion(stack).getColor();
+    }
+
+    private static @NotNull PotionContents getPotion(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 
     @Override
@@ -59,7 +64,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         List<MobEffectInstance> effects = potion.getEffects();
         if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
             for (var e : effects) {
-                if (e.getEffect().isBeneficial()) return false;
+                if (e.getEffect().value().isBeneficial()) return false;
             }
         }
         return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
@@ -89,7 +94,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public Component getName(ItemStack stack) {
-        Potion p = PotionUtils.getPotion(stack);
+        PotionContents p = getPotion(stack);
         Component arrowName = Component.translatable(p.getName("item.minecraft.tipped_arrow.effect."));
         String s = arrowName.getString();
         if (s.contains("Arrow of ")) {
@@ -101,6 +106,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public ItemStack getDefaultInstance() {
+        //replace with item constructor default component
         return makeSpikeItem(Potions.POISON);
     }
 

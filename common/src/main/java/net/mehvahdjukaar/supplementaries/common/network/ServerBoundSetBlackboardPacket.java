@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -12,6 +14,10 @@ import net.minecraft.world.level.Level;
 import java.util.Objects;
 
 public class ServerBoundSetBlackboardPacket implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSetBlackboardPacket> CODEC = Message.makeType(
+            Supplementaries.res("c2s_set_blackboard"), ServerBoundSetBlackboardPacket::new);
+
     private final BlockPos pos;
     private final byte[][] pixels;
 
@@ -29,7 +35,7 @@ public class ServerBoundSetBlackboardPacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);
         for (byte[] pixel : this.pixels) {
             buf.writeByteArray(pixel);
@@ -37,8 +43,8 @@ public class ServerBoundSetBlackboardPacket implements Message {
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
-        Player sender = context.getSender();
+    public void handle(Context context) {
+        Player sender = context.getPlayer();
         Level level = Objects.requireNonNull(sender).level();
 
         BlockPos pos = this.pos;
@@ -49,5 +55,10 @@ public class ServerBoundSetBlackboardPacket implements Message {
                 board.setChanged();
             }
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
     }
 }

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.common.items.HatStandItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -87,13 +88,6 @@ public class HatStandEntity extends LivingEntity {
         this.originalYRot = null;
     }
 
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        //so rotation is set immediately
-        if (PlatHelper.getPlatform().isForge()) return PlatHelper.getEntitySpawnPacket(this);
-        return super.getAddEntityPacket();
-    }
-
     private Vector3f getRotationAxis() {
         return this.getViewVector(0).toVector3f();
     }
@@ -108,11 +102,11 @@ public class HatStandEntity extends LivingEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_CLIENT_FLAGS, (byte) 0);
-        this.entityData.define(FACING_TARGET, OptionalInt.empty());
-        this.entityData.define(DATA_HEAD_POSE, DEFAULT_HEAD_POSE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_CLIENT_FLAGS, (byte) 0);
+        builder.define(FACING_TARGET, OptionalInt.empty());
+        builder.define(DATA_HEAD_POSE, DEFAULT_HEAD_POSE);
     }
 
     @Override

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 public class MiscUtils {
 
 
-    public static boolean showsHints(BlockGetter worldIn, TooltipFlag flagIn) {
+    public static boolean showsHints(TooltipFlag flagIn) {
         if (worldIn instanceof Level l && l.isClientSide) {
             return ClientConfigs.General.TOOLTIP_HINTS.get();
         }

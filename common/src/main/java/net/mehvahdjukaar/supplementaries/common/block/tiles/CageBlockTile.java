@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
@@ -26,24 +27,24 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(),false);
     }
 
-    public void saveToNbt(ItemStack stack) {
+    public void saveToNbt(ItemStack stack, HolderLookup.Provider registries) {
         if (!this.mobContainer.isEmpty()) {
             CompoundTag compound = new CompoundTag();
-            this.saveAdditional(compound);
+            this.saveAdditional(compound, registries);
             stack.addTagElement("BlockEntityTag", compound);
         }
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.mobContainer.load(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.mobContainer.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        this.mobContainer.save(compound);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.mobContainer.save(tag);
     }
 
     @Override
@@ -52,8 +53,8 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     @Override

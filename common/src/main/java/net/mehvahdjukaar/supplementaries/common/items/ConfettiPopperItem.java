@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,10 +37,10 @@ public class ConfettiPopperItem extends Item {
             //hack
             float oldRot = player.getXRot();
             player.setXRot((float) (oldRot - 20 * Math.cos(oldRot * Mth.DEG_TO_RAD)));
-            ClientBoundParticlePacket packet = new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Type.CONFETTI,
+            ClientBoundParticlePacket packet = new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI,
                     null, player.getLookAngle());
             player.setXRot(oldRot);
-            ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(pos), packet);
+            NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) level, BlockPos.containing(pos), packet);
 
             level.gameEvent(player, GameEvent.EXPLODE, player.position());
         }

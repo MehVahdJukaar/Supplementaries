@@ -29,11 +29,11 @@ public class HatStandRenderer extends LivingEntityRenderer<HatStandEntity, HatSt
     }
 
     @Override
-    protected void setupRotations(HatStandEntity entityLiving, PoseStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - rotationYaw));
-        float f = (entityLiving.level().getGameTime() - entityLiving.lastHit) + partialTicks;
+    protected void setupRotations(HatStandEntity entity, PoseStack poseStack, float bob, float yBodyRot, float partialTicks, float scale) {
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - yBodyRot));
+        float f = (entity.level().getGameTime() - entity.lastHit) + partialTicks;
         if (f < 5.0F) {
-            matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f / 1.5F * 3.1415927F) * 3.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f / 1.5F * 3.1415927F) * 3.0F));
         }
     }
 

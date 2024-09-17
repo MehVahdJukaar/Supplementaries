@@ -4,8 +4,8 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,9 +23,9 @@ class KeyBehavior extends DispenserHelper.AdditionalDispenserBehavior {
 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-        ServerLevel level = source.getLevel();
-        Direction dir = source.getBlockState().getValue(DispenserBlock.FACING);
-        BlockPos pos = source.getPos().relative(dir);
+        ServerLevel level = source.level();
+        Direction dir = source.state().getValue(DispenserBlock.FACING);
+        BlockPos pos = source.pos().relative(dir);
 
         var tile = level.getBlockEntity(pos);
         if (tile instanceof KeyLockableTile kt) {

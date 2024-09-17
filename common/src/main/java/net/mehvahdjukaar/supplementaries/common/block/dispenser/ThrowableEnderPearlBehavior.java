@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.projectile.Projectile;

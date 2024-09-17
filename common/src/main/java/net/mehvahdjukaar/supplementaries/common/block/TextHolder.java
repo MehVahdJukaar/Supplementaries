@@ -23,7 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
@@ -55,7 +55,7 @@ public class TextHolder implements IAntiqueTextProvider {
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
 
     private static Codec<Component[]> compCodec(int size) {
-        return CODEC_CACHE.computeIfAbsent(size, s -> ExtraCodecs.FLAT_COMPONENT.listOf()
+        return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.FLAT_CODEC.listOf()
                 .comapFlatMap((list) -> Util.fixedSize(list, s)
                                 .map(l -> l.toArray(Component[]::new)),
                         components -> Arrays.stream(components).toList()));
@@ -120,8 +120,7 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     private Component[] decodeMessage(Tag com, Level level, BlockPos pos) {
-        return Arrays.stream(compCodec(lines).decode(NbtOps.INSTANCE, com).getOrThrow(false, s -> {
-                })
+        return Arrays.stream(compCodec(lines).decode(NbtOps.INSTANCE, com).getOrThrow()
                 .getFirst()).map(c -> {
             if (level instanceof ServerLevel sl) {
                 try {
@@ -141,11 +140,9 @@ public class TextHolder implements IAntiqueTextProvider {
         com.putBoolean("has_glowing_text", this.hasGlowingText);
         com.putBoolean("has_antique_ink", this.hasAntiqueInk);
         if (lines != 0) {
-            com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow(false, s -> {
-            }));
+            com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow());
             if (hasFilteredMessage()) {
-                com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow(false, s -> {
-                }));
+                com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow());
             }
         }
         compound.put("TextHolder", com);
@@ -265,7 +262,7 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public boolean hasEditableText(boolean filtering) {
         return Arrays.stream(this.getMessages(filtering))
-                .allMatch((component) -> component.equals(CommonComponents.EMPTY) || component.getContents() instanceof LiteralContents);
+                .allMatch((component) -> component.equals(CommonComponents.EMPTY) || component.getContents() instanceof PlainTextContents.LiteralContents);
     }
 
     public boolean executeClickCommandsIfPresent(Player player, Level level, BlockPos pos) {

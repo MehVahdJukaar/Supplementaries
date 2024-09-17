@@ -21,7 +21,7 @@ public class ReloadConfigsCommand implements Command<CommandSourceStack> {
     @Override
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         //TODO: figure out server/client side
-        CommonConfigs.SPEC.sendSyncedConfigsToAllPlayers();
+        CommonConfigs.CONFIG_HOLDER.sendSyncedConfigsToAllPlayers();
         context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.configs_reloaded"), false);
         return 0;
     }

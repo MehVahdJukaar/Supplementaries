@@ -75,12 +75,12 @@ public class SuppPlatformStuffImpl {
 
     public static void disableAMWarn() {
         ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
-        ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
+        ((FabricConfigSpec) ClientConfigs.CONFIG_HOLDER).saveConfig();
     }
 
     public static void disableOFWarn(boolean on) {
         ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
-        ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
+        ((FabricConfigSpec) ClientConfigs.CONFIG_HOLDER).saveConfig();
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState maybeSticky) {

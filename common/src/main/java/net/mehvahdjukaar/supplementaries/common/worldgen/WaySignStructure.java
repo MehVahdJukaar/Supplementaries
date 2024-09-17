@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
-import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.moonlight.api.misc.WeakHashSet;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
@@ -34,18 +34,18 @@ import java.util.Set;
 public class WaySignStructure extends Structure {
 
 
-    public static final Codec<WaySignStructure> CODEC = RecordCodecBuilder.<WaySignStructure>mapCodec(instance ->
+    public static final MapCodec<WaySignStructure> CODEC = RecordCodecBuilder.<WaySignStructure>mapCodec(instance ->
             instance.group(WaySignStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
-                    StrOpt.of(ResourceLocation.CODEC, "start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                    ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
                     Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY)
-            ).apply(instance, WaySignStructure::new)).codec();
+            ).apply(instance, WaySignStructure::new));
 
 
     public static class Type implements StructureType<WaySignStructure> {
         @Override
-        public Codec<WaySignStructure> codec() {
+        public MapCodec<WaySignStructure> codec() {
             return CODEC;
         }
     }

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
-import net.mehvahdjukaar.moonlight.api.map.type.CustomDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
 import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -21,21 +21,21 @@ public class ModMapMarkers {
     //builtin code defined ones
 
     //with markers
-    public static final CustomDecorationType<CustomMapDecoration, SignPostMarker> SIGN_POST_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<CustomMapDecoration, SignPostMarker> SIGN_POST_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("sign_post"), SignPostMarker::new, SignPostMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<ColoredDecoration, BedMarker> BED_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<ColoredDecoration, BedMarker> BED_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("bed"), BedMarker::new, BedMarker::getFromWorld, ColoredDecoration::new);
-    public static final CustomDecorationType<ColoredDecoration, FlagMarker> FLAG_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<ColoredDecoration, FlagMarker> FLAG_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("flag"), FlagMarker::new, FlagMarker::getFromWorld, ColoredDecoration::new);
-    public static final CustomDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("nether_portal"), NetherPortalMarker::new, NetherPortalMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<CustomMapDecoration, BeaconMarker> BEACON_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<CustomMapDecoration, BeaconMarker> BEACON_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("beacon"), BeaconMarker::new, BeaconMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<ColoredDecoration, CeilingBannerMarker> BANNER_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<ColoredDecoration, CeilingBannerMarker> BANNER_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("banner"), CeilingBannerMarker::new, CeilingBannerMarker::getFromWorld, ColoredDecoration::new);
-    public static final CustomDecorationType<CustomMapDecoration, ChestMarker> CHEST_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<CustomMapDecoration, ChestMarker> CHEST_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("chest"), ChestMarker::new, ChestMarker::getFromWorld, CustomMapDecoration::new);
-    public static final CustomDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+    public static final MLMapDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
             Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
 
     public static final DataObjectReference<MapDecorationType<?,?>> DEATH_MARKER =

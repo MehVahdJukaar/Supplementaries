@@ -413,7 +413,7 @@ public class ClientReceivers {
             float power = packet.power();
             List<BlockPos> toBlow = packet.toBlow();
             Vec3 knockback = packet.knockback();
-            switch (packet.type()) {
+            switch (packet.explosionType()) {
                 case BOMB -> {
                     Explosion explosion = new BombExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow,
                             BombEntity.BombType.values()[packet.getId()]);

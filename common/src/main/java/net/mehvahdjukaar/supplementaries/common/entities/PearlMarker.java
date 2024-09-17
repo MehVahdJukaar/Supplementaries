@@ -13,9 +13,9 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacke
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -69,8 +69,8 @@ public class PearlMarker extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(TELEPORT_POS, this.blockPosition());
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(TELEPORT_POS, this.blockPosition());
     }
 
     @Override
@@ -142,14 +142,6 @@ public class PearlMarker extends Entity {
         return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
     }
 
-
-    @NotNull
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return PlatHelper.getEntitySpawnPacket(this);
-    }
-
-
     private void removePearl(ThrownEnderpearl pearl) {
         this.pearls.remove(pearl);
     }
@@ -193,7 +185,7 @@ public class PearlMarker extends Entity {
                     }
                     ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
                             new ClientBoundParticlePacket(fromPos.getCenter(),
-                                    ClientBoundParticlePacket.Type.PEARL_TELEPORT,
+                                    ClientBoundParticlePacket.Kind.PEARL_TELEPORT,
                                     0, toPos.getCenter()));
 
                     super.teleportTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5);
@@ -238,7 +230,7 @@ public class PearlMarker extends Entity {
 
 
     public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
-        Level level = source.getLevel();
+        Level level = source.level();
         BlockPos pos = source.getPos();
         ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
         pearl.setPos(pearlPos.x(), pearlPos.y(), pearlPos.z());

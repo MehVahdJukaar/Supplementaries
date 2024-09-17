@@ -97,7 +97,7 @@ public class GlobeManager {
 
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
             if (sepia) return SEPIA_COLORS.getInt(b);
-            IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
+            IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(ResourceLocation.withDefaultNamespace("overworld")));
             if(l != null){
                return l.getInt(b);
             }
@@ -124,7 +124,7 @@ public class GlobeManager {
                 SEPIA_COLORS.clear();
                 SEPIA_COLORS.addAll(l);
             } else {
-                DIMENSION_COLOR_MAP.put(new ResourceLocation(name.replace(".", ":")), new IntArrayList(l));
+                DIMENSION_COLOR_MAP.put(ResourceLocation.tryParse(name.replace(".", ":")), new IntArrayList(l));
             }
         }
         if(DIMENSION_COLOR_MAP.isEmpty()){
