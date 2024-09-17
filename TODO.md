@@ -8,7 +8,6 @@
 
 # Supplementaries
 
-- faucet connets down in amendmnets cauldron
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
 - test config saving
@@ -58,6 +57,7 @@
 
 # Amendments
 
+- royal jelly bug
 - fluid offer ignoring min amount
 - faucet behaviors update on data reload
 - dye cauldon 1.21
