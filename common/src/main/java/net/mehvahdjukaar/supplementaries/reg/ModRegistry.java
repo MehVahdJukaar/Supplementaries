@@ -740,6 +740,13 @@ public class ModRegistry {
                     .strength(0.5F)
                     .sound(SoundType.WOOL))
     );
+
+    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
+            ModSounds.AVAST_MUSIC, new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE),
+            20 * 60 * 3));
+
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
             BlockBehaviour.Properties.copy(Blocks.WHEAT)

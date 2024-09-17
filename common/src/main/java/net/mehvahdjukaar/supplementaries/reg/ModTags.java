@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -124,6 +126,10 @@ public class ModTags {
 
     private static TagKey<EntityType<?>> entityTag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, Supplementaries.res(name));
+    }
+
+    private static TagKey<DamageType> damageTag(String name) {
+        return TagKey.create(Registries.DAMAGE_TYPE, Supplementaries.res(name));
     }
 
     private static TagKey<Enchantment> enchTag(String name) {

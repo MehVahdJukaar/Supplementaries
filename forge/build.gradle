@@ -145,7 +145,7 @@ dependencies {
     modImplementation("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
-    modImplementation("curse.maven:supplementaries-squared-838411:5130385")
+    modCompileOnly("curse.maven:supplementaries-squared-838411:5130385")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modCompileOnly("curse.maven:balm-531761:4757228")

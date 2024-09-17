@@ -734,6 +734,7 @@ public class CommonConfigs {
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
             CANNONBALL_ENABLED = feature(builder, "cannonball");
+            AVAST_DISC_ENABLED = feature(builder, ModConstants.AVAST_DISC_NAME);
             builder.pop();
 
             builder.push("present");
@@ -836,6 +837,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
+        public static final Supplier<Boolean> AVAST_DISC_ENABLED;
     }
 
 
