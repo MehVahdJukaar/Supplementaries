@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -52,16 +52,17 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        this.scrollText((int) delta);
-        return true;
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        boolean old = super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        boolean n = this.scrollText((int) scrollY);
+        return old || n;
     }
 
     protected boolean canScroll() {
         return true;
     }
 
-    protected void scrollText(int amount) {
+    protected boolean scrollText(int amount) {
         if (canScroll()) {
             lineIndex = lineIndex - amount;
 
@@ -73,7 +74,9 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
                 textHolderIndex %= messages.length;
             }
             textInputUtil.setCursorToEnd();
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -116,7 +119,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
     @Override
     public void removed() {
         // send new text to the server
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTextHolderPacket(
+        NetworkHelper.sendToServer(new ServerBoundSetTextHolderPacket(
                 this.tile.getBlockPos(), this.messages));
     }
 

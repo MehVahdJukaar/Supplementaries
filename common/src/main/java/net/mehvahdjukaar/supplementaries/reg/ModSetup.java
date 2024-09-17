@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.crafting.FireworkStarRecipe;
 import net.minecraft.world.level.block.ComposterBlock;
 
@@ -38,7 +39,7 @@ public class ModSetup {
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
             FireBehaviorsManager::registerBehaviors,
-            () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
+            () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
     );
 
     public static void asyncSetup() {

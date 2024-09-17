@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
@@ -107,15 +108,15 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.framed = compound.getBoolean("Framed");
-        this.signUp.load(compound.getCompound("SignUp"), this.level, this.worldPosition);
-        this.signDown.load(compound.getCompound("SignDown"), this.level, this.worldPosition);
-        this.loadOwner(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.framed = tag.getBoolean("Framed");
+        this.signUp.load(tag.getCompound("SignUp"), this.level, this.worldPosition);
+        this.signDown.load(tag.getCompound("SignDown"), this.level, this.worldPosition);
+        this.loadOwner(tag);
         this.isSlim = this.mimic.getBlock() instanceof StickBlock;
-        if (compound.contains("Waxed")) {
-            this.isWaxed = compound.getBoolean("Waxed");
+        if (tag.contains("Waxed")) {
+            this.isWaxed = tag.getBoolean("Waxed");
         }
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
@@ -123,13 +124,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putBoolean("Framed", this.framed);
-        compound.put("SignUp", this.signUp.save());
-        compound.put("SignDown", this.signDown.save());
-        this.saveOwner(compound);
-        if (isWaxed) compound.putBoolean("Waxed", isWaxed);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putBoolean("Framed", this.framed);
+        tag.put("SignUp", this.signUp.save());
+        tag.put("SignDown", this.signDown.save());
+        this.saveOwner(tag);
+        if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
 
     @Nullable
@@ -152,11 +153,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
-        SignPostScreen.open(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
@@ -38,7 +39,7 @@ public class PickleData {
             var id = e.getKey();
             if (on) {
                 //to client
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) player, new PicklePacket(id, on, e.getValue().isJar));
+                NetworkHelper.sendToClientPlayer((ServerPlayer) player, new PicklePacket(id, on, e.getValue().isJar));
             }
         }
     }

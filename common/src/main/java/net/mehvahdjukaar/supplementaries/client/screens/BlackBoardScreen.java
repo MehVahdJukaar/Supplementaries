@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.DrawableBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.DyeBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -91,7 +92,7 @@ public class BlackBoardScreen extends Screen {
                 pixels[xx][yy] = (this.buttons[xx][yy].getColor());
             }
         }
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
+        NetworkHelper.sendToServer(new ServerBoundSetBlackboardPacket(this.tile.getBlockPos(), pixels));
     }
 
     //dynamic refreshTextures for client

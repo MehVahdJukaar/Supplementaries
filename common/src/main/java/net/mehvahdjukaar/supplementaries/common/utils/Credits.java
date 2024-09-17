@@ -7,7 +7,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -34,8 +33,7 @@ public class Credits implements Serializable {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping()
             .registerTypeAdapter(Credits.class, (JsonDeserializer<Credits>)
-                    (json, typeOfT, context) -> CODEC.parse(JsonOps.INSTANCE, json).getOrThrow(false, e -> {
-                    })).create();
+                    (json, typeOfT, context) -> CODEC.parse(JsonOps.INSTANCE, json).getOrThrow()).create();
 
     //empty default one
     public static Credits INSTANCE = new Credits(Map.of(), List.of(), List.of(), List.of(), List.of(), List.of());
@@ -86,7 +84,7 @@ public class Credits implements Serializable {
 
         }
         if (hasGlobe) {
-            ResourceLocation texture = new ResourceLocation(Supplementaries.MOD_ID, "textures/entity/globes/globe_" + name + ".png");
+            ResourceLocation texture = Supplementaries.res("textures/entity/globes/globe_" + name + ".png");
             globes.put(name, texture);
             for (String n : alias) {
                 if (n != null) globes.put(n.toLowerCase(Locale.ROOT), texture);
@@ -209,10 +207,10 @@ public class Credits implements Serializable {
     private static final class Supporter {
 
         private static final Codec<Supporter> CODEC = RecordCodecBuilder.create((i) -> i.group(
-                StrOpt.of(UUIDUtil.STRING_CODEC, "uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
-                StrOpt.of(Codec.BOOL, "has_statue", false).forGetter(p -> p.has_statue),
-                StrOpt.of(Codec.BOOL, "has_globe", false).forGetter(p -> p.has_globe),
-                StrOpt.of(Codec.STRING, "alias").forGetter(p -> Optional.ofNullable(p.alias))
+                UUIDUtil.STRING_CODEC.optionalFieldOf("uuid").forGetter(p -> Optional.ofNullable(p.uuid)),
+                Codec.BOOL.optionalFieldOf("has_statue", false).forGetter(p -> p.has_statue),
+                Codec.BOOL.optionalFieldOf("has_globe", false).forGetter(p -> p.has_globe),
+                Codec.STRING.optionalFieldOf("alias").forGetter(p -> Optional.ofNullable(p.alias))
         ).apply(i, Supporter::new));
 
         private final @Nullable UUID uuid;

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,8 +21,8 @@ import static net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRope
 
 public class RopeKnotBlockTile extends MimicBlockTile {
 
-    private VoxelShape collisionShape = null;
-    private VoxelShape shape = null;
+    private VoxelShape cachedCollisionShape = null;
+    private VoxelShape cachedShape = null;
 
     public RopeKnotBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.ROPE_KNOT_TILE.get(), pos, state);
@@ -29,15 +30,15 @@ public class RopeKnotBlockTile extends MimicBlockTile {
     }
 
     public VoxelShape getCollisionShape() {
-        if (collisionShape == null) this.recalculateShapes(this.getBlockState());
+        if (cachedCollisionShape == null) this.recalculateShapes(this.getBlockState());
         //might cause issue in worldgen so better be sure
-        return Objects.requireNonNullElseGet(collisionShape, Shapes::block);
+        return Objects.requireNonNullElseGet(cachedCollisionShape, Shapes::block);
     }
 
     public VoxelShape getShape() {
-        if (shape == null) this.recalculateShapes(this.getBlockState());
+        if (cachedShape == null) this.recalculateShapes(this.getBlockState());
         //might cause issue in worldgen so better be sure
-        return Objects.requireNonNullElseGet(shape, Shapes::block);
+        return Objects.requireNonNullElseGet(cachedShape, Shapes::block);
     }
 
     private static final VoxelShape DOWN_SHAPE = Block.box(6, 0, 6, 10, 6, 10);
@@ -67,8 +68,8 @@ public class RopeKnotBlockTile extends MimicBlockTile {
             VoxelShape s = mimic.getShape(this.level, this.worldPosition);
             c = Shapes.or(c, r);
             s = Shapes.or(s, r);
-            this.collisionShape = c.optimize();
-            this.shape = s.optimize();
+            this.cachedCollisionShape = c.optimize();
+            this.cachedShape = s.optimize();
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: " + e);
         }
@@ -81,15 +82,15 @@ public class RopeKnotBlockTile extends MimicBlockTile {
                 Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
         //not sure if needed here
         this.requestModelReload();
-        this.collisionShape = null;
-        this.shape = null;
+        this.cachedCollisionShape = null;
+        this.cachedShape = null;
         super.setChanged();
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.collisionShape = null;
-        this.shape = null;
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.cachedCollisionShape = null;
+        this.cachedShape = null;
     }
 }

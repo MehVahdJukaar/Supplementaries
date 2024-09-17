@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 public class RegistryCommand {
     private static final long PAGE_SIZE = 8L;
-    private static final ResourceKey<Registry<Registry<?>>> ROOT_REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation("root"));
+    private static final ResourceKey<Registry<Registry<?>>> ROOT_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("root"));
     private static final DynamicCommandExceptionType UNKNOWN_REGISTRY = new DynamicCommandExceptionType((key) ->
             Component.translatable("commands.supplementaries.registry.error.unknown_registry", key.toString()));
 

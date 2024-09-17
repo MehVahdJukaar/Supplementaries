@@ -20,6 +20,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -177,21 +178,20 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         return false;
     }
 
-
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         try {
-            this.fluidHolder.load(compound);
+            this.fluidHolder.load(tag);
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("Failed to load fluid container at {}:", this.getBlockPos(), e);
         }
-        this.mobContainer.load(compound);
+        this.mobContainer.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         try {
             this.fluidHolder.save(tag);
         } catch (Exception e) {

@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
@@ -236,15 +237,15 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.transferCooldown = compound.getInt("TransferCooldown");
-        this.tempFluidHolder.load(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.transferCooldown = tag.getInt("TransferCooldown");
+        this.tempFluidHolder.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt("TransferCooldown", this.transferCooldown);
         this.tempFluidHolder.save(tag);
     }
@@ -255,8 +256,8 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     @FunctionalInterface

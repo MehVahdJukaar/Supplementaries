@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigSelectScreen;
+import net.minecraft.world.level.block.Block;
 
 public class CompatHandlerClientImpl {
 
@@ -14,6 +15,7 @@ public class CompatHandlerClientImpl {
         if (CompatHandler.CONFIGURED && ClientConfigs.General.CUSTOM_CONFIGURED_SCREEN.get()) {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }
+
         if (CompatHandler.QUARK) {
             QuarkClientCompat.setupClient();
         }

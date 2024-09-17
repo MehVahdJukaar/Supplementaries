@@ -105,7 +105,7 @@ public class ModTags {
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
     private static TagKey<Structure> MCstructureTag(String name) {
-        return TagKey.create(Registries.STRUCTURE, new ResourceLocation(name));
+        return TagKey.create(Registries.STRUCTURE, ResourceLocation.withDefaultNamespace(name));
     }
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registries.STRUCTURE, Supplementaries.res(name));
@@ -118,7 +118,7 @@ public class ModTags {
     }
 
     private static TagKey<Item> MCitemTag(String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(name));
+        return TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace(name));
     }
 
     private static TagKey<Block> blockTag(String name) {

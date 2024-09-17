@@ -70,7 +70,7 @@ public class FallingUrnEntity extends ImprovedFallingBlockEntity {
         BlockPos pos = this.blockPosition();
         if (tag != null && !tag.isEmpty()) {
             tile = new UrnBlockTile(pos, state);
-            tile.load(tag);
+            tile.loadWithComponents(tag, level().registryAccess());
         }
         Level level = level();
         Block.dropResources(state, level, pos, tile, null, ItemStack.EMPTY);

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
@@ -69,7 +70,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
         this.supplementaries$quiver = quiver;
         if(!level().isClientSide){
             //only needed when entity is alraedy spawned
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncSkellyQuiverPacket(this));
         }
     }

@@ -77,12 +77,12 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
 
         matrixStack.pushPose();
         matrixStack.translate(0, this.riding ? -0.5 : 0.5f, 0);
 
-        super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, color);
         matrixStack.popPose();
     }
 

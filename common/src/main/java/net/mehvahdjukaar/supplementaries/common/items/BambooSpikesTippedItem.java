@@ -51,7 +51,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return getPotion(stack).getColor();
     }
 
-    private static @NotNull PotionContents getPotion(ItemStack stack) {
+    public static @NotNull PotionContents getPotion(ItemStack stack) {
         return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 
