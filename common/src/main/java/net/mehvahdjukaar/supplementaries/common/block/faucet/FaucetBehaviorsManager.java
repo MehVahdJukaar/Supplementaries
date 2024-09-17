@@ -15,6 +15,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -124,30 +125,6 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         }
 
         listeners.forEach(Runnable::run);
-    }
-
-    public static class BlockTestLevel extends FakeLevel {
-
-        private BlockState blockState;
-
-        protected static BlockTestLevel get(RegistryAccess ra) {
-            // always server sie even on client as projectiles entities wont get fire on client
-            return FakeLevel.get("cannon_test_level", false,ra, BlockTestLevel::new);
-        }
-
-        public BlockTestLevel(boolean clientSide, String id, RegistryAccess registryAccess) {
-            super(clientSide, id, registryAccess);
-        }
-
-        @Override
-        public boolean setBlock(BlockPos pos, BlockState state, int flags, int recursionLeft) {
-            this.blockState = state;
-            return true;
-        }
-
-        public void setup() {
-            blockState = null;
-        }
     }
 
 

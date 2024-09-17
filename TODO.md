@@ -1,3 +1,9 @@
+# Soon
+
+-  dispenser minecraft angle and speed
+- polytone bow model
+
+
 # Supplementaries
 
 - faucet connets down in amendmnets cauldron
@@ -16,7 +22,7 @@
 - hat stand wobble not synced
 - check particle collision with blocks
 - bunding pulled up by ropes voided
-- planter root only happen with 2x2
+- planter root  only happen with 2x2
 - slingshot proj not interacting with entities
 - ash bonemeal
 - pulley piston

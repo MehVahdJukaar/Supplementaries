@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.RegistryAccess;
@@ -112,29 +113,6 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         return testLevel.projectile;
     }
 
-    protected static class ProjectileTestLevel extends FakeLevel {
 
-        protected static ProjectileTestLevel get(RegistryAccess ra) {
-            // always server sie even on client as projectiles entities wont get fire on client
-            return FakeLevel.get("cannon_test_level", false, ra, ProjectileTestLevel::new);
-        }
-
-        @Nullable
-        private Entity projectile = null;
-
-        public ProjectileTestLevel(boolean clientSide, String id, RegistryAccess ra) {
-            super(clientSide, id, ra);
-        }
-
-        public void setup() {
-            projectile = null;
-        }
-
-        @Override
-        public boolean addFreshEntity(Entity entity) {
-            this.projectile = entity;
-            return true;
-        }
-    }
 
 }

@@ -45,6 +45,7 @@ Bug Fixes:
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
+- dispenser minecraft projectiles will retain the minecart velocity and be shot at an angle when on a rail slope
 - fixed a rare issue with enderman heads
 - fixed wrench particles and sounds not showing for other players
 - projectile weapons can now show their arrow as preview

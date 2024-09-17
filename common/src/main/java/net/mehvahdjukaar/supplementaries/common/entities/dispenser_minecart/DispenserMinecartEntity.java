@@ -2,13 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.AbstractProjectileBehaviorAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -16,16 +20,19 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
 
     private static final BlockState BLOCK_STATE = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.UP);
-    private static final BlockState BLOCK_STATE_FRONT = Blocks.DISPENSER.defaultBlockState().setValue(DispenserBlock.FACING, Direction.NORTH);
 
     private final MovingDispenserBlockEntity dispenser;
 
@@ -51,8 +57,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     public DispenserMinecartEntity(EntityType<DispenserMinecartEntity> entityType, Level level) {
         super(entityType, level);
-        BlockState state = CommonConfigs.Redstone.DISPENSER_MINECART_FRONT.get() ? BLOCK_STATE_FRONT : BLOCK_STATE;
-        this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, state, this);
+        this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, BLOCK_STATE, this);
     }
 
     @Override
@@ -253,7 +258,13 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                         ((DispenserBlock) Blocks.DISPENSER).getDispenseMethod(itemstack);
                 if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
                     MovingBlockSource<?> blockSource = new MovingBlockSource<>(this, dispenser);
-                    this.dispenser.setItem(i, dispenseitembehavior.dispense(blockSource, itemstack));
+                    // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...
+                    ItemStack dispensed;
+                    if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && dispenseitembehavior instanceof AbstractProjectileBehaviorAccessor pb) {
+                        dispensed = executeAbstractProjectileBehavior(pb, blockSource, itemstack);
+                    } else dispensed = dispenseitembehavior.dispense(blockSource, itemstack);
+
+                    this.dispenser.setItem(i, dispensed);
                 }
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("Failed to execute Dispenser Minecart behavior for item {}", itemstack.getItem());
@@ -261,6 +272,56 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         }
         ((ILevelEventRedirect) pLevel).supp$setRedirected(false, Vec3.ZERO);
 
+    }
+
+    private ItemStack executeAbstractProjectileBehavior(AbstractProjectileBehaviorAccessor ap, BlockSource source, ItemStack stack) {
+        Level level = source.getLevel();
+        Position position = DispenserBlock.getDispensePosition(source);
+        Projectile projectile = ap.invokeGetProjectile(level, position, stack);
+
+
+        Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+        projectile.shoot(direction.getStepX(), ((float) direction.getStepY() + 0.1F), direction.getStepZ(),
+                ap.invokeGetPower(), ap.invokeGetUncertainty());
+
+        //shit code incoming. server doenst sync xRot. TODO: change in 1.21
+        BlockState rail = level.getBlockState(this.blockPosition());
+        if (rail.getBlock() instanceof BaseRailBlock br) {
+            RailShape railShape = rail.getValue(br.getShapeProperty());
+            boolean ascending = railShape.isAscending();
+            if (ascending) {
+                adjustMovementRelativeToRail(projectile, railShape);
+            }
+        }
+        Vec3 mySpeed = this.getDeltaMovement().scale(0.25f); // too much otherwise
+        projectile.setDeltaMovement(projectile.getDeltaMovement().add(mySpeed.x, this.onGround() ? 0.0 : mySpeed.y, mySpeed.z));
+
+
+        level.addFreshEntity(projectile);
+        stack.shrink(1);
+
+        ap.invokePlaySound(source);
+        source.getLevel().levelEvent(2000, source.getPos(), direction.get3DDataValue());
+        return stack;
+    }
+
+    private static void adjustMovementRelativeToRail(Projectile projectile, RailShape railShape) {
+        var movement = projectile.getDeltaMovement();
+        switch (railShape) {
+            case ASCENDING_EAST -> {
+                movement = movement.zRot(-Mth.HALF_PI / 2);
+            }
+            case ASCENDING_WEST -> {
+                movement = movement.zRot(Mth.HALF_PI / 2);
+            }
+            case ASCENDING_SOUTH -> {
+                movement = movement.xRot(Mth.HALF_PI / 2);
+            }
+            case ASCENDING_NORTH -> {
+                movement = movement.xRot(-Mth.HALF_PI / 2);
+            }
+        }
+        projectile.setDeltaMovement(movement);
     }
 
 }

@@ -219,8 +219,8 @@ public class CommonConfigs {
 
             builder.push("dispenser_minecart");
             DISPENSER_MINECART_ENABLED = feature(builder);
-            DISPENSER_MINECART_FRONT = builder.comment("Dispenser minecarts will have their dispenser facing forward instead of up")
-                    .define("face_forward", false);
+            DISPENSER_MINECART_ANGLE = builder.comment("Makes projectiles shot from dispenser minecart retain the minecart velocity and be shot at an angle when the minecart is on a rail slope")
+                    .define("adjust_projectile_angle", true);
             builder.pop();
 
             builder.push("faucet");
@@ -297,7 +297,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
 
         public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
-        public static final Supplier<Boolean> DISPENSER_MINECART_FRONT;
+        public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
 
         public static final Supplier<Boolean> RELAYER_ENABLED;
 

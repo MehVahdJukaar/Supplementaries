@@ -183,7 +183,7 @@ public class FlowerPotHandler {
 
 
         List<Item> tallFlowers = new ArrayList<>(List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
-                Items.VINE, Items.GLOW_BERRIES, Items.SWEET_BERRIES,
+                Items.VINE, Items.GLOW_BERRIES, Items.SWEET_BERRIES, Items.SUGAR_CANE,
                 Items.TWISTING_VINES, Items.PEONY, Items.LARGE_FERN, Items.PITCHER_PLANT));
         if (CompatHandler.QUARK) {
             tallFlowers.add(Items.TALL_GRASS);

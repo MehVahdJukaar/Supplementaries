@@ -9,7 +9,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-//TODO: change
 class BombsBehavior extends AbstractProjectileDispenseBehavior {
 
     @Override

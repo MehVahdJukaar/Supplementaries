@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.Projectile;
