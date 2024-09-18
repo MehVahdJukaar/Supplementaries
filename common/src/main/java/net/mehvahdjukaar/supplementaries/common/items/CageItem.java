@@ -27,7 +27,7 @@ public class CageItem extends AbstractMobContainerItem implements ICustomItemRen
 
     @Override
     public void playCatchSound(Player player) {
-        player.level().playSound(null, player.blockPosition(), SoundEvents.CHAIN_FALL, SoundSource.PLAYERS, 1, 0.7f);
+        player.playSound(SoundEvents.CHAIN_FALL, 1, 0.7f);
     }
 
     @Override

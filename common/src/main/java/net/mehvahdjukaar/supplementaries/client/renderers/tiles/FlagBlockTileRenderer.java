@@ -22,6 +22,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -131,10 +132,10 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             matrixStackIn.pushPose();
 
-            float[] color = list.get(p).getSecond().getTextureDiffuseColors();
-            float b = color[2];
-            float g = color[1];
-            float r = color[0];
+            int color = list.get(p).getSecond().getTextureDiffuseColor();
+            float b = FastColor.ARGB32.blue(color)/255f;
+            float g = FastColor.ARGB32.green(color)/255f;
+            float r = FastColor.ARGB32.red(color)/255f;
 
             renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
 

@@ -18,6 +18,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -94,7 +95,8 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return makeSpikeItem(Potions.POISON);
     }
 
-    public static ItemStack makeSpikeItem(Holder<Potion> potion) {
+    public static ItemStack makeSpikeItem(@Nullable Holder<Potion> potion) {
+        if(potion == null)return ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
         return PotionContents.createItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), potion);
     }
 

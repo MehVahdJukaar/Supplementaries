@@ -324,10 +324,11 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             //fix here
 
             ForgeHelper.reviveEntity(entity);
+
+            this.playCatchSound(player);
             //return for client
             if (player.level().isClientSide) return InteractionResult.SUCCESS;
 
-            this.playCatchSound(player);
             this.angerNearbyEntities(entity, player);
 
             if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {

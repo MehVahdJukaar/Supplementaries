@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -118,33 +118,28 @@ public class BambooSpikesBlockTile extends BlockEntity {
     }
 
     public void makeParticle(Level level) {
-        int i = this.getColor();
-        double d0 = (i >> 16 & 255) / 255.0D;
-        double d1 = (i >> 8 & 255) / 255.0D;
-        double d2 = (i & 255) / 255.0D;
+        int color = this.getColor();
         BlockPos pos = this.getBlockPos();
-        level.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
+        level.addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, color), pos.getX() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
                 pos.getY() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75,
-                pos.getZ() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75, d0, d1, d2);
+                pos.getZ() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75, 0, 0, 0);
     }
 
-    public ItemStack getSpikeItem() {
+    public ItemStack toSpikeItem() {
+        ItemStack stack = BambooSpikesTippedItem.makeSpikeItem(this.potion);
         if (this.hasPotion()) {
-            ItemStack stack = BambooSpikesTippedItem.makeSpikeItem(this.potion);
             stack.setDamageValue(stack.getMaxDamage() - this.charges);
-            return stack;
         }
-        return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
+        return stack;
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putInt("Charges", this.charges);
-        compound.putLong("LastTicked", this.lastTicked);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("Charges", this.charges);
+        tag.putLong("LastTicked", this.lastTicked);
 
-        ResourceLocation resourcelocation = BuiltInRegistries.POTION.getKey(this.potion);
-        compound.putString("Potion", resourcelocation.toString());
+        if (this.potion != null) tag.putString("Potion", this.potion.getRegisteredName());
     }
 
     @Override
@@ -152,7 +147,10 @@ public class BambooSpikesBlockTile extends BlockEntity {
         super.loadAdditional(tag, registries);
         this.charges = tag.getInt("Charges");
         this.lastTicked = tag.getLong("LastTicked");
-        this.potion = PotionUtils.getPotion(compound);
+        if (tag.contains("Potion")) {
+            ResourceLocation potionId = ResourceLocation.tryParse(tag.getString("Potion"));
+            this.potion = BuiltInRegistries.POTION.getHolder(potionId).orElse(null);
+        } else this.potion = null;
     }
 
     @Override

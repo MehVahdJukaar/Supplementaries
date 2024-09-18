@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacement;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
@@ -31,13 +30,11 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -109,24 +106,18 @@ public class RegUtils {
         return RegHelper.registerBlock(Supplementaries.res(name), sup);
     }
 
-
     public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory) {
-        return regWithItem(name, blockFactory, 0);
+        return regWithItem(name, blockFactory);
     }
 
-    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, int burnTime) {
-        return regWithItem(name, blockFactory, new Item.Properties(), burnTime);
-    }
-
-    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties, int burnTime) {
+    public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties) {
         RegSupplier<T> block = regBlock(name, blockFactory);
-        regBlockItem(name, block, properties, burnTime);
+        regBlockItem(name, block, properties);
         return block;
     }
 
-    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties, int burnTime) {
-        return RegHelper.registerItem(Supplementaries.res(name), () -> burnTime == 0 ? new BlockItem(blockSup.get(), properties) :
-                new WoodBasedBlockItem(blockSup.get(), properties, burnTime));
+    public static RegSupplier<BlockItem> regBlockItem(String name, Supplier<? extends Block> blockSup, Item.Properties properties) {
+        return RegHelper.registerItem(Supplementaries.res(name), () -> new BlockItem(blockSup.get(), properties));
     }
 
     //candle holders
@@ -146,7 +137,7 @@ public class RegUtils {
 
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName.getPath() + "_" + color.getName();
-            Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
+            Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(baseName.withPath( name),
                     () -> new CandleHolderBlock(color, prop)
             );
             map.put(color, coloredBlock);

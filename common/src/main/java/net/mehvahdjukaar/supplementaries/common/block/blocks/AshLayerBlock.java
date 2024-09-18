@@ -271,7 +271,7 @@ public class AshLayerBlock extends FallingBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level.isClientSide) {
-            if (!(entity instanceof LivingEntity) || entity.getFeetBlockState().is(this)) {
+            if (!(entity instanceof LivingEntity) || entity.getBlockStateOn().is(this)) {
 
                 boolean bl = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (bl && level.random.nextInt(2) == 0) {
@@ -298,7 +298,7 @@ public class AshLayerBlock extends FallingBlock {
     public static boolean applyBonemeal(ItemStack stack, Level level, BlockPos pos, Player player) {
         BlockState blockstate = level.getBlockState(pos);
         if (blockstate.getBlock() instanceof BonemealableBlock bonemealableblock) {
-            if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate, level.isClientSide)) {
+            if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate)) {
 
                 if (level instanceof ServerLevel serverLevel) {
                     if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {

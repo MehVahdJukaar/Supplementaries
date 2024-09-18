@@ -45,9 +45,9 @@ public class CaveEnhancementsCompat {
 
     public static void registerCandle(ResourceLocation id) {
         var name = id.getPath() + "_spectacle";
-        ResourceLocation res = new ResourceLocation(id.getNamespace(), name);
+        ResourceLocation res = id.withPath(name);
         var b = RegHelper.registerBlockWithItem(res, () -> new SpectacleCandleHolder(null,
-                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME));
+                BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME));
         SPECTACLE_CANDLE_HOLDERS.add(b);
 
         tile = RegHelper.registerBlockEntityType(res,
@@ -57,7 +57,6 @@ public class CaveEnhancementsCompat {
 
         ModRegistry.ALL_CANDLE_HOLDERS.add(b);
     }
-
 
 
     public static void setupClient() {

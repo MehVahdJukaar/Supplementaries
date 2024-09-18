@@ -5,9 +5,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +53,8 @@ public abstract class CapturedMobInstance<T extends Entity> {
      * @param entityData actual mob nbt that is stored in the container. Use this only if you want to store permanent data in your entity which will be kept when it will be released from the container.
      * @return Pass to do nothing. Success or Consume to prevent any further action
      */
-    public InteractionResult onPlayerInteract(Level world, BlockPos pos, Player player, InteractionHand hand, CompoundTag entityData) {
-        return InteractionResult.PASS;
+    public ItemInteractionResult onPlayerInteract(Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack stack, CompoundTag entityData) {
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
 

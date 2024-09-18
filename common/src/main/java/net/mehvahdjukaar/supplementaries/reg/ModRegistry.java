@@ -26,6 +26,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -102,7 +103,7 @@ public class ModRegistry {
 
     //rope arrow
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(new Item.Properties()
-            .defaultDurability(CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
+            .durability(CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(new Item.Properties()
@@ -232,8 +233,7 @@ public class ModRegistry {
 
     //notice board
     public static final Supplier<Block> NOTICE_BOARD = regWithItem(NOTICE_BOARD_NAME, () -> new NoticeBoardBlock(
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)),
-            300);
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
@@ -251,7 +251,9 @@ public class ModRegistry {
 
     public static final Supplier<Item> SAFE_ITEM = regItem(SAFE_NAME, () ->
             new SafeItem(SAFE.get(), new Item.Properties()
-                    .stacksTo(1).fireResistant()));
+                    .stacksTo(1)
+                    .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+                    .fireResistant()));
 
     //cage
     public static final Supplier<Block> CAGE = regBlock(CAGE_NAME, () -> new CageBlock(
@@ -301,7 +303,9 @@ public class ModRegistry {
                     SackBlockTile::new, SackBlock.SACK_BLOCKS.toArray(Block[]::new)));
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
-            new Item.Properties().stacksTo(1)));
+            new Item.Properties().stacksTo(1)
+                    .component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+    ));
 
     //blackboard
     public static final Supplier<Block> BLACKBOARD = regBlock(BLACKBOARD_NAME, () -> new BlackboardBlock(
@@ -442,7 +446,7 @@ public class ModRegistry {
 
     public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(
             BAMBOO_SPIKES.get(), new Item.Properties()
-            .defaultDurability(BambooSpikesBlockTile.MAX_CHARGES)));
+            .durability(BambooSpikesBlockTile.MAX_CHARGES)));
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(
@@ -474,7 +478,7 @@ public class ModRegistry {
                     .strength(0.75f, 0.1f)
                     .noOcclusion()
                     .noCollission()
-    ), 100);
+    ));
 
     public static final Supplier<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = regTile(
             ITEM_SHELF_NAME, () -> PlatHelper.newBlockEntityType(
@@ -486,7 +490,7 @@ public class ModRegistry {
                     .mapColor(MapColor.WOOD)
                     .strength(0.1F)
                     .noOcclusion()
-    ), 134);
+    ));
 
     public static final Supplier<BlockEntityType<DoormatBlockTile>> DOORMAT_TILE = regTile(
             DOORMAT_NAME, () -> PlatHelper.newBlockEntityType(
@@ -557,7 +561,7 @@ public class ModRegistry {
     public static final Supplier<SpeakerBlock> SPEAKER_BLOCK = regWithItem(SPEAKER_BLOCK_NAME, () ->
             new SpeakerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NOTE_BLOCK)
                     .strength(1f, 2f)
-                    .sound(SoundType.WOOD)), 300);
+                    .sound(SoundType.WOOD)));
 
     public static final Supplier<BlockEntityType<SpeakerBlockTile>> SPEAKER_BLOCK_TILE = regTile(
             SPEAKER_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -584,7 +588,7 @@ public class ModRegistry {
     //pulley
     public static final Supplier<Block> PULLEY_BLOCK = regWithItem(PULLEY_BLOCK_NAME, () -> new PulleyBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
-    ), 300);
+    ));
 
     public static final Supplier<BlockEntityType<PulleyBlockTile>> PULLEY_BLOCK_TILE = regTile(
             PULLEY_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
@@ -610,7 +614,7 @@ public class ModRegistry {
                     .strength(3f, 3f)
                     .sound(SoundType.WOOD)
                     .noOcclusion()
-    ), 300);
+    ));
 
     public static final Supplier<BlockEntityType<BellowsBlockTile>> BELLOWS_TILE = regTile(
             BELLOWS_NAME, () -> PlatHelper.newBlockEntityType(

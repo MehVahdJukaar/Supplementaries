@@ -33,8 +33,8 @@ public class BuzzierBeesCompat {
 
     private static void addCandle(ResourceLocation id, String _end, Supplier<ParticleType<?>> smallEndFlame) {
         var name = id.getPath() + _end;
-        var b = RegHelper.registerBlockWithItem(new ResourceLocation(id.getNamespace(), name), () -> new CandleHolderBlock(null,
-                BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), smallEndFlame));
+        var b = RegHelper.registerBlockWithItem(id.withPath(name), () -> new CandleHolderBlock(null,
+                BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get()), smallEndFlame));
         BB_CANDLES.add(b);
         ModRegistry.ALL_CANDLE_HOLDERS.add(b);
     }

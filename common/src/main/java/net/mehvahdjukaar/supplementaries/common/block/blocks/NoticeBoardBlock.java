@@ -90,10 +90,6 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (worldIn.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-            //only needed if you are not using block entity tag
-            if (stack.hasCustomHoverName()) {
-                tile.setCustomName(stack.getHoverName());
-            }
             BlockUtil.addOptionalOwnership(placer, tile);
         }
     }

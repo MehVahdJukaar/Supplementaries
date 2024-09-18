@@ -56,7 +56,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+    public static final ResourceLocation CONTENTS = ResourceLocation.withDefaultNamespace("contents");
     private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
 
     public SafeBlock(Properties properties) {

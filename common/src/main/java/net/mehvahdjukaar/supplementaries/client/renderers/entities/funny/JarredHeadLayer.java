@@ -115,7 +115,7 @@ public class JarredHeadLayer<T extends Player, M extends HumanoidModel<T> & Head
         eyeLeft.x = Mth.cos(ageInTicks / 12f) / 4f;
         eyeLeft.y = Mth.cos(ageInTicks / 7f) / 4f;
 
-        model.render(matrixStack, vc, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, vc, packedLight, OverlayTexture.NO_OVERLAY, -1);
         matrixStack.popPose();
 
         matrixStack.popPose();

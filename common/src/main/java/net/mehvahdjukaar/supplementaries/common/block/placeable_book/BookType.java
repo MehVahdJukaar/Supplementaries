@@ -14,7 +14,7 @@ import net.minecraft.world.item.DyeColor;
 
 public final class BookType {
 
-    public static final Codec<BookType> CODEC = ExtraCodecs.stringResolverCodec(BookType::name, PlaceableBookManager::getByName);
+    public static final Codec<BookType> CODEC = Codec.stringResolver(BookType::name, PlaceableBookManager::getByName);
 
     private final String name;
     private final float hue;
@@ -56,7 +56,7 @@ public final class BookType {
     }
 
     public BookType(DyeColor color, float angle, boolean enchanted) {
-        this(color.getName(), ColorUtils.pack(color.getTextureDiffuseColors()), angle, enchanted);
+        this(color.getName(), color.getTextureDiffuseColor(), angle, enchanted);
     }
 
     public BookType(DyeColor color) {

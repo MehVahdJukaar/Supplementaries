@@ -96,11 +96,11 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         if (com == null) return;
         long lastTicked = com.getLong("LastTicked");
         if (!this.isOnCooldown(world, lastTicked)) {
-            DUMMY.load(com);
+            DUMMY.loadWithComponents(com, world.registryAccess());
             if (DUMMY.interactWithEntity(le, world)) {
                CreateCompat. changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
             }
-            com = DUMMY.saveWithFullMetadata();
+            com = DUMMY.saveWithFullMetadata(world.registryAccess());
             lastTicked = world.getGameTime();
             com.putLong("LastTicked", lastTicked);
             context.blockEntityData = com;

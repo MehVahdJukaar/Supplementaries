@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -146,12 +147,15 @@ public class FeatherParticle extends TextureSheetParticle {
         float f8 = this.getU1();
         float f5 = this.getV0();
         float f6 = this.getV1();
-        int j = this.getLightColor(partialTicks);
-        double offset = 0.125;
-        builder.vertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).uv(f8, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        builder.vertex(avector3f[1].x(), avector3f[1].y() + offset, avector3f[1].z()).uv(f8, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        builder.vertex(avector3f[2].x(), avector3f[2].y() + offset, avector3f[2].z()).uv(f7, f5).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
-        builder.vertex(avector3f[3].x(), avector3f[3].y() + offset, avector3f[3].z()).uv(f7, f6).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(j).endVertex();
+        int lightColor = this.getLightColor(partialTicks);
+        int bl = LightTexture.block(lightColor);
+        int sl = LightTexture.sky(lightColor);
+
+        float offset = 0.125f;
+        builder.addVertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
+        builder.addVertex(avector3f[1].x(), avector3f[1].y() + offset, avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
+        builder.addVertex(avector3f[2].x(), avector3f[2].y() + offset, avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
+        builder.addVertex(avector3f[3].x(), avector3f[3].y() + offset, avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
     }
 
 

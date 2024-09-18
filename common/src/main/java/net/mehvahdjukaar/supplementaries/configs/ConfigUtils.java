@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;
@@ -26,7 +27,7 @@ public class ConfigUtils {
     //called from config screen
     public static void configScreenReload(ServerPlayer player) {
         //TODO: fix configs sinking and remove this. idk why its needed
-        CommonConfigs.CONFIG_HOLDER.loadFromFile();
+        CommonConfigs.CONFIG_HOLDER.forceLoad();
         CommonConfigs.CONFIG_HOLDER.syncConfigsToPlayer(player);
     }
 

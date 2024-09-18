@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -43,17 +44,17 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.textHolder.load(compound, this.level, this.getBlockPos());
-        if (compound.contains("Waxed")) {
-            this.isWaxed = compound.getBoolean("Waxed");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.textHolder.load(tag, this.level, this.getBlockPos());
+        if (tag.contains("Waxed")) {
+            this.isWaxed = tag.getBoolean("Waxed");
         }
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         this.textHolder.save(tag);
         if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
@@ -69,11 +70,6 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
-        DoormatScreen.open(this);
-    }
-
-    @Override
-    public void openScreen(Level level, BlockPos blockPos, Player player) {
         DoormatScreen.open(this);
     }
 

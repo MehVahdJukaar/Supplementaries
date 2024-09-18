@@ -88,13 +88,13 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (worldIn.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
+            if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
                 VariableSizeContainerMenu.openTileMenu(player, tile);
                 PiglinAi.angerNearbyPiglins(player, true);
 

@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.AbstractFish;
@@ -223,11 +224,11 @@ public class MobContainer {
         }
     }
 
-    public InteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand) {
+    public ItemInteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         if (this.mobInstance != null && this.data instanceof MobNBTData.Entity entityData) {
-            return mobInstance.onPlayerInteract(world, pos, player, hand, entityData.mobTag);
+            return mobInstance.onPlayerInteract(world, pos, player, hand,  stack,entityData.mobTag);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Nullable

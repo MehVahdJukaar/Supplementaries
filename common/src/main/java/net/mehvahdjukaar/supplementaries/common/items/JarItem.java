@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.util.PotionNBTHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
@@ -14,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -67,7 +67,8 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public void playCatchSound(Player player) {
-        player.level().playSound(null, player.blockPosition(), SoundEvents.ARMOR_EQUIP_GENERIC, SoundSource.PLAYERS, 1, 1);
+        //TODO:custom sound here
+        player.playSound(ModSounds.JAR_PLACE.get(), 1, 1);
     }
 
     @Override
@@ -202,7 +203,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
@@ -211,7 +212,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
                 SoftFluidTank fh = jarBlockTile.getSoftFluidTank();
                 var provider = fh.getFluid().getFoodProvider();
                 Item food = provider.getFood();
-                return food.getUseDuration(food.getDefaultInstance()) / provider.getDivider();
+                return food.getUseDuration(food.getDefaultInstance(), livingEntity) / provider.getDivider();
             }
         }
         return 0;

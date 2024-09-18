@@ -57,7 +57,7 @@ public class JarItemRenderer extends CageItemRenderer {
         }
         if (tag.contains("FluidHolder")) {
             CompoundTag com = tag.getCompound("FluidHolder");
-            SoftFluidStack fluidStack = SoftFluidStack.load(com);
+            SoftFluidStack fluidStack = SoftFluidStack.load(registries, com);
             int count = fluidStack.getCount();
             if (count != 0) {
                 int color = fluidStack.getFlowingColor(Minecraft.getInstance().level, null);
