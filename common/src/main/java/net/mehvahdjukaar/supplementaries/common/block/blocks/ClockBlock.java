@@ -13,7 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -109,11 +111,13 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
 
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState oldState = context.getLevel().getBlockState(context.getClickedPos());
+        Level level = context.getLevel();
+        BlockState oldState = level.getBlockState(context.getClickedPos());
         if (oldState.is(this)) {
             return oldState.setValue(TWO_FACED, true);
         } else {
             return super.getStateForPlacement(context)
+                    .setValue(HOUR, ClockBlockTile.calculateHour( (int) (level.getDayTime() % 24000)))
                     .setValue(FACING, context.getHorizontalDirection().getOpposite());
         }
     }
@@ -123,17 +127,17 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (state.getValue(TWO_FACED)) {
             return switch (state.getValue(FACING)) {
-                default -> SHAPE_NORTH_2;
                 case SOUTH -> SHAPE_SOUTH_2;
                 case EAST -> SHAPE_EAST_2;
                 case WEST -> SHAPE_WEST_2;
+                default -> SHAPE_NORTH_2;
             };
         } else {
             return switch (state.getValue(FACING)) {
-                default -> SHAPE_NORTH;
                 case SOUTH -> SHAPE_SOUTH;
                 case EAST -> SHAPE_EAST;
                 case WEST -> SHAPE_WEST;
+                default -> SHAPE_NORTH;
             };
         }
     }
@@ -176,10 +180,10 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        super.onPlace(state, worldIn, pos, oldState, isMoving);
-        if (worldIn.getBlockEntity(pos) instanceof ClockBlockTile tile) {
-            tile.updateInitialTime(worldIn, state, pos);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if(level.isClientSide && level.getBlockEntity(pos) instanceof ClockBlockTile tile){
+            tile.updateInitialTime(level, state, pos);
         }
     }
 

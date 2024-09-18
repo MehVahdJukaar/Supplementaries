@@ -15,6 +15,8 @@ import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.OpeneableContainerBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -56,6 +58,9 @@ public class ClientEventsFabric {
             } else if (t == EntityType.STRAY) {
                 e.register(new QuiverLayer(r, true));
             }else if(t == EntityType.CREEPER){
+                e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
+            }
+            else if(t == EntityType.CREEPER){
                 e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
             }
         });
