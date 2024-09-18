@@ -64,7 +64,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     public static void sendDataToClient(ServerPlayer player) {
         Set<DataDefinedCatchableMob> set = new HashSet<>(CUSTOM_MOB_PROPERTIES.values());
-        ModNetwork.CHANNEL.sendToClientPlayer(player,
+        NetworkHelper.sendToClientPlayer(player,
                 new ClientBoundSyncCapturedMobsPacket(set, moddedFishProperty));
     }
 

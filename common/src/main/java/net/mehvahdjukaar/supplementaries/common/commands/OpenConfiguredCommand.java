@@ -24,7 +24,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
     public int run(CommandContext<CommandSourceStack> context) {
         if (CommonConfigs.CONFIG_HOLDER.hasConfigScreen()) {
             if (context.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
-                ModNetwork.CHANNEL.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
+                NetworkHelper.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
             }
         } else {
             context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.configs"), false);

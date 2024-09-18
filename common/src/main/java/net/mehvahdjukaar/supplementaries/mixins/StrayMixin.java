@@ -68,7 +68,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
         this.supplementaries$quiver = quiver;
         if(!level().isClientSide){
             //only needed when entity is alraedy spawned
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+            NetworkHelper.sentToAllClientPlayersTrackingEntity(this,
                     new SyncSkellyQuiverPacket(this));
         }
     }

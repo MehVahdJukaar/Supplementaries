@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
@@ -66,19 +67,17 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
         return false;
     }
 
-
-
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        if (compound.contains("Password")) {
-            this.password = compound.getString("Password");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("Password")) {
+            this.password = tag.getString("Password");
         } else this.password = null;
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (this.password != null) {
             tag.putString("Password", this.password);
         }

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
@@ -42,34 +43,15 @@ public class ClockBlockTile extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag compound) {
-        super.load(compound);
-        this.roll = compound.getFloat("MinRoll");
-        this.prevRoll = this.roll;
-        this.targetRoll = this.roll;
-
-        this.sRoll = compound.getFloat("SecRoll");
-        this.sPrevRoll = this.sRoll;
-        this.sTargetRoll = this.sRoll;
-        this.power = compound.getInt("Power");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.power = tag.getInt("Power");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putFloat("MinRoll", this.targetRoll);
-        tag.putFloat("SecRoll", this.sTargetRoll);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt("Power", this.power);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
     }
 
     public void updateInitialTime(Level level, BlockState state, BlockPos pos) {
@@ -158,15 +140,15 @@ public class ClockBlockTile extends BlockEntity {
                 tile.sTargetRoll = d0;
             }
 
-            tile.rota += tile.targetRoll * 0.1;
-            tile.rota *= 0.8;
+            tile.rota += (float) (tile.targetRoll * 0.1);
+            tile.rota *= 0.8f;
             tile.roll = Mth.positiveModulo(tile.roll + tile.rota, 360);
 
             tile.sPrevRoll = tile.sRoll;
 
 
-            tile.sRota += tile.sTargetRoll * 0.1;
-            tile.sRota *= 0.8;
+            tile.sRota += (float) (tile.sTargetRoll * 0.1);
+            tile.sRota *= 0.8f;
             tile.sRoll = Mth.positiveModulo(tile.sRoll + tile.sRota, 360);
         }
     }

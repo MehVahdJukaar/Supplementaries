@@ -189,7 +189,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                 this.setDeltaMovement(movement.scale(factor));
                 Message message = ClientBoundExplosionPacket.cannonball(exp, this);
 
-                ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
+                NetworkHelper.sendToAllClientPlayersInDefaultRange(this.level(), pos, message);
             }
             this.hasImpulse = true;
 

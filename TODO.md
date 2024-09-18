@@ -6,6 +6,7 @@
 
 # Soon
 
+- globe sheared particle event for servers
 - hat for players
 - anger nearby piglins
 - polytone bow model
@@ -18,6 +19,7 @@
 
 # Supplementaries
 
+- explosion shake
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
 - test config saving

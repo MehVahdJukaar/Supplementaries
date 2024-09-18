@@ -59,7 +59,7 @@ public class PicklePlayer {
                             Component.literal("I turned myself into a pickle!"), true);
                 }
                 PickleData.set(id, turnOn, jar);
-                ModNetwork.CHANNEL.sendToServer(new PicklePacket(id, turnOn, jar));
+                NetworkHelper.sendToServer(new PicklePacket(id, turnOn, jar));
                 return true;
             }
         }

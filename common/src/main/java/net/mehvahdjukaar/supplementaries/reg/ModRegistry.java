@@ -60,12 +60,8 @@ public class ModRegistry {
     //loot
     public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
             () -> new LootItemFunctionType<>(RandomEnchantFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType<?>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
-            () -> new LootItemFunctionType<>(new RandomArrowFunction.Serializer()), Registries.LOOT_FUNCTION_TYPE);
-
-    //paintings
-    public static final Supplier<PaintingVariant> BOMB_PAINTING = RegHelper.registerPainting(
-            res("bombs"), () -> new PaintingVariant(32, 32));
+    public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
+            () -> new LootItemFunctionType<>(RandomArrowFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
 
     //enchantment
     public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerAsync(

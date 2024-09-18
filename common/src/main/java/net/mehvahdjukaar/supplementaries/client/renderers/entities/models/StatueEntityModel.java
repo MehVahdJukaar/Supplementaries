@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities.models;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
@@ -62,15 +61,15 @@ public class StatueEntityModel extends Model {
     }
 
 
-    public void renderEars(PoseStack p_228287_1_, VertexConsumer p_228287_2_, int p_228287_3_, int p_228287_4_) {
+    public void renderEars(PoseStack poseStack, VertexConsumer consumer, int light, int overlay) {
         this.ear.copyFrom(this.head);
         this.ear.x = 0.0F;
         this.ear.y = 0.0F;
-        this.ear.render(p_228287_1_, p_228287_2_, p_228287_3_, p_228287_4_);
+        this.ear.render(poseStack, consumer, light, overlay);
     }
 
-    public void renderCloak(PoseStack p_228289_1_, VertexConsumer p_228289_2_, int p_228289_3_, int p_228289_4_) {
-        this.cloak.render(p_228289_1_, p_228289_2_, p_228289_3_, p_228289_4_);
+    public void renderCloak(PoseStack poseStack, VertexConsumer consumer, int light, int overlay) {
+        this.cloak.render(poseStack, consumer, light, overlay);
     }
 
 
@@ -155,42 +154,32 @@ public class StatueEntityModel extends Model {
         this.rightSleeveS.copyFrom(this.rightArm);
     }
 
-    protected Iterable<ModelPart> headParts() {
-        return ImmutableList.of(this.head);
-    }
-
-    protected Iterable<ModelPart> bodyParts() {
-        return ImmutableList.of(this.body, this.rightArm, this.leftArm, this.rightLeg, this.leftLeg, this.hat,
-                this.leftPants, this.rightPants, this.leftSleeve, this.rightSleeve, this.jacket);
-    }
-
     @Override
     public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn,
-                               float red, float green, float blue, float alpha) {
+                               int color) {
 
-        head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        body.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        jacket.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        rightLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftPants.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        rightPants.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
-
-        rightArmS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftArmS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftSleeveS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        rightSleeveS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
-        rightArm.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftArm.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        leftSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        rightSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        head.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        hat.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        body.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        jacket.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        rightLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftLeg.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftPants.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        rightPants.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 
 
+        rightArmS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftArmS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftSleeveS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        rightSleeveS.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 
+        rightArm.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftArm.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        leftSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
+        rightSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
 
+        renderCloak(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
+        renderEars(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 }
 

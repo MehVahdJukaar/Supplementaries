@@ -64,7 +64,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.setBlockEntity(be);
 
         if(!level.isClientSide) {
-             ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, neighborPos,
+             NetworkHelper.sendToAllClientPlayersInDefaultRange(level, neighborPos,
                    new ClientBoundSetSlidingBlockEntityPacket(be));
         }
 

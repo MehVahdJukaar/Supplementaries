@@ -50,7 +50,7 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     private void postButtonClick() {
         (this.menu).setSelectionHint(this.shopItem);
         (this.menu).tryMoveItems(this.shopItem);
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
+        NetworkHelper.sendToServer(new ServerBoundSelectMerchantTradePacket(this.shopItem));
     }
 
     @Override

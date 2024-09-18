@@ -19,7 +19,7 @@ public class ConfigUtils {
     //called on client. client -> server -..-> all clients
     public static void clientRequestServerConfigReload() {
         if (Minecraft.getInstance().getConnection() != null)
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestConfigReloadPacket());
+            NetworkHelper.sendToServer(new ServerBoundRequestConfigReloadPacket());
     }
 
 

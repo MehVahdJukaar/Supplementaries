@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -34,19 +35,19 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(tag) && tag.contains("Items", 9)) {
-            ContainerHelper.loadAllItems(tag, this.items);
+            ContainerHelper.loadAllItems(tag, this.items, registries);
         }
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.items, false);
+            ContainerHelper.saveAllItems(tag, this.items, false, registries);
         }
     }
 
@@ -66,16 +67,10 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
-    }
-
-    @Override
     public void startOpen(Player player) {
         if (!this.remove && !player.isSpectator()) {
             this.openersCounter.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
-
     }
 
     @Override

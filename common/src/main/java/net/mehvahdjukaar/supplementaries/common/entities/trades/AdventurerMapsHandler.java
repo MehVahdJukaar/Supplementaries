@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +49,9 @@ public class AdventurerMapsHandler {
         if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
             var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
                     radius, skipKnown, zoom, mapMarker, name, color);
-            item.setHoverName(Component.translatable(name));
+            if (name != null) {
+                item.set(DataComponents.ITEM_NAME, Component.translatable(name));
+            }
             return item;
         }
 
@@ -81,7 +84,7 @@ public class AdventurerMapsHandler {
         MapHelper.addDecorationToMap(stack, pos, decoration, color);
 
         if (name != null) {
-            stack.setHoverName(Component.translatable(name));
+            stack.set(DataComponents.ITEM_NAME, Component.translatable(name));
         }
         return stack;
     }

@@ -35,7 +35,7 @@ public abstract class SongInstrumentItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         player.startUsingItem(hand);
         if (!world.isClientSide) {
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
+            NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
         }
         return InteractionResultHolder.consume(player.getItemInHand(hand));
     }
@@ -54,7 +54,7 @@ public abstract class SongInstrumentItem extends Item {
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
         SongsManager.clearCurrentlyPlaying(entity.getUUID());
         if (!pLevel.isClientSide) {
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
+            NetworkHelper.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
         }
     }
 

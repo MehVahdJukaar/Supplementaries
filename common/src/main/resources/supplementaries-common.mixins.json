@@ -21,7 +21,6 @@
     "EntityMixin",
     "EvokerMixin",
     "ExplorationMapFunctionMixin",
-    "ExplorationMapSerializerMixin",
     "ExplosionMixin",
     "FallingBlockEntityMixin",
     "FireBlockMixin",

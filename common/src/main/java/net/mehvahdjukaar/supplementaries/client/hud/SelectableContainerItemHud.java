@@ -118,7 +118,7 @@ public abstract class SelectableContainerItemHud {
     private void sendCycle(int slotsMoved, Slot slot) {
         var data = getItemUsedData();
         if (data != null) {
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
+            NetworkHelper.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
             //update client immediately. stacks now may be desynced
             data.cycle(slotsMoved);
         }
@@ -127,7 +127,7 @@ public abstract class SelectableContainerItemHud {
     private void sendSetSlot(Slot slot, int number) {
         var data = getItemUsedData();
         if (data != null) {
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
+            NetworkHelper.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
                     number, slot, true, itemUsed));
             getItemUsedData().setSelectedSlot(number);
         }

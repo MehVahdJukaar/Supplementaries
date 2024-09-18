@@ -126,7 +126,7 @@ public class WrenchItem extends Item {
                 dir = dir.getOpposite();
             }
             if (shiftDown) dir = dir.getOpposite();
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(player,
+            NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(player,
                     new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
                             dir.get3DDataValue()));
         }

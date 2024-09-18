@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -69,7 +70,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
         if (worldIn.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
-            if (stack.hasCustomHoverName()) {
+            if (stack.has(DataComponents.CUSTOM_NAME)) {
                 tile.setCustomName(stack.getHoverName());
             }
             BlockUtil.addOptionalOwnership(placer, tile);

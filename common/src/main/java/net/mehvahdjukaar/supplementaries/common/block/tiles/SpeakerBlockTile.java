@@ -148,7 +148,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
             Component component = Component.literal(s + this.message.getString()).withStyle(style);
             Component filtered = Component.literal(s + this.filteredMessage.getString()).withStyle(style);
 
-            ModNetwork.CHANNEL.sendToAllClientPlayersInRange(server, pos,
+            NetworkHelper.sendToAllClientPlayersInRange(server, pos,
                     this.volume, new ClientBoundPlaySpeakerMessagePacket(component,filtered, this.mode));
 
         }

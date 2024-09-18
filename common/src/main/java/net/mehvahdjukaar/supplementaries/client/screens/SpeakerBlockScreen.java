@@ -102,7 +102,7 @@ public class SpeakerBlockScreen extends Screen {
 
     @Override
     public void removed() {
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
+        NetworkHelper.sendToServer(new ServerBoundSetSpeakerBlockPacket(this.tileSpeaker.getBlockPos(),
                 this.editBox.getValue(), this.mode, this.volumeSlider.getValue()));
     }
 

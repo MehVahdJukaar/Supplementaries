@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fake_level;
 
-import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
+import net.mehvahdjukaar.moonlight.api.misc.FakeLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.block.state.BlockState;

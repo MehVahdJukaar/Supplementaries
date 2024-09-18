@@ -5,16 +5,14 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.component.Fireworks;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 
 import java.util.ArrayList;
@@ -23,12 +21,12 @@ import java.util.Optional;
 
 import static net.mehvahdjukaar.supplementaries.common.entities.trades.StarItemListing.createRandomFireworkStar;
 
-public record RocketItemListing(ItemStack emeralds, ItemStack priceSecondary, int rockets,
+public record RocketItemListing(ItemCost emeralds, Optional<ItemCost> priceSecondary, int rockets,
                                 int maxTrades, int xp, float priceMult, int level) implements ModItemListing {
 
     public static final MapCodec<RocketItemListing> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-            ItemStack.CODEC.fieldOf("price").forGetter(RocketItemListing::emeralds),
-            ItemStack.CODEC.optionalFieldOf("price_secondary", ItemStack.EMPTY).forGetter(RocketItemListing::priceSecondary),
+            ItemCost.CODEC.fieldOf("price").forGetter(RocketItemListing::emeralds),
+            ItemCost.CODEC.optionalFieldOf("price_secondary").forGetter(RocketItemListing::priceSecondary),
             Codec.INT.fieldOf("amount").forGetter(RocketItemListing::rockets),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("max_trades", 16).forGetter(RocketItemListing::maxTrades),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("xp").forGetter(s -> Optional.of(s.xp)),
@@ -36,7 +34,7 @@ public record RocketItemListing(ItemStack emeralds, ItemStack priceSecondary, in
             Codec.intRange(1, 5).optionalFieldOf("level", 1).forGetter(RocketItemListing::level)
     ).apply(instance, RocketItemListing::createDefault));
 
-    public static RocketItemListing createDefault(ItemStack price, ItemStack price2, int rockets,
+    public static RocketItemListing createDefault(ItemCost price, Optional<ItemCost> price2, int rockets,
                                                   int maxTrades, Optional<Integer> xp, float priceMult,
                                                   int level) {
         return new RocketItemListing(price, price2, rockets, maxTrades, xp.orElse(ModItemListing.defaultXp(false, level)),

@@ -183,7 +183,7 @@ public class PearlMarker extends Entity {
                         }
 
                     }
-                    ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+                    NetworkHelper.sentToAllClientPlayersTrackingEntity(this,
                             new ClientBoundParticlePacket(fromPos.getCenter(),
                                     ClientBoundParticlePacket.Kind.PEARL_TELEPORT,
                                     0, toPos.getCenter()));

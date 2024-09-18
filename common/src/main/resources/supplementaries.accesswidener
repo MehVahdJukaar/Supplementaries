@@ -9,8 +9,20 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
 #dispenser minecart
 
-accessible class net/minecraft/client/gui/MapRenderer$MapInstance
+# camera
+accessible method net/minecraft/client/Camera getMaxZoom (F)F
+accessible method net/minecraft/client/Camera move (FFF)V
 
+# map stuff
+accessible class net/minecraft/client/gui/MapRenderer$MapInstance
+accessible method net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction <init> (Ljava/util/List;Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/Holder;BIZ)V
+accessible field net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction zoom B
+accessible field net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction mapDecoration Lnet/minecraft/core/Holder;
+accessible field net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction searchRadius I
+accessible field net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction skipKnownStructures Z
+accessible field net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction destination Lnet/minecraft/tags/TagKey;
+
+accessible method net/minecraft/world/level/block/FallingBlock tick (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V
 
 accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 

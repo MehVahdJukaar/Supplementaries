@@ -47,7 +47,7 @@ public class GlobeData extends SavedData {
     public void sendToClient(Level world) {
         this.setDirty();
         if (!world.isClientSide)
-            ModNetwork.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncGlobeDataPacket(this));
+            NetworkHelper.sendToAllClientPlayers(new ClientBoundSyncGlobeDataPacket(this));
     }
 
     //data received from network is stored here
@@ -76,7 +76,7 @@ public class GlobeData extends SavedData {
     public static void sendDataToClient(ServerPlayer player) {
         GlobeData data = GlobeData.get(player.level());
         if (data != null) {
-            ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
+            NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncGlobeDataPacket(data));
         }
 
     }

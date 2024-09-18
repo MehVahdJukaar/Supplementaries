@@ -33,7 +33,7 @@ public abstract class ChunkHolderMixin {
                     cap.ifPresent(c -> {
                         ServerChunkCache chunkSource = serverLevel.getChunkSource();
                         chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
-                                ModNetwork.CHANNEL.sendToClientPlayer(p,
+                                NetworkHelper.sendToClientPlayer(p,
                                         new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
                     });
                 }

@@ -128,7 +128,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             String sender = Minecraft.getInstance().player.getName().getString();
             String recipient = this.recipient.getText();
             String description = this.descriptionBox.getText();
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
+            NetworkHelper.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
                     this.packed, recipient, sender, description));
             this.tile.updateState(this.packed, recipient, sender, description);
 

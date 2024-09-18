@@ -27,7 +27,7 @@ public class SpawnEggBehavior implements IFireItemBehavior {
             if (e != null) {
                 level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
                 //update client velocity
-               /// ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
+               /// NetworkHelper.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
                //         new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
                 return true;
             }

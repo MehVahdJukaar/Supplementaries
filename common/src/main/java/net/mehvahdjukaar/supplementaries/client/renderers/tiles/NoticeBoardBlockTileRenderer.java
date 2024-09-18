@@ -123,7 +123,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             } else {
                 //request map data from server
                 Player player = Minecraft.getInstance().player;
-                ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
+                NetworkHelper.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
             }
             return;
         }

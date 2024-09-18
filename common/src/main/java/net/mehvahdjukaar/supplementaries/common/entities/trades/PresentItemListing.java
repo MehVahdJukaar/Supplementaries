@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -11,7 +10,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
+
+import java.util.Optional;
 
 public record PresentItemListing(ModItemListing original) implements ModItemListing {
 
@@ -32,9 +34,14 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
             ItemStack stack = dummyTile.getPresentItem(ModRegistry.PRESENTS.get(DyeColor.values()[
                     random.nextInt(DyeColor.values().length)]).get());
 
-            return new MerchantOffer(originalOffer.getBaseCostA(), originalOffer.getCostB(), stack, originalOffer.getUses(),
+            Optional<ItemCost> costB = Optional.ofNullable(itemCost(originalOffer.getCostB()));
+            return new MerchantOffer(itemCost(originalOffer.getBaseCostA()), costB, stack, originalOffer.getUses(),
                     originalOffer.getMaxUses(), originalOffer.getXp(), originalOffer.getPriceMultiplier(), originalOffer.getDemand());
         } else return originalOffer;
+    }
+
+    private ItemCost itemCost(ItemStack baseCostA) {
+        return baseCostA.isEmpty() ? null : new ItemCost(baseCostA.getItem(), baseCostA.getCount());
     }
 
     @Override

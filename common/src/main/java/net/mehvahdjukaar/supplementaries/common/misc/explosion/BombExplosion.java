@@ -251,6 +251,7 @@ public class BombExplosion extends Explosion {
             }
         }
 
+
         this.bombType.afterExploded(this, level);
 
     }

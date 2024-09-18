@@ -1,18 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.items.loot;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -24,37 +24,43 @@ import java.util.List;
 
 public class RandomArrowFunction extends LootItemConditionalFunction {
 
+    public static final MapCodec<RandomArrowFunction> CODEC = RecordCodecBuilder.mapCodec((instance) ->
+            commonFields(instance).and(instance.group(
+                    Codec.INT.optionalFieldOf("min", 3).forGetter((f) -> f.min),
+                    Codec.INT.optionalFieldOf("max", 12).forGetter((f) -> f.max))
+            ).apply(instance, RandomArrowFunction::new));
+
     private static final List<ItemStack> RANDOM_ARROWS = new ArrayList<>();
 
     //call on mod setup
     public static void setup() {
-        for (Potion potion : BuiltInRegistries.POTION) {
-            if (BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.QUIVER_POTION_BLACKLIST)) continue;
+        for (Holder<Potion> potion : BuiltInRegistries.POTION.holders().toList()) {
+            if (potion.is(ModTags.QUIVER_POTION_BLACKLIST)) continue;
             boolean isNegative = false;
-            for (var e : potion.getEffects()) {
+            for (var e : potion.value().getEffects()) {
                 if (!e.getEffect().value().isBeneficial()) {
                     isNegative = true;
                     break;
                 }
             }
             if (isNegative) {
-                RANDOM_ARROWS.add(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), potion));
+                RANDOM_ARROWS.add(PotionContents.createItemStack(Items.TIPPED_ARROW, potion));
             }
         }
         RANDOM_ARROWS.add(new ItemStack(Items.SPECTRAL_ARROW));
     }
 
-    final int min;
-    final int max;
+    private final int min;
+    private final int max;
 
-    RandomArrowFunction(LootItemCondition[] pConditions, int min, int max) {
+    public RandomArrowFunction(List<LootItemCondition> pConditions, int min, int max) {
         super(pConditions);
         this.min = min;
         this.max = max;
     }
 
     @Override
-    public LootItemFunctionType getType() {
+    public LootItemFunctionType<RandomArrowFunction> getType() {
         return ModRegistry.RANDOM_ARROW_FUNCTION.get();
     }
 
@@ -114,26 +120,6 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
         @Override
         public LootItemFunction build() {
             return new RandomArrowFunction(this.getConditions(), this.min, this.max);
-        }
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<RandomArrowFunction> {
-        /**
-         * Serialize the value by putting its data into the JsonObject.
-         */
-        @Override
-        public void serialize(JsonObject jsonObject, RandomArrowFunction function, JsonSerializationContext context) {
-            super.serialize(jsonObject, function, context);
-            jsonObject.addProperty("min", function.min);
-            jsonObject.addProperty("max", function.max);
-        }
-
-        @Override
-        public RandomArrowFunction deserialize(JsonObject pObject, JsonDeserializationContext context, LootItemCondition[] pConditions) {
-
-            int min = GsonHelper.getAsInt(pObject, "min", 3);
-            int max = GsonHelper.getAsInt(pObject, "max", 12);
-            return new RandomArrowFunction(pConditions, min, max);
         }
     }
 }

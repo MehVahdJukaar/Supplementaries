@@ -21,9 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Score;
-import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.*;
 
 public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, PickleModel<AbstractClientPlayer>> {
 
@@ -126,10 +124,10 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         poseStack.pushPose();
         if (d0 < 100.0D) {
             Scoreboard scoreboard = player.getScoreboard();
-            Objective objective = scoreboard.getDisplayObjective(2);
+            Objective objective = scoreboard.getDisplayObjective(DisplaySlot.BELOW_NAME);
             if (objective != null) {
-                Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), objective);
-                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), poseStack, buffer, p_225629_5_);
+                ScoreAccess score = scoreboard.getOrCreatePlayerScore(player, objective);
+                super.renderNameTag(player, (Component.literal(Integer.toString(score.get()))).append(" ").append(objective.getDisplayName()), poseStack, buffer, packedLight, partialTick);
                 poseStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
             }
         }

@@ -56,7 +56,7 @@ public class FeatherBlock extends Block {
                 world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
             }
             double amount = Math.min(6, height * 0.8);
-            ModNetwork.CHANNEL.sendToAllClientPlayersInDefaultRange(world, pos,
+            NetworkHelper.sendToAllClientPlayersInDefaultRange(world, pos,
                     new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, (int) amount,
                             new Vec3(0, height, 0)));
         }
@@ -86,7 +86,7 @@ public class FeatherBlock extends Block {
                 if (isMoving && random.nextInt(10) == 0) {
                     double dy = 0.001;
 
-                    ModNetwork.CHANNEL.sendToAllClientPlayersInParticleRange(level, blockPos,
+                    NetworkHelper.sendToAllClientPlayersInParticleRange(level, blockPos,
                             new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, 1,
                                     new Vec3(0, dy, 0)));
                 }

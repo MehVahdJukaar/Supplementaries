@@ -78,7 +78,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
 
         if (hasChanged) {
 
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
+            NetworkHelper.sendToServer(new ServerBoundSetTrappedPresentPacket(this.tile.getBlockPos(),
                     this.primed));
             this.tile.updateState(this.primed);
 

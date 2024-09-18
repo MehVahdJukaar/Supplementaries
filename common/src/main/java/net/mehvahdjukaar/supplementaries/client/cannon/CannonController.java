@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
@@ -110,7 +111,7 @@ public class CannonController {
             lastCameraPos = camera.getPosition();
             lastCameraYaw = camera.getYRot();
             lastCameraPitch = camera.getXRot();
-            lastZoomOut = (float) camera.getMaxZoom(4);
+            lastZoomOut = camera.getMaxZoom(4);
 
             float horizontalOffset = -1;
 
@@ -186,7 +187,7 @@ public class CannonController {
         if (options.keyShift.matches(key, action)) {
             stopControllingAndSync();
         } else if (options.keyInventory.matches(key, action)) {
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+            NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
 
             //Minecraft.getInstance().player.openMenu()
         } else if (options.keyJump.matches(key, action)) {

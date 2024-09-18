@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import net.minecraft.resources.ResourceLocation;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
+import net.minecraft.core.Holder;
 
 public interface IExplorationFunctionExtension {
 
-    ResourceLocation supplementaries$getCustomDecoration();
+    Holder<MLMapDecorationType<?, ?>> supplementaries$getCustomDecoration();
 
-    void supplementaries$setCustomDecoration(ResourceLocation resourceLocation);
+    void supplementaries$setCustomDecoration(Holder<MLMapDecorationType<?, ?>> deco);
+
 }

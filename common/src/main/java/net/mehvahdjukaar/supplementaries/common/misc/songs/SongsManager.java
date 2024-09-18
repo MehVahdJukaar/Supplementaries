@@ -93,7 +93,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
+        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
     }
 
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
@@ -155,7 +155,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
             if (!notes.isEmpty() && notes.getInt(0) > 0) {
-                ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+                NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
                 played = true;
@@ -256,7 +256,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         //SONGS.put(name, song);
 
         if (!level.isClientSide) {
-            ModNetwork.CHANNEL.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
+            NetworkHelper.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
         }
 
         RECORDING.clear();

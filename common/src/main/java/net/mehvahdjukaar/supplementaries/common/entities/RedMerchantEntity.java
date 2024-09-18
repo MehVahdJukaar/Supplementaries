@@ -144,7 +144,7 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         if (optionalint.isPresent() && player instanceof ServerPlayer serverPlayer) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                ModNetwork.CHANNEL.sendToClientPlayer(serverPlayer,
+                NetworkHelper.sendToClientPlayer(serverPlayer,
                         new ClientBoundSyncTradesPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }

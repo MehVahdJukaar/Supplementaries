@@ -24,9 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Score;
-import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.*;
 
 public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, JarredModel<AbstractClientPlayer>> {
 
@@ -152,33 +150,35 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
         }
     }
 
+    // same as player. no idea why we are not extending
     @Override
-    protected void renderNameTag(AbstractClientPlayer player, Component name, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+    protected void renderNameTag(AbstractClientPlayer player, Component displayName, PoseStack poseStack,
+                                 MultiBufferSource buffer, int packedLight, float partialTick) {
         double d0 = this.entityRenderDispatcher.distanceToSqr(player);
-        matrixStack.pushPose();
+        poseStack.pushPose();
         if (d0 < 100.0D) {
             Scoreboard scoreboard = player.getScoreboard();
-            Objective objective = scoreboard.getDisplayObjective(2);
+            Objective objective = scoreboard.getDisplayObjective(DisplaySlot.BELOW_NAME);
             if (objective != null) {
-                Score score = scoreboard.getOrCreatePlayerScore(player.getScoreboardName(), objective);
-                super.renderNameTag(player, (Component.literal(Integer.toString(score.getScore()))).append(" ").append(objective.getDisplayName()), matrixStack, buffer, packedLight);
-                matrixStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
+                ScoreAccess score = scoreboard.getOrCreatePlayerScore(player, objective);
+                super.renderNameTag(player, (Component.literal(Integer.toString(score.get()))).append(" ").append(objective.getDisplayName()), poseStack, buffer, packedLight, partialTick);
+                poseStack.translate(0.0D, 9.0F * 1.15F * 0.025F, 0.0D);
             }
         }
 
-        super.renderNameTag(player, name, matrixStack, buffer, packedLight);
-        matrixStack.popPose();
+        super.renderNameTag(player, displayName, poseStack, buffer, packedLight, partialTick);
+        poseStack.popPose();
     }
 
     @Override
-    protected void setupRotations(AbstractClientPlayer player, PoseStack matrixStack, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void setupRotations(AbstractClientPlayer player, PoseStack poseStack, float bob, float yBodyRot, float partialTicks, float scale) {
         float f = player.getSwimAmount(partialTicks);
         if (player.isFallFlying()) {
-            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
             float f1 = player.getFallFlyingTicks() + partialTicks;
             float f2 = Mth.clamp(f1 * f1 / 100.0F, 0.0F, 1.0F);
             if (!player.isAutoSpinAttack()) {
-                matrixStack.mulPose(Axis.XP.rotationDegrees(f2 * (-90.0F - player.getXRot())));
+                poseStack.mulPose(Axis.XP.rotationDegrees(f2 * (-90.0F - player.getXRot())));
             }
 
             Vec3 vector3d = player.getViewVector(partialTicks);
@@ -188,18 +188,18 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
             if (d0 > 0.0D && d1 > 0.0D) {
                 double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                 double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;
-                matrixStack.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
+                poseStack.mulPose(Axis.YP.rotation((float) (Math.signum(d3) * Math.acos(d2))));
             }
         } else if (f > 0.0F) {
-            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
             float f3 = player.isInWater() ? -90.0F - player.getXRot() : -90.0F;
             float f4 = Mth.lerp(f, 0.0F, f3);
-            matrixStack.mulPose(Axis.XP.rotationDegrees(f4));
+            poseStack.mulPose(Axis.XP.rotationDegrees(f4));
             if (player.isVisuallySwimming()) {
-                matrixStack.translate(0.0D, -0.25, 0.25);
+                poseStack.translate(0.0D, -0.25, 0.25);
             }
         } else {
-            super.setupRotations(player, matrixStack, ageInTicks, rotationYaw, partialTicks);
+            super.setupRotations(player, poseStack, bob, yBodyRot, partialTicks, scale);
         }
 
 

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
@@ -14,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -62,8 +64,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putFloat("yaw", this.yaw);
         tag.putFloat("pitch", this.pitch);
         tag.putInt("cooldown", this.cooldownTimer);
@@ -72,8 +74,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
         this.cooldownTimer = tag.getInt("cooldown");
@@ -270,7 +272,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
                 // open gui (edit sign with empty hand)
                 this.setPlayerWhoMayEdit(player.getUUID());
-                ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
+                NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
             }
             return true;
         }
@@ -374,7 +376,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
 
     public static void syncToServer(CannonBlockTile cannon, boolean fire, boolean removeOwner) {
-        ModNetwork.CHANNEL.sendToServer(new ServerBoundSyncCannonPacket(
+        NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
                 cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
                 fire, cannon.getBlockPos(), removeOwner));
     }

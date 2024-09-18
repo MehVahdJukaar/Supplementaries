@@ -129,7 +129,7 @@ public class ServerEventsForge {
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             try {
-                ModNetwork.CHANNEL.sendToClientPlayer(player,
+                NetworkHelper.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
             } catch (Exception exception) {
                 Supplementaries.LOGGER.warn("failed to send login message: " + exception);

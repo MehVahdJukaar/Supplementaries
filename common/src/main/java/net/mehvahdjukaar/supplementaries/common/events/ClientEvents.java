@@ -174,7 +174,7 @@ public class ClientEvents {
     }
 
     private static void checkIfOnRope(Player p) {
-        BlockState state = p.getFeetBlockState();
+        BlockState state = p.getBlockStateOn();
         isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.getBlock() instanceof AbstractRopeBlock rb && !rb.hasConnection(Direction.UP, state) &&
                 (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
     }

@@ -4,18 +4,18 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -75,14 +75,14 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         this.updatePower(state, worldIn, pos);
-        if (stack.hasCustomHoverName()) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             if (worldIn.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
                 tile.setCustomName(stack.getHoverName());
             }
@@ -120,12 +120,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
 
             if (!level.isClientSide) {
                 if (tile.isSpinningVeryFast() && player instanceof ServerPlayer serverPlayer) {
-                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("supplementaries", "adventure/globe"));
-                    if (advancement != null) {
-                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
-                            serverPlayer.getAdvancements().award(advancement, "unlock");
-                        }
-                    }
+                    Utils.awardAdvancement(serverPlayer, Supplementaries.res("adventure/globe"));
                 }
 
                 level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);

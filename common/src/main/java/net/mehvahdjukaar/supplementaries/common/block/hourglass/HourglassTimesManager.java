@@ -68,7 +68,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        ModNetwork.CHANNEL.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(INSTANCE.dusts));
+        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(INSTANCE.dusts));
     }
 
 }

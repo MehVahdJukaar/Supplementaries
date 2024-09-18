@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -11,6 +12,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -32,7 +34,7 @@ public class ClientEventsFabric {
 
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            if (CompatHandler.CLOTH_CONFIG) {
+            if (CompatHandler.CLOTH_CONFIG || CompatHandler.YACL) {
                 List<? extends GuiEventListener> listeners = s.children();
                 ClientEvents.addConfigButton(s, listeners, e -> {
                     List<GuiEventListener> c = (List<GuiEventListener>) s.children();
@@ -53,6 +55,8 @@ public class ClientEventsFabric {
                 e.register(new QuiverLayer(r, true));
             } else if (t == EntityType.STRAY) {
                 e.register(new QuiverLayer(r, true));
+            }else if(t == EntityType.CREEPER){
+                e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
             }
         });
 

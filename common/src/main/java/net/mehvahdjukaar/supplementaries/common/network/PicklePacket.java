@@ -1,17 +1,22 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 
-import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkDir;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
 
 public class PicklePacket implements Message {
+
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, PicklePacket> CODEC = Message.makeType(
+            Supplementaries.res("pickle"), PicklePacket::new);
 
     protected UUID playerID;
     protected final boolean on;
@@ -32,21 +37,21 @@ public class PicklePacket implements Message {
     }
 
     @Override
-    public void writeToBuffer(FriendlyByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBoolean(this.on);
-        buf.writeBoolean(this.isJar );
+        buf.writeBoolean(this.isJar);
         if (this.playerID != null) {
             buf.writeUUID(this.playerID);
         }
     }
 
     @Override
-    public void handle(ChannelHandler.Context context) {
-        if (context.getDirection() == NetworkDir.PLAY_TO_CLIENT) {
+    public void handle(Context context) {
+        if (context.getDirection() == NetworkDir.CLIENT_BOUND) {
             PickleData.set(this.playerID, this.on, isJar);
         } else {
             //gets id from server just to be sure
-            Player player = context.getSender();
+            Player player = context.getPlayer();
             UUID id = player.getGameProfile().getId();
             if (PickleData.isDev(id, isJar)) { //validate if it is indeed a dev
 
@@ -56,12 +61,16 @@ public class PicklePacket implements Message {
                 //broadcast to all players
                 for (ServerPlayer p : player.getServer().getPlayerList().getPlayers()) {
                     if (p != player) {
-                        ModNetwork.CHANNEL.sendToClientPlayer(p, new PicklePacket(this.playerID, this.on, this.isJar));
+                        NetworkHelper.sendToClientPlayer(p, new PicklePacket(this.playerID, this.on, this.isJar));
                     }
                 }
             }
         }
     }
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }
 
