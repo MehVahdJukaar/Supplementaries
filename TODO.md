@@ -3,7 +3,7 @@
 - recipes codecs with customizaton
 - burn time data map
 - check if sacks safes and lunch boxes work with creative drop
-- check if the above keep their creative names
+- check if the above keep their custom names
 - bellows block place power
 
 
@@ -23,6 +23,7 @@
 
 # Supplementaries
 
+- framed block items pick up
 - explosion shake
 - soap and wax dispenser behaviors
 - waxable dispenser behavior

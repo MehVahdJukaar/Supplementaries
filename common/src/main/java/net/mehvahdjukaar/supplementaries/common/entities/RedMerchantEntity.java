@@ -1,20 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncTradesPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -31,6 +28,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Item;
@@ -66,11 +64,6 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     public void setAttackCooldown(int attackCooldown) {
         this.attackCooldown = attackCooldown;
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return PlatHelper.getEntitySpawnPacket(this);
     }
 
     @Override
@@ -166,10 +159,9 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         if (compound.contains("DespawnDelay", 99)) {
             this.despawnDelay = compound.getInt("DespawnDelay");
         }
-
-        if (compound.contains("WanderTarget")) {
-            this.wanderTarget = NbtUtils.readBlockPos(compound.getCompound("WanderTarget"));
-        }
+        NbtUtils.readBlockPos(compound, "wander_target").ifPresent((blockPos) -> {
+            this.wanderTarget = blockPos;
+        });
 
         this.setAge(Math.max(0, this.getAge()));
     }

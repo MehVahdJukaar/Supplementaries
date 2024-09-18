@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -319,7 +320,7 @@ public class ModCreativeTabs {
                 ModConstants.CANNON_NAME,
                 ModRegistry.CANNON);
 
-        after(e, i -> i.getItem() instanceof RecordItem, CreativeModeTabs.TOOLS_AND_UTILITIES,
+        after(e, i -> i.getItem().components().get(DataComponents.JUKEBOX_PLAYABLE) != null, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.AVAST_DISC_NAME,
                 ModRegistry.AVAST_DISC);
 
@@ -664,7 +665,7 @@ public class ModCreativeTabs {
     private static void afterML(RegHelper.ItemToTabEvent event, String modTarget,
                                 ResourceKey<CreativeModeTab> tab, String key,
                                 Supplier<?>... items) {
-        ResourceLocation id = new ResourceLocation(modTarget);
+        ResourceLocation id = ResourceLocation.tryParse(modTarget);
         BuiltInRegistries.ITEM.getOptional(id).ifPresent(target -> after(event, target, tab, key, items));
     }
 
@@ -697,7 +698,7 @@ public class ModCreativeTabs {
 
     private static boolean isTagOn(String... tags) {
         for (var t : tags)
-            if (BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, new ResourceLocation(t))).isPresent()) {
+            if (BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, ResourceLocation.parse(t))).isPresent()) {
                 return true;
             }
         return false;

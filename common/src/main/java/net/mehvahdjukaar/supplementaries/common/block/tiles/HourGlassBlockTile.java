@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesMa
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -87,17 +88,17 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.progress = compound.getFloat("Progress");
-        this.prevProgress = compound.getFloat("PrevProgress");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.progress = tag.getFloat("Progress");
+        this.prevProgress = tag.getFloat("PrevProgress");
         this.cachedTexture = null;
         this.sandData = HourglassTimesManager.getData(this.getDisplayedItem().getItem());
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putFloat("Progress", this.progress);
         tag.putFloat("PrevProgress", this.prevProgress);
     }

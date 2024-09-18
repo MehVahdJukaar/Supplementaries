@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
 
 public class ModMaterials {
-    public static final ResourceLocation SIGN_SHEET = new ResourceLocation("textures/atlas/signs.png");
-    public static final ResourceLocation BANNER_SHEET = new ResourceLocation("textures/atlas/banner_patterns.png");
+    public static final ResourceLocation SIGN_SHEET = ResourceLocation.withDefaultNamespace("textures/atlas/signs.png");
+    public static final ResourceLocation BANNER_SHEET = ResourceLocation.withDefaultNamespace("textures/atlas/banner_patterns.png");
 
     //materials
     public static final Material CLOCK_HAND = new Material(TextureAtlas.LOCATION_BLOCKS, ModTextures.CLOCK_HAND_TEXTURE);

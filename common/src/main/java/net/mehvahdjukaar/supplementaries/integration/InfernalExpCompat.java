@@ -30,10 +30,10 @@ public class InfernalExpCompat {
 
     //glow
     public static final Supplier<Block> SCONCE_GLOW = regBlock(SCONCE_NAME_GLOW, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), 13,
+            BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get()), 13,
             CompatObjects.GLOW_FLAME));
     public static final Supplier<Block> SCONCE_WALL_GLOW = regBlock("sconce_wall_glow", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())
+            BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get())
                     .dropsLike(SCONCE_GLOW.get()),
             CompatObjects.GLOW_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GLOW = regItem(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(

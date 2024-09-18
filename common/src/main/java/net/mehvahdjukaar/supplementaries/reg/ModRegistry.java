@@ -11,8 +11,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
-import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
@@ -20,10 +20,11 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
@@ -68,7 +69,7 @@ public class ModRegistry {
             res(STASIS_NAME), StasisEnchantment::new, Registries.ENCHANTMENT);
 
     //effects
-    public static final Supplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
+    public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
             res("overencumbered"), OverencumberedEffect::new);
 
     public static final Supplier<MobEffect> FLAMMABLE = RegHelper.registerEffect(
@@ -425,7 +426,7 @@ public class ModRegistry {
     ));
 
     //spikes
-    public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
+    public static final Supplier<Block> BAMBOO_SPIKES = regWithItem(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
             BlockBehaviour.Properties.of()
                     .pushReaction(PushReaction.NORMAL)
                     .mapColor(MapColor.SAND)
@@ -438,9 +439,6 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<BambooSpikesBlockTile>> BAMBOO_SPIKES_TILE = regTile(
             BAMBOO_SPIKES_NAME, () -> PlatHelper.newBlockEntityType(
                     BambooSpikesBlockTile::new, BAMBOO_SPIKES.get()));
-
-    public static final Supplier<Item> BAMBOO_SPIKES_ITEM = regItem(BAMBOO_SPIKES_NAME, () -> new WoodBasedBlockItem(
-            BAMBOO_SPIKES.get(), new Item.Properties(), 150));
 
     public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(
             BAMBOO_SPIKES.get(), new Item.Properties()
@@ -502,6 +500,7 @@ public class ModRegistry {
 
     //raked gravel
     public static final Supplier<Block> RAKED_GRAVEL = regWithItem(RAKED_GRAVEL_NAME, () -> new RakedGravelBlock(
+            new ColorRGBA(-8356741),
             BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)
                     .isViewBlocking((w, s, p) -> true)
                     .isSuffocating((w, s, p) -> true)
@@ -726,8 +725,9 @@ public class ModRegistry {
     ));
 
     //pancakes
-    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(
-            15, ModSounds.PANCAKE_MUSIC.get(), new Item.Properties(), 3 * 60 + 48));
+    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(new Item.Properties()
+            .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
+                    new EitherHolder<>(ModSounds.PANCAKE_MUSIC_JUKEBOX.getKey()), false))));
 
     // cant be block item so we use extra placement stuff later
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(
@@ -737,11 +737,11 @@ public class ModRegistry {
                     .sound(SoundType.WOOL))
     );
 
-    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
-            ModSounds.AVAST_MUSIC, new Item.Properties()
-                    .stacksTo(1)
-                    .rarity(Rarity.RARE),
-            20 * 60 * 3));
+    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> new Item(new Item.Properties()
+            .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
+                    new EitherHolder<>(ModSounds.AVAST_MUSIC_JUKEBOX.getKey()), true))
+            .stacksTo(1)
+            .rarity(Rarity.RARE)));
 
     //flax
     public static final Supplier<Block> FLAX = regBlock(FLAX_NAME, () -> new FlaxBlock(
@@ -854,7 +854,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(
-            TIMBER_FRAME.get(), new Item.Properties(), 200));
+            TIMBER_FRAME.get(), new Item.Properties()));
 
     //timber brace
     public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
@@ -862,7 +862,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
     });
     public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(
-            TIMBER_BRACE.get(), new Item.Properties(), 200));
+            TIMBER_BRACE.get(), new Item.Properties()));
 
     //timber cross brace
     public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
@@ -870,7 +870,7 @@ public class ModRegistry {
         return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(
-            TIMBER_CROSS_BRACE.get(), new Item.Properties(), 200));
+            TIMBER_CROSS_BRACE.get(), new Item.Properties()));
 
     public static final Supplier<BlockEntityType<FrameBlockTile>> TIMBER_FRAME_TILE = regTile(
             TIMBER_FRAME_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1029,7 +1029,7 @@ public class ModRegistry {
                     .isRedstoneConductor(NEVER)
                     .isViewBlocking(NEVER)
                     .noOcclusion()
-                    ));
+    ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1038,7 +1038,7 @@ public class ModRegistry {
     //cannonball
     public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.ANVIL)
-                    .strength(5,6)
+                    .strength(5, 6)
                     .sound(SoundType.COPPER)
                     .isSuffocating(NEVER)
                     .isRedstoneConductor(NEVER)

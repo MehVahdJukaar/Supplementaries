@@ -29,10 +29,10 @@ public class EndergeticCompat {
     }
 
     public static final Supplier<Block> SCONCE_ENDER = regBlock(SCONCE_NAME_ENDER, () -> new SconceBlock(
-            BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), 13,
+            BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get()), 13,
             CompatObjects.ENDER_FLAME));
     public static final Supplier<Block> SCONCE_WALL_ENDER = regBlock("sconce_wall_ender", () -> new SconceWallBlock(
-            BlockBehaviour.Properties.copy(SCONCE_ENDER.get())
+            BlockBehaviour.Properties.ofFullCopy(SCONCE_ENDER.get())
                     .dropsLike(SCONCE_ENDER.get()),
             CompatObjects.ENDER_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_ENDER = regItem(SCONCE_NAME_ENDER, () -> new StandingAndWallBlockItem(

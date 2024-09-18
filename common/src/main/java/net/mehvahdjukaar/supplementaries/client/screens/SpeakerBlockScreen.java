@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -46,10 +47,10 @@ public class SpeakerBlockScreen extends Screen {
 
     private void updateMode() {
         switch (this.mode) {
-            default -> this.modeBtn.setMessage(CHAT_TEXT);
             case NARRATOR -> this.modeBtn.setMessage(NARRATOR_TEXT);
             case STATUS_MESSAGE -> this.modeBtn.setMessage(ACTION_BAR_TEXT);
             case TITLE -> this.modeBtn.setMessage(TITLE_TEXT);
+            default -> this.modeBtn.setMessage(CHAT_TEXT);
         }
     }
 

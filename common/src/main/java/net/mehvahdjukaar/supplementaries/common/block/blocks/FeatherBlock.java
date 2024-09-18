@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -56,7 +58,7 @@ public class FeatherBlock extends Block {
                 world.playSound(null, pos, SoundEvents.WOOL_FALL, SoundSource.BLOCKS, 1F, 0.9F);
             }
             double amount = Math.min(6, height * 0.8);
-            NetworkHelper.sendToAllClientPlayersInDefaultRange(world, pos,
+            NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) world, pos,
                     new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, (int) amount,
                             new Vec3(0, height, 0)));
         }
@@ -79,7 +81,7 @@ public class FeatherBlock extends Block {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos blockPos, Entity entity) {
         if (!level.isClientSide) {
-            if (!(entity instanceof LivingEntity) || entity.getFeetBlockState().is(this)) {
+            if (!(entity instanceof LivingEntity) || entity.getBlockStateOn().is(this)) {
 
                 RandomSource random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();

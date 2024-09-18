@@ -20,6 +20,7 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +58,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return level.getBlockEntity(pos) instanceof FlagBlockTile tile ? tile.getItem(state) : super.getCloneItemStack(level, pos, state);
     }
 
@@ -105,15 +106,6 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            if (world.getBlockEntity(pos) instanceof FlagBlockTile tile) {
-                tile.setCustomName(stack.getHoverName());
-            }
-        }
     }
 
     @Override

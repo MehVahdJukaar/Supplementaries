@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -71,18 +72,19 @@ public class TurnTableBlockTile extends BlockEntity {
     }
     //TODO: this makes block instantly rotate when condition becomes true
 
+
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.cooldown = compound.getInt("Cooldown");
-        this.canRotate = compound.getBoolean("CanRotate");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.cooldown = tag.getInt("Cooldown");
+        this.canRotate = tag.getBoolean("CanRotate");
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putInt("Cooldown", this.cooldown);
-        compound.putBoolean("CanRotate", this.canRotate);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("Cooldown", this.cooldown);
+        tag.putBoolean("CanRotate", this.canRotate);
     }
 
 }

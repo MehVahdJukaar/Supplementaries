@@ -29,6 +29,10 @@ import org.jetbrains.annotations.NotNull;
 public class EndermanSkullBlock extends SkullBlock {
 
     public static final SkullBlock.Type TYPE = new Type() {
+        @Override
+        public String getSerializedName() {
+            return "supplementaries_enderman_skull";
+        }
     };
     public static final VoxelShape SHAPE_ANGERY = Block.box(4.0, 0.0, 4.0, 12.0, 8.0 + 6, 12.0);
     public static final BooleanProperty WATCHED = ModBlockProperties.WATCHED;

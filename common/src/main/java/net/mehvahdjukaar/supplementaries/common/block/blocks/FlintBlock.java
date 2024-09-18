@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -55,7 +56,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
     private void ignitePosition(Level level, BlockPos firePos, boolean isIronMoving) {
         //send particle packet
 
-        NetworkHelper.sendToAllClientPlayersInParticleRange(level, firePos,
+        NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, firePos,
                 new ClientBoundParticlePacket(Vec3.atCenterOf(firePos),
                         ClientBoundParticlePacket.Kind.FLINT_BLOCK_IGNITE,
                         isIronMoving ? 1 : 0));

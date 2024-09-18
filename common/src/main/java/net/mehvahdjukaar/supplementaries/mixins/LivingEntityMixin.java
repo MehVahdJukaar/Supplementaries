@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -68,13 +69,11 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @Shadow
     public abstract boolean isSuppressingSlidingDownLadder();
 
-    @Shadow
-    @Nullable
-    public abstract MobEffectInstance getEffect(MobEffect pPotion);
+    @Shadow public abstract @Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
 
     @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
     private float suppl$checkOverencumbered(float original) {
-        var effect = this.getEffect(ModRegistry.OVERENCUMBERED.get());
+        var effect = this.getEffect(ModRegistry.OVERENCUMBERED.getHolder());
         if ((effect != null && effect.getAmplifier() > 0)) {
             original -= 0.1f;
         }
@@ -92,7 +91,7 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @Inject(method = "handleOnClimbable", at = @At("HEAD"), cancellable = true)
     private void suppl$checkOnRope(Vec3 motion, CallbackInfoReturnable<Vec3> info) {
         if (this.onClimbable() && CommonConfigs.Functional.ROPE_SLIDE.get()) {
-            BlockState b = this.getFeetBlockState();
+            BlockState b = this.getBlockStateOn();
             if (b.is(ModTags.FAST_FALL_ROPES)) {
                 this.fallDistance = 0;
                 double x = Mth.clamp(motion.x, -0.15F, 0.15F);

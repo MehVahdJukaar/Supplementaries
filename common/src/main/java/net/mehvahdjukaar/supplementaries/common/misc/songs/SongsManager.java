@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
@@ -20,6 +21,8 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -70,7 +73,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         jsons.forEach((key, json) -> {
             try {
                 var result = Song.CODEC.parse(JsonOps.INSTANCE, json);
-                Song song = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to parse flute song: {}", e));
+                Song song = result.getOrThrow();
                 temp.add(song);
                 SongsManager.addSong(song);
             } catch (Exception e) {
@@ -124,7 +127,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         if (!CURRENTLY_PAYING.containsKey(id)) {
 
             String res = null;
-            if (stack.hasCustomHoverName()) {
+            if (stack.has(DataComponents.CUSTOM_NAME)) {
                 String name = stack.getHoverName().getString().toLowerCase(Locale.ROOT);
                 for (var v : SONGS.keySet()) {
                     if (v.equals(name)) {
@@ -155,7 +158,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         if (timeSinceStarted % song.getTempo() == 0) {
             IntList notes = song.getNoteToPlay(timeSinceStarted);
             if (!notes.isEmpty() && notes.getInt(0) > 0) {
-                NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+                NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(entity,
                         new ClientBoundPlaySongNotesPacket(notes, entity));
 
                 played = true;

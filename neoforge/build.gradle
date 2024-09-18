@@ -157,7 +157,7 @@ dependencies {
     modCompileOnly("curse.maven:farmers-respite-551453:5543547")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
-    modImplementation("curse.maven:emi-580555:5032425")
+    modImplementation("curse.maven:emi-580555:5704405")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")

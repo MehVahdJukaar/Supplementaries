@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 
 public class DummySprite extends TextureAtlasSprite {
     protected static final ResourceLocation LOCATION = Supplementaries.res("dummy");
@@ -17,16 +18,16 @@ public class DummySprite extends TextureAtlasSprite {
         super(LOCATION, new SpriteContents(LOCATION,
                 new FrameSize(1, 1),
                 new NativeImage(1, 1, false),
-                AnimationMetadataSection.EMPTY), 1, 1, 0, 0);
+                ResourceMetadata.EMPTY), 1, 1, 0, 0);
     }
 
     @Override
-    public float getU(double u) {
-        return (float) u / 16;
+    public float getU(float u) {
+        return u / 16;
     }
 
     @Override
-    public float getV(double v) {
-        return (float) v / 16;
+    public float getV(float v) {
+        return v / 16;
     }
 }

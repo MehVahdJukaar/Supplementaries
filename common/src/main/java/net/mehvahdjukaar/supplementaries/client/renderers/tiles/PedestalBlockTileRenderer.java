@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -39,7 +40,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
     }
 
     protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
-        if (Minecraft.renderNames() && item.hasCustomHoverName() && !type.isGlobe()) {
+        if (Minecraft.renderNames() && item.has(DataComponents.CUSTOM_NAME) && !type.isGlobe()) {
             double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
             return d0 < 16 * 16;
         }
@@ -138,7 +139,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
                                 boolean sepia = tile.getDisplayType() == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
                                 Pair<GlobeManager.Model, ResourceLocation> pair =
-                                        stack.hasCustomHoverName() ?
+                                        stack.has(DataComponents.CUSTOM_NAME) ?
                                                 GlobeManager.Type.getModelAndTexture(stack.getHoverName().getString()) :
                                                 Pair.of(GlobeManager.Model.GLOBE, null);
 

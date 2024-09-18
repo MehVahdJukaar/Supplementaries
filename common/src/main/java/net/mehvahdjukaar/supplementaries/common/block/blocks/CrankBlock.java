@@ -86,28 +86,27 @@ public class CrankBlock extends WaterBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (!worldIn.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
             //send particles
-            worldIn.blockEvent(pos, this, 0, 0);
+            level.blockEvent(pos, this, 0, 0);
 
             boolean ccw = player.isShiftKeyDown();
-            this.activate(state, worldIn, pos, ccw);
-            float f = 0.55f + state.getValue(POWER) * 0.04f; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(worldIn.random, 0.04f)
-            worldIn.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
-            worldIn.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
+            this.activate(state, level, pos, ccw);
+            float f = 0.55f + state.getValue(POWER) * 0.04f; //(ccw ? 0.6f : 0.7f)+ MthUtils.nextWeighted(level.random, 0.04f)
+            level.playSound(null, pos, ModSounds.CRANK.get(), SoundSource.BLOCKS, 0.5F, f);
+            level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
 
             Direction dir = state.getValue(FACING).getOpposite();
             if (dir.getAxis() != Direction.Axis.Y) {
                 BlockPos behind = pos.relative(dir);
-                BlockState backState = worldIn.getBlockState(behind);
+                BlockState backState = level.getBlockState(behind);
                 if (backState.is(ModRegistry.PULLEY_BLOCK.get()) && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
-                    ((PulleyBlock) backState.getBlock()).windPulley(backState, behind, worldIn, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
+                    ((PulleyBlock) backState.getBlock()).windPulley(backState, behind, level, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
                 }
             }
         }
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     public void activate(BlockState state, Level world, BlockPos pos, boolean ccw) {
@@ -178,11 +177,6 @@ public class CrankBlock extends WaterBlock {
             case DOWN -> SHAPE_DOWN;
             default -> SHAPE_SOUTH;
         };
-    }
-
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
-        return true;
     }
 
     @Override

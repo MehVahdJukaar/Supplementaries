@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +26,7 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
     }
 
     protected boolean canRenderName(ItemShelfBlockTile tile) {
-        if (Minecraft.renderNames() && tile.getItem(0).hasCustomHoverName()) {
+        if (Minecraft.renderNames() && tile.getItem(0).has(DataComponents.CUSTOM_NAME)) {
             double d0 = Minecraft.getInstance().getEntityRenderDispatcher().distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
             return d0 < 16;
         }

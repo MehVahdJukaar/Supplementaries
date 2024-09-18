@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -86,11 +87,11 @@ public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace) {
-        if (world.getBlockEntity(pos) instanceof FrameBlockTile tile) {
-            return tile.handleInteraction(world, pos, player, hand, trace, true);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof FrameBlockTile tile) {
+            return tile.interactWithPlayer(level, pos, player, hand, hitResult, stack, true);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     //handles dynamic culling
@@ -162,25 +163,19 @@ public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         if (state.getValue(HAS_BLOCK)) return false;
         return switch (type) {
             case LAND, AIR -> true;
-            case WATER -> worldIn.getFluidState(pos).is(FluidTags.WATER);
+            case WATER -> state.getFluidState().is(FluidTags.WATER);
         };
     }
 
     @Override
     public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        if(state.getValue(HAS_BLOCK)){
+        if (state.getValue(HAS_BLOCK)) {
             return level.getMaxLightLevel();
-        }
-        else return super.getLightBlock(state, level, pos);
+        } else return super.getLightBlock(state, level, pos);
     }
 
-
-    @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        return new ItemStack(this);
-    }
 }

@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
@@ -82,8 +83,8 @@ public class FrameBlockTile extends MimicBlockTile {
         }
     }
 
-    public InteractionResult handleInteraction(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace, boolean canStrip) {
-        ItemStack stack = player.getItemInHand(hand);
+    public ItemInteractionResult interactWithPlayer(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace,
+                                                    ItemStack stack, boolean canStrip) {
         Item item = stack.getItem();
         if (Utils.mayBuild(player,pos) && !trace.isInside()) {
             if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {

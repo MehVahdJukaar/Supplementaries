@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
@@ -80,7 +79,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     @Override
     public Component getName(ItemStack stack) {
         PotionContents p = getPotion(stack);
-        Component arrowName = Component.translatable(p.getName("item.minecraft.tipped_arrow.effect."));
+        Component arrowName = Component.translatable(Potion.getName(p.potion(), "item.minecraft.tipped_arrow.effect."));
         String s = arrowName.getString();
         if (s.contains("Arrow of ")) {
             return Component.translatable("item.supplementaries.bamboo_spikes_tipped_effect",
@@ -99,14 +98,14 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return PotionContents.createItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), potion);
     }
 
-    public static boolean isPotionValid(Potion potion) {
-        List<MobEffectInstance> effects = potion.getEffects();
+    public static boolean isPotionValid(Holder<Potion> potion) {
+        List<MobEffectInstance> effects = potion.value().getEffects();
         if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
             for (var e : effects) {
                 if (e.getEffect().value().isBeneficial()) return false;
             }
         }
-        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        return !potion.is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     public static @NotNull PotionContents getPotion(ItemStack stack) {

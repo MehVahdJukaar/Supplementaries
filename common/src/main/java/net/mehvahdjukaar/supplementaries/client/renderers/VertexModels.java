@@ -117,13 +117,12 @@ public class VertexModels {
                             int color,
                             int lu, int lv, float nx, float ny, float nz) {
         //not chained because of MC263524
-        builder.vertex(poseStack.last().pose(), x, y, z);
-        builder.color(color);
-        builder.uv(u, v);
-        builder.overlayCoords(0, 10);
-        builder.uv2(lu, lv);
-        builder.normal(poseStack.last().normal(), nx, ny, nz);
-        builder.endVertex();
+        builder.addVertex(poseStack.last(), x, y, z);
+        builder.setColor(color);
+        builder.setUv(u, v);
+        builder.setUv1(0, 10);
+        builder.setUv2(lu, lv);
+        builder.setNormal(poseStack.last(), nx, ny, nz);
     }
 
 

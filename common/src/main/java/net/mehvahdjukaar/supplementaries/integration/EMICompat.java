@@ -28,13 +28,15 @@ public class EMICompat implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        SpecialRecipeDisplays.registerCraftingRecipes(recipes -> recipes.stream().map(r ->
-                new EmiCraftingRecipe(
-                        r.getIngredients().stream().map(EmiIngredient::of).toList(),
-                        EmiStack.of(r.getResultItem(null)),
-                        r.getId(),
-                        r instanceof ShapelessRecipe
-                )).forEach(registry::addRecipe));
+        SpecialRecipeDisplays.registerCraftingRecipes(recipes -> recipes.stream().map(rh -> {
+                    var r = rh.value();
+                    return new EmiCraftingRecipe(
+                            r.getIngredients().stream().map(EmiIngredient::of).toList(),
+                            EmiStack.of(r.getResultItem(null)),
+                            rh.id(),
+                            r instanceof ShapelessRecipe);
+                }
+        ).forEach(registry::addRecipe));
 
         registry.addRecipe(
                 EmiWorldInteractionRecipe.builder()
@@ -54,18 +56,18 @@ public class EMICompat implements EmiPlugin {
                         .id(Supplementaries.res("ash_burn"))
                         .leftInput(EmiIngredient.of(ItemTags.LOGS_THAT_BURN))
                         .rightInput(EmiStack.EMPTY, false, slotWidget ->
-                                slotWidget.customBackground(new ResourceLocation("textures/block/stone.png"),
-                                        0, 0,256,1))
+                                slotWidget.customBackground(ResourceLocation.parse("textures/block/stone.png"),
+                                        0, 0, 256, 1))
                         .output(EmiStack.of(ModRegistry.ASH_BLOCK.get()))
                         .build()
         );
 
 
-        registry.setDefaultComparison(EmiStack.of(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()), Comparison.compareNbt());
+        registry.setDefaultComparison(EmiStack.of(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()), Comparison.compareComponents());
     }
 
     public static class Grind implements EmiRecipe {
-        private static final ResourceLocation BACKGROUND = new ResourceLocation("minecraft", "textures/gui/container/grindstone.png");
+        private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("textures/gui/container/grindstone.png");
         private final ResourceLocation id;
         private final EmiStack to;
         private final EmiStack from;

@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -20,43 +21,41 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
 
 
-    private static List<CraftingRecipe> createAntiqueMapRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createAntiqueMapRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.antique_map";
 
         ItemStack stack = new ItemStack(Items.FILLED_MAP);
-        stack.setHoverName(Component.translatable("filled_map.antique"));
+        stack.set(DataComponents.ITEM_NAME, Component.translatable("filled_map.antique"));
         AntiqueInkItem.setAntiqueInk(stack, true);
 
         Ingredient ink = Ingredient.of(new ItemStack(ModRegistry.ANTIQUE_INK.get()));
         Ingredient map = Ingredient.of(new ItemStack(Items.FILLED_MAP));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_map_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, stack, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("antique_map_create_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, stack, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createAntiqueBookRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createAntiqueBookRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.antique_book";
 
         ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);
@@ -66,15 +65,15 @@ public class SpecialRecipeDisplays {
         Ingredient map = Ingredient.of(new ItemStack(Items.WRITTEN_BOOK));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, map, ink);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "antique_book_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, stack, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("antique_book_create_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, stack, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createRopeArrowCreateRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createRopeArrowCreateRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.rope_arrow";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
@@ -83,15 +82,15 @@ public class SpecialRecipeDisplays {
         Ingredient arrow = Ingredient.of(new ItemStack(Items.ARROW));
         Ingredient rope = Ingredient.of(ModTags.ROPES);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, arrow, rope, rope, rope, rope);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_create_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("rope_arrow_create_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createRopeArrowAddRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createRopeArrowAddRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.rope_arrow_add";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
@@ -101,15 +100,15 @@ public class SpecialRecipeDisplays {
         Ingredient arrow = Ingredient.of(ropeArrow2);
         Ingredient rope = Ingredient.of(ModTags.ROPES);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, rope, rope, rope, rope, arrow, rope, rope, rope, rope);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "rope_arrow_add_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("rope_arrow_add_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.EQUIPMENT, ropeArrow, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createSoapCleanRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createSoapCleanRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.soap";
 
         for (String k : BlocksColorAPI.getBlockKeys()) {
@@ -126,15 +125,15 @@ public class SpecialRecipeDisplays {
 
                 ItemStack output = out.getDefaultInstance();
                 ResourceLocation id = Supplementaries.res("soap_clean_" + k.replace(":", "_"));
-                ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
-                recipes.add(recipe);
+                ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+                recipes.add(new RecipeHolder<>(id, recipe));
             }
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> makeTrappedPresentRecipes() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> makeTrappedPresentRecipes() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.trapped_presents";
 
         for (DyeColor color : DyeColor.values()) {
@@ -144,7 +143,8 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, baseShulkerIngredient, Ingredient.of(Items.TRIPWIRE_HOOK));
 
             ResourceLocation id = Supplementaries.res("trapped_present_" + color.getName() + "_display");
-            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+            recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         }
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
         ItemStack output = ModRegistry.TRAPPED_PRESENTS.get(null).get().asItem().getDefaultInstance();
@@ -152,12 +152,13 @@ public class SpecialRecipeDisplays {
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(Items.TRIPWIRE_HOOK));
 
         ResourceLocation id = Supplementaries.res("trapped_present_display");
-        recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
+        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+        recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         return recipes;
     }
 
-    private static List<CraftingRecipe> makePresentColoringRecipes() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> makePresentColoringRecipes() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "presents";
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
         for (DyeColor color : DyeColor.values()) {
@@ -167,13 +168,14 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
             ResourceLocation id = Supplementaries.res("present_" + color.getName() + "_display");
-            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+            recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> makeSackColoringRecipes() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> makeSackColoringRecipes() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "sacks";
         Ingredient ingredients = Ingredient.of(ModRegistry.SACK.get());
         for (DyeColor color : DyeColor.values()) {
@@ -183,32 +185,33 @@ public class SpecialRecipeDisplays {
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
             ResourceLocation id = Supplementaries.res("sack_" + color.getName() + "_display");
-            recipes.add(new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs));
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+            recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> createItemLoreRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createItemLoreRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
 
         String group = "item_lore";
 
         ItemStack output = new ItemStack(Items.SLIME_BALL);
         ItemStack tag = new ItemStack(Items.NAME_TAG);
         var c = Component.literal("Ew sticky!");
-        tag.setHoverName(c);
+        tag.set(DataComponents.ITEM_NAME, c);
         ItemLoreRecipe.addLore(c, output);
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SLIME_BALL), Ingredient.of(tag));
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "item_lore_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("item_lore_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createRemoveLoreRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createRemoveLoreRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "remove_lore";
 
         ItemStack output = new ItemStack(Items.COCOA_BEANS);
@@ -218,23 +221,23 @@ public class SpecialRecipeDisplays {
         ItemLoreRecipe.addLore(c, input);
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(soap));
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "remove_lore_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("remove_lore_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createSusRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createSusRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
 
         String group = "sus_crafting";
         List<Block> blocks = new ArrayList<>();
-        if(CommonConfigs.Tweaks.SUS_RECIPES.get()){
+        if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
             blocks.add(Blocks.SAND);
             blocks.add(Blocks.GRAVEL);
         }
-        if(CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()){
+        if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
             blocks.add(ModRegistry.GRAVEL_BRICKS.get());
         }
 
@@ -242,15 +245,15 @@ public class SpecialRecipeDisplays {
             ItemStack output = new ItemStack(Items.SLIME_BALL);
             ItemStack input = new ItemStack(block);
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(Items.NAME_TAG));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, Utils.getID(output.getItem()).getPath());
-            ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
-            recipes.add(recipe);
+            ResourceLocation id = Supplementaries.res(Utils.getID(output.getItem()).getPath());
+            ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+            recipes.add(new RecipeHolder<>(id, recipe));
         }
         return recipes;
     }
 
-    private static List<CraftingRecipe> createBubbleBlowerChargeRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createBubbleBlowerChargeRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "bubble_blower";
 
         ItemStack ropeArrow = new ItemStack(ModRegistry.BUBBLE_BLOWER.get());
@@ -260,40 +263,41 @@ public class SpecialRecipeDisplays {
         Ingredient base = Ingredient.of(empty);
         Ingredient soap = Ingredient.of(ModRegistry.SOAP.get());
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, soap);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "bubble_blower_charge_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, ropeArrow, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("bubble_blower_charge_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, ropeArrow, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
 
 
-    private static List<CraftingRecipe> createTippedBambooSpikesRecipes() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createTippedBambooSpikesRecipes() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "tipped_spikes";
 
-        for (Potion potionType : BuiltInRegistries.POTION) {
-            if (!potionType.getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(potionType)) {
+        for (var potionType : BuiltInRegistries.POTION.holders().toList()) {
+            if (!potionType.value().getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(potionType)) {
                 recipes.add(makeSpikeRecipe(potionType, group));
             }
         }
         return recipes;
     }
 
-    private static ShapelessRecipe makeSpikeRecipe(Potion potionType, String group) {
-        ItemStack spikes = new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
-        ItemStack lingeringPotion = PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), potionType);
+    private static RecipeHolder<ShapelessRecipe> makeSpikeRecipe(Holder<Potion> potionType, String group) {
+        ItemStack spikes = new ItemStack(ModRegistry.BAMBOO_SPIKES.get());
+        ItemStack lingeringPotion = PotionContents.createItemStack(Items.LINGERING_POTION, potionType);
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
         ItemStack output = BambooSpikesTippedItem.makeSpikeItem(potionType);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, potionType.getName("tipped_spikes_display."));
+        ResourceLocation id = Supplementaries.res(Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
 
-        return new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, output, inputs);
+        var recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+        return new RecipeHolder<>(id, recipe);
     }
 
-    private static List<CraftingRecipe> createFlagFromBanner() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createFlagFromBanner() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "flag_from_banner";
 
         for (DyeColor color : DyeColor.values()) {
@@ -316,17 +320,17 @@ public class SpecialRecipeDisplays {
 
             Ingredient emptyFlag = Ingredient.of(new ItemStack(ModRegistry.FLAGS.get(color).get()));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "flag_from_banner_display_" + color.getName());
+            ResourceLocation id = Supplementaries.res("flag_from_banner_display_" + color.getName());
 
-            ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, fullFlag, inputs);
-            recipes.add(recipe);
+            ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, fullFlag, inputs);
+            recipes.add(new RecipeHolder<>(id, recipe));
         }
 
         return recipes;
     }
 
-    private static List<CraftingRecipe> createBlackboardDuplicate() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createBlackboardDuplicate() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.blackboard_duplicate";
 
         ItemStack blackboard = getTroll();
@@ -334,9 +338,9 @@ public class SpecialRecipeDisplays {
         Ingredient emptyBoard = Ingredient.of(new ItemStack(ModRegistry.BLACKBOARD_ITEM.get()));
         Ingredient fullBoard = Ingredient.of(blackboard);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyBoard, fullBoard);
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "blackboard_duplicate_display");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.BUILDING, blackboard, inputs);
-        recipes.add(recipe);
+        ResourceLocation id = Supplementaries.res("blackboard_duplicate_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, blackboard, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
 
         return recipes;
     }
@@ -394,13 +398,13 @@ public class SpecialRecipeDisplays {
     }
 
 
-    public static void registerCraftingRecipes(Consumer<List<CraftingRecipe>> registry) {
+    public static void registerCraftingRecipes(Consumer<List<RecipeHolder<? extends CraftingRecipe>>> registry) {
         for (var c : RecipeBookCategories.AGGREGATE_CATEGORIES.get(RecipeBookCategories.CRAFTING_SEARCH)) {
             registerRecipes(c, registry);
         }
     }
 
-    public static void registerRecipes(RecipeBookCategories category, Consumer<List<CraftingRecipe>> registry) {
+    public static void registerRecipes(RecipeBookCategories category, Consumer<List<RecipeHolder<? extends CraftingRecipe>>> registry) {
 
         if (category == RecipeBookCategories.CRAFTING_MISC) {
             if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {

@@ -30,7 +30,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     public void tick() {
         if (!this.player.isRemoved()) {
             if (player.onClimbable()) {
-                BlockState b = player.getFeetBlockState();
+                BlockState b = player.getBlockStateOn();
                 if (b.is(ModTags.FAST_FALL_ROPES)) {
 
                     this.x = this.player.getX();

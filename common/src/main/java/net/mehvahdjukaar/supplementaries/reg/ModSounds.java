@@ -4,9 +4,9 @@ import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.JukeboxSong;
 
 import java.util.function.Supplier;
 
@@ -20,8 +20,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CLOCK_TICK_1 = regSound("block.clock.tick_1");
     public static final Supplier<SoundEvent> CLOCK_TICK_2 = regSound("block.clock.tick_2");
     public static final Supplier<SoundEvent> BOMB_EXPLOSION = regSound("item.bomb");
-    public static final Supplier<SoundEvent> PANCAKE_MUSIC = regSound("music.pancake");
-    public static final Supplier<SoundEvent> AVAST_MUSIC = regSound("music.avast");
+    public static final RegSupplier<SoundEvent> PANCAKE_MUSIC = regSound("music.pancake");
+    public static final RegSupplier<SoundEvent> AVAST_MUSIC = regSound("music.avast");
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final Supplier<SoundEvent> CRANK = regSound("block.crank");
 
@@ -101,6 +101,12 @@ public class ModSounds {
 
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
 
+
+    public static final RegSupplier<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = registerJukeboxSong("pancake",
+            PANCAKE_MUSIC, 3 * 60 + 48, 15);
+    public static final RegSupplier<JukeboxSong> AVAST_MUSIC_JUKEBOX = registerJukeboxSong("avast",
+            AVAST_MUSIC, 3 * 60, 7);
+
     public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,
             SLIDY_BLOCK_BREAK,
             SLIDY_BLOCK_STEP,
@@ -152,7 +158,10 @@ public class ModSounds {
 
 
     public static RegSupplier<SoundEvent> regSound(String name) {
-        return RegHelper.register(Supplementaries.res(name), () -> SoundEvent.createVariableRangeEvent(Supplementaries.res(name)), Registries.SOUND_EVENT);
+        return RegHelper.registerSound(Supplementaries.res(name));
     }
 
+    public static RegSupplier<JukeboxSong> registerJukeboxSong(String name, RegSupplier<SoundEvent> sound, float durationInSeconds, int power) {
+        return RegHelper.registerJukeboxSong(Supplementaries.res(name), sound::getHolder, durationInSeconds, power);
+    }
 }

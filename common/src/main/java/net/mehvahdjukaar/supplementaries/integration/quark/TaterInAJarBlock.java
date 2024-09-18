@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -76,24 +77,20 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof Tile tile) {
-            tile.interact(player, hand, player.getItemInHand(hand), hit.getDirection());
-            if (world instanceof ServerLevel serverLevel) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof Tile tile) {
+            tile.interact(player, hand, player.getItemInHand(hand), hitResult.getDirection());
+            if (level instanceof ServerLevel serverLevel) {
                 AABB box = SHAPE.bounds();
                 serverLevel.sendParticles(ParticleTypes.ANGRY_VILLAGER, pos.getX() + box.minX + Math.random() * (box.maxX - box.minX), (double) pos.getY() + box.maxY - 1, (double) pos.getZ() + box.minZ + Math.random() * (box.maxZ - box.minZ), 1, 0.0D, 0.0D, 0.0D, 0.0D);
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         ItemStack stack = new ItemStack(this);
-        if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof Tile te) {
-            if (te.hasCustomName())
-                stack.setHoverName(te.getCustomName());
-        }
         return Collections.singletonList(stack);
     }
 

@@ -41,13 +41,12 @@ public class EndLampBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (!worldIn.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
             int inc = player.isShiftKeyDown() ? -1 : 1;
-            worldIn.setBlockAndUpdate(pos, state.setValue(RUNE,
+            level.setBlockAndUpdate(pos, state.setValue(RUNE,
                     Rune.values()[(state.getValue(RUNE).ordinal() + inc + Rune.values().length) % Rune.values().length]));
-            worldIn.playSound(null, pos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.25F, 1.7f);
+            level.playSound(null, pos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.25F, 1.7f);
 
             return InteractionResult.CONSUME;
         }
