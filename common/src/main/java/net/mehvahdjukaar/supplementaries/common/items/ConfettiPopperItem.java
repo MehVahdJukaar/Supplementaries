@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -11,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ConfettiPopperItem extends Item {
 
@@ -66,5 +70,9 @@ public class ConfettiPopperItem extends Item {
         return super.interactLivingEntity(stack, player, entity, usedHand);
     }
 
+    @PlatformOnly(PlatformOnly.FORGE)
+    public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
+        return EquipmentSlot.HEAD;
+    }
 
 }

@@ -31,15 +31,6 @@ public class SafeItem extends BlockItem {
     }
 
     @Override
-    public void onDestroyed(ItemEntity pItemEntity) {
-        CompoundTag compoundtag = pItemEntity.getItem().getTag();
-        if (compoundtag != null) {
-            ListTag listtag = compoundtag.getCompound("BlockEntityTag").getList("Items", 10);
-            ItemUtils.onContainerDestroyed(pItemEntity, listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of));
-        }
-    }
-
-    @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
         return ItemsUtil.tryInteractingWithContainerItem(stack, incoming, slot, action, player, true);
     }

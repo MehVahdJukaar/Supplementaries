@@ -100,8 +100,10 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
             if (player instanceof ServerPlayer sp) {
-                PlatHelper.openCustomMenu(sp, tile, pos);
-                PiglinAi.angerNearbyPiglins(player, true);
+                if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null))) {
+                    PlatHelper.openCustomMenu(sp, tile, pos);
+                    PiglinAi.angerNearbyPiglins(player, true);
+                }
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
         }

@@ -24,6 +24,7 @@ Bug Fixes:
 - wind vane uses an entity model now with proper shading
 - crystal displays can be chained
 - book pile generation fix
+- destroying a safe item will no longer drop its content
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
