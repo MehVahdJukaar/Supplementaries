@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -99,8 +100,10 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                                  BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
             if (player instanceof ServerPlayer sp) {
-                if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
+                if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null))) {
                     PlatHelper.openCustomMenu(sp, tile, pos);
+                    PiglinAi.angerNearbyPiglins(player, true);
+                }
             }
             return InteractionResult.sidedSuccess(worldIn.isClientSide());
         }

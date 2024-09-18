@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -26,7 +25,7 @@ public record ServerBoundRequestOpenCannonGuiMessage(BlockPos pos) implements Me
         Player player = context.getSender();
         Level level = player.level();
         if (level.getBlockEntity(this.pos) instanceof CannonBlockTile tile) {
-            PlatHelper.openCustomMenu((ServerPlayer) player, tile, this.pos);
+            tile.tryOpeningEditGui((ServerPlayer) player, this.pos, player.getMainHandItem());
         }
 
     }

@@ -141,7 +141,7 @@ public class AwningBlock extends WaterBlock implements IColored {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         boolean bottom = state.getValue(BOTTOM);
-        if (CommonConfigs.Building.AWNING_FALL_THROUGH.get() && context instanceof EntityCollisionContext) {
+        if (CommonConfigs.Building.AWNING_FALL_THROUGH.get() && context instanceof EntityCollisionContext ec && ec.getEntity() != null) {
             if (context.isDescending() || !context.isAbove(bottom ? TOP_COLLISION : BOTTOM_COLLISION,
                     bottom ? pos.below() : pos, false)) {
                return Shapes.empty();

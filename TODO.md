@@ -4,7 +4,9 @@
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs
-
+- hat for players
+- anger nearby piglins
+- lumisene sets stuff on fire
 
 # Supplementaries
 
