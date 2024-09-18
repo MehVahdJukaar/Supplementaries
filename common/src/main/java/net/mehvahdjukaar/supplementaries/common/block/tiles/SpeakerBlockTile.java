@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
@@ -14,8 +15,10 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -98,36 +101,36 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        if (compound.contains("CustomName", 8)) {
-            this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("CustomName", 8)) {
+            this.customName = Component.Serializer.fromJson(tag.getString("CustomName"), registries);
         }
 
-        this.message = Component.Serializer.fromJson(compound.getString("Message"));
-        if(compound.contains("FilteredMessage")){
-            this.filteredMessage = Component.Serializer.fromJson(compound.getString("FilteredMessage"));
+        this.message = Component.Serializer.fromJson(tag.getString("Message"), registries);
+        if(tag.contains("FilteredMessage")){
+            this.filteredMessage = Component.Serializer.fromJson(tag.getString("FilteredMessage"), registries);
         }else filteredMessage = message;
-        var m = Mode.values()[compound.getInt("Mode")];
+        var m = Mode.values()[tag.getInt("Mode")];
         if (m == Mode.NARRATOR && !CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) m = Mode.CHAT;
         this.mode = m;
-        this.volume = compound.getDouble("Volume");
-        this.loadOwner(compound);
+        this.volume = tag.getDouble("Volume");
+        this.loadOwner(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (this.customName != null) {
-            compound.putString("CustomName", Component.Serializer.toJson(this.customName));
+            tag.putString("CustomName", Component.Serializer.toJson(this.customName, registries));
         }
-        compound.putString("Message", Component.Serializer.toJson(this.message));
+        tag.putString("Message", Component.Serializer.toJson(this.message, registries));
         if(this.message != this.filteredMessage){
-            compound.putString("FilteredMessage", Component.Serializer.toJson( this.filteredMessage));
+            tag.putString("FilteredMessage", Component.Serializer.toJson( this.filteredMessage, registries));
         }
-        compound.putInt("Mode", this.mode.ordinal());
-        compound.putDouble("Volume", this.volume);
-        this.saveOwner(compound);
+        tag.putInt("Mode", this.mode.ordinal());
+        tag.putDouble("Volume", this.volume);
+        this.saveOwner(tag);
     }
     public void sendMessage() {
         BlockState state = this.getBlockState();
@@ -172,8 +175,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
@@ -206,11 +209,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
     @Override
     public UUID getPlayerWhoMayEdit() {
         return playerWhoMayEdit;
-    }
-
-    @Override
-    public void openScreen(Level level, BlockPos pos, Player player) {
-        SpeakerBlockScreen.open(this);
     }
 
     @Override

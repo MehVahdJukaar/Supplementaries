@@ -4,10 +4,10 @@ import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +19,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,10 +27,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -130,7 +127,7 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -165,31 +162,11 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
 
     //for creative drop
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            if (!worldIn.isClientSide && player.isCreative()) {
-                ItemStack itemstack = new ItemStack(this);
-                saveTileToItem(tile, itemstack);
-
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
-                itementity.setDefaultPickUpDelay();
-                worldIn.addFreshEntity(itementity);
-            } else {
-                tile.unpackLootTable(player);
-            }
+            BlockUtil.spawnCreativeContainerLoot(worldIn, pos, player, tile);
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
-    }
-
-    private static void saveTileToItem(SackBlockTile tile, ItemStack itemstack) {
-        CompoundTag compoundTag = tile.saveWithoutMetadata();
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (tile.hasCustomName()) {
-            itemstack.setHoverName(tile.getCustomName());
-        }
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
@@ -205,21 +182,11 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            saveTileToItem(tile, itemstack);
+            BlockUtil.saveTileToItem(tile);
         }
-        return itemstack;
-    }
-
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-                tile.setCustomName(stack.getHoverName());
-            }
-        }
+        return super.getCloneItemStack(level, pos, state);
     }
 
     @Override

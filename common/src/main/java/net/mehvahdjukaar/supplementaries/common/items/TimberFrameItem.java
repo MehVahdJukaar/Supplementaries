@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.item.FuelBlockItem;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -11,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,18 +19,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TimberFrameItem extends FuelBlockItem {
-
-    public TimberFrameItem(Block block, Properties properties, int burnTicks) {
-        super(block, properties, () -> burnTicks);
-    }
+public class TimberFrameItem extends BlockItem {
 
     public TimberFrameItem(Block block, Properties properties) {
-        this(block, properties, 0);
+        super(block, properties);
     }
 
     @Override
@@ -62,11 +57,10 @@ public class TimberFrameItem extends FuelBlockItem {
         return super.useOn(context);
     }
 
-
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add((Component.translatable("message.supplementaries.timber_frame")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add((Component.translatable("message.supplementaries.timber_frame")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 }

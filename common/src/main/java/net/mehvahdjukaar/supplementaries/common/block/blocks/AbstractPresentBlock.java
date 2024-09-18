@@ -5,11 +5,11 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,8 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -74,40 +74,33 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
             return tile.interact(level, pos, state, player);
         }
         return InteractionResult.PASS;
     }
 
+
     //overrides creative drop
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-            if (!worldIn.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                ItemStack itemstack = tile.getPresentItem(this);
-
-                ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
-                itementity.setDefaultPickUpDelay();
-                worldIn.addFreshEntity(itementity);
-            } else {
-                tile.unpackLootTable(player);
-            }
+            BlockUtil.spawnCreativeContainerLoot(player, tile);
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     //normal drop
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof AbstractPresentBlockTile tile) {
-            ItemStack itemstack = tile.getPresentItem(this);
+            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
 
             return Collections.singletonList(itemstack);
         }
@@ -115,21 +108,12 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-            return tile.getPresentItem(this);
+            return BlockUtil.saveTileToItem(tile);
         }
         return itemstack;
-    }
-
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            if (worldIn.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-                tile.setCustomName(stack.getHoverName());
-            }
-        }
     }
 
     @Override

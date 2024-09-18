@@ -25,8 +25,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
-import static net.minecraft.world.item.MapItem.makeKey;
-
 public class SliceMapItem extends EmptyMapItem {
 
     public SliceMapItem(Properties properties) {
@@ -137,7 +135,7 @@ public class SliceMapItem extends EmptyMapItem {
         }
 
         @Override
-        public void loadUpdateTag(CompoundTag tag) {
+        public void loadFromUpdateTag(CompoundTag tag) {
             if (tag.contains(DEPTH_LOCK_KEY)) {
                 this.height = tag.getInt(DEPTH_LOCK_KEY);
                 if (this.height == Integer.MAX_VALUE) this.height = null;

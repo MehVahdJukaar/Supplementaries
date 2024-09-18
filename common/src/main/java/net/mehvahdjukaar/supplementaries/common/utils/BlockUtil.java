@@ -21,12 +21,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,6 +59,26 @@ public class BlockUtil {
                 tile.setOwner(placer.getUUID());
             }
         }
+    }
+
+    public static void spawnCreativeContainerLoot(Player player, RandomizableContainerBlockEntity tile) {
+        Level level = player.level();
+        if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
+            BlockPos pos = tile.getBlockPos();
+            ItemStack itemstack = saveTileToItem(tile);
+
+            ItemEntity itementity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
+            itementity.setDefaultPickUpDelay();
+            level.addFreshEntity(itementity);
+        } else {
+            tile.unpackLootTable(player);
+        }
+    }
+
+    public static ItemStack saveTileToItem(BlockEntity tile) {
+        ItemStack stack = new ItemStack(tile.getBlockState().getBlock().asItem());
+        stack.applyComponents(tile.collectComponents());
+        return stack;
     }
 
     //rotation stuff

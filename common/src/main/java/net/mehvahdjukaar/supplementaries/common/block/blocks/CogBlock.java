@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -12,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import org.jetbrains.annotations.Nullable;
 
 public class CogBlock extends Block {
 
@@ -28,21 +28,16 @@ public class CogBlock extends Block {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.updatePower(state, worldIn, pos);
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context)
+                .setValue(POWER, context.getLevel().getBestNeighborSignal(context.getClickedPos()));
     }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.updatePower(state, world, pos);
-    }
-
-    public void updatePower(BlockState state, Level world, BlockPos pos) {
-        if (!world.isClientSide) {
-            int pow = world.getBestNeighborSignal(pos);
-            world.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 1 | 2 | 4);
-        }
+        int pow = world.getBestNeighborSignal(pos);
+        world.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 1 | 2 | 4);
     }
 
     @Override

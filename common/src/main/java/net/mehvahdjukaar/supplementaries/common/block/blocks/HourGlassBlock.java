@@ -14,12 +14,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -81,23 +79,22 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
 
-            if (player.isShiftKeyDown() && player.getItemInHand(handIn).isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
+            if (player.isShiftKeyDown() && stack.isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
                 level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1, 1);
                 if (!level.isClientSide) {
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                     level.setBlock(pos, state.setValue(FACING, state.getValue(FACING).getOpposite()), 3);
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
 
-            return tile.interact(player, handIn);
+            return tile.interactWithPlayerItem(player, hand, stack);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -145,10 +142,10 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add((Component.translatable("message.supplementaries.hourglass")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add((Component.translatable("message.supplementaries.hourglass")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Override

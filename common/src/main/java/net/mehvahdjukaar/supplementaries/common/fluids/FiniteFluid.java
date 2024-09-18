@@ -196,7 +196,7 @@ public abstract class FiniteFluid extends Fluid {
         if (!fluidState.isEmpty() && !fluidState.is(this)) return false;
         Block block = state.getBlock();
         if (block instanceof LiquidBlockContainer lc) {
-            return lc.canPlaceLiquid(level, pos, state, this);
+            return lc.canPlaceLiquid(null, level, pos, state, this);
         } else if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && !state.is(Blocks.LADDER) &&
                 !state.is(Blocks.SUGAR_CANE) && !state.is(Blocks.BUBBLE_COLUMN)) {
             if (!state.is(Blocks.NETHER_PORTAL) && !state.is(Blocks.END_PORTAL) && !state.is(Blocks.END_GATEWAY) && !state.is(Blocks.STRUCTURE_VOID)) {

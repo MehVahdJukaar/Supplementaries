@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static net.minecraft.util.StringUtil.isAllowedChatCharacter;
 
 //mainly BookEditScreen code
 public class MultiLineEditBoxWidget extends AbstractWidget {
@@ -102,7 +105,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     @Override
     public boolean charTyped(char c, int key) {
         if (this.canConsumeInput()) {
-            if (SharedConstants.isAllowedChatCharacter(c)) {
+            if (StringUtil.isAllowedChatCharacter(c)) {
                 this.pageEdit.insertText(Character.toString(c));
                 this.clearDisplayCache();
                 return true;
@@ -190,19 +193,20 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
 
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        boolean old = super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         if (this.canConsumeInput() && this.visible) {
-            if (amount >= 1) {
+            if (scrollY >= 1) {
                 this.keyUp();
                 this.clearDisplayCache();
                 return true;
-            } else if (amount <= -1) {
+            } else if (scrollY <= -1) {
                 this.keyDown();
                 this.clearDisplayCache();
                 return true;
             }
         }
-        return false;
+        return old;
     }
 
     private void callOutOfBounds(boolean up) {
@@ -451,7 +455,6 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
     }
 
     protected static class DisplayCache {

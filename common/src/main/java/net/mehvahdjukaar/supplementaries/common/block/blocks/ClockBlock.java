@@ -117,7 +117,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
             return oldState.setValue(TWO_FACED, true);
         } else {
             return super.getStateForPlacement(context)
-                    .setValue(HOUR, ClockBlockTile.calculateHour( (int) (level.getDayTime() % 24000)))
+                    .setValue(HOUR, ClockBlockTile.calculateHour((int) (level.getDayTime() % 24000)))
                     .setValue(FACING, context.getHorizontalDirection().getOpposite());
         }
     }
@@ -182,7 +182,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        if(level.isClientSide && level.getBlockEntity(pos) instanceof ClockBlockTile tile){
+        if (level.isClientSide && level.getBlockEntity(pos) instanceof ClockBlockTile tile) {
             tile.updateInitialTime(level, state, pos);
         }
     }

@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -103,28 +102,20 @@ public class BellowsBlock extends Block implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
-    }
-
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.updatePower(state, world, pos);
-    }
-
-    public void updatePower(BlockState state, Level world, BlockPos pos) {
-        int signal = world.getBestNeighborSignal(pos);
-        int currentPower = state.getValue(POWER);
-        // on-off
-        if (signal != currentPower) {
-            world.setBlock(pos, state.setValue(POWER, signal), 2 | 4);
-            //returns if state changed
-        }
+        return this.defaultBlockState()
+                .setValue(POWER, context.getLevel().getBestNeighborSignal(context.getClickedPos()))
+                .setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.updatePower(state, world, pos);
+        int signal = world.getBestNeighborSignal(pos);
+        int currentPower = state.getValue(POWER);
+        // on-off
+        if (signal != currentPower) {
+            world.setBlock(pos, state.setValue(POWER, signal), 2 | 4);
+        }
     }
 
     @Nullable
@@ -151,13 +142,13 @@ public class BellowsBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (state.getValue(POWER) == 0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
             tile.setManualPress();
-            level.playSound(null, pos,
+            level.playSound(player, pos,
                     ModSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 0.1f, 1.5f);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 }

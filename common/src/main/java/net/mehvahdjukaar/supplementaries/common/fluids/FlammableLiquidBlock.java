@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.SoulFiredCompat;
@@ -18,11 +17,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
@@ -121,8 +121,8 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        return this.interactWithPlayer(state, worldIn, pos, player, handIn);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return this.interactWithPlayerItem(state, level, pos, player, hand, stack);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             // normal fire damage
             entity.hurt(level.damageSources().inFire(), 1);
         } else if (entity.isOnFire()) {
-            this.lightUp(entity, state, pos, level, FireSourceType.FLAMING_ARROW);
+            this.lightUp(entity, state, pos, level, FireSoundType.FLAMING_ARROW);
         }
         super.entityInside(state, level, pos, entity);
     }
@@ -229,12 +229,12 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (!level.isClientSide() && isLitUp(state, level, pos)) {
             //extinguish sound
             level.levelEvent(null, 1009, pos, 0);
         }
-        super.playerWillDestroy(level, pos, state, player);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
 

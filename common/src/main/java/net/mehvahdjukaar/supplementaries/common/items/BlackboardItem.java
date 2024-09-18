@@ -26,8 +26,8 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         CompoundTag tag = pStack.getTagElement("BlockEntityTag");
         if (tag != null && tag.contains("Waxed")) {
             pTooltip.add((Component.translatable("message.supplementaries.blackboard")).withStyle(ChatFormatting.GRAY));

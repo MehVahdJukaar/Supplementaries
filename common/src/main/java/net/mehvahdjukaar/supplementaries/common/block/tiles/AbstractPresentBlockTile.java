@@ -60,19 +60,5 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public ItemStack getPresentItem(ItemLike block) {
-        CompoundTag compoundTag = new CompoundTag();
-        this.saveAdditional(compoundTag);
-        ItemStack itemstack = new ItemStack(block);
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (this.hasCustomName()) {
-            itemstack.setHoverName(this.getCustomName());
-        }
-        return itemstack;
-    }
-
 }
 

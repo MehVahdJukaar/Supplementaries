@@ -2,10 +2,14 @@
 - fix and re assing all isPathfindables
 - recipes codecs with customizaton
 - burn time data map
+- check if sacks safes and lunch boxes work with creative drop
+- check if the above keep their creative names
+- bellows block place power
 
 
 # Soon
 
+- guarded by piglins block tag
 - globe sheared particle event for servers
 - hat for players
 - anger nearby piglins

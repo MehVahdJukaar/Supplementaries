@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -130,8 +131,8 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.recipient = "";
         this.sender = "";
         this.description = "";
@@ -141,8 +142,8 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (!this.recipient.isEmpty()) tag.putString("Recipient", this.recipient);
         if (!this.sender.isEmpty()) tag.putString("Sender", this.sender);
         if (!this.description.isEmpty()) tag.putString("Description", this.description);

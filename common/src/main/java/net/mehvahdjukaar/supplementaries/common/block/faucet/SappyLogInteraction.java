@@ -28,7 +28,7 @@ class SappyLogInteraction implements FaucetSource.BlState {
 
     @Override
     public void drain(Level level, BlockPos pos, Direction dir, BlockState state, int amount) {
-        Optional<Block> log = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(Utils.getID(state.getBlock())
+        Optional<Block> log = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.tryParse(Utils.getID(state.getBlock())
                 .toString().replace("sappy", "stripped")));
         log.ifPresent(block -> level.setBlock(pos, block.withPropertiesOf(state), 3));
     }

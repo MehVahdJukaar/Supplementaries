@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
@@ -9,27 +10,25 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -58,6 +57,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final ResourceLocation CONTENTS = new ResourceLocation("contents");
+    private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
 
     public SafeBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0));
@@ -114,7 +114,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -125,7 +125,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
@@ -141,9 +141,11 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (stack.has(DataComponents.CONTAINER_LOOT)) {
+            tooltipComponents.add(UNKNOWN_CONTENTS);
+        }
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag != null) {
             if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
@@ -169,33 +171,20 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         tooltip.add((Component.translatable("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
     }
 
-    private static void saveTileToItem(SafeBlockTile tile, ItemStack itemstack) {
-        CompoundTag compoundTag = tile.saveWithoutMetadata();
-        if (!compoundTag.isEmpty()) {
-            itemstack.addTagElement("BlockEntityTag", compoundTag);
-        }
-
-        if (tile.hasCustomName()) {
-            itemstack.setHoverName(tile.getCustomName());
-        }
-    }
-
     //overrides creative drop
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
-                ItemStack itemstack = new ItemStack(this);
-                saveTileToItem(tile, itemstack);
-
-                ItemEntity itementity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
-                itementity.setDefaultPickUpDelay();
-                level.addFreshEntity(itementity);
-            } else {
-                tile.unpackLootTable(player);
+            spawnAsItemWithContent(level, pos, player, tile);
+            //forge has a better override for this (no particls)
+            if (PlatHelper.getPlatform().isFabric()) {
+                if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get()) {
+                    if (!tile.canPlayerOpen(player, true)) return state;
+                }
             }
         }
-        super.playerWillDestroy(level, pos, state, player);
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
