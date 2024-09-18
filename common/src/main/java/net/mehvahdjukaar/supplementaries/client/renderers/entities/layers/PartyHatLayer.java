@@ -125,6 +125,7 @@ public abstract class PartyHatLayer<E extends LivingEntity, M extends EntityMode
         @Override
         protected void renderExtra(PoseStack poseStack, MultiBufferSource buffer, int packedLight, C entity) {
             if (this.rendersItem) {
+                parentHead.translateAndRotate(poseStack);
                 CustomHeadLayer.translateToHead(poseStack, false);
                 itemRenderer.renderItem(entity, stack, ItemDisplayContext.HEAD, false, poseStack, buffer, packedLight);
             }

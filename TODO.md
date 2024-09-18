@@ -1,5 +1,6 @@
 # Soon
 
+- clock block first tick setup
 - polytone bow model
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
