@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +82,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
             Rotation rot = originalRot;
             if (world.getBlockEntity(pos) instanceof PulleyBlockTile pulley) {
-                if (axis.getAxisDirection() == Direction.AxisDirection.NEGATIVE) rot = rot.getRotated(Rotation.CLOCKWISE_180);
+                if (axis.getAxisDirection() == Direction.AxisDirection.NEGATIVE)
+                    rot = rot.getRotated(Rotation.CLOCKWISE_180);
                 pulley.rotateDirectly(rot);
             }
             //try turning connected
@@ -95,14 +97,13 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
             if (player instanceof ServerPlayer sp) {
-                if (!(player.isShiftKeyDown() && this.windPulley(state, pos, worldIn, Rotation.COUNTERCLOCKWISE_90, null)))
-                    PlatHelper.openCustomMenu(sp, tile, pos);
+                PlatHelper.openCustomMenu(sp, tile, pos);
+                PiglinAi.angerNearbyPiglins(player, true);
             }
-            return InteractionResult.sidedSuccess(worldIn.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.PASS;
     }

@@ -1,10 +1,13 @@
 # 1.21
 - fix and re assing all isPathfindables
+- recipes codecs with customizaton
+- burn time data map
 
 
 # Soon
 
-- slimed sound for all hits not just slimed
+- hat for players
+- anger nearby piglins
 - polytone bow model
 - gravel bricks exploded particles
 - bomb bounce on slime blocks

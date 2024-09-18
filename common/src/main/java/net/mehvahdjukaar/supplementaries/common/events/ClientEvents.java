@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -140,7 +141,7 @@ public class ClientEvents {
                 newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
             }
             if (newShader != null && !newShader.equals(current)) {
-                renderer.loadEffect(new ResourceLocation(newShader));
+                renderer.loadEffect(ResourceLocation.tryParse(newShader));
                 currentlyAppliedMobShader = newShader;
             } else if (current != null && (!current.equals(currentlyAppliedMobShader) || newShader == null)) {
                 renderer.shutdownEffect();
@@ -182,10 +183,10 @@ public class ClientEvents {
     public static void onEntityLoad(Entity entity, Level clientLevel) {
         if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
             //ask server to send quiver data
-            ModNetwork.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
+            NetworkHelper.sendToServer(new SyncSkellyQuiverPacket(q));
         }
         if (entity instanceof IPartyCreeper && entity instanceof Creeper c) {
-            ModNetwork.CHANNEL.sendToServer(new SyncPartyCreeperPacket(c));
+            NetworkHelper.sendToServer(new SyncPartyCreeperPacket(c));
         }
     }
 

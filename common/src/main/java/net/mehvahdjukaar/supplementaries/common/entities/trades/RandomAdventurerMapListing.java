@@ -12,17 +12,20 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.jetbrains.annotations.NotNull;
 
-public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMax, ItemStack priceSecondary,
+import java.util.Optional;
+
+public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMax, Optional<ItemCost> priceSecondary,
                                          int maxTrades, float priceMult, int level) implements ModItemListing {
 
     public static final MapCodec<RandomAdventurerMapListing> CODEC = RecordCodecBuilder.mapCodec((i) -> i.group(
             BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item", Items.EMERALD).forGetter(RandomAdventurerMapListing::emerald),
             Codec.INT.fieldOf("price_min").forGetter(RandomAdventurerMapListing::priceMin),
             Codec.INT.fieldOf("price_max").forGetter(RandomAdventurerMapListing::priceMax),
-            ItemStack.CODEC.optionalFieldOf("price_secondary", ItemStack.EMPTY).forGetter(RandomAdventurerMapListing::priceSecondary),
+            ItemCost.CODEC.optionalFieldOf("price_secondary").forGetter(RandomAdventurerMapListing::priceSecondary),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("max_trades", 16).forGetter(RandomAdventurerMapListing::maxTrades),
             ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("price_multiplier", 0.05f).forGetter(RandomAdventurerMapListing::priceMult),
             Codec.intRange(1, 5).optionalFieldOf("level", 1).forGetter(RandomAdventurerMapListing::level)
@@ -40,7 +43,7 @@ public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMa
             int x = 6;
             int xp = (int) ((x * 12) / (float) maxTrades);
 
-            return new MerchantOffer(new ItemStack(emerald, emeraldCost), priceSecondary, result, maxTrades, xp, priceMult);
+            return new MerchantOffer(new ItemCost(emerald, emeraldCost), priceSecondary, result, maxTrades, xp, priceMult);
         }
         return null;
     }

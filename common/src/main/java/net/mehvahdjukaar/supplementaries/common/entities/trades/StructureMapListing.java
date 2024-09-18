@@ -16,13 +16,15 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Function;
 
-public record StructureMapListing(Item cost, int minPrice, int maxPrice, ItemStack cost2, HolderSet<Structure> structure,
+public record StructureMapListing(Item cost, int minPrice, int maxPrice, Optional<ItemCost> cost2, HolderSet<Structure> structure,
                                   int maxTrades, float priceMult, int level,
                                   String mapName, int mapColor,
                                   ResourceLocation mapMarker) implements ModItemListing {
@@ -37,7 +39,7 @@ public record StructureMapListing(Item cost, int minPrice, int maxPrice, ItemSta
                     BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(StructureMapListing::cost),
                     ExtraCodecs.POSITIVE_INT.optionalFieldOf("price_min", 7).forGetter(StructureMapListing::minPrice),
                     ExtraCodecs.POSITIVE_INT.optionalFieldOf("price_max", 13).forGetter(StructureMapListing::maxPrice),
-                    ItemStack.CODEC.optionalFieldOf("price_secondary", ItemStack.EMPTY).forGetter(StructureMapListing::cost2),
+                    ItemCost.CODEC.optionalFieldOf("price_secondary").forGetter(StructureMapListing::cost2),
                     TARGET_CODEC.fieldOf("structure").forGetter(p -> p.structure),
                     ExtraCodecs.POSITIVE_INT.optionalFieldOf( "max_trades", 16).forGetter(StructureMapListing::maxTrades),
                     ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf( "price_multiplier", 0.05f).forGetter(StructureMapListing::priceMult),
@@ -58,7 +60,7 @@ public record StructureMapListing(Item cost, int minPrice, int maxPrice, ItemSta
         if (itemstack.isEmpty()) return null;
 
         int i = Math.max(1, random.nextInt(Math.max(1, maxPrice - minPrice)) + minPrice);
-        return new MerchantOffer(new ItemStack(cost, i), cost2, itemstack, maxTrades, ModItemListing.defaultXp(false, level), priceMult);
+        return new MerchantOffer(new ItemCost(cost, i), cost2, itemstack, maxTrades, ModItemListing.defaultXp(false, level), priceMult);
     }
 
 

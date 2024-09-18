@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -65,7 +65,7 @@ public class SoapItem extends Item {
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
 
         if (!pLevel.isClientSide) {
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(entity,
                     new ClientBoundParticlePacket(entity,
                             ClientBoundParticlePacket.Kind.BUBBLE_EAT, entity.getViewVector(1)));
         }
@@ -75,13 +75,13 @@ public class SoapItem extends Item {
     public static boolean hasBeenEatenBefore(Player player, Level level) {
         ResourceLocation res = Supplementaries.res("husbandry/soap");
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
-            Advancement a = serverLevel.getServer().getAdvancements().getAdvancement(res);
+            AdvancementHolder a = serverLevel.getServer().getAdvancements().get(res);
             if (a != null) {
                 return serverPlayer.getAdvancements().getOrStartProgress(a).isDone();
             }
         } else if (player instanceof LocalPlayer localPlayer) {
             var advancements = localPlayer.connection.getAdvancements();
-            Advancement a = advancements.getAdvancements().get(res);
+            AdvancementHolder a = advancements.get(res);
             return a != null;
         }
         return false;
@@ -130,7 +130,7 @@ public class SoapItem extends Item {
                 0.9f + level.random.nextFloat() * 0.3f);
         if (!level.isClientSide) {
             // spawn particles
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(entity,
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(entity,
                     new ClientBoundParticlePacket(entity,
                             ClientBoundParticlePacket.Kind.BUBBLE_CLEAN_ENTITY));
         }

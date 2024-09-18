@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -97,14 +96,12 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
-                                 InteractionHand hand, BlockHitResult hit) {
-        if (MovingSlidyBlock.maybeMove(state, level, pos, hit.getDirection().getOpposite())) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (MovingSlidyBlock.maybeMove(state, level, pos, hitResult.getDirection().getOpposite())) {
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }
-
 
 }

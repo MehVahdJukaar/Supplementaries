@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
@@ -51,7 +52,7 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
         int old = this.supp$getSlimedTicks();
         this.supp$slimedTicks = newSlimedTicks;
         if (sync && !this.level().isClientSide) {
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntityAndSelf(this,
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(this,
                     new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
             if (newSlimedTicks > old) {
                 //send packet

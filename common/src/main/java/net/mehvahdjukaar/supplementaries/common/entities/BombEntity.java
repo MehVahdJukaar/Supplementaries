@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.core.fake_player.FakeGenericPlayer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
@@ -27,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -109,8 +111,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return PlatHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return PlatHelper.getEntitySpawnPacket(this, serverEntity);
     }
 
     @Override
@@ -260,7 +262,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    public float getGravity() {
+    public double getDefaultGravity() {
         return ProjectileStats.BOMB_GRAVITY;
     }
 
@@ -311,7 +313,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             if (p.distanceToSqr(this) < 64 * 64) {
                 Message message = ClientBoundExplosionPacket.bomb(explosion, p);
 
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) p, message);
+                NetworkHelper.sendToClientPlayer((ServerPlayer) p, message);
             }
         }
 

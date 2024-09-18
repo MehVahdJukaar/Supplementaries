@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -34,7 +35,7 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
         this.supplementaries$festive = festive;
         if (!level().isClientSide) {
             //only needed when entity is alraedy spawned
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncPartyCreeperPacket(this));
         }
     }
@@ -49,7 +50,7 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
             ClientBoundParticlePacket packet = new ClientBoundParticlePacket(new Vec3(x, y + this.getBbHeight() / 2, z), ClientBoundParticlePacket.Kind.CONFETTI_EXPLOSION,
                     (int) radius, null);
 
-            ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this, packet);
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this, packet);
             return false;
         }
         return true;

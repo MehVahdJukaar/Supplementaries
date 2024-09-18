@@ -23,7 +23,7 @@ public class AwningModelLoader implements CustomModelLoader {
 
     @Override
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
-        if (!SuppClientPlatformStuff.hasFixedAO() ||true) {
+        if (!SuppClientPlatformStuff.hasFixedAO()) {
             // vanilla AO code is so shit, full of bugs
             json.addProperty("ambientocclusion", false);
         }

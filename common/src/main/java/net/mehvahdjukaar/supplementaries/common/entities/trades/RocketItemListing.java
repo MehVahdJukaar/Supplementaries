@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.ExtraCodecs;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.FireworkExplosion;
+import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.trading.MerchantOffer;
 
 import java.util.ArrayList;
@@ -45,18 +47,18 @@ public record RocketItemListing(ItemStack emeralds, ItemStack priceSecondary, in
     public MerchantOffer getOffer(Entity entity, RandomSource random) {
 
         ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, rockets);
-        CompoundTag tag = itemstack.getOrCreateTagElement("Fireworks");
-        ListTag listTag = new ListTag();
+        List<FireworkExplosion> explosions = new ArrayList<>();
 
         int stars = 0;
         List<FireworkExplosion.Shape> usedShapes = new ArrayList<>();
         do {
-            listTag.add(createRandomFireworkStar(random, usedShapes));
+            explosions.add(createRandomFireworkStar(random, usedShapes));
             stars++;
         } while (random.nextFloat() < 0.42f && stars < 7);
 
-        tag.putByte("Flight", (byte) (random.nextInt(3) + 1));
-        tag.put("Explosions", listTag);
+        int flightDuration = random.nextInt(3) + 1;
+        Fireworks fireworks = new Fireworks(flightDuration, explosions);
+        itemstack.set(DataComponents.FIREWORKS, fireworks);
 
         return new MerchantOffer(emeralds, priceSecondary, itemstack, maxTrades, ModItemListing.defaultXp(true, level),
                 priceMult);

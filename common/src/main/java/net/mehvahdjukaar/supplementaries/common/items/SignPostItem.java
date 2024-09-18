@@ -33,7 +33,7 @@ import net.minecraft.world.level.material.Fluids;
 public class SignPostItem extends WoodBasedItem {
 
     public SignPostItem(Properties properties, WoodType wood) {
-        super(properties, wood, 100);
+        super(properties, wood);
     }
 
     private AttachType getAttachType(BlockState state) {

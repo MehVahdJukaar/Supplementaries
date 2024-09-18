@@ -21,10 +21,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -204,13 +201,13 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
             Optional<Direction> closest = findClosestConnection(state, pos, hit.getLocation());
-            if (closest.isPresent()) return tile.interact(player, handIn, closest.get().get2DDataValue());
+            if (closest.isPresent()) return tile.interactWithPlayerItem(player, handIn, stack, closest.get().get2DDataValue());
         }
         return InteractionResult.PASS;
     }
 
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         Optional<Direction> closest = findClosestConnection(state, pos, target.getLocation());
         if (world.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
             ItemStack held = tile.getItem(closest.get().get2DDataValue());
@@ -220,7 +217,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return ModRegistry.ROPE_ITEM.get().getDefaultInstance();
     }
 

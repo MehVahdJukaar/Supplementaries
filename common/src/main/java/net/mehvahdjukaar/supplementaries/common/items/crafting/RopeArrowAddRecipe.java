@@ -3,30 +3,29 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class RopeArrowAddRecipe extends CustomRecipe {
-    public RopeArrowAddRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public RopeArrowAddRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingInput inv, Level worldIn) {
 
         ItemStack arrow = null;
         ItemStack rope = null;
         int missingRopes = 0;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get() && stack.getDamageValue() != 0) {
                 if (arrow != null) {
@@ -43,10 +42,10 @@ public class RopeArrowAddRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider access) {
         int ropes = 0;
         ItemStack arrow = null;
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (RopeArrowItem.isValidRope(stack)) {
                 ropes++;
@@ -62,8 +61,8 @@ public class RopeArrowAddRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+        return NonNullList.withSize(inv.size(), ItemStack.EMPTY);
     }
 
     @Override
