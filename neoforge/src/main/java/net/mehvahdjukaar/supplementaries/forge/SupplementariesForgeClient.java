@@ -134,7 +134,7 @@ public class SupplementariesForgeClient {
         }
 
         var creeperRenderer = event.getRenderer(EntityType.CREEPER);
-        creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels()));
+        creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
 
         //player skins
         for (String skinType : event.getSkins()) {
