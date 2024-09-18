@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.quark.CartographersQuillItem;
 import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
@@ -57,7 +56,6 @@ import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -71,12 +69,12 @@ public class QuarkCompat {
 
     static {
         TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
-                new Item.Properties().rarity(Rarity.UNCOMMON), 0);
+                new Item.Properties().rarity(Rarity.UNCOMMON));
 
         TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
 
-        CARTOGRAPHERS_QUILL = RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
+        CARTOGRAPHERS_QUILL = null;// RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
     }
 
     public static void init() {
@@ -238,11 +236,15 @@ public class QuarkCompat {
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> targets,
                                                 int radius, boolean skipKnown, int zoom,
                                                 ResourceLocation destinationType, @Nullable String name, int color) {
+        //TODO: add back
+        /*
         var item = CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom, null, name, color);
         if (destinationType != null) {
             item.getOrCreateTag().putString(CartographersQuillItem.TAG_DECORATION, destinationType.toString().toLowerCase(Locale.ROOT));
         }
         return item;
+        */
+        return null;
     }
 
     private static Boolean oldFenceValue = null;

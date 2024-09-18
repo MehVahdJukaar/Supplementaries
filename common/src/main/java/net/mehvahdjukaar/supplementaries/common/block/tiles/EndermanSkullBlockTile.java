@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -82,7 +83,7 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
     public static boolean isBeingWatched(Level level, BlockPos pos, BlockState state) {
         int range = 20;
         List<Player> players = level.getEntitiesOfClass(
-                Player.class, new AABB(pos.offset(-range, -range, -range), pos.offset(range, range, range))
+                Player.class, AABB.encapsulatingFullBlocks(pos.offset(-range, -range, -range), pos.offset(range, range, range))
         );
         EnderMan fakeEnderman = FAKE_ENDERMAN.computeIfAbsent(level, l -> new EnderMan(EntityType.ENDERMAN, l));
 
@@ -123,14 +124,14 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt("WatchTime", watchTime);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.watchTime = tag.getInt("WatchTime");
     }
 

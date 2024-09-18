@@ -1,16 +1,19 @@
 package net.mehvahdjukaar.supplementaries.client;
 
-import com.google.common.base.Suppliers;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +23,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static net.minecraft.client.renderer.texture.TextureAtlas.LOCATION_BLOCKS;
@@ -48,25 +50,23 @@ public class ModMaterials {
                     c -> new Material(TextureAtlas.LOCATION_BLOCKS,
                             Supplementaries.res("block/buntings/bunting_" + c.getName()))));
 
-    public static final Supplier<Map<BannerPattern, Material>> FLAG_MATERIALS = Suppliers.memoize(() -> {
-        var map = new IdentityHashMap<BannerPattern, Material>();
-        for (var v : ModTextures.FLAG_TEXTURES.entrySet()) {
-            map.put(v.getKey(), new Material(BANNER_SHEET, v.getValue()));
-        }
-        return map;
-    });
+    public static final Function<BannerPattern, Material> FLAG_MATERIALS = Util.memoize(pattern ->
+            new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/" + pattern.assetId()
+                    .toShortLanguageKey().replace(":", "/").replace(".", "/"))
+            ));
 
 
     @Nullable
-    public static Material getFlagMaterialForPatternItem(BannerPatternItem item) {
+    public static Material getFlagMaterialForPatternItem(Level level, BannerPatternItem item) {
         var p = ITEM_TO_PATTERNS.get(item);
         if (p == null) {
-            for (var j : BuiltInRegistries.BANNER_PATTERN.getTag(item.getBannerPattern()).get()) {
+            Registry<BannerPattern> registry = level.registryAccess().registryOrThrow(Registries.BANNER_PATTERN);
+            for (var j : registry.getTag(item.getBannerPattern()).get()) {
                 ITEM_TO_PATTERNS.put(item, j.value());
-                return FLAG_MATERIALS.get().get(j.value());
+                return FLAG_MATERIALS.apply(j.value());
             }
             return null;
-        } else return FLAG_MATERIALS.get().get(p);
+        } else return FLAG_MATERIALS.apply(p);
     }
 
     private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();

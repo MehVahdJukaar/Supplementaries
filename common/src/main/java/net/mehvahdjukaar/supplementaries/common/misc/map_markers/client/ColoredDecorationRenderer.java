@@ -12,7 +12,7 @@ public class ColoredDecorationRenderer extends MapDecorationRenderer<ColoredDeco
 
     @Override
     public int getColor(ColoredDecoration decoration) {
-        return decoration.getColorValue();
+        return decoration.getColor().getTextureDiffuseColor();
     }
 
 }

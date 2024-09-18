@@ -1,3 +1,6 @@
 {
-  "custom_type": "supplementaries:beacon"
+  "target_block": {
+    "block": "minecraft:beacon",
+    "predicate_type": "minecraft:block_match"
+  }
 }

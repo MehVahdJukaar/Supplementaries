@@ -1,3 +1,6 @@
 {
-  "custom_type": "supplementaries:chest"
+  "target_block": {
+    "tag": "minecraft:chests",
+    "predicate_type": "minecraft:tag_match"
+  }
 }

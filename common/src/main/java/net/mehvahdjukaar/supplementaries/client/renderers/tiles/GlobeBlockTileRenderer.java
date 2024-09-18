@@ -152,7 +152,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
             builder = buffer.getBuffer(RenderType.entityCutout(texture));
         }
 
-        model.render(poseStack, builder, light, overlay, 1, 1, 1, 1);
+        model.render(poseStack, builder, light, overlay, -1);
         poseStack.popPose();
     }
 

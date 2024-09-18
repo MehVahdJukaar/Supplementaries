@@ -144,8 +144,4 @@ public class ModTextures {
     public static final List<ResourceLocation> NOTICE_BOARD_SLOT_ICONS =
             List.of(MAP_ICON, BANNER_PATTERN_ICON, BOOK_ICON);
 
-
-    public static final Function<BannerPattern, ResourceLocation> FLAG_TEXTURES = Util.memoize(pattern ->
-            Supplementaries.res("entity/banner/flags/" + pattern.assetId()
-                    .toShortLanguageKey().replace(":", "/").replace(".", "/")));
 }

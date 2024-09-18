@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:oak_planks"
+    },
+    "2": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "supplementaries:sign_post_oak",
+    "count": 3
+  },
+  "conditions": [
+    {
+      "type": "forge:false"
+    }
+  ]
+}

@@ -21,11 +21,10 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -35,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -42,7 +42,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -310,9 +309,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             }
             //change direction with compass
             else if (item instanceof CompassItem) {
-                //itemModelProperties code
-                BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
-                        this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
+
+                BlockPos pointingPos = getCompassTrackedPos(level, itemstack);
 
                 if (pointingPos != null) {
                     if (sign.active) {
@@ -331,6 +329,17 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return this.interactWithTextHolder(ind ? 0 : 1, level, pos, state, player, handIn);
     }
 
+    private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {
+        LodestoneTracker tracker = itemstack.get(DataComponents.LODESTONE_TRACKER);
+        if (tracker != null && tracker.target().isPresent()) {
+            GlobalPos gp = tracker.target().get();
+            if (level.dimension() == gp.dimension()) {
+                return tracker.target().get().pos();
+            }
+        }
+        return level.dimensionType().natural() ? level.getLevelData().getSpawnPos() : null;
+    }
+
     public boolean getClickedSignIndex(Vec3 hit) {
         double y = hit.y;
         //negative y yay!
@@ -343,28 +352,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return getSign(getClickedSignIndex(hit));
     }
 
-    @Nullable
-    private BlockPos getLodestonePos(Level world, ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag != null) {
-            boolean flag = tag.contains("LodestonePos");
-            boolean flag1 = tag.contains("LodestoneDimension");
-            if (flag && flag1) {
-                Optional<ResourceKey<Level>> optional =
-                        Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, tag.get("LodestoneDimension")).result();
-                if (optional.isPresent() && world.dimension() == optional.get()) {
-                    return NbtUtils.readBlockPos(tag.getCompound("LodestonePos"));
-                }
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private BlockPos getWorldSpawnPos(Level world) {
-        return world.dimensionType().natural() ? new BlockPos(world.getLevelData().getXSpawn(),
-                world.getLevelData().getYSpawn(), world.getLevelData().getZSpawn()) : null;
-    }
 
     @Override
     public void setWaxed(boolean waxed) {

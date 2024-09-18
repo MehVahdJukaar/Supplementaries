@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.misc.globe;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncGlobeDataPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +27,7 @@ public class GlobeData extends SavedData {
     }
 
     //from tag
-    public GlobeData(CompoundTag tag) {
+    public GlobeData(CompoundTag tag, HolderLookup.Provider provider) {
         this.globePixels = new byte[TEXTURE_W][TEXTURE_H];
         for (int i = 0; i < TEXTURE_W; i++) {
             this.globePixels[i] = tag.getByteArray("colors_" + i);
@@ -34,13 +35,14 @@ public class GlobeData extends SavedData {
         this.seed = tag.getLong("seed");
     }
 
+
     @Override
-    public CompoundTag save(CompoundTag nbt) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         for (int i = 0; i < globePixels.length; i++) {
-            nbt.putByteArray("colors_" + i, this.globePixels[i]);
+            tag.putByteArray("colors_" + i, this.globePixels[i]);
         }
-        nbt.putLong("seed", this.seed);
-        return nbt;
+        tag.putLong("seed", this.seed);
+        return tag;
     }
 
     //call after you modify the data value
@@ -56,13 +58,14 @@ public class GlobeData extends SavedData {
     @Nullable
     public static GlobeData get(Level world) {
         if (world instanceof ServerLevel server) {
-            return world.getServer().overworld().getDataStorage().computeIfAbsent(GlobeData::new,
-                    () -> new GlobeData(server.getSeed()),
-                    DATA_NAME);
+            return world.getServer().overworld().getDataStorage().computeIfAbsent(
+                    new Factory<>(() -> new GlobeData(server.getSeed()),
+                            GlobeData::new, null), DATA_NAME);
         } else {
             return CLIENT_SIDE_INSTANCE;
         }
     }
+
 
     public static void set(ServerLevel level, GlobeData pData) {
         level.getServer().overworld().getDataStorage().set(DATA_NAME, pData);

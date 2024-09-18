@@ -1,18 +1,37 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
 
-import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
-import net.mehvahdjukaar.moonlight.api.map.markers.MapBlockMarker;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
-import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
-import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapMarker;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.markers.*;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.WaystonesCompat;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.AbstractBannerBlock;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WallBannerBlock;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class ModMapMarkers {
@@ -21,52 +40,117 @@ public class ModMapMarkers {
     //builtin code defined ones
 
     //with markers
-    public static final MLMapDecorationType<CustomMapDecoration, SignPostMarker> SIGN_POST_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("sign_post"), SignPostMarker::new, SignPostMarker::getFromWorld, CustomMapDecoration::new);
-    public static final MLMapDecorationType<ColoredDecoration, BedMarker> BED_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("bed"), BedMarker::new, BedMarker::getFromWorld, ColoredDecoration::new);
-    public static final MLMapDecorationType<ColoredDecoration, FlagMarker> FLAG_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("flag"), FlagMarker::new, FlagMarker::getFromWorld, ColoredDecoration::new);
-    public static final MLMapDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("nether_portal"), NetherPortalMarker::new, NetherPortalMarker::getFromWorld, CustomMapDecoration::new);
-    public static final MLMapDecorationType<CustomMapDecoration, BeaconMarker> BEACON_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("beacon"), BeaconMarker::new, BeaconMarker::getFromWorld, CustomMapDecoration::new);
-    public static final MLMapDecorationType<ColoredDecoration, CeilingBannerMarker> BANNER_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("banner"), CeilingBannerMarker::new, CeilingBannerMarker::getFromWorld, ColoredDecoration::new);
-    public static final MLMapDecorationType<CustomMapDecoration, ChestMarker> CHEST_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("chest"), ChestMarker::new, ChestMarker::getFromWorld, CustomMapDecoration::new);
-    public static final MLMapDecorationType<CustomMapDecoration, WaystoneMarker> WAYSTONE_DECORATION_TYPE = MLMapDecorationType.withWorldMarker(
-            Supplementaries.res("waystone"), WaystoneMarker::new, WaystoneMarker::getFromWorld, CustomMapDecoration::new);
+    public static final DynamicHolder<MLMapDecorationType<?, ?>> DEATH_MARKER =
+            DynamicHolder.of(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
 
-    public static final DataObjectReference<MapDecorationType<?,?>> DEATH_MARKER =
-    new DataObjectReference<>(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
-
-
+    public static final ResourceLocation SIGN_POST_FACTORY_ID = Supplementaries.res("sign_post");
+    public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
+    public static final ResourceLocation BANNER_FACTORY_ID = Supplementaries.res("banner");
+    public static final ResourceLocation BED_FACTORY_ID = Supplementaries.res("bed");
+    public static final ResourceLocation FLAG_FACTORY_ID = Supplementaries.res("flag");
 
     public static void init() {
-        MapDataRegistry.registerCustomType(SIGN_POST_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(BED_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(FLAG_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(NETHER_PORTAL_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(BEACON_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(BANNER_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(CHEST_DECORATION_TYPE);
-        MapDataRegistry.registerCustomType(WAYSTONE_DECORATION_TYPE);
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(SIGN_POST_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::signPost));
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAYSTONE_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::waystone));
+
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(BANNER_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldCustomMarker(
+                        ColoredMarker.DIRECT_CODEC, ColoredDecoration.DIRECT_CODEC,
+                        ModMapMarkers::banner));
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(BED_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldCustomMarker(
+                        ColoredMarker.DIRECT_CODEC, ColoredDecoration.DIRECT_CODEC,
+                        ModMapMarkers::bed));
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(FLAG_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldCustomMarker(
+                        ColoredMarker.DIRECT_CODEC, ColoredDecoration.DIRECT_CODEC,
+                        ModMapMarkers::flag));
 
         MapDataRegistry.addDynamicServerMarkersEvent(ModMapMarkers::getForPlayer);
     }
 
-    public static Set<MapBlockMarker<?>> getForPlayer(Player player, int mapId, MapItemSavedData data) {
+
+    public static Set<MLMapMarker<?>> getForPlayer(Player player, MapId mapId, MapItemSavedData data) {
         var v = player.getLastDeathLocation();
         if (v.isPresent() && data.dimension.equals(v.get().dimension())) {
             if (CommonConfigs.Tweaks.DEATH_MARKER.get().isOn(player)) {
-                MapBlockMarker<?> marker = DEATH_MARKER.get().createEmptyMarker();
-                marker.setPos(v.get().pos());
-                marker.setName(Component.translatable("message.supplementaries.death_marker"));
+                MLMapMarker<?> marker = new SimpleMapMarker(DEATH_MARKER, v.get().pos(), 0f,
+                        Optional.of(Component.translatable("message.supplementaries.death_marker")));
                 return Set.of(marker);
             }
         }
         return Set.of();
     }
 
+
+    @Nullable
+    private static SimpleMapMarker signPost(Holder<MLMapDecorationType<?, ?>> type,
+                                            BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
+            Component t = Component.literal("");
+            if (tile.getSignUp().active()) t = tile.getTextHolder(0).getMessage(0, false);
+            if (tile.getSignDown().active() && t.getString().isEmpty())
+                t = tile.getTextHolder(1).getMessage(0, false);
+            if (t.getString().isEmpty()) t = null;
+            return new SimpleMapMarker(type, pos, 0f, Optional.ofNullable(t));
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private static ColoredMarker bed(Holder<MLMapDecorationType<?, ?>> type,
+                                     BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof BedBlockEntity tile) {
+            DyeColor dyecolor = tile.getColor();
+            return new ColoredMarker(type, pos, dyecolor);
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private static ColoredMarker flag(Holder<MLMapDecorationType<?, ?>> type,
+                                      BlockGetter world, BlockPos pos) {
+        if (world.getBlockEntity(pos) instanceof FlagBlockTile tile) {
+            DyeColor dyecolor = tile.getColor();
+            Component name = tile.hasCustomName() ? tile.getCustomName() : null;
+            return new ColoredMarker(type, pos, name, dyecolor);
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private static ColoredMarker banner(Holder<MLMapDecorationType<?, ?>> type,
+                                        BlockGetter world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+        //for amendments
+        if (block instanceof AbstractBannerBlock && !(block instanceof WallBannerBlock) &&
+                !(block instanceof BannerBlock)) {
+            DyeColor col = BlocksColorAPI.getColor(block);
+            if (col != null) {
+                BlockEntity be = world.getBlockEntity(pos);
+                Component name = be instanceof Nameable n && n.hasCustomName() ? n.getCustomName() : null;
+                return new ColoredMarker(type, pos, name, col);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static SimpleMapMarker waystone(Holder<MLMapDecorationType<?, ?>> type,
+                                            BlockGetter world, BlockPos pos) {
+        if (CompatHandler.WAYSTONES) {
+            var te = world.getBlockEntity(pos);
+
+            if (WaystonesCompat.isWaystone(te)) {
+                Component name = WaystonesCompat.getName(te);
+                return new SimpleMapMarker(type, pos, 0f, Optional.of(name));
+            }
+        }
+        return null;
+    }
 }

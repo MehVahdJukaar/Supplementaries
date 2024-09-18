@@ -33,7 +33,8 @@ public class SlingshotRendererHelper {
         Vec3 range = player.getLookAngle().scale(blockRange);
         BlockHitResult raytrace = level
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-        if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance().gameMode.getPickRange())) {
+        if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance()
+                .gameMode.getPickRange())) {
             lookPos = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
         }
     }

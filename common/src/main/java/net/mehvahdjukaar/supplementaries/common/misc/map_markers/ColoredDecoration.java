@@ -1,43 +1,39 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
 
-import net.mehvahdjukaar.moonlight.api.map.CustomMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
-import net.mehvahdjukaar.moonlight.api.map.type.MapDecorationType;
-import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class ColoredDecoration extends MLMapDecoration {
-    private final DyeColor color;
-    private final int value;
 
-    public ColoredDecoration(MLMapDecorationType<?, ?> type, byte x, byte y, byte rot, @Nullable Component displayName, @NotNull DyeColor color) {
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ColoredDecoration> DIRECT_CODEC = StreamCodec.composite(
+            MLMapDecorationType.STREAM_CODEC, ColoredDecoration::getType,
+            ByteBufCodecs.BYTE, ColoredDecoration::getX,
+            ByteBufCodecs.BYTE, ColoredDecoration::getY,
+            ByteBufCodecs.BYTE, ColoredDecoration::getRot,
+            ComponentSerialization.OPTIONAL_STREAM_CODEC, m -> Optional.ofNullable(m.getDisplayName()),
+            DyeColor.STREAM_CODEC, ColoredDecoration::getColor,
+            ColoredDecoration::new
+    );
+
+    private final DyeColor color;
+
+    public ColoredDecoration(Holder<MLMapDecorationType<?, ?>> type, byte x, byte y, byte rot, Optional<Component> displayName,
+                             DyeColor color) {
         super(type, x, y, rot, displayName);
         this.color = color;
-        this.value = ColorHelper.pack(color.getTextureDiffuseColors());
-    }
-
-    public ColoredDecoration(MLMapDecorationType<?, ?> type, FriendlyByteBuf buffer) {
-        this(type, buffer.readByte(), buffer.readByte(), (byte) (buffer.readByte() & 15), buffer.readBoolean() ? buffer.readComponent() : null,
-                DyeColor.byId(buffer.readByte()));
-    }
-
-    @Override
-    public void saveToBuffer(FriendlyByteBuf buffer) {
-        super.saveToBuffer(buffer);
-        buffer.writeByte(color.getId());
     }
 
     public DyeColor getColor() {
         return color;
     }
-
-    public int getColorValue() {
-        return value;
-    }
-
 }

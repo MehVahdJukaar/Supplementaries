@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:cherry_sign"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:sign_post_cherry",
+    "count": 2
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sign_post"
+    }
+  ]
+}

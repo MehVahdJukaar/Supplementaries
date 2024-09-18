@@ -1,3 +1,6 @@
 {
-  "custom_type": "supplementaries:nether_portal"
+  "target_block": {
+    "block": "minecraft:nether_portal",
+    "predicate_type": "minecraft:block_match"
+  }
 }

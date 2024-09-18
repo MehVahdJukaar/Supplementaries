@@ -3,50 +3,25 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.simibubi.create.foundation.render.RenderTypes;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
-import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
-import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
@@ -121,92 +96,33 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
                 if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
                     builder.add(Biomes.BASALT_DELTAS.location());
-                    builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
+                    builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
                 }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }
         }
-
-        genAllRecipesAdv(Supplementaries.MOD_ID);
     }
 
     private void addSignPostRecipes(ResourceManager manager) {
-        IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
-                ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
+        Recipe<?> recipe = RPUtils.readRecipe(manager, ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
+        Recipe<?> recipe2 = RPUtils.readRecipe(manager, ResType.RECIPES.getPath(Supplementaries.res("sign_post_mod_template")));
 
         WoodType oak = WoodTypeRegistry.OAK_TYPE;
-
-        if (signPostTemplate2 == null) {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
-                            ModRegistry.SIGN_POST_ITEMS.get(oak), 3)
-                    .pattern("   ")
-                    .pattern("222")
-                    .pattern(" 1 ")
-                    .define('1', Items.STICK)
-                    .define('2', oak.planks)
-                    .group(ModConstants.SIGN_POST_NAME)
-                    .unlockedBy("has_plank", InventoryChangeTrigger.TriggerInstance.hasItems(oak.planks))
-                    .save(s -> signPostTemplate2 = TemplateRecipeManager.read(s.serializeRecipe()));
-        }
 
         ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
             if (w != oak) {
                 try {
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                    IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
+                    Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
-                    FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
-                    if (newR == null) return;
-                    newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
+                    var newR = RPUtils.makeSimilarRecipe(recipe2, WoodTypeRegistry.OAK_TYPE, w, "sign_post_oak");
+                    //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     this.dynamicPack.addRecipe(newR);
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
                 }
             }
         });
-    }
-
-    private IRecipeTemplate<?> signPostTemplate2;
-
-    public static void genAllRecipesAdv(String modId) {
-        if (true || !PlatHelper.isDev()) return;
-        var level = PlatHelper.getCurrentServer().overworld();
-        var man = level.getRecipeManager();
-        for (var r : man.getRecipes()) {
-            ResourceLocation recipeId = r.getId();
-            if (recipeId.getNamespace().equals(modId) && !r.isSpecial()) {
-                Set<Item> ii = new HashSet<>();
-                try {
-                    var builder = Advancement.Builder.recipeAdvancement()
-                            .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
-                            .rewards(AdvancementRewards.Builder.recipe(recipeId))
-                            .requirements(RequirementsStrategy.OR);
-                    Set<TagKey<Item>> tags = new HashSet<>();
-                    for (var i : r.getIngredients()) {
-                        if (!i.isEmpty()) {
-                            if (i.values[0] instanceof Ingredient.TagValue tv) {
-                                tags.add(tv.tag);
-                            } else
-                                ii.addAll(Arrays.stream(i.getItems()).map(ItemStack::getItem).collect(Collectors.toSet()));
-                        }
-                    }
-
-                    for (var ing : ii) {
-                        builder.addCriterion("has_" + Utils.getID(ing).getPath(), RecipeProvider.has(ing));
-                    }
-                    for (var tag : tags) {
-                        builder.addCriterion(tag.location().toString(), RecipeProvider.has(tag));
-                    }
-                    var res = recipeId.withPrefix("recipes/");
-
-                    JsonObject json = builder.serializeToJson();
-                    removeNullEntries(json);
-                    INSTANCE.dynamicPack.addJson(res, json, ResType.ADVANCEMENTS);
-                } catch (Exception e) {
-                    int aa = 1; //error
-                }
-            }
-        }
     }
 
     private static void removeNullEntries(JsonObject jsonObject) {

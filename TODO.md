@@ -4,7 +4,9 @@
 - burn time data map
 - check if sacks safes and lunch boxes work with creative drop
 - check if the above keep their custom names
-- bellows block place power
+- check bellows block place power
+- strip recipe conditions from signpost2 recipe
+- test all map markers & with names
 
 
 # Soon
