@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FirePitBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -20,6 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -401,6 +404,18 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 }
             }
         }
+    }
+
+    @ForgeOverride
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
+    }
+
+    @ForgeOverride
+    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
     }
 
     private static @NotNull FireBlock getFireDelegate() {
