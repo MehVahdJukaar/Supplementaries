@@ -96,11 +96,6 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
-        return true;
-    }
-
-    @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction direction) {
         return adjacentBlockState.getFluidState().getType().isSame(this.fluid);
     }
