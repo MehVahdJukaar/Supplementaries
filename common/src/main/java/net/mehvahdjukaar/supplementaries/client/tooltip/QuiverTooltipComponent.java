@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class QuiverTooltipComponent implements ClientTooltipComponent {
-    public static final ResourceLocation TEXTURE_LOCATION = ClientBundleTooltip.TEXTURE_LOCATION;
     private final List<ItemStack> items;
     private final int selectedSlot;
 
@@ -77,7 +77,7 @@ public class QuiverTooltipComponent implements ClientTooltipComponent {
     }
 
     private void blit(GuiGraphics guiGraphics, int x, int y, Texture texture) {
-        guiGraphics.blit(TEXTURE_LOCATION, x, y, 0, texture.x, texture.y, texture.w, texture.h, 128, 128);
+        guiGraphics.blit(ModTextures.QUIVER_TOOLTIP, x, y, 0, texture.x, texture.y, texture.w, texture.h, 128, 128);
     }
 
     private int gridSizeX() {

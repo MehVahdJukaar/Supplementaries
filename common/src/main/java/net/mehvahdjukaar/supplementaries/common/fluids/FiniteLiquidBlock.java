@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -96,11 +97,6 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
-        return true;
-    }
-
-    @Override
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction direction) {
         return adjacentBlockState.getFluidState().getType().isSame(this.fluid);
     }
@@ -144,7 +140,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
     }
 
     @Override
-    public ItemStack pickupBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+    public ItemStack pickupBlock(Player player, LevelAccessor level, BlockPos pos, BlockState state) {
         //find connected blocks around. if their LEVEL sum is greater than 13 pickup fluid and delete them
         AtomicInteger currentLevel = new AtomicInteger(state.getFluidState().getAmount());
         Map<BlockPos, Integer> posList = new HashMap<>();
@@ -194,7 +190,7 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canPlaceLiquid(Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return fluid == this.fluid;
     }
 

@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -87,8 +86,8 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
     }
 
     //calls all interfaces methods
-    default ItemInteractionResult interactWithTextHolder(int index, Level level, BlockPos pos, BlockState state,
-                                                         Player player, InteractionHand hand, ItemStack stack) {
+    default ItemInteractionResult textHolderInteract(int index, Level level, BlockPos pos, BlockState state,
+                                                     Player player, InteractionHand hand, ItemStack stack) {
 
         ItemInteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand, stack);
         if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {

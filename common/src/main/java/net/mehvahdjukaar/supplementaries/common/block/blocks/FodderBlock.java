@@ -7,6 +7,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
@@ -44,7 +46,8 @@ public class FodderBlock extends WaterBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter blockGetter, BlockPos pos, PathComputationType pathType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathType) {
+        // likely snow layer code
         if (pathType == PathComputationType.LAND) {
             return state.getValue(LAYERS) <= MAX_LAYERS / 2;
         }
@@ -122,23 +125,22 @@ public class FodderBlock extends WaterBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.getItem() instanceof HoeItem) {
-            world.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            if (!world.isClientSide) {
+            level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (!level.isClientSide) {
 
                 int layers = state.getValue(FodderBlock.LAYERS);
                 if (layers > 1) {
-                    world.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
-                    world.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 1), 11);
+                    level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
+                    level.setBlock(pos, state.setValue(FodderBlock.LAYERS, layers - 1), 11);
                 } else {
-                    world.destroyBlock(pos, false);
+                    level.destroyBlock(pos, false);
                 }
-                stack.hurtAndBreak(1, player, (e) -> e.broadcastBreakEvent(hand));
+                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             }
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

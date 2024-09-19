@@ -32,7 +32,7 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltips, tooltipFlag);
-        getPotion(stack).addPotionTooltip(tooltips::add, BambooSpikesBlockTile.POTION_MULTIPLIER);
+        getPotion(stack).addPotionTooltip(tooltips::add, BambooSpikesBlockTile.POTION_MULTIPLIER, context.tickRate());
     }
 
     @Override

@@ -9,6 +9,8 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -18,12 +20,15 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -79,8 +84,12 @@ public class BlockUtil {
     public static ItemStack saveTileToItem(BlockEntity tile) {
         Block block = tile.getBlockState().getBlock();
         ItemStack stack = new ItemStack(block.asItem());
-        stack.applyComponents(tile.collectComponents());
+        tile.saveToItem(stack, tile.getLevel().registryAccess());
         return stack;
+    }
+
+    public static void loadTileFromItem(BlockEntity tile, ItemStack stack) {
+        tile.loadWithComponents();
     }
 
     //rotation stuff
@@ -435,4 +444,6 @@ public class BlockUtil {
         Direction dir = bedState.getValue(BedBlock.FACING);
         return part == BedPart.FOOT ? dir : dir.getOpposite();
     }
+
+
 }

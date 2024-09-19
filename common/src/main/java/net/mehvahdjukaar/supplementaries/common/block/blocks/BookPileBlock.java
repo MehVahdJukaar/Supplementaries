@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -120,7 +120,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             tile.getItem(state.getValue(BOOKS) - 1);
         }
@@ -159,13 +159,12 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
-            if (player.getItemInHand(hand).isEmpty()) {
-                return tile.interact(player, hand, getBookIndex(state, pos, hit.getLocation()));
-            }
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.isEmpty() && player.isSecondaryUseActive() && level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
+            return tile.interactWithPlayerItem(player, hand, stack, getBookIndex(state, pos, hitResult.getLocation()));
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     protected int getBookIndex(BlockState state, BlockPos pos, Vec3 location) {

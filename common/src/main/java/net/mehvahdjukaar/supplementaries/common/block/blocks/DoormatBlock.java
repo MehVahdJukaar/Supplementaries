@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -68,7 +67,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             //color wax and gui
-            return tile.interactWithTextHolder(0, level, pos, state, player, hand, stack);
+            return tile.textHolderInteract(0, level, pos, state, player, hand, stack);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }

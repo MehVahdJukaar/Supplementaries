@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,18 +26,18 @@ public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if(!this.items.get(0).isEmpty()){
-            tag.put("item", this.items.get(0).save(new CompoundTag()));
+            tag.put("item", this.items.get(0).save(registries));
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("item", 10)) {
-            this.items.set(0, ItemStack.of(tag.getCompound("item")));
+            this.items.set(0, ItemStack.parseOptional(registries, tag.getCompound("item")));
         }
     }
 

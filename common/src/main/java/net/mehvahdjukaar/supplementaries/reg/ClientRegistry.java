@@ -241,7 +241,7 @@ public class ClientRegistry {
 
 
         ItemProperties.register(ModRegistry.BUBBLE_BLOWER.get(), Supplementaries.res("using"),
-                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ForgeHelper.areStacksEqual(stack, entity.getUseItem(), true) ? 1.0F : 0.0F);
+                (stack, world, entity, s) -> entity != null && entity.isUsingItem() && ItemStack.isSameItemSameComponents(stack, entity.getUseItem()) ? 1.0F : 0.0F);
 
 
         ModRegistry.PRESENTS.values().forEach(i -> ItemProperties.register(i.get().asItem(), Supplementaries.res("packed"),

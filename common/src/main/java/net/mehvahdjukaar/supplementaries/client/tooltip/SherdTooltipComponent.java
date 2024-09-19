@@ -10,11 +10,12 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 
 public class SherdTooltipComponent implements ClientTooltipComponent {
 
     private final int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
-    private final ResourceKey<String> pattern;
+    private final ResourceKey<DecoratedPotPattern> pattern;
 
     public SherdTooltipComponent(SherdTooltip tooltip) {
         this.pattern = tooltip.sherd();

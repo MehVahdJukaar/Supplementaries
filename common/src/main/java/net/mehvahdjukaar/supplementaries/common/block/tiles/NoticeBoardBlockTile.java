@@ -276,7 +276,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 return res;
             }
         }
-        InteractionResult r = this.interactWithTextHolder(0, level, pos, state, player, handIn);
+        InteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn);
         if (r != InteractionResult.PASS) return r;
 
 

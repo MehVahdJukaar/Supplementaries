@@ -6,11 +6,9 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 //Needed on both sides because...
 public class ModTextures {
@@ -91,6 +89,7 @@ public class ModTextures {
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
     public static final ResourceLocation CANNON_ICONS_TEXTURE = Supplementaries.res("textures/gui/cannon_icons.png");
     public static final ResourceLocation QUIVER_HUD = Supplementaries.res("textures/gui/quiver_hud.png");
+    public static final ResourceLocation QUIVER_TOOLTIP = ResourceLocation.withDefaultNamespace("container/bundle/background");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

@@ -1,22 +1,20 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,7 +41,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
 
         BlockPos pos = hit.getBlockPos();
         Item i = stack.getItem();
-        if  (CommonConfigs.xpBottlingOverride.test(world.getBlockState(pos).getBlock())) {
+        if (CommonConfigs.xpBottlingOverride.test(world.getBlockState(pos).getBlock())) {
             ItemStack returnStack = null;
 
             //prevent accidentally releasing bottles
@@ -56,16 +54,13 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                     returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                 } else if (i instanceof JarItem) {
                     dummyTile.clearAllContents();
-                    CompoundTag tag = stack.getTagElement("BlockEntityTag");
-                    if (tag != null) {
-                        dummyTile.load(tag);
-                    }
+                    BlockUtil.loadTileFromItem(dummyTile, stack);
 
                     if (dummyTile.canInteractWithSoftFluidTank()) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                         ItemStack temp = dummyTile.fluidHolder.interactWithItem(tempStack, null, null, false);
                         if (temp != null && temp.getItem() == Items.GLASS_BOTTLE) {
-                            returnStack = ((JarBlock) ((BlockItem) i).getBlock()).getJarItem(dummyTile);
+                            returnStack = BlockUtil.saveTileToItem(dummyTile);
                         }
                     }
                 }
