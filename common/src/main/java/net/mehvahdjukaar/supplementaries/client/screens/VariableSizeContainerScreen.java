@@ -17,20 +17,17 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
     }
 
     @Override
-    protected void renderBg(GuiGraphics matrixStack, float partialTicks, int x, int y) {
-    }
-
-    //TODO: merge
-    private void renderBack(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        int x = (this.width - this.imageWidth) / 2;
-        int y = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+        int x = this.leftPos;
+        int y = this.topPos;
+        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0,
+                this.imageWidth, this.imageHeight);
     }
 
 
     private void renderSlots(GuiGraphics graphics) {
-        int k = -1 + (this.width - this.imageWidth) / 2;
-        int l = -1 + (this.height - this.imageHeight) / 2;
+        int k = -1 + this.leftPos;
+        int l = -1 + this.topPos;
 
         int size = this.menu.unlockedSlots;
 
@@ -56,11 +53,8 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
-        this.renderBack(graphics, partialTicks, mouseX, mouseY);
-        this.renderSlots(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
+        this.renderSlots(graphics);
     }
 
     @Override

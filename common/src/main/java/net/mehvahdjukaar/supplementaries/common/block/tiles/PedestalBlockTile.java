@@ -25,7 +25,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
 
     @ForgeOverride
     public AABB getRenderBoundingBox() {
-        return new AABB(worldPosition, worldPosition.offset(1, 2, 1));
+        return AABB.encapsulatingFullBlocks(worldPosition, worldPosition.offset(1, 2, 1));
     }
 
     public DisplayType getDisplayType() {

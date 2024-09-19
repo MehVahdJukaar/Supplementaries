@@ -24,18 +24,9 @@ public class PulleyScreen extends AbstractContainerScreen<PulleyContainerMenu> {
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-        int k = (this.width - this.imageWidth) / 2;
-        int l = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.PULLEY_BLOCK_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(ModTextures.PULLEY_BLOCK_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         this.slotBG.render(this.menu, graphics, partialTicks, this.leftPos, this.topPos);
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
-    }
-
-    @Override
-    public void render(GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override

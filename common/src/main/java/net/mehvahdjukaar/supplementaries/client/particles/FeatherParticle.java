@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -148,8 +149,8 @@ public class FeatherParticle extends TextureSheetParticle {
         float f5 = this.getV0();
         float f6 = this.getV1();
         int lightColor = this.getLightColor(partialTicks);
-        int lu = VetexUtil.lightU(lightColor);
-        int lv = VetexUtil.lightV(lightColor);
+        int lu = VertexUtil.lightU(lightColor);
+        int lv = VertexUtil.lightV(lightColor);
 
         float offset = 0.125f;
         builder.addVertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);

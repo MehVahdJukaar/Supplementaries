@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
@@ -57,14 +58,18 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,11 +113,11 @@ public class ClientRegistry {
     public static final ResourceLocation LUNCH_BOX_ITEM_MODEL = Supplementaries.res("item/lunch_basket_gui");
     public static final ResourceLocation LUNCH_BOX_OPEN_ITEM_MODEL = Supplementaries.res("item/lunch_basket_gui_open");
 
-    public static final ResourceLocation BOAT_MODEL = Supplementaries.res("block/jar_boat_ship");
-    public static final ResourceLocation BLACKBOARD_FRAME = Supplementaries.res("block/blackboard_frame");
-    public static final Supplier<Map<WoodType, ResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
+    public static final ModelResourceLocation BOAT_MODEL = modelRes("block/jar_boat_ship");
+    public static final ModelResourceLocation BLACKBOARD_FRAME = modelRes("block/blackboard_frame");
+    public static final Supplier<Map<WoodType, ModelResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
-                    w -> Supplementaries.res("block/sign_posts/" + w.getVariantId("sign_post"))))
+                    w -> modelRes("block/sign_posts/" + w.getVariantId("sign_post"))))
     );
 
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
@@ -122,6 +127,10 @@ public class ClientRegistry {
 
     private static ModelLayerLocation loc(String name) {
         return new ModelLayerLocation(Supplementaries.res(name), name);
+    }
+
+    private static ModelResourceLocation modelRes(String name) {
+        return RenderUtil.getStandaloneModelLocation(Supplementaries.res(name));
     }
 
     public static void init() {
@@ -222,7 +231,7 @@ public class ClientRegistry {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
                     } else {
-                        return (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
+                        return (float) (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
                     }
                 });
 
@@ -245,7 +254,7 @@ public class ClientRegistry {
                 (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
 
         ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
-                (stack, world, entity, s) -> ((DyeableLeatherItem) stack.getItem()).hasCustomColor(stack) ? 1 : 0);
+                (stack, world, entity, s) -> stack.has(DataComponents.DYED_COLOR) ? 1 : 0);
 
         ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
                 new GlobeProperty());
@@ -261,21 +270,17 @@ public class ClientRegistry {
     private static class GlobeProperty implements ClampedItemPropertyFunction {
 
         @Override
-        public float call(ItemStack itemStack, @org.jetbrains.annotations.Nullable ClientLevel clientLevel, @org.jetbrains.annotations.Nullable LivingEntity livingEntity, int i) {
-            CompoundTag compoundTag = itemStack.getTagElement("display");
-            if (compoundTag != null) {
-                var n = compoundTag.getString("Name");
-                MutableComponent mutableComponent = Component.Serializer.fromJson(n);
-                if (mutableComponent != null) {
-                    var v = GlobeManager.Type.getTextureID(mutableComponent.getString());
-                    if (v != null) return Float.valueOf(v);
-                }
+        public float call(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
+            var customName = itemStack.get(DataComponents.CUSTOM_NAME);
+            if (customName != null) {
+                return GlobeManager.getTextureID(customName.getString());
             }
             return Float.NEGATIVE_INFINITY;
         }
 
         @Override
-        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity
+                livingEntity, int i) {
             return call(itemStack, clientLevel, livingEntity, i);
         }
 
@@ -285,8 +290,8 @@ public class ClientRegistry {
 
         @Override
         public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
-            return entity != null && CrossbowItem.isCharged(stack)
-                    && CrossbowItem.containsChargedProjectile(stack, projectile) ? 1.0F : 0.0F;
+            ChargedProjectiles chargedProjectiles = stack.get(DataComponents.CHARGED_PROJECTILES);
+            return chargedProjectiles != null && chargedProjectiles.contains(projectile) ? 1.0F : 0.0F;
         }
 
         @Override
@@ -483,7 +488,8 @@ public class ClientRegistry {
     private static void registerItemColors(ClientHelper.ItemColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
-        event.register((itemStack, i) -> i != 1 ? -1 : ((DyeableLeatherItem) itemStack.getItem()).getColor(itemStack),
+        event.register((itemStack, i) -> i > 0 ? -1 :
+                        DyedItemColor.getOrDefault(itemStack, -6265536),
                 ModRegistry.QUIVER_ITEM.get());
     }
 

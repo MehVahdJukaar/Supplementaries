@@ -63,25 +63,24 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        if (this.visible) {
-            if (this.canConsumeInput() && this.suggestion != null) {
-                int x = this.getX();
-                var cache = this.getDisplayCache();
-                if (cache.lines.length > 0) {
-                    x += this.font.width(cache.lines[0].contents);
-                }
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.renderWidget(graphics, mouseX, mouseY, partialTicks);
 
-                graphics.drawString(font, this.suggestion, x, this.getY(), -8355712, false);
+        if (this.canConsumeInput() && this.suggestion != null) {
+            int x = this.getX();
+            var cache = this.getDisplayCache();
+            if (cache.lines.length > 0) {
+                x += this.font.width(cache.lines[0].contents);
             }
 
-            if (this.getText().isEmpty()) {
-                graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0, false);
-            } else {
-                if (this.selectedPlayer != null) {
-                    this.selectedPlayer.render(graphics, this.getX(), this.getY(), this.width, this.height, partialTicks);
-                }
+            graphics.drawString(font, this.suggestion, x, this.getY(), -8355712, false);
+        }
+
+        if (this.getText().isEmpty()) {
+            graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0, false);
+        } else {
+            if (this.selectedPlayer != null) {
+                this.selectedPlayer.render(graphics, this.getX(), this.getY(), this.width, this.height, partialTicks);
             }
         }
     }

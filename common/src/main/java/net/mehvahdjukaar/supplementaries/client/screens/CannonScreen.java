@@ -42,8 +42,8 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         super.init();
 
         this.titleLabelX = 8;
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
+        int i = this.leftPos;
+        int j = this.topPos;
         this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
@@ -91,16 +91,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        this.renderBackground(graphics);
-        int k = (this.width - this.imageWidth) / 2;
-        int l = (this.height - this.imageHeight) / 2;
-        graphics.blit(Supplementaries.res("textures/gui/cannon_gui.png"), k, l, 0, 0, this.imageWidth, this.imageHeight);
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
+        graphics.blit(ModTextures.CANNON_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
@@ -116,13 +107,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     public boolean keyPressed(int key, int a, int b) {
         return super.keyPressed(key, a, b);
-    }
-
-    @Override
-    public void containerTick() {
-        super.containerTick();
-        this.yawSelector.tick();
-        this.pitchSelector.tick();
     }
 
     @Override

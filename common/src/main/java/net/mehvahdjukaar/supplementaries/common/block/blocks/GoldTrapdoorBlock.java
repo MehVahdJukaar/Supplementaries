@@ -18,7 +18,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class GoldTrapdoorBlock extends TrapDoorBlock {
     public GoldTrapdoorBlock(Properties properties) {
-        super(properties, BlockSetType.GOLD);
+        super(BlockSetType.GOLD, properties);
     }
 
 

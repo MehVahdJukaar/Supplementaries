@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CageBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,18 +68,11 @@ public class CageBlock extends WaterBlock implements EntityBlock {
         return RenderShape.MODEL;
     }
 
-    // shulker box code
-    public ItemStack getCageItem(CageBlockTile te) {
-        ItemStack returnStack = new ItemStack(this);
-        te.saveToNbt(returnStack);
-        return returnStack;
-    }
-
     //loot table does the same. frick the loot table
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CageBlockTile tile) {
-            ItemStack itemstack = this.getCageItem(tile);
+            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
@@ -90,7 +84,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof CageBlockTile tile) {
-            return this.getCageItem(tile);
+            return BlockUtil.saveTileToItem(tile);
         }
         return super.getCloneItemStack(level, pos, state);
     }

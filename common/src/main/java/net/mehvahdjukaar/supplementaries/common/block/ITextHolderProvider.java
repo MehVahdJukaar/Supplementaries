@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -86,13 +87,14 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
     }
 
     //calls all interfaces methods
-    default InteractionResult interactWithTextHolder(int index, Level level, BlockPos pos, BlockState state, Player player, InteractionHand hand) {
+    default ItemInteractionResult interactWithTextHolder(int index, Level level, BlockPos pos, BlockState state,
+                                                         Player player, InteractionHand hand, ItemStack stack) {
 
-        InteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand);
-        if (result == InteractionResult.PASS) {
-            result = this.tryWaxing(level, pos, player, hand);
+        ItemInteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand, stack);
+        if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            result = this.tryWaxing(level, pos, player, hand,stack);
         }
-        if (result != InteractionResult.PASS) {
+        if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
             if (!level.isClientSide && this instanceof BlockEntity te) {
                 te.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
@@ -103,9 +105,9 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
         }
         if (player instanceof ServerPlayer serverPlayer &&
                 this.tryOpeningEditGui(serverPlayer, pos, player.getItemInHand(hand))) {
-            return InteractionResult.CONSUME;
+            return ItemInteractionResult.CONSUME;
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
         // return InteractionResult.PASS;
     }
 

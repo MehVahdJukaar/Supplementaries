@@ -110,7 +110,7 @@ public class GlobeManager {
      * Refresh colors and textures
      */
     public static void refreshColorsAndTextures(ResourceManager manager) {
-        Type.recomputeCache();
+        recomputeCache();
 
         DIMENSION_COLOR_MAP.clear();
         int targetColors = 13;
@@ -134,6 +134,7 @@ public class GlobeManager {
         refreshTextures();
     }
 
+    // remove this. its very random
     public enum Type {
         FLAT(new String[]{"flat", "flat earth"}, Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
         MOON(new String[]{"moon", "luna", "selene", "cynthia"},
@@ -150,54 +151,58 @@ public class GlobeManager {
         }
 
         private final String[] keyWords;
-        public final Component transKeyWord;
-        public final ResourceLocation texture;
+        private final Component transKeyWord;
+        private final ResourceLocation texture;
 
-        private static final Map<String, Pair<Model, ResourceLocation>> nameCache = new HashMap<>();
-        private static final Map<String,Integer> idMap = new HashMap<>();
-        public static final List<ResourceLocation> textures = new ArrayList<>();
+        public ResourceLocation getTexture() {
+            return texture;
+        }
+    }
 
-        public static void recomputeCache() {
-            nameCache.clear();
-            for (Type type : Type.values()) {
-                Model model = type == FLAT ? Model.FLAT : Model.GLOBE;
-                var pair = Pair.of(model, type.texture);
-                if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
-                    nameCache.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
-                }
-                for (String s : type.keyWords) {
-                    if (!s.equals("")) {
-                        nameCache.put(s, pair);
-                    }
+
+    private static final Map<String, Pair<Model, ResourceLocation>> NAME_CACHE = new HashMap<>();
+    private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
+    private static final List<ResourceLocation> TEXTURES = new ArrayList<>();
+
+    public static void recomputeCache() {
+        NAME_CACHE.clear();
+        for (Type type : Type.values()) {
+            Model model = type == Type.FLAT ? Model.FLAT : Model.GLOBE;
+            var pair = Pair.of(model, type.texture);
+            if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
+                NAME_CACHE.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
+            }
+            for (String s : type.keyWords) {
+                if (!s.equals("")) {
+                    NAME_CACHE.put(s, pair);
                 }
             }
+        }
 
-            for (var g : Credits.INSTANCE.globes().entrySet()) {
-                var path = g.getValue();
-                Model model = Model.GLOBE;
-                if (path.getPath().contains("globe_wais")) {
-                    model = Model.SNOW;
-                }
-                nameCache.put(g.getKey(), Pair.of(model, path));
+        for (var g : Credits.INSTANCE.globes().entrySet()) {
+            var path = g.getValue();
+            Model model = Model.GLOBE;
+            if (path.getPath().contains("globe_wais")) {
+                model = Model.SNOW;
             }
-            textures.clear();
-            nameCache.values().forEach(o -> {
-                if(!textures.contains(o.getSecond())) textures.add(o.getSecond());
-            });
-            Collections.sort(textures);
-            idMap.clear();
-            nameCache.forEach((key, value) -> idMap.put(key, textures.indexOf(value.getSecond())));
+            NAME_CACHE.put(g.getKey(), Pair.of(model, path));
         }
+        TEXTURES.clear();
+        NAME_CACHE.values().forEach(o -> {
+            if(!TEXTURES.contains(o.getSecond())) TEXTURES.add(o.getSecond());
+        });
+        Collections.sort(TEXTURES);
+        MODEL_ID_MAP.clear();
+        NAME_CACHE.forEach((key, value) -> MODEL_ID_MAP.put(key, (float) TEXTURES.indexOf(value.getSecond())));
+    }
 
-        @Nullable
-        public static Pair<Model, ResourceLocation> getModelAndTexture(String text) {
-            return nameCache.get(text.toLowerCase(Locale.ROOT));
-        }
+    @Nullable
+    public static Pair<Model, ResourceLocation> getModelAndTexture(String text) {
+        return NAME_CACHE.get(text.toLowerCase(Locale.ROOT));
+    }
 
-        @Nullable
-        public static Integer getTextureID(String text) {
-            return idMap.get(text.toLowerCase(Locale.ROOT));
-        }
+    public static Float getTextureID(String text) {
+        return MODEL_ID_MAP.getOrDefault(text.toLowerCase(Locale.ROOT), Float.NEGATIVE_INFINITY);
     }
 
     public enum Model {

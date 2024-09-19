@@ -42,11 +42,6 @@ public class BlazeRodBlock extends StickBlock {
             int c = list.getInt(random.nextInt(s));
             double x, y, z;
             switch (c) {
-                default -> {
-                    x = pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
-                    y = pos.getY() + random.nextFloat();
-                    z = pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
-                }
                 case 1 -> {
                     y = pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                     x = pos.getX() + random.nextFloat();
@@ -56,6 +51,11 @@ public class BlazeRodBlock extends StickBlock {
                     y = pos.getY() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                     z = pos.getZ() + random.nextFloat();
                     x = pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                }
+                default -> {
+                    x = pos.getX() + 0.5D - 0.125 + random.nextFloat() * 0.25;
+                    y = pos.getY() + random.nextFloat();
+                    z = pos.getZ() + 0.5D - 0.125 + random.nextFloat() * 0.25;
                 }
             }
             world.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);

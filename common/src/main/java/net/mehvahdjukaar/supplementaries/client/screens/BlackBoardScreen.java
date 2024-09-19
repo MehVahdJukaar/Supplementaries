@@ -181,7 +181,6 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();

@@ -88,17 +88,13 @@ public class ModRegistry {
 
 
     public static final Supplier<Item> BOMB_ITEM = regItem(BOMB_NAME, () -> new BombItem(new Item.Properties()));
-    public static final Supplier<Item> BOMB_ITEM_ON = regItem("bomb_projectile", () -> new BombItem(new Item.Properties()));
 
-    public static final Supplier<Item> BOMB_BLUE_ITEM = regItem(BOMB_BLUE_NAME, () -> new BombItem(new Item.Properties(),
+    public static final Supplier<Item> BOMB_BLUE_ITEM = regItem(BOMB_BLUE_NAME, () -> new BombItem(new Item.Properties()
+            .rarity(Rarity.RARE),
             BombEntity.BombType.BLUE, true));
-    public static final Supplier<Item> BOMB_BLUE_ITEM_ON = regItem("bomb_blue_projectile", () -> new BombItem(new Item.Properties(),
-            BombEntity.BombType.BLUE, false));
 
     //sharpnel bomb
     public static final Supplier<Item> BOMB_SPIKY_ITEM = regItem(BOMB_SPIKY_NAME, () -> new BombItem(new Item.Properties(),
-            BombEntity.BombType.SPIKY, false));
-    public static final Supplier<Item> BOMB_SPIKY_ITEM_ON = regItem("bomb_spiky_projectile", () -> new BombItem(new Item.Properties(),
             BombEntity.BombType.SPIKY, false));
 
     //rope arrow

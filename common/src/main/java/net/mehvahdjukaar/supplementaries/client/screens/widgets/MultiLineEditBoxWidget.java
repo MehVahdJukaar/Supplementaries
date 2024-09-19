@@ -259,7 +259,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int i, int j, float f) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick){
         DisplayCache displayCache = this.getDisplayCache();
 
         for (LineInfo lineInfo : displayCache.lines) {

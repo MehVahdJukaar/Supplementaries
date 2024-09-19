@@ -1,19 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ProjectileItem;
+import net.minecraft.world.item.SnowballItem;
 import net.minecraft.world.level.Level;
 
-public class BombItem extends Item {
+public class BombItem extends Item implements ProjectileItem {
     private final BombEntity.BombType type;
     private final boolean glint;
 
@@ -33,12 +39,7 @@ public class BombItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return glint;
-    }
-
-    @Override
-    public Rarity getRarity(ItemStack stack) {
-        return type == BombEntity.BombType.BLUE ? Rarity.EPIC : Rarity.RARE;
+        return !stack.has(DataComponents.CUSTOM_MODEL_DATA) && glint;
     }
 
     @Override
@@ -68,5 +69,19 @@ public class BombItem extends Item {
     }
 
 
+    @Override
+    public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
+        var bomb = new BombEntity(level, pos.x(), pos.y(), pos.z(), type);
+        bomb.setItem(stack);
+        return bomb;
+    }
+
+    @Override
+    public DispenseConfig createDispenseConfig() {
+        return DispenseConfig.builder()
+                .power(ProjectileStats.BOMB_DISPENSER_SPEED)
+                .uncertainty(ProjectileStats.BOMB_DISPENSER_INACCURACY)
+                .build();
+    }
 }
 

@@ -419,7 +419,7 @@
   "message.supplementaries.blackboard": "Waxed",
   "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
   "message.supplementaries.cage.tooltip": "[%s] to place",
-  "message.supplementaries.cage.fail": "You can only capture small animals",
+  "message.supplementaries.cage.fail": "You can't catch this animal",
   "message.supplementaries.candle_holder": "Stackable",
   "message.supplementaries.cartographers_quill": "Unknown",
   "message.supplementaries.command.configs": "Install Configured to access configs",

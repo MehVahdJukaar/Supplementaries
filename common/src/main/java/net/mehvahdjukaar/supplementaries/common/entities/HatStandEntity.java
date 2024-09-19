@@ -161,7 +161,7 @@ public class HatStandEntity extends LivingEntity {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Helmet")) {
-            this.helmet.set(0, ItemStack.of(compound.getCompound("Helmet")));
+            this.helmet.set(0, ItemStack.parseOptional(level().registryAccess(), compound.getCompound("Helmet")));
         }
         this.setInvisible(compound.getBoolean("Invisible"));
         this.setNoBasePlate(compound.getBoolean("NoBasePlate"));

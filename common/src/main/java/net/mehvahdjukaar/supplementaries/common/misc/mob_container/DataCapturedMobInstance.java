@@ -17,8 +17,8 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
     @Nullable
     private final BuiltinAnimation<T> builtinAnimationInstance;
 
-    protected DataCapturedMobInstance(T entity, float width, float height, DataDefinedCatchableMob type) {
-        super(entity, width, height);
+    protected DataCapturedMobInstance(T entity, DataDefinedCatchableMob type) {
+        super(entity);
         this.properties = type;
         this.builtinAnimationInstance = BuiltinAnimation.get(entity, properties.builtinAnimation);
     }
@@ -38,11 +38,11 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
 
     //force water check
     @Override
-    public void onContainerWaterlogged(boolean waterlogged) {
+    public void onContainerWaterlogged(boolean waterlogged, float containerWidth, float containerHeight) {
         var f = this.properties.forceFluidID.orElse(null);
         if (!waterlogged && f != null && f.getPath().equals("water")) {
-           super.onContainerWaterlogged(true);
-        } else super.onContainerWaterlogged(waterlogged);
+           super.onContainerWaterlogged(true, containerWidth, containerHeight);
+        } else super.onContainerWaterlogged(waterlogged, containerWidth, containerHeight);
     }
 
 

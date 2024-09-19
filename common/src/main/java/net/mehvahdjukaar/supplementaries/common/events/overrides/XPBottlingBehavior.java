@@ -55,7 +55,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                 if (i == Items.GLASS_BOTTLE) {
                     returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                 } else if (i instanceof JarItem) {
-                    dummyTile.resetHolders();
+                    dummyTile.clearAllContents();
                     CompoundTag tag = stack.getTagElement("BlockEntityTag");
                     if (tag != null) {
                         dummyTile.load(tag);

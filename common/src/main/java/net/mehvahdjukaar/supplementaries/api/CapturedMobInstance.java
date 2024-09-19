@@ -14,15 +14,11 @@ import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CapturedMobInstance<T extends Entity> {
+public class CapturedMobInstance<T extends Entity> {
     protected final T entity;
-    protected final float containerWidth;
-    protected final float containerHeight;
 
-    protected CapturedMobInstance(T entity,float width, float height) {
+    protected CapturedMobInstance(T entity) {
         this.entity = entity;
-        this.containerWidth = width;
-        this.containerHeight = height;
     }
 
     @Nullable
@@ -63,25 +59,15 @@ public abstract class CapturedMobInstance<T extends Entity> {
      *
      * @param waterlogged new block waterlogged state
      */
-    public void onContainerWaterlogged(boolean waterlogged) {
+    public void onContainerWaterlogged(boolean waterlogged, float containerWidth, float containerHeight) {
         if (entity instanceof WaterAnimal && this.entity.isInWater() != waterlogged) {
             entity.wasTouchingWater = waterlogged;
             Pair<Float, Float> dim = MobContainer.calculateMobDimensionsForContainer(this.entity,
-                    this.containerWidth, this.containerHeight, waterlogged);
+                    containerWidth, containerHeight, waterlogged);
             double py = dim.getRight() + 0.0001;
             entity.setPos(entity.getX(), py, entity.getZ());
             entity.yOld = py;
         }
     }
 
-
-    //below methods are only used for rendering
-
-
-    public static class Default<T extends Entity> extends CapturedMobInstance<T> {
-
-        public Default(T entity, float width, float height) {
-            super(entity, width, height);
-        }
-    }
 }

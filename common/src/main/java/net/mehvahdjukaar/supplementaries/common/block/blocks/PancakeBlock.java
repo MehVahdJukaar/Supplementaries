@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -53,31 +55,13 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
-        Item item = stack.getItem();
-        var found = Topping.fromItem(stack);
-        Topping t = found.getFirst();
-        if (t != Topping.NONE) {
-            if (state.getValue(TOPPING) == Topping.NONE) {
-                if (!worldIn.isClientSide) {
-                    worldIn.setBlock(pos, state.setValue(TOPPING, t), 3);
-                    worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
-                }
-                Item empty = found.getSecond();
-                ItemStack returnItem = empty == null ? ItemStack.EMPTY : empty.getDefaultInstance();
-                if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
-                //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            }
-        } else if (item == this.asItem()) {
-            return InteractionResult.PASS;
-        } else if (player.canEat(false)) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player.canEat(false)) {
             player.getFoodData().eat(1, 0.1F);
             player.playSound(SoundEvents.GENERIC_EAT, 1, 1);
-            if (!worldIn.isClientSide) {
+            if (!level.isClientSide) {
 
-                this.removeLayer(state, pos, worldIn, player);
+                this.removeLayer(state, pos, level, player);
                 return InteractionResult.CONSUME;
             } else {
                 Minecraft.getInstance().particleEngine.destroy(player.blockPosition().above(1), state);
@@ -85,6 +69,31 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             }
         }
         return InteractionResult.PASS;
+
+    }
+
+    @Override
+    public ItemInteractionResult useItemOn(ItemStack stack,BlockState state, Level level, BlockPos pos, Player player,
+                                     InteractionHand handIn, BlockHitResult hit) {
+        Item item = stack.getItem();
+        var found = Topping.fromItem(stack);
+        Topping t = found.getFirst();
+        if (t != Topping.NONE) {
+            if (state.getValue(TOPPING) == Topping.NONE) {
+                if (!level.isClientSide) {
+                    level.setBlock(pos, state.setValue(TOPPING, t), 3);
+                    level.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
+                }
+                Item empty = found.getSecond();
+                ItemStack returnItem = empty == null ? ItemStack.EMPTY : empty.getDefaultInstance();
+                if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
+                //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
+        } else if (item == this.asItem()) {
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
 
@@ -119,8 +128,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
     }
 
-    protected boolean isValidGround(BlockState state, BlockGetter worldIn, BlockPos pos) {
-        return !state.getCollisionShape(worldIn, pos).getFaceShape(Direction.UP).isEmpty() || state.isFaceSturdy(worldIn, pos, Direction.UP);
+    protected boolean isValidGround(BlockState state, BlockGetter level, BlockPos pos) {
+        return !state.getCollisionShape(level, pos).getFaceShape(Direction.UP).isEmpty() || state.isFaceSturdy(level, pos, Direction.UP);
     }
 
     @Override

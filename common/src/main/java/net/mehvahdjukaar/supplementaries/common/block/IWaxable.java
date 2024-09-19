@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
@@ -24,19 +25,16 @@ public interface IWaxable {
     void setWaxed(boolean b);
 
     //callable on both sides
-    default InteractionResult tryWaxing(Level level, BlockPos pos, Player player, InteractionHand hand) {
+    default ItemInteractionResult tryWaxing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         if (isWaxed()) {
             level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
-            return InteractionResult.FAIL;
+            return ItemInteractionResult.FAIL;
         }
-        ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() instanceof HoneycombItem) {
 
             level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS);
 
-            if (!player.isCreative()) {
-                stack.shrink(1);
-            }
+            stack.consume(1, player);
 
             //server logic. stuff should be sent my packets here
             if (player instanceof ServerPlayer serverPlayer) {
@@ -49,8 +47,8 @@ public interface IWaxable {
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.WAX_ON));
             }
 
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

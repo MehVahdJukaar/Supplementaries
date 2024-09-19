@@ -2,3 +2,4 @@
 - new bomb sounds
 - awning placement set
 - gingerbread stuff
+- doormat add item sound

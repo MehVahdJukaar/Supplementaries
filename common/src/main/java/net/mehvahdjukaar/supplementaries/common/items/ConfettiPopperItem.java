@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -50,9 +48,7 @@ public class ConfettiPopperItem extends Item {
         }
 
         ItemStack heldItem = player.getItemInHand(hand);
-        if (!player.isCreative()) {
-            heldItem.shrink(1);
-        }
+        heldItem.consume(1, player);
         return InteractionResultHolder.sidedSuccess(heldItem, level.isClientSide);
     }
 
@@ -62,9 +58,7 @@ public class ConfettiPopperItem extends Item {
                 entity instanceof IPartyCreeper pc &&
                 !c.isIgnited() && !pc.supplementaries$isFestive()) {
             pc.supplementaries$setFestive(true);
-            if (!player.isCreative()) {
-                player.getItemInHand(usedHand).shrink(1);
-            }
+            stack.consume(1, player);
             return InteractionResult.sidedSuccess(player.level().isClientSide);
         }
         return super.interactLivingEntity(stack, player, entity, usedHand);

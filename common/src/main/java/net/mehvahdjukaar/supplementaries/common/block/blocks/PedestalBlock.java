@@ -142,9 +142,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                 ItemStack removed = tile.removeItemNoUpdate(0);
                 tile.setDisplayedItem(it);
 
-                if (!player.isCreative()) {
-                    handItem.shrink(1);
-                }
+                handItem.consume(1, player);
                 if (!level.isClientSide()) {
                     player.setItemInHand(handIn, removed);
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);

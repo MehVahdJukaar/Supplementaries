@@ -34,6 +34,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -210,8 +211,7 @@ public class TextHolder implements IAntiqueTextProvider {
         this.hasGlowingText = glowing;
     }
 
-    public InteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
+    public ItemInteractionResult playerInteract(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         Item item = stack.getItem();
         boolean success = false;
         boolean commandSuccess = this.executeClickCommandsIfPresent(player, level, pos);
@@ -246,18 +246,16 @@ public class TextHolder implements IAntiqueTextProvider {
             }
         }
         if (success) {
-            if (!player.isCreative()) {
-                stack.shrink(1);
-            }
+            stack.consume(1, player);
             if (player instanceof ServerPlayer serverPlayer) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-        if (commandSuccess) return InteractionResult.sidedSuccess(level.isClientSide);
+        if (commandSuccess) return ItemInteractionResult.sidedSuccess(level.isClientSide);
 
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     public boolean hasEditableText(boolean filtering) {

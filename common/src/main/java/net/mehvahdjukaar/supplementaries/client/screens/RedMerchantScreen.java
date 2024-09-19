@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSelectMerchantTradePacket;
@@ -9,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -163,12 +165,11 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         MerchantOffers merchantOffers = this.menu.getOffers();
         if (!merchantOffers.isEmpty()) {
-            int k = (this.width - this.imageWidth) / 2;
-            int l = (this.height - this.imageHeight) / 2;
+            int k = this.leftPos;
+            int l = this.topPos;
             int m = l + 16 + 1;
             int n = k + 5 + 5;
             this.renderScroller(guiGraphics, k, l, merchantOffers);
@@ -256,11 +257,11 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         int i = (this.menu).getOffers().size();
         if (this.canScroll(i)) {
             int j = i - 7;
-            this.scrollOff = Mth.clamp((int) (this.scrollOff - delta), 0, j);
+            this.scrollOff = Mth.clamp((int) (this.scrollOff - scrollY), 0, j);
         }
 
         return true;

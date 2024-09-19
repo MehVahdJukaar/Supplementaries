@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 public class GoldDoorBlock extends DoorBlock {
 
     public GoldDoorBlock(Properties builder) {
-        super(builder, BlockSetType.GOLD);
+        super(BlockSetType.GOLD, builder);
     }
 
     public boolean canBeOpened(BlockState state) {

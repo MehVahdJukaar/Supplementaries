@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
+import org.jetbrains.annotations.Nullable;
 
 public class SugarParticle extends TerrainParticle {
 
@@ -36,16 +37,16 @@ public class SugarParticle extends TerrainParticle {
         var fluid = this.level.getFluidState(pos);
         boolean wasTouchingWater = fluid.is(FluidTags.WATER);
         if (wasTouchingWater && Math.abs((this.y - pos.getY() - fluid.getOwnHeight())) < 0.01 && this.level.getFluidState(pos.above()).isEmpty()) {
-               this.gravity = 0;
-               this.yd = 0;
-        }else {
+            this.gravity = 0;
+            this.yd = 0;
+        } else {
             this.gravity = wasTouchingWater ? -0.05f : 1;
         }
 
         super.tick();
 
 
-        if(gravity != 0) {
+        if (gravity != 0) {
             var pos2 = BlockPos.containing(this.x, this.y, this.z);
             var fluid2 = this.level.getFluidState(pos2);
             boolean isTouchingWater = fluid2.is(FluidTags.WATER);
@@ -78,16 +79,13 @@ public class SugarParticle extends TerrainParticle {
     }
 
     public static final ParticleRenderType TERRAIN_SHEET_OPAQUE = new ParticleRenderType() {
-        public void begin(BufferBuilder builder, TextureManager textureManager) {
+        @Override
+        public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
             RenderSystem.disableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.depthMask(true);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
-
-        public void end(Tesselator tesselator) {
-            tesselator.end();
+            return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
         public String toString() {

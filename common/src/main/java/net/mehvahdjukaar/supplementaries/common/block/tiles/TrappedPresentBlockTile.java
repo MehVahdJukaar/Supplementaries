@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContai
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -37,9 +38,9 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     }
 
     public static boolean isPrimed(ItemStack stack) {
-        CompoundTag com = stack.getTag();
-        if (com != null) {
-            CompoundTag tag = com.getCompound("BlockEntityTag");
+        var beData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (beData != null) {
+            CompoundTag tag = beData.getUnsafe().getCompound("BlockEntityTag");
             return tag.contains("Items");
         }
         return false;

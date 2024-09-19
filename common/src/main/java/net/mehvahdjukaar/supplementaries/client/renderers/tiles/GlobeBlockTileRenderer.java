@@ -132,7 +132,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         if (data == null) return;
         poseStack.pushPose();
         poseStack.mulPose(RotHlpr.X180);
-        ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() : GlobeManager.Type.EARTH.texture;
+        ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() :
+                GlobeManager.Type.EARTH.getTexture();
 
         ModelPart model = this.models.get(data.getFirst());
 

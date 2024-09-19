@@ -34,12 +34,9 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-        this.renderBackground(graphics);
 
         super.render(graphics, mouseX, mouseY, partialTicks);
-
 
         Lighting.setupForFlatItems();
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);

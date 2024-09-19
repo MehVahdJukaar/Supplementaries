@@ -29,7 +29,7 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
 
     public void renderMob(MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
         Entity mob = mobHolder.getDisplayedMob();
-        if (mob != null && mobHolder.getData() instanceof MobContainer.MobNBTData.Entity entityData) {
+        if (mob != null && mobHolder.getData() instanceof MobContainer.MobData.Entity entityData) {
             matrixStack.pushPose();
 
             float s = entityData.getScale();

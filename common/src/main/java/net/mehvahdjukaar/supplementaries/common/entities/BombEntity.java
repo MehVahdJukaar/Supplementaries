@@ -117,12 +117,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     protected Item getDefaultItem() {
-        return ModRegistry.BOMB_ITEM_ON.get();
-    }
-
-    @Override
-    public ItemStack getItem() {
-        return type.getDisplayStack(this.active);
+        return ModRegistry.BOMB_ITEM.get();
     }
 
     private void spawnBreakParticles() {
@@ -326,21 +321,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     public enum BombType {
-        NORMAL(ModRegistry.BOMB_ITEM, ModRegistry.BOMB_ITEM_ON),
-        BLUE(ModRegistry.BOMB_BLUE_ITEM, ModRegistry.BOMB_BLUE_ITEM_ON),
-        SPIKY(ModRegistry.BOMB_SPIKY_ITEM, ModRegistry.BOMB_SPIKY_ITEM_ON);
-
-        public final Supplier<Item> item;
-        public final Supplier<Item> itemOn;
-
-        BombType(Supplier<Item> item, Supplier<Item> itemOn) {
-            this.item = item;
-            this.itemOn = itemOn;
-        }
-
-        public ItemStack getDisplayStack(boolean active) {
-            return (active ? itemOn : item).get().getDefaultInstance();
-        }
+        NORMAL,
+        BLUE,
+        SPIKY;
 
         public double getRadius() {
             return this == BLUE ? CommonConfigs.Tools.BOMB_BLUE_RADIUS.get() : CommonConfigs.Tools.BOMB_RADIUS.get();

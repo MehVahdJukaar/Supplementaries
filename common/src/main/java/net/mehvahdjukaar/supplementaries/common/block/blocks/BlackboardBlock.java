@@ -167,9 +167,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             if (glowChanged) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
 
-                if (!player.isCreative()) {
-                    stack.shrink(1);
-                }
+                stack.consume(1, player);
                 //server
                 if (player instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);

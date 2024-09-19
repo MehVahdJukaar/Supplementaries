@@ -41,7 +41,7 @@ class AntiqueInkBehavior implements ItemUseOnBlockBehavior {
         if (tile != null && (!(tile instanceof IOwnerProtected op) || op.isAccessibleBy(player)) &&
                 !(tile instanceof SignBlockEntity)) { //taken care by sign applicator
             if (AntiqueInkItem.toggleAntiqueInkOnSigns(world, player, pos, tile, newState)) {
-                if (!player.isCreative()) stack.shrink(1);
+                stack.consume(1, player);
 
                 return InteractionResult.sidedSuccess(world.isClientSide);
             }

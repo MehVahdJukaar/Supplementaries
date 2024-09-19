@@ -14,6 +14,16 @@
 - pack button tooltip positioner
 - named block being placed retaining name
 - antique ink book signing
+- doormat add item sound
+- check all iOwner protected and openable container stuff
+- render backgrounds
+- check mob holder serialization
+- bombprojectile item model
+- quiver color and default color
+- check all guis
+- cannon screen number box tick
+- jar item fluids
+- cage catching sound
 
 
 # Soon

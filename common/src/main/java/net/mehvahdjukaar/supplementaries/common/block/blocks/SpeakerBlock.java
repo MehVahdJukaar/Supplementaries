@@ -113,9 +113,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
                     level.setBlockAndUpdate(pos, state.setValue(ANTIQUE, true));
                     level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
 
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
+                    stack.consume(1, player);
                     if (player instanceof ServerPlayer serverPlayer) {
                         CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                         player.awardStat(Stats.ITEM_USED.get(stack.getItem()));

@@ -95,10 +95,8 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
                 : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-
-    //@Override
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {
                 ItemStack i = tile.getItem(0);
@@ -106,16 +104,19 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
             }
         }
         return super.getCloneItemStack(world, pos, state);
-
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
-            return tile.interact(player, handIn);
+    public boolean isPossibleToRespawnInThis(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
+            return tile.interactWithPlayerItem(player, hand, stack);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

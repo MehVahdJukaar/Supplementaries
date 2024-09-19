@@ -79,7 +79,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
 
     @Override
     public <T extends Entity> CapturedMobInstance<T> createCapturedMobInstance(T self, float containerWidth, float containerHeight) {
-        return new DataCapturedMobInstance<>(self, containerWidth, containerHeight, this);
+        return new DataCapturedMobInstance<>(self, this);
     }
 
     @Override

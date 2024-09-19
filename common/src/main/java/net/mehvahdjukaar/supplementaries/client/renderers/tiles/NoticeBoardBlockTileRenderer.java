@@ -29,6 +29,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FastColor;
@@ -39,6 +40,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -112,14 +114,14 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
         //render map
         if (stack.getItem() instanceof ComplexItem) {
-            MapItemSavedData mapData = MapItem.getSavedData(stack, tile.getLevel());
+            MapId mapId = stack.get(DataComponents.MAP_ID);
+            MapItemSavedData mapData = MapItem.getSavedData(mapId, tile.getLevel());
             if (mapData != null) {
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 0.008);
                 poseStack.scale(0.0078125F, -0.0078125F, -0.0078125F);
                 poseStack.translate(-64.0D, -64.0D, 0.0D);
-                Integer integer = MapItem.getMapId(stack);
-                mapRenderer.render(poseStack, buffer, integer, mapData, true, frontLight);
+                mapRenderer.render(poseStack, buffer, mapId, mapData, true, frontLight);
                 poseStack.popPose();
             } else {
                 //request map data from server

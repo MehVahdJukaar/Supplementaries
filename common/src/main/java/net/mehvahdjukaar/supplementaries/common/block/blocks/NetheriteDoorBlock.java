@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,7 +31,7 @@ import java.util.List;
 public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
 
     public NetheriteDoorBlock(Properties builder) {
-        super(builder, BlockSetType.IRON);
+        super(BlockSetType.IRON, builder);
     }
 
     @Override
@@ -83,9 +84,9 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add(Component.translatable("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add(Component.translatable("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 }

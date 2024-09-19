@@ -7,10 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -45,14 +42,12 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof DoormatBlockTile tile && tile.isAccessibleBy(player)) {
 
-            ItemStack itemstack = player.getItemInHand(hand);
-
-            boolean sideHit = hit.getDirection() != Direction.UP;
-            boolean canExtract = itemstack.isEmpty() && (player.isShiftKeyDown() || sideHit);
+            boolean sideHit = hitResult.getDirection() != Direction.UP;
+            boolean canExtract = stack.isEmpty() && (player.isShiftKeyDown() || sideHit);
             boolean canInsert = tile.isEmpty() && sideHit;
             if (canExtract ^ canInsert) {
                 if (!level.isClientSide) {
@@ -62,22 +57,20 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                         drop.setDefaultPickUpDelay();
                         level.addFreshEntity(drop);
                     } else {
-                        ItemStack newStack = itemstack.copy();
+                        ItemStack newStack = stack.copy();
                         newStack.setCount(1);
                         tile.setItems(NonNullList.withSize(1, newStack));
-                        if (!player.isCreative()) {
-                            itemstack.shrink(1);
-                        }
+                        stack.consume(1, player);
                     }
                     tile.setChanged();
-                    level.playSound(null, pos, tile.getAddItemSound(), SoundSource.BLOCKS, 1.0F, 0.8f);
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                level.playSound(player, pos, tile.getAddItemSound(), SoundSource.BLOCKS, 1.0F, 0.8f);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             //color wax and gui
-            return tile.interactWithTextHolder(0, level, pos, state, player, hand);
+            return tile.interactWithTextHolder(0, level, pos, state, player, hand, stack);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -119,10 +112,6 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
         return true;
     }
 
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-        return true;
-    }
 
     @Nullable
     @Override
@@ -152,6 +141,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer, stack);
         BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 

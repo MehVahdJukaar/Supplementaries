@@ -40,7 +40,8 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
     }
 
 
-    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferIn, int light, int combinedOverlayIn) {
+    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack,
+                                   MultiBufferSource bufferIn, int light, int combinedOverlayIn) {
         poseStack.pushPose();
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         VertexConsumer builder = ModMaterials.get(texture).buffer(bufferIn, RenderType::entityTranslucentCull);

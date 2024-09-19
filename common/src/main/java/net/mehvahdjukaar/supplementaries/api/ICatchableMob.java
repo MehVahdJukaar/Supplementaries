@@ -117,7 +117,7 @@ public interface ICatchableMob {
      * Here you can return a custom Behavior instance that will give you more control over the behavior in cages and jars
      */
     default <T extends Entity> CapturedMobInstance<T> createCapturedMobInstance(T self, float containerWidth, float containerHeight) {
-        return new CapturedMobInstance.Default<>(self, containerWidth, containerHeight);
+        return new CapturedMobInstance<>(self);
     }
 
 }

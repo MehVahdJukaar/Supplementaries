@@ -4,7 +4,6 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTrappedPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
@@ -45,8 +44,8 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
         super.init();
 
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
+        int i = this.leftPos;
+        int j = this.topPos;
         this.packButton = this.addRenderableWidget(new PackButton(i + 60 + 33, j + 33));
 
         this.primed = tile.isPrimed();
@@ -104,22 +103,21 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        this.renderBackground(graphics);
-        int k = (this.width - this.imageWidth) / 2;
-        int l = (this.height - this.imageHeight) / 2;
-        graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        int k = this.leftPos;
+        int l = this.topPos;
+        graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k, l, 0, 0,
+                this.imageWidth, this.imageHeight);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.primed) {
-            int k = (this.width - this.imageWidth) / 2;
-            int l = (this.height - this.imageHeight) / 2;
+            int k = this.leftPos;
+            int l = this.topPos;
             Slot slot = this.menu.getSlot(0);
             graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 400, 12, 232, 16, 16, 256, 256);
         }
-        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -175,11 +173,6 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
             this.packed = packed;
             this.active = hasItem;
             this.setTooltip(!packed ? TOOLTIP : null);
-        }
-
-        @Override
-        protected ClientTooltipPositioner createTooltipPositioner() {
-            return DefaultTooltipPositioner.INSTANCE;
         }
 
         @Override

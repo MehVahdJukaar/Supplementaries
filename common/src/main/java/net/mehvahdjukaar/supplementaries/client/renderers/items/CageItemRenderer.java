@@ -35,7 +35,7 @@ public class CageItemRenderer extends ItemStackRenderer {
         }
     }
 
-    protected void renderContent(CompoundTag tag, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderContent(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         //render mob
         if (tag.contains("MobHolder")) {

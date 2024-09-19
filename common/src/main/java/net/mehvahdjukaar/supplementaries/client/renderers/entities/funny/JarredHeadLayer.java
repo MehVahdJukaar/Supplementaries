@@ -83,7 +83,7 @@ public class JarredHeadLayer<T extends Player, M extends HumanoidModel<T> & Head
         float bodyXRot = Mth.rotLerp(partialTick, player.xRotO, player.getXRot()) * Mth.DEG_TO_RAD;
         parentHead.translateAndRotate(matrixStack);
 
-        float deltaTime = Minecraft.getInstance().getDeltaFrameTime();
+        float deltaTime = Minecraft.getInstance().getTimer().getGameTimeDeltaTicks();
 
         float viscosity = 0.17f;
         head.yRot = rotlerpRad(deltaTime * viscosity, head.yRot, bodyYRot + parentHead.yRot);

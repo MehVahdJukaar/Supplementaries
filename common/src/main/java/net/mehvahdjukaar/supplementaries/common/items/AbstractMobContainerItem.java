@@ -7,11 +7,13 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -33,13 +35,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -167,16 +169,17 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      * @param entity       mob
      * @param currentStack holder item
      * @param bucketStack  optional filled bucket item
-     * @return full item stack
+     * @return new full item stack if it was successful, same otherwise
      */
     public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucketStack) {
-        ItemStack returnStack = new ItemStack(this);
-        if (currentStack.hasCustomHoverName()) returnStack.setHoverName(currentStack.getHoverName());
-
-        CompoundTag cmp = MobContainer.createMobHolderItemTag(entity, this.getMobContainerWidth(), this.getMobContainerHeight(),
-                bucketStack, this.isAquarium);
-        if (cmp != null) returnStack.addTagElement("BlockEntityTag", cmp);
-        return returnStack;
+        ItemStack returnStack = currentStack.copy();
+        MobContainer mobContainer = new MobContainer(this.getMobContainerWidth(), this.getMobContainerHeight(), this.isAquarium);
+        boolean success = mobContainer.captureEntity(entity, bucketStack);
+        if (success) {
+            returnStack.set(ModComponents.MOB_HOLDER_CONTENT.get(), MobContainerView.of(mobContainer));
+            return returnStack;
+        }
+        return currentStack;
     }
 
     //TODO: delegate to mobHolder
@@ -184,9 +187,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
-        CompoundTag com = stack.getTagElement("BlockEntityTag");
+        CustomData beData = stack.get(ModComponents.MOB_HOLDER_CONTENTS.get());
         Player player = context.getPlayer();
-        if (!context.getPlayer().isShiftKeyDown() && com != null) {
+        if (!context.getPlayer().isShiftKeyDown() && beData != null) {
             //TODO: add other case
             boolean success = false;
             Level world = context.getLevel();
@@ -233,7 +236,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                     if (player.isCreative() && nbt.contains("UUID")) {
                         nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
                     }
-                }else Supplementaries.LOGGER.error("Failed to load entity from itemstack");
+                } else Supplementaries.LOGGER.error("Failed to load entity from itemstack");
             }
             if (success) {
                 if (!world.isClientSide) {
@@ -255,18 +258,19 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        CustomData beData = stack.get(ModComponents.MOB_HOLDER_CONTENTS);
+        if (beData != null) {
+            CompoundTag tag = beData.getUnsafe();
             CompoundTag com = tag.getCompound("MobHolder");
             if (com.isEmpty()) com = tag.getCompound("BucketHolder");
             if (com.contains("Name")) {
-                tooltip.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
+                tooltipComponents.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
             }
         }
-        if (MiscUtils.showsHints(worldIn, flagIn)) {
-            this.addPlacementTooltip(tooltip);
+        if (MiscUtils.showsHints(tooltipFlag)) {
+            this.addPlacementTooltip(tooltipComponents);
         }
     }
 
@@ -321,24 +325,25 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             if (this.isAquarium) {
                 bucket = BucketHelper.getBucketFromEntity(entity);
             }
-            //fix here
+            //not ideal here...
+            if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
+                mob.setPersistenceRequired();
+            }
 
-            ForgeHelper.reviveEntity(entity);
+            ItemStack newItem = this.saveEntityInItem(entity, stack, bucket);
+            if (newItem == stack) return InteractionResult.FAIL;
 
             this.playCatchSound(player);
             //return for client
             if (player.level().isClientSide) return InteractionResult.SUCCESS;
 
-            this.angerNearbyEntities(entity, player);
+            Utils.swapItemNBT(player, hand, stack, newItem);
 
-            if (CommonConfigs.Functional.CAGE_PERSISTENT_MOBS.get() && entity instanceof Mob mob) {
-                mob.setPersistenceRequired();
-            }
+            this.angerNearbyEntities(entity, player);
 
             if (entity instanceof Mob mob) {
                 mob.dropLeash(true, !player.getAbilities().instabuild);
             }
-            Utils.swapItemNBT(player, hand, stack, this.saveEntityInItem(entity, stack, bucket));
 
             entity.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.CONSUME;

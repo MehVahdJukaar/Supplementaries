@@ -85,9 +85,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
             this.level().broadcastEntityEvent(this, (byte) 16);
         }
 
-        if (!player.isCreative()) {
-            stack.shrink(1);
-        }
+        stack.consume(1, player);
     }
 
     public boolean supp$isConverting() {

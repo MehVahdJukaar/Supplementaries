@@ -8,13 +8,15 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
+import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -22,6 +24,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +49,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         super(ModRegistry.JAR_TILE.get(), pos, state, 12);
         int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
         this.fluidHolder = SoftFluidTank.create(capacity);
-        AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.JAR_ITEM.get());
+        AbstractMobContainerItem item = ((AbstractMobContainerItem) state.getBlock().asItem());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
     }
 
@@ -54,6 +57,30 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public void addExtraModelData(ExtraModelData.Builder builder) {
         builder.with(FLUID, fluidHolder.getFluidValue())
                 .with(FILL_LEVEL, fluidHolder.getHeight(1));
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        SoftFluidTankView fluidView = componentInput.get(ModComponents.SOFT_FLUID_CONTENT.get());
+        if (fluidView != null) {
+            fluidView.apply(this.fluidHolder);
+        }
+        MobContainerView mobView = componentInput.get(ModComponents.MOB_HOLDER_CONTENT.get());
+        if (mobView != null) {
+            mobView.apply(this.mobContainer);
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        if (!this.fluidHolder.isEmpty()) {
+            components.set(ModComponents.SOFT_FLUID_CONTENT.get(), SoftFluidTankView.of(this.fluidHolder));
+        }
+        if (!this.mobContainer.isEmpty()) {
+            components.set(ModComponents.MOB_HOLDER_CONTENT.get(), MobContainerView.of(this.mobContainer));
+        }
     }
 
     @Override
@@ -163,7 +190,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         return false;
     }
 
-    public void resetHolders() {
+    public void clearAllContents() {
         this.fluidHolder.clear();
         this.mobContainer.clear();
         this.setItems(NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY));
@@ -181,23 +208,15 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        try {
-            this.fluidHolder.load(tag);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to load fluid container at {}:", this.getBlockPos(), e);
-        }
-        this.mobContainer.load(tag);
+        this.fluidHolder.load(tag, registries);
+        this.mobContainer.load(tag, registries);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        try {
-            this.fluidHolder.save(tag);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to save fluid container at {}:", this.getBlockPos(), e);
-        }
-        this.mobContainer.save(tag);
+        this.fluidHolder.save(tag, registries);
+        this.mobContainer.save(tag, registries);
     }
 
     public boolean hasContent() {

@@ -62,8 +62,8 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         super.init();
 
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
+        int i = this.leftPos;
+        int j = this.height;
 
         this.packButton = this.addRenderableWidget(new PackButton(i + 14, j + 45));
 
@@ -156,26 +156,22 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        this.renderBackground(graphics);
-        int k = (this.width - this.imageWidth) / 2;
-        int l = (this.height - this.imageHeight) / 2;
         ResourceLocation presentGuiTexture = this.menu.getSlot(0).getItem().isEmpty() ?
                 ModTextures.PRESENT_EMPTY_GUI_TEXTURE :
                 ModTextures.PRESENT_GUI_TEXTURE;
-        graphics.blit(presentGuiTexture, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(presentGuiTexture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.packed) {
-            int k = (this.width - this.imageWidth) / 2;
-            int l = (this.height - this.imageHeight) / 2;
+            int k = this.leftPos;
+            int l = this.topPos;
             Slot slot = this.menu.getSlot(0);
 
             graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 300, 12, 232, 16, 16, 256, 256);
         }
-        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
