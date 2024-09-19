@@ -74,7 +74,6 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return 17;
     }
 
-
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemCopy = ItemStack.EMPTY;
