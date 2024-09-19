@@ -9,6 +9,8 @@ import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosi
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +25,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -286,9 +291,14 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 3; //TODO: config
-            if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), (float) lostEnergy * dmgMult)) {
+            float dmgMult = 3.5f; //TODO: config
+            float amount = (float) lostEnergy * dmgMult;
+            float oldHealth = le.getHealth();
+            if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);
+            }
+            if (!level().isClientSide && le instanceof Creeper && oldHealth >= le.getMaxHealth()) {
+                maybeDropDisc(le);
             }
         }
 
@@ -316,6 +326,15 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         if (target instanceof CannonBallEntity c) {
             c.justCollidedWith.add(this);
             this.playSound(ModSounds.CANNONBALL_BOUNCE.get(), 1 * 2.2f, 1);
+        }
+    }
+
+    private void maybeDropDisc(LivingEntity le) {
+        if (!le.isAlive() && CommonConfigs.Functional.AVAST_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
+            if (((LivingEntityAccessor) le).invokeShouldDropLoot() && this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+                le.spawnAtLocation(ModRegistry.AVAST_DISC.get());
+                // we cant use global loot modifiers because we dont have access to damage value there
+            }
         }
     }
 

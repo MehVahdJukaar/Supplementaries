@@ -1,28 +1,32 @@
+# Soon
+
+- clock block first tick setup
+- polytone bow model
+- gravel bricks exploded particles
+- bomb bounce on slime blocks
+- awning slimeball bounce, boundy block tag for cannonbals and bombs
+- hat for players
+- anger nearby piglins
+- lumisene sets stuff on fire
+
 # Supplementaries
 
+- soap and wax dispenser behaviors
 - waxable dispenser behavior
-- dispensers shoot quiver content
-- bundle and quiver dispenser interaction
-- faucets not working with water
-- fire pit falling amendments
 - test config saving
 - lumisene on fire cauldron
-- dispenser and lumisene stuff
-- lumisene bottle fluid in cauldrons
-- slingshot bucket
 - lumisene burns in nether
-- hourglass sculk
 - present open sculk
+- blackboard draw sculk
 - rope pull down candle holders and lanterns
 - fire charge speed up when fired from present
 - lumisene cauldron with particles
 - re test all faucet interactions
-- pedestal spin is bugged
 - client side bellows jump
 - hat stand wobble not synced
 - check particle collision with blocks
 - bunding pulled up by ropes voided
-- planter root only happen with 2x2
+- planter root  only happen with 2x2
 - slingshot proj not interacting with entities
 - ash bonemeal
 - pulley piston
@@ -39,7 +43,6 @@
 - blue bomb charge animation and sound (total overhaul, sound or smoke bomb)
 - rope like quark chain stuff pull puston blocks
 - flammable blocks with tile (notice board and timber) burn forever
-- slimeballa nd thrown bricks out of presents and cannons
 - faucet pulling stuff game event
 - ash auto bonemeal, improve bubbles
 - better fodder pathfinding
@@ -48,10 +51,8 @@
 - create moving dynamic blocks like rope knot
 - emi world interaction (ash)
 - wrench rotation overlay
-- squishy piston launcher. also rework them and fix on servers
 - ash makes mobs jump
 - clicking on cage with lead will put the leashed animal inside
-- safe shulker recipe broken as it deletes items inside
 - more flywheel stuff
 - Fix doormat highlight text box
 - brush remove 1 layer ash or snow
@@ -59,12 +60,18 @@
 
 # Amendments
 
+- royal jelly bug
+- fluid offer ignoring min amount
+- faucet behaviors update on data reload
+- dye cauldon 1.21
+- finish 1.21 (fire damage, event..)
+- cauldron bottle conversion from dispensers
+- wall lantern quad order inverted . visible when embeddum is on
 - rope bell doesnt work
 - make bell connectto the side
 - hanging signs dont work with antique ink
 - water cauldron update bubbling state automatically
 - boilingdamage string
-- cauldron light kevek
 - citadel lecterns
 - crafting cauldron sound
 - jukebox flat animation
@@ -79,6 +86,8 @@
 
 # Snowy Spirit
 
+- snowy spirit eat code server side with entity event for particles
+- gingy spin attack animationa and hostiles in witch hut
 - new ginger tegure and sound
 - gumdrop entities
 - finish gingerbead golem
@@ -124,6 +133,10 @@
 - heartstone pets with system taht keeps track in unloaded chunks
 
 
+# MmmMmmMmmMmm
+
+- crow scarecrow
+
 # Adv Frames
 
 - advancement frames not showing player name
@@ -132,12 +145,10 @@
 
 # Polytone
 
-- lightmap affecting night visonwhen it shouldnt
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
-
+- entity random model CIM
 - hex codec for colormaps
-- polytone better lightmap smoothing and wiki docs
 
 # Randomium
 - particles for randomium
@@ -145,12 +156,13 @@
 - randomium can give onl stuff already obtained by a player in survival
 
 # Wise Tree
-- Tree chat gtp
+- Tree chat gpt
 - tree splash text
 
 
 # Random Ideas
 
+- rework spring launcher into gust emitter
 - telescope
 - meteors
 - nautilus mob and block
@@ -266,17 +278,12 @@
 - add shift middle click to swap to correct tool
 - mod idea: blackboard banners and flags with villager
 - simple mode for doors and trapdoors
-- animated pulley texture
 -
 - TODO: faucets create sprout
 -
 - randomium item particle when drop
--
 - TODO: xp bottling whose cost depends on player total xp
 - golden carrots to breed baby pignis
 - TODO: credist screen
--
-- small honey slime in cage
--
 - hud mod. armor broken hud, items offhadn crafting
 - snow real magic compat

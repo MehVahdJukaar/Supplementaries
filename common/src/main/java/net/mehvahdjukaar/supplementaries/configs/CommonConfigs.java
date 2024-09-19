@@ -219,8 +219,8 @@ public class CommonConfigs {
 
             builder.push("dispenser_minecart");
             DISPENSER_MINECART_ENABLED = feature(builder);
-            DISPENSER_MINECART_FRONT = builder.comment("Dispenser minecarts will have their dispenser facing forward instead of up")
-                    .define("face_forward", false);
+            DISPENSER_MINECART_ANGLE = builder.comment("Makes projectiles shot from dispenser minecart retain the minecart velocity and be shot at an angle when the minecart is on a rail slope")
+                    .define("adjust_projectile_angle", true);
             builder.pop();
 
             builder.push("faucet");
@@ -297,7 +297,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
 
         public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
-        public static final Supplier<Boolean> DISPENSER_MINECART_FRONT;
+        public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
 
         public static final Supplier<Boolean> RELAYER_ENABLED;
 
@@ -734,6 +734,7 @@ public class CommonConfigs {
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
             CANNONBALL_ENABLED = feature(builder, "cannonball");
+            AVAST_DISC_ENABLED = feature(builder, ModConstants.AVAST_DISC_NAME);
             builder.pop();
 
             builder.push("present");
@@ -836,6 +837,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
+        public static final Supplier<Boolean> AVAST_DISC_ENABLED;
     }
 
 
@@ -1068,6 +1070,8 @@ public class CommonConfigs {
                     .define("axe_strip", true);
             ENDER_PEAR_DISPENSERS = builder.comment("Enables shooting ender pearls with dispensers")
                     .define("shoot_ender_pearls", true);
+            BUNDLE_DISPENSER = builder.comment("Enables extracting bundles items with dispensers")
+                    .define("extract_from_bundles", true);
             builder.pop();
 
             //throwable bricks
@@ -1201,6 +1205,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> APPLE_DISENCHANT;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
+        public static final Supplier<Boolean> BUNDLE_DISPENSER;
         public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
         public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
         public static final Supplier<Boolean> PLACEABLE_STICKS;

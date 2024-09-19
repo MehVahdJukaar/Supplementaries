@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.GameRules;
@@ -44,74 +43,64 @@ public class ClockBlockTile extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag compound) {
         super.load(compound);
-        this.roll = compound.getFloat("MinRoll");
-        this.prevRoll = this.roll;
-        this.targetRoll = this.roll;
-
-        this.sRoll = compound.getFloat("SecRoll");
-        this.sPrevRoll = this.sRoll;
-        this.sTargetRoll = this.sRoll;
         this.power = compound.getInt("Power");
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putFloat("MinRoll", this.targetRoll);
-        tag.putFloat("SecRoll", this.sTargetRoll);
         tag.putInt("Power", this.power);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
     }
 
     public void updateInitialTime(Level level, BlockState state, BlockPos pos) {
         int time = (int) (level.getDayTime() % 24000);
-        this.updateTime(time, level, state, pos);
+        this.updateTargetTime(time, level, state, pos);
         this.roll = this.targetRoll;
         this.prevRoll = this.targetRoll;
         this.sRoll = this.sTargetRoll;
         this.sPrevRoll = this.sTargetRoll;
     }
 
-    public void updateTime(int time, Level level, BlockState state, BlockPos pos) {
-
-
-        //minute here are 1 rl second -> 50m in a minecraft hour
-        int minute = Mth.clamp((time % 1000) / 20, 0, 50);
-        int hour = Mth.clamp(time / 1000, 0, 24);
-
-        //server
-        if (!level.isClientSide && level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
-
-            if (hour != state.getValue(ClockBlock.HOUR)) {
-                //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
-                level.setBlock(pos, state.setValue(ClockBlock.HOUR, hour), 3);
-            }
-            int p = Mth.clamp(time / 1500, 0, 15);
-            if (p != this.power) {
-                this.power = p;
-                level.updateNeighbourForOutputSignal(pos, this.getBlockState().getBlock());
-            }
-            this.level.playSound(null, this.worldPosition,
-                    (minute % 2 == 0 ? ModSounds.CLOCK_TICK_1 : ModSounds.CLOCK_TICK_2).get(), SoundSource.BLOCKS,
-                    0.08f, MthUtils.nextWeighted(level.random, 0.1f) + 0.95f);
-
-        }
-        //hours
-        this.targetRoll = (hour * 30) % 360;
-        //minutes
-        this.sTargetRoll = (minute * 7.2f + 180) % 360f;
+    public static int calculateHour(int time){
+        return Mth.clamp(time / 1000, 0, 24);
     }
 
-    public static boolean canReadTime(Level level) {
+    private static int calculateMinute(int time) {
+        return Mth.clamp((time % 1000) / 20, 0, 50);
+    }
+
+    protected void updateTargetTime(int time, Level level, BlockState state, BlockPos pos) {
+        //minute here are 1 rl second -> 50m in a minecraft hour
+        int minute = calculateMinute(time);
+        int hour = calculateHour(time);
+
+        //server
+        if (!level.isClientSide) {
+            if (level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
+                if (hour != state.getValue(ClockBlock.HOUR)) {
+                    //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
+                    level.setBlock(pos, state.setValue(ClockBlock.HOUR, hour), 3);
+                }
+                int p = Mth.clamp(time / 1500, 0, 15);
+                if (p != this.power) {
+                    this.power = p;
+                    level.updateNeighbourForOutputSignal(pos, this.getBlockState().getBlock());
+                }
+                this.level.playSound(null, this.worldPosition,
+                        (minute % 2 == 0 ? ModSounds.CLOCK_TICK_1 : ModSounds.CLOCK_TICK_2).get(), SoundSource.BLOCKS,
+                        0.08f, MthUtils.nextWeighted(level.random, 0.1f) + 0.95f);
+            }
+        } else {
+            //hours
+            this.targetRoll = (hour * 30) % 360;
+            //minutes
+            this.sTargetRoll = (minute * 7.2f + 180) % 360f;
+        }
+    }
+
+
+
+    protected boolean canReadTime(Level level) {
         return level.dimensionType().natural() ^ MiscUtils.FESTIVITY.isAprilsFool();
     }
 
@@ -119,13 +108,20 @@ public class ClockBlockTile extends BlockEntity {
         int dayTime = (int) (level.getDayTime() % 24000);
         int time = level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT) ?
                 dayTime : (int) (level.getGameTime() % 24000);
-        if (canReadTime(level)) {
-            if (time % 20 == 0) {
-                tile.updateTime(dayTime, level, pState, pPos);
 
-            }
+        boolean canReadTime = tile.canReadTime(level);
+
+        if (canReadTime && time % 20 == 0) {
+            tile.updateTargetTime(dayTime, level, pState, pPos);
+        }
+        if (!level.isClientSide) {
+            return;
+        }
+
+        tile.prevRoll = tile.roll;
+        if (canReadTime) {
+
             //hours
-            tile.prevRoll = tile.roll;
             if (tile.roll != tile.targetRoll) {
                 float r = (tile.roll + 8) % 360;
                 if ((r >= tile.targetRoll) && (r <= tile.targetRoll + 8)) {
@@ -143,7 +139,6 @@ public class ClockBlockTile extends BlockEntity {
                 tile.sRoll = r;
             }
         } else {
-            tile.prevRoll = tile.roll;
 
             if (time % 5 == 0) {
 
@@ -158,15 +153,15 @@ public class ClockBlockTile extends BlockEntity {
                 tile.sTargetRoll = d0;
             }
 
-            tile.rota += tile.targetRoll * 0.1;
-            tile.rota *= 0.8;
+            tile.rota += (float) (tile.targetRoll * 0.1);
+            tile.rota *= 0.8F;
             tile.roll = Mth.positiveModulo(tile.roll + tile.rota, 360);
 
             tile.sPrevRoll = tile.sRoll;
 
 
-            tile.sRota += tile.sTargetRoll * 0.1;
-            tile.sRota *= 0.8;
+            tile.sRota += (float) (tile.sTargetRoll * 0.1);
+            tile.sRota *= 0.8F;
             tile.sRoll = Mth.positiveModulo(tile.sRoll + tile.sRota, 360);
         }
     }

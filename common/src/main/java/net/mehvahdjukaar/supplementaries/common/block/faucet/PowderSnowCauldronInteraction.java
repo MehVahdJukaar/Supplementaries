@@ -30,11 +30,11 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
-        int amount = fluid.getCount();
+    public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer fluidOffer) {
         if (state.is(Blocks.CAULDRON)) {
-            if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW.get())) {
+            if (fluidOffer.fluid().is(BuiltInSoftFluids.POWDERED_SNOW.get())) {
 
+                int minAmount = fluidOffer.minAmount();
                 int am = Math.min(minAmount, 3);
                 level.setBlockAndUpdate(pos, Blocks.POWDER_SNOW_CAULDRON.defaultBlockState()
                         .setValue(LayeredCauldronBlock.LEVEL, am));
@@ -42,9 +42,13 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
             }
         }
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
+            SoftFluidStack fluid = fluidOffer.fluid();
+            int minAmount = fluidOffer.minAmount();
             if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW.get()) &&
                     state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
                 int space = 3 - state.getValue(LayeredCauldronBlock.LEVEL);
+                int amount = fluid.getCount();
+
                 int am = Math.min(amount, space);
                 level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
                         state.getValue(LayeredCauldronBlock.LEVEL) + am));

@@ -76,7 +76,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
 
                             boolean stasis = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0;
                             InteractionHand hand = player.getUsedItemHand();
-                            power *= (CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1;
+                            power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (stasis ? 0.5 : 0)) * 1.1);
                             shootProjectile(world, entity, hand, stack, projectiles.get(j), count == 1 ? 1 : pitches[j], power, 1,
                                     angle * (j - (count - 1) / 2f));
                         }
@@ -109,12 +109,12 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
     }
 
     //shoot pitches for multi shot
-    private static float[] getShotPitches(RandomSource random) {
+    protected float[] getShotPitches(RandomSource random) {
         boolean flag = random.nextBoolean();
         return new float[]{getRandomShotPitch(random, flag), 1.0F, getRandomShotPitch(random, !flag)};
     }
 
-    private static float getRandomShotPitch(RandomSource random, boolean left) {
+    protected float getRandomShotPitch(RandomSource random, boolean left) {
         float f = left ? 0.63F : 0.43F;
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
@@ -190,7 +190,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements Vanishable, I
             if (i instanceof FireChargeItem) {
                 return CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get();
             }
-            if (i instanceof BucketItem) {
+            if (i instanceof DispensibleContainerItem && i.hasCraftingRemainingItem()) {
                 return CommonConfigs.Tools.SLINGSHOT_BUCKETS.get();
             }
             if (s.is(ModTags.SLINGSHOT_DAMAGEABLE)) {

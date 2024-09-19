@@ -31,6 +31,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -135,5 +136,9 @@ public class SuppPlatformStuffImpl {
 
     public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
         return UseItemCallback.EVENT.invoker().interact(player, player.level(), hand);
+    }
+
+    public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
+        dc.emptyContents(player, level, hit.getBlockPos(), hit);
     }
 }

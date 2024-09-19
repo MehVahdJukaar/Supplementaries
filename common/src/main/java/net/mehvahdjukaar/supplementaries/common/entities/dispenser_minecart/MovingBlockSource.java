@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
-    //TODO: forward fancing dispenser
+
     private final Entity entity;
     private final T blockEntity;
 

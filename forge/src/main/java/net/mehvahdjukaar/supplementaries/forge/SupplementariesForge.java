@@ -74,7 +74,6 @@ public class SupplementariesForge {
     public void registerOverrides(RegisterEvent event) {
         if (event.getRegistryKey() == ForgeRegistries.ITEMS.getRegistryKey()) {
             if (CommonConfigs.Tweaks.SHULKER_HELMET_ENABLED.get()) {
-                Block b;
                 event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
                         new ShulkerShellItem(new Item.Properties()
                                 .stacksTo(64)

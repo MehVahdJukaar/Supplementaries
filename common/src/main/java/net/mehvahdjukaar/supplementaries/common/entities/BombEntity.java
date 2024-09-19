@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.moonlight.core.fake_player.FakeGenericPlayer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
@@ -17,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -41,10 +44,14 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
 
@@ -126,7 +133,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void handleEntityEvent(byte id) {
         switch (id) {
-            default -> super.handleEntityEvent(id);
             case 3 -> {
                 spawnBreakParticles();
                 this.discard();
@@ -143,6 +149,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 }
                 this.active = false;
             }
+            default -> super.handleEntityEvent(id);
         }
     }
 
@@ -180,17 +187,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
-
-    @Override
-    protected void onHitEntity(EntityHitResult hit) {
-        super.onHitEntity(hit);
-        hit.getEntity().hurt(level().damageSources().thrown(this, this.getOwner()), 1);
-        if (hit.getEntity() instanceof LargeFireball) {
-            this.superCharged = true;
-            hit.getEntity().remove(RemovalReason.DISCARDED);
-        }
-    }
-
     public void turnOff() {
         Level level = level();
         if (!level.isClientSide()) {
@@ -211,20 +207,35 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult hit) {
-        super.onHitBlock(hit);
-        this.setDeltaMovement(Vec3.ZERO);
-        this.setOnGround(true);
+    protected void onHitEntity(EntityHitResult hit) {
+        super.onHitEntity(hit);
+        hit.getEntity().hurt(level().damageSources().thrown(this, this.getOwner()), 1);
+        if (hit.getEntity() instanceof LargeFireball) {
+            this.superCharged = true;
+            hit.getEntity().remove(RemovalReason.DISCARDED);
+        }
+        activateBomb();
     }
 
     @Override
-    protected void onHit(HitResult result) {
-        super.onHit(result);
+    protected void onHitBlock(BlockHitResult hit) {
+        super.onHitBlock(hit);
+
+        BlockState state = level().getBlockState(hit.getBlockPos());
+        if (!state.is(ModTags.BOUNCY_BLOCKS) || hit.getDirection() != Direction.UP) {
+            this.setDeltaMovement(Vec3.ZERO);
+            this.setOnGround(true);
+            activateBomb();
+            //TODO: Fix
+        }
+    }
+
+    private void activateBomb() {
         Level level = level();
         if (!level.isClientSide && !this.hasFuse) {
             boolean isInstantlyActivated = this.type.isInstantlyActivated();
             if (!isInstantlyActivated && this.changeTimer == -1) {
-                this.changeTimer = 10;
+                this.changeTimer = 5;
                 //this.setDeltaMovement(Vector3d.ZERO);
                 level.broadcastEntityEvent(this, (byte) 68);
                 level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.5f, 1.3f);
@@ -361,7 +372,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             switch (this) {
                 case BLUE -> {
                     //TODO: change all this
-                    ParticleUtil. spawnParticleInASphere(level, x, y, z, ()->ParticleTypes.FLAME, 40, 0.4f,
+                    ParticleUtil.spawnParticleInASphere(level, x, y, z, () -> ParticleTypes.FLAME, 40, 0.4f,
                             0.01f, 0.15f);
                 }
                 case SPIKY -> {

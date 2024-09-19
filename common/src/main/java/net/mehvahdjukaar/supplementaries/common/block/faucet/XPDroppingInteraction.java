@@ -28,9 +28,10 @@ class XPDroppingInteraction implements FaucetTarget.BlState {
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.isAir()) {
-            if (fluid.is(BuiltInSoftFluids.XP.get())) {
+            if (offer.fluid().is(BuiltInSoftFluids.XP.get())) {
+                int minAmount = offer.minAmount();
                 this.dropXP(level, pos, minAmount);
                 return minAmount;
             }

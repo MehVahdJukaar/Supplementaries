@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -47,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
-    private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     protected int MAX_AGE = 700;
 
     //these are used on both sides...need to be synced on creation. Could use only clientside tbh
@@ -77,9 +78,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         super(ModEntities.SLINGSHOT_PROJECTILE.get(), world);
         this.maxAge = MAX_AGE;
         this.setItem(item);
-        this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(throwerStack));
+        this.setLoyalty((byte) EnchantmentHelper.getLoyalty(throwerStack));
         this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
-
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
         this.xRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
@@ -87,12 +87,15 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setYRot(this.random.nextFloat() * 360);
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
+
+        this.maxStuckTime = 0;
     }
 
     //client factory
     public SlingshotProjectileEntity(EntityType<SlingshotProjectileEntity> type, Level world) {
         super(type, world);
         this.maxAge = MAX_AGE;
+        this.maxStuckTime = 0;
     }
 
     @Override
@@ -103,23 +106,27 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ID_LOYALTY, (byte) 0);
+        this.entityData.define(LOYALTY, (byte) 0);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.entityData.set(ID_LOYALTY, tag.getByte("Loyalty"));
+        this.setLoyalty(tag.getByte("Loyalty"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putByte("Loyalty", this.entityData.get(ID_LOYALTY));
+        tag.putByte("Loyalty", this.getLoyalty());
     }
 
-    public void setLoyalty(ItemStack stack) {
-        this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(stack));
+    private void setLoyalty(byte loyalty) {
+        this.entityData.set(LOYALTY, loyalty);
+    }
+
+    public byte getLoyalty() {
+        return this.entityData.get(LOYALTY);
     }
 
     @Override
@@ -147,10 +154,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
         if (stack.is(ModTags.SLINGSHOT_DAMAGEABLE)) {
             //TODO: finish this
-            float speed = (float)this.getDeltaMovement().length();
+            float speed = (float) this.getDeltaMovement().length();
             double baseDamage = CommonConfigs.Tools.SLINGSHOT_DAMAGEABLE_DAMAGE.get();
             // max damage same as arrows
-            int damage = Mth.ceil(Mth.clamp((double)speed * baseDamage, 0.0, 2.147483647E9));
+            int damage = Mth.ceil(Mth.clamp((double) speed * baseDamage, 0.0, 2.147483647E9));
             entityRayTraceResult.getEntity().hurt(ModDamageSources.slingshot(this, this.getOwner()), damage);
 
             this.kill();
@@ -162,10 +169,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         super.onHitBlock(hit);
         //can only place when first hits
         Entity owner = this.getOwner();
-        boolean success;
+        boolean shoulKill;
         Level level = level();
-        success = trySplashPotStuff();
-        if (!success && owner instanceof Player player) {
+        shoulKill = trySplashPotStuff();
+        if (!shoulKill && owner instanceof Player player) {
             if (!Utils.mayPerformBlockAction(player, hit.getBlockPos(), getItem())) return;
             if (CompatHandler.FLAN) {
                 if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
@@ -173,7 +180,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 }
             }
         }
-        if (!success) {
+        if (!shoulKill) {
 
             ItemStack stack = this.getItem();
             Item item = stack.getItem();
@@ -187,25 +194,35 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             }
 
             //block override. mimic forge event that would have called these
+            //we cant call all forge events unfortunately otherwise we could ater the world as if player was there and not just place extra blocks
             InteractionResult overrideResult = InteractEventsHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
             if (overrideResult.consumesAction()) {
-                success = true;
+                shoulKill = true;
             } else {
                 overrideResult = InteractEventsHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit);
-                if (overrideResult.consumesAction()) success = true;
+                if (overrideResult.consumesAction()) shoulKill = true;
             }
 
-            if (!success) {
+            if (!shoulKill) {
                 //null player so sound always plays
                 //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
                 Player fakePlayer = FakePlayerManager.getDefault(this, player);
 
                 BlockPlaceContext context = new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit);
-                success = ItemsUtil.place(item,
+                shoulKill = ItemsUtil.place(item,
                         context).consumesAction();
             }
+            if (!shoulKill && item instanceof DispensibleContainerItem dc && item.hasCraftingRemainingItem()) {
+                Item craftingRemainingItem = stack.getItem().getCraftingRemainingItem();
+                SuppPlatformStuff.dispenseContent(dc, stack, hit, level, player);
+                dc.checkExtraContent(player, level, stack, hit.getBlockPos());
+                if (craftingRemainingItem != null) {
+                    this.setItem(craftingRemainingItem.getDefaultInstance());
+                } else shoulKill = true;
+            }
+            this.isStuck = true;
         }
-        if (success) {
+        if (shoulKill) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -254,10 +271,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public void tick() {
-
-        // if has stasis
-        if (this.isNoGravity()) {
-            int loyaltyLevel = this.entityData.get(ID_LOYALTY);
+        // no physics is turned on when its coming back. Its also saved to nbt so no extra data is required
+        if (this.isNoPhysics()) {
+            int loyaltyLevel = this.getLoyalty();
             Entity owner = this.getOwner();
             if (loyaltyLevel > 0 && this.isAcceptableReturnOwner(owner)) {
                 Vec3 force = new Vec3(owner.getX() - this.getX(), owner.getEyeY() - this.getY(), owner.getZ() - this.getZ());
@@ -268,8 +284,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
                 double d0 = 0.05D * loyaltyLevel;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(force.normalize().scale(d0)));
-
-                //++this.clientSideReturnTridentTickCount;
             }
         }
         super.tick();
@@ -285,17 +299,17 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     public void playerTouch(Player playerEntity) {
-        if (this.isNoGravity() || this.isStuck) {
-
-            boolean success = playerEntity.getAbilities().instabuild || playerEntity.getInventory().add(this.getItem());
+        // Same as AbstractArrow code. we cant take player.take as that is just for arrows an items
+        if (!level().isClientSide && this.hasLeftOwner() && (this.isNoPhysics() || this.isStuck)) {
+            boolean success = playerEntity.getAbilities().instabuild || playerEntity.
+                    getInventory().add(this.getItem());
 
             Level level = this.level();
-            if (!level.isClientSide) {
-                if (!success) {
-                    this.spawnAtLocation(this.getItem(), 0.1f);
-                }
+            if (!success) {
+                this.spawnAtLocation(this.getItem(), 0.1f);
             } else {
-                level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F, false);
+                level.playSound(null, playerEntity, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+                        0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F);
             }
             this.remove(RemovalReason.DISCARDED);
         }
@@ -304,13 +318,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     public boolean hasReachedEndOfLife() {
         if (this.isNoGravity() && this.getDeltaMovement().lengthSqr() < 0.005) return true;
-        return super.hasReachedEndOfLife() && !this.isNoGravity();
+        return super.hasReachedEndOfLife();
     }
 
     @Override
     public void reachedEndOfLife() {
-        if (this.entityData.get(ID_LOYALTY) != 0 && this.isAcceptableReturnOwner(this.getOwner())) {
-            this.setNoGravity(true);
+        if (this.getLoyalty() != 0 && this.isAcceptableReturnOwner(this.getOwner())) {
+            this.setNoPhysics(true);
             this.stuckTime = 0;
         } else {
             this.spawnAtLocation(this.getItem(), 0.1f);
@@ -335,7 +349,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     public void spawnTrailParticles() {
         super.spawnTrailParticles();
-        if (!this.isNoGravity()) {
+        if (!this.isNoPhysics()) {
             double speed = this.getDeltaMovement().length();
             if (this.tickCount > 1 && speed * this.tickCount > 1.5) {
                 if (this.isNoGravity()) {

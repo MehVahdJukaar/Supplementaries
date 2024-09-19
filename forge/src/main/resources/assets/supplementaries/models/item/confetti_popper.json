@@ -1,0 +1,16 @@
+{
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "item/generated",
+    "textures": {
+      "layer0": "supplementaries:item/confetti_popper"
+    }
+  },
+  "perspectives": {
+    "head": {
+      "parent": "supplementaries:item/confetti_popper_head"
+    }
+  },
+  "gui_light": "front"
+}
+

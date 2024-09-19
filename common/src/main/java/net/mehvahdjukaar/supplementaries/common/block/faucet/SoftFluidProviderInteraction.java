@@ -26,9 +26,10 @@ class SoftFluidProviderInteraction implements FaucetTarget.BlState, FaucetSource
     }
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.getBlock() instanceof ISoftFluidConsumer p) {
-            return p.tryAcceptingFluid(level, state, pos, fluid.copyWithCount(minAmount)) ? minAmount : 0;
+            return p.tryAcceptingFluid(level, state, pos, offer.fluid().copyWithCount(offer.minAmount())) ?
+                    offer.minAmount() : 0;
         }
         return null;
     }

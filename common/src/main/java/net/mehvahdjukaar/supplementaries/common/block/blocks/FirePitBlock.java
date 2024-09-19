@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.amendments.common.entity.FallingLanternEntity;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,8 +21,10 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -54,6 +59,15 @@ public class FirePitBlock extends LightUpWaterBlock {
         }
 
         super.entityInside(state, level, pos, entity);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        if (state.getValue(HANGING) && CompatHandler.AMENDMENTS &&
+                AmendmentsCompat.canSurviveCeilingAndMaybeFall(state, pos, level)) {
+            return true;
+        }
+        return super.canSurvive(state, level, pos);
     }
 
     @Override

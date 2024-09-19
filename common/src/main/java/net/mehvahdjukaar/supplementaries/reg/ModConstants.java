@@ -139,4 +139,5 @@ public final class ModConstants {
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
     public static final String ENDERMAN_HEAD_NAME = "enderman_head";
+    public static final String AVAST_DISC_NAME = "music_disc_avast";
 }

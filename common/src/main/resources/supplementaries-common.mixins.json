@@ -7,6 +7,7 @@
   "mixins": [
     "AbstractArrowMixin",
     "AbstractHorseMixin",
+    "AbstractProjectileBehaviorAccessor",
     "AbstractSkeletonMixin",
     "BannerPatternItemMixin",
     "BowMixin",
@@ -30,6 +31,7 @@
     "GrindstoneTestSlotMixin",
     "InkSackMixin",
     "IronBarsBlockMixin",
+    "LivingEntityAccessor",
     "LivingEntityMixin",
     "LoomInputSlotMixin",
     "LoomMenuMixin",

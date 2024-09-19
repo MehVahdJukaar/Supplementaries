@@ -9,9 +9,9 @@ import net.minecraft.world.level.block.state.BlockState;
 class SpongeInteraction implements FaucetTarget.BlState {
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState target, SoftFluidStack fluid, int minAmount) {
+    public Integer fill(Level level, BlockPos pos, BlockState target, FluidOffer offer) {
         if (target.getBlock() == Blocks.SPONGE) {
-            return minAmount;
+            return offer.minAmount();
         }
         return null;
     }

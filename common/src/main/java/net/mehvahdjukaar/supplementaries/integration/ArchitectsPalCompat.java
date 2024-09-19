@@ -30,7 +30,7 @@ public class ArchitectsPalCompat {
     //nether brass
     public static final Supplier<Block> SCONCE_NETHER_BRASS = regBlock(SCONCE_NAME_NETHER_BRASS, () -> new SconceBlock(
             BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), 14,
-            CompatObjects.NETHER_BRASS_FLAME));
+                CompatObjects.NETHER_BRASS_FLAME));
     public static final Supplier<Block> SCONCE_WALL_NETHER_BRASS = regBlock("sconce_wall_nether_brass", () -> new SconceWallBlock(
             BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get())
                     .dropsLike(SCONCE_NETHER_BRASS.get()),

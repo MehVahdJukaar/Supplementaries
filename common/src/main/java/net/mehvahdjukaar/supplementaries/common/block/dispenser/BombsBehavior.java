@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.minecraft.core.Position;
@@ -8,7 +9,6 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-//TODO: change
 class BombsBehavior extends AbstractProjectileDispenseBehavior {
 
     @Override
@@ -18,12 +18,12 @@ class BombsBehavior extends AbstractProjectileDispenseBehavior {
 
     @Override
     protected float getUncertainty() {
-        return 11.0F;
+        return ProjectileStats.BOMB_DISPENSER_INACCURACY;
     }
 
     @Override
     protected float getPower() {
-        return 1.3F;
+        return ProjectileStats.BOMB_DISPENSER_SPEED;
     }
 }
 

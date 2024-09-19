@@ -10,11 +10,11 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
-subprojects {
-    apply plugin: "dev.architectury.loom"
-    apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "com.matthewprenger.cursegradle"
-    apply plugin: "com.modrinth.minotaur"
+    subprojects {
+        apply plugin: "dev.architectury.loom"
+        apply plugin: "com.github.johnrengelman.shadow"
+        apply plugin: "com.matthewprenger.cursegradle"
+        apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -23,10 +23,10 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         mappings loom.layered() {
-            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
             it.officialMojangMappings {
                 setNameSyntheticMembers(false)
             }
+            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
         }
 
     }

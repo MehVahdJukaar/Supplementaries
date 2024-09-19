@@ -25,11 +25,11 @@ public class AwningModelLoader implements CustomModelLoader {
 
     @Override
     public CustomGeometry deserialize(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
-        BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
         if(!SuppClientPlatformStuff.hasFixedAO()){
             // vanilla AO code is so shit, full of bugs
             json.addProperty("ambientocclusion", false);
         }
+        BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
         if (json.has("elements")) {
             JsonArray ja = GsonHelper.getAsJsonArray(json, "elements");
             for (int j = 0; j < ja.size() && j < modelHack.getElements().size(); ++j) {

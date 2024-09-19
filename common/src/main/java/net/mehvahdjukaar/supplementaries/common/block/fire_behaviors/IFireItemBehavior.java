@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,14 +12,14 @@ import org.jetbrains.annotations.Nullable;
 public interface IFireItemBehavior {
 
     default boolean fire(ItemStack stack, ServerLevel level, BlockPos pos,
-                         float fireOffset, Vec3 direction, float power, float drag,
+                         float fireOffset, Vec3 direction, float power,
                          int inaccuracy, @Nullable Player owner) {
         return fire(stack, level, pos.getCenter().add(direction.scale(fireOffset)),
-                direction, power, drag, inaccuracy, owner);
+                direction, power, inaccuracy, owner);
     }
 
     boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction,
-                 float power, float drag, int inaccuracy, @Nullable Player owner);
+                 float power, int inaccuracy, @Nullable Player owner);
 
 }
 

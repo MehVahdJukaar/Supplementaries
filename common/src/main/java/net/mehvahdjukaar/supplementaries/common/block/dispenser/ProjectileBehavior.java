@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -49,13 +50,13 @@ abstract class ProjectileBehavior extends DispenserHelper.AdditionalDispenserBeh
 
     protected abstract Projectile getProjectileEntity(BlockSource source, Position position, ItemStack stackIn);
 
+    // same as snowball
     protected float getProjectileInaccuracy() {
-        return 7.0F;
+        return ProjectileStats.SNOWBALL_DISPENSER_INACCURACY;
     }
 
-    //TODO: fix throwable bricks rendering glitchyness
     protected float getProjectileVelocity() {
-        return 0.8F;
+        return ProjectileStats.SNOWBALL_DISPENSER_SPEED;
     }
 
 }

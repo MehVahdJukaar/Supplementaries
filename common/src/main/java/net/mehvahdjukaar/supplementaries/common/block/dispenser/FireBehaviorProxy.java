@@ -34,8 +34,7 @@ public class FireBehaviorProxy extends DispenserHelper.AdditionalDispenserBehavi
         Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
         Vec3 firePos = new Vec3(position.x(), position.y(), position.z());
 
-        if (inner.fire(stack, level, firePos, new Vec3(direction.step()), power,
-                1, uncertainty, null)) {
+        if (inner.fire(stack, level, firePos, new Vec3(direction.step()), power, uncertainty, null)) {
             stack.shrink(1);
         }
 

@@ -302,7 +302,7 @@ public class ModCreativeTabs {
                     BuntingItem.getColored(DyeColor.WHITE));
 
             e.addAfter(CreativeModeTabs.COLORED_BLOCKS, i -> i.is(ItemTags.BANNERS),
-                     BlocksColorAPI.SORTED_COLORS.stream().map(BuntingItem::getColored)
+                    BlocksColorAPI.SORTED_COLORS.stream().map(BuntingItem::getColored)
                             .toArray(ItemStack[]::new));
         }
 
@@ -318,6 +318,10 @@ public class ModCreativeTabs {
         before(e, Items.DISPENSER, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.CANNON_NAME,
                 ModRegistry.CANNON);
+
+        after(e, i -> i.getItem() instanceof RecordItem, CreativeModeTabs.TOOLS_AND_UTILITIES,
+                ModConstants.AVAST_DISC_NAME,
+                ModRegistry.AVAST_DISC);
 
         after(e, Items.LAVA_BUCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUMISENE_NAME,
@@ -489,7 +493,7 @@ public class ModCreativeTabs {
                 ModConstants.ASH_NAME,
                 ModRegistry.ASH_BLOCK);
 
-       // add(e, CreativeModeTabs.SPAWN_EGGS,
+        // add(e, CreativeModeTabs.SPAWN_EGGS,
         //        ModConstants.RED_MERCHANT_NAME,
         //        ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
 

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
@@ -125,10 +126,9 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
     private void addBlockToModel(int index, final List<BakedQuad> quads, BlockState state,
                                  BlockPos pos,
                                  PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
-
         BakedModel model;
         //for special flowers
-        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem());
+        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true);
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants
@@ -140,6 +140,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         }
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand);
+        if(mimicQuads.isEmpty())return;
 
         poseStack.pushPose();
         if (res == null) {
@@ -162,7 +163,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                 .applyingAmbientOcclusion(true)
                 .applyingTintIndex(index);
 
-        quads.addAll(transformer.transformAll(mimicQuads));
+        List<BakedQuad> collection = transformer.transformAll(mimicQuads);
+        quads.addAll(collection);
     }
 
     @Override

@@ -25,15 +25,4 @@ class ThrowableEnderPearlBehavior extends ProjectileBehavior {
     protected Projectile getProjectileEntity(BlockSource source, Position position, ItemStack stackIn) {
         return PearlMarker.createPearlToDispenseAndPlaceMarker(source, position);
     }
-
-    @Override
-    protected float getProjectileInaccuracy() {
-        return 6.0F;
-    }
-
-    //TODO: check these
-    @Override
-    protected float getProjectileVelocity() {
-        return 1.1F;
-    }
 }

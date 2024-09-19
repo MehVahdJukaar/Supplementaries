@@ -1,8 +1,9 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:urn","required":false},
-    {"id":"minecraft:tnt","required":false},
+    "supplementaries:urn",
+    "#supplementaries:gravel_bricks",
+    "minecraft:tnt",
     {"id":"immersive_weathering:icicle","required":false}
   ]
 }

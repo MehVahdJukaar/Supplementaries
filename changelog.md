@@ -10,6 +10,7 @@ New features:
 - slidy block, it slides. try it on soap and ice
 - confetti and party creeper
 - lunch boxes. click to switch mode
+- dispensers can empty bundles, quivers and lunch boxes
 - probably other stuff I forgot
 
 
@@ -23,11 +24,14 @@ Bug Fixes:
 - wind vane uses an entity model now with proper shading
 - crystal displays can be chained
 - book pile generation fix
+- destroying a safe item will no longer drop its content
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
 - improved urns spawning
 - added a recipe to clear item lore
+- fixe many issues with slingshot projectiles
+- slingshots can now shoot buckets
 - fixed dispenser ender pearl not having proper particles and not updating the dispenser properly
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players
@@ -37,10 +41,12 @@ Bug Fixes:
 - you can enable the old mode in the configs
 - flower boxes can now only exist when against a solid block
 - flower boxes can be hung from ceilings
+- safe crafting recipe correctly retains items in shulker boxes
 - trapped presents can now correctly dispense ender pearls
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
 - sprinting on flint blocks with iron boots will cause sparks
+- dispenser minecraft projectiles will retain the minecart velocity and be shot at an angle when on a rail slope
 - fixed a rare issue with enderman heads
 - fixed wrench particles and sounds not showing for other players
 - projectile weapons can now show their arrow as preview
@@ -49,11 +55,14 @@ Bug Fixes:
 - you can now wash the upper and lower part of a sign post independently
 - fixed soap interaction not spawning bubble particles on servers
 - fixed soap cleaning being able to clean multiple things at once
+- changed and standardized all mod projectiles attributes
+- fixed throwable bricks from dispensers not using correct item texture when non standard bricks were used
 - Fixed a very rare crash with quivers and server players
 - Ash can no longer spawn from non solid blocks
 - suds particles will break when in contact with a block
 - playing flute and using bubble blower will emit sculk vibrations
 - placing sign post will emit sculk vibrations. So will tipped spikes
+- using lock blocks and hourglass will also emit sculk vibrations
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
 - Added /supplementaries dimension command, allows to teleport to dimensions

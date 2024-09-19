@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -13,19 +14,28 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 class EmptyContainerItemBehavior extends DispenserHelper.AdditionalDispenserBehavior {
 
-    public EmptyContainerItemBehavior(Item item) {
+    public EmptyContainerItemBehavior(SelectableContainerItem item) {
         super(item);
     }
 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-        Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+        if (stack.getItem() instanceof SelectableContainerItem<?> bi) {
+            var data = bi.getData(stack);
+            var removed = data.removeOneStack();
+            if (removed.isPresent()) {
+                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+                Position position = DispenserBlock.getDispensePosition(source);
 
-        if (stack.getItem() instanceof BundleItem bi) {
-            Position position = DispenserBlock.getDispensePosition(source);
-            ItemStack itemStack = stack.split(1);
-            DefaultDispenseItemBehavior.spawnItem(source.getLevel(), itemStack, 6, direction, position);
-            return InteractionResultHolder.pass(stack);
+                ItemStack extracted = removed.get();
+                ItemStack toSpit = extracted.split(1);
+                DefaultDispenseItemBehavior.spawnItem(source.getLevel(), toSpit, 6, direction, position);
+
+                if (!extracted.isEmpty()) {
+                    data.tryAdding(extracted);
+                }
+                return InteractionResultHolder.success(stack);
+            }
         }
 
         return InteractionResultHolder.pass(stack);

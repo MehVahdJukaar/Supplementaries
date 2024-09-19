@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallistic;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
@@ -48,7 +48,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     private int fuseTimer = 0;
     private byte powerLevel = 1;
 
-    private IBallistic.Data trajectoryData = IBallistic.LINE;
+    private IBallisticBehavior.Data trajectoryData = IBallisticBehavior.LINE;
     private Item trajectoryFor = Items.AIR;
 
     @Nullable
@@ -90,10 +90,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     private void computeTrajectoryData() {
         ItemStack proj = this.getProjectile();
         var behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
-        if (behavior instanceof IBallistic b) {
+        if (behavior instanceof IBallisticBehavior b) {
             this.trajectoryData = b.calculateData(proj, level);
         } else {
-            this.trajectoryData = IBallistic.LINE;
+            this.trajectoryData = IBallisticBehavior.LINE;
         }
         if(trajectoryData == null) {
             Supplementaries.error();
@@ -145,7 +145,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.setItem(0, stack);
     }
 
-    public IBallistic.Data getTrajectoryData() {
+    public IBallisticBehavior.Data getTrajectoryData() {
         if (trajectoryFor != getProjectile().getItem()){
             computeTrajectoryData();
         }
@@ -342,7 +342,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
         return behavior.fire(projectile.copy(), (ServerLevel) level, worldPosition, 0.5f,
-                facing, getFirePower(), getTrajectoryData().drag(), 0, getPlayerWhoFired());
+                facing, getFirePower(), 0, getPlayerWhoFired());
     }
 
 

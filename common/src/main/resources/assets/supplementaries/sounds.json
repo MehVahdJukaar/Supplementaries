@@ -193,8 +193,15 @@
         "name": "supplementaries:music/pancake",
         "stream": true
       }
-    ],
-    "subtitle": "subtitles.supplementaries.music.pancake"
+    ]
+  },
+  "music.avast": {
+    "sounds": [
+      {
+        "name": "supplementaries:music/avast",
+        "stream": true
+      }
+    ]
   },
   "block.slidy_block.break": {
     "sounds": [
@@ -363,9 +370,9 @@
   },
   "block.present.break": {
     "sounds": [
+      "supplementaries:block/present_break_0",
       "supplementaries:block/present_break_1",
-      "supplementaries:block/present_break_2",
-      "supplementaries:block/present_break_3"
+      "supplementaries:block/present_break_2"
     ],
     "subtitle": "subtitles.block.generic.break"
   },

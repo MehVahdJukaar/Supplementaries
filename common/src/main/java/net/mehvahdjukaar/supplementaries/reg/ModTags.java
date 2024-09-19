@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -46,6 +48,7 @@ public class ModTags {
     public static final TagKey<Block> TINTED_ON_MAPS_WC = blockTag("map_tint_water_color");
     public static final TagKey<Block> NOT_TINTED_ON_MAPS = blockTag("map_tint_blacklist");
     public static final TagKey<Block> FAST_FALL_ROPES = blockTag("fast_fall_climbable");
+    public static final TagKey<Block> BOUNCY_BLOCKS = blockTag("bouncy_blocks");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
@@ -70,6 +73,8 @@ public class ModTags {
     public static final TagKey<Item> OVERENCUMBERING = itemTag("overencumbering");
     public static final TagKey<Item> QUIVER_BLACKLIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
+
+    public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
@@ -112,12 +117,20 @@ public class ModTags {
         return TagKey.create(Registries.ITEM, Supplementaries.res(name));
     }
 
+    private static TagKey<Item> MCitemTag(String name) {
+        return TagKey.create(Registries.ITEM, new ResourceLocation(name));
+    }
+
     private static TagKey<Block> blockTag(String name) {
         return TagKey.create(Registries.BLOCK, Supplementaries.res(name));
     }
 
     private static TagKey<EntityType<?>> entityTag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, Supplementaries.res(name));
+    }
+
+    private static TagKey<DamageType> damageTag(String name) {
+        return TagKey.create(Registries.DAMAGE_TYPE, Supplementaries.res(name));
     }
 
     private static TagKey<Enchantment> enchTag(String name) {

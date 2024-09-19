@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotProjectileBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -29,6 +29,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -65,8 +66,8 @@ import java.util.Optional;
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
-    private static final IFireItemBehavior DEFAULT =
-            new AlternativeBehavior(new GenericProjectileBehavior(), new SlingshotProjectileBehavior());
+    private static final IFireItemBehavior DEFAULT = new AlternativeBehavior(
+            new GenericProjectileBehavior(), new SlingshotBehavior());
 
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
@@ -190,7 +191,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         var litUpAction = this.interactWithPlayer(state, level, pos, player, hand);
         if (litUpAction != InteractionResult.PASS) return litUpAction;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-            if(player instanceof ServerPlayer sp){
+            if (player instanceof ServerPlayer sp) {
                 tile.tryOpeningEditGui(sp, pos, player.getItemInHand(hand));
             }
             return InteractionResult.sidedSuccess(level.isClientSide());

@@ -183,7 +183,7 @@ public class FlowerPotHandler {
 
 
         List<Item> tallFlowers = new ArrayList<>(List.of(Items.ROSE_BUSH, Items.SUNFLOWER, Items.LILAC, Items.WEEPING_VINES,
-                Items.VINE, Items.GLOW_BERRIES, Items.SWEET_BERRIES,
+                Items.VINE, Items.GLOW_BERRIES, Items.SWEET_BERRIES, Items.SUGAR_CANE,
                 Items.TWISTING_VINES, Items.PEONY, Items.LARGE_FERN, Items.PITCHER_PLANT));
         if (CompatHandler.QUARK) {
             tallFlowers.add(Items.TALL_GRASS);
@@ -193,11 +193,13 @@ public class FlowerPotHandler {
     }
 
     @Nullable
-    public static ResourceLocation getSpecialFlowerModel(Item i) {
-        ResourceLocation res = CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get() ?
-                SPECIAL_TALL_FLOWER_BOX_FLOWERS.get(i) :
-                SPECIAL_FLOWER_BOX_FLOWERS.get(i);
-
+    public static ResourceLocation getSpecialFlowerModel(Item i, boolean forRenderer) {
+        ResourceLocation res;
+        if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) {
+            res = SPECIAL_TALL_FLOWER_BOX_FLOWERS.get(i);
+            if (res != null || !forRenderer) return res;
+        }
+        res = SPECIAL_FLOWER_BOX_FLOWERS.get(i);
         if (res != null) return res;
 
         if (i instanceof IFlowerModelProvider flowerModelProvider) {
@@ -209,7 +211,7 @@ public class FlowerPotHandler {
     }
 
     public static boolean hasSpecialFlowerModel(Item i) {
-        return getSpecialFlowerModel(i) != null;
+        return getSpecialFlowerModel(i, false) != null;
     }
 
 }

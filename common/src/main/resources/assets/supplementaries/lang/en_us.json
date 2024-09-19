@@ -406,6 +406,8 @@
   "item.supplementaries.lumisene_bottle": "Lumisene Bottle",
   "item.supplementaries.confetti_popper": "Confetti Popper",
   "fluid.supplementaries.lumisene": "Lumisene",
+  "item.supplementaries.music_disc_avast": "Music Disc",
+  "item.supplementaries.music_disc_avast.desc": "Partyp - Avast",
 
   "itemGroup.jars": "Jars",
   "itemGroup.supplementaries": "Supplementaries",
@@ -503,7 +505,6 @@
   "subtitles.supplementaries.jar.break": "Jar broken",
   "subtitles.supplementaries.jar.cookie": "Cookie placed in a jar",
   "subtitles.supplementaries.jar.place": "Jar placed",
-  "subtitles.supplementaries.music.pancake": "Pancake Music",
   "subtitles.supplementaries.present.break": "Present broken",
   "subtitles.supplementaries.present.open": "Present opened",
   "subtitles.supplementaries.present.pack": "Present packed",

@@ -60,6 +60,7 @@ public interface IOnePlayerInteractable {
     }
 
     default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+        //this is likely not needed
         if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
             // open gui (edit sign with empty hand)
             this.setPlayerWhoMayEdit(player.getUUID());

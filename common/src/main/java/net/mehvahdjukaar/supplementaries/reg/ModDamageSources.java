@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.misc.DataObjectReference;
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -15,37 +16,37 @@ import org.jetbrains.annotations.Nullable;
 
 public class ModDamageSources {
 
-    private static final DataObjectReference<DamageType> SPIKE = new DataObjectReference<>(Supplementaries.res("bamboo_spikes"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> BOTTLING = new DataObjectReference<>(Supplementaries.res("xp_extracting"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> BOMB = new DataObjectReference<>(Supplementaries.res("bomb_explosion"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> PLAYER_BOMB = new DataObjectReference<>(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> CANNONBALL = new DataObjectReference<>(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> PLAYER_CANNONBALL = new DataObjectReference<>(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
-    private static final DataObjectReference<DamageType> SLINGSHOT = new DataObjectReference<>(Supplementaries.res("slingshot"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> SPIKE = DynamicHolder.of(Supplementaries.res("bamboo_spikes"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> BOTTLING = DynamicHolder.of(Supplementaries.res("xp_extracting"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> BOMB = DynamicHolder.of(Supplementaries.res("bomb_explosion"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> PLAYER_BOMB = DynamicHolder.of(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> CANNONBALL = DynamicHolder.of(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> PLAYER_CANNONBALL = DynamicHolder.of(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
+    public static final DynamicHolder<DamageType> SLINGSHOT = DynamicHolder.of(Supplementaries.res("slingshot"), Registries.DAMAGE_TYPE);
 
     public static DamageSource spikePlayer(Player player) {
-        return new SpikePlayerDamageSource(SPIKE.getHolder(), player);
+        return new SpikePlayerDamageSource(SPIKE, player);
     }
 
     public static DamageSource spike() {
-        return new DamageSource(SPIKE.getHolder());
+        return new DamageSource(SPIKE);
     }
 
     public static DamageSource bottling() {
-        return new DamageSource(BOTTLING.getHolder());
+        return new DamageSource(BOTTLING);
     }
 
     public static DamageSource bombExplosion(@Nullable Entity projectile, @Nullable Entity shooter) {
-        return new DamageSource(shooter != null && projectile != null ? PLAYER_BOMB.getHolder() : BOMB.getHolder(), projectile, shooter);
+        return new DamageSource(shooter != null && projectile != null ? PLAYER_BOMB : BOMB, projectile, shooter);
     }
 
     //TODO: why a player damage source here?
     public static DamageSource cannonBallExplosion(@Nullable Entity projectile, @Nullable Entity shooter) {
-        return new DamageSource(shooter != null && projectile != null ? PLAYER_CANNONBALL.getHolder() : CANNONBALL.getHolder(), projectile, shooter);
+        return new DamageSource(shooter != null && projectile != null ? PLAYER_CANNONBALL : CANNONBALL, projectile, shooter);
     }
 
     public static DamageSource slingshot(@Nullable Entity projectile, @Nullable Entity shooter) {
-        return new DamageSource(SLINGSHOT.getHolder(), projectile, shooter);
+        return new DamageSource(SLINGSHOT, projectile, shooter);
     }
 
     public static class SpikePlayerDamageSource extends DamageSource {

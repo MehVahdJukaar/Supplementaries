@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,21 +60,23 @@ public class LockBlock extends Block implements EntityBlock {
         if (!worldIn.isClientSide) {
             worldIn.setBlock(pos, state.setValue(POWERED, true), 2 | 4 | 3);
             worldIn.scheduleTick(pos, this, 20);
+            worldIn.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
         }
 
         this.playSound(player, worldIn, pos, true);
     }
 
     protected void playSound(@Nullable Player player, Level level, BlockPos pos, boolean isOpened) {
-            level.playSound(player, pos,isOpened ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
-                    SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound(player, pos, isOpened ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
+                SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
-        super.tick(state, worldIn, pos, rand);
-        if (!worldIn.isClientSide && state.getValue(POWERED)) {
-            worldIn.setBlock(pos, state.setValue(POWERED, false), 2 | 4 | 3);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
+        super.tick(state, level, pos, rand);
+        if (!level.isClientSide && state.getValue(POWERED)) {
+            level.setBlock(pos, state.setValue(POWERED, false), 2 | 4 | 3);
+            level.gameEvent(null, GameEvent.BLOCK_DEACTIVATE, pos);
         }
     }
 

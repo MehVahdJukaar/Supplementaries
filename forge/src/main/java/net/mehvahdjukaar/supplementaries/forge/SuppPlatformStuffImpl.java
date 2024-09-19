@@ -156,14 +156,18 @@ public class SuppPlatformStuffImpl {
     }
 
     public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
-       ((FireBlockAccessor) Blocks.FIRE).invokeTryCatchFire(level, pos, chance, random, age, direction);
+        ((FireBlockAccessor) Blocks.FIRE).invokeTryCatchFire(level, pos, chance, random, age, direction);
     }
 
 
     public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
         var r = ForgeHooks.onItemRightClick(player, hand);
-        if(r == null)r = InteractionResult.PASS;
+        if (r == null) r = InteractionResult.PASS;
         return new InteractionResultHolder<>(r, player.getItemInHand(hand));
+    }
+
+    public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
+        dc.emptyContents(player, level, hit.getBlockPos(), hit, stack);
     }
 
 }

@@ -10,11 +10,11 @@ import net.minecraft.world.level.block.state.BlockState;
 class MudInteraction implements FaucetTarget.BlState {
 
     @Override
-    public Integer fill(Level level, BlockPos pos, BlockState state, SoftFluidStack fluid, int minAmount) {
+    public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.DIRT)) {
-            if (fluid.is(BuiltInSoftFluids.WATER.get())) {
+            if (offer.fluid().is(BuiltInSoftFluids.WATER.get())) {
                 level.setBlock(pos, Blocks.MUD.defaultBlockState(), 3);
-                return minAmount;
+                return offer.minAmount();
             }
             return 0;
         }

@@ -5,9 +5,11 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -23,14 +25,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic {
+public class GenericProjectileBehavior implements IBallisticBehavior {
 
     @Override
     public Data calculateData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
-            return IBallistic.LINE;
+            return IBallisticBehavior.LINE;
         }
-        Entity proj = createEntity(projectile, level, Vec3.ZERO);
+        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1,0,0));
         if (proj != null) {
             double speed = proj.getDeltaMovement().length();
             if(speed == 0 && proj instanceof AbstractArrow){
@@ -45,13 +47,13 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
             float gravity = (float) -newMovement.y;
             return new Data(drag, gravity, (float) speed);
         }
-        return IBallistic.LINE;
+        return IBallisticBehavior.LINE;
     }
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos,
-                        Vec3 facing, float power, float drag, int inaccuracy, @Nullable Player owner) {
-        Entity entity = createEntity(stack, level, facing);
+    public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
+                        Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
+        Entity entity = createEntity(stack, ProjectileTestLevel.get(level.registryAccess()), facing);
 
         if (entity != null) {
 
@@ -67,7 +69,8 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
                 pr.ownerUUID = null;
                 pr.setOwner(owner);
 
-                pr.shoot(facing.x, facing.y, facing.z, drag * power, inaccuracy);
+                pr.shoot(facing.x, facing.y, facing.z,
+                        scalePower , inaccuracy);
             }
 
             //  float radius = entity.getBbWidth() * 1.42f;
@@ -83,14 +86,9 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
 
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
 
+    // facing is likely not needed
     @Nullable
-    protected Entity createEntity(ItemStack projectile, Level level, Vec3 facing) {
-        //we could have subclassed here...
-        ProjectileTestLevel testLevel = ProjectileTestLevel.get();
-
-        //TODO: remove this
-        if (projectile.is(Items.FIRE_CHARGE)) return EntityType.SMALL_FIREBALL.create(testLevel);
-        if (projectile.is(ModRegistry.CANNONBALL_ITEM.get())) return ModEntities.CANNONBALL.get().create(testLevel);
+    protected Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
 
         // fake player living in fake level
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, testLevel);
@@ -115,28 +113,6 @@ public class GenericProjectileBehavior implements IFireItemBehavior, IBallistic 
         return testLevel.projectile;
     }
 
-    protected static class ProjectileTestLevel extends FakeLevel {
 
-        protected static ProjectileTestLevel get() {
-            return FakeLevel.get("cannon_test_level", false, ProjectileTestLevel::new);
-        }
-
-        @Nullable
-        private Entity projectile = null;
-
-        public ProjectileTestLevel(boolean clientSide, String id) {
-            super(clientSide, id);
-        }
-
-        public void setup() {
-            projectile = null;
-        }
-
-        @Override
-        public boolean addFreshEntity(Entity entity) {
-            this.projectile = entity;
-            return true;
-        }
-    }
 
 }

@@ -38,7 +38,6 @@ public class ModSetup {
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
             FireBehaviorsManager::registerBehaviors,
-            FaucetBehaviorsManager::registerBehaviors, //amendments is also registering them so we need to do it here
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
