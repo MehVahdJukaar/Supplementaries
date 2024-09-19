@@ -17,6 +17,7 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +98,11 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return super.canPlaceItem(index, stack) && !isPacked();
+    }
+
+    @Override
     public boolean canOpen(Player player) {
         if (!super.canOpen(player)) return false;
         if (!this.isUnused()) return false;
@@ -109,7 +115,6 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     @Override
     public InteractionResult interact(Level level, BlockPos pos, BlockState state, Player player) {
         if (this.isUnused()) {
-
             if (this.canOpen(player)) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     //we open directly as its a container and can open contains this logic
