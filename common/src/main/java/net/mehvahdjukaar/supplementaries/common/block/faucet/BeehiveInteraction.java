@@ -14,7 +14,7 @@ class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-            return FluidOffer.of(BuiltInSoftFluids.HONEY.getHolder());
+            return FluidOffer.of(BuiltInSoftFluids.HONEY);
         }
         return null;
     }

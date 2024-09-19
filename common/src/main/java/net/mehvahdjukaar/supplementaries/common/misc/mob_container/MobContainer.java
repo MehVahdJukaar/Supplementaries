@@ -508,10 +508,10 @@ public class MobContainer {
                 ItemStack bucket = ItemStack.of(cmp.getCompound("Bucket"));
                 ResourceLocation fluid = null;
                 if (cmp.contains("Fluid")) {
-                    fluid = new ResourceLocation(cmp.getString("Fluid"));
+                    fluid = ResourceLocation.parse(cmp.getString("Fluid"));
                 }
                 if (bucket.isEmpty()) {
-                    Supplementaries.LOGGER.error("Bucket error 1: name " + name + ", bucket " + bucket + " fluid, " + fluid);
+                    Supplementaries.LOGGER.error("Bucket error 1: name {}, bucket {} fluid, {}", name, bucket, fluid);
                 }
                 return new Bucket(name, bucket, fish, fluid);
             }
@@ -541,7 +541,7 @@ public class MobContainer {
                 int fish = cmp.getInt("FishTexture");
                 ResourceLocation fluid = null;
                 if (cmp.contains("Fluid")) {
-                    fluid = new ResourceLocation(cmp.getString("Fluid"));
+                    fluid = ResourceLocation.parse(cmp.getString("Fluid"));
                 }
                 CompoundTag entityData = cmp.getCompound("EntityData");
                 float scale = cmp.getFloat("Scale");

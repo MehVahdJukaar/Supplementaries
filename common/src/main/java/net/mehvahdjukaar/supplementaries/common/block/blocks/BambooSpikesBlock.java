@@ -35,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -113,13 +112,10 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         super.setPlacedBy(worldIn, pos, state, placer, stack);
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile) {
-            CompoundTag com = stack.getTag();
-            if (com != null) {
-                Potion p = PotionUtils.getPotion(stack);
-                if (p != Potions.EMPTY && com.contains("Damage")) {
-                    tile.potion = p;
-                    tile.setMissingCharges(com.getInt("Damage"));
-                }
+            PotionContents p = getPotion(stack);
+            if (p.potion().isPresent() && stack.isDamaged()) {
+                tile.potion = p.potion().get();
+                tile.setMissingCharges(stack.getDamageValue());
             }
         }
     }
@@ -206,7 +202,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
                                               InteractionHand hand, BlockHitResult hitResult) {
-        if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (!TIPPED_ENABLED.get() || state.getValue(TIPPED))
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (stack.getItem() instanceof LingeringPotionItem) {
             if (tryAddingPotion(state, level, pos, getPotion(stack), player)) {
                 if (!player.isCreative())
@@ -247,7 +244,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is( BuiltInSoftFluids.POTION.get()) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
+        if (fluid.is(BuiltInSoftFluids.POTION.get()) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
             return tryAddingPotion(state, world, pos, getPotion(fluid.getTag()), null);
         }
         return false;

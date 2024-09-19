@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class RelayerBlock extends DirectionalBlock {
 
+    private static final MapCodec<RelayerBlock> CODEC = simpleCodec(RelayerBlock::new);
+
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -29,6 +33,11 @@ public class RelayerBlock extends DirectionalBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(POWER, 0).setValue(POWERED, false));
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -91,8 +100,8 @@ public class RelayerBlock extends DirectionalBlock {
         BlockState b = level.getBlockState(behind);
         if (b.getBlock() instanceof RedStoneWireBlock) {
             pow = Math.max(b.getValue(RedStoneWireBlock.POWER), pow);
-        } else if (b.getBlock() instanceof DiodeBlock repeaterBlock) {
-            pow = Math.max(repeaterBlock.getSignal(b, level, behind, b.getValue(DiodeBlock.FACING)), pow);
+        } else if (b.getBlock() instanceof DiodeBlock) {
+            pow = Math.max(b.getSignal(level, behind, b.getValue(DiodeBlock.FACING)), pow);
         } else if (b.is(this)) {
             pow = Math.max(b.getValue(POWER), pow);
         }

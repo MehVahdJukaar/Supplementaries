@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -191,12 +192,6 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return this.recipient.mouseScrolled(mouseX, mouseY, amount) ||
-                this.descriptionBox.mouseScrolled(mouseX, mouseY, amount);
-    }
-
-    @Override
     public boolean keyPressed(int key, int a, int b) {
         if (key == 256) {
             this.minecraft.player.closeContainer();
@@ -256,11 +251,6 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             this.packed = packed;
             this.active = hasItem;
             this.setTooltip(!packed ? TOOLTIP : null);
-        }
-
-        @Override
-        protected ClientTooltipPositioner createTooltipPositioner() {
-            return DefaultTooltipPositioner.INSTANCE;
         }
 
         @Override

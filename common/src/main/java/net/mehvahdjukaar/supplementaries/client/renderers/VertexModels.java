@@ -28,8 +28,8 @@ public class VertexModels {
         TextureAtlasSprite sprite = ModMaterials.BUBBLE_BLOCK_MATERIAL.sprite();
         builder = sprite.wrap(builder);
 
-        int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff';
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
         float minU = 0;
         float minV = 0;
         float maxU = 1;
@@ -143,8 +143,9 @@ public class VertexModels {
         float h = fishH / (float) textH;
         float hw = 4 * w / 2f;
         float hh = 2 * h / 2f;
-        int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff';
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
+
         float minu = 0 * fishu * w;
         float minv = 0 * fishv * h;
         float maxu = 1 * w + minu;
@@ -163,8 +164,8 @@ public class VertexModels {
                 maxu = temp;
             }
             lu = 240;
-            minu += (1 / 2);
-            maxu += (1 / 2);
+            minu += (1 / 2f);
+            maxu += (1 / 2f);
 
         }
     }

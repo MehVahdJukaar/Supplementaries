@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -20,8 +22,8 @@ import net.minecraft.world.level.Level;
 import java.lang.ref.WeakReference;
 
 public class WeatheredMapRecipe extends CustomRecipe {
-    public WeatheredMapRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public WeatheredMapRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     private static WeakReference<ServerLevel> lastLevelHack = null;
@@ -31,12 +33,12 @@ public class WeatheredMapRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level level) {
+    public boolean matches(CraftingInput inv, Level level) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.isEmpty()) {
             } else if (isMap(stack)) {
@@ -45,8 +47,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
                 }
                 itemstack = stack;
             } else if (stack.getItem() == ModRegistry.ANTIQUE_INK.get() ||
-                    (false && //disabled
-                    stack.getItem() == ModRegistry.SOAP.get())) {
+                    (stack.getItem() == ModRegistry.SOAP.get())) {
 
                 if (itemstack1 != null) {
                     return false;
@@ -67,15 +68,15 @@ public class WeatheredMapRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider access) {
         boolean antique = true;
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             if (inv.getItem(i).getItem() == ModRegistry.SOAP.get()) {
                 antique = false;
                 break;
             }
         }
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.getItem() instanceof MapItem) {
                 ItemStack s = stack.copy();
@@ -90,12 +91,6 @@ public class WeatheredMapRecipe extends CustomRecipe {
         return ItemStack.EMPTY;
     }
 
-
-    @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-    }
-
     @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
@@ -105,6 +100,5 @@ public class WeatheredMapRecipe extends CustomRecipe {
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.ANTIQUE_MAP.get();
     }
-
 
 }

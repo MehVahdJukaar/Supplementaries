@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -108,20 +109,20 @@ public class CannonFireParticle extends TextureSheetParticle {
     private void drawDoubleQuad(VertexConsumer buffer, Matrix4f mat, float w, float o, float u0, float u1, float v0,
                                 float v1, int light) {
 
-        int blockLight = LightTexture.block(light);
-        int skyLight = LightTexture.sky(light);
+        int lU = VertexUtil.lightU(light);
+        int lV = VertexUtil.lightV(light);
 
-        buffer.addVertex(mat, -w, -w, o).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, -w, w, o).setUv(u1, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, w, w, o).setUv(u0, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, w, -w, o).setUv(u0, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
+        buffer.addVertex(mat, -w, -w, o).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, -w, w, o).setUv(u1, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, w, w, o).setUv(u0, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, w, -w, o).setUv(u0, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
 
 
         // Second quad (mirrored)
-        buffer.addVertex(mat, w, -w, o).setUv(u0, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, w, w, o).setUv(u0, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, -w, w, o).setUv(u1, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
-        buffer.addVertex(mat, -w, -w, o).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(blockLight, skyLight);
+        buffer.addVertex(mat, w, -w, o).setUv(u0, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, w, w, o).setUv(u0, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, -w, w, o).setUv(u1, v0).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
+        buffer.addVertex(mat, -w, -w, o).setUv(u1, v1).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lU, lV);
 
     }
 

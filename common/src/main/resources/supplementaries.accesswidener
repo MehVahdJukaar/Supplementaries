@@ -13,6 +13,8 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible method net/minecraft/client/Camera getMaxZoom (F)F
 accessible method net/minecraft/client/Camera move (FFF)V
 
+accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/Block;
+
 # map stuff
 accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 accessible method net/minecraft/world/level/storage/loot/functions/ExplorationMapFunction <init> (Ljava/util/List;Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/Holder;BIZ)V

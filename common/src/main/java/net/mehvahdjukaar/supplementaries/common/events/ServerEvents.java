@@ -153,7 +153,6 @@ public class ServerEvents {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }
         }
-        RandomEnchantFunction.rebuild();
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

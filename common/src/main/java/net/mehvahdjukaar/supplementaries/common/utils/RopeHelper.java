@@ -128,20 +128,20 @@ public class RopeHelper {
 
     //TODO: fix order of operations to allow pulling down lanterns
     @SuppressWarnings("ConstantConditions")
-    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level world) {
-        if (toPos.getY() < world.getMinBuildHeight() || toPos.getY() > world.getMaxBuildHeight()) return false;
-        BlockState state = world.getBlockState(fromPos);
+    private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level level) {
+        if (toPos.getY() < level.getMinBuildHeight() || toPos.getY() > level.getMaxBuildHeight()) return false;
+        BlockState state = level.getBlockState(fromPos);
 
         PushReaction push = state.getPistonPushReaction();
 
-        if (isBlockMovable(state, world, fromPos) &&
+        if (isBlockMovable(state, level, fromPos) &&
                 (
                         ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY))
-                                && state.canSurvive(world, toPos)) || (state.is(ModTags.ROPE_HANG_TAG))
+                                && state.canSurvive(level, toPos)) || (state.is(ModTags.ROPE_HANG_TAG))
                 )
         ) {
 
-            BlockEntity tile = world.getBlockEntity(fromPos);
+            BlockEntity tile = level.getBlockEntity(fromPos);
             if (tile != null) {
                 //moves everything if quark is not enabled. bad :/ install quark guys
                 if (CompatHandler.QUARK && !QuarkCompat.canMoveBlockEntity(state)) {
@@ -153,7 +153,7 @@ public class RopeHelper {
 
             //gets refreshTextures state for new position
 
-            Fluid fluidState = world.getFluidState(toPos).getType();
+            Fluid fluidState = level.getFluidState(toPos).getType();
             boolean waterFluid = fluidState == Fluids.WATER;
             boolean canHoldWater = false;
             if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
@@ -170,22 +170,22 @@ public class RopeHelper {
             }
 
 
-            FluidState fromFluid = world.getFluidState(fromPos);
+            FluidState fromFluid = level.getFluidState(fromPos);
             boolean leaveWater = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource()) && !canHoldWater;
-            world.setBlockAndUpdate(fromPos, leaveWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
+            level.setBlockAndUpdate(fromPos, leaveWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
 
             //refreshTextures existing block block to new position
-            BlockState newState = Block.updateFromNeighbourShapes(state, world, toPos);
-            world.setBlockAndUpdate(toPos, newState);
+            BlockState newState = Block.updateFromNeighbourShapes(state, level, toPos);
+            level.setBlockAndUpdate(toPos, newState);
             if (tile != null) {
-                CompoundTag tag = tile.saveWithoutMetadata();
-                BlockEntity te = world.getBlockEntity(toPos);
+                CompoundTag tag = tile.saveWithoutMetadata(level.registryAccess());
+                BlockEntity te = level.getBlockEntity(toPos);
                 if (te != null) {
-                    te.load(tag);
+                    te.loadWithComponents(tag, level.registryAccess());
                 }
             }
             //world.notifyNeighborsOfStateChange(toPos, state.getBlock());
-            world.neighborChanged(toPos, state.getBlock(), toPos);
+            level.neighborChanged(toPos, state.getBlock(), toPos);
             return true;
         }
         return false;

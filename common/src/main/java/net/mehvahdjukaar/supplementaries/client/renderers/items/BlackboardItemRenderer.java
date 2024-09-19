@@ -41,8 +41,8 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         var blackboard = BlackboardManager.getInstance(BlackboardManager.Key.of(packed));
         VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());
 
-        int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff';
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
 
         matrixStackIn.translate(0, 0, 0.6875);
         VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);

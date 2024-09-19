@@ -113,7 +113,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     }
 
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target.getLocation().y() > pos.getY() + 1 - 0.1875) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
                 ItemStack i = tile.getDisplayedItem();

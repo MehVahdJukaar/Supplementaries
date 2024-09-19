@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -18,7 +20,7 @@ import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public class BlackboardDuplicateRecipe extends CustomRecipe {
-    public BlackboardDuplicateRecipe(ResourceLocation idIn, CraftingBookCategory category) {
+    public BlackboardDuplicateRecipe(CraftingBookCategory category) {
         super(idIn, category);
     }
 
@@ -28,12 +30,12 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingInput inv, Level worldIn) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();
             if (item == ModRegistry.BLACKBOARD_ITEM.get()) {
@@ -58,8 +60,8 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isDrawnBlackboard(stack)) {
                 ItemStack s = stack.copy();
@@ -71,8 +73,8 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);

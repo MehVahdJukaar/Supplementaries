@@ -16,6 +16,8 @@ import java.util.function.UnaryOperator;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerMixin {
 
+    //TODO: add back or remove
+    /*
     @ModifyArg(method = {"signBook", "updateBookContents"}, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;updateBookPages(Ljava/util/List;Ljava/util/function/UnaryOperator;Lnet/minecraft/world/item/ItemStack;)V"))
     private UnaryOperator<String> addAntiqueInk(List<FilteredText> list, UnaryOperator<String> unaryOperator, ItemStack itemStack) {
@@ -27,6 +29,6 @@ public abstract class ServerGamePacketListenerMixin {
             };
         }
         return unaryOperator;
-    }
+    }*/
 
 }

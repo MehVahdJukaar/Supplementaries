@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
@@ -26,6 +27,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.joml.Quaternionf;
 
 import java.util.List;
@@ -44,7 +46,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
+    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay,
+                              BannerPatternLayers patterns, DyeColor baseColor) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
@@ -53,7 +56,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         this.flag.zRot = (float) (0.5 * Math.PI);
         this.flag.y = -12;
         this.flag.x = 1.5f;
-        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
+        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE,
+                true, baseColor, patterns);
         matrixStack.popPose();
     }
 
@@ -61,12 +65,12 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     public void render(FlagBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        List<Pair<Holder<BannerPattern>, DyeColor>> list = tile.getPatterns();
+        BannerPatternLayers patterns = tile.getPatterns();
 
-        if (list != null) {
+        if (patterns != BannerPatternLayers.EMPTY) {
 
-            int lu = combinedLightIn & '\uffff';
-            int lv = combinedLightIn >> 16 & '\uffff';
+            int lu = VertexUtil.lightU(combinedLightIn);
+            int lv = VertexUtil.lightV(combinedLightIn);
 
             int w = 24;
             int h = 16;
@@ -90,7 +94,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-                renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, list);
+                renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, tile.getColor());
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
@@ -99,7 +103,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
-                    renderPatterns(bufferIn, poseStack, list, lu, lv, dX, w, h, segmentLen,ang, oldAng);
+                    renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,ang, oldAng);
                     poseStack.mulPose(Axis.YP.rotationDegrees(ang));
                     poseStack.translate(0, 0, segmentLen / 16f);
                     poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
@@ -112,14 +116,15 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
     }
 
-    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> list, int combinedLightIn) {
-        int lu = combinedLightIn & '\uffff';
-        int lv = combinedLightIn >> 16 & '\uffff';
-        renderPatterns(bufferIn, matrixStackIn, list, lu, lv, 0, 24, 16, 24, 0,0);
+    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> patterns, int combinedLightIn) {
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
+
+        renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24, 0,0);
     }
 
 
-    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, List<Pair<Holder<BannerPattern>, DyeColor>> list,
+    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, BannerPatternLayers list,
                                        int lu, int lv, int dX, int w, int h, int segmentlen, float ang, float oldAng) {
 
         for (int p = 0; p < list.size(); p++) {

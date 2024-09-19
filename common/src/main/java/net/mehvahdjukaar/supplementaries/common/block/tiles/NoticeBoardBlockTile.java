@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -102,7 +103,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         Item item = itemstack.getItem();
         this.cachedPattern = null;
         if (item instanceof BannerPatternItem bannerPatternItem) {
-            this.cachedPattern = ModMaterials.getFlagMaterialForPatternItem(bannerPatternItem);
+            this.cachedPattern = ModMaterials.getFlagMaterialForPatternItem(level, bannerPatternItem);
         }
 
         this.needsVisualRefresh = true;
@@ -158,15 +159,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        this.pageNumber = compound.getInt("PageNumber");
-        this.textHolder.load(compound, level, worldPosition);
-        super.load(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.pageNumber = tag.getInt("PageNumber");
+        this.textHolder.load(tag, level, worldPosition);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt("PageNumber", this.pageNumber);
         this.textHolder.save(tag);
     }
@@ -255,7 +256,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.setChanged();
     }
 
-    public InteractionResult interact(Player player, InteractionHand handIn, BlockPos pos, BlockState state, BlockHitResult hit) {
+    public InteractionResult interact(Player player, InteractionHand handIn, ItemStack stack, BlockPos pos, BlockState state, BlockHitResult hit) {
         Level level = player.level();
 
         if (player.isShiftKeyDown() && !this.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
@@ -270,7 +271,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
         //try place or open
         if (hit.getDirection() == state.getValue(NoticeBoardBlock.FACING)) {
-            InteractionResult res = super.interact(player, handIn);
+            InteractionResult res = super.interactWithPlayerItem(player, handIn, stack);
             if (res.consumesAction()) {
                 return res;
             }

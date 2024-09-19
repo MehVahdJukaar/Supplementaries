@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
@@ -40,9 +41,11 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void setCustomName(Component name) {
-        super.setCustomName(name);
-        this.updateName();
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        if (componentInput.get(DataComponents.CUSTOM_NAME) != null) {
+            this.updateSkin();
+        }
     }
 
     public StatuePose getPose() {
@@ -76,10 +79,8 @@ public class StatueBlockTile extends ItemDisplayTile {
         }
     }
 
-    private void updateName() {
-
+    private void updateSkin() {
         if (this.hasCustomName()) {
-
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
@@ -91,7 +92,7 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     @Override
     public void updateClientVisualsOnLoad() {
-        this.updateName();
+        this.updateSkin();
         ItemStack stack = this.getDisplayedItem();
         this.pose = StatuePose.getPose(stack);
         this.isWaving = this.getBlockState().getValue(StatueBlock.POWERED);

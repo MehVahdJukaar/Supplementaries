@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
@@ -206,8 +207,8 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             int b = (int) (scale* (FastColor.ARGB32.blue(i)));
             int g = (int) (scale*(FastColor.ARGB32.green(i)));
             int r = (int) (scale*(FastColor.ARGB32.red(i)));
-            int lu = frontLight & '\uffff';
-            int lv = frontLight >> 16 & '\uffff';
+            int lu = VertexUtil.lightU(frontLight);
+            int lv = VertexUtil.lightV(frontLight);
             poseStack.translate(0,0,0.008f);
             VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F,  0.4375F, 0.4375F,
                     0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 255, lu, lv);

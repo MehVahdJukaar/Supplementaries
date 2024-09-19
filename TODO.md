@@ -7,6 +7,13 @@
 - check bellows block place power
 - strip recipe conditions from signpost2 recipe
 - test all map markers & with names
+- check all forge overrides
+- check all clone itemstacks (flags, safes...)
+- wearhered map soap clearing
+- present screen mouse scrolled
+- pack button tooltip positioner
+- named block being placed retaining name
+- antique ink book signing
 
 
 # Soon

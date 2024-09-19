@@ -211,7 +211,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
         if (!paymentSlot.isEmpty()) {
             for(int i = 3; i < 39; ++i) {
                 ItemStack itemStack = (this.slots.get(i)).getItem();
-                if (!itemStack.isEmpty() && ItemStack.isSameItemSameTags(paymentSlot, itemStack)) {
+                if (!itemStack.isEmpty() && ItemStack.isSameItemSameComponents(paymentSlot, itemStack)) {
                     ItemStack itemStack2 = this.tradeContainer.getItem(paymentSlotIndex);
                     int j = itemStack2.isEmpty() ? 0 : itemStack2.getCount();
                     int k = Math.min(paymentSlot.getMaxStackSize() - j, itemStack.getCount());

@@ -69,7 +69,7 @@ public class FlowerPotHandler {
     }
 
     private static void registerFlower(String itemRes) {
-        var id = new ResourceLocation(itemRes);
+        var id = ResourceLocation.parse(itemRes);
         var opt = BuiltInRegistries.ITEM.getOptional(id);
         if (opt.isPresent()) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
@@ -103,7 +103,7 @@ public class FlowerPotHandler {
 
         if (CompatHandler.QUARK) {
             Item[] items = new Item[]{
-                    Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.GRASS,
+                    Items.SUGAR_CANE, Items.BEETROOT_SEEDS, Items.CARROT, Items.CHORUS_FLOWER, Items.POTATO, Items.SHORT_GRASS,
                     Items.COCOA_BEANS, Items.WHEAT_SEEDS, Items.VINE, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.WEEPING_VINES,
                     Items.NETHER_SPROUTS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.TALL_GRASS, Items.SEA_PICKLE, Items.NETHER_WART
             };

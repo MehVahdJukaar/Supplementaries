@@ -88,7 +88,7 @@ public class FeatherParticle extends TextureSheetParticle {
                     double freq = 1 - this.rotSpeed; //ClientConfigs.general.TEST1.get() - this.rotSpeed
 
                     //attenuation
-                    double k = 20 * 1;//ClientConfigs.general.TEST2.get();
+                    double k = 20 * 1d;//ClientConfigs.general.TEST2.get();
 
                     //minimum amplitude
                     float min = (float) (freq / 2f);
@@ -148,14 +148,14 @@ public class FeatherParticle extends TextureSheetParticle {
         float f5 = this.getV0();
         float f6 = this.getV1();
         int lightColor = this.getLightColor(partialTicks);
-        int bl = LightTexture.block(lightColor);
-        int sl = LightTexture.sky(lightColor);
+        int lu = VetexUtil.lightU(lightColor);
+        int lv = VetexUtil.lightV(lightColor);
 
         float offset = 0.125f;
-        builder.addVertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
-        builder.addVertex(avector3f[1].x(), avector3f[1].y() + offset, avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
-        builder.addVertex(avector3f[2].x(), avector3f[2].y() + offset, avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
-        builder.addVertex(avector3f[3].x(), avector3f[3].y() + offset, avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(bl,sl);
+        builder.addVertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
+        builder.addVertex(avector3f[1].x(), avector3f[1].y() + offset, avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
+        builder.addVertex(avector3f[2].x(), avector3f[2].y() + offset, avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
+        builder.addVertex(avector3f[3].x(), avector3f[3].y() + offset, avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
     }
 
 

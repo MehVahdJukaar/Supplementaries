@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -76,7 +77,8 @@ public class BlockUtil {
     }
 
     public static ItemStack saveTileToItem(BlockEntity tile) {
-        ItemStack stack = new ItemStack(tile.getBlockState().getBlock().asItem());
+        Block block = tile.getBlockState().getBlock();
+        ItemStack stack = new ItemStack(block.asItem());
         stack.applyComponents(tile.collectComponents());
         return stack;
     }
@@ -367,9 +369,9 @@ public class BlockUtil {
 
                 BlockEntity tile = level.getBlockEntity(oldPos);
                 if (tile != null) {
-                    CompoundTag tag = tile.saveWithoutMetadata();
+                    CompoundTag tag = tile.saveWithoutMetadata(level.registryAccess());
                     if (level.getBlockEntity(targetPos) instanceof ChestBlockEntity newChestTile) {
-                        newChestTile.load(tag);
+                        newChestTile.loadWithComponents(tag, level.registryAccess());
                     }
                     tile.setRemoved();
                 }

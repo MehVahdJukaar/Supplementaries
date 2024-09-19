@@ -96,28 +96,8 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (worldIn.getBlockEntity(pos) instanceof JarBlockTile tile) {
-            if (stack.hasCustomHoverName()) {
-                tile.setCustomName(stack.getHoverName());
-            }
             BlockUtil.addOptionalOwnership(placer, tile);
         }
-    }
-
-    public ItemStack getJarItem(JarBlockTile te) {
-        ItemStack returnStack = new ItemStack(this);
-
-        if (te.hasContent()) {
-            CompoundTag compoundTag = te.saveWithoutMetadata();
-            //hax
-            if (compoundTag.contains("Owner")) compoundTag.remove("Owner");
-            if (!compoundTag.isEmpty()) {
-                returnStack.addTagElement("BlockEntityTag", compoundTag);
-            }
-        }
-        if (te.hasCustomName()) {
-            returnStack.setHoverName(te.getCustomName());
-        }
-        return returnStack;
     }
 
     @Override
@@ -128,16 +108,17 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof JarBlockTile tile) {
-            ItemStack itemstack = this.getJarItem(tile);
+            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
+            //TODO: replace with loot table
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof JarBlockTile tile) {
-            return this.getJarItem(tile);
+            return BlockUtil.saveTileToItem(tile);
         }
         return super.getCloneItemStack(level, pos, state);
     }

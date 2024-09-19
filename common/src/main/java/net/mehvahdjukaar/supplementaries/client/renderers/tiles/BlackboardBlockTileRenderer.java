@@ -17,6 +17,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -66,8 +67,9 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
 
         if (noise) {
-            int lu = light & '\uffff';
-            int lv = light >> 16 & '\uffff';
+
+            int lu = VertexUtil.lightU(light);
+            int lv = VertexUtil.lightV(light);
 
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
@@ -106,8 +108,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
                     poseStack.mulPose(RotHlpr.rot(dir));
                     poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
-                    int lu = light & '\uffff';
-                    int lv = light >> 16 & '\uffff';
+                    int lu = VertexUtil.lightU(light);
+                    int lv = VertexUtil.lightV(light);
 
                     Vector2i pair = BlackboardBlock.getHitSubPixel(blockHit);
                     float p = 1 / 16f;

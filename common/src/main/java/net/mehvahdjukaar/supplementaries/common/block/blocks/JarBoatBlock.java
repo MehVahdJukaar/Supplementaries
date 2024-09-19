@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBoatTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,11 +19,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class JarBoatBlock extends HorizontalDirectionalBlock implements EntityBlock {
+
+    public static final MapCodec<JarBoatBlock> CODEC = simpleCodec(JarBoatBlock::new);
+
     protected static final VoxelShape SHAPE_X = Block.box(3, 0, 0, 13, 12, 16);
     protected static final VoxelShape SHAPE_Z = Block.box(0, 0, 3, 16, 12, 13);
 
     public JarBoatBlock(Properties builder) {
         super(builder);
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -35,7 +45,7 @@ public class JarBoatBlock extends HorizontalDirectionalBlock implements EntityBl
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 

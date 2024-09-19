@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -27,11 +28,18 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
+    public static MapCodec<SlidyBlock> CODEC = simpleCodec(SlidyBlock::new);
+
     public static BooleanProperty ON_PRESSURE_PLATE = ModBlockProperties.ON_PRESSURE_PLATE;
 
     public SlidyBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(ON_PRESSURE_PLATE, false));
+    }
+
+    @Override
+    protected MapCodec<? extends FallingBlock> codec() {
+        return CODEC;
     }
 
     @Override

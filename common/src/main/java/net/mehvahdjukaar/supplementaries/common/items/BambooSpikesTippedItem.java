@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -10,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
@@ -22,11 +22,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BambooSpikesTippedItem extends WoodBasedBlockItem implements SimpleWaterloggedBlock {
+public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterloggedBlock {
 
 
     public BambooSpikesTippedItem(Block blockIn, Properties builder) {
-        super(blockIn, builder, 150);
+        super(blockIn, builder);
     }
 
     @Override
@@ -96,13 +96,14 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
     }
 
     public static ItemStack makeSpikeItem(@Nullable Holder<Potion> potion) {
-        if(potion == null)return ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
+        if (potion == null) return ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
         return PotionContents.createItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), potion);
     }
 
     public static boolean isPotionValid(Holder<Potion> potion) {
         List<MobEffectInstance> effects = potion.value().getEffects();
         if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+            if (effects.isEmpty()) return false;
             for (var e : effects) {
                 if (e.getEffect().value().isBeneficial()) return false;
             }

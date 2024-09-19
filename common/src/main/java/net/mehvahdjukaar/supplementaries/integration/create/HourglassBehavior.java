@@ -46,7 +46,7 @@ public class HourglassBehavior implements MovementBehaviour {
         this.sandData = HourglassTimeData.EMPTY;
         var prevSandData = this.sandData;
         NonNullList<ItemStack> l = NonNullList.create();
-        ContainerHelper.loadAllItems(com, l);
+        ContainerHelper.loadAllItems(com, l, context.world.registryAccess());
         if (l.isEmpty()) return;
         this.sandData = HourglassTimesManager.getData(l.get(0).getItem());
         if (prevSandData != sandData && context.world.isClientSide) {

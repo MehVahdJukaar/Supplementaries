@@ -40,7 +40,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -82,14 +81,13 @@ public class ClientReceivers {
 
     public static void handleSendBombKnockbackPacket(ClientBoundSendKnockbackPacket message) {
         withLevelDo(l -> {
-            Entity e = l.getEntity(message.id);
-            if (e != null) e.setDeltaMovement(e.getDeltaMovement()
-                    .add(message.knockbackX, message.knockbackY, message.knockbackZ));
+            Entity e = l.getEntity(message.id());
+            if (e != null) e.setDeltaMovement(e.getDeltaMovement().add(message.knockback()));
         });
     }
 
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
-        withPlayerDo(p -> PlayerSuggestionBoxWidget.setUsernameCache(message.usernameCache));
+        withPlayerDo(p -> PlayerSuggestionBoxWidget.setUsernameCache(message.usernameCache()));
     }
 
     public static void handleSpawnBlockParticlePacket(ClientBoundParticlePacket message) {
@@ -301,9 +299,9 @@ public class ClientReceivers {
 
     public static void handlePlaySongNotesPacket(ClientBoundPlaySongNotesPacket message) {
         withLevelDo(l -> {
-            Entity e = l.getEntity(message.entityID);
+            Entity e = l.getEntity(message.entityID());
             if (e instanceof Player p && p.getUseItem().getItem() instanceof SongInstrumentItem instrumentItem) {
-                for (int note : message.notes) {
+                for (int note : message.notes()) {
                     if (note > 0) {
                         //always plays a sound for local player. this is because this method is called on client side for other clients aswell
                         //and playsound only plays if the given player is the local one
@@ -323,7 +321,7 @@ public class ClientReceivers {
         withPlayerDo(p -> {
             AbstractContainerMenu container = p.containerMenu;
             if (message.containerId == container.containerId && container instanceof RedMerchantMenu containerMenu) {
-                containerMenu.setOffers(new MerchantOffers(message.offers.createTag()));
+                containerMenu.setOffers(message.offers);
                 containerMenu.setXp(message.villagerXp);
                 containerMenu.setMerchantLevel(message.villagerLevel);
                 containerMenu.setShowProgressBar(message.showProgress);
@@ -334,18 +332,18 @@ public class ClientReceivers {
 
     public static void handleSyncQuiverPacket(SyncSkellyQuiverPacket message) {
         withLevelDo(l -> {
-            Entity e = l.getEntity(message.entityID);
+            Entity e = l.getEntity(message.entityID());
             if (e instanceof IQuiverEntity qe) {
-                qe.supplementaries$setQuiver(message.on ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
+                qe.supplementaries$setQuiver(message.on() ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
             }
         });
     }
 
     public static void handleSyncPartyCreeper(SyncPartyCreeperPacket message) {
         withLevelDo(l -> {
-            Entity e = l.getEntity(message.entityID);
+            Entity e = l.getEntity(message.entityID());
             if (e instanceof IPartyCreeper le) {
-                le.supplementaries$setFestive(message.on);
+                le.supplementaries$setFestive(message.on());
             }
         });
     }
@@ -381,9 +379,9 @@ public class ClientReceivers {
 
         for (Player player : list) {
             var l = player.getShoulderEntityLeft();
-            if (l != null) l.putBoolean("record_playing", isPartying);
+            if (!l.isEmpty()) l.putBoolean("record_playing", isPartying);
             var r = player.getShoulderEntityRight();
-            if (r != null) r.putBoolean("record_playing", isPartying);
+            if (!r.isEmpty()) r.putBoolean("record_playing", isPartying);
 
         }
         Player p = source.left().orElse(null);

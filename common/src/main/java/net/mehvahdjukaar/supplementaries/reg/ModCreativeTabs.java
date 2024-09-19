@@ -29,6 +29,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 
@@ -707,15 +708,16 @@ public class ModCreativeTabs {
     public static ItemStack[] getSpikeItems() {
         var items = new ArrayList<ItemStack>();
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
-            items.add(ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance());
+            items.add(ModRegistry.BAMBOO_SPIKES.get().asItem().getDefaultInstance());
             if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && CommonConfigs.Functional.TIPPED_SPIKES_TAB.get()) {
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.LONG_POISON));
                 items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.STRONG_POISON));
-                for (Potion potion : BuiltInRegistries.POTION) {
-                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
+                for (var potion : BuiltInRegistries.POTION.holders().toList()) {
+                    var p = potion.value();
+                    if (p == Potions.POISON || p == Potions.LONG_POISON || p == Potions.STRONG_POISON)
                         continue;
-                    if (!potion.getEffects().isEmpty() && potion != Potions.EMPTY && BambooSpikesTippedItem.isPotionValid(potion)) {
+                    if (BambooSpikesTippedItem.isPotionValid(potion)) {
                         items.add(BambooSpikesTippedItem.makeSpikeItem(potion));
                     }
                 }
@@ -744,8 +746,8 @@ public class ModCreativeTabs {
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
-                //if (s.isEnabled()) continue;
-                if (s == BuiltInSoftFluids.POTION.get() || s.isEmptyFluid()) continue;
+                if (!s.isEnabled()) continue;
+                if (h.is(BuiltInSoftFluids.POTION) || s.isEmptyFluid()) continue;
                 CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
                 fluidHolder.setFluid(SoftFluidStack.of(h, 100));
@@ -754,14 +756,14 @@ public class ModCreativeTabs {
                 tryAddJar(items, com);
             }
 
-            for (ResourceLocation potion : BuiltInRegistries.POTION.keySet()) {
-                CompoundTag com = new CompoundTag();
-                com.putString("Potion", potion.toString());
-                fluidHolder.setFluid(SoftFluidStack.of(BuiltInSoftFluids.POTION.getHolder(), 100, com));
+            for (var potion : BuiltInRegistries.POTION.holders().toList()) {
+                SoftFluidStack fluidStack = SoftFluidStack.of(BuiltInSoftFluids.POTION, 100);
+                fluidStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
+                fluidHolder.setFluid(fluidStack);
                 fluidHolder.capCapacity();
-                CompoundTag com2 = new CompoundTag();
-                fluidHolder.save(com2);
-                tryAddJar(items, com2);
+                CompoundTag tag = new CompoundTag();
+                fluidHolder.save(tag);
+                tryAddJar(items, tag);
             }
         }
         return items.toArray(ItemStack[]::new);

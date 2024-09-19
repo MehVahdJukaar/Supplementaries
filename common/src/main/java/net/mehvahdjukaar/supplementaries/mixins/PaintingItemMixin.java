@@ -29,6 +29,7 @@ public abstract class PaintingItemMixin extends Item {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
+        //TODO: use event
         if (ClientConfigs.Tweaks.PAINTINGS_TOOLTIPS.get() && type == EntityType.PAINTING) {
             var tag = stack.getTag();
             if (tag != null && tag.contains("EntityTag")) {

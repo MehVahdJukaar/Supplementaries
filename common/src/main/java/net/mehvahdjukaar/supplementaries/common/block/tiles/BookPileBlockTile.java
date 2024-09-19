@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -78,15 +79,15 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
+        super.saveAdditional(compound, registries);
         compound.putFloat("EnchantPower", this.enchantPower);
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.enchantPower = compound.getFloat("EnchantPower");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.enchantPower = tag.getFloat("EnchantPower");
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
         }

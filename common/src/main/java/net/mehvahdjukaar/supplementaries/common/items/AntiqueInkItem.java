@@ -5,23 +5,32 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class AntiqueInkItem extends Item implements SignApplicator {
     public AntiqueInkItem(Properties properties) {
@@ -74,45 +83,56 @@ public class AntiqueInkItem extends Item implements SignApplicator {
     public static void setAntiqueInk(ItemStack stack, boolean ink) {
 
         if (ink) {
-            stack.getOrCreateTag().putBoolean("AntiqueInk", true);
-            if ((stack.getItem() instanceof WrittenBookItem || stack.getItem() instanceof WritableBookItem)) {
-                if (stack.hasTag()) {
-                    ListTag listTag = stack.getTag().getList("pages", 8);
-                    ListTag newListTag = new ListTag();
-                    for (var v : listTag) {
-                        MutableComponent comp = Component.Serializer.fromJson(v.getAsString());
-                        newListTag.add(StringTag.valueOf(
-                                Component.Serializer.toJson(comp.withStyle(comp.getStyle().withFont(ModTextures.ANTIQUABLE_FONT))))
-                        );
+            stack.set(ModComponents.ANTIQUE_INK.get(), Unit.INSTANCE);
+
+            WrittenBookContent written = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+            if (written != null) {
+                var title = written.title();
+                String author = written.author();
+                List<Filterable<Component>> pages = written.pages();
+                List<Filterable<Component>> newPages = new ArrayList<>(pages.size());
+                for (Filterable<Component> page : pages) {
+                    Component comp = page.raw();
+                    Optional<Component> optional = page.filtered();
+                    if (comp instanceof MutableComponent mc) {
+                        comp = mc.withStyle(mc.getStyle().withFont(ModTextures.ANTIQUABLE_FONT));
                     }
-                    stack.addTagElement("pages", newListTag);
+                    if (optional.isPresent() && optional.get() instanceof MutableComponent mc2) {
+                        optional = Optional.of(mc2.withStyle(mc2.getStyle().withFont(ModTextures.ANTIQUABLE_FONT)));
+                    }
+                    newPages.add(new Filterable<>(comp, optional));
                 }
-                if (stack.getItem() == Items.WRITTEN_BOOK) {
-                    stack.getOrCreateTag().putInt("generation", 3);
-                }
+                stack.set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(title, author, 3, newPages, false));
             }
-        } else if (stack.hasTag()) {
-            stack.getTag().remove("AntiqueInk");
-            if (stack.hasTag() && (stack.getItem() instanceof WrittenBookItem || stack.getItem() instanceof WritableBookItem)) {
-                ListTag listTag = stack.getTag().getList("pages", 8);
-                ListTag newListTag = new ListTag();
-                for (var v : listTag) {
-                    MutableComponent comp = Component.Serializer.fromJson(v.getAsString());
-                    newListTag.add(StringTag.valueOf(
-                            Component.Serializer.toJson(comp.withStyle(Style.EMPTY)))
-                    );
+
+        } else {
+            stack.remove(ModComponents.ANTIQUE_INK.get());
+
+            WrittenBookContent written = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+            if (written != null) {
+                var title = written.title();
+                String author = written.author();
+                int generation = written.generation();
+                List<Filterable<Component>> pages = written.pages();
+                List<Filterable<Component>> newPages = new ArrayList<>(pages.size());
+                for (Filterable<Component> page : pages) {
+                    Component comp = page.raw();
+                    Optional<Component> optional = page.filtered();
+                    if (comp instanceof MutableComponent mc) {
+                        comp = mc.withStyle(mc.getStyle().withFont(null));
+                    }
+                    if (optional.isPresent() && optional.get() instanceof MutableComponent mc2) {
+                        optional = Optional.of(mc2.withStyle(mc2.getStyle().withFont(null)));
+                    }
+                    newPages.add(new Filterable<>(comp, optional));
                 }
-                stack.addTagElement("pages", newListTag);
+                stack.set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(title, author, generation, newPages, false));
             }
         }
     }
 
     public static boolean hasAntiqueInk(ItemStack stack) {
-        var t = stack.getTag();
-        if (t != null) {
-            return t.contains("AntiqueInk");
-        }
-        return false;
+        return stack.get(ModComponents.ANTIQUE_INK.get()) != null;
     }
 }
 

@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -206,8 +207,8 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("Owner")) {
             this.owner = tag.getUUID("Owner");
         } else this.owner = null;
@@ -220,13 +221,13 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        this.saveOwner(compound);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.saveOwner(tag);
         if (this.ownerName != null)
-            compound.putString("OwnerName", this.ownerName);
+            tag.putString("OwnerName", this.ownerName);
         if (this.password != null)
-            compound.putString("Password", this.password);
+            tag.putString("Password", this.password);
     }
 
     @Override
