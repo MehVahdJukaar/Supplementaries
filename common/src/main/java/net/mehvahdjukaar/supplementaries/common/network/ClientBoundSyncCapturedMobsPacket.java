@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHa
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCatchableMob;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.Nullable;
@@ -34,20 +33,12 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
         int size = buf.readInt();
         this.mobSet = new HashSet<>();
         for (int i = 0; i < size; i++) {
-            CompoundTag tag = buf.readNbt();
-            if (tag != null) {
-                var r = DataDefinedCatchableMob.CODEC.parse(NbtOps.INSTANCE, tag);
-                if (r.result().isPresent()) {
-                    mobSet.add(r.result().get());
-                }
-            }
+            var r = DataDefinedCatchableMob.STREAM_CODEC.decode(buf);
+            mobSet.add(r);
         }
         if (buf.readBoolean()) {
-            CompoundTag tag = buf.readNbt();
-            var r = DataDefinedCatchableMob.CODEC.parse(NbtOps.INSTANCE, tag);
-            if (r.result().isPresent()) {
+            var r = DataDefinedCatchableMob.STREAM_CODEC.decode(NbtOps.INSTANCE, tag);
                 this.fish = r.result().get();
-            } else fish = null;
         } else fish = null;
     }
 

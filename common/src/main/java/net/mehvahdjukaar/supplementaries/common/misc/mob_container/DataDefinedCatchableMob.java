@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
@@ -10,6 +11,9 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
@@ -43,6 +47,9 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
             ResourceLocation.CODEC.optionalFieldOf("force_fluid").forGetter(p -> p.forceFluidID),
             LootParam.CODEC.optionalFieldOf("loot").forGetter(p -> p.loot)
     ).apply(instance, DataDefinedCatchableMob::new));
+
+    // sub optimal code. too bad
+    public static final StreamCodec<ByteBuf, DataDefinedCatchableMob> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC.codec());
 
     private final List<ResourceLocation> owners;
     final float widthIncrement;

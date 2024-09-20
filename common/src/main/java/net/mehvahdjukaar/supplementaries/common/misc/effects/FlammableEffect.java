@@ -26,20 +26,16 @@ public class FlammableEffect extends MobEffect {
     }
 
     @Override
-    public boolean isInstantenous() {
-        return false;
-    }
-
-    @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
+    // false if effect should be removed
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+    public boolean applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
 
         int ticks = pLivingEntity.getRemainingFireTicks();
-        if (ticks <= 0) return;
+        if (ticks <= 0) return true;
         if (ticks <= 8 * 20) {
             pLivingEntity.setSecondsOnFire(8);
         }
@@ -47,7 +43,7 @@ public class FlammableEffect extends MobEffect {
         Level level = pLivingEntity.level();
 
         if (pLivingEntity.getRandom().nextFloat() > 0.5f + (pAmplifier * 0.2)) {
-            return;
+            return true;
         }
         FireBlock delegate = (FireBlock) Blocks.FIRE;
 
@@ -71,6 +67,7 @@ public class FlammableEffect extends MobEffect {
 
         }
 
+        return true;
             /*
             FireBlock fireblock = (FireBlock) BaseFireBlock.FIRE.get();
             if (BaseFireBlock.canBePlacedAt(level, blockpos, direction)) {
@@ -81,14 +78,6 @@ public class FlammableEffect extends MobEffect {
 
     @Override
     public void applyInstantenousEffect(@Nullable Entity pSource, @Nullable Entity pIndirectSource, LivingEntity pLivingEntity, int pAmplifier, double pHealth) {
-
     }
 
-    @Override
-    public void addAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-    }
-
-    @Override
-    public void removeAttributeModifiers(LivingEntity pLivingEntity, AttributeMap pAttributeMap, int pAmplifier) {
-    }
 }
