@@ -88,7 +88,7 @@ public class FeatherBlock extends Block {
                 if (isMoving && random.nextInt(10) == 0) {
                     double dy = 0.001;
 
-                    NetworkHelper.sendToAllClientPlayersInParticleRange(level, blockPos,
+                    NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, blockPos,
                             new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, 1,
                                     new Vec3(0, dy, 0)));
                 }

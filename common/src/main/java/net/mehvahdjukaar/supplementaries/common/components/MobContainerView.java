@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.components;
+package net.mehvahdjukaar.supplementaries.common.components;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class MobContainerView {
@@ -33,6 +34,7 @@ public class MobContainerView {
     private MobContainerView(@NotNull MobContainer.MobData data, float width, float height, boolean aquarium) {
         this.inner = new MobContainer(width, height, aquarium);
         this.inner.setData(Preconditions.checkNotNull(data, "cannot create mob container view with null data"));
+
     }
 
     private MobContainerView(MobContainer container) {
@@ -54,5 +56,16 @@ public class MobContainerView {
 
     public void apply(MobContainer mobContainer) {
         mobContainer.setData(this.inner.getData());
+    }
+
+    public Entity getVisualEntity() {
+        //TODO: cache
+     //   Entity e = CapturedMobCache.getOrCreateCachedMob(id, cmp2);
+        //
+        return inner.getDisplayedMob();
+    }
+
+    public float getRenderScale() {
+        return ((MobContainer.MobData.Entity)inner.getData()).getScale();
     }
 }

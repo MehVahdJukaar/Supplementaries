@@ -15,16 +15,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySongNotesPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSongsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.sounds.SoundSource;
@@ -95,10 +91,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         songs.forEach(SongsManager::addSong);
     }
 
-    public static void sendDataToClient(ServerPlayer player) {
-        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
-    }
-
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
         Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
@@ -116,7 +108,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
             return CAROLS.get(random.nextInt(CAROLS.size()));
         }
         Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
-        return song.map(WeightedEntry.Wrapper::getData).orElse("");
+        return song.map(WeightedEntry.Wrapper::data).orElse("");
     }
 
     //called on server only
@@ -257,10 +249,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         //temporarily adds the song
         //SONGS.clear();
         //SONGS.put(name, song);
-
-        if (!level.isClientSide) {
-            NetworkHelper.sendToAllClientPlayers(new ClientBoundSyncSongsPacket(SongsManager.SONGS.values()));
-        }
 
         RECORDING.clear();
         return song.getTranslationKey();

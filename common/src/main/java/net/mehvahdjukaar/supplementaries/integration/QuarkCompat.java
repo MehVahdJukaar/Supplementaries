@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -159,7 +160,7 @@ public class QuarkCompat {
         BlockEntity tile = eb.newBlockEntity(pos, state);
         if (tile == null) return null;
         CompoundTag tileTag = PistonsMoveTileEntitiesModule.getMovingBlockEntityData(level, pos);
-        if (tileTag != null && tile.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(new ResourceLocation(tileTag.getString("id"))))
+        if (tileTag != null && tile.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.tryParse(tileTag.getString("id"))))
             tile.load(tileTag);
         return tile;
     }
@@ -169,14 +170,13 @@ public class QuarkCompat {
         Level world = context.getLevel();
         if (world.getBlockEntity(pos) instanceof TinyPotatoBlockEntity te && te.getType() != TATER_IN_A_JAR_TILE.get()) {
             ItemStack stack = context.getItemInHand();
-            CompoundTag com = stack.getTagElement("BlockEntityTag");
-            if (com == null || com.isEmpty()) {
+            if (!stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
                 if (!world.isClientSide) {
                     Player player = context.getPlayer();
                     item.playCatchSound(player);
 
                     ItemStack returnItem = new ItemStack(TATER_IN_A_JAR.get());
-                    if (te.hasCustomName()) returnItem.setHoverName(te.getCustomName());
+                    if (te.hasCustomName()) returnItem.set(DataComponents.CUSTOM_NAME, te.getCustomName());
                     Utils.swapItemNBT(player, context.getHand(), stack, returnItem);
 
                     world.removeBlock(pos, false);

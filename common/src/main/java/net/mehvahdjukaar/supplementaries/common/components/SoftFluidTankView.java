@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.items.components;
+package net.mehvahdjukaar.supplementaries.common.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

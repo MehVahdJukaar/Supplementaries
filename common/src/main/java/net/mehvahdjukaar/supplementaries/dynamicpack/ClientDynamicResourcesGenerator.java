@@ -88,7 +88,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         RPUtils.appendModelOverride(manager, this.dynamicPack, Supplementaries.res("globe"), e -> {
             int i = 0;
-            for (var text : GlobeManager.Type.textures) {
+            for (var text : GlobeManager.TEXTURES) {
                 String name = text.getPath().split("/")[3].split("\\.")[0];
                 e.add(new ItemOverride(Supplementaries.res("item/" + name),
                         List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));

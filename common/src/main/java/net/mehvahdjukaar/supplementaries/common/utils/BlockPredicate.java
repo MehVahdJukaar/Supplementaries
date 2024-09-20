@@ -27,10 +27,10 @@ public interface BlockPredicate extends Predicate<BlockState> {
     @NotNull
     static BlockPredicate create(String s) {
         if (s.startsWith("#")) {
-            var tag = TagKey.create(Registries.BLOCK, new ResourceLocation(s.replace("#", "")));
+            var tag = TagKey.create(Registries.BLOCK, ResourceLocation.parse(s.replace("#", "")));
             return new Tag(tag);
         }
-        ResourceLocation id = new ResourceLocation(s);
+        ResourceLocation id = ResourceLocation.parse(s);
         return new Block(id);
     }
 

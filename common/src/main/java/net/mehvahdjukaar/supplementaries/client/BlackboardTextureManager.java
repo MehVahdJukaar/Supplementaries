@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -18,83 +19,42 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
-public class BlackboardManager {
+public class BlackboardTextureManager {
 
-    private static final LoadingCache<Key, Blackboard> TEXTURE_CACHE = CacheBuilder.newBuilder()
+    private static final LoadingCache<BlackboardData, BlackboardVisuals> TEXTURE_CACHE = CacheBuilder.newBuilder()
             .expireAfterAccess(2, TimeUnit.MINUTES)
             .removalListener(i -> {
-                Blackboard value = (Blackboard) i.getValue();
+                BlackboardVisuals value = (BlackboardVisuals) i.getValue();
                 if (value != null) {
                     RenderSystem.recordRenderCall(value::close);
                 }
             })
             .build(new CacheLoader<>() {
                 @Override
-                public Blackboard load(Key key) {
+                public BlackboardVisuals load(BlackboardData key) {
                     return null;
                 }
             });
 
-    public static Blackboard getInstance(Key key) {
-        Blackboard textureInstance = TEXTURE_CACHE.getIfPresent(key);
+    public static BlackboardVisuals getInstance(BlackboardData key) {
+        BlackboardVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new Blackboard(BlackboardBlockTile.unpackPixels(key.values), key.glow);
+            textureInstance = new BlackboardVisuals(BlackboardBlockTile.unpackPixels(key.values), key.glow);
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;
     }
 
-    public static class Key implements TooltipComponent {
-        private final long[] values;
-        private final boolean glow;
-
-        Key(long[] packed, boolean glowing) {
-            values = packed;
-            glow = glowing;
-        }
-
-        public static Key of(long[] packPixels, boolean glowing) {
-            return new Key(packPixels, glowing);
-        }
-
-        public static Key of(long[] packPixels) {
-            return new Key(packPixels, false);
-        }
-
-        @Override
-        public boolean equals(Object another) {
-            if (another == this) {
-                return true;
-            }
-            if (another == null) {
-                return false;
-            }
-            if (another.getClass() != this.getClass()) {
-                return false;
-            }
-            Key key = (Key) another;
-            return Arrays.equals(this.values, key.values) && glow == key.glow;
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(this.values);
-        }
-    }
-
-
-    public static class Blackboard implements AutoCloseable {
+    public static class BlackboardVisuals implements AutoCloseable {
         private static final int WIDTH = 16;
 
         //models for each direction
@@ -109,7 +69,7 @@ public class BlackboardManager {
         @Nullable
         private ResourceLocation textureLocation;
 
-        private Blackboard(byte[][] pixels, boolean glow) {
+        private BlackboardVisuals(byte[][] pixels, boolean glow) {
             this.pixels = pixels;
             this.glow = glow;
         }
@@ -165,7 +125,7 @@ public class BlackboardManager {
         }
 
         @NotNull
-        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<Blackboard, Direction, List<BakedQuad>> modelFactory) {
+        public List<BakedQuad> getOrCreateModel(Direction dir, BiFunction<BlackboardVisuals, Direction, List<BakedQuad>> modelFactory) {
             return quadsCache.computeIfAbsent(dir, d -> modelFactory.apply(this, d));
         }
 

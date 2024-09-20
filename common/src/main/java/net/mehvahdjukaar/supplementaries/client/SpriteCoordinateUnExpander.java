@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import org.joml.Vector3f;
 
 public class SpriteCoordinateUnExpander implements VertexConsumer {
     private final VertexConsumer delegate;
@@ -12,16 +13,19 @@ public class SpriteCoordinateUnExpander implements VertexConsumer {
         this.sprite = textureAtlasSprite;
     }
 
-    public VertexConsumer vertex(double x, double y, double z) {
-        return this.delegate.vertex(x, y, z);
+    @Override
+    public VertexConsumer addVertex(float x, float y, float z) {
+        return this.delegate.addVertex(x, y, z);
     }
 
-    public VertexConsumer color(int red, int green, int blue, int alpha) {
-        return this.delegate.color(red, green, blue, alpha);
+    @Override
+    public VertexConsumer setColor(int red, int green, int blue, int alpha) {
+        return this.delegate.setColor(red, green, blue, alpha);
     }
 
-    public VertexConsumer uv(float u, float v) {
-        return this.delegate.uv(getU(u), getV(v));
+    @Override
+    public VertexConsumer setUv(float u, float v) {
+        return this.delegate.setUv(getU(u), getV(v));
     }
 
     private float getU(float u) {
@@ -34,34 +38,19 @@ public class SpriteCoordinateUnExpander implements VertexConsumer {
         return (v - this.sprite.getV0()) / vs;
     }
 
-    public VertexConsumer overlayCoords(int u, int v) {
-        return this.delegate.overlayCoords(u, v);
+    @Override
+    public VertexConsumer setUv1(int u, int v) {
+        return this.delegate.setUv1(u, v);
     }
 
-    public VertexConsumer uv2(int u, int v) {
-        return this.delegate.uv2(u, v);
+    @Override
+    public VertexConsumer setUv2(int u, int v) {
+        return this.delegate.setUv2(u, v);
     }
 
-    public VertexConsumer normal(float x, float y, float z) {
-        return this.delegate.normal(x, y, z);
+    @Override
+    public VertexConsumer setNormal(float x, float y, float z) {
+        return this.delegate.setNormal(x, y, z);
     }
 
-    public void endVertex() {
-        this.delegate.endVertex();
-    }
-
-    public void defaultColor(int defaultR, int defaultG, int defaultB, int defaultA) {
-        this.delegate.defaultColor(defaultR, defaultG, defaultB, defaultA);
-    }
-
-    public void unsetDefaultColor() {
-        this.delegate.unsetDefaultColor();
-    }
-
-    public void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float texU, float texV, int overlayUV, int lightmapUV, float normalX, float normalY, float normalZ) {
-        this.delegate.vertex(x, y, z, red, green, blue, alpha,
-                this.getU(texU),
-                this.getV(texV),
-                overlayUV, lightmapUV, normalX, normalY, normalZ);
-    }
 }

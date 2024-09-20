@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireChargeItem;
 import net.minecraft.world.item.FlintAndSteelItem;
@@ -32,10 +34,12 @@ class LightUpLumiseneLiquidBehavior implements ItemUseOnBlockBehavior {
     @Override
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
-        BlockHitResult blockHitResult = (BlockHitResult) player.pick(ForgeHelper.getReachDistance(player), 1, true);
+        double blockReach = player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
+        BlockHitResult blockHitResult = (BlockHitResult) player.pick(blockReach, 1, true);
         BlockState state = world.getBlockState(blockHitResult.getBlockPos());
         if (state.getBlock() instanceof FlammableLiquidBlock) {
-            return state.use(world, player, hand, blockHitResult);
+            //super hack
+            return state.useItemOn(player.getItemInHand(hand), world, player, hand, blockHitResult).result();
         }
 
         return InteractionResult.PASS;

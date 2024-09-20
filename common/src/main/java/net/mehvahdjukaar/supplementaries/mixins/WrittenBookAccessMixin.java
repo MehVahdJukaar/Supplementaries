@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.world.item.ItemStack;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BookViewScreen.WrittenBookAccess.class)
-public abstract class WrittenBookAccessMixin implements IAntiqueTextProvider {
+public abstract class WrittenBookAccessMixin implements IAntiquable {
 
     @Unique
     private boolean supplementaries$antiqueInk;
@@ -22,11 +22,11 @@ public abstract class WrittenBookAccessMixin implements IAntiqueTextProvider {
     }
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean isAntique() {
         return supplementaries$antiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void setAntique(boolean hasInk) {
     }
 }

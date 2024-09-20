@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,9 +22,9 @@ public class SpawnEggBehavior implements IFireItemBehavior {
 
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
-        EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack.getTag());
+        EntityType<?> type = ((SpawnEggItem) stack.getItem()).getType(stack);
         try {
-            Entity e = spawnMob(type, level, firePos, direction, power, stack);
+            Entity e = spawnMob(type, level, firePos, direction, power, stack, owner);
             if (e != null) {
                 level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
                 //update client velocity
@@ -39,24 +40,23 @@ public class SpawnEggBehavior implements IFireItemBehavior {
 
     @Nullable
     protected <T extends Entity> T spawnMob(EntityType<T> entityType, ServerLevel serverLevel,
-                                            Vec3 firePos, Vec3 direction, float power, @Nullable ItemStack stack) {
-        CompoundTag tag = stack == null ? null : stack.getTag();
-        Component component = stack != null && stack.hasCustomHoverName() ? stack.getHoverName() : null;
+                                            Vec3 firePos, Vec3 direction, float power, @Nullable ItemStack stack,
+                                            @Nullable Player player) {
 
-
+        // we cant call spawn as we want no sound nor any custom equipment due to difficulty
         T entity = entityType.create(serverLevel);
         if (entity != null) {
 
-            if (component != null) {
-                entity.setCustomName(component);
+            if (stack != null) {
+                // adds item stuff to entity
+                EntityType.createDefaultStackConfig(serverLevel, stack, player).accept(entity);
             }
 
-            EntityType.updateCustomEntityTag(serverLevel, null, entity, tag);
             entity.setPos(firePos.x(), firePos.y(), firePos.z());
             entity.moveTo(firePos.x(), firePos.y(), firePos.z(), Mth.wrapDegrees(serverLevel.random.nextFloat() * 360.0F), 0.0F);
 
             entity.setDeltaMovement(direction.scale(power));
-            //entity.hasImpulse = true;
+            entity.hasImpulse = true;
             entity.hurtMarked = true;
 
             if (entity instanceof Mob mob) {

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
@@ -13,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BannerRenderer;
@@ -22,11 +20,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.joml.Quaternionf;
 
@@ -83,7 +79,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
             long time = tile.getLevel().getGameTime();
 
             double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
-            long  period =  (ClientConfigs.Blocks.FLAG_PERIOD.get());
+            long period = (ClientConfigs.Blocks.FLAG_PERIOD.get());
             double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
             double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
 
@@ -103,7 +99,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
                     float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
-                    renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,ang, oldAng);
+                    renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen, ang, oldAng);
                     poseStack.mulPose(Axis.YP.rotationDegrees(ang));
                     poseStack.translate(0, 0, segmentLen / 16f);
                     poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
@@ -116,31 +112,32 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
     }
 
-    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, List<Pair<Holder<BannerPattern>, DyeColor>> patterns, int combinedLightIn) {
+    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, BannerPatternLayers patterns, int combinedLightIn) {
         int lu = VertexUtil.lightU(combinedLightIn);
         int lv = VertexUtil.lightV(combinedLightIn);
 
-        renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24, 0,0);
+        renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24, 0, 0);
     }
 
 
     private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, BannerPatternLayers list,
                                        int lu, int lv, int dX, int w, int h, int segmentlen, float ang, float oldAng) {
 
-        for (int p = 0; p < list.size(); p++) {
+        List<BannerPatternLayers.Layer> layers = list.layers();
+        for (int p = 0; p < layers.size(); p++) {
 
-            Material material = ModMaterials.FLAG_MATERIALS.get().get(list.get(p).getFirst().value());
-            if(material == null){
+            Material material = ModMaterials.FLAG_MATERIALS.apply(layers.get(p).pattern().value());
+            if (material == null) {
                 continue;
             }
             VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
 
             matrixStackIn.pushPose();
 
-            int color = list.get(p).getSecond().getTextureDiffuseColor();
-            float b = FastColor.ARGB32.blue(color)/255f;
-            float g = FastColor.ARGB32.green(color)/255f;
-            float r = FastColor.ARGB32.red(color)/255f;
+            int color = layers.get(p).color().getTextureDiffuseColor();
+            float b = FastColor.ARGB32.blue(color) / 255f;
+            float g = FastColor.ARGB32.green(color) / 255f;
+            float r = FastColor.ARGB32.red(color) / 255f;
 
             renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
 
@@ -166,13 +163,13 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         float h = height / 16f;
 
         float pU = maxU - (1 / textW);
-        float pV =  maxV - w;
-        float pV2 =  w;
+        float pV = maxV - w;
+        float pV2 = w;
 
         //TODO: fix
         Quaternionf rot = Axis.YP.rotationDegrees(angle);
         Quaternionf oldRot = Axis.YP.rotationDegrees(oldAng);
-        Quaternionf rotInc = Axis.YP.rotationDegrees(angle-oldAng);
+        Quaternionf rotInc = Axis.YP.rotationDegrees(angle - oldAng);
         Quaternionf rotInv = Axis.YP.rotationDegrees(-angle);
 
         //correct

@@ -1,24 +1,35 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Stray;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Stray.class)
 public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEntity {
     //frick it going full mixin here. I could have used caps and spawn events...
 
     //server
+    @NotNull
     @Unique
     private ItemStack supplementaries$quiver = ItemStack.EMPTY;
     @Unique
@@ -29,13 +40,24 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     }
 
     @Override
-    protected void dropCustomDeathLoot(DamageSource damageSource, int looting, boolean hitByPlayer) {
-        super.dropCustomDeathLoot(damageSource, looting, hitByPlayer);
-        if (this.supplementaries$quiver != null && hitByPlayer) {
+    protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean hitByPlayer) {
+        if (!this.supplementaries$quiver.isEmpty()) {
+            //same code as Mob super call for armor
             ItemStack itemStack = this.supplementaries$quiver;
-            if (Math.max(this.random.nextFloat() - looting * 0.02F, 0.0F) < supplementaries$quiverDropChance) {
-                this.spawnAtLocation(itemStack);
-                this.supplementaries$quiver = ItemStack.EMPTY;
+
+            float dropChance = supplementaries$quiverDropChance;
+            if (dropChance != 0) {
+
+                Entity damagingEntity = damageSource.getEntity();
+                if (damagingEntity instanceof LivingEntity le) {
+                    dropChance = EnchantmentHelper.processEquipmentDropChance(serverLevel, le, damageSource, dropChance);
+                }
+                boolean alwaysDrop = dropChance > 1.0F;
+                if (!EnchantmentHelper.has(itemStack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)
+                        && (hitByPlayer || alwaysDrop) && this.random.nextFloat() < dropChance) {
+                    this.spawnAtLocation(itemStack);
+                    this.supplementaries$quiver = ItemStack.EMPTY;
+                }
             }
         }
     }
@@ -44,7 +66,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (!this.supplementaries$quiver.isEmpty()) {
-            compound.put("Quiver", supplementaries$quiver.save(new CompoundTag()));
+            compound.put("Quiver", supplementaries$quiver.save(level().registryAccess(), new CompoundTag()));
             compound.putFloat("QuiverDropChance", supplementaries$quiverDropChance);
         }
     }
@@ -53,7 +75,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("Quiver")) {
-            this.supplementaries$setQuiver(ItemStack.of(compound.getCompound("Quiver")));
+            this.supplementaries$setQuiver(ItemStack.parseOptional(level().registryAccess(), compound.getCompound("Quiver")));
             this.supplementaries$quiverDropChance = compound.getFloat("QuiverDropChance");
         }
     }
@@ -68,23 +90,20 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
         this.supplementaries$quiver = quiver;
         if(!level().isClientSide){
             //only needed when entity is alraedy spawned
-            NetworkHelper.sentToAllClientPlayersTrackingEntity(this,
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncSkellyQuiverPacket(this));
         }
     }
 
     @Override
     public boolean wantsToPickUp(ItemStack stack) {
-        if (this.supplementaries$quiver == null && stack.getItem() == ModRegistry.QUIVER_ITEM.get()) return true;
+        if (this.supplementaries$quiver.isEmpty() && stack.getItem() == ModRegistry.QUIVER_ITEM.get()) return true;
         return super.wantsToPickUp(stack);
     }
 
     @Override
     public ItemStack equipItemIfPossible(ItemStack stack) {
-        if(stack.getItem() == ModRegistry.QUIVER_ITEM.get()){
-            if(this.supplementaries$quiver != null){
-                this.spawnAtLocation(supplementaries$quiver);
-            }
+        if(stack.getItem() == ModRegistry.QUIVER_ITEM.get() && this.supplementaries$quiver.isEmpty()){
             this.supplementaries$setQuiver(stack);
             this.supplementaries$quiverDropChance = 1;
             return stack;

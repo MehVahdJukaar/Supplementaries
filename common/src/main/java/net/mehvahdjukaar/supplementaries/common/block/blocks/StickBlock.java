@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -133,53 +134,52 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
-        return false;
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return super.isPathfindable(state, pathComputationType);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-
-        if (player.getItemInHand(hand).isEmpty() && hand == InteractionHand.MAIN_HAND) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (CommonConfigs.Building.FLAG_POLE.get()) {
-                if (this != ModRegistry.STICK_BLOCK.get()) return InteractionResult.PASS;
-                if (world.isClientSide) return InteractionResult.SUCCESS;
+                if (this != ModRegistry.STICK_BLOCK.get()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                if (level.isClientSide) return ItemInteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
-                    findConnectedFlag(world, pos, Direction.UP, moveDir, 0);
-                    findConnectedFlag(world, pos, Direction.DOWN, moveDir, 0);
+                    findConnectedFlag(level, pos, Direction.UP, moveDir, 0);
+                    findConnectedFlag(level, pos, Direction.DOWN, moveDir, 0);
                 }
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private static boolean isVertical(BlockState state) {
         return state.getValue(AXIS_Y) && !state.getValue(AXIS_X) && !state.getValue(AXIS_Z);
     }
 
-    public static boolean findConnectedFlag(Level world, BlockPos pos, Direction searchDir, Direction moveDir, int it) {
+    public static boolean findConnectedFlag(Level level, BlockPos pos, Direction searchDir, Direction moveDir, int it) {
         if (it > CommonConfigs.Building.FLAG_POLE_LENGTH.get()) return false;
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
         Block b = state.getBlock();
         if (b == ModRegistry.STICK_BLOCK.get() && isVertical(state)) {
-            return findConnectedFlag(world, pos.relative(searchDir), searchDir, moveDir, it + 1);
+            return findConnectedFlag(level, pos.relative(searchDir), searchDir, moveDir, it + 1);
         } else if (b instanceof FlagBlock && it != 0) {
             BlockPos toPos = pos.relative(moveDir);
-            BlockState stick = world.getBlockState(toPos);
+            BlockState stick = level.getBlockState(toPos);
 
-            if (world.getBlockEntity(pos) instanceof FlagBlockTile tile && stick.getBlock() == ModRegistry.STICK_BLOCK.get() && isVertical(stick)) {
+            if (level.getBlockEntity(pos) instanceof FlagBlockTile tile && stick.getBlock() == ModRegistry.STICK_BLOCK.get() && isVertical(stick)) {
 
-                world.setBlockAndUpdate(pos, stick);
-                world.setBlockAndUpdate(toPos, state);
+                level.setBlockAndUpdate(pos, stick);
+                level.setBlockAndUpdate(toPos, state);
 
-                CompoundTag tag = tile.saveWithoutMetadata();
-                BlockEntity te = world.getBlockEntity(toPos);
+                CompoundTag tag = tile.saveWithoutMetadata(level.registryAccess());
+                BlockEntity te = level.getBlockEntity(toPos);
                 if (te != null) {
-                    te.load(tag);
+                    te.loadWithComponents(tag, level.registryAccess());
                 }
-                world.playSound(null, toPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1F, 1.4F);
+                level.playSound(null, toPos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 1F, 1.4F);
                 return true;
             }
         }
@@ -189,7 +189,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     //quark
     //TODO: improve for multiple sticks
     //@Override
-    public BlockState applyRotationLock(Level world, BlockPos blockPos, BlockState state, Direction dir, int half) {
+    public BlockState applyRotationLock(Level level, BlockPos blockPos, BlockState state, Direction dir, int half) {
         int i = 0;
         if (state.getValue(AXIS_X)) i++;
         if (state.getValue(AXIS_Y)) i++;
@@ -200,7 +200,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     @Override
-    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @org.jetbrains.annotations.Nullable Vec3 hit) {
+    public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor level, BlockPos pos, Rotation rotation, Direction axis, @org.jetbrains.annotations.Nullable Vec3 hit) {
         if(rotation == Rotation.CLOCKWISE_180)return Optional.empty();
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
@@ -229,14 +229,14 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
         if (this == ModRegistry.STICK_BLOCK.get()) {
-          //  if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-          //     FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,false);
+          //  if (facing == Direction.DOWN && !levelIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
+          //     FarmersDelightCompat.tryTomatoLogging(facingState, levelIn, facingPos,false);
           //  }
         }
 
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);
     }
 
 }

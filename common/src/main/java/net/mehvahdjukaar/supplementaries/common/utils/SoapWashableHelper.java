@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -96,10 +97,10 @@ public class SoapWashableHelper {
         for (String key : keywords) {
             if (name.contains(key)) {
                 String newName = name.replace(key, "");
-                var bb = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(r.getNamespace(), newName));
+                var bb = BuiltInRegistries.BLOCK.getOptional(r.withPath(newName));
                 if (bb.isEmpty()) {
                     //tries minecraft namespace
-                    bb = BuiltInRegistries.BLOCK.getOptional(new ResourceLocation(newName));
+                    bb = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse(newName));
                 }
                 if (bb.isPresent()) {
                     BlockState newState = bb.get().withPropertiesOf(oldState);
@@ -159,7 +160,7 @@ public class SoapWashableHelper {
             if (newColor instanceof EntityBlock) {
                 var be = level.getBlockEntity(pos);
                 if (be != null) {
-                    tag = be.saveWithoutMetadata();
+                    tag = be.saveWithoutMetadata(level.registryAccess());
                 }
             }
 
@@ -169,7 +170,7 @@ public class SoapWashableHelper {
             if (tag != null) {
                 var be = level.getBlockEntity(pos);
                 if (be != null) {
-                    be.load(tag);
+                    be.loadWithComponents(tag, level.registryAccess());
                 }
             }
             return true;

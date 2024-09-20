@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,8 +25,8 @@ public abstract class BlockEntityRendererDispatcherMixin {
                                                                   PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> {
             if (c.hasAntiqueInk()) {
-                IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
-                font.setAntiqueInk(true);
+                IAntiquable font = (IAntiquable) (Minecraft.getInstance().font);
+                font.setAntique(true);
                 supplementaries$antiqueFontActive = true;
             }
         });
@@ -36,8 +36,8 @@ public abstract class BlockEntityRendererDispatcherMixin {
     private static <T extends BlockEntity> void setupAndRenderPost(BlockEntityRenderer<T> renderer, T tile, float partialTicks,
                                                                    PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         if (supplementaries$antiqueFontActive) {
-            IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
-            font.setAntiqueInk(false);
+            IAntiquable font = (IAntiquable) (Minecraft.getInstance().font);
+            font.setAntique(false);
             supplementaries$antiqueFontActive = false;
         }
     }

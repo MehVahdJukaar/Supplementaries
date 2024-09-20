@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
+import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,8 +14,8 @@ public class BlackboardTooltipComponent implements ClientTooltipComponent {
     private final int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();
     private final ResourceLocation texture;
 
-    public BlackboardTooltipComponent(BlackboardManager.Key key) {
-        this.texture = BlackboardManager.getInstance(key).getTextureLocation();
+    public BlackboardTooltipComponent(BlackboardData key) {
+        this.texture = BlackboardTextureManager.getInstance(key).getTextureLocation();
     }
 
     @Override

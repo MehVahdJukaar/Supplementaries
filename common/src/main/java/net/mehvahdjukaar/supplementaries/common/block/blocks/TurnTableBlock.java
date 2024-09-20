@@ -175,12 +175,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
             if ((e instanceof LivingEntity entity)) {
 
                 if (e instanceof ServerPlayer player) {
-                    Advancement advancement = world.getServer().getAdvancements().getAdvancement(Supplementaries.res("husbandry/turn_table"));
-                    if (advancement != null) {
-                        if (!player.getAdvancements().getOrStartProgress(advancement).isDone()) {
-                            player.getAdvancements().award(advancement, "unlock");
-                        }
-                    }
+                    Utils.awardAdvancement(player, Supplementaries.res("husbandry/turn_table"));
                 }
 
                 e.setOnGround(false); //remove this?

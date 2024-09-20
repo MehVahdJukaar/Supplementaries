@@ -24,6 +24,16 @@
 - cannon screen number box tick
 - jar item fluids
 - cage catching sound
+- check ALL new enchantment components stuff everywhere
+- stick flag movement
+- quiver shulker like tooltips
+- filled present state for placement
+- bomb block interaction
+- welcome message screen button
+- test cannon trajectory renderer
+- glowing blackboard persistence
+- waxed too
+- standardize and make IWaxable IGlowable and IAntiquable
 
 
 # Soon

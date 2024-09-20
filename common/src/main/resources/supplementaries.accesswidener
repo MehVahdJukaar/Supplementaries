@@ -128,18 +128,6 @@ accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/mi
 #flower pot fabric
 accessible field net/minecraft/world/level/block/FlowerPotBlock POTTED_BY_CONTENT Ljava/util/Map;
 
-#recipe stuff to remove
-accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
-accessible field net/minecraft/world/item/crafting/Ingredient values [Lnet/minecraft/world/item/crafting/Ingredient$Value;
-accessible field net/minecraft/world/item/crafting/Ingredient$TagValue tag Lnet/minecraft/tags/TagKey;
+accessible field net/minecraft/world/level/block/ColoredFallingBlock dustColor Lnet/minecraft/util/ColorRGBA;
+accessible method net/minecraft/world/level/Explosion getIndirectSourceEntityInternal (Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/entity/LivingEntity;
 
-#bomb stuff
-accessible field net/minecraft/world/level/Explosion damageCalculator Lnet/minecraft/world/level/ExplosionDamageCalculator;
-accessible field net/minecraft/world/level/Explosion level Lnet/minecraft/world/level/Level;
-accessible field net/minecraft/world/level/Explosion radius F
-accessible field net/minecraft/world/level/Explosion x D
-accessible field net/minecraft/world/level/Explosion y D
-accessible field net/minecraft/world/level/Explosion z D
-accessible field net/minecraft/world/level/Explosion damageSource Lnet/minecraft/world/damagesource/DamageSource;
-mutable field net/minecraft/world/level/Explosion damageSource Lnet/minecraft/world/damagesource/DamageSource;
-accessible field net/minecraft/world/level/Explosion blockInteraction Lnet/minecraft/world/level/Explosion$BlockInteraction;

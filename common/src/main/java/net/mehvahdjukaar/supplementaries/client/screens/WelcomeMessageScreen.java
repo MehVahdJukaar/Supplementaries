@@ -65,12 +65,10 @@ public class WelcomeMessageScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTicks);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 30, 16777215);
         this.message.renderCentered(graphics, this.width / 2, 55);
         this.suggestions.renderCentered(graphics, this.width / 2, 180);
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.exitButton.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

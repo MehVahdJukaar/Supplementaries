@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
+import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
@@ -27,7 +28,7 @@ public class PresentRecipientAttribute implements ItemAttribute {
     public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
         String name = readRecipient(itemStack);
         List<ItemAttribute> atts = new ArrayList<>();
-        if(name.length() > 0) {
+        if (name.length() > 0) {
             atts.add(new PresentRecipientAttribute(name));
         }
         return atts;
@@ -51,19 +52,12 @@ public class PresentRecipientAttribute implements ItemAttribute {
     @Override
     public ItemAttribute readNBT(CompoundTag compoundTag) {
         return new PresentRecipientAttribute(compoundTag.getString("recipient"));
-
     }
+
     private String readRecipient(ItemStack itemStack) {
-        String name;
-        if (itemStack.getItem() instanceof PresentItem) {
-            var t = itemStack.getTagElement("BlockEntityTag");
-            if (t != null){
-                name = t.getString("Recipient");
-                if (name != PresentBlockTile.PUBLIC_KEY)
-                {
-                    return name;
-                }
-            }
+        PresentAddress address = itemStack.get(ModComponents.ADDRESS.get());
+        if (address != null && address.isPublic()) {
+            return address.recipient();
         }
         return "";
     }

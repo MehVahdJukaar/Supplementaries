@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,11 +39,6 @@ public class SpeakerBlockScreen extends Screen {
 
     public static void open(SpeakerBlockTile te) {
         Minecraft.getInstance().setScreen(new SpeakerBlockScreen(te));
-    }
-
-    @Override
-    public void tick() {
-        this.editBox.tick();
     }
 
     private void updateMode() {
@@ -142,8 +138,7 @@ public class SpeakerBlockScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
         super.render(graphics, mouseX, mouseY, partialTicks);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
     }
 }

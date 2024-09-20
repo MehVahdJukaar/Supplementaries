@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -122,18 +123,19 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        CompoundTag com = context.getItemInHand().getTag();
-        int charges = com != null ? context.getItemInHand().getMaxDamage() - com.getInt("Damage") : 0;
-        boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, flag)
-                .setValue(TIPPED, charges != 0 && PotionUtils.getPotion(com) != Potions.EMPTY);
+        ItemStack stack = context.getItemInHand();
+        var damage = stack.get(DataComponents.DAMAGE);
+        boolean hasPotion = stack.has(DataComponents.POTION_CONTENTS);
+        int charges = damage != null ? stack.getMaxDamage() - damage : 0;
+        return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace())
+                .setValue(TIPPED, charges != 0 && hasPotion);
     }
 
     public ItemStack getSpikeItem(BlockEntity te) {
         if (te instanceof BambooSpikesBlockTile tile) {
             return tile.toSpikeItem();
         }
-        return new ItemStack(ModRegistry.BAMBOO_SPIKES_ITEM.get());
+        return this.asItem().getDefaultInstance();
     }
 
     @Override
@@ -244,7 +246,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is(BuiltInSoftFluids.POTION.get()) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
+        if (fluid.is(BuiltInSoftFluids.POTION) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
             return tryAddingPotion(state, world, pos, getPotion(fluid.getTag()), null);
         }
         return false;

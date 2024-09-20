@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
+import net.mehvahdjukaar.supplementaries.common.components.MobContainerView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
@@ -35,7 +35,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -187,9 +186,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
-        CustomData beData = stack.get(ModComponents.MOB_HOLDER_CONTENTS.get());
+        MobContainerView content = stack.get(ModComponents.MOB_HOLDER_CONTENT.get());
         Player player = context.getPlayer();
-        if (!context.getPlayer().isShiftKeyDown() && beData != null) {
+        if (!context.getPlayer().isShiftKeyDown() && content != null) {
             //TODO: add other case
             boolean success = false;
             Level world = context.getLevel();
@@ -260,9 +259,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        CustomData beData = stack.get(ModComponents.MOB_HOLDER_CONTENTS);
-        if (beData != null) {
-            CompoundTag tag = beData.getUnsafe();
+        MobContainerView content = stack.get(ModComponents.MOB_HOLDER_CONTENT.get());
+        if (content != null) {
+            CompoundTag tag = content.getUnsafe();
             CompoundTag com = tag.getCompound("MobHolder");
             if (com.isEmpty()) com = tag.getCompound("BucketHolder");
             if (com.contains("Name")) {

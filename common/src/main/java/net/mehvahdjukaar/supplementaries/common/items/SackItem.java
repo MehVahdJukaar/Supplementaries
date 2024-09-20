@@ -51,7 +51,7 @@ public class SackItem extends BlockItem {
             amount = ItemsUtil.getEncumbermentFromInventory(stack, player);
             int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
             if (amount > inc) {
-                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.get(),
+                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.getHolder(),
                         20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
             }
         }
@@ -59,8 +59,8 @@ public class SackItem extends BlockItem {
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {

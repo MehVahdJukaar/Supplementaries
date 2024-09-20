@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.capabilities;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
@@ -25,7 +25,7 @@ public class CapabilityHandler {
 
     public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<IAntiqueTextProvider> ANTIQUE_TEXT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<IAntiquable> ANTIQUE_TEXT_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
     public static final Capability<IWashable> SOAP_WASHABLE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -39,14 +39,14 @@ public class CapabilityHandler {
     public static void register(RegisterCapabilitiesEvent event) {
         //so other mods can find them i guess
         event.register(ICatchableMob.class);
-        event.register(IAntiqueTextProvider.class);
+        event.register(IAntiquable.class);
         event.register(IWashable.class);
         event.register(QuiverItemImpl.Cap.class);
         event.register(LunchBoxItemImpl.Cap.class);
         event.register(IQuiverEntity.class);
 
         TOKENS.put(ICatchableMob.class, CATCHABLE_MOB_CAP);
-        TOKENS.put(IAntiqueTextProvider.class, ANTIQUE_TEXT_CAP);
+        TOKENS.put(IAntiquable.class, ANTIQUE_TEXT_CAP);
         TOKENS.put(IWashable.class, SOAP_WASHABLE_CAPABILITY);
         TOKENS.put(QuiverItemImpl.Cap.class, QUIVER_ITEM_HANDLER);
         TOKENS.put(LunchBoxItemImpl.Cap.class, LUNCH_BOX_ITEM_HANDLER);

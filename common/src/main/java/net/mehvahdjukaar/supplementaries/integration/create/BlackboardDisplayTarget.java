@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -55,9 +55,9 @@ public class BlackboardDisplayTarget extends DisplayTarget {
     }
 
     private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
-        CompoundTag cmp = stack.getTagElement("BlockEntityTag");
-        if (cmp != null && cmp.contains("Pixels")) {
-            tile.setPixels(BlackboardBlockTile.unpackPixels(cmp.getLongArray("Pixels")));
+        var beData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (beData != null && beData.contains("Pixels")) {
+            tile.setPixels(BlackboardBlockTile.unpackPixels(beData.getUnsafe().getLongArray("Pixels")));
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
             reserve(line, te, context);
             return true;

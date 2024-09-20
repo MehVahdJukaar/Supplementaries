@@ -11,8 +11,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.common.items.AbstractMobContainerItem;
-import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
-import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.common.components.MobContainerView;
+import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -25,6 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -84,6 +85,15 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        //ugly. removes stuff that's put in components
+        tag.remove("fluid");
+        tag.remove("MobHolder");
+        tag.remove("BucketHolder");
+    }
+
+    @Override
     public void updateTileOnInventoryChanged() {
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
         int light = this.fluidHolder.getFluidValue().getLuminosity();
@@ -124,7 +134,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
             if (CommonConfigs.Functional.JAR_EAT.get()) {
                 if (this.fluidHolder.tryDrinkUpFluid(player, level)) return true;
                 //cookies
-                if (displayedStack.isEdible() && player.canEat(false) && !player.isCreative()) {
+                if (displayedStack.has(DataComponents.FOOD) && player.canEat(false) && !player.isCreative()) {
                     //eat cookies
                     player.eat(level, displayedStack);
                     return true;

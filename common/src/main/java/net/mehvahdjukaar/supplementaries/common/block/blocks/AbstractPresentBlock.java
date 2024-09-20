@@ -7,13 +7,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlock
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
@@ -149,11 +147,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        CompoundTag tag = context.getItemInHand().getTag();
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            CompoundTag t = tag.getCompound("BlockEntityTag");
-            if (t.contains("Items")) state = state.setValue(PACKED, true);
-        }
+        state = state.setValue(PACKED, context.getItemInHand().has(DataComponents.CONTAINER));
         return state;
     }
 

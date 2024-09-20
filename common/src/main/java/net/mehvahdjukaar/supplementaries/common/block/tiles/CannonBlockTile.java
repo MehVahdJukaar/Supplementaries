@@ -269,7 +269,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
         if (player.isSecondaryUseActive()) {
             //same as super but sends custom packet
-            if (Utils.mayPerformBlockAction(player, pos, stack) && !this.isOtherPlayerEditing(player)) {
+            if ( !this.isOtherPlayerEditing(player)) {
                 // open gui (edit sign with empty hand)
                 this.setPlayerWhoMayEdit(player.getUUID());
                 NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
@@ -9,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,10 +26,8 @@ public class MiscUtils {
 
 
     public static boolean showsHints(TooltipFlag flagIn) {
-        if (worldIn instanceof Level l && l.isClientSide) {
-            return ClientConfigs.General.TOOLTIP_HINTS.get();
-        }
-        return false;
+        if (PlatHelper.getPhysicalSide().isServer()) return false;
+        return ClientConfigs.General.TOOLTIP_HINTS.get();
     }
 
     public enum Festivity {
@@ -124,7 +122,7 @@ public class MiscUtils {
             case WEST -> endPos = endPos.offset(0, 1, 1);
             case DOWN -> endPos = endPos.offset(1, 0, 1);
         }
-        return new AABB(pos, endPos);
+        return AABB.encapsulatingFullBlocks(pos, endPos);
     }
 
     //this is how you do it :D
@@ -149,14 +147,14 @@ public class MiscUtils {
     }
 
     // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
-    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos,  Block block, int delay){
-        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long)delay, level.nextSubTickCount());
+    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos, Block block, int delay) {
+        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long) delay, level.nextSubTickCount());
 
         long l = ChunkPos.asLong(tick.pos());
 
-       var container = level.getBlockTicks().allContainers.get(l);
-       container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
-       container.schedule(tick);
+        var container = level.getBlockTicks().allContainers.get(l);
+        container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
+        container.schedule(tick);
     }
 
 }

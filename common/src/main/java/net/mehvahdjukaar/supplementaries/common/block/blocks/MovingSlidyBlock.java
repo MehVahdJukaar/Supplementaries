@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -65,7 +66,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.setBlockEntity(be);
 
         if(!level.isClientSide) {
-             NetworkHelper.sendToAllClientPlayersInDefaultRange(level, neighborPos,
+             NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) level, neighborPos,
                    new ClientBoundSetSlidingBlockEntityPacket(be));
         }
 

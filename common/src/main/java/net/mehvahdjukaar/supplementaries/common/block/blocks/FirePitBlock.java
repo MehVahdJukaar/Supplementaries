@@ -53,14 +53,14 @@ public class FirePitBlock extends LightUpWaterBlock {
     }
 
     @ForgeOverride
-    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
-        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+    public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
 
     @ForgeOverride
-    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
-        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+    public @Nullable PathType getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, PathType originalType) {
+        if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
 

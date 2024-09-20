@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -297,7 +298,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         BombExplosion explosion = new BombExplosion(this.level(), this,
-                new BombExplosionDamageCalculator(this.type),
                 this.getX(), this.getY() + 0.25, this.getZ(),
                 this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
 
@@ -409,26 +409,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                     }
                 }
             }
-        }
-    }
-
-
-    private static class BombExplosionDamageCalculator extends ExplosionDamageCalculator {
-        private final BombType type;
-
-        public BombExplosionDamageCalculator(BombType type) {
-            this.type = type;
-        }
-
-        @Override
-        public boolean shouldBlockExplode(Explosion explosion, BlockGetter reader, BlockPos pos, BlockState state, float power) {
-            return switch (type.breakMode()) {
-                case ALL -> true;
-                case WEAK -> state.canBeReplaced(Fluids.WATER) ||
-                        state.is(ModTags.BOMB_BREAKABLE) ||
-                        state.getBlock() instanceof TntBlock;
-                default -> false;
-            };
         }
     }
 

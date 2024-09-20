@@ -162,7 +162,8 @@ public class GlobeManager {
 
     private static final Map<String, Pair<Model, ResourceLocation>> NAME_CACHE = new HashMap<>();
     private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
-    private static final List<ResourceLocation> TEXTURES = new ArrayList<>();
+    public static final List<ResourceLocation> TEXTURES = new ArrayList<>();
+
 
     public static void recomputeCache() {
         NAME_CACHE.clear();

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
@@ -23,13 +24,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -47,7 +44,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -65,6 +61,8 @@ import java.util.Optional;
 
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
+    public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
+
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
     private static final IFireItemBehavior DEFAULT = new AlternativeBehavior(
             new GenericProjectileBehavior(), new SlingshotBehavior());
@@ -80,6 +78,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     public CannonBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
     }
 
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
@@ -185,20 +188,21 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(), CannonBlockTile::tick);
     }
 
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return this.lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
+    }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-            var litUpAction = this.interactWithPlayer(state, level, pos, player, hand);
-        if (litUpAction != InteractionResult.PASS) return litUpAction;
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if (player instanceof ServerPlayer sp) {
                 tile.tryOpeningEditGui(sp, pos, player.getItemInHand(hand));
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
-        return super.use(state, level, pos, player, hand, hit);
+        return super.useWithoutItem(state, level, pos, player, hand, hit);
     }
-
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
@@ -221,22 +225,20 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos,
-                           LevelAccessor world, FireSoundType fireSourceType) {
+    public boolean tryLightUp(@Nullable Entity player, BlockState state, BlockPos pos,
+                              LevelAccessor world, FireSoundType fireSourceType) {
         if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-            if (tile.readyToFire()) {
-                if (!world.isClientSide()) {
-                    tile.ignite(player);
-                    this.playLightUpSound(world, pos, fireSourceType);
-                }
-
-                world.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
-                return true;
-            } else {
-                return false;
-            }
+            if (!tile.readyToFire()) return false;
         }
-        return false;
+        return ILightable.super.tryLightUp(player, state, pos, world, fireSourceType);
+    }
+
+    @Override
+    public void setLitUp(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos,
+                         @Nullable Entity igniter, boolean on) {
+        if (levelAccessor.getBlockEntity(blockPos) instanceof CannonBlockTile tile) {
+            tile.ignite(igniter);
+        }
     }
 
     @Override

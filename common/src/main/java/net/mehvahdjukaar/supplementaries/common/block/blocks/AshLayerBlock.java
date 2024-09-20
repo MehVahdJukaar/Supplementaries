@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -12,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -29,10 +32,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -47,7 +47,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class AshLayerBlock extends FallingBlock {
+public class AshLayerBlock extends ColoredFallingBlock {
+    public static final MapCodec<AshLayerBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+            ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter((coloredFallingBlock) -> coloredFallingBlock.dustColor),
+            propertiesCodec()).apply(instance, AshLayerBlock::new));
+
     private static final int MAX_LAYERS = 8;
     public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS + 1];
@@ -56,9 +60,15 @@ public class AshLayerBlock extends FallingBlock {
         Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2d, 16.0D));
     }
 
-    public AshLayerBlock(Properties properties) {
-        super(properties);
+    public AshLayerBlock(ColorRGBA color, Properties properties) {
+        super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 1));
+    }
+
+    @SuppressWarnings("all")
+    @Override
+    public MapCodec<ColoredFallingBlock> codec() {
+        return (MapCodec) CODEC;
     }
 
     @Override
@@ -72,11 +82,6 @@ public class AshLayerBlock extends FallingBlock {
                 this.removeOneLayer(state, pos, level);
             }
         }
-    }
-
-    @Override
-    public int getDustColor(BlockState state, BlockGetter reader, BlockPos pos) {
-        return 0x9a9090;
     }
 
     @Override

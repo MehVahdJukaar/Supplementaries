@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.FontSet;
@@ -17,18 +17,18 @@ import java.util.function.Function;
 
 //@Mixin(targets = {"net/minecraft/client/gui/FontRenderer$CharacterRenderer"})
 @Mixin(Font.class)
-public abstract class FontRendererMixin implements IAntiqueTextProvider {
+public abstract class FontRendererMixin implements IAntiquable {
 
     @Unique
     private boolean supplementaries$antique = false;
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean isAntique() {
         return supplementaries$antique;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void setAntique(boolean hasInk) {
         supplementaries$antique = hasInk;
     }
 

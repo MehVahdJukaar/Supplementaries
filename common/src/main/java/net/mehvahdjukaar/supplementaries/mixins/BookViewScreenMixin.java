@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -26,9 +26,9 @@ public abstract class BookViewScreenMixin {
     @ModifyArg(method = "render", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     public ResourceLocation setTatteredBookTexture(ResourceLocation resourceLocation) {
-        if (this.bookAccess instanceof IAntiqueTextProvider wb && wb.hasAntiqueInk()) {
-            ((IAntiqueTextProvider) this.forwardButton).setAntiqueInk(true);
-            ((IAntiqueTextProvider) this.backButton).setAntiqueInk(true);
+        if (this.bookAccess instanceof IAntiquable wb && wb.isAntique()) {
+            ((IAntiquable) this.forwardButton).setAntique(true);
+            ((IAntiquable) this.backButton).setAntique(true);
             return ModTextures.TATTERED_BOOK_GUI_TEXTURE;
         }
         return resourceLocation;

@@ -7,12 +7,10 @@ import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGener
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -32,6 +30,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -108,10 +107,10 @@ public class ClientRegistry {
     public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
     public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
     public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
-    public static final ResourceLocation ALTIMETER_TEMPLATE = Supplementaries.res("item/altimeter_template");
-    public static final ResourceLocation ALTIMETER_OVERLAY = Supplementaries.res("item/altimeter_overlay");
-    public static final ResourceLocation LUNCH_BOX_ITEM_MODEL = Supplementaries.res("item/lunch_basket_gui");
-    public static final ResourceLocation LUNCH_BOX_OPEN_ITEM_MODEL = Supplementaries.res("item/lunch_basket_gui_open");
+    public static final ModelResourceLocation ALTIMETER_TEMPLATE = modelRes("item/altimeter_template");
+    public static final ModelResourceLocation ALTIMETER_OVERLAY = modelRes("item/altimeter_overlay");
+    public static final ModelResourceLocation LUNCH_BOX_ITEM_MODEL = modelRes("item/lunch_basket_gui");
+    public static final ModelResourceLocation LUNCH_BOX_OPEN_ITEM_MODEL = modelRes("item/lunch_basket_gui_open");
 
     public static final ModelResourceLocation BOAT_MODEL = modelRes("block/jar_boat_ship");
     public static final ModelResourceLocation BLACKBOARD_FRAME = modelRes("block/blackboard_frame");
@@ -464,7 +463,7 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
-        event.register(BlackboardManager.Key.class, BlackboardTooltipComponent::new);
+        event.register(BlackboardData.class, BlackboardTooltipComponent::new);
         event.register(SelectableContainerTooltip.class, QuiverTooltipComponent::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);

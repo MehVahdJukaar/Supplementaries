@@ -26,6 +26,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
@@ -288,6 +290,7 @@ public class ModRegistry {
 
     //sack
     public static final Supplier<Block> SACK = regBlock(SACK_NAME, () -> new SackBlock(
+            new ColorRGBA(0xba8f6a),
             BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)
                     .mapColor(MapColor.WOOD)
                     .pushReaction(PushReaction.DESTROY)
@@ -442,6 +445,7 @@ public class ModRegistry {
 
     public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(
             BAMBOO_SPIKES.get(), new Item.Properties()
+            .component(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON))
             .durability(BambooSpikesBlockTile.MAX_CHARGES)));
 
     //goblet
@@ -1063,6 +1067,7 @@ public class ModRegistry {
 
     //ash
     public static final Supplier<Block> ASH_BLOCK = regWithItem(ASH_NAME, () -> new AshLayerBlock(
+            new ColorRGBA(0x9a9090),
             BlockBehaviour.Properties.of()
                     .pushReaction(PushReaction.DESTROY)
                     .replaceable()

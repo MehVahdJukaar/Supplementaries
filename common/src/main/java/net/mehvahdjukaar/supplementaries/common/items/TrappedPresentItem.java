@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,8 +17,7 @@ public class TrappedPresentItem extends PresentItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null && tag.contains("Items")) {
+        if (stack.has(DataComponents.CONTAINER)) {
             return this.normal.getName(stack);
         }
         return super.getName(stack);

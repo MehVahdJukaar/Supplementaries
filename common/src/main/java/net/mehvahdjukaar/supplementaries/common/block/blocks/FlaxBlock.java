@@ -31,6 +31,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import static net.minecraft.world.InteractionHand.MAIN_HAND;
+
 //btw this should never grow a upper stage with age <4. Such block has a funny model and it you see it its some mod doing some fuckery or unsafe assumptions
 public class FlaxBlock extends CropBlock implements IBeeGrowable {
     public static final int DOUBLE_AGE = 4; //age at which it grows in block above
@@ -107,7 +109,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (!worldIn.isClientSide) {
             if (player.isCreative()) {
                 removeBottomHalf(worldIn, pos, state, player);
@@ -115,7 +117,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
                 dropResources(state, worldIn, pos, null, player, player.getMainHandItem());
             }
         }
-        super.playerWillDestroy(worldIn, pos, state, player);
+      return   super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             return; // Forge: prevent loading unloaded chunks when checking neighbor's light
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) return; //only bottom one handles ticking
         if (level.getRawBrightness(pos, 0) >= 9) {
-            if (this.isValidBonemealTarget(level, pos, state, level.isClientSide)) {
+            if (this.isValidBonemealTarget(level, pos, state)) {
                 float f = getGrowthSpeed(this, level, pos);
                 if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                     this.growCropBy(level, pos, state, 1);
@@ -165,16 +167,17 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         Preconditions.checkArgument( state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
-        InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
+        InteractionResult old = super.useWithoutItem(state, level, pos, player, hitResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);
+            // calls use event on lower block
+            var ev = ForgeHelper.onRightClickBlock(player, MAIN_HAND, pos.below(), hitResult);
             if (ev != null) return ev;
             else {
-                BlockState below = world.getBlockState(pos.below());
+                BlockState below = level.getBlockState(pos.below());
                 if (below.is(this)) {
-                    return this.use(below, world, pos.below(), player, hand, rayTraceResult);
+                    return this.useWithoutItem(below, level, pos.below(), player, hitResult);
                 }
             }
         }
@@ -186,9 +189,8 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         return state.getBlock() instanceof FlaxBlock || state.canBeReplaced();
     }
 
-    //for bonemeal
     @Override
-    public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader worldIn, BlockPos pos, BlockState state) {
         return (!this.isMaxAge(state) && (this.canGrowUp(worldIn, pos) || this.getAge(state) < DOUBLE_AGE - 1));
     }
 

@@ -105,20 +105,6 @@ public class ItemsUtil {
         throw new AssertionError();
     }
 
-
-    @Nullable
-    public static BlockEntity loadBlockEntityFromItem(CompoundTag tag, Item item) {
-        if (item instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            if (block instanceof EntityBlock entityBlock) {
-                BlockEntity te = entityBlock.newBlockEntity(BlockPos.ZERO, block.defaultBlockState());
-                if (te != null) te.load(tag);
-                return te;
-            }
-        }
-        return null;
-    }
-
     @ExpectPlatform
     public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
         throw new AssertionError();
@@ -148,7 +134,7 @@ public class ItemsUtil {
         }
         if (blockEntityTag.contains("Items", 9)) {
             NonNullList<ItemStack> itemStacks = NonNullList.withSize(27, ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(blockEntityTag, itemStacks);
+            ContainerHelper.loadAllItems(blockEntityTag, itemStacks, null);
             int i = 0;
             int j = 0;
 

@@ -50,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
+//TODO: finish
 //I swear I changed this stuff from the ground up at least 5 times, and it just keeps getting messier somehow. It just needs to do so much...
 public class MobContainer {
 

@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -12,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -48,8 +52,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterloggedBlock {
-
+public class SackBlock extends ColoredFallingBlock implements EntityBlock, SimpleWaterloggedBlock {
+    public static final MapCodec<SackBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(coloredFallingBlock -> coloredFallingBlock.dustColor), propertiesCodec())
+                    .apply(instance, SackBlock::new)
+    );
     public static final List<Block> SACK_BLOCKS = new ArrayList<>();
 
     public static final VoxelShape SHAPE_CLOSED = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
@@ -62,15 +69,16 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public SackBlock(Properties properties) {
-        super(properties);
+    public SackBlock(ColorRGBA color, Properties properties) {
+        super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED, false));
         SACK_BLOCKS.add(this);
     }
 
+    @SuppressWarnings("all")
     @Override
-    public int getDustColor(BlockState state, BlockGetter reader, BlockPos pos) {
-        return 0xba8f6a;
+    public MapCodec<ColoredFallingBlock> codec() {
+        return (MapCodec) CODEC;
     }
 
     //falling block
@@ -119,7 +127,7 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
             if (canFall(pos, level)) {
                 ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModEntities.FALLING_SACK.get(),
                         level, pos, state, true);
-                entity.blockData = tile.saveWithoutMetadata();
+                entity.blockData = tile.saveWithoutMetadata(level.registryAccess());
                 float power = this.getAnalogOutputSignal(state, level, pos) / 15f;
                 entity.setHurtsEntities(1 + power * 5, 40);
             }
@@ -164,7 +172,7 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            BlockUtil.spawnCreativeContainerLoot(worldIn, pos, player, tile);
+            BlockUtil.spawnCreativeContainerLoot(player, tile);
         }
         return super.playerWillDestroy(worldIn, pos, state, player);
     }

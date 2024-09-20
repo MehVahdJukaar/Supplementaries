@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.mixins.AbstractProjectileBehaviorAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -279,6 +278,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     private ItemStack executeAbstractProjectileBehavior(AbstractProjectileBehaviorAccessor ap, BlockSource source, ItemStack stack) {
         Level level = source.getLevel();
+
         Position position = DispenserBlock.getDispensePosition(source);
         Projectile projectile = ap.invokeGetProjectile(level, position, stack);
 

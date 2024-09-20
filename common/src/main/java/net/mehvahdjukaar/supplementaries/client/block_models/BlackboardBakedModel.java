@@ -4,11 +4,11 @@ import com.mojang.math.Transformation;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
-import net.mehvahdjukaar.supplementaries.client.BlackboardManager.Key;
+import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -76,16 +76,16 @@ public class BlackboardBakedModel implements CustomBakedModel {
         List<BakedQuad> quads = new ArrayList<>(back.getQuads(state, side, rand));
         if (data != ExtraModelData.EMPTY && state != null && side == null) {
             Direction dir = state.getValue(BlackboardBlock.FACING);
-            Key key = data.get(BlackboardBlockTile.BLACKBOARD_KEY);
+            BlackboardData key = data.get(BlackboardBlockTile.BLACKBOARD_KEY);
             if (key != null) {
-                var blackboard = BlackboardManager.getInstance(key);
+                var blackboard = BlackboardTextureManager.getInstance(key);
                 quads.addAll(blackboard.getOrCreateModel(dir, this::generateQuads));
             }
         }
         return quads;
     }
 
-    private List<BakedQuad> generateQuads(BlackboardManager.Blackboard blackboard, Direction dir) {
+    private List<BakedQuad> generateQuads(BlackboardTextureManager.BlackboardVisuals blackboard, Direction dir) {
         byte[][] pixels = blackboard.getPixels();
         boolean emissive = blackboard.isGlow();
         List<BakedQuad> quads;

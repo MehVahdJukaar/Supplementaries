@@ -81,7 +81,7 @@ public class CommonConfigs {
         String xp = Tweaks.BOTTLING_TARGET.get();
         if (xp.isEmpty()) xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
         else xpBottlingOverride = b -> b == Suppliers.memoize(() ->
-                BuiltInRegistries.BLOCK.get(new ResourceLocation(xp)));
+                BuiltInRegistries.BLOCK.get(ResourceLocation.parse(xp)));
 
         stasisEnabled = Tools.STASIS_ENABLED.get() && (Tools.SLINGSHOT_ENABLED.get() || Tools.BUBBLE_BLOWER_ENABLED.get());
     }

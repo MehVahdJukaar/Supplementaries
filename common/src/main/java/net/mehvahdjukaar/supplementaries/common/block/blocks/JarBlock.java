@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -76,21 +77,20 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof JarBlockTile tile && tile.isAccessibleBy(player)) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof JarBlockTile tile && tile.isAccessibleBy(player)) {
             // make te do the work
-            if (tile.handleInteraction(player, handIn, worldIn, pos)) {
-                if (!worldIn.isClientSide()) {
+            if (tile.handleInteraction(player, hand, level, pos)) {
+                if (!level.isClientSide()) {
                     tile.setChanged();
                 }
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             if (CommonConfigs.Functional.JAR_CAPTURE.get()) {
-                return tile.mobContainer.onInteract(worldIn, pos, player, handIn);
+                return tile.mobContainer.onInteract(level, pos, player, hand, stack);
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

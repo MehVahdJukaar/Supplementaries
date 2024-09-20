@@ -16,7 +16,6 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundSyncTradesPacket.CODEC);
         event.registerClientBound(ClientBoundSendKnockbackPacket.CODEC);
         event.registerClientBound(ClientBoundSyncAntiqueInk.CODEC);
-        event.registerClientBound(ClientBoundSyncSongsPacket.CODEC);
         event.registerClientBound(ClientBoundSetSlidingBlockEntityPacket.CODEC);
         event.registerClientBound(ClientBoundSyncHourglassPacket.CODEC);
         event.registerClientBound(ClientBoundSyncCapturedMobsPacket.CODEC);

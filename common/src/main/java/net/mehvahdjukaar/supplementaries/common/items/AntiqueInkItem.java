@@ -3,18 +3,15 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +19,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,12 +44,12 @@ public class AntiqueInkItem extends Item implements SignApplicator {
 
 
     public static boolean toggleAntiqueInkOnSigns(Level world, Player player, BlockPos pos, BlockEntity tile, boolean newState) {
-        var cap = SuppPlatformStuff.getForgeCap(tile, IAntiqueTextProvider.class);
+        var cap = SuppPlatformStuff.getForgeCap(tile, IAntiquable.class);
 
         boolean success = false;
         if (cap != null) {
-            if (cap.hasAntiqueInk() != newState) {
-                cap.setAntiqueInk(newState);
+            if (cap.isAntique() != newState) {
+                cap.setAntique(newState);
                 tile.setChanged();
                 if (world instanceof ServerLevel serverLevel) {
                     NetworkHelper.sendToAllClientPlayersInRange(serverLevel, pos, 256,
@@ -74,9 +70,9 @@ public class AntiqueInkItem extends Item implements SignApplicator {
     }
 
     public static void setAntiqueInk(BlockEntity tile, boolean ink) {
-        var cap = SuppPlatformStuff.getForgeCap(tile, IAntiqueTextProvider.class);
+        var cap = SuppPlatformStuff.getForgeCap(tile, IAntiquable.class);
         if (cap != null) {
-            cap.setAntiqueInk(ink);
+            cap.setAntique(ink);
         }
     }
 

@@ -18,6 +18,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -238,9 +239,8 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand
-            handIn, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+                                              Player player, InteractionHand hand, BlockHitResult hit) {
         Item i = stack.getItem();
 
         if (i == this.asItem()) {
@@ -248,50 +248,49 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 //restores sheared
                 if (hasConnection(Direction.UP, state) && !hasConnection(Direction.DOWN, state)) {
                     state = setConnection(Direction.DOWN, state, true);
-                    world.setBlock(pos, state, 0);
+                    level.setBlock(pos, state, 0);
                 }
-                if (RopeHelper.addRopeDown(pos.below(), world, player, handIn, this)) {
+                if (RopeHelper.addRopeDown(pos.below(), level, player, hand, this)) {
                     SoundType soundtype = state.getSoundType();
-                    world.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
                     }
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else if (stack.isEmpty()) {
             if (hasConnection(Direction.UP, state)) {
-                if (findConnectedPulley(world, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
-                    return InteractionResult.sidedSuccess(world.isClientSide);
+                if (findConnectedPulley(level, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
-            if (!player.isShiftKeyDown() && handIn == InteractionHand.MAIN_HAND) {
-                if (world.getBlockState(pos.below()).getBlock() == this) {
-                    if (RopeHelper.removeRopeDown(pos.below(), world, this)) {
-                        world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
+            if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+                if (level.getBlockState(pos.below()).getBlock() == this) {
+                    if (RopeHelper.removeRopeDown(pos.below(), level, this)) {
+                        level.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
                             ItemsUtil.addStackToExisting(player, new ItemStack(this), true);
                         }
-                        return InteractionResult.sidedSuccess(world.isClientSide);
+                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
                     }
                 }
             }
         } else if (i instanceof ShearsItem) {
             if (hasConnection(Direction.DOWN, state)) {
-                if (!world.isClientSide) {
+                if (!level.isClientSide) {
                     //TODO: proper sound event here
-                    world.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.8F, 1.3F);
+                    level.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.8F, 1.3F);
                     BlockState newState = setConnection(Direction.DOWN, state, false).setValue(KNOT, true);
-                    world.setBlock(pos, newState, 3);
+                    level.setBlock(pos, newState, 3);
                     //refreshTextures below
-                    //world.updateNeighborsAt(pos, newState.getBlock());
+                    //level.updateNeighborsAt(pos, newState.getBlock());
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
-            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
 

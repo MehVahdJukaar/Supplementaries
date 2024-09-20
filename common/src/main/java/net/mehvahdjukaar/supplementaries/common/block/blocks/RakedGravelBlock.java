@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.RakeDirection;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -25,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RakedGravelBlock extends ColoredFallingBlock {
+    public static final MapCodec<RakedGravelBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(coloredFallingBlock -> coloredFallingBlock.dustColor), propertiesCodec())
+                    .apply(instance, RakedGravelBlock::new)
+    );
 
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
@@ -33,6 +39,12 @@ public class RakedGravelBlock extends ColoredFallingBlock {
     public RakedGravelBlock(ColorRGBA color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH));
+    }
+
+    @SuppressWarnings("all")
+    @Override
+    public MapCodec<ColoredFallingBlock> codec() {
+        return (MapCodec) CODEC;
     }
 
     @Override
@@ -127,11 +139,11 @@ public class RakedGravelBlock extends ColoredFallingBlock {
                 default -> super.mirror(state, mirror);
             };
             case FRONT_BACK -> switch (shape) {
-                default -> super.mirror(state, mirror);
                 case SOUTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_WEST);
                 case SOUTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.SOUTH_EAST);
                 case NORTH_WEST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_EAST);
                 case NORTH_EAST -> state.setValue(RAKE_DIRECTION, RakeDirection.NORTH_WEST);
+                default -> super.mirror(state, mirror);
             };
             default -> super.mirror(state, mirror);
         };

@@ -4,13 +4,15 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +23,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 public class PresentBlockTile extends AbstractPresentBlockTile {
 
@@ -155,33 +156,37 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        PresentAddress address = PresentAddress.of(this.recipient, this.sender, this.description);
+        if (address != null) {
+            components.set(ModComponents.ADDRESS.get(), address);
+        }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        PresentAddress address = componentInput.get(ModComponents.ADDRESS.get());
+        if (address != null) {
+            this.recipient = address.recipient();
+            this.sender = address.sender();
+            this.description = address.description();
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("Recipient");
+        tag.remove("Sender");
+        tag.remove("Description");
+    }
+
+    @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new PresentContainerMenu(id, player, this);
     }
 
-    @Nullable
-    public MutableComponent getSenderMessage() {
-        return getSenderMessage(this.sender);
-    }
 
-    @Nullable
-    public static MutableComponent getSenderMessage(String sender) {
-        if (sender.isEmpty()) return null;
-        return Component.translatable("message.supplementaries.present.from", sender);
-    }
-
-    @Nullable
-    public MutableComponent getRecipientMessage() {
-        return getRecipientMessage(this.recipient);
-    }
-
-    @Nullable
-    public static MutableComponent getRecipientMessage(String recipient) {
-        if (recipient.isEmpty()) return null;
-        if (recipient.equalsIgnoreCase(PUBLIC_KEY)) {
-            return Component.translatable("message.supplementaries.present.public");
-        } else {
-            return Component.translatable("message.supplementaries.present.to", recipient);
-        }
-    }
 }

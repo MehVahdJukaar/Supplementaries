@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities;
 
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
 //actual capability provider (which provides itself as a cap instance)
-public class AntiqueInkProvider implements IAntiqueTextProvider, ICapabilitySerializable<CompoundTag> {
+public class AntiqueInkProvider implements IAntiquable, ICapabilitySerializable<CompoundTag> {
 
     private boolean hasAntiqueInk = false;
 
@@ -33,12 +33,12 @@ public class AntiqueInkProvider implements IAntiqueTextProvider, ICapabilitySeri
     }
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean isAntique() {
         return this.hasAntiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void setAntique(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
     }
 }

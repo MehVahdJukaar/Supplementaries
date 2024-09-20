@@ -12,37 +12,39 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-public interface IWaxable {
+public interface IGlowable {
 
-    boolean isWaxed();
 
-    void setWaxed(boolean b);
+    boolean isGlowing();
 
+    void setGlowing(boolean b);
+
+    //TODO: move to static utility classmaybe?
     //callable on both sides
-    default ItemInteractionResult tryWaxing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
-        if (isWaxed()) {
+    default ItemInteractionResult tryGlowing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
+        if (isGlowing()) {
             level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
             return ItemInteractionResult.FAIL;
         }
-        if (stack.getItem() instanceof HoneycombItem) {
+        if (stack.is(Items.GLOW_INK_SAC)) {
 
-            level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS);
+            level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS);
 
             stack.consume(1, player);
 
             //server logic. stuff should be sent my packets here
             if (player instanceof ServerPlayer serverPlayer) {
-                this.setWaxed(true);
+                this.setGlowing(true);
 
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                 player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
 
                 NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, pos,
-                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.WAX_ON));
+                        new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.GLOW_ON));
             }
 
             return ItemInteractionResult.sidedSuccess(level.isClientSide);

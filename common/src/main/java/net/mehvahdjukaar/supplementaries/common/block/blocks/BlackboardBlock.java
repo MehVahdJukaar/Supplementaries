@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -11,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +19,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -139,23 +141,21 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
-            ItemStack stack = player.getItemInHand(hand);
-            InteractionResult result = te.tryWaxing(level, pos, player, hand);
+            ItemInteractionResult result = te.tryWaxing(level, pos, player, hand, stack);
 
             if (result.consumesAction()) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
                 te.setChanged(); //this also sends block update in tile
             }
-            if (result != InteractionResult.PASS) return result;
+            if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return result;
 
             boolean glowChanged = false;
             if (stack.is(Items.GLOW_INK_SAC) && !state.getValue(GLOWING)) {
                 level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlockAndUpdate(pos, state.setValue(GLOWING, true));
-
+TextHolder
                 glowChanged = true;
 
             } else if (stack.is(Items.INK_SAC) && state.getValue(GLOWING)) {
@@ -228,21 +228,10 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
         return new BlackboardBlockTile(pPos, pState);
     }
 
-    public ItemStack getBlackboardItem(BlackboardBlockTile te) {
-        ItemStack itemstack = new ItemStack(this);
-        if (!te.isEmpty()) {
-            CompoundTag tag = te.savePixels(new CompoundTag());
-            if (!tag.isEmpty()) {
-                itemstack.addTagElement("BlockEntityTag", tag);
-            }
-        }
-        return itemstack;
-    }
-
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
-            return this.getBlackboardItem(te);
+            return BlockUtil.saveTileToItem(te);
         }
         return super.getCloneItemStack(level, pos, state);
     }
@@ -258,7 +247,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                 te.setChanged();
                 return true;
             } else if (!te.isEmpty()) {
-                te.clear();
+                te.clearPixels();
                 te.setChanged();
                 return true;
             }

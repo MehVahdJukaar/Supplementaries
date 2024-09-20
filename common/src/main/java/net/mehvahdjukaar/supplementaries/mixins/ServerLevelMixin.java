@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.ILevelEventRedirect;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
@@ -65,13 +66,12 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
 
     @Inject(method = "findLightningTargetAround", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z",
             shift = At.Shift.AFTER),
-            locals = LocalCapture.CAPTURE_FAILEXCEPTION,
             cancellable = true)
     private void unluckyLightning(BlockPos pos, CallbackInfoReturnable<BlockPos> cir,
-                                  BlockPos blockPos) {
+                                  @Local(ordinal = 1) BlockPos blockPos) {
 
         if (this.random.nextFloat() < 0.5 && CommonConfigs.Tweaks.BAD_LUCK_LIGHTNING.get()) {
-            AABB aabb = (new AABB(blockPos, new BlockPos(blockPos.getX(), this.getMaxBuildHeight(), blockPos.getZ()))).inflate(16.0);
+            AABB aabb = (AABB.encapsulatingFullBlocks(blockPos, new BlockPos(blockPos.getX(), this.getMaxBuildHeight(), blockPos.getZ()))).inflate(16.0);
             List<LivingEntity> l = this.getEntitiesOfClass(LivingEntity.class, aabb, (e) ->
                     e != null && e.isAlive() && this.canSeeSky(e.blockPosition())
                             && e.hasEffect(MobEffects.UNLUCK));

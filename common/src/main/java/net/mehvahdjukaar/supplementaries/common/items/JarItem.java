@@ -107,9 +107,10 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     }
 
     //full jar stuff
+
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
         if (compoundTag == null) {
             if (!MiscUtils.showsHints(worldIn, flagIn)) return;

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -30,10 +29,8 @@ import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -51,7 +48,7 @@ import java.util.function.BooleanSupplier;
 import static net.minecraft.world.level.block.entity.SignBlockEntity.createCommandSourceStack;
 
 //TODO: move to ML
-public class TextHolder implements IAntiqueTextProvider {
+public class TextHolder implements IAntiquable {
 
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
 
@@ -70,7 +67,6 @@ public class TextHolder implements IAntiqueTextProvider {
     //text that gets rendered
     private final FormattedCharSequence[] renderMessages;
     private DyeColor color = DyeColor.BLACK;
-    private boolean renderMessagedFiltered;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
 
@@ -95,6 +91,7 @@ public class TextHolder implements IAntiqueTextProvider {
     //removing command source crap
     public void load(CompoundTag compound, Level level, BlockPos pos) {
         if (compound.contains("TextHolder")) {
+
             CompoundTag com = compound.getCompound("TextHolder");
             this.color = DyeColor.byName(com.getString("color"), DyeColor.BLACK);
             this.hasGlowingText = com.getBoolean("has_glowing_text");
@@ -220,14 +217,14 @@ public class TextHolder implements IAntiqueTextProvider {
         if (item == Items.INK_SAC) {
             if (this.hasGlowingText || this.hasAntiqueInk) {
                 level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setAntiqueInk(false);
+                this.setAntique(false);
                 this.hasGlowingText = false;
                 success = true;
             }
         } else if (item == ModRegistry.ANTIQUE_INK.get()) {
             if (!this.hasAntiqueInk) {
                 level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setAntiqueInk(true);
+                this.setAntique(true);
                 success = true;
             }
         } else if (item == Items.GLOW_INK_SAC) {
@@ -278,12 +275,12 @@ public class TextHolder implements IAntiqueTextProvider {
     }
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean isAntique() {
         return this.hasAntiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void setAntique(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
         for (int i = 0; i < this.messages.length; i++) {
             this.setMessage(i, this.messages[i], this.filteredMessages[i]);
@@ -292,7 +289,7 @@ public class TextHolder implements IAntiqueTextProvider {
 
     public void clearEffects() {
         this.setColor(DyeColor.BLACK);
-        this.setAntiqueInk(false);
+        this.setAntique(false);
         this.setHasGlowingText(false);
     }
 
@@ -329,7 +326,7 @@ public class TextHolder implements IAntiqueTextProvider {
         return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(),
                 ClientConfigs.getSignColorMult(),
                 combinedLight,
-                this.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
+                this.isAntique() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
                 normal, shouldShowGlow);
     }
 

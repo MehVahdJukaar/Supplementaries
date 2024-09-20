@@ -3,10 +3,11 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
-import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.components.MobContainerView;
+import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
+import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
@@ -22,10 +23,18 @@ public class ModComponents {
 
     public static final Supplier<DataComponentType<Unit>> ANTIQUE_INK = register("antique_ink",
             Unit.CODEC, StreamCodec.unit(Unit.INSTANCE));
+
     public static final Supplier<DataComponentType<SoftFluidTankView>> SOFT_FLUID_CONTENT = register("soft_fluid_content",
             SoftFluidTankView.CODEC, SoftFluidTankView.STREAM_CODEC, true);
+
     public static final Supplier<DataComponentType<MobContainerView>> MOB_HOLDER_CONTENT = register("mob_holder_content",
             MobContainerView.CODEC, MobContainerView.STREAM_CODEC, true);
+
+    public static final Supplier<DataComponentType<PresentAddress>> ADDRESS = register("address",
+            PresentAddress.CODEC, PresentAddress.STREAM_CODEC);
+
+    public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
+            BlackboardData.CODEC, BlackboardData.STREAM_CODEC);
 
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {
