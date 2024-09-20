@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class SelectableContainerItem<M extends SelectableContainerContent.Mut<C>,
-        C extends SelectableContainerContent<M>> extends Item {
+public abstract class SelectableContainerItem<C extends SelectableContainerContent<M>,
+        M extends SelectableContainerContent.Mut<C>> extends Item {
 
     private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
@@ -192,7 +192,6 @@ public abstract class SelectableContainerItem<M extends SelectableContainerConte
     public int getBarColor(ItemStack pStack) {
         return BAR_COLOR;
     }
-
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {

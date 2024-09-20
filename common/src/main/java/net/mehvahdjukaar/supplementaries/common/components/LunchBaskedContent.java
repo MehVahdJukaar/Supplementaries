@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
@@ -17,6 +18,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedContent.Mutable> {
+
+    protected final MutableComponent CLOSED_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.closed");
+    protected final MutableComponent OPEN_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.open");
 
     public static final Codec<LunchBaskedContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.CODEC.listOf().fieldOf("Items").forGetter(LunchBaskedContent::getContentCopy),
@@ -51,7 +55,13 @@ public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedCo
         return isOpen;
     }
 
-    public static class Mutable extends Mut {
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        super.addToTooltip(context, tooltipAdder, tooltipFlag);
+        tooltipAdder.accept(isOpen ? OPEN_TOOLTIP : CLOSED_TOOLTIP);
+    }
+
+    public static class Mutable extends Mut<LunchBaskedContent> {
 
         private boolean isOpen;
 

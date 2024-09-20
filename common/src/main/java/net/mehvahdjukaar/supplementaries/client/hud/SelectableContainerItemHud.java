@@ -43,7 +43,7 @@ public abstract class SelectableContainerItemHud {
     protected final Minecraft mc;
     //behold states
     @Nullable
-    private SelectableContainerItem itemUsed;
+    private SelectableContainerItem<?,?> itemUsed;
     private Supplier<ItemStack> stackSlot;
     private boolean usingKey = false; //false if just using
     private double lastCumulativeMouseDx = 0;
@@ -121,6 +121,7 @@ public abstract class SelectableContainerItemHud {
         if (data != null) {
             NetworkHelper.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
             //update client immediately. stacks now may be desynced
+
             data.cycle(slotsMoved);
         }
     }
@@ -206,7 +207,7 @@ public abstract class SelectableContainerItemHud {
         poseStack.pushPose();
 
         int selected = data.getSelectedSlot();
-        List<ItemStack> items = data.getContentView();
+        List<ItemStack> items = data.getContentUnsafe();
         int slots = items.size();
 
         RenderSystem.enableBlend();

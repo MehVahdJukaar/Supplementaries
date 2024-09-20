@@ -168,7 +168,7 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
 
 
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target instanceof BlockHitResult hit && hit.getDirection() == Direction.UP) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
                 ItemStack i = tile.getItem(getIndex(state, pos, hit));

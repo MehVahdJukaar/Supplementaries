@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -112,6 +113,10 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
     }
 
     public static @NotNull PotionContents getPotion(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+    }
+
+    public static @NotNull PotionContents getPotion(SoftFluidStack stack) {
         return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
     }
 }

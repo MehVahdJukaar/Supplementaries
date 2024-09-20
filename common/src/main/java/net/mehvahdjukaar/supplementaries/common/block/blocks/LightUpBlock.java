@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class LightUpBlock extends Block implements ILightable {
 
@@ -35,7 +36,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
     }
 
     @Override
-    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, @Nullable Entity entity, boolean lit) {
         world.setBlock(pos, state.setValue(LIT, lit), 3);
     }
 

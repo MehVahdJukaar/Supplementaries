@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.TooltipProvider;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -43,11 +44,16 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         return selectedItemCount;
     }
 
+    public List<ItemStack> getContentCopy() {
+        return this.stacks.stream().map(ItemStack::copy).toList();
+    }
+
     /**
      * Do not modify this list directly if you are on fabric. On forge it can be modified
      */
-    public List<ItemStack> getContentCopy() {
-        return this.stacks.stream().map(ItemStack::copy).toList();
+    @ApiStatus.Internal
+    public List<ItemStack> getContentUnsafe() {
+        return stacks;
     }
 
     public ItemStack getSelected() {
@@ -78,6 +84,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
                             getSelectedItem().getDescription(), selectedItemCount)
                     .withStyle(ChatFormatting.GRAY));
         }
+
     }
 
     private static int computeSelectedItemCount(List<ItemStack> stacks, int sel) {
@@ -106,6 +113,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
     public boolean isEmpty() {
         return empty;
     }
+
 
     public abstract static class Mut<T extends SelectableContainerContent> {
 

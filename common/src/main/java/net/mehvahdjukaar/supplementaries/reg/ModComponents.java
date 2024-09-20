@@ -33,9 +33,11 @@ public class ModComponents {
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC);
 
-    public static final Supplier<DataComponentType<LunchBaskedContent>> LUNCH_BASKET = register("lunch_basket",
+    public static final Supplier<DataComponentType<LunchBaskedContent>> LUNCH_BASKET_CONTENT = register("lunch_basket_content",
             LunchBaskedContent.CODEC, LunchBaskedContent.STREAM_CODEC);
 
+    public static final Supplier<DataComponentType<QuiverContent>> QUIVER_CONTENT = register("quiver_content",
+            QuiverContent.CODEC, QuiverContent.STREAM_CODEC);
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {
         return RegHelper.registerDataComponent(Supplementaries.res(name), factory);

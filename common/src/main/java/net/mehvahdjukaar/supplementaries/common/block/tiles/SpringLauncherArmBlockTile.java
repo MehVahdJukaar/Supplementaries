@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -169,27 +170,27 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        this.age = compound.getInt("Age");
-        this.offset = compound.getDouble("Offset");
-        this.prevOffset = compound.getDouble("PrevOffset");
-        this.increment = compound.getDouble("Increment");
-        this.dx = compound.getInt("Dx");
-        this.dy = compound.getInt("Dy");
-        this.dz = compound.getInt("Dz");
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.age = tag.getInt("Age");
+        this.offset = tag.getDouble("Offset");
+        this.prevOffset = tag.getDouble("PrevOffset");
+        this.increment = tag.getDouble("Increment");
+        this.dx = tag.getInt("Dx");
+        this.dy = tag.getInt("Dy");
+        this.dz = tag.getInt("Dz");
     }
 
     @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putInt("Age", this.age);
-        compound.putDouble("Offset", this.offset);
-        compound.putDouble("PrevOffset", this.prevOffset);
-        compound.putDouble("Increment", this.increment);
-        compound.putInt("Dx", this.dx);
-        compound.putInt("Dy", this.dy);
-        compound.putInt("Dz", this.dz);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("Age", this.age);
+        tag.putDouble("Offset", this.offset);
+        tag.putDouble("PrevOffset", this.prevOffset);
+        tag.putDouble("Increment", this.increment);
+        tag.putInt("Dx", this.dx);
+        tag.putInt("Dy", this.dy);
+        tag.putInt("Dz", this.dz);
     }
 /*
     @Override
@@ -209,8 +210,9 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     }
     */
 
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return super.getUpdateTag(registries);
     }
 
     public void retractOnFallOn() {

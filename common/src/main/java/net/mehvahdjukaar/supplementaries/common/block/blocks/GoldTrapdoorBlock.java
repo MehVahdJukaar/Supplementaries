@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -27,16 +28,16 @@ public class GoldTrapdoorBlock extends TrapDoorBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (this.canBeOpened(state)) {
             state = state.cycle(OPEN);
-            worldIn.setBlock(pos, state, 2);
+            level.setBlock(pos, state, 2);
             if (state.getValue(WATERLOGGED)) {
-                worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+                level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
             }
 
-            this.playSound(player, worldIn, pos, state.getValue(OPEN));
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            this.playSound(player, level, pos, state.getValue(OPEN));
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

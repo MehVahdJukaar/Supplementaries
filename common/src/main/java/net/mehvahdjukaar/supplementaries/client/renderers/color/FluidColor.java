@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -30,11 +32,10 @@ public record FluidColor(boolean flowing) implements BlockColor, ItemColor {
 
     @Override
     public int getColor(ItemStack itemStack, int i) {
-        CompoundTag fluidHolder = itemStack.getTagElement("FluidHolder");
+        SoftFluidTankView tank = itemStack.get(ModComponents.SOFT_FLUID_CONTENT.get());
         Level level = Minecraft.getInstance().level;
-        if (fluidHolder != null && level != null) {
-            SoftFluidStack stack = SoftFluidStack.load(fluidHolder);
-            return flowing ? stack.getFlowingColor(level, null) : stack.getStillColor(level, null);
+        if (tank != null && level != null) {
+            return flowing ? tank.getFlowingColor(level) : tank.getStillColor(level);
         }
         return 0;
     }

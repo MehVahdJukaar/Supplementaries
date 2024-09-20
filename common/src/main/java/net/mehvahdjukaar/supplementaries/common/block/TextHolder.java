@@ -51,6 +51,7 @@ import static net.minecraft.world.level.block.entity.SignBlockEntity.createComma
 public class TextHolder implements IAntiquable {
 
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
+    private boolean renderMessagedFiltered;
 
     private static Codec<Component[]> compCodec(int size) {
         return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.FLAT_CODEC.listOf()

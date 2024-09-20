@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -180,10 +181,10 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return switch (state.getValue(FACE)) {
             case FLOOR -> SHAPE_FLOOR;
             case WALL -> switch (state.getValue(FACING)) {
-                default -> SHAPE_WALL_NORTH;
                 case SOUTH -> SHAPE_WALL_SOUTH;
                 case WEST -> SHAPE_WALL_WEST;
                 case EAST -> SHAPE_WALL_EAST;
+                default -> SHAPE_WALL_NORTH;
             };
             case CEILING -> SHAPE_CEILING;
         };
@@ -301,4 +302,5 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }
+
 }

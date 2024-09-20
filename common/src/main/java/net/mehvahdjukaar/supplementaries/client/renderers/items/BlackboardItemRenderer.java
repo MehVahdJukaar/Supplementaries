@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -34,12 +35,9 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         blockRenderer.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(STATE, false)),
                 STATE, model, 1, 1, 1, combinedLightIn, combinedOverlayIn);
 
-        CompoundTag com = stack.getTagElement("BlockEntityTag");
-        long[] packed = new long[16];
-        if(com != null && com.contains("Pixels")) {
-            packed = com.getLongArray("Pixels");
-        }
-        var blackboard = BlackboardTextureManager.getInstance(BlackboardData.of(packed));
+        BlackboardData data = stack.getOrDefault(ModComponents.BLACKBOARD.get(), BlackboardData.DEFAULT);
+
+        var blackboard = BlackboardTextureManager.getInstance(data);
         VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());
 
         int lu = VertexUtil.lightU(combinedLightIn);

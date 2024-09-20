@@ -155,7 +155,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             if (stack.is(Items.GLOW_INK_SAC) && !state.getValue(GLOWING)) {
                 level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlockAndUpdate(pos, state.setValue(GLOWING, true));
-TextHolder
+
                 glowChanged = true;
 
             } else if (stack.is(Items.INK_SAC) && state.getValue(GLOWING)) {

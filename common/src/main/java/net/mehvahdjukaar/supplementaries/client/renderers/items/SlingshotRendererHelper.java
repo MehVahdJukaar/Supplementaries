@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -33,8 +34,8 @@ public class SlingshotRendererHelper {
         Vec3 range = player.getLookAngle().scale(blockRange);
         BlockHitResult raytrace = level
                 .clip(new ClipContext(start, start.add(range), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-        if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(Minecraft.getInstance()
-                .gameMode.getPickRange())) {
+        if (raytrace.getType() == HitResult.Type.BLOCK && start.distanceToSqr(raytrace.getLocation()) > Mth.square(player
+                .getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE))) {
             lookPos = raytrace.getBlockPos().relative(raytrace.getDirection(), 0);
         }
     }

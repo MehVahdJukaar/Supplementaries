@@ -10,17 +10,17 @@ import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.moonlight.api.util.PotionBottleType;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,8 +36,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -48,7 +48,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -207,11 +206,14 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (stack.getItem() instanceof LingeringPotionItem) {
-            if (tryAddingPotion(state, level, pos, getPotion(stack), player)) {
-                if (!player.isCreative())
-                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
+            var potion = getPotion(stack).potion();
+            if (potion.isPresent()) {
+                if (tryAddingPotion(state, level, pos, potion.get(), player)) {
+                    if (!player.isCreative())
+                        player.setItemInHand(hand, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -246,13 +248,16 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is(BuiltInSoftFluids.POTION) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
-            return tryAddingPotion(state, world, pos, getPotion(fluid.getTag()), null);
+        if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.get(fluid) == PotionBottleType.LINGERING) {
+            var content = getPotion(fluid).potion();
+            if (content.isPresent()) {
+                return tryAddingPotion(state, world, pos, content.get(), null);
+            }
         }
         return false;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, PotionContents potion, @Nullable Entity adder) {
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Holder<Potion> potion, @Nullable Entity adder) {
         world.setBlock(pos, state.setValue(TIPPED, true), 0);
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {

@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -56,8 +57,8 @@ public class RopeArrowEntity extends AbstractArrow {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return PlatHelper.getEntitySpawnPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return PlatHelper.getEntitySpawnPacket(this, serverEntity);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class RopeArrowEntity extends AbstractArrow {
                     //TODO: i might just give null here since player isn't actually placing these blocks
                     player = pl;
 
-                    if(CompatHandler.FLAN && !FlanCompat.canPlace(pl, hitPos)){
+                    if (CompatHandler.FLAN && !FlanCompat.canPlace(pl, hitPos)) {
                         return;
                     }
                 }

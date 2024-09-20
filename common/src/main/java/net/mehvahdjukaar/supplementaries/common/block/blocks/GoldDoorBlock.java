@@ -29,7 +29,7 @@ public class GoldDoorBlock extends DoorBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (this.canBeOpened(state)) {
             tryOpenDoubleDoor(level, state, pos);
 
