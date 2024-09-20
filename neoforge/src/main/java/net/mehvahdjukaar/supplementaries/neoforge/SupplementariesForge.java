@@ -11,17 +11,12 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 /**
  * Author: MehVahdJukaar
@@ -30,10 +25,9 @@ import net.minecraftforge.registries.RegisterEvent;
 public class SupplementariesForge {
 
 
-    public SupplementariesForge() {
+    public SupplementariesForge(IEventBus bus) {
         Supplementaries.commonInit();
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.register(this);
 
         ServerEventsForge.init();

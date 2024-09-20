@@ -1,11 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -28,9 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class SelectableContainerItem<D extends SelectableContainerItem.AbstractData> extends Item {
+public abstract class SelectableContainerItem<M extends SelectableContainerContent.Mut<C>,
+        C extends SelectableContainerContent<M>> extends Item {
 
     private static final int BAR_COLOR = Mth.color(0.4F, 0.4F, 1.0F);
 
@@ -38,7 +37,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         super(properties);
     }
 
-    public abstract D getData(ItemStack stack);
+    public abstract DataComponentType<C> getComponentType();
 
     @Override
     public boolean canFitInsideContainerItems() {
@@ -46,62 +45,70 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     }
 
     @Override
-    public boolean overrideStackedOnOther(ItemStack quiver, Slot pSlot, ClickAction pAction, Player pPlayer) {
+    public boolean overrideStackedOnOther(ItemStack myStack, Slot pSlot, ClickAction pAction, Player pPlayer) {
         if (pAction != ClickAction.SECONDARY) {
             return false;
         } else {
             ItemStack itemstack = pSlot.getItem();
             //place into slot
-            AtomicBoolean didStuff = new AtomicBoolean(false);
+            boolean didStuff = false;
+            C c = myStack.get(this.getComponentType());
+            if (c == null) return false;
+            M mutable = c.toMutable();
+
             if (itemstack.isEmpty()) {
-                D data = this.getData(quiver);
-                if (data != null) {
-                    data.removeOneStack().ifPresent((stack) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        data.tryAdding(pSlot.safeInsert(stack));
-                        didStuff.set(true);
-                    });
+                ItemStack removed = mutable.tryRemovingOne();
+                if (removed != null) {
+                    this.playRemoveOneSound(pPlayer);
+                    ItemStack remainder = pSlot.safeInsert(removed);
+                    mutable.tryAdding(remainder);
+                    didStuff = true;
                 }
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                D data = this.getData(quiver);
-                if (data != null) {
-                    var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
-                    ItemStack remaining = data.tryAdding(taken);
-                    if (!remaining.equals(taken)) {
-                        this.playInsertSound(pPlayer);
-                        didStuff.set(true);
-                    }
-                    pSlot.set(remaining);
+                var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                ItemStack remaining = mutable.tryAdding(taken);
+                if (!remaining.equals(taken)) {
+                    this.playInsertSound(pPlayer);
+                    didStuff = true;
                 }
+                pSlot.set(remaining);
             }
-            return didStuff.get();
+            if (didStuff) {
+                myStack.set(this.getComponentType(), mutable.toImmutable());
+            }
+
+            return didStuff;
         }
     }
 
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
+    public boolean overrideOtherStackedOnMe(ItemStack myStack, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
-            AbstractData data = this.getData(quiver);
-            if (data != null) {
-                AtomicBoolean didStuff = new AtomicBoolean(false);
-                if (pOther.isEmpty()) {
-                    data.removeOneStack().ifPresent((removed) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        pAccess.set(removed);
-                        didStuff.set(true);
-                    });
-                } else {
-                    ItemStack i = data.tryAdding(pOther);
-                    if (!i.equals(pOther)) {
-                        this.playInsertSound(pPlayer);
-                        pAccess.set(i);
-                        didStuff.set(true);
-                    }
+            var c = myStack.get(this.getComponentType());
+            if (c == null) return false;
+            var data = c.toMutable();
+            boolean didStuff = false;
+            if (pOther.isEmpty()) {
+                ItemStack removed = data.tryRemovingOne();
+                if (removed != null) {
+                    this.playRemoveOneSound(pPlayer);
+                    pAccess.set(removed);
+                    didStuff = true;
                 }
-                return didStuff.get();
+            } else {
+                ItemStack i = data.tryAdding(pOther);
+                if (!i.equals(pOther)) {
+                    this.playInsertSound(pPlayer);
+                    pAccess.set(i);
+                    didStuff = true;
+                }
             }
+            if (didStuff) {
+                myStack.set(this.getComponentType(), data.toImmutable());
+            }
+            return didStuff;
         }
         return false;
     }
@@ -109,35 +116,42 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        D data = this.getData(stack);
+        ItemStack myStack = player.getItemInHand(hand);
+        var data = myStack.get(this.getComponentType());
+        if (data == null) return InteractionResultHolder.fail(myStack);
+        var mutable = data.toMutable();
 
         InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack possibleArrowStack = player.getItemInHand(otherHand);
 
         //try inserting offhand
-        if (data.canAcceptItem(possibleArrowStack)) {
-            ItemStack remaining = data.tryAdding(possibleArrowStack);
+        if (mutable.isItemValid(possibleArrowStack)) {
+            ItemStack remaining = mutable.tryAdding(possibleArrowStack);
             if (!remaining.equals(possibleArrowStack)) {
                 this.playInsertSound(player);
                 player.setItemInHand(otherHand, remaining);
-                return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
+
+                myStack.set(this.getComponentType(), mutable.toImmutable());
+                return InteractionResultHolder.sidedSuccess(myStack, pLevel.isClientSide);
             }
         }
 
         if (player.isSecondaryUseActive()) {
-            if (data.cycle()) {
+            if (mutable.cycle()) {
                 this.playInsertSound(player);
             }
-            return InteractionResultHolder.sidedSuccess(stack, pLevel.isClientSide);
+            myStack.set(this.getComponentType(), mutable.toImmutable());
+            return InteractionResultHolder.sidedSuccess(myStack, pLevel.isClientSide);
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
                 SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(player, hand));
             }
             this.playRemoveOneSound(player);
+            myStack.set(this.getComponentType(), mutable.toImmutable());
+
             player.startUsingItem(hand);
-            return InteractionResultHolder.consume(stack);
+            return InteractionResultHolder.consume(myStack);
         }
     }
 
@@ -158,19 +172,18 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        D data = this.getData(pStack);
+        var data = pStack.get(this.getComponentType());
         if (data != null) {
-            return data.getSelected().getCount() > 0;
+            return data.getSelectedCount() > 0;
         }
         return false;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        D data = this.getData(pStack);
+        var data = pStack.get(this.getComponentType());
         if (data != null) {
-            return Math.min(1 + 12 * data.getSelectedItemCount() /
-                    (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
+            return data.getBarSize();
         }
         return 0;
     }
@@ -183,40 +196,27 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        D data = this.getData(pStack);
-        if (data != null) {
-            NonNullList<ItemStack> list = NonNullList.create();
-            boolean isEmpty = true;
-            for (var v : data.getContentView()) {
-                if (!v.isEmpty()) isEmpty = false;
-                list.add(v);
-            }
-            if (!isEmpty) {
-                return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
-            }
+        var data = pStack.get(this.getComponentType());
+        if (data != null && !data.isEmpty()) {
+            return Optional.of(data);
         }
         return Optional.empty();
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        D data = this.getData(stack);
+        var data = stack.get(this.getComponentType());
         if (data != null) {
-            int c = data.getSelectedItemCount();
-            if (c != 0) {
-                tooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
-                        data.getSelected().getItem().getDescription(), c)
-                        .withStyle(ChatFormatting.GRAY));
-            }
+            data.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }
     }
 
 
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
-        D data = this.getData(pItemEntity.getItem());
+        var data = pItemEntity.getItem().get(this.getComponentType());
         if (data != null) {
-            ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
+            ItemUtils.onContainerDestroyed(pItemEntity, data.getContentCopy());
         }
     }
 
@@ -232,99 +232,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         pEntity.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
 
-    //used to reset the selected arrow. I wish I didn't have to do this but I dont have control over when the itemstack is decremented
-    @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        D data = this.getData(stack);
-        if (data != null) data.updateSelectedIfNeeded();
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
-    }
-
     // BS instance fields
 
+    @Deprecated(forRemoval = true)
     @NotNull
     public abstract ItemStack getFirstInInventory(Player player);
 
+    @Deprecated(forRemoval = true)
     public abstract int getMaxSlots();
 
-    public interface AbstractData {
-
-        int getSelectedSlot();
-
-        void setSelectedSlot(int selectedSlot);
-
-        /**
-         * Do not modify this list directly if you are on fabric. On forge it can be modified
-         */
-        List<ItemStack> getContentView();
-
-        boolean canAcceptItem(ItemStack toInsert);
-
-        default ItemStack getSelected() {
-            var content = this.getContentView();
-            int selected = this.getSelectedSlot();
-            return content.get(selected);
-        }
-
-        default boolean cycle() {
-            return cycle(1);
-        }
-
-        default boolean cycle(boolean clockWise) {
-            return cycle(clockWise ? 1 : -1);
-        }
-
-        default boolean cycle(int slotsMoved) {
-            int originalSlot = this.getSelectedSlot();
-            var content = this.getContentView();
-            ItemStack selected;
-            if (slotsMoved == 0) {
-                //returns if it doesn't have to move
-                selected = content.get(this.getSelectedSlot());
-                if (!selected.isEmpty()) return false;
-            }
-            int maxSlots = content.size();
-            slotsMoved = slotsMoved % maxSlots;
-            this.setSelectedSlot((maxSlots + (this.getSelectedSlot() + slotsMoved)) % maxSlots);
-            for (int i = 0; i < maxSlots; i++) {
-                selected = content.get(this.getSelectedSlot());
-                if (!selected.isEmpty()) break;
-                this.setSelectedSlot((maxSlots + (this.getSelectedSlot() + (slotsMoved >= 0 ? 1 : -1))) % maxSlots);
-            }
-            return originalSlot != getSelectedSlot();
-        }
-
-        /**
-         * Adds one item. returns the item that is remaining and has not been added. Same item if no change was made
-         */
-        ItemStack tryAdding(ItemStack pInsertedStack, boolean onlyOnExisting);
-
-        default ItemStack tryAdding(ItemStack pInsertedStack) {
-            return tryAdding(pInsertedStack, false);
-        }
-
-
-        Optional<ItemStack> removeOneStack();
-
-        default int getSelectedItemCount() {
-            ItemStack selected = this.getSelected();
-            int amount = 0;
-            for (var item : this.getContentView()) {
-
-                if (ForgeHelper.canItemStack(selected, item)) {
-                    amount += item.getCount();
-                }
-            }
-            return amount;
-        }
-
-        default void updateSelectedIfNeeded() {
-            this.cycle(0); //this works
-        }
-
-        //fabric and skeleton shoot goal. forge for player doesn't need this as stack decrement already affects the one in quiver
-        void consumeSelected();
-
-    }
 
 }

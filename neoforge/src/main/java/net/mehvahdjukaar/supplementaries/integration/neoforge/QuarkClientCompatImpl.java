@@ -83,14 +83,14 @@ public class QuarkClientCompatImpl {
 
     public static void usageTickerStack(UsageTickerEvent.GetStack event) {
         if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getData(event.currentRealStack);
+            var data = li.getComponentKey(event.currentRealStack);
             event.setResultStack(data.getSelected());
         }
     }
 
     public static void usageTickerCount(UsageTickerEvent.GetCount event) {
         if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getData(event.currentRealStack);
+            var data = li.getComponentKey(event.currentRealStack);
             event.setResultCount(data.getSelectedItemCount());
         } else if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
             //adds missing ones from quiver

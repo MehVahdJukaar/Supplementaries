@@ -24,7 +24,7 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @Override
-    public Data getData(ItemStack stack) {
+    public Data getComponentKey(ItemStack stack) {
         return getQuiverData(stack);
     }
 

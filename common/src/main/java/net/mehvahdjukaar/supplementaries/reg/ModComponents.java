@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
-import net.mehvahdjukaar.supplementaries.common.components.MobContainerView;
-import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
-import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.common.components.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -35,6 +32,9 @@ public class ModComponents {
 
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC);
+
+    public static final Supplier<DataComponentType<LunchBaskedContent>> LUNCH_BASKET = register("lunch_basket",
+            LunchBaskedContent.CODEC, LunchBaskedContent.STREAM_CODEC);
 
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {

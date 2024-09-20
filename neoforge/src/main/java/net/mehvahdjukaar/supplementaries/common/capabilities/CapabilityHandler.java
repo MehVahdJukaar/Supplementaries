@@ -1,27 +1,26 @@
 package net.mehvahdjukaar.supplementaries.common.capabilities;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.items.neoforge.LunchBoxItemImpl;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.neoforge.QuiverItemImpl;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraftforge.common.capabilities.*;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 public class CapabilityHandler {
-
-    private static final Map<Class<?>, Capability<?>> TOKENS = new Object2ObjectOpenHashMap<>();
 
     public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -37,12 +36,21 @@ public class CapabilityHandler {
     });
 
     public static void register(RegisterCapabilitiesEvent event) {
+
+        event.registerItem(Capabilities.ItemHandler.ITEM, new ICapabilityProvider<>() {
+            @Override
+            public @Nullable IItemHandler getCapability(ItemStack stack, Void object2) {
+                if (stack.getItem() instanceof SelectableContainerItem se) {
+                    return (IItemHandler) se.getComponentType(stack);
+                }
+                return null;
+            }
+        }, ModRegistry.LUNCH_BASKET.get(), ModRegistry.QUIVER_ITEM.get());
+
         //so other mods can find them i guess
         event.register(ICatchableMob.class);
         event.register(IAntiquable.class);
         event.register(IWashable.class);
-        event.register(QuiverItemImpl.Cap.class);
-        event.register(LunchBoxItemImpl.Cap.class);
         event.register(IQuiverEntity.class);
 
         TOKENS.put(ICatchableMob.class, CATCHABLE_MOB_CAP);
@@ -58,11 +66,6 @@ public class CapabilityHandler {
                 event.getObject() instanceof HangingSignBlockEntity)) {
             event.addCapability(Supplementaries.res("antique_ink"), new AntiqueInkProvider());
         }
-    }
-
-    @Nullable
-    public static <T> Capability<T> getToken(Class<T> capClass) {
-        return (Capability<T>) TOKENS.get(capClass);
     }
 
     @SuppressWarnings("ConstantConditions")

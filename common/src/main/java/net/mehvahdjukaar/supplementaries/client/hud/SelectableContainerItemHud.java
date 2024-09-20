@@ -6,8 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundCycleSelectableContainerItemPacket.Slot;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -43,7 +43,7 @@ public abstract class SelectableContainerItemHud {
     protected final Minecraft mc;
     //behold states
     @Nullable
-    private SelectableContainerItem<?> itemUsed;
+    private SelectableContainerItem itemUsed;
     private Supplier<ItemStack> stackSlot;
     private boolean usingKey = false; //false if just using
     private double lastCumulativeMouseDx = 0;
@@ -68,7 +68,7 @@ public abstract class SelectableContainerItemHud {
     //todo: test key and use combinaton
     public void setUsingItem(SlotReference slot) {
         stackSlot = slot;
-        if (slot.getItem() instanceof SelectableContainerItem<?> selectable) {
+        if (slot.getItem() instanceof SelectableContainerItem selectable) {
             itemUsed = selectable;
         } else {
             itemUsed = null;
@@ -164,11 +164,11 @@ public abstract class SelectableContainerItemHud {
     }
 
     @Nullable
-    private SelectableContainerItem.AbstractData getItemUsedData() {
+    private SelectableContainerContent<?> getItemUsedData() {
         if (itemUsed == null) return null;
         ItemStack stack = stackSlot.get();
         if (!stack.is(itemUsed)) return null;
-        return itemUsed.getData(stack);
+        return stack.get(itemUsed.getComponentType());
     }
 
     @NotNull

@@ -19,7 +19,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 //TODO: improve this
 public class TurnTableBlockTile extends BlockEntity {
     private int cooldown = 5;
-    private boolean canRotate = false;
+    private boolean canRotate = true;
     // private long tickedGameTime;
     private int catTimer = 0;
 

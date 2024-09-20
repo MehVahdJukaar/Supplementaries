@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -110,7 +109,7 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     private void suppl$eatFromLunchBasket(ItemStack stack, int amount, CallbackInfo ci,
                                           @Local(argsOnly = true) LocalRef<ItemStack> food) {
         if (stack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getData(stack);
+            var data = li.getComponentKey(stack);
             if (data.canEatFrom()) {
                 food.set(data.getSelected());
             }

@@ -28,9 +28,11 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
+import net.mehvahdjukaar.supplementaries.client.tooltip.SelectableContainerTooltip;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -464,7 +466,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(BlackboardData.class, BlackboardTooltipComponent::new);
-        event.register(SelectableContainerTooltip.class, QuiverTooltipComponent::new);
+        event.register(SelectableContainerContent.class, SelectableContainerTooltip::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);
         event.register(SherdTooltip.class, SherdTooltipComponent::new);

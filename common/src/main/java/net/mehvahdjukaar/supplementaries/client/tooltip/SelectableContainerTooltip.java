@@ -1,24 +1,23 @@
 package net.mehvahdjukaar.supplementaries.client.tooltip;
 
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SelectableContainerTooltip;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class QuiverTooltipComponent implements ClientTooltipComponent {
+public class SelectableContainerTooltip implements ClientTooltipComponent {
     private final List<ItemStack> items;
     private final int selectedSlot;
 
-    public QuiverTooltipComponent(SelectableContainerTooltip tooltip) {
-        this.items = tooltip.stacks();
-        this.selectedSlot = tooltip.selected();
+    public SelectableContainerTooltip(SelectableContainerContent<?> content) {
+        this.items = content.stacks();
+        //TODO: copy bundle one
+        this.selectedSlot = content.selected();
     }
 
     @Override

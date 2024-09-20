@@ -12,7 +12,7 @@ public class SelectableItemOverlayRenderer implements IItemDecoratorRenderer {
     @Override
     public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
         if (Minecraft.getInstance().player != null) {
-            ItemStack ammo = ((SelectableContainerItem<?>)stack.getItem()).getData(stack).getSelected();
+            ItemStack ammo = ((SelectableContainerItem<?>)stack.getItem()).getComponentType(stack).getSelected();
             ProjectileWeaponOverlayRenderer.renderAmmo(graphics, x, y, ammo);
         }
         return true;

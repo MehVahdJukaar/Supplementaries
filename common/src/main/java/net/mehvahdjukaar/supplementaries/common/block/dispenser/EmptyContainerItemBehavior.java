@@ -7,8 +7,6 @@ import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.item.BundleItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
 
@@ -21,7 +19,7 @@ class EmptyContainerItemBehavior extends DispenserHelper.AdditionalDispenserBeha
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         if (stack.getItem() instanceof SelectableContainerItem<?> bi) {
-            var data = bi.getData(stack);
+            var data = bi.getComponentType(stack);
             var removed = data.removeOneStack();
             if (removed.isPresent()) {
                 Direction direction = source.state().getValue(DispenserBlock.FACING);

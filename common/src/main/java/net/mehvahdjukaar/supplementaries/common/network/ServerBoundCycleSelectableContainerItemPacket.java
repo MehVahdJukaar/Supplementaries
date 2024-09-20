@@ -61,7 +61,7 @@ public class ServerBoundCycleSelectableContainerItemPacket implements Message {
             if (!(stack.getItem() instanceof SelectableContainerItem<?> item)) {
                 Supplementaries.error(); //should not happen
             } else {
-                var data = item.getData(stack);
+                var data = item.getComponentType(stack);
                 if (setSlot) {
                     data.setSelectedSlot(amount);
                 } else {

@@ -9,13 +9,17 @@ import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -41,12 +45,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, Level level, List<Component> list, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, level, list, pIsAdvanced);
-        if (MiscUtils.showsHints(level, pIsAdvanced)) {
-            addClientTooltip(list);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (MiscUtils.showsHints(tooltipFlag)) {
+            addClientTooltip(tooltipComponents);
         }
-        Data data = this.getData(pStack);
+        Data data = this.getComponentKey(pStack);
         if (data != null) {
             boolean open = data.canEatFrom();
             list.add(open ?
@@ -66,7 +70,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
             if (food.isEmpty()) {
@@ -88,7 +92,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public boolean onLeftClick(ItemStack stack, Player player, InteractionHand hand) {
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         boolean open = data.canEatFrom();
         if (open) {
             player.playSound(ModSounds.LUNCH_BASKET_CLOSE.get(),
@@ -111,7 +115,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     @Nullable
     @ForgeOverride
     public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         if (data.canEatFrom()) {
             return SuppPlatformStuff.getFoodProperties(data.getSelected(), entity);
         }
@@ -120,7 +124,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         if (data.canEatFrom()) {
             return data.getSelected().getUseDuration();
         }
@@ -129,7 +133,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         if (data.canEatFrom()) {
             return data.getSelected().getUseAnimation();
         }
@@ -138,7 +142,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        var data = getData(stack);
+        var data = getComponentKey(stack);
         if (data.canEatFrom()) {
             ItemStack selected = data.getSelected();
             //assume it will be decremented by at most 1
@@ -173,13 +177,13 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     @Override
-    public int getMaxSlots() {
-        return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
+    public DataComponentType<LunchBaskedContent> getComponentType() {
+        return ModComponents.LUNCH_BASKET.get();
     }
 
     @Override
-    public Data getData(ItemStack stack) {
-        return getLunchBoxData(stack);
+    public int getMaxSlots() {
+        return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
     }
 
     @Override
@@ -187,10 +191,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return getLunchBox(player);
     }
 
-    @ExpectPlatform
-    public static Data getLunchBoxData(ItemStack stack) {
-        throw new AssertionError();
-    }
 
     @NotNull
     public static ItemStack getLunchBox(LivingEntity entity) {
@@ -208,16 +208,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }
 
-    public interface Data extends AbstractData {
-
-        default boolean canAcceptItem(ItemStack toInsert) {
-            return LunchBoxItem.canAcceptItem(toInsert);
-        }
-
-        boolean canEatFrom();
-
-        void switchMode();
-    }
 
 
 }
