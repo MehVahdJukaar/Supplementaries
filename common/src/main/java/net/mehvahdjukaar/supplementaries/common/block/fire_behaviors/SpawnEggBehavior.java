@@ -62,7 +62,8 @@ public class SpawnEggBehavior implements IFireItemBehavior {
             if (entity instanceof Mob mob) {
                 mob.yHeadRot = mob.getYRot();
                 mob.yBodyRot = mob.getYRot();
-                mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.DISPENSER, null, tag);
+                mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()),
+                        MobSpawnType.DISPENSER, null);
                 mob.playAmbientSound();
             }
             serverLevel.addFreshEntity(entity);

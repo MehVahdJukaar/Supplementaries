@@ -28,7 +28,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOve
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
-import net.mehvahdjukaar.supplementaries.client.tooltip.SelectableContainerTooltip;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
@@ -44,6 +44,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
+import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -118,6 +119,9 @@ public class ClientRegistry {
     public static final Supplier<Map<WoodType, ModelResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
                     w -> modelRes("block/sign_posts/" + w.getVariantId("sign_post"))))
+    );
+    public static final Function<BookType, ModelResourceLocation> BOOK_MODELS = Util.memoize(type ->
+            RenderUtil.getStandaloneModelLocation(Supplementaries.res("block/books/book_" + type.name()))
     );
 
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
@@ -412,7 +416,7 @@ public class ClientRegistry {
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         SIGN_POST_MODELS.get().values().forEach(event::register);
-        PlaceableBookManager.getAll().forEach(b -> event.register(b.modelPath()));
+        PlaceableBookManager.getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);

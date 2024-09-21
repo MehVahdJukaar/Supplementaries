@@ -5,20 +5,23 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
-import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -128,6 +131,19 @@ public class ServerEvents {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    @EventCalled
+    public static void onServerStopped(){
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            CapturedMobCache.clear();
+        } else {
+            WeatheredMapRecipe.onWorldUnload();
+            WaySignStructure.clearCache();
+            EndermanSkullBlockTile.clearCache();
+            ColoredMapHandler.clearIdCache();
+        }
+
     }
 
     @EventCalled

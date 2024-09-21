@@ -146,13 +146,13 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (worldIn.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
+            if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
 
                 PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
                     p.writeBoolean(true);

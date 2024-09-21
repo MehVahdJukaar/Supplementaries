@@ -16,6 +16,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
@@ -26,10 +27,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.UUID;
 
+import static net.minecraft.world.level.block.entity.SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR;
+
 public class StatueBlockTile extends ItemDisplayTile {
 
     @Nullable
-    private GameProfile playerSkin = null;
+    private ResolvableProfile playerSkin = null;
 
     //clientside
     private StatuePose pose = StatuePose.STANDING;
@@ -61,21 +64,23 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Nullable
-    public GameProfile getPlayerSkin() {
+    public ResolvableProfile getPlayerSkin() {
         return playerSkin;
     }
 
-    //skull code
-    protected void setPlayerSkin(@Nullable GameProfile input) {
-        if (this.playerSkin == null) {
-            synchronized (this) {
-                this.playerSkin = input;
-            }
+    // skull code
+    public void setPlayerSkin(@Nullable ResolvableProfile owner) {
+        synchronized(this) {
+            this.playerSkin = owner;
+        }
 
-            SkullBlockEntity.updateGameprofile(this.playerSkin, (gameProfile) -> {
-                this.playerSkin = gameProfile;
+        if (this.playerSkin != null && !this.playerSkin.isResolved()) {
+            this.playerSkin.resolve().thenAcceptAsync(resolvableProfile -> {
+                this.playerSkin = resolvableProfile;
                 this.setChanged();
-            });
+            }, CHECKED_MAIN_THREAD_EXECUTOR);
+        } else {
+            this.setChanged();
         }
     }
 
@@ -84,7 +89,8 @@ public class StatueBlockTile extends ItemDisplayTile {
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
-                this.setPlayerSkin(new GameProfile(profile.getFirst(), profile.getSecond()));
+                GameProfile gameProfile = new GameProfile(profile.getFirst(), profile.getSecond());
+                this.setPlayerSkin(new ResolvableProfile(gameProfile));
             }
         } else this.playerSkin = null;
 

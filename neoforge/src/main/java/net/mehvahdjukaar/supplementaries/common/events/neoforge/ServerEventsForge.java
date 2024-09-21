@@ -1,19 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
-import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.neoforge.VillagerScareStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -31,30 +28,19 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.level.NoteBlockEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.UsernameCache;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.NoteBlockEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 public class ServerEventsForge {
 
@@ -208,14 +194,8 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onLevelUnload(LevelEvent.Unload event) {
-        if (event.getLevel().isClientSide()) {
-            CapturedMobCache.clear();
-        } else {
-            WeatheredMapRecipe.onWorldUnload();
-            WaySignStructure.clearCache();
-            EndermanSkullBlockTile.clearCache();
-        }
+    public static void onLevelUnload(ServerStoppedEvent event) {
+        ServerEvents.onServerStopped();
     }
 
 

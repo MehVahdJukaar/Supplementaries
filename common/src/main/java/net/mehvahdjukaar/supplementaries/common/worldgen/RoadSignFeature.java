@@ -19,17 +19,20 @@ import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -47,6 +50,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 
@@ -444,11 +448,10 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
             }
         } else {
             ItemStack book = new ItemStack(Items.WRITABLE_BOOK);
-            CompoundTag com = new CompoundTag();
-            ListTag listTag = new ListTag();
-            listTag.add(StringTag.valueOf("nothing here but monsters\n\n\n"));
-            com.put("pages", listTag);
-            book.setTag(com);
+            WritableBookContent content = new WritableBookContent(
+                    List.of(new Filterable<>("nothing here but monsters\n\n\n", Optional.empty()))
+            );
+            book.set(DataComponents.WRITABLE_BOOK_CONTENT, content);
             BlockPos belowPos = generatorPos.below(2);
             level.setBlockAndUpdate(belowPos, ModRegistry.NOTICE_BOARD.get().defaultBlockState().setValue(NoticeBoardBlock.HAS_BOOK, true)
                     .setValue(NoticeBoardBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(level.random)));

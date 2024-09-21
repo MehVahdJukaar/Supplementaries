@@ -2,13 +2,15 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BannerPatternItem;
@@ -54,7 +56,6 @@ public class ModMaterials {
             new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/" + pattern.assetId()
                     .toShortLanguageKey().replace(":", "/").replace(".", "/"))
             ));
-
 
     @Nullable
     public static Material getFlagMaterialForPatternItem(Level level, BannerPatternItem item) {

@@ -36,10 +36,15 @@
 - standardize and make IWaxable IGlowable and IAntiquable
 - all quiver and lunch
 - all tipped and configs
+- urn broken extra particles
+- test all containers with loot table in spectator
+- all jar tooltips
+- moonlight map data stuff via stream codecs on update tag
 
 
 # Soon
 
+- make polytone and supp hourglass use reloadable registries
 - all use action in adventure mode
 - guarded by piglins block tag
 - globe sheared particle event for servers
@@ -103,6 +108,7 @@
 - Fix doormat highlight text box
 - brush remove 1 layer ash or snow
 - brush works on blackboards
+- cape on statues
 
 # Amendments
 

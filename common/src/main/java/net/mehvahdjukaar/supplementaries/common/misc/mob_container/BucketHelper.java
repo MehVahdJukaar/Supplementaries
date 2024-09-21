@@ -59,7 +59,7 @@ public class BucketHelper {
                 mobId = itemName.replace("bucket_", "");
             }
             if (mobId != null) {
-                ResourceLocation res = new ResourceLocation(mobId);
+                ResourceLocation res = ResourceLocation.parse(mobId);
                 var opt = BuiltInRegistries.ENTITY_TYPE.getOptional(res);
                 if (opt.isPresent()) {
                     EntityType<?> en = opt.get();

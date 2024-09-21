@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;

@@ -14,7 +14,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.WATER_CAULDRON)) {
-            return FluidOffer.of(BuiltInSoftFluids.WATER.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(BuiltInSoftFluids.WATER, source.getValue(LayeredCauldronBlock.LEVEL));
         }
         return null;
     }

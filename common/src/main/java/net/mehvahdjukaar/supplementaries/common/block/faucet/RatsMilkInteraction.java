@@ -15,7 +15,7 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.getBlock() == CompatObjects.MILK_CAULDRON.get()) {
-            return FluidOffer.of(BuiltInSoftFluids.MILK.getHolder(), SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
+            return FluidOffer.of(BuiltInSoftFluids.MILK, SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
         }
         return null;
     }

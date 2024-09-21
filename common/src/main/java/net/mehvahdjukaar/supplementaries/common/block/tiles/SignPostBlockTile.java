@@ -126,8 +126,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putBoolean("Framed", this.framed);
-        tag.put("SignUp", this.signUp.save());
-        tag.put("SignDown", this.signDown.save());
+        tag.put("SignUp", this.signUp.save(registries));
+        tag.put("SignDown", this.signDown.save(registries));
         this.saveOwner(tag);
         if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
@@ -203,13 +203,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
         }
 
-        public CompoundTag save() {
+        public CompoundTag save(HolderLookup.Provider registries) {
             CompoundTag compound = new CompoundTag();
             compound.putFloat("Yaw", this.yaw);
             compound.putBoolean("Left", this.left);
             compound.putBoolean("Active", this.active);
             compound.putString("WoodType", this.woodType.toString());
-            this.text.save(compound);
+            this.text.save(compound, registries);
             return compound;
         }
 

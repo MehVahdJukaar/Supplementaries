@@ -69,4 +69,8 @@ public class SoftFluidTankView {
     public void apply(SoftFluidTank fluidHolder) {
         fluidHolder.copyContent(this.inner);
     }
+
+    public SoftFluidTank toMutable() {
+        return this.inner.makeCopy();
+    }
 }

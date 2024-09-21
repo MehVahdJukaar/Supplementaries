@@ -124,36 +124,33 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hitResult) {
 
-
-        InteractionResult resultType = InteractionResult.PASS;
+        ItemInteractionResult resultType = ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (state.getValue(ITEM_STATUS).hasTile() &&
                 level.getBlockEntity(pos) instanceof PedestalBlockTile tile && tile.isAccessibleBy(player)) {
 
-            ItemStack handItem = player.getItemInHand(handIn);
-
             //Indiana Jones swap
-            if (handItem.getItem() instanceof SackItem) {
+            if (stack.getItem() instanceof SackItem) {
 
-                ItemStack it = handItem.copy();
+                ItemStack it = stack.copy();
                 it.setCount(1);
                 ItemStack removed = tile.removeItemNoUpdate(0);
                 tile.setDisplayedItem(it);
 
-                handItem.consume(1, player);
+                stack.consume(1, player);
                 if (!level.isClientSide()) {
-                    player.setItemInHand(handIn, removed);
+                    player.setItemInHand(hand, removed);
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.10F + 0.95F);
                     tile.setChanged();
                 } else {
                     //also refreshTextures visuals on client. will get overwritten by packet tho
                     tile.updateClientVisualsOnLoad();
                 }
-                resultType = InteractionResult.sidedSuccess(level.isClientSide);
+                resultType = ItemInteractionResult.sidedSuccess(level.isClientSide);
             } else {
-                resultType = tile.interact(player, handIn);
+                resultType = tile.interactWithPlayerItem(player, hand, stack);
             }
         }
         return resultType;

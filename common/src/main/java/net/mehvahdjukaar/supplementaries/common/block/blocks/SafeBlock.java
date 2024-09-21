@@ -4,8 +4,10 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -146,29 +148,13 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         if (stack.has(DataComponents.CONTAINER_LOOT)) {
             tooltipComponents.add(UNKNOWN_CONTENTS);
         }
-        CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
-        if (compoundTag != null) {
-            if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
-                if (compoundTag.contains("Owner")) {
-                    UUID id = compoundTag.getUUID("Owner");
-                    if (!id.equals(Minecraft.getInstance().player.getUUID())) {
-                        String name = compoundTag.getString("OwnerName");
-                        tooltip.add((Component.translatable("message.supplementaries.safe.owner", name)).withStyle(ChatFormatting.GRAY));
-
-                        //TODO: this is wrong. needs to be added below aswell.also check quark configs and account for both modes.
-                        ItemsUtil.addShulkerLikeTooltips(compoundTag, tooltip);
-                        return;
-                    }
-                }
-                return;
-            } else {
-                if (compoundTag.contains("Password")) {
-                    tooltip.add((Component.translatable("message.supplementaries.safe.bound")).withStyle(ChatFormatting.GRAY));
-                    return;
-                }
+        else{
+            SafeOwner owner = stack.get(ModComponents.SAFE_OWNER.get());
+            if (owner != null) {
+                owner.addToTooltip(context, tooltipComponents::add, tooltipFlag);
             }
         }
-        tooltip.add((Component.translatable("message.supplementaries.safe.unbound")).withStyle(ChatFormatting.GRAY));
+
     }
 
     //overrides creative drop

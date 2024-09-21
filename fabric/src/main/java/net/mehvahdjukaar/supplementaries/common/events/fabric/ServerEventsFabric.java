@@ -2,10 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.*;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -47,6 +45,10 @@ public class ServerEventsFabric {
             for (var p : server.getPlayerList().getPlayers()) {
                 ServerEvents.serverPlayerTick(p);
             }
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
+            ServerEvents.onServerStopped();
         });
 
 

@@ -7,17 +7,20 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -45,6 +48,8 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public class JarItem extends AbstractMobContainerItem implements ICustomItemRendererProvider {
+
+    protected final MutableComponent HINT = Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
 
     public JarItem(Block blockIn, Properties properties) {
         super(blockIn, properties, 0.625f, 0.875f, true);
@@ -111,10 +116,9 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        CompoundTag compoundTag = stack.getTagElement("BlockEntityTag");
-        if (compoundTag == null) {
-            if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-            tooltip.add(Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        if (!stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+            if (!MiscUtils.showsHints(tooltipFlag)) return;
+            tooltipComponents.add(HINT);
         } else {
             if (compoundTag.contains("LootTable", 8)) {
                 tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
@@ -178,17 +182,15 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        if (tag != null && entity instanceof Player player) {
-            JarBlockTile temp = new JarBlockTile(entity.getOnPos(), ModRegistry.JAR.get().defaultBlockState());
-            temp.load(tag);
-            SoftFluidTank fh = temp.getSoftFluidTank();
-            if (fh.containsFood()) {
-                if (fh.tryDrinkUpFluid(player, world)) {
-                    CompoundTag newTag = new CompoundTag();
-                    temp.saveAdditional(newTag);
-                    stack.addTagElement("BlockEntityTag", newTag);
-                    return stack;
+        if ( entity instanceof Player player) {
+            SoftFluidTankView view = stack.get(ModComponents.SOFT_FLUID_CONTENT.get());
+            if(view != null) {
+                SoftFluidTank ft = view.toMutable();
+                if (ft.containsFood()) {
+                    if (ft.tryDrinkUpFluid(player, world)) {
+                        stack.set(ModComponents.SOFT_FLUID_CONTENT.get(), SoftFluidTankView.of(ft));
+                        return stack;
+                    }
                 }
             }
         }
@@ -197,7 +199,7 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-        if (this.getUseDuration(playerEntity.getItemInHand(hand)) != 0) {
+        if (this.getUseDuration(playerEntity.getItemInHand(hand), playerEntity) != 0) {
             return ItemUtils.startUsingInstantly(world, playerEntity, hand);
         }
         return super.use(world, playerEntity, hand);
@@ -206,13 +208,10 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
     @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         if (CommonConfigs.Functional.JAR_ITEM_DRINK.get()) {
-            CompoundTag tag = stack.getTagElement("BlockEntityTag");
-            if (tag != null) {
-                var jarBlockTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-                jarBlockTile.load(tag);
-                SoftFluidTank fh = jarBlockTile.getSoftFluidTank();
-                var provider = fh.getFluid().getFoodProvider();
-                Item food = provider.getFood();
+            SoftFluidTankView tankView = itemStack.get(ModComponents.SOFT_FLUID_CONTENT.get());
+            if (tankView != null) {
+                var provider = tankView.getFluid().getFoodProvider();
+                Item food = provider.getFoodItem();
                 return food.getUseDuration(food.getDefaultInstance(), livingEntity) / provider.getDivider();
             }
         }

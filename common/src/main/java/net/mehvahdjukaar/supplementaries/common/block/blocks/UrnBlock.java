@@ -15,16 +15,20 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.LootCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -36,10 +40,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -216,8 +217,8 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
             return l;
         }
         //hax
-        ResourceLocation resourcelocation = this.getLootTable();
-        if (resourcelocation == BuiltInLootTables.EMPTY) {
+        ResourceKey<LootTable> tableKey = this.getLootTable();
+        if (tableKey == BuiltInLootTables.EMPTY) {
             return super.getDrops(state, builder);
         } else {
             float oldLuck = builder.luck;
@@ -226,7 +227,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
             builder.withLuck(oldLuck + 0.25f * f);
             var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
             ServerLevel serverlevel = lootContext.getLevel();
-            LootTable loottable = serverlevel.getServer().getLootData().getLootTable(resourcelocation);
+            LootTable loottable = serverlevel.getServer().reloadableRegistries().getLootTable(tableKey);
             List<ItemStack> selectedLoot;
             do {
                 selectedLoot = loottable.getRandomItems(lootContext);
@@ -273,7 +274,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         super.spawnAfterBreak(state, level, pos, stack, bl);
         if (level.random.nextFloat() < CommonConfigs.Functional.URN_ENTITY_SPAWN_CHANCE.get() &&
                 level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
+                !EnchantmentHelper.hasTag(stack, EnchantmentTags.PREVENTS_INFESTED_SPAWNS)) {
             List<EntityType<?>> list = new ArrayList<>();
             for (var e : BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(ModTags.URN_SPAWN)) {
                 list.add(e.value());

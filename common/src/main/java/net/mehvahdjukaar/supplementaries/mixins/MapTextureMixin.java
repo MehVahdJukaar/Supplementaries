@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.mehvahdjukaar.supplementaries.common.misc.ColoredMapHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;

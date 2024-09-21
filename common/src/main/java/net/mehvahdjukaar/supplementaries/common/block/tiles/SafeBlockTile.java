@@ -4,15 +4,18 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
+import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.inventories.SafeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -228,6 +231,34 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             tag.putString("OwnerName", this.ownerName);
         if (this.password != null)
             tag.putString("Password", this.password);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        SafeOwner safeOwner = SafeOwner.of(this.owner, this.ownerName, this.password);
+        if (safeOwner != null) {
+            components.set(ModComponents.SAFE_OWNER.get(), safeOwner);
+        }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        SafeOwner safeOwner = componentInput.get(ModComponents.SAFE_OWNER.get());
+        if (safeOwner != null) {
+            this.owner = safeOwner.owner();
+            this.ownerName = safeOwner.ownerName();
+            this.password = safeOwner.password();
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("Owner");
+        tag.remove("OwnerName");
+        tag.remove("Password");
     }
 
     @Override

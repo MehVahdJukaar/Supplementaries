@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -77,7 +78,7 @@ public class GoldDoorBlock extends DoorBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void tryOpenDoubleDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand) {
+    public static void tryOpenDoubleDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
             Direction direction = state.getValue(DoorBlock.FACING);
             boolean isOpen = state.getValue(DoorBlock.OPEN);
@@ -86,7 +87,7 @@ public class GoldDoorBlock extends DoorBlock {
             BlockPos doorPos = state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? mirrorPos : mirrorPos.below();
             BlockState other = world.getBlockState(doorPos);
             if (other.getBlock() == state.getBlock() && other.getValue(DoorBlock.FACING) == direction && other.getValue(DoorBlock.OPEN) == isOpen && other.getValue(DoorBlock.HINGE) != isMirrored) {
-                if (world.getBlockEntity(doorPos) instanceof KeyLockableTile keyLockableTile && (keyLockableTile.handleAction(player, hand, "door"))) {
+                if (world.getBlockEntity(doorPos) instanceof KeyLockableTile keyLockableTile && (keyLockableTile.handleAction(player, hand, stack, "door"))) {
                     BlockState newState = other.cycle(DoorBlock.OPEN);
                     world.setBlock(doorPos, newState, 10);
                 }

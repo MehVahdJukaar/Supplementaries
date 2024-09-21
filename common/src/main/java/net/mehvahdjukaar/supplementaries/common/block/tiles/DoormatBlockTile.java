@@ -55,7 +55,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        this.textHolder.save(tag);
+        this.textHolder.save(tag, registries);
         if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
 

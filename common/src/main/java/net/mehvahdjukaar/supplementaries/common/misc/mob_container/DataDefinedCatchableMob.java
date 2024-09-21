@@ -11,9 +11,10 @@ import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
@@ -151,19 +152,21 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     protected record CatchMode(boolean on, boolean onlyBaby) {
         private static final Codec<CatchMode> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.BOOL.fieldOf("allow").forGetter(CatchMode::on),
-               Codec.BOOL.optionalFieldOf("only_baby", false).forGetter(CatchMode::onlyBaby)
+                Codec.BOOL.optionalFieldOf("only_baby", false).forGetter(CatchMode::onlyBaby)
         ).apply(instance, CatchMode::new));
     }
 
-    protected record LootParam(ResourceLocation tableId, float chance) {
+    protected record LootParam(ResourceKey<LootTable> tableId, float chance) {
         private static final Codec<LootParam> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("loot_table").forGetter(LootParam::tableId),
+                ResourceLocation.CODEC
+                        .xmap(i -> ResourceKey.create(Registries.LOOT_TABLE, i), ResourceKey::location)
+                        .fieldOf("loot_table").forGetter(LootParam::tableId),
                 Codec.floatRange(0, 1).fieldOf("chance").forGetter(LootParam::chance)
         ).apply(instance, LootParam::new));
 
         public void tryDropping(ServerLevel serverLevel, BlockPos pos, Entity entity) {
             if (serverLevel.random.nextFloat() < chance) {
-                LootTable lootTable = serverLevel.getServer().getLootData().getLootTable(tableId);
+                LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(tableId);
                 LootParams.Builder builder = new LootParams.Builder(serverLevel)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
                         .withParameter(LootContextParams.BLOCK_STATE, serverLevel.getBlockState(pos))

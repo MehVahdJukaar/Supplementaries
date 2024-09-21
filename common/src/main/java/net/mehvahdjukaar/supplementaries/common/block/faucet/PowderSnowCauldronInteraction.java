@@ -14,7 +14,7 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.POWDER_SNOW_CAULDRON)) {
-            return FluidOffer.of(BuiltInSoftFluids.POWDERED_SNOW.getHolder(), source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(BuiltInSoftFluids.POWDERED_SNOW, source.getValue(LayeredCauldronBlock.LEVEL));
         }
         return null;
     }

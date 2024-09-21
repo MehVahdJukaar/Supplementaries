@@ -2,10 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.misc.globe;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
-import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncGlobeDataPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -15,28 +16,54 @@ import org.jetbrains.annotations.Nullable;
 
 public class GlobeData extends SavedData {
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, GlobeData> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public GlobeData decode(RegistryFriendlyByteBuf buf) {
+            int len = buf.readVarInt();
+            byte[][] pixels = new byte[len][];
+            for (int i = 0; i < len; i++) {
+                pixels[i] = buf.readByteArray();
+            }
+            long seed = buf.readLong();
+            return new GlobeData(pixels, seed);
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf buf, GlobeData data) {
+            buf.writeVarInt(data.globePixels.length);
+            for (byte[] pixels : data.globePixels) {
+                buf.writeByteArray(pixels);
+            }
+            buf.writeLong(data.seed);
+        }
+    };
+
     private static final int TEXTURE_H = 16;
     private static final int TEXTURE_W = 32;
     public static final String DATA_NAME = "globe_data";
 
-    public final byte[][] globePixels;
-    public final long seed;
+    private final byte[][] globePixels;
+    private final long seed;
+
+    public GlobeData(byte[][] pixels, long seed) {
+        this.globePixels = pixels;
+        this.seed = seed;
+    }
 
     //generate new from seed
-    public GlobeData(long seed) {
-        this.seed = seed;
-        this.globePixels = GlobeTextureGenerator.generate(this.seed);
+    private static GlobeData generate(long seed) {
+        return new GlobeData(GlobeTextureGenerator.generate(seed), seed);
     }
 
     //from tag
-    public GlobeData(CompoundTag tag, HolderLookup.Provider provider) {
-        this.globePixels = new byte[TEXTURE_W][TEXTURE_H];
+    private static GlobeData load(CompoundTag tag, HolderLookup.Provider provider) {
+        byte[][] globePixels = new byte[TEXTURE_W][TEXTURE_H];
         for (int i = 0; i < TEXTURE_W; i++) {
-            this.globePixels[i] = tag.getByteArray("colors_" + i);
+            globePixels[i] = tag.getByteArray("colors_" + i);
         }
-        this.seed = tag.getLong("seed");
+        long seed = tag.getLong("seed");
+        return new GlobeData(globePixels, seed);
     }
-
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
@@ -61,8 +88,8 @@ public class GlobeData extends SavedData {
     public static GlobeData get(Level world) {
         if (world instanceof ServerLevel server) {
             return world.getServer().overworld().getDataStorage().computeIfAbsent(
-                    new Factory<>(() -> new GlobeData(server.getSeed()),
-                            GlobeData::new, null), DATA_NAME);
+                    new Factory<>(() -> GlobeData.generate(server.getSeed()),
+                            GlobeData::load, null), DATA_NAME);
         } else {
             return CLIENT_SIDE_INSTANCE;
         }

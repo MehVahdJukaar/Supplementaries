@@ -36,6 +36,9 @@ public class ModComponents {
     public static final Supplier<DataComponentType<PresentAddress>> ADDRESS = register("address",
             PresentAddress.CODEC, PresentAddress.STREAM_CODEC);
 
+    public static final Supplier<DataComponentType<SafeOwner>> SAFE_OWNER = register("safe_owner",
+            SafeOwner.CODEC, SafeOwner.STREAM_CODEC);
+
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC, true);
 

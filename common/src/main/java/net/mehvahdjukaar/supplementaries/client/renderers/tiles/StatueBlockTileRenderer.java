@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.phys.HitResult;
 
 
@@ -70,23 +71,26 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        GameProfile gameProfile = tile.getPlayerSkin();
+        ResolvableProfile gameProfile = tile.getPlayerSkin();
 
         if (gameProfile != null && this.canRenderName(tile)) {
-            var name = gameProfile.getName();
+            var name = gameProfile.gameProfile().getName();
             if (name != null) {
                 PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, poseStack, bufferIn, combinedLightIn);
             }
         }
-        ResourceLocation resourceLocation;
+        ResourceLocation skinTexture;
+        ResourceLocation capeTexture;
         boolean slim;
         if (gameProfile == null) {
-            resourceLocation = ModTextures.STATUE;
+            skinTexture = ModTextures.STATUE;
             slim = false;
+            capeTexture = null;
         } else {
-            PlayerSkin playerSkin = skinManager.getInsecureSkin(gameProfile);
-            resourceLocation = playerSkin.texture();
+            PlayerSkin playerSkin = skinManager.getInsecureSkin(gameProfile.gameProfile());
+            skinTexture = playerSkin.texture();
             slim = playerSkin.model() == PlayerSkin.Model.SLIM;
+            capeTexture = playerSkin.capeTexture();
         }
 
         Direction dir = tile.getDirection();
@@ -95,7 +99,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
         poseStack.translate(0, -0.25, 0);
 
-        RenderType renderType = RenderType.entityTranslucent(resourceLocation);
+        RenderType renderType = RenderType.entityTranslucent(skinTexture);
 
         StatueBlockTile.StatuePose pose = tile.getPose();
         ItemStack stack = tile.getDisplayedItem();
@@ -128,8 +132,12 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving(), slim);
         this.model.renderToBuffer(poseStack, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, -1);
 
+        if (capeTexture != null) {
+            RenderType capeType = RenderType.entityTranslucent(capeTexture);
+            VertexConsumer capeBuffer = bufferIn.getBuffer(capeType);
+            this.model.renderCloak(poseStack, capeBuffer, combinedLightIn, combinedOverlayIn);
+        }
 
-        //Todo cape or statue
         poseStack.popPose();
 
 

@@ -12,12 +12,14 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.VisualBook;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,9 +30,11 @@ import java.util.function.Function;
 public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBlockTile> {
 
     private static ModelBlockRenderer renderer;
+    private static ModelManager modelManager;
 
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+        modelManager = Minecraft.getInstance().getModelManager();
     }
 
 
@@ -129,15 +133,15 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
 
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
-        BakedModel model = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), b.getType().modelPath());
-        if(model != null) {
+        BakedModel model = ClientHelper.getModel(modelManager, ClientRegistry.BOOK_MODELS.apply(b.getType()));
+        if (model != null) {
             renderer.renderModel(poseStack.last(),
                     builder,
                     null,
                     model,
                     1.0F, 1.0F, 1.0F,
                     light, overlay);
-        }else{
+        } else {
             Supplementaries.error();
         }
         poseStack.popPose();

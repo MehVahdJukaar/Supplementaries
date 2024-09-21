@@ -1,7 +1,8 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.misc.map_data;
 
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.NativeImage;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
@@ -12,8 +13,10 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAmbientLightPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -25,6 +28,7 @@ import java.util.Objects;
 
 
 // Experimental. Can be activated by mods.
+
 public class MapLightHandler {
 
     private static boolean enabled = false;
@@ -37,8 +41,9 @@ public class MapLightHandler {
         enabled = on;
     }
 
-    public static final CustomMapData.Type<LightData> LIGHT_DATA =
-            MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("light_data"), LightData::new);
+    public static final CustomMapData.Type<Patch, LightData> LIGHT_DATA =
+            MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("light_data"), LightData::new,
+                    Patch.STREAM_CODEC);
 
     public static LightData getLightData(MapItemSavedData data) {
         return LIGHT_DATA.get(data);
@@ -88,7 +93,7 @@ public class MapLightHandler {
 
     }
 
-    public static class LightData implements CustomMapData<Counter> {
+    public static class LightData implements CustomMapData<Counter, Patch> {
 
         private static final String LIGHTMAP_TAG = "lightmap";
         public static final String MIN_X = "min_x";
@@ -117,17 +122,12 @@ public class MapLightHandler {
         }
 
         @Override
-        public void load(CompoundTag tag) {
+        public void load(CompoundTag tag, HolderLookup.Provider lookup) {
             if (tag.contains(LIGHTMAP_TAG)) {
                 CompoundTag t = tag.getCompound(LIGHTMAP_TAG);
-
                 int minX = 0;
-                if (t.contains(MIN_X)) minX = t.getInt(MIN_X);
                 int maxX = 127;
-                if (t.contains(MAX_X)) maxX = t.getInt(MAX_X);
                 int minZ = 0;
-                if (t.contains(MIN_Z)) minZ = t.getInt(MIN_Z);
-
                 for (int x = minX; x <= maxX; x++) {
                     byte[] rowData = t.getByteArray("pos_" + x);
                     if (data == null) {
@@ -141,20 +141,16 @@ public class MapLightHandler {
             }
         }
 
-        private void savePatch(CompoundTag tag, int minX, int maxX, int minZ, int maxZ,
-                               boolean pos) {
-
-            if (pos && data != null) {
+        @Override
+        public void save(CompoundTag tag, HolderLookup.Provider lookup) {
+            // save all
+            if (data != null) {
                 CompoundTag t = new CompoundTag();
-                if (minX != 0) t.putInt(MIN_X, minX);
-                if (maxX != 127) t.putInt(MAX_X, maxX);
-                if (minZ != 0) t.putInt(MIN_Z, minZ);
-
-                for (int x = minX; x <= maxX; x++) {
+                for (int x = 0; x <= 127; x++) {
                     if (data[x] != null) {
-                        byte[] rowData = new byte[maxZ - minZ + 1];
+                        byte[] rowData = new byte[127 - 0 + 1];
 
-                        System.arraycopy(data[x], minZ, rowData, 0, rowData.length);
+                        System.arraycopy(data[x], 0, rowData, 0, rowData.length);
                         t.putByteArray("pos_" + x, rowData);
                     }
                 }
@@ -163,14 +159,36 @@ public class MapLightHandler {
         }
 
         @Override
-        public void save(CompoundTag tag) {
-            // save all
-            savePatch(tag, 0, 127, 0, 127, true);
+        public void applyUpdatePatch(Patch patch) {
+            int minX = patch.minX;
+            int maxX = patch.maxX;
+            int minZ = patch.minZ;
+
+            for (int x = minX; x <= maxX; x++) {
+                byte[] rowData = patch.lights.get(x);
+
+                if (data == null) {
+                    data = new byte[128][];
+                }
+                if (data[x] == null) {
+                    data[x] = new byte[128];
+                }
+                System.arraycopy(rowData, 0, data[x], minZ, rowData.length);
+            }
         }
 
         @Override
-        public void saveToUpdateTag(CompoundTag tag, Counter dc) {
-            this.savePatch(tag, dc.minDirtyX, dc.maxDirtyX, dc.minDirtyZ, dc.maxDirtyZ, dc.posDirty);
+        public Patch createUpdatePatch(Counter counter) {
+            int minX = counter.minDirtyX;
+            int maxX = counter.maxDirtyX;
+            int minZ = counter.minDirtyZ;
+            Int2ObjectArrayMap<byte[]> lights = new Int2ObjectArrayMap<>();
+            for (int x = minX; x <= maxX; x++) {
+                if (data[x] != null) {
+                    lights.put(x, data[x]);
+                }
+            }
+            return new Patch(minX, maxX, minZ, lights);
         }
 
         @Override
@@ -179,7 +197,7 @@ public class MapLightHandler {
         }
 
         @Override
-        public Type<?> getType() {
+        public Type<Patch, ?> getType() {
             return LIGHT_DATA;
         }
 
@@ -245,6 +263,40 @@ public class MapLightHandler {
         }
     }
 
+    public record Patch(int minX, int maxX, int minZ, Int2ObjectArrayMap<byte[]> lights) {
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Patch> STREAM_CODEC = new StreamCodec<>() {
+            @Override
+            public Patch decode(RegistryFriendlyByteBuf buf) {
+                int minX = buf.readInt();
+                int maxX = buf.readInt();
+                int minZ = buf.readInt();
+                int size = buf.readVarInt();
+                Int2ObjectArrayMap<byte[]> positions = new Int2ObjectArrayMap<>(size);;
+                for (int i = 0; i < size; i++) {
+                    int x = buf.readVarInt();
+                    byte[] rowData = buf.readByteArray();
+                    positions.put(x, rowData);
+                }
+                return new Patch(minX, maxX, minZ, positions);
+
+            }
+
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, Patch patch) {
+                buf.writeInt(patch.minX);
+                buf.writeInt(patch.maxX);
+                buf.writeInt(patch.minZ);
+                buf.writeVarInt(patch.lights.size());
+                for (var entry : patch.lights.int2ObjectEntrySet()) {
+                    buf.writeVarInt(entry.getIntKey());
+                    byte[] rowData = entry.getValue();
+                    buf.writeByteArray(rowData);
+                }
+            }
+        };
+    }
+
     private static final Object2IntMap<ResourceKey<Level>> LIGHT_PER_WORLD = new Object2IntArrayMap<>();
 
 
@@ -272,6 +324,5 @@ public class MapLightHandler {
             NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
         }
     }
-
 
 }
