@@ -51,7 +51,6 @@ public class SupplementariesForgeClient {
         VibeChecker.checkVibe();
     }
 
-
     private static ShaderInstance staticNoiseShader;
     private static ShaderInstance entityOffsetShader;
 
@@ -134,8 +133,9 @@ public class SupplementariesForgeClient {
         }
 
         var creeperRenderer = event.getRenderer(EntityType.CREEPER);
-        creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
-
+        if (creeperRenderer != null) {
+            creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
+        }
         //player skins
         for (String skinType : event.getSkins()) {
             var r = event.getSkin(skinType);

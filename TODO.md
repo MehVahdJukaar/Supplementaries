@@ -8,6 +8,9 @@
 - lumisene sets stuff on fire
 - cannon camera glitchyness
 - globe sheared particle event for servers
+- heavy key getting overwritten by normal key
+- safe recipe jei
+- no jar of dirt
 
 # Supplementaries
 
