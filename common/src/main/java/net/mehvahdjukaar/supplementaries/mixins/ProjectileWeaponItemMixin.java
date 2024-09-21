@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,22 +30,21 @@ public abstract class ProjectileWeaponItemMixin {
         if (stack.getItem() instanceof QuiverItem) {
             quiverStack = stack;
         }
-        if(quiverStack == null){
-            if(shooter instanceof IQuiverEntity quiverEntity){ //client only
+        if (quiverStack == null) {
+            if (shooter instanceof IQuiverEntity quiverEntity) { //client only
                 quiverStack = quiverEntity.supplementaries$getQuiver();
-            }
-            else {
+            } else {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);
                 if (stack.getItem() instanceof QuiverItem) {
                     quiverStack = stack;
-                }else if(shooter instanceof ServerPlayer sp){
+                } else if (shooter instanceof ServerPlayer sp) {
                     //server side curio stuff
-                   quiverStack = CompatHandler.getQuiverFromModsSlots(sp).get();
+                    quiverStack = CompatHandler.getQuiverFromModsSlots(sp).get();
                 }
             }
         }
-        if(quiverStack != null){
-            var data = QuiverItem.getQuiverData(quiverStack);
+        if (quiverStack != null) {
+            var data = quiverStack.get(ModComponents.QUIVER_CONTENT.get());
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
                 if (!arrow.isEmpty()) cir.setReturnValue(arrow);

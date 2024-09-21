@@ -39,6 +39,9 @@ public class ModComponents {
     public static final Supplier<DataComponentType<SafeOwner>> SAFE_OWNER = register("safe_owner",
             SafeOwner.CODEC, SafeOwner.STREAM_CODEC);
 
+    public static final Supplier<DataComponentType<FlutePet>> FLUTE_PET = register("flute_pet",
+            FlutePet.CODEC, FlutePet.STREAM_CODEC);
+
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC, true);
 
@@ -50,6 +53,7 @@ public class ModComponents {
 
     public static final Supplier<DataComponentType<Integer>> CHARGES = register("charges",
             ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
+
 
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {

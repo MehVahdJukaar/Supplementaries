@@ -15,8 +15,8 @@ import java.util.function.Predicate;
 public class QuiverContent extends SelectableContainerContent<QuiverContent.Mutable> {
 
     public static final Codec<QuiverContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ItemStack.CODEC.listOf().fieldOf("Items").forGetter(QuiverContent::getContentCopy),
-            Codec.INT.fieldOf("SelectedSlot").forGetter(QuiverContent::getSelectedSlot)
+            ItemStack.CODEC.listOf().fieldOf("items").forGetter(QuiverContent::getContentCopy),
+            Codec.INT.fieldOf("selected_slot").forGetter(QuiverContent::getSelectedSlot)
     ).apply(instance, QuiverContent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, QuiverContent> STREAM_CODEC = StreamCodec.composite(

@@ -19,7 +19,7 @@ class ConcreteInteraction implements FaucetTarget.BlState {
                 return 1;
             }
             if (state.getBlock() instanceof ConcretePowderBlock cp) {
-                level.setBlock(pos, cp.concrete, 3);
+                level.setBlock(pos, cp.concrete.defaultBlockState(), 3);
                 return offer.minAmount();
             }
         }

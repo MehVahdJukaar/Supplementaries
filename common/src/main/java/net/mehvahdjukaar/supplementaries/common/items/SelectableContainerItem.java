@@ -233,6 +233,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
 
     // BS instance fields
 
+    //TODO: find a better way to do this
     @Deprecated(forRemoval = true)
     @NotNull
     public abstract ItemStack getFirstInInventory(Player player);

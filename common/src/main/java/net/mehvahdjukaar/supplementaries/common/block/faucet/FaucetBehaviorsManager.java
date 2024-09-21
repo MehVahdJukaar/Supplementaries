@@ -62,12 +62,8 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         dataInteractions.clear();
         map.forEach((key, json) -> {
             try {
-                var result = CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json);
-                var d = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to fluid interaction: {}", e));
-                Object o;
-                var l = d.left();
-                if (l.isPresent()) o = l.get();
-                else o = d.right().get();
+                var either = CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json).getOrThrow();
+                Object o = either.mapBoth(i -> i, f -> f);
                 dataInteractions.add(o);
                 FaucetBlockTile.registerInteraction(o);
             } catch (Exception e) {
@@ -101,7 +97,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         Player player = FakePlayerManager.getDefault(testLevel);
         InteractionHand hand = InteractionHand.MAIN_HAND;
         BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();
-        for (var e : CauldronInteraction.EMPTY.entrySet()) {
+        for (var e : CauldronInteraction.EMPTY.map().entrySet()) {
             Item i = e.getKey();
             CauldronInteraction interaction = e.getValue();
             // skip vanilla. we already registered them

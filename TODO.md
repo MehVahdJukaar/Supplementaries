@@ -41,6 +41,8 @@
 - all jar tooltips
 - minecart and other entities spawned with cusutom name
 - re check all forge item extension usage
+- test quiver actually consuming arrows
+- boakcboard and text holder new interaction (redo). also their tooltips
 
 
 # Soon

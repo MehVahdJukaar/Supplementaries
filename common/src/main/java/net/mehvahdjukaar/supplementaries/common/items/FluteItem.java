@@ -8,10 +8,11 @@ import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.components.FlutePet;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
@@ -19,13 +20,15 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +39,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -54,9 +56,8 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        var tag = pStack.getTag();
-        if (tag == null) return false;
-        return tag.contains("Pet") || super.isFoil(pStack);
+        FlutePet flutePet = pStack.get(ModComponents.FLUTE_PET.get());
+        return flutePet != null || super.isFoil(pStack);
     }
 
     /*
@@ -82,19 +83,16 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     @EventCalled
     public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         if (!(target instanceof LivingEntity)) return false;
-        CompoundTag c = stack.getTagElement("Pet");
-        if (c != null) return false;
+        FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
+
+        if (flutePet != null) return false;
         if (target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(player.getUUID())
                 || target.getType().is(ModTags.FLUTE_PET)) {
 
             if (target instanceof AbstractHorse horse && !horse.isTamed()) return false;
             else if (target instanceof Fox fox && !fox.trusts(player.getUUID())) return false;
 
-            CompoundTag com = new CompoundTag();
-            com.putString("Name", target.getName().getString());
-            com.putUUID("UUID", target.getUUID());
-
-            stack.addTagElement("Pet", com);
+            stack.set(ModComponents.FLUTE_PET.get(), FlutePet.of(target));
             player.setItemInHand(hand, stack);
             player.getCooldowns().addCooldown(stack.getItem(), 20);
             return true;
@@ -113,9 +111,9 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
             double y = player.getY();
             double z = player.getZ();
             int r = CommonConfigs.Tools.FLUTE_RADIUS.get();
-            CompoundTag com = stack.getTagElement("Pet");
-            if (com != null) {
-                Entity entity = serverLevel.getEntity(com.getUUID("UUID"));
+            FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
+            if (flutePet != null) {
+                Entity entity = serverLevel.getEntity(flutePet.uuid());
                 int maxDist = CommonConfigs.Tools.FLUTE_DISTANCE.get() * CommonConfigs.Tools.FLUTE_DISTANCE.get();
                 if (entity instanceof LivingEntity pet) {
                     if (pet.level() == player.level() && pet.distanceToSqr(player) < maxDist) {
@@ -142,17 +140,17 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     }
 
     @Override
-    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
-        super.releaseUsing(pStack, pLevel, entity, pTimeCharged);
-        pStack.hurtAndBreak(1, entity, (en) -> en.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+    public void releaseUsing(ItemStack stack, Level pLevel, LivingEntity entity, int pTimeCharged) {
+        super.releaseUsing(stack, pLevel, entity, pTimeCharged);
+        stack.hurtAndBreak(1, entity, LivingEntity.getSlotForHand(entity.getUsedItemHand()));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        CompoundTag tag = stack.getTagElement("Pet");
-        if (tag != null) {
-            tooltip.add(Component.literal(tag.getString("Name")).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
+        if (flutePet != null) {
+            flutePet.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }
     }
 
@@ -171,7 +169,7 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
         by = by.xRot(xRot).yRot(yRot);
         bz = bz.xRot(xRot).yRot(yRot);
 
-        //rotate a vector on y axis
+        //rotate a vector on y-axis
         Vec3 armVec = new Vec3(0, 0, 0.28 + level.random.nextFloat() * 0.5);
 
         int mirror = entity.getMainArm() == HumanoidArm.RIGHT ^ entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? -1 : 1;
@@ -193,22 +191,24 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     }
 
     @Override
-    public void animateItemFirstPerson(LivingEntity entity, ItemStack stack, InteractionHand hand, PoseStack matrixStack, float partialTicks, float pitch, float attackAnim, float handHeight) {
+    public void animateItemFirstPerson(Player player, ItemStack stack, InteractionHand hand, HumanoidArm arm,
+                                       PoseStack poseStack, float partialTicks, float pitch, float attackAnim, float handHeight) {
+
         //is using item
-        if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
+        if (player.isUsingItem() && player.getUseItemRemainingTicks() > 0 && player.getUsedItemHand() == hand) {
             //bow anim
-            int mirror = entity.getMainArm() == HumanoidArm.RIGHT ^ hand == InteractionHand.MAIN_HAND ? -1 : 1;
+            int mirror = player.getMainArm() == HumanoidArm.RIGHT ^ hand == InteractionHand.MAIN_HAND ? -1 : 1;
 
-            matrixStack.translate(-0.4 * mirror, 0.2, 0);
+            poseStack.translate(-0.4 * mirror, 0.2, 0);
 
-            float timeLeft = stack.getUseDuration() - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = stack.getUseDuration(player) - (player.getUseItemRemainingTicks() - partialTicks + 1.0F);
 
             float sin = Mth.sin((timeLeft - 0.1F) * 1.3F);
 
-            matrixStack.translate(0, sin * 0.0038F, 0);
-            matrixStack.mulPose(Axis.ZN.rotationDegrees(90));
+            poseStack.translate(0, sin * 0.0038F, 0);
+            poseStack.mulPose(Axis.ZN.rotationDegrees(90));
 
-            matrixStack.scale(1.0F * mirror, -1.0F * mirror, -1.0F);
+            poseStack.scale(1.0F * mirror, -1.0F * mirror, -1.0F);
         }
     }
 

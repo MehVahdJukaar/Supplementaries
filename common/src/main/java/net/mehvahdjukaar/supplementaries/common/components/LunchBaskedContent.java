@@ -23,9 +23,9 @@ public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedCo
     protected final MutableComponent OPEN_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.open");
 
     public static final Codec<LunchBaskedContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ItemStack.CODEC.listOf().fieldOf("Items").forGetter(LunchBaskedContent::getContentCopy),
-            Codec.INT.fieldOf("SelectedSlot").forGetter(LunchBaskedContent::getSelectedSlot),
-            Codec.BOOL.fieldOf("Open").forGetter(LunchBaskedContent::canEatFrom)
+            ItemStack.CODEC.listOf().fieldOf("items").forGetter(LunchBaskedContent::getContentCopy),
+            Codec.INT.fieldOf("selected_slot").forGetter(LunchBaskedContent::getSelectedSlot),
+            Codec.BOOL.fieldOf("open").forGetter(LunchBaskedContent::canEatFrom)
     ).apply(instance, LunchBaskedContent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LunchBaskedContent> STREAM_CODEC = StreamCodec.composite(

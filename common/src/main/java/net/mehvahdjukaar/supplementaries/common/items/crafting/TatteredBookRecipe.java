@@ -3,30 +3,31 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TatteredBookRecipe extends CustomRecipe {
-    public TatteredBookRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public TatteredBookRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingInput inv, Level level) {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
         Boolean clear = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.isEmpty()) {
             } else if (isValidBook(stack)) {
@@ -51,9 +52,9 @@ public class TatteredBookRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider access) {
         boolean antique = true;
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             if (inv.getItem(i).getItem() == ModRegistry.SOAP.get()) {
                 antique = false;
                 break;

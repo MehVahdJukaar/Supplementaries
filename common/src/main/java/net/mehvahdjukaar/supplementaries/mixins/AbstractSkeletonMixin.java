@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +33,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
     }
 
     @Inject(method = "finalizeSpawn", at = @At("TAIL"))
-    public void supp$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
+    public void supp$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && CommonConfigs.Tools.QUIVER_ENABLED.get()) {
             if (random.nextFloat() < CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get() * difficulty.getSpecialMultiplier()) {
                 ((IQuiverEntity) this).supplementaries$setQuiver(
@@ -41,15 +43,21 @@ public abstract class AbstractSkeletonMixin extends Monster {
     }
 
     @Inject(method = "performRangedAttack", at = @At(value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;getArrow(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/projectile/AbstractArrow;",
-            shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void supp$consumeQuiverArrow(LivingEntity target, float velocity, CallbackInfo ci, ItemStack arrow) {
+            target = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;getArrow(Lnet/minecraft/world/item/ItemStack;FLnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/projectile/AbstractArrow;",
+            shift = At.Shift.AFTER))
+    public void supp$consumeQuiverArrow(LivingEntity target, float velocity, CallbackInfo ci, @Local(ordinal = 0) ItemStack arrow) {
         if (this instanceof IQuiverEntity quiverEntity) {
             var quiver = quiverEntity.supplementaries$getQuiver();
             //ignore offhand as it has priority over quiver
             if (!quiver.isEmpty() && this.getItemInHand(InteractionHand.OFF_HAND).getItem() != arrow.getItem()) {
-                var data = QuiverItem.getQuiverData(quiver);
-                if (data != null) data.consumeSelected();
+                var data = quiver.get(ModComponents.QUIVER_CONTENT.get());
+                if (data != null){
+                    var mutable = data.toMutable();
+                    mutable.getSelected().shrink(1);
+                    quiver.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());
+                }
+
+
             }
         }
     }

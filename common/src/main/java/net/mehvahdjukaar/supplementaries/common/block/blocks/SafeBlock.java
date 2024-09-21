@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -154,7 +156,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            spawnAsItemWithContent(level, pos, player, tile);
+            BlockUtil.saveTileToItem(tile);
             //forge has a better override for this (no particls)
             if (PlatHelper.getPlatform().isFabric()) {
                 if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get()) {
@@ -179,10 +181,10 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            saveTileToItem(tile, itemstack);
+            BlockUtil.saveTileToItem(tile);
         }
         return itemstack;
     }
@@ -191,9 +193,6 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            if (stack.hasCustomHoverName()) {
-                tile.setCustomName(stack.getHoverName());
-            }
             if (placer instanceof Player) {
                 if (tile.getOwner() == null) {
                     tile.setOwner(placer.getUUID());

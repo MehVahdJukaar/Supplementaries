@@ -104,7 +104,7 @@ public class FrameBlockTile extends MimicBlockTile {
                         if (!player.getAbilities().instabuild && !level.isClientSide()) {
                             stack.shrink(1);
                         }
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
                     }
                 }
             } else if (canStrip && item instanceof AxeItem && !this.getHeldBlock().isAir() && CommonConfigs.Building.AXE_TIMBER_FRAME_STRIP.get()) {
@@ -116,11 +116,11 @@ public class FrameBlockTile extends MimicBlockTile {
                         SoundSource.BLOCKS, 1, 1);
                 stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
                 level.setBlockAndUpdate(pos, held);
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
         }
         //don't try filling with other hand
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
     public static boolean isValidBlock(@Nullable BlockState state, BlockPos pos, Level world) {

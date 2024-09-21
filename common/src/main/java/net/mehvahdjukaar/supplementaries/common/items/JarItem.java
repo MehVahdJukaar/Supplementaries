@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -120,60 +121,11 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
             if (!MiscUtils.showsHints(tooltipFlag)) return;
             tooltipComponents.add(HINT);
         } else {
-            if (compoundTag.contains("LootTable", 8)) {
-                tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
-            }
+            ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
 
-            if (compoundTag.contains("FluidHolder")) {
-                CompoundTag com = compoundTag.getCompound("FluidHolder");
-                SoftFluidStack fluid = SoftFluidStack.load(com);
-                if (!fluid.isEmpty()) {
-                    CompoundTag nbt = null;
-                    String add = "";
-                    if (fluid.hasTag()) {
-                        nbt = fluid.getTag();
-                        if (nbt.contains("Bottle")) {
-                            String bottle = nbt.getString("Bottle").toLowerCase(Locale.ROOT);
-                            if (!bottle.equals("regular")) add = "_" + bottle;
-                        }
-                    }
-
-                    tooltip.add(Component.translatable("message.supplementaries.fluid_tooltip",
-                            Component.translatable(fluid.fluid().getTranslationKey() + add), fluid.getCount()).withStyle(ChatFormatting.GRAY));
-                    if (nbt != null) {
-                        PotionNBTHelper.addPotionTooltip(nbt, tooltip, 1);
-                        return;
-                    }
-                }
-            }
-
-            if (compoundTag.contains("Items", 9)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(27, ItemStack.EMPTY);
-                ContainerHelper.loadAllItems(compoundTag, nonnulllist);
-                int i = 0;
-                int j = 0;
-
-                for (ItemStack itemstack : nonnulllist) {
-                    if (!itemstack.isEmpty()) {
-                        ++j;
-                        if (i <= 4) {
-                            ++i;
-                            MutableComponent iformattabletextcomponent = itemstack.getHoverName().copy();
-
-                            String s = iformattabletextcomponent.getString();
-                            s = s.replace(" Bucket", "");
-                            s = s.replace(" Bottle", "");
-                            s = s.replace("Bucket of ", "");
-                            MutableComponent str = Component.literal(s);
-
-                            str.append(" x").append(String.valueOf(itemstack.getCount()));
-                            tooltip.add(str.withStyle(ChatFormatting.GRAY));
-                        }
-                    }
-                }
-                if (j - i > 0) {
-                    tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
-                }
+            SoftFluidTankView tank = stack.get(ModComponents.SOFT_FLUID_CONTENT.get());
+            if(tank != null){
+                tank.addToTooltip(context, tooltipComponents::add, tooltipFlag);
             }
         }
     }

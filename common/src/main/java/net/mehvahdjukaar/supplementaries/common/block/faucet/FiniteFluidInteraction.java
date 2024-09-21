@@ -17,7 +17,7 @@ public class FiniteFluidInteraction implements FaucetTarget.Fluid, FaucetSource.
         var vanillaF = offer.fluid().getVanillaFluid();
         if (vanillaF instanceof FiniteFluid ff) {
             int oldLayers = 0;
-            if (existing.getType().isSame(vanillaF)) {
+            if (existing.getType().isSame(vanillaF.value())) {
                 oldLayers = existing.getAmount();
             } else if (!existing.isEmpty() || !level.getBlockState(pos).isAir()) {
                 return null;

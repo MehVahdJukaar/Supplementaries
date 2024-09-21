@@ -100,8 +100,8 @@ public class GlobeData extends SavedData {
     }
 
 
-    public static void set(ServerLevel level, GlobeData pData) {
-        level.getServer().overworld().getDataStorage().set(DATA_NAME, pData);
+    public static void recreateFromSeed(ServerLevel level, long seed) {
+        level.getServer().overworld().getDataStorage().set(DATA_NAME, GlobeData.generate(seed));
     }
 
     public static void setClientData(GlobeData data) {

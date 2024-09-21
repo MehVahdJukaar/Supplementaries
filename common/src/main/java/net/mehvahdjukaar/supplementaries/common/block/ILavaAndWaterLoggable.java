@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -13,12 +14,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContainer {
 
-    default boolean canPlaceLiquid(BlockGetter reader, BlockPos pos, BlockState state, Fluid fluid) {
+    @Override
+    default boolean canPlaceLiquid(@Nullable Player player, BlockGetter reader, BlockPos pos, BlockState state, Fluid fluid) {
         return (!state.getValue(ModBlockProperties.LAVALOGGED) && fluid == Fluids.LAVA)
                 || (!state.getValue(BlockStateProperties.WATERLOGGED) && fluid == Fluids.WATER);
     }
@@ -55,8 +58,7 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
 
     }
 
-
-    default ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+    default ItemStack pickupBlock(@Nullable Player player,LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         if (pState.getValue(BlockStateProperties.WATERLOGGED)) {
             pLevel.setBlock(pPos, pState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
             if (!pState.canSurvive(pLevel, pPos)) {
