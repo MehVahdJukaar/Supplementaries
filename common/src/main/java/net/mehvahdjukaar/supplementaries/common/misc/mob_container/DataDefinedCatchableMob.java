@@ -35,7 +35,7 @@ import java.util.Optional;
 
 public final class DataDefinedCatchableMob implements ICatchableMob {
 
-    public static final MapCodec<DataDefinedCatchableMob> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static final Codec<DataDefinedCatchableMob> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.listOf().fieldOf("owners").forGetter(p -> p.owners),
             Codec.FLOAT.fieldOf("width_increment").forGetter(p -> p.widthIncrement),
             Codec.FLOAT.fieldOf("height_increment").forGetter(p -> p.heightIncrement),
@@ -50,7 +50,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     ).apply(instance, DataDefinedCatchableMob::new));
 
     // sub optimal code. too bad
-    public static final StreamCodec<ByteBuf, DataDefinedCatchableMob> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC.codec());
+    public static final StreamCodec<ByteBuf, DataDefinedCatchableMob> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     private final List<ResourceLocation> owners;
     final float widthIncrement;

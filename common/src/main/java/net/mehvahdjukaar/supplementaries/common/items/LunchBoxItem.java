@@ -18,6 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -67,7 +68,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
             if (food.isEmpty()) {
                 return InteractionResultHolder.fail(stack);
             }
-            if (food.isEdible()) {
+            if (food.has(DataComponents.FOOD)) {
                 if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
                     player.startUsingItem(hand);
                     return InteractionResultHolder.consume(stack);
@@ -94,8 +95,9 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
                     0.3F, 1.6F + player.level().getRandom().nextFloat() * 0.3F);
         }
 
-        data.switchMode();
-
+        var mutable = data.toMutable();
+        mutable.switchMode();
+        stack.set(getComponentType(), mutable.toImmutable());
         return true;
     }
 
@@ -111,16 +113,16 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         if (data != null && data.canEatFrom()) {
             return SuppPlatformStuff.getFoodProperties(data.getSelected(), entity);
         }
-        return super.getFoodProperties();
+        return null;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());
-        if (data.canEatFrom()) {
-            return data.getSelected().getUseDuration();
+        if (data != null && data.canEatFrom()) {
+            return data.getSelected().getUseDuration(livingEntity);
         }
-        return super.getUseDuration(stack);
+        return super.getUseDuration(stack, livingEntity);
     }
 
     @Override
@@ -136,21 +138,26 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());
         if (data != null && data.canEatFrom()) {
+            var mutable = data.toMutable();
             ItemStack selected = data.getSelected();
             //assume it will be decremented by at most 1
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = copy.finishUsingItem(level, livingEntity);
+            boolean success = false;
             if (result.isEmpty()) {
-                data.consumeSelected();
+                mutable.getSelected().shrink(1);
+                success = true;
             } else if (result != copy) {
-                data.consumeSelected();
-                ItemStack remaining = data.tryAdding(result);
+                mutable.getSelected().shrink(1);
+                ItemStack remaining = mutable.tryAdding(result);
+                success = true;
 
                 if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
                     p.drop(remaining, false);
                 }
             }
+            if (success) stack.set(getComponentType(), mutable.toImmutable());
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
@@ -199,7 +206,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         var animation = toInsert.getItem().getUseAnimation(toInsert);
         return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }
-
 
 
 }

@@ -72,6 +72,7 @@ public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedCo
 
         @Override
         public LunchBaskedContent toImmutable() {
+            this.updateSelectedIfNeeded();
             return new LunchBaskedContent(this.stacks, this.selectedSlot, this.isOpen);
         }
 

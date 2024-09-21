@@ -79,27 +79,6 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         return this.saveWithoutMetadata(registries);
     }
 
-    // does all the calculation for handling player interaction.
-    public boolean handleInteraction(Player player, InteractionHand hand) {
-
-        //interact with fluid holder
-        if (this.fluidHolder.interactWithPlayer(player, hand, level, worldPosition)) {
-            return true;
-        }
-        //empty hand: eat food
-        if (!player.isShiftKeyDown()) {
-            //from drink
-            if (CommonConfigs.Building.GOBLET_DRINK.get()) {
-                boolean b = this.fluidHolder.tryDrinkUpFluid(player, this.level);
-                if (b && player instanceof ServerPlayer serverPlayer) {
-                    Utils.awardAdvancement(serverPlayer, Supplementaries.res("nether/goblet"));
-                }
-                return b;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);

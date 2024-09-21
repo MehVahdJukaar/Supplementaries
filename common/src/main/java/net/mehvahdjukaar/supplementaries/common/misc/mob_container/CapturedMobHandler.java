@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
@@ -42,8 +43,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         CUSTOM_MOB_PROPERTIES.clear();
         var list = new ArrayList<DataDefinedCatchableMob>();
         jsons.forEach((key, json) -> {
-            var v = DataDefinedCatchableMob.CODEC.parse(JsonOps.INSTANCE, json);
-            var data = v.getOrThrow(false, e -> Supplementaries.LOGGER.error("failed to parse captured mob properties: {}", e));
+            var data = DataDefinedCatchableMob.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
             if (key.getPath().equals("generic_fish")) {
                 moddedFishProperty = data;
             } else {

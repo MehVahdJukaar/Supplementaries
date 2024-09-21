@@ -8,12 +8,8 @@ import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -21,7 +17,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +25,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -49,7 +47,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlock {
     public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
@@ -59,7 +56,6 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final ResourceLocation CONTENTS = ResourceLocation.withDefaultNamespace("contents");
-    private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
 
     public SafeBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0));
@@ -145,15 +141,12 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (stack.has(DataComponents.CONTAINER_LOOT)) {
-            tooltipComponents.add(UNKNOWN_CONTENTS);
+
+        SafeOwner owner = stack.get(ModComponents.SAFE_OWNER.get());
+        if (owner != null) {
+            owner.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }
-        else{
-            SafeOwner owner = stack.get(ModComponents.SAFE_OWNER.get());
-            if (owner != null) {
-                owner.addToTooltip(context, tooltipComponents::add, tooltipFlag);
-            }
-        }
+        ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
 
     }
 

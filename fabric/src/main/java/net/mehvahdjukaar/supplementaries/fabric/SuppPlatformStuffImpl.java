@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -110,7 +111,7 @@ public class SuppPlatformStuffImpl {
     }
 
     public static FoodProperties getFoodProperties(ItemStack selected, LivingEntity entity) {
-        return selected.getItem().getFoodProperties();
+        return selected.get(DataComponents.FOOD);
     }
 
     public static SoundType getSoundType(BlockState blockState, BlockPos pos, Level level, Entity entity) {

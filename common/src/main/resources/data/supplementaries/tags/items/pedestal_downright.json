@@ -1,7 +1,10 @@
 {
   "replace": false,
   "values": [
-{"id":"minecraft:trident","required":false}
+    {
+      "id": "minecraft:trident",
+      "required": false
+    }
   ]
 }
 

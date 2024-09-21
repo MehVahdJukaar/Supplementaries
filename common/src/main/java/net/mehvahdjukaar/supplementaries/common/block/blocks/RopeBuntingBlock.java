@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -197,13 +198,13 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && tile.isAccessibleBy(player)) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile) {
             Optional<Direction> closest = findClosestConnection(state, pos, hit.getLocation());
-            if (closest.isPresent()) return tile.interactWithPlayerItem(player, handIn, stack, closest.get().get2DDataValue());
+            if (closest.isPresent()) return tile.interactWithPlayerItem(player, hand, stack, closest.get().get2DDataValue());
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @ForgeOverride

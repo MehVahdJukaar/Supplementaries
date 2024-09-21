@@ -56,6 +56,10 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         return stacks;
     }
 
+    public ItemStack getSelectedUnsafe(){
+        return this.stacks.get(this.selectedSlot);
+    }
+
     public ItemStack getSelected() {
         return this.stacks.get(this.selectedSlot).copy();
     }
@@ -115,7 +119,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
     }
 
 
-    public abstract static class Mut<T extends SelectableContainerContent> {
+    public abstract static class Mut<T extends SelectableContainerContent<?>> {
 
         protected NonNullList<ItemStack> stacks;
         protected int selectedSlot;
@@ -143,6 +147,10 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return this.stacks.get(slot);
         }
 
+        public ItemStack getSelected() {
+            return this.stacks.get(this.selectedSlot);
+        }
+
         public List<ItemStack> getStacks() {
             return stacks;
         }
@@ -152,7 +160,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return this.stacks.size();
         }
 
-        public void updateSelectedIfNeeded() {
+        protected void updateSelectedIfNeeded() {
             this.cycle(0); //this works
         }
 
@@ -222,7 +230,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         public ItemStack tryAdding(ItemStack pInsertedStack) {
             return tryAdding(pInsertedStack, false);
         }
-
 
 
         public boolean cycle() {

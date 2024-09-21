@@ -112,11 +112,8 @@ public class DispenserBehaviorsManager {
             //default behaviors for modded items
             var bombBehavior = new BombsBehavior();
             event.register(ModRegistry.BOMB_ITEM.get(), bombBehavior);
-            event.register(ModRegistry.BOMB_ITEM_ON.get(), bombBehavior);
             event.register(ModRegistry.BOMB_BLUE_ITEM.get(), bombBehavior);
-            event.register(ModRegistry.BOMB_BLUE_ITEM_ON.get(), bombBehavior);
             event.register(ModRegistry.BOMB_SPIKY_ITEM.get(), bombBehavior);
-            event.register(ModRegistry.BOMB_SPIKY_ITEM_ON.get(), bombBehavior);
         }
         //gunpowder
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {

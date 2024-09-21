@@ -11,16 +11,15 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +27,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -68,14 +67,20 @@ public class ModCreativeTabs {
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
         Map<ResourceKey<CreativeModeTab>, List<ItemStack>> map = new HashMap<>();
         CreativeModeTabs.tabs().forEach(t -> map.putIfAbsent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(t).get(), new ArrayList<>()));
-        var dummy = new RegHelper.ItemToTabEvent((creativeModeTab, itemStackPredicate, reverse, itemStacks) -> {
-            var l = map.computeIfAbsent(creativeModeTab, t -> new ArrayList<>());
-            if (reverse) {
-                var v = new ArrayList<>(itemStacks);
-                Collections.reverse(v);
-                l.addAll(v);
-            } else l.addAll(itemStacks);
-        });
+        var dummy = new RegHelper.ItemToTabEvent() {
+
+            @Override
+            public void addItems(ResourceKey<CreativeModeTab> resourceKey, @Nullable Predicate<ItemStack> predicate,
+                                 boolean reverse, List<ItemStack> list) {
+                var l = map.computeIfAbsent(resourceKey, t -> new ArrayList<>());
+                if (reverse) {
+                    var v = new ArrayList<>(list);
+                    Collections.reverse(v);
+                    l.addAll(v);
+                } else l.addAll(list);
+            }
+        };
+
         registerItemsToTabs(dummy);
         for (var e : map.values()) {
             NON_HIDDEN_ITEMS.addAll(e);
@@ -731,29 +736,15 @@ public class ModCreativeTabs {
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
         SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
-
-        if (CommonConfigs.Functional.JAR_COOKIES.get()) {
-            for (var i : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.COOKIES)) {
-                ItemStack regItem = new ItemStack(i);
-                CompoundTag com = new CompoundTag();
-                if (tempTile.canPlaceItem(0, regItem)) {
-                    regItem.setCount(tempTile.getMaxStackSize());
-                    ContainerHelper.saveAllItems(com, NonNullList.withSize(1, regItem));
-                    tryAddJar(items, com);
-                }
-            }
-        }
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
                 if (!s.isEnabled()) continue;
                 if (h.is(BuiltInSoftFluids.POTION) || s.isEmptyFluid()) continue;
-                CompoundTag com = new CompoundTag();
                 fluidHolder.clear();
                 fluidHolder.setFluid(SoftFluidStack.of(h, 100));
                 fluidHolder.capCapacity();
-                fluidHolder.save(com);
-                tryAddJar(items, com);
+                tryAddJar(items, fluidHolder);
             }
 
             for (var potion : BuiltInRegistries.POTION.holders().toList()) {
@@ -761,19 +752,17 @@ public class ModCreativeTabs {
                 fluidStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
                 fluidHolder.setFluid(fluidStack);
                 fluidHolder.capCapacity();
-                CompoundTag tag = new CompoundTag();
-                fluidHolder.save(tag);
-                tryAddJar(items, tag);
+                tryAddJar(items, fluidHolder);
             }
         }
         return items.toArray(ItemStack[]::new);
     }
 
 
-    private static void tryAddJar(List<ItemStack> items, CompoundTag com) {
-        if (!com.isEmpty()) {
+    private static void tryAddJar(List<ItemStack> items, SoftFluidTank tank) {
+        if (!tank.isEmpty()) {
             ItemStack returnStack = new ItemStack(ModRegistry.JAR_ITEM.get());
-            returnStack.addTagElement("BlockEntityTag", com);
+            returnStack.set(ModComponents.SOFT_FLUID_CONTENT.get(), SoftFluidTankView.of(tank));
             for (ItemStack i : items) {
                 if (i.equals(returnStack)) return;
             }

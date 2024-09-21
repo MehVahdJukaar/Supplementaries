@@ -59,6 +59,7 @@ public class QuiverContent extends SelectableContainerContent<QuiverContent.Muta
 
         @Override
         public QuiverContent toImmutable() {
+            this.updateSelectedIfNeeded();
             return new QuiverContent(this.stacks, this.selectedSlot);
         }
 

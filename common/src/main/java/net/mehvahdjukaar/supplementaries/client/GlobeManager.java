@@ -71,7 +71,7 @@ public class GlobeManager {
         private void updateTexture(Level world) {
             var data = GlobeData.get(world);
             if (data == null) return;
-            byte[][] pixels = data.globePixels;
+            byte[][] pixels = data.getPixels();
 
             for (int i = 0; i < 16; ++i) {
                 for (int j = 0; j < 32; ++j) {

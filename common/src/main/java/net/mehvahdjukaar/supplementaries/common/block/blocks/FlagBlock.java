@@ -117,7 +117,7 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
             if (itemstack.getItem() instanceof MapItem) {
                 if (!world.isClientSide) {
                     if (MapItem.getSavedData(itemstack, world) instanceof ExpandedMapData data) {
-                        data.toggleCustomDecoration(world, pos);
+                        data.ml$toggleCustomDecoration(world, pos);
                     }
                 }
                 return InteractionResult.sidedSuccess(world.isClientSide);

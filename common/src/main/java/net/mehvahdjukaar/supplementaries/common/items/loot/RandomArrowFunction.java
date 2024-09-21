@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
@@ -83,8 +84,9 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
     }
 
     private static ItemStack createRandomQuiver(RandomSource random, ItemStack quiver, int amount) {
-        var data = QuiverItem.getQuiverData(quiver);
+        var data = quiver.get(ModComponents.QUIVER_CONTENT.get());
         if (data == null) return quiver;
+        var mutable = data.toMutable();
         int tries = 0;
         while (amount > 0 && tries < 10) {
             int stackAmount = random.nextInt(1, 7);
@@ -92,10 +94,11 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
             stackAmount = Math.min(amount, stackAmount);
             amount -= stackAmount;
             arrow.setCount(stackAmount);
-            data.tryAdding(arrow);
+            mutable.tryAdding(arrow);
             tries++;
         }
-        data.setSelectedSlot(0);
+        mutable.setSelectedSlot(0);
+        quiver.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());
         return quiver;
     }
 

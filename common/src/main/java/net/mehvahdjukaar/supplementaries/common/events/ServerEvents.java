@@ -24,6 +24,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -235,17 +236,19 @@ public class ServerEvents {
     private static boolean takeArrow(Entity itemEntity, Player player, ItemStack stack) {
         ItemStack quiverItem = QuiverItem.getQuiver(player);
         if (!quiverItem.isEmpty()) {
-            var data = QuiverItem.getQuiverData(quiverItem);
+            var data = quiverItem.get(ModComponents.QUIVER_CONTENT.get());
             if (data != null) {
+                var mutable = data.toMutable();
                 ItemStack copy = stack.copy();
                 int count = copy.getCount();
-                int newCount = data.tryAdding(copy, true).getCount();
+                int newCount = mutable.tryAdding(copy, true).getCount();
                 if (count != newCount) {
                     player.take(itemEntity, count);
                     stack.setCount(newCount);
                     if (stack.isEmpty()) {
                         itemEntity.discard();
                     }
+                    stack.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());
                     return true;
                 }
             }

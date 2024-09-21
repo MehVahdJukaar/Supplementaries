@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.effects;
 
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.Entity;
@@ -13,8 +14,8 @@ public class OverencumberedEffect extends MobEffect {
 
     public OverencumberedEffect() {
         super(MobEffectCategory.HARMFUL, 0x6C451F);
-        this.addAttributeModifier(Attributes.MOVEMENT_SPEED, "2303DE5E-8CE8-4030-940E-614C1F160830",
-                -0.15F, AttributeModifier.Operation.MULTIPLY_TOTAL);
+        this.addAttributeModifier(Attributes.MOVEMENT_SPEED, Supplementaries.res("overencumbered_speed_debuff"),
+                -0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override
@@ -23,8 +24,8 @@ public class OverencumberedEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-
+    public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
+        return false;
     }
 
     @Override

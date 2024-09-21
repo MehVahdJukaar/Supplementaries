@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundFluteParrotsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -27,7 +28,7 @@ public abstract class SongInstrumentItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return 72000;
     }
 
@@ -35,7 +36,7 @@ public abstract class SongInstrumentItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         player.startUsingItem(hand);
         if (!world.isClientSide) {
-            NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
         }
         return InteractionResultHolder.consume(player.getItemInHand(hand));
     }
@@ -54,7 +55,7 @@ public abstract class SongInstrumentItem extends Item {
     public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity entity, int pTimeCharged) {
         SongsManager.clearCurrentlyPlaying(entity.getUUID());
         if (!pLevel.isClientSide) {
-            NetworkHelper.sentToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(entity, new ClientBoundFluteParrotsPacket(entity, false));
         }
     }
 

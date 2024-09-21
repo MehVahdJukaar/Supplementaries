@@ -77,8 +77,6 @@ public final class SafeOwner implements TooltipProvider {
                         tooltipAdder.accept((Component.translatable("message.supplementaries.safe.owner", ownerName))
                                 .withStyle(ChatFormatting.GRAY));
                     }
-                    //TODO: this is wrong. needs to be added below aswell.also check quark configs and account for both modes.
-                    ItemsUtil.addShulkerLikeTooltips(compoundTag, tooltip);
                     return;
                 }
             }

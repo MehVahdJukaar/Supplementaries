@@ -65,6 +65,10 @@ public class GlobeData extends SavedData {
         return new GlobeData(globePixels, seed);
     }
 
+    public byte[][] getPixels() {
+        return globePixels;
+    }
+
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         for (int i = 0; i < globePixels.length; i++) {

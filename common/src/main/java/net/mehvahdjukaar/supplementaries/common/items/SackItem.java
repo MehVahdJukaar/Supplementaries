@@ -9,8 +9,7 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,9 +25,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class SackItem extends BlockItem {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if (!CommonConfigs.Functional.SACK_PENALTY.get()) return;
         if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player &&
-                !player.isCreative() && !entityIn.isSpectator() && stack.getTagElement("BlockEntityTag") != null) {
+                !player.isCreative() && !entityIn.isSpectator()) {
             //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
             //keep refreshing for better accuracy
             float amount;
@@ -62,10 +61,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
-            CompoundTag tag = stack.getTagElement("BlockEntityTag");
-            if (tag != null) {
-                ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
-            }
+            ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
         }
     }
 
@@ -76,10 +72,11 @@ public class SackItem extends BlockItem {
 
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
-        CompoundTag compoundtag = pItemEntity.getItem().getTag();
-        if (compoundtag != null) {
-            ListTag listtag = compoundtag.getCompound("BlockEntityTag").getList("Items", 10);
-            ItemUtils.onContainerDestroyed(pItemEntity, listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of));
+        ItemStack stack = pItemEntity.getItem();
+        var contents = stack.get(DataComponents.CONTAINER);
+        if (contents != null) {
+            stack.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+            ItemUtils.onContainerDestroyed(pItemEntity, contents.nonEmptyItemsCopy());
         }
     }
 
@@ -98,9 +95,9 @@ public class SackItem extends BlockItem {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
-            CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
-            if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new InventoryTooltip(cmp, this, CommonConfigs.Functional.SACK_SLOTS.get()));
+            if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
+                var container = pStack.get(DataComponents.CONTAINER);
+                return Optional.of(new InventoryTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();
@@ -117,19 +114,13 @@ public class SackItem extends BlockItem {
 
     //0 nothing, 1 non empty sack. In between for custom non full stacks
     public static float getEncumber(ItemStack slotItem) {
-        if (slotItem.getItem() instanceof SackItem) {
-            CompoundTag tag = slotItem.getTag();
-            if (tag != null) {
-                var bet = tag.getCompound("BlockEntityTag");
-                if (!bet.isEmpty()) {
-                    var l = bet.getList("Items", 10);
-                    if (!l.isEmpty()) return 1;
-                }
+        if (slotItem.is(ModTags.OVERENCUMBERING)) {
+            ItemContainerContents contents = slotItem.get(DataComponents.CONTAINER);
+            if (contents != null) {
+                return contents != ItemContainerContents.EMPTY ? 1 : 0;
+            } else {
+                return slotItem.getCount() / (float) slotItem.getMaxStackSize();
             }
-            return 0;
-        } else if (slotItem.is(ModTags.OVERENCUMBERING)) {
-            if (slotItem.hasTag()) return 1;
-            return slotItem.getCount() / (float) slotItem.getMaxStackSize();
         }
         return 0;
     }

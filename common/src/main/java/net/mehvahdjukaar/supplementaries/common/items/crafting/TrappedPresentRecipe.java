@@ -17,14 +17,15 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TrappedPresentRecipe extends CustomRecipe {
-    public TrappedPresentRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
-        super(resourceLocation, category);
+
+    public TrappedPresentRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     public boolean matches(CraftingContainer craftingContainer, Level level) {
         int i = 0;
         int j = 0;
-
+//TODO: pretty sure vanilla now has a way to make these since they use components
         for (int k = 0; k < craftingContainer.getContainerSize(); ++k) {
             ItemStack itemstack = craftingContainer.getItem(k);
             if (!itemstack.isEmpty()) {

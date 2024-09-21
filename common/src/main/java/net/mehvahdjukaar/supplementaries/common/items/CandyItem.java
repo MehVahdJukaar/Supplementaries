@@ -20,7 +20,7 @@ public class CandyItem extends Item {
     //TODO: use capability here
 
     private static final FoodProperties CANDIE_FOOD = (new FoodProperties.Builder())
-            .nutrition(1).saturationMod(0.2F).fast().alwaysEat().build();
+            .nutrition(1).saturationModifier(0.2F).fast().alwaysEdible().build();
     private static final int SUGAR_PER_CANDY = 10 * 20;
     private static final int EFFECT_THRESHOLD = 80 * 20;
 

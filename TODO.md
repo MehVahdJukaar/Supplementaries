@@ -39,7 +39,8 @@
 - urn broken extra particles
 - test all containers with loot table in spectator
 - all jar tooltips
-- moonlight map data stuff via stream codecs on update tag
+- minecart and other entities spawned with cusutom name
+- re check all forge item extension usage
 
 
 # Soon

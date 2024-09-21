@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -125,14 +125,14 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return this.interactWithPlayerItem(state, level, pos, player, hand, stack);
+        return this.lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
     }
 
     @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor level, FireSoundType fireSourceType) {
+    public boolean tryLightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor level, FireSoundType fireSourceType) {
         //extra can light up checks
         if (shouldNotHaveFire(state, pos, level)) return false;
-        var success = ILightable.super.lightUp(player, state, pos, level, fireSourceType);
+        var success = ILightable.super.tryLightUp(player, state, pos, level, fireSourceType);
         if (success && level instanceof ServerLevel sl) {
             MiscUtils.scheduleTickOverridingExisting(sl, pos, this, getReactToFireDelay());
         }
@@ -161,7 +161,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @Override
-    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
+    public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, @Nullable Entity e, boolean lit) {
         world.setBlock(pos, state.setValue(AGE, lit ? 1 : 0), 3);
     }
 
@@ -183,7 +183,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        this.interactWithEntity(level, state, projectile, pos);
+        this.lightableInteractWithEntity(level, state, projectile, pos);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity instanceof Projectile projectile) {
-            this.interactWithEntity(level, state, projectile, pos);
+            this.lightableInteractWithEntity(level, state, projectile, pos);
         }
         // same logic as fire block
         if (isLitUp(state, level, pos)) {
@@ -222,7 +222,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             // normal fire damage
             entity.hurt(level.damageSources().inFire(), 1);
         } else if (entity.isOnFire()) {
-            this.lightUp(entity, state, pos, level, FireSoundType.FLAMING_ARROW);
+            this.tryLightUp(entity, state, pos, level, FireSoundType.FLAMING_ARROW);
         }
         super.entityInside(state, level, pos, entity);
     }
@@ -290,7 +290,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 if (dir == Direction.DOWN) continue;
                 if (GunpowderBlock.isFireSource(level, pos.relative(dir))) {
                     //plays sound too
-                    this.lightUp(null, state, pos, level, FireSourceType.FLAMING_ARROW);
+                    this.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
                     return;
                 }
             }
@@ -394,7 +394,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                             int newAge = Math.min(15, age + random.nextInt(5) / 4);
 
                             if (isLumisene && level.getBlockState(pos).getBlock() instanceof FlammableLiquidBlock fl) {
-                                fl.lightUp(null, state, pos, level, FireSourceType.FLAMING_ARROW);
+                                fl.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
                             } else {
                                 // sets fire block
                                 level.setBlock(mutableBlockPos, fireBlock.getStateWithAge(level, mutableBlockPos, newAge), 3);
@@ -407,14 +407,14 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
     }
 
     @ForgeOverride
-    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
-        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+    public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
 
     @ForgeOverride
-    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
-        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+    public @Nullable PathType getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, PathType originalType) {
+        if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
 

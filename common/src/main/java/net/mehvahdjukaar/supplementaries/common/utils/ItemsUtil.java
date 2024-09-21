@@ -5,14 +5,10 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -20,12 +16,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,32 +122,25 @@ public class ItemsUtil {
         throw new AssertionError();
     }
 
+    private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
 
-    public static void addShulkerLikeTooltips(CompoundTag blockEntityTag, List<Component> tooltip) {
-        if (blockEntityTag.contains("LootTable", 8)) {
-            tooltip.add(Component.literal("???????").withStyle(ChatFormatting.GRAY));
+    public static void addShulkerLikeTooltips(ItemStack stack, List<Component> tooltip) {
+        if (stack.has(DataComponents.CONTAINER_LOOT)) {
+            tooltip.add(UNKNOWN_CONTENTS);
         }
-        if (blockEntityTag.contains("Items", 9)) {
-            NonNullList<ItemStack> itemStacks = NonNullList.withSize(27, ItemStack.EMPTY);
-            ContainerHelper.loadAllItems(blockEntityTag, itemStacks, null);
-            int i = 0;
-            int j = 0;
+        int i = 0;
+        int j = 0;
 
-            for (ItemStack itemstack : itemStacks) {
-                if (!itemstack.isEmpty()) {
-                    ++j;
-                    if (i <= 4) {
-                        ++i;
-                        MutableComponent component = itemstack.getHoverName().copy();
-                        component.append(" x").append(String.valueOf(itemstack.getCount()));
-                        tooltip.add(component.withStyle(ChatFormatting.GRAY));
-                    }
-                }
+        for (ItemStack itemStack : (stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)).nonEmptyItems()) {
+            ++j;
+            if (i <= 4) {
+                ++i;
+                tooltip.add(Component.translatable("container.shulkerBox.itemCount", itemStack.getHoverName(), itemStack.getCount()));
             }
+        }
 
-            if (j - i > 0) {
-                tooltip.add((Component.translatable("container.shulkerBox.more", j - i)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
-            }
+        if (j - i > 0) {
+            tooltip.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
         }
     }
 }

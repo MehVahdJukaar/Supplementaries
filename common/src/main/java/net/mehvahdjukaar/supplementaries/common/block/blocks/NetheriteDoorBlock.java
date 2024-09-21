@@ -44,7 +44,7 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
         if (level.getBlockEntity(p) instanceof KeyLockableTile keyLockableTile) {
             if (keyLockableTile.handleAction(player, hand, stack, "door")) {
 
-                GoldDoorBlock.tryOpenDoubleDoorKey(level, state, pos, player, hand);
+                GoldDoorBlock.tryOpenDoubleDoorKey(level, state, pos, player, hand, stack);
 
                 state = state.cycle(OPEN);
                 level.setBlock(pos, state, 10);

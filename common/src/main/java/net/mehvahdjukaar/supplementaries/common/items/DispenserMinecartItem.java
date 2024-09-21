@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -71,7 +72,7 @@ public class DispenserMinecartItem extends Item {
 
         @Override
         protected void playSound(BlockSource blockSource) {
-            blockSource.level().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, blockSource.getPos(), 0);
+            blockSource.level().levelEvent(LevelEvent.SOUND_DISPENSER_DISPENSE, blockSource.pos(), 0);
         }
     };
 
@@ -99,9 +100,6 @@ public class DispenserMinecartItem extends Item {
                 }
 
                 AbstractMinecart abstractminecart = new DispenserMinecartEntity(level,  blockpos.getX() + 0.5D,  blockpos.getY() + 0.0625D + d0,  blockpos.getZ() + 0.5D);
-                if (itemstack.hasCustomHoverName()) {
-                    abstractminecart.setCustomName(itemstack.getHoverName());
-                }
 
                 level.addFreshEntity(abstractminecart);
                 level.gameEvent(pContext.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);
