@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.globe;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncGlobeDataPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class GlobeData extends SavedData {
-    //TODO: add codec here
 
     private static final int TEXTURE_H = 16;
     private static final int TEXTURE_W = 32;

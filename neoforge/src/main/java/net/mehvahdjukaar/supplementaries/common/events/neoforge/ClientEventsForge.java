@@ -22,19 +22,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.event.sound.SoundEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.sound.SoundEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientEventsForge {
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.register(ClientEventsForge.class);
+        NeoForge.EVENT_BUS.register(ClientEventsForge.class);
     }
 
     private static boolean hasOptifine;
