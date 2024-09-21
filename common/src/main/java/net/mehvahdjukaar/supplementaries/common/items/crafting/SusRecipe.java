@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SusGravelBricksTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,18 +19,18 @@ public class SusRecipe extends CustomRecipe {
     private final ItemStack result;
 
 
-    public SusRecipe(ResourceLocation recipeId, CraftingBookCategory craftingBookCategory, Ingredient ingredient, ItemStack itemStack) {
-        super(recipeId, craftingBookCategory);
+    public SusRecipe(CraftingBookCategory craftingBookCategory, Ingredient ingredient, ItemStack itemStack) {
+        super(craftingBookCategory);
         this.ingredient = ingredient;
         this.result = itemStack;
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level level) {
+    public boolean matches(CraftingInput inv, Level level) {
         ItemStack gravel = null;
         ItemStack something = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (gravel == null && ingredient.test(stack)) {
                 gravel = stack;
@@ -44,11 +45,11 @@ public class SusRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
         ItemStack gravel = null;
         ItemStack something = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (gravel == null && ingredient.test(stack)) {
                 gravel = stack;

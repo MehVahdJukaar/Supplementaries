@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -39,7 +40,7 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
         jsonMap.forEach((key, json) -> {
             try {
                 var result = HourglassTimeData.CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, access), json);
-                HourglassTimeData data = result.getOrThrow(false, e -> Supplementaries.LOGGER.error("Failed to parse hourglass data: {}", e));
+                HourglassTimeData data = result.getOrThrow();
                 list.add(data);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data {}", key);

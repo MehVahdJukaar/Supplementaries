@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
@@ -72,22 +73,21 @@ public class BlockGeneratorBlockTile extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (this.config != null) {
-            tag.put("config", RoadSignFeature.Config.CODEC.encodeStart(NbtOps.INSTANCE, this.config)
-                    .getOrThrow(false, s -> {
-                    }));
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            tag.put("config", RoadSignFeature.Config.CODEC.encodeStart(ops, this.config).getOrThrow());
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         if (tag.contains("config")) {
-            this.config = RoadSignFeature.Config.CODEC.decode(NbtOps.INSTANCE, tag.get("config"))
-                    .getOrThrow(true, s -> {
-                    }).getFirst();
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            this.config = RoadSignFeature.Config.CODEC.decode(ops, tag.get("config"))
+                    .getOrThrow().getFirst();
         }
     }
 }

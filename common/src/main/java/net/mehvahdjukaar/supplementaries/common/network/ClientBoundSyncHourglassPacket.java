@@ -1,15 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import com.mojang.serialization.DataResult;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,22 +13,21 @@ import java.util.List;
 
 public class ClientBoundSyncHourglassPacket implements Message {
 
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundSyncHourglassPacket> CODEC = Message.makeType(
+            Supplementaries.res("sync_hourglass"),
+            ClientBoundSyncHourglassPacket::new);
+
     protected final List<HourglassTimeData> hourglass;
 
-    public ClientBoundSyncHourglassPacket(final Collection<HourglassTimeData> songs) {
-        this.hourglass = List.copyOf(songs);
+    public ClientBoundSyncHourglassPacket(final Collection<HourglassTimeData> data) {
+        this.hourglass = List.copyOf(data);
     }
 
-    public ClientBoundSyncHourglassPacket(FriendlyByteBuf buf) {
+    public ClientBoundSyncHourglassPacket(RegistryFriendlyByteBuf buf) {
         int size = buf.readInt();
-        this.hourglass = new ArrayList<>();
+        this.hourglass = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            CompoundTag tag = buf.readNbt();
-            if (tag != null) {
-                //TODO: stream codec there
-                DataResult<HourglassTimeData> r = HourglassTimeData.NETWORK_CODEC.parse(NbtOps.INSTANCE, tag);
-                r.result().ifPresent(hourglass::add);
-            }
+            this.hourglass.add(HourglassTimeData.STREAM_CODEC.decode(buf));
         }
     }
 
@@ -40,10 +35,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeInt(this.hourglass.size());
         for (var entry : this.hourglass) {
-            DataResult<Tag> r = HourglassTimeData.NETWORK_CODEC.encodeStart(NbtOps.INSTANCE, entry);
-            if (r.result().isPresent()) {
-                buf.writeNbt((CompoundTag) r.result().get());
-            }
+            HourglassTimeData.STREAM_CODEC.encode(buf, entry);
         }
     }
 
@@ -55,4 +47,8 @@ public class ClientBoundSyncHourglassPacket implements Message {
     }
 
 
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return CODEC.type();
+    }
 }

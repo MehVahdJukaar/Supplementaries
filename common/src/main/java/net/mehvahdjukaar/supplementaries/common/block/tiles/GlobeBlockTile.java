@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -32,8 +33,8 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private boolean sheared = false;
 
-    //cient
-    private Component customName;
+    //client
+    private Component customName = null;
     private float yaw = 0;
     private float prevYaw = 0;
     private Pair<Model, @Nullable ResourceLocation> renderData = DEFAULT_DATA;
@@ -78,7 +79,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
                             GLOBE_SHEARED_TEXTURE);
         } else if (this.hasCustomName()) {
-            var customData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
+            var customData = GlobeManager.getModelAndTexture(this.getCustomName().getString());
             if (customData != null) this.renderData = customData;
             else this.renderData = DEFAULT_DATA;
         } else this.renderData = DEFAULT_DATA;
@@ -99,21 +100,20 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        if (compound.contains("CustomName", 8)) {
-            this.setCustomName(Component.Serializer.fromJson(compound.getString("CustomName")));
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("CustomName", 8)) {
+            this.setCustomName(Component.Serializer.fromJson(tag.getString("CustomName"), registries));
         }
-        this.yaw = compound.getFloat("Yaw");
-        this.sheared = compound.getBoolean("Sheared");
-        super.load(compound);
-
+        this.yaw = tag.getFloat("Yaw");
+        this.sheared = tag.getBoolean("Sheared");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         if (this.customName != null) {
-            tag.putString("CustomName", Component.Serializer.toJson(this.customName));
+            tag.putString("CustomName", Component.Serializer.toJson(this.customName, registries));
         }
         tag.putFloat("Yaw", this.yaw);
         tag.putBoolean("Sheared", this.sheared);
@@ -138,6 +138,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
                     SoundSource.BLOCKS, 0.65f,
                     MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
+        } else if (id == 2) {
+            level.addDestroyBlockEffect(worldPosition, getBlockState());
+            return true;
         } else {
             return super.triggerEvent(id, type);
         }
@@ -149,8 +152,8 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {

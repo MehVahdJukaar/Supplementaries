@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -21,11 +19,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -33,25 +32,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.HitResult;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 
 public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockTile> {
-    protected final ItemRenderer itemRenderer;
+    private final ItemRenderer itemRenderer;
     private final StatueEntityModel model;
     private final BlockRenderDispatcher blockRenderer;
     private final EntityRenderDispatcher entityRenderer;
+    private final SkinManager skinManager;
 
     public StatueBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = Minecraft.getInstance().getItemRenderer();
         model = new StatueEntityModel(context);
         blockRenderer = Minecraft.getInstance().getBlockRenderer();
         entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
+        skinManager = Minecraft.getInstance().getSkinManager();
     }
 
+    //same as entity logic
     protected boolean canRenderName(StatueBlockTile tile) {
-        if (Minecraft.renderNames() && tile.getPlayerSkin() != null) {
+        if (Minecraft.renderNames()) {
             HitResult hit = Minecraft.getInstance().hitResult;
             if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
                 BlockPos pos = tile.getBlockPos();
@@ -66,62 +65,33 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
     }
 
     @Override
-    public int getViewDistance() {
-        return 60;
-    }
-
-    private boolean slim = false;
-
-    public static ResourceLocation getPlayerSkin(GameProfile gameProfile) {
-        return getPlayerSkinAndSlim(gameProfile, s -> {
-        });
-    }
-
-    public static ResourceLocation getPlayerSkinAndSlim(GameProfile gameProfile, Consumer<Boolean> slimSkinSetter) {
-        if (!gameProfile.isComplete()) {
-            return ResourceLocation.withDefaultNamespace("textures/entity/steve.png");
-        } else {
-            SkinManager skinManager = Minecraft.getInstance().getSkinManager();
-
-            Map<Type, MinecraftProfileTexture> skinCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
-            if (skinCache.containsKey(Type.SKIN)) {
-                MinecraftProfileTexture texture = skinCache.get(Type.SKIN);
-                String s = texture.getMetadata("model");
-                boolean slim = s != null && !s.equals("default");
-                slimSkinSetter.accept(slim);
-
-                return skinManager.registerTexture(texture, Type.SKIN);
-            } else {
-                slimSkinSetter.accept(false);
-                return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
-            }
-        }
-    }
-
-    private boolean isSkinSlim(GameProfile gameProfile) {
-        return gameProfile != null && gameProfile.getId() != null && (gameProfile.getId().hashCode() & 1) == 1;
-    }
-
-    @Override
     public void render(StatueBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        GameProfile playerInfo = tile.getPlayerSkin();
+        GameProfile gameProfile = tile.getPlayerSkin();
 
-        if (this.canRenderName(tile)) {
-            var name = playerInfo.getName();
+        if (gameProfile != null && this.canRenderName(tile)) {
+            var name = gameProfile.getName();
             if (name != null) {
                 PedestalBlockTileRenderer.renderName(Component.literal(name), 0.875f, poseStack, bufferIn, combinedLightIn);
             }
         }
-
-        ResourceLocation resourceLocation = playerInfo == null ? ModTextures.STATUE : getPlayerSkinAndSlim(playerInfo, s -> this.slim = s);
+        ResourceLocation resourceLocation;
+        boolean slim;
+        if (gameProfile == null) {
+            resourceLocation = ModTextures.STATUE;
+            slim = false;
+        } else {
+            PlayerSkin playerSkin = skinManager.getInsecureSkin(gameProfile);
+            resourceLocation = playerSkin.texture();
+            slim = playerSkin.model() == PlayerSkin.Model.SLIM;
+        }
 
         Direction dir = tile.getDirection();
         poseStack.mulPose(RotHlpr.rot(dir));
-        poseStack.scale(-1,-1,1);
+        poseStack.scale(-1, -1, 1);
 
         poseStack.translate(0, -0.25, 0);
 
@@ -156,9 +126,11 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         VertexConsumer buffer = bufferIn.getBuffer(renderType);
 
         this.model.setupAnim(tile.getLevel().getGameTime(), partialTicks, dir, pose, tile.isWaving(), slim);
-        this.model.renderToBuffer(poseStack, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.model.renderToBuffer(poseStack, buffer, combinedLightIn, OverlayTexture.NO_OVERLAY, -1);
+
+
+        //Todo cape or statue
         poseStack.popPose();
-        this.slim = false;
 
 
         switch (pose) {
@@ -188,8 +160,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
 
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
                         Pair<GlobeManager.Model, ResourceLocation> pair =
-                                stack.hasCustomHoverName() ?
-                                        GlobeManager.Type.getModelAndTexture(stack.getHoverName().getString()) :
+                                stack.has(DataComponents.CUSTOM_NAME) ?
+                                        GlobeManager.getModelAndTexture(stack.getHoverName().getString()) :
                                         Pair.of(GlobeManager.Model.GLOBE, null);
 
                         GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, poseStack, bufferIn,

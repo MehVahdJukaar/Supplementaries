@@ -7,12 +7,14 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -73,8 +75,8 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     // does all the calculation for handling player interaction.
@@ -90,12 +92,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
             if (CommonConfigs.Building.GOBLET_DRINK.get()) {
                 boolean b = this.fluidHolder.tryDrinkUpFluid(player, this.level);
                 if (b && player instanceof ServerPlayer serverPlayer) {
-                    Advancement advancement = level.getServer().getAdvancements().getAdvancement(Supplementaries.res("nether/goblet"));
-                    if (advancement != null) {
-                        if (!serverPlayer.getAdvancements().getOrStartProgress(advancement).isDone()) {
-                            serverPlayer.getAdvancements().award(advancement, "unlock");
-                        }
-                    }
+                    Utils.awardAdvancement(serverPlayer, Supplementaries.res("nether/goblet"));
                 }
                 return b;
             }
@@ -104,14 +101,10 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        try {
-            this.fluidHolder.load(compound);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to load fluid container at {}:", this.getBlockPos(), e);
-        }
-        this.loadOwner(compound);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.fluidHolder.load(tag, registries);
+        this.loadOwner(tag);
 
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
@@ -119,13 +112,9 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        try {
-            this.fluidHolder.save(tag);
-        } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to save fluid container at {}:", this.getBlockPos(), e);
-        }
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        this.fluidHolder.save(tag, registries);
         this.saveOwner(tag);
     }
 
@@ -133,7 +122,6 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     public SoftFluidTank getSoftFluidTank() {
         return this.fluidHolder;
     }
-
 
 
 }

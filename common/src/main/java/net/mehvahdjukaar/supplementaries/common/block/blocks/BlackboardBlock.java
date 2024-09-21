@@ -141,7 +141,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
             ItemInteractionResult result = te.tryWaxing(level, pos, player, hand, stack);
 
@@ -173,7 +174,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                 }
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
 
             UseMode config = CommonConfigs.Building.BLACKBOARD_MODE.get();
@@ -192,7 +193,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                         te.setPixel(x, y, newColor);
                         te.setChanged(); //this also updates clients
                     }
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
             }
             if (config.canOpenGui()) {

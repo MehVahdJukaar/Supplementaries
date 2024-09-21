@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -103,21 +104,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
-            if (player.getItemInHand(handIn).getItem() instanceof ShearsItem) {
-
-                tile.toggleShearing();
-                tile.setChanged();
-                level.sendBlockUpdated(pos, state, state, 3);
-                level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
-                if (level.isClientSide) {
-                    level.addDestroyBlockEffect(pos, state);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
-
             if (!level.isClientSide) {
                 if (tile.isSpinningVeryFast() && player instanceof ServerPlayer serverPlayer) {
                     Utils.awardAdvancement(serverPlayer, Supplementaries.res("adventure/globe"));
@@ -130,8 +118,27 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                     displayCurrentCoordinates(level, player, pos);
                 }
             }
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.getItem() instanceof ShearsItem) {
+            if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
+
+                tile.toggleShearing();
+                tile.setChanged();
+                level.sendBlockUpdated(pos, state, state, 3);
+                level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
+                if (!level.isClientSide) {
+                    level.blockEvent(pos, state.getBlock(), 2, 0);
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

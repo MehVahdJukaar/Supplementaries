@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
@@ -174,29 +175,18 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
     public static class SimplePlayerEntry {
         private static final int SKIN_SIZE = 8;
 
-        private final Supplier<ResourceLocation> skinGetter;
-        private GameProfile profile;
+        private final GameProfile profile;
         private boolean isOnline;
 
         public SimplePlayerEntry(PlayerInfo playerInfo) {
             this.profile = playerInfo.getProfile();
             //uses online player info
-            this.skinGetter = playerInfo::getSkinLocation;
             this.isOnline = true;
         }
 
         //offline?
         public SimplePlayerEntry(UUID id, String lastName) {
-            GameProfile profile = new GameProfile(id, lastName);
-            this.skinGetter = () -> StatueBlockTileRenderer.getPlayerSkin(this.profile);
-
-            if (!(profile.isComplete() && profile.getProperties().containsKey("textures"))) {
-                synchronized (this) {
-                    this.profile = profile;
-                }
-                SkullBlockEntity.updateGameprofile(this.profile,
-                        (gameProfile) -> this.profile = gameProfile);
-            }
+            this.profile = new GameProfile(id, lastName);
             this.isOnline = false;
         }
 
@@ -218,7 +208,8 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
             float c = this.isOnline ? 1 : 0.5f;
             RenderSystem.setShaderColor(1, c, c, 1);
-            ResourceLocation resourceLocation = this.skinGetter.get();
+        PlayerSkin skin = Minecraft.getInstance().getSkinManager().getInsecureSkin(this.profile);
+            ResourceLocation resourceLocation = skin.texture();
             //face and overlay
             graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);
             RenderSystem.enableBlend();

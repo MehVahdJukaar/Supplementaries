@@ -84,7 +84,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     @ForgeOverride
     public AABB getRenderBoundingBox() {
-        return new AABB(getBlockPos().offset(0, -1, 0), getBlockPos().offset(1, 1, 1));
+        return AABB.encapsulatingFullBlocks(getBlockPos().offset(0, -1, 0), getBlockPos().offset(1, 1, 1));
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
@@ -240,14 +240,14 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.transferCooldown = tag.getInt("TransferCooldown");
-        this.tempFluidHolder.load(tag);
+        this.tempFluidHolder.load(tag, registries);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("TransferCooldown", this.transferCooldown);
-        this.tempFluidHolder.save(tag);
+        this.tempFluidHolder.save(tag, registries);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -231,7 +230,7 @@ public class ModRegistry {
 
     //notice board
     public static final Supplier<Block> NOTICE_BOARD = regWithItem(NOTICE_BOARD_NAME, () -> new NoticeBoardBlock(
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
@@ -410,9 +409,12 @@ public class ModRegistry {
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
     //buntings
-    public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()));
+    public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()
+            .component(DataComponents.BASE_COLOR, DyeColor.WHITE)));
+
     public static final Supplier<RopeBuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
-            BlockBehaviour.Properties.ofFullCopy(ROPE.get()).dropsLike(ROPE.get())));
+            BlockBehaviour.Properties.ofFullCopy(ROPE.get())
+                    .dropsLike(ROPE.get())));
 
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
             "rope_buntings", () -> PlatHelper.newBlockEntityType(
@@ -446,7 +448,7 @@ public class ModRegistry {
     public static final Supplier<Item> BAMBOO_SPIKES_TIPPED_ITEM = regItem(TIPPED_SPIKES_NAME, () -> new BambooSpikesTippedItem(
             BAMBOO_SPIKES.get(), new Item.Properties()
             .component(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON))
-            .durability(BambooSpikesBlockTile.MAX_CHARGES)));
+            .component(ModComponents.CHARGES.get(), BambooSpikesBlockTile.MAX_CHARGES)));
 
     //goblet
     public static final Supplier<Block> GOBLET = regWithItem(GOBLET_NAME, () -> new GobletBlock(

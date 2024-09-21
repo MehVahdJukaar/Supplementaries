@@ -113,8 +113,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile) {
             PotionContents p = getPotion(stack);
-            if (p.potion().isPresent() && stack.isDamaged()) {
-                tile.potion = p.potion().get();
+            if (p != PotionContents.EMPTY && stack.isDamaged()) {
+                tile.tryApplyPotion(p);
                 tile.setMissingCharges(stack.getDamageValue());
             }
         }
@@ -128,13 +128,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         int charges = damage != null ? stack.getMaxDamage() - damage : 0;
         return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace())
                 .setValue(TIPPED, charges != 0 && hasPotion);
-    }
-
-    public ItemStack getSpikeItem(BlockEntity te) {
-        if (te instanceof BambooSpikesBlockTile tile) {
-            return tile.toSpikeItem();
-        }
-        return this.asItem().getDefaultInstance();
     }
 
     @Override
@@ -249,15 +242,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
         if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.get(fluid) == PotionBottleType.LINGERING) {
-            var content = getPotion(fluid).potion();
-            if (content.isPresent()) {
-                return tryAddingPotion(state, world, pos, content.get(), null);
-            }
+            var content = getPotion(fluid);
+                return tryAddingPotion(state, world, pos, content, null);
         }
         return false;
     }
 
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, Holder<Potion> potion, @Nullable Entity adder) {
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, PotionContents potion, @Nullable Entity adder) {
         world.setBlock(pos, state.setValue(TIPPED, true), 0);
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {

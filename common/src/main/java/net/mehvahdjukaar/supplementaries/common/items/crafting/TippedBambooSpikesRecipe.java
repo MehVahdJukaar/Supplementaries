@@ -3,24 +3,25 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class TippedBambooSpikesRecipe extends CustomRecipe {
-    public TippedBambooSpikesRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public TippedBambooSpikesRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     private boolean isEmptySpike(ItemStack stack) {
@@ -31,12 +32,11 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
-
+    public boolean matches(CraftingInput inv, Level level) {
         ItemStack itemstack = null;
         ItemStack stack1 = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isEmptySpike(stack)) {
                 if (itemstack != null) {
@@ -44,9 +44,8 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
                 }
                 itemstack = stack;
             } else if (stack.getItem() == Items.LINGERING_POTION) {
-                Potion potion = PotionUtils.getPotion(stack);
-                var effects = potion.getEffects();
-                if (effects.isEmpty()) return false;
+                PotionContents potion = stack.get(DataComponents.POTION_CONTENTS);
+                if (potion == null) return false;
                 if (!BambooSpikesTippedItem.isPotionValid(potion)) return false;
 
                 if (stack1 != null) {
@@ -58,11 +57,10 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
         return itemstack != null && stack1 != null;
     }
 
-
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
         Potion potion = Potions.EMPTY;
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             Potion p = PotionUtils.getPotion(inv.getItem(i));
             if (p != Potions.EMPTY) {
                 potion = p;

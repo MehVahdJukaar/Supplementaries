@@ -5,9 +5,11 @@ import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
@@ -27,8 +29,8 @@ public class BlackboardDisplayTarget extends DisplayTarget {
             if (!parseText(text.get(0).getString(), tile)) {
                 ItemStack copyStack = CreateCompat.getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                 if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
-                var pixels = BlackboardBlockTile.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
-                tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
+                var pixels = BlackboardData.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
+                tile.setPixels(BlackboardData.unpackPixels(pixels));
             }
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
             reserve(line, te, context);
@@ -55,9 +57,9 @@ public class BlackboardDisplayTarget extends DisplayTarget {
     }
 
     private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
-        var beData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (beData != null && beData.contains("Pixels")) {
-            tile.setPixels(BlackboardBlockTile.unpackPixels(beData.getUnsafe().getLongArray("Pixels")));
+        var beData = stack.get(ModComponents.BLACKBOARD.get());
+        if (beData != null) {
+            tile.setPixels(beData.unpackPixels());
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
             reserve(line, te, context);
             return true;

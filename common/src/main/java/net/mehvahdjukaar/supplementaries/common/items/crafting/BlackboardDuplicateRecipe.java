@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class BlackboardDuplicateRecipe extends CustomRecipe {
     public BlackboardDuplicateRecipe(CraftingBookCategory category) {
-        super(idIn, category);
+        super(category);
     }
 
     private boolean isDrawnBlackboard(ItemStack stack) {

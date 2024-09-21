@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -19,11 +19,6 @@ public class BuntingItem extends Item {
     }
 
     @Override
-    public ItemStack getDefaultInstance() {
-        return getColored(DyeColor.WHITE);
-    }
-
-    @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
@@ -34,11 +29,11 @@ public class BuntingItem extends Item {
             BlockState s = RopeBuntingBlock.fromRope(state, hit);
             if (s != null) {
                 level.setBlockAndUpdate(pos, s);
-                var ret = s.use(level, context.getPlayer(), context.getHand(), hit);
+                var ret = s.useItemOn(context.getItemInHand(), level, context.getPlayer(), context.getHand(), hit);
                 if (!ret.consumesAction()) {
                     level.setBlockAndUpdate(pos, state);
                 }
-                return ret;
+                else return ret.result();
             }
         }
         return super.useOn(context);
@@ -47,26 +42,16 @@ public class BuntingItem extends Item {
     @Override
     public String getDescriptionId(ItemStack stack) {
         var des = super.getDescriptionId(stack);
-        var t = stack.getTag();
-        if (t != null) {
-            des += "_" + t.getString("Color");
-        }
+        des += "_" + getColor(stack).getName();
         return des;
     }
 
     public static DyeColor getColor(ItemStack item) {
-        if (item.getItem() instanceof BuntingItem) {
-            CompoundTag tag = item.getTag();
-            if (tag != null) {
-                return DyeColor.byName(tag.getString("Color"), DyeColor.WHITE);
-            }
-        }
-        return DyeColor.WHITE;
+        return item.getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE);
     }
 
     public static void setColor(ItemStack item, DyeColor color) {
-        CompoundTag tag = item.getOrCreateTag();
-        tag.putString("Color", color.getName());
+        item.set(DataComponents.BASE_COLOR, color);
     }
 
     public static ItemStack getColored(DyeColor color) {
@@ -74,4 +59,5 @@ public class BuntingItem extends Item {
         setColor(stack, color);
         return stack;
     }
+
 }

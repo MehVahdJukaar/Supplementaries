@@ -4,14 +4,14 @@ import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -42,7 +42,7 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     public static final BooleanProperty LAVALOGGED = ModBlockProperties.LAVALOGGED;
 
     public NetheriteTrapdoorBlock(Properties properties) {
-        super(properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0), BlockSetType.IRON);
+        super(BlockSetType.IRON, properties.lightLevel(state -> state.getValue(LAVALOGGED) ? 15 : 0));
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(OPEN, false).setValue(HALF, Half.BOTTOM).setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(LAVALOGGED, false));
@@ -54,24 +54,23 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-
-        if (worldIn.getBlockEntity(pos) instanceof KeyLockableTile tile) {
-            if (tile.handleAction(player, handIn, "trapdoor")) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof KeyLockableTile tile) {
+            if (tile.handleAction(player, hand, stack, "trapdoor")) {
                 state = state.cycle(OPEN);
-                worldIn.setBlock(pos, state, 2);
+                level.setBlock(pos, state, 2);
                 if (state.getValue(WATERLOGGED)) {
-                    worldIn.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+                    level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
                 }
 
                 //TODO: replace with proper sound event
                 boolean open = state.getValue(OPEN);
-                this.playSound(player, worldIn, pos, open);
-                worldIn.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+                this.playSound(player, level, pos, open);
+                level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -133,10 +132,10 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add(Component.translatable("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add(KeyLockableTile.KEY_LOCKABLE_TOOLTIP);
     }
 
     @Override

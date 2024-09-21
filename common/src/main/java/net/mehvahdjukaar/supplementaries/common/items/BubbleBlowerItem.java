@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -26,6 +24,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -37,7 +36,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -70,7 +68,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     //bubble block
     @SuppressWarnings("UnsafePlatformOnlyCall")
     private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        double reachDistance = ForgeHelper.getReachDistance(player);
+        double reachDistance = player.getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE);
         if (!player.isCreative()) reachDistance = Math.min(2, reachDistance);
         HitResult result = player.pick(reachDistance, 1, true);
 
@@ -102,8 +100,8 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                 level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 if (!(player.getAbilities().instabuild)) {
-                    int max = this.getMaxDamage(stack);
-                    this.setDamage(stack, Math.min(max, this.getDamage(stack) + CommonConfigs.Tools.BUBBLE_BLOWER_COST.get()));
+                    int max = stack.getMaxDamage();
+                    stack.setDamageValue(Math.min(max, stack.getDamageValue() + CommonConfigs.Tools.BUBBLE_BLOWER_COST.get()));
                 }
 
                 return InteractionResultHolder.success(stack);
@@ -113,15 +111,15 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (this.getCharges(stack) != 0) {
-            tooltip.add(Component.translatable("message.supplementaries.bubble_blower_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+            tooltipComponents.add(Component.translatable("message.supplementaries.bubble_blower_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
         }
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return 72000;
     }
 
@@ -130,9 +128,8 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         return this.getCharges(stack) > 0;
     }
 
-    @SuppressWarnings("UnsafePlatformOnlyCall")
     private int getCharges(ItemStack stack) {
-        return this.getMaxDamage(stack) - this.getDamage(stack);
+        return stack.getMaxDamage() - stack.getDamageValue();
     }
 
     @Override
@@ -173,32 +170,16 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                         EnchantmentHelper.getEnchantmentId(ModRegistry.STASIS_ENCHANTMENT.get()));
     }
 
-    //forge already has these
-    @PlatformOnly(PlatformOnly.FABRIC)
-    private void setDamage(ItemStack stack, int damage) {
-        stack.getOrCreateTag().putInt("Damage", Math.max(0, damage));
-    }
-
-    @PlatformOnly(PlatformOnly.FABRIC)
-    public int getMaxDamage(ItemStack stack) {
-        return getMaxDamage();
-    }
-
-    @PlatformOnly(PlatformOnly.FABRIC)
-    private int getDamage(ItemStack stack) {
-        return !stack.hasTag() ? 0 : stack.getTag().getInt("Damage");
-    }
-
     @SuppressWarnings("UnsafePlatformOnlyCall")
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
-        int damage = this.getDamage(stack) + 1;
-        if (damage > this.getMaxDamage(stack)) {
+        int damage = stack.getDamageValue() + 1;
+        if (damage > stack.getMaxDamage()) {
             entity.stopUsingItem();
             return;
         }
         if (!(entity instanceof Player player) || !(player.getAbilities().instabuild)) {
-            this.setDamage(stack, damage);
+            stack.setDamageValue(damage);
         }
 
         int soundLength = 4;
@@ -220,7 +201,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
             double dz = v.z + ((0.5 - r.nextFloat()) * 0.08);
 
             level.addParticle(ModParticles.SUDS_PARTICLE.get(), x, y, z, dx, dy, dz);
-        }else{
+        } else {
             if (remainingUseDuration % 10 == 0) {
                 level.gameEvent(entity, GameEvent.INSTRUMENT_PLAY, entity.position());
             }
@@ -270,25 +251,25 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         AnimationUtils.bobModelPart(mainHand, entity.tickCount, -dir);
     }
 
-
     @Override
-    public void animateItemFirstPerson(LivingEntity entity, ItemStack stack, InteractionHand hand, PoseStack matrixStack, float partialTicks, float pitch, float attackAnim, float handHeight) {
+    public void animateItemFirstPerson(Player player, ItemStack stack, InteractionHand hand, HumanoidArm humanoidArm,
+                                       PoseStack poseStack, float partialTicks, float v1, float v2, float v3) {
         //is using item
-        if (entity.isUsingItem() && entity.getUseItemRemainingTicks() > 0 && entity.getUsedItemHand() == hand) {
+        if (player.isUsingItem() && player.getUseItemRemainingTicks() > 0 && player.getUsedItemHand() == hand) {
             //bow anim
 
-            float timeLeft = stack.getUseDuration() - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
+            float timeLeft = stack.getUseDuration(player) - (player.getUseItemRemainingTicks() - partialTicks + 1.0F);
             float f12 = 1;//getPowerForTime(stack, timeLeft);
 
             if (f12 > 0.1F) {
                 float f15 = Mth.sin((timeLeft - 0.1F) * 1.3F);
                 float f18 = f12 - 0.1F;
                 float f20 = f15 * f18;
-                matrixStack.translate(0, f20 * 0.004F, 0);
+                poseStack.translate(0, f20 * 0.004F, 0);
             }
 
-            matrixStack.translate(0, 0, f12 * 0.04F);
-            matrixStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
+            poseStack.translate(0, 0, f12 * 0.04F);
+            poseStack.scale(1.0F, 1.0F, 1.0F + f12 * 0.2F);
             //matrixStack.mulPose(Axis.YN.rotationDegrees((float)k * 45.0F));
         }
     }

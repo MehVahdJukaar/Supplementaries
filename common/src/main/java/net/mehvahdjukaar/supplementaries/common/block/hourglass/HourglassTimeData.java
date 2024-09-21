@@ -8,8 +8,10 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
@@ -21,36 +23,36 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 
-public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, Optional<ResourceLocation> texture, int ordering) {
+public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, Optional<ResourceLocation> texture,
+                                int ordering) {
 
     public static final HourglassTimeData EMPTY = new HourglassTimeData(HolderSet.direct(), 0, 0, Optional.empty(), 99);
 
     public static final Codec<HourglassTimeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(p -> p.dusts),
-            ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
-           Codec.intRange(0, 15).optionalFieldOf( "light_level", 0).forGetter(p -> p.light),
-           ResourceLocation.CODEC.optionalFieldOf( "texture").forGetter(p -> p.texture),
-           ExtraCodecs.POSITIVE_INT.optionalFieldOf( "ordering", 0).forGetter(p -> p.ordering)
+            RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("items").forGetter(HourglassTimeData::dusts),
+            ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(HourglassTimeData::duration),
+            Codec.intRange(0, 15).optionalFieldOf("light_level", 0).forGetter(HourglassTimeData::light),
+            ResourceLocation.CODEC.optionalFieldOf("texture").forGetter(HourglassTimeData::texture),
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("ordering", 0).forGetter(HourglassTimeData::ordering)
     ).apply(instance, HourglassTimeData::new));
 
-    public static final Codec<HourglassTimeData> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("items").forGetter(p -> p.dusts.stream()
-                    .map(Holder::value)
-                    .toList()),
-            ExtraCodecs.POSITIVE_INT.fieldOf("duration").forGetter(p -> p.duration),
-           Codec.intRange(0, 15).optionalFieldOf( "light_level", 0).forGetter(p -> p.light),
-           ResourceLocation.CODEC.optionalFieldOf( "texture").forGetter(p -> p.texture),
-           ExtraCodecs.POSITIVE_INT.optionalFieldOf( "ordering", 0).forGetter(p -> p.ordering)
-    ).apply(instance, HourglassTimeData::fromNetwork));
+    public static final StreamCodec<RegistryFriendlyByteBuf, HourglassTimeData> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.holderRegistry(Registries.ITEM).apply(ByteBufCodecs.list()), h -> h.dusts.stream().toList(),
+            ByteBufCodecs.INT, HourglassTimeData::duration,
+            ByteBufCodecs.INT, HourglassTimeData::light,
+            ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), HourglassTimeData::texture,
+            ByteBufCodecs.INT, HourglassTimeData::ordering,
+            HourglassTimeData::fromNetwork
+    );
 
-    private static HourglassTimeData fromNetwork(List<Item> items, Integer integer, Integer integer1, Optional<ResourceLocation> resourceLocation, Integer integer2) {
-        return new HourglassTimeData(HolderSet.direct( items.stream().map(BuiltInRegistries.ITEM::wrapAsHolder).toList()),
+    private static HourglassTimeData fromNetwork(List<Holder<Item>> items, Integer integer, Integer integer1, Optional<ResourceLocation> resourceLocation, Integer integer2) {
+        return new HourglassTimeData(HolderSet.direct(items),
                 integer, integer1, resourceLocation, integer2);
     }
 
     public ResourceLocation computeTexture(ItemStack i, Level world) {
-        Minecraft mc = Minecraft.getInstance();
         if (this.texture.isEmpty()) {
+            Minecraft mc = Minecraft.getInstance();
             ItemRenderer itemRenderer = mc.getItemRenderer();
             BakedModel model = itemRenderer.getModel(i, world, null, 0);
             return model.getParticleIcon().contents().name();

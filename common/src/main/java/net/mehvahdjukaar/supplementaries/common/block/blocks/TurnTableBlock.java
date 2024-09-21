@@ -10,14 +10,12 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -86,20 +84,15 @@ public class TurnTableBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        Direction face = hit.getDirection();
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        Direction face = hitResult.getDirection();
         Direction myDir = state.getValue(FACING);
         if (face != myDir && face != myDir.getOpposite()) {
-            if (!Utils.mayPerformBlockAction(player, pos, player.getItemInHand(handIn))) {
-                return InteractionResult.PASS;
-            } else {
-                state = state.cycle(INVERTED);
-                float f = state.getValue(INVERTED) ? 0.55F : 0.5F;
-                worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, f);
-                worldIn.setBlock(pos, state, 2 | 4);
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            }
+            state = state.cycle(INVERTED);
+            float f = state.getValue(INVERTED) ? 0.55F : 0.5F;
+            level.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            level.setBlock(pos, state, 2 | 4);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

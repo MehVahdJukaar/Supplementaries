@@ -2,17 +2,15 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
@@ -40,13 +38,13 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 
         BlockPos p = this.hasTileEntity(state) ? pos : pos.below();
         if (level.getBlockEntity(p) instanceof KeyLockableTile keyLockableTile) {
-            if (keyLockableTile.handleAction(player, handIn, "door")) {
+            if (keyLockableTile.handleAction(player, hand, stack, "door")) {
 
-                GoldDoorBlock.tryOpenDoubleDoorKey(level, state, pos, player, handIn);
+                GoldDoorBlock.tryOpenDoubleDoorKey(level, state, pos, player, hand);
 
                 state = state.cycle(OPEN);
                 level.setBlock(pos, state, 10);
@@ -54,9 +52,10 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
                 this.playSound(player, level, pos, state.getValue(OPEN));
                 level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
             }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
@@ -87,6 +86,6 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (!MiscUtils.showsHints(tooltipFlag)) return;
-        tooltipComponents.add(Component.translatable("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(KeyLockableTile.KEY_LOCKABLE_TOOLTIP);
     }
 }

@@ -132,7 +132,6 @@ public class ServerEvents {
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-        SongsManager.sendDataToClient(player);
         CapturedMobHandler.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);

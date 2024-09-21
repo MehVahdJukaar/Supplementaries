@@ -3,38 +3,38 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 public class BambooSpikesBlockTile extends BlockEntity {
-    //private List<EffectInstance> effects = new ArrayList<>();
-    @Nullable
-    public Holder<Potion> potion = null;
-    public int charges = 0;
-    public long lastTicked = 0;
+
     //put these two in config
     public static final float POTION_MULTIPLIER = 0.1f;
     public static final int MAX_CHARGES = 16;
+
+    @NotNull
+    protected PotionContents potion = PotionContents.EMPTY;
+    protected int charges = 0;
+    protected long lastTicked = 0;
 
     public BambooSpikesBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BAMBOO_SPIKES_TILE.get(), pos, state);
@@ -42,12 +42,12 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     public int getColor() {
         if (this.hasPotion())
-            return PotionContents.getColor(this.potion);
+            return this.potion.getColor();
         return 0xffffff;
     }
 
     public boolean hasPotion() {
-        return this.potion != null && this.charges != 0;
+        return this.charges != 0 && this.potion != PotionContents.EMPTY;
     }
 
     public boolean isOnCooldown(Level world) {
@@ -56,33 +56,38 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //true if it has run out of charges
     public boolean consumeCharge(Level world) {
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get() && this.potion.value().getEffects().stream().anyMatch(
-                e -> e.getEffect().value().isBeneficial()
-        )) return false;
+        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+            for (var e : this.potion.getAllEffects()) {
+                if (e.getEffect().value().isBeneficial()) return true;
+            }
+        }
+
         this.lastTicked = world.getGameTime();
         this.charges -= 1;
         this.setChanged();
         if (this.charges <= 0) {
             this.charges = 0;
-            this.potion = null;
+            this.potion = PotionContents.EMPTY;
             return true;
         }
         return false;
     }
 
-    public void setMissingCharges(int missing) {
-        this.charges = Math.max(MAX_CHARGES - missing, 0);
+    public boolean tryApplyPotion(PotionContents potion) {
+        return tryApplyPotion(potion, MAX_CHARGES);
     }
 
-    public boolean tryApplyPotion(Holder<Potion> newPotion) {
-
-        if (this.charges == 0 || this.potion == null || this.potion.equals(newPotion) && this.charges != MAX_CHARGES) {
+    public boolean tryApplyPotion(PotionContents newPotion, int charges) {
+        if (!this.hasPotion() || this.potion.equals(newPotion) && this.charges != MAX_CHARGES) {
             if (BambooSpikesTippedItem.isPotionValid(newPotion)) {
                 this.potion = newPotion;
                 this.charges = MAX_CHARGES;
                 this.setChanged();
                 //needed for buggy white tipped state. aparently not enough
                 this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+
+                this.charges = Math.clamp(charges, 0, MAX_CHARGES);
+
                 return true;
             }
         }
@@ -94,7 +99,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
     public boolean interactWithEntity(LivingEntity le, @NotNull Level world) {
         if (this.hasPotion() && !this.isOnCooldown(world)) {
             boolean used = false;
-            for (MobEffectInstance effectInstance : this.potion.value().getEffects()) {
+            for (MobEffectInstance effectInstance : this.potion.getAllEffects()) {
                 if (!le.canBeAffected(effectInstance)) continue;
                 if (le.hasEffect(effectInstance.getEffect())) continue;
 
@@ -125,21 +130,16 @@ public class BambooSpikesBlockTile extends BlockEntity {
                 pos.getZ() + 0.5 + (level.random.nextFloat() - 0.5) * 0.75, 0, 0, 0);
     }
 
-    public ItemStack toSpikeItem() {
-        ItemStack stack = BambooSpikesTippedItem.makeSpikeItem(this.potion);
-        if (this.hasPotion()) {
-            stack.setDamageValue(stack.getMaxDamage() - this.charges);
-        }
-        return stack;
-    }
-
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("Charges", this.charges);
         tag.putLong("LastTicked", this.lastTicked);
 
-        if (this.potion != null) tag.putString("Potion", this.potion.getRegisteredName());
+        if (this.hasPotion()) {
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            tag.put("Potion", PotionContents.CODEC.encodeStart(ops, this.potion).getOrThrow());
+        }
     }
 
     @Override
@@ -148,9 +148,37 @@ public class BambooSpikesBlockTile extends BlockEntity {
         this.charges = tag.getInt("Charges");
         this.lastTicked = tag.getLong("LastTicked");
         if (tag.contains("Potion")) {
-            ResourceLocation potionId = ResourceLocation.tryParse(tag.getString("Potion"));
-            this.potion = BuiltInRegistries.POTION.getHolder(potionId).orElse(null);
-        } else this.potion = null;
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            PotionContents.CODEC.decode(ops, tag.get("Potion")).ifSuccess(
+                    p -> this.potion = p.getFirst()
+            );
+        } else this.potion = PotionContents.EMPTY;
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        var potion = componentInput.get(DataComponents.POTION_CONTENTS);
+        if (potion != null) {
+            this.potion = potion;
+            this.charges = Mth.clamp(componentInput.getOrDefault(ModComponents.CHARGES.get(), MAX_CHARGES), 0, MAX_CHARGES);
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        if (this.hasPotion()) {
+            components.set(DataComponents.POTION_CONTENTS, this.potion);
+            components.set(ModComponents.CHARGES.get(), Mth.clamp(this.charges, 0, MAX_CHARGES));
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("Potion");
+        tag.remove("Charges");
     }
 
     @Override

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -12,8 +11,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class LockBlock extends Block implements EntityBlock {
+
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public LockBlock(Properties properties) {
@@ -45,15 +46,15 @@ public class LockBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (state.getValue(POWERED)) return InteractionResult.PASS;
-        if (worldIn.getBlockEntity(pos) instanceof KeyLockableTile tile) {
-            if (tile.handleAction(player, handIn, "lock_block")) {
-                this.activate(state, worldIn, pos, player);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (state.getValue(POWERED)) return ItemInteractionResult.FAIL;
+        if (level.getBlockEntity(pos) instanceof KeyLockableTile tile) {
+            if (tile.handleAction(player, hand, stack, "lock_block")) {
+                this.activate(state, level, pos, player);
             }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
-
-        return InteractionResult.sidedSuccess(worldIn.isClientSide);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     public void activate(BlockState state, Level worldIn, BlockPos pos, Player player) {
@@ -97,9 +98,9 @@ public class LockBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
-        tooltip.add(Component.translatable("message.supplementaries.key.lockable").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add(KeyLockableTile.KEY_LOCKABLE_TOOLTIP);
     }
 }

@@ -28,14 +28,14 @@ public class ServerBoundCycleSelectableContainerItemPacket implements Message {
     }
 
     public ServerBoundCycleSelectableContainerItemPacket(int amount, Slot slot, boolean setSlot,
-                                                         SelectableContainerItem<?> item) {
+                                                         SelectableContainerItem<?,?> item) {
         this.amount = amount;
         this.slot = slot;
         this.setSlot = setSlot;
         this.itemInstance = item;
     }
 
-    public ServerBoundCycleSelectableContainerItemPacket(int amount, Slot slot, @NotNull SelectableContainerItem<?> item) {
+    public ServerBoundCycleSelectableContainerItemPacket(int amount, Slot slot, @NotNull SelectableContainerItem<?,?> item) {
         this(amount, slot, false, item); //cycle
     }
 

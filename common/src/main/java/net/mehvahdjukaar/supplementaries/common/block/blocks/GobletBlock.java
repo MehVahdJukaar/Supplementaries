@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GobletBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -94,12 +95,11 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
             if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
                 SoftFluidTank tank = tile.getSoftFluidTank();
                 if (tank.getFluid().is(BuiltInSoftFluids.POTION.get())) {
-                    int i = tank.getCachedStillColor(world, pos);
-                    double d0 = (i >> 16 & 255) / 255.0D;
-                    double d1 = (i >> 8 & 255) / 255.0D;
-                    double d2 = (i & 255) / 255.0D;
+                    int color = tank.getCachedStillColor(world, pos);
 
-                    world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + 0.3125 + random.nextFloat() * 0.375, pos.getY() + 0.5625, pos.getZ() + 0.3125 + random.nextFloat() * 0.375, d0, d1, d2);
+                    world.addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, color),
+                            pos.getX() + 0.3125 + random.nextFloat() * 0.375, pos.getY() + 0.5625, pos.getZ() + 0.3125 + random.nextFloat() * 0.375,
+                            0,0,0);
                 }
             }
         }

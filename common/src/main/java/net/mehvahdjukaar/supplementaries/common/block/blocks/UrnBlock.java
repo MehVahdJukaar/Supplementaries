@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -19,10 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,6 +64,8 @@ import java.util.List;
 
 public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterloggedBlock {
 
+    public static final MapCodec<UrnBlock> CODEC = simpleCodec(UrnBlock::new);
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty TREASURE = ModBlockProperties.TREASURE;
 
@@ -77,6 +77,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(WATERLOGGED, false).setValue(TREASURE, false));
+    }
+
+    @Override
+    protected MapCodec<? extends FallingBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -110,7 +115,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType pathType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -129,7 +134,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         if (isFree(pLevel.getBlockState(pos.below())) && pos.getY() >= pLevel.getMinBuildHeight()) {
             CompoundTag tag = null;
             if (pLevel.getBlockEntity(pos) instanceof UrnBlockTile tile) {
-                tag = tile.saveWithoutMetadata();
+                tag = tile.saveWithoutMetadata(pLevel.registryAccess());
                 tile.clearContent();
                 tile.setRemoved();
             }
@@ -160,12 +165,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isEmpty()) {
-            return tile.interact(player, handIn);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isEmpty()) {
+            return tile.interactWithPlayerItem(player, hand, stack);
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
 
@@ -235,11 +239,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
+    public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         if (pLevel.isClientSide && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, pPlayer.getUseItem()) == 0) {
             spawnExtraBrokenParticles(pState, pPos, pLevel);
         }
+        return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
     }
 
     public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {

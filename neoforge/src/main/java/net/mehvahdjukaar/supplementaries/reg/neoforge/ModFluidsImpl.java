@@ -30,6 +30,7 @@ import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.common.extensions.IForgeMobEffect;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;

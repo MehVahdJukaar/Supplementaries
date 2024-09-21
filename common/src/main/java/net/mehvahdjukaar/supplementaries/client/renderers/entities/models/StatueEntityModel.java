@@ -177,9 +177,6 @@ public class StatueEntityModel extends Model {
         leftArm.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         leftSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
         rightSleeve.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, color);
-
-        renderCloak(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
-        renderEars(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
     }
 }
 

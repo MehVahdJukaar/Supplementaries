@@ -18,6 +18,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -54,7 +55,7 @@ public class TextHolder implements IAntiquable {
     private boolean renderMessagedFiltered;
 
     private static Codec<Component[]> compCodec(int size) {
-        return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.FLAT_CODEC.listOf()
+        return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.CODEC.listOf()
                 .comapFlatMap((list) -> Util.fixedSize(list, s)
                                 .map(l -> l.toArray(Component[]::new)),
                         components -> Arrays.stream(components).toList()));
@@ -119,7 +120,9 @@ public class TextHolder implements IAntiquable {
     }
 
     private Component[] decodeMessage(Tag com, Level level, BlockPos pos) {
-        return Arrays.stream(compCodec(lines).decode(NbtOps.INSTANCE, com).getOrThrow()
+        var ops = level.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+
+        return Arrays.stream(compCodec(lines).decode(ops, com).getOrThrow()
                 .getFirst()).map(c -> {
             if (level instanceof ServerLevel sl) {
                 try {
@@ -133,15 +136,17 @@ public class TextHolder implements IAntiquable {
     }
 
 
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(CompoundTag compound, HolderLookup.Provider registries) {
         CompoundTag com = new CompoundTag();
         com.putString("color", this.color.getName());
         com.putBoolean("has_glowing_text", this.hasGlowingText);
         com.putBoolean("has_antique_ink", this.hasAntiqueInk);
         if (lines != 0) {
-            com.put("message", compCodec(lines).encodeStart(NbtOps.INSTANCE, messages).getOrThrow());
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+
+            com.put("message", compCodec(lines).encodeStart(ops, messages).getOrThrow());
             if (hasFilteredMessage()) {
-                com.put("filtered_message", compCodec(lines).encodeStart(NbtOps.INSTANCE, filteredMessages).getOrThrow());
+                com.put("filtered_message", compCodec(lines).encodeStart(ops, filteredMessages).getOrThrow());
             }
         }
         compound.put("TextHolder", com);

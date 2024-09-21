@@ -122,8 +122,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 
         if (!state.getValue(POWERED) && gold || !CommonConfigs.Building.CONSISTENT_GATE.get()) {
             Direction dir = player.getDirection();
@@ -150,7 +149,6 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         }
 
         return InteractionResult.PASS;
-
     }
 
     private static void soundAndEvent(BlockState state, Level level, BlockPos pos, @Nullable Player player) {

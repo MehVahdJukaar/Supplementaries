@@ -2,20 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-public class QuiverContent extends SelectableContainerContent<QuiverContent.Mutable>{
+public class QuiverContent extends SelectableContainerContent<QuiverContent.Mutable> {
 
     public static final Codec<QuiverContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.CODEC.listOf().fieldOf("Items").forGetter(QuiverContent::getContentCopy),
@@ -32,12 +29,29 @@ public class QuiverContent extends SelectableContainerContent<QuiverContent.Muta
         super(stacks, selected);
     }
 
+    public ItemStack getSelected() {
+        return getSelected(null);
+    }
+
+    public ItemStack getSelected(@Nullable Predicate<ItemStack> supporterArrows) {
+        if (supporterArrows == null) return super.getSelected();
+
+        var content = this.getContentUnsafe();
+        int size = content.size();
+        for (int i = 0; i < size; i++) {
+            ItemStack s = content.get((i + this.selectedSlot) % size);
+            if (supporterArrows.test(s)) return s.copy();
+        }
+        return ItemStack.EMPTY;
+    }
+
     @Override
     public Mutable toMutable() {
         return new Mutable(this);
     }
 
-    public static class Mutable extends Mut<QuiverContent>{
+
+    public static class Mutable extends Mut<QuiverContent> {
 
         protected Mutable(SelectableContainerContent<?> original) {
             super(original);
@@ -50,8 +64,10 @@ public class QuiverContent extends SelectableContainerContent<QuiverContent.Muta
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return false;
+            return QuiverItem.canAcceptItem(stack);
         }
+
+
     }
 
 

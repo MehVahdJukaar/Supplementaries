@@ -34,10 +34,13 @@
 - glowing blackboard persistence
 - waxed too
 - standardize and make IWaxable IGlowable and IAntiquable
+- all quiver and lunch
+- all tipped and configs
 
 
 # Soon
 
+- all use action in adventure mode
 - guarded by piglins block tag
 - globe sheared particle event for servers
 - hat for players

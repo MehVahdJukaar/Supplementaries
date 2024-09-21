@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
@@ -183,7 +184,7 @@ public class PearlMarker extends Entity {
                         }
 
                     }
-                    NetworkHelper.sentToAllClientPlayersTrackingEntity(this,
+                    NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                             new ClientBoundParticlePacket(fromPos.getCenter(),
                                     ClientBoundParticlePacket.Kind.PEARL_TELEPORT,
                                     0, toPos.getCenter()));

@@ -4,22 +4,17 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,16 +32,6 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return false;
-    }
-
-    @ForgeOverride
-    public boolean isRepairable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
     public int getBarColor(ItemStack stack) {
         return getPotion(stack).getColor();
     }
@@ -57,25 +42,8 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
     }
 
     @Override
-    public int getEnchantmentValue() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @ForgeOverride
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
-
-    @Override
-    public String getDescriptionId(ItemStack stack) {
-        return "item.supplementaries.bamboo_spikes_tipped";
-        //return PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed(super.getTranslationKey() + ".effect.");
+    public int getBarWidth(ItemStack stack) {
+        return super.getBarWidth(stack);
     }
 
     @Override
@@ -90,26 +58,14 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
         return Component.translatable(this.getDescriptionId(stack));
     }
 
-    @Override
-    public ItemStack getDefaultInstance() {
-        //replace with item constructor default component
-        return makeSpikeItem(Potions.POISON);
-    }
-
-    public static ItemStack makeSpikeItem(@Nullable Holder<Potion> potion) {
-        if (potion == null) return ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
-        return PotionContents.createItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), potion);
-    }
-
-    public static boolean isPotionValid(Holder<Potion> potion) {
-        List<MobEffectInstance> effects = potion.value().getEffects();
+    public static boolean isPotionValid(PotionContents potion) {
+        if (!potion.hasEffects()) return false;
         if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
-            if (effects.isEmpty()) return false;
-            for (var e : effects) {
+            for (var e : potion.getAllEffects()) {
                 if (e.getEffect().value().isBeneficial()) return false;
             }
         }
-        return !potion.is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        return potion.potion().isEmpty() || !potion.potion().get().is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
     }
 
     public static @NotNull PotionContents getPotion(ItemStack stack) {

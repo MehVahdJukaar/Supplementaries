@@ -2,9 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class KeyLockableTile extends BlockEntity implements IKeyLockable {
+
+    public static final MutableComponent KEY_LOCKABLE_TOOLTIP = Component.translatable("message.supplementaries.key.lockable")
+            .withStyle(ChatFormatting.ITALIC)
+            .withStyle(ChatFormatting.GRAY);
+
 
     private String password = null;
 
@@ -36,9 +44,8 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
     }
 
     //returns true if door has to open
-    public boolean handleAction(Player player, InteractionHand handIn, String translName) {
+    public boolean handleAction(Player player, InteractionHand handIn, ItemStack stack, String translName) {
         if (player.isSpectator()) return false;
-        ItemStack stack = player.getItemInHand(handIn);
 
         String keyPassword = IKeyLockable.getKeyPassword(stack);
         //clear ownership
