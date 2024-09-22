@@ -38,7 +38,6 @@ public class ServerEventsFabric {
         ServerPlayConnectionEvents.JOIN.register((l, s, m) -> ServerEvents.onPlayerLoggedIn(l.player));
         UseEntityCallback.EVENT.register(ServerEvents::onRightClickEntity);
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(ServerEvents::onDataSyncToPlayer);
-        CommonLifecycleEvents.TAGS_LOADED.register(ServerEvents::onCommonTagUpdate);
         ServerEntityEvents.ENTITY_LOAD.register(ServerEvents::onEntityLoad);
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {

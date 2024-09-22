@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 
 import com.google.common.base.Stopwatch;
+import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
@@ -12,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.FireworkRocketItem;
@@ -30,6 +35,12 @@ public class ModSetup {
     private static int setupStage = 0;
     private static boolean firstTagLoad = false;
 
+    public static void init(){
+        PlatHelper.addCommonSetup(ModSetup::setup);
+        PlatHelper.addCommonSetup(ModSetup::asyncSetup);
+        PlatHelper.addReloadableCommonSetup(ModSetup::onCommonTagUpdate);
+    }
+
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
             FlowerPotHandler::setup,
@@ -42,6 +53,7 @@ public class ModSetup {
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
     );
 
+    @EventCalled
     public static void asyncSetup() {
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
@@ -49,6 +61,7 @@ public class ModSetup {
         PlaceableBookManager.setup();
     }
 
+    @EventCalled
     public static void setup() {
         var list = new ArrayList<Long>();
         try {
@@ -102,7 +115,7 @@ public class ModSetup {
     }
 
     //events on setup. fire on world load
-    public static void tagDependantSetup(RegistryAccess registryAccess) {
+    private static void tagDependantSetup(RegistryAccess registryAccess) {
         if (!firstTagLoad) {
             //using this as a post-setup event that can access tags
             Stopwatch watch = Stopwatch.createStarted();
@@ -124,6 +137,22 @@ public class ModSetup {
         // this we can properly refresh every time
         InteractEventsHandler.setupOverrides();
 
+    }
+
+    @EventCalled
+    public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
+        ModSetup.tagDependantSetup(registryAccess);
+
+        if (!client) {
+            WaySignStructure.recomputeValidStructureCache(registryAccess);
+
+            try {
+                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.EMPTY.getID());
+                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.WATER.getID());
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
+            }
+        }
     }
 
 }

@@ -126,13 +126,6 @@ public class ServerEventsForge {
         }
     }
 
-
-    @SubscribeEvent
-    public static void onTagUpdate(TagsUpdatedEvent event) {
-        ServerEvents.onCommonTagUpdate(event.getRegistryAccess(),
-                event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED);
-    }
-
     //for flute and cage. fabric calls directly
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {

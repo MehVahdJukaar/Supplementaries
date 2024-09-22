@@ -46,6 +46,9 @@
 - all disepnser behavior. bamboo spikes one too
 - test soap interaction on servers
 - bubble blower chages and tooltip
+- antique ink on written books
+- panitng tooltips
+- buble blower, tipped spikes and rope arrow bars
 
 
 # Soon

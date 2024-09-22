@@ -26,7 +26,7 @@ public abstract class BlockEntityRendererDispatcherMixin {
         tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> {
             if (c.hasAntiqueInk()) {
                 IAntiquable font = (IAntiquable) (Minecraft.getInstance().font);
-                font.setAntique(true);
+                font.supplementaries$setAntique(true);
                 supplementaries$antiqueFontActive = true;
             }
         });
@@ -37,7 +37,7 @@ public abstract class BlockEntityRendererDispatcherMixin {
                                                                    PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         if (supplementaries$antiqueFontActive) {
             IAntiquable font = (IAntiquable) (Minecraft.getInstance().font);
-            font.setAntique(false);
+            font.supplementaries$setAntique(false);
             supplementaries$antiqueFontActive = false;
         }
     }

@@ -23,12 +23,12 @@ public abstract class FontRendererMixin implements IAntiquable {
     private boolean supplementaries$antique = false;
 
     @Override
-    public boolean isAntique() {
+    public boolean supplementaries$isAntique() {
         return supplementaries$antique;
     }
 
     @Override
-    public void setAntique(boolean hasInk) {
+    public void supplementaries$setAntique(boolean hasInk) {
         supplementaries$antique = hasInk;
     }
 

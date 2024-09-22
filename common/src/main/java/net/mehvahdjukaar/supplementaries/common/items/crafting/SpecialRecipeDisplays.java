@@ -1,13 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.RecipeBookCategories;
@@ -16,7 +19,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
@@ -26,6 +28,8 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -306,17 +310,13 @@ public class SpecialRecipeDisplays {
             ItemStack banner = new ItemStack(BannerBlock.byColor(color).asItem());
             ItemStack fullFlag = new ItemStack(ModRegistry.FLAGS.get(color).get());
 
-            ListTag list = new ListTag();
-            CompoundTag compoundTag = new CompoundTag();
+            BannerPatternLayers patterns = new BannerPatternLayers(
+                    List.of(new BannerPatternLayers.Layer(DynamicHolder.of(BannerPatterns.BASE),
+                            color == DyeColor.WHITE ? DyeColor.BLACK : DyeColor.WHITE))
+            );
 
-            compoundTag.putString("Pattern", "mojang");
-            compoundTag.putInt("Color", color == DyeColor.WHITE ? DyeColor.BLACK.getId() : DyeColor.WHITE.getId());
-            list.add(compoundTag);
-
-            CompoundTag com = banner.getOrCreateTagElement("BlockEntityTag");
-            com.put("Patterns", list);
-            CompoundTag com2 = fullFlag.getOrCreateTagElement("BlockEntityTag");
-            com2.put("Patterns", list);
+            banner.set(DataComponents.BANNER_PATTERNS, patterns);
+            fullFlag.set(DataComponents.BANNER_PATTERNS, patterns);
 
             Ingredient emptyFlag = Ingredient.of(new ItemStack(ModRegistry.FLAGS.get(color).get()));
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, emptyFlag, Ingredient.of(banner));
@@ -366,8 +366,7 @@ public class SpecialRecipeDisplays {
                 {0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}};
-        com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
-        blackboard.addTagElement("BlockEntityTag", com);
+        blackboard.set(ModComponents.BLACKBOARD.get(), BlackboardData.pack(pixels, false, false));
         return blackboard;
     }
 
@@ -392,8 +391,7 @@ public class SpecialRecipeDisplays {
                 {0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0},
                 {0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0},
                 {0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0}};
-        com.putLongArray("Pixels", BlackboardBlockTile.packPixels(pixels));
-        blackboard.addTagElement("BlockEntityTag", com);
+        blackboard.set(ModComponents.BLACKBOARD.get(), BlackboardData.pack(pixels, false, false));
         return blackboard;
     }
 

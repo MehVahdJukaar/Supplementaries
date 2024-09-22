@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.EmptySliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.DepthDataHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
@@ -57,6 +58,7 @@ public class Supplementaries {
 
         MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 
+        ModSetup.init();
         ModNetwork.init();
         ModSounds.init();
         ModFluids.init();
@@ -72,7 +74,7 @@ public class Supplementaries {
         ModCreativeTabs.init();
         LootTablesInjects.init();
         InteractEventsHandler.init();
-        EmptySliceMapItem.init();
+        DepthDataHandler.init();
         WeatheredHandler.init();
         ColoredMapHandler.init();
         MapLightHandler.init();

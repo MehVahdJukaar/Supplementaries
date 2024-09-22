@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -43,7 +44,7 @@ public abstract class SelectableContainerItemHud {
     protected final Minecraft mc;
     //behold states
     @Nullable
-    private SelectableContainerItem<?,?> itemUsed;
+    private SelectableContainerItem<?, ?> itemUsed;
     private Supplier<ItemStack> stackSlot;
     private boolean usingKey = false; //false if just using
     private double lastCumulativeMouseDx = 0;
@@ -117,23 +118,29 @@ public abstract class SelectableContainerItemHud {
     }
 
     private void sendCycle(int slotsMoved, Slot slot) {
-        var data = getItemUsedData();
-        if (data != null) {
+        ItemStack stack = getItemUsed();
+        if (stack != null) {
             NetworkHelper.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(slotsMoved, slot, itemUsed));
             //update client immediately. stacks now may be desynced
-
-            data.cycle(slotsMoved);
+            itemUsed.modify(stack, m -> {
+                m.cycle(slotsMoved);
+                return true;
+            });
         }
     }
 
     private void sendSetSlot(Slot slot, int number) {
-        var data = getItemUsedData();
-        if (data != null) {
+        ItemStack stack = getItemUsed();
+        if (stack != null) {
             NetworkHelper.sendToServer(new ServerBoundCycleSelectableContainerItemPacket(
                     number, slot, true, itemUsed));
-            getItemUsedData().setSelectedSlot(number);
+            itemUsed.modify(stack, m -> {
+                m.setSelectedSlot(number);
+                return true;
+            });
         }
     }
+
 
     @EventCalled
     public boolean onKeyPressed(int key, int action, int modifiers) {
@@ -165,11 +172,11 @@ public abstract class SelectableContainerItemHud {
     }
 
     @Nullable
-    private SelectableContainerContent<?> getItemUsedData() {
+    private ItemStack getItemUsed() {
         if (itemUsed == null) return null;
         ItemStack stack = stackSlot.get();
         if (!stack.is(itemUsed)) return null;
-        return stack.get(itemUsed.getComponentType());
+        return stack;
     }
 
     @NotNull
@@ -197,11 +204,17 @@ public abstract class SelectableContainerItemHud {
             }
         }
 
-        var data = getItemUsedData();
+        ItemStack stack = getItemUsed();
+        if (stack == null) {
+            closeHud();
+            return;
+        }
+        var data = stack.get(ModComponents.QUIVER_CONTENT.get());
         if (data == null) {
             closeHud();
             return;
         }
+
         ///gui.setupOverlayRenderState(true, false);
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();

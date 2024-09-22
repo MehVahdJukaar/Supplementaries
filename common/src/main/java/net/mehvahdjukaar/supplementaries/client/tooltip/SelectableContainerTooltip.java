@@ -11,13 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class SelectableContainerTooltip implements ClientTooltipComponent {
-    private final List<ItemStack> items;
-    private final int selectedSlot;
+
+    private final SelectableContainerContent<?> content;
 
     public SelectableContainerTooltip(SelectableContainerContent<?> content) {
-        this.items = content.stacks();
-        //TODO: copy bundle one
-        this.selectedSlot = content.selected();
+        this.content = content;
     }
 
     @Override
@@ -46,15 +44,16 @@ public class SelectableContainerTooltip implements ClientTooltipComponent {
     }
 
     private void renderSlot(int x, int y, int itemIndex, Font font, GuiGraphics graphics) {
-        if (itemIndex >= this.items.size()) {
+        List<ItemStack> items = this.content.getContentUnsafe();
+        if (itemIndex >= items.size()) {
             this.blit(graphics, x, y, Texture.SLOT);
             return;
         }
-        ItemStack itemStack = this.items.get(itemIndex);
+        ItemStack itemStack = items.get(itemIndex);
         this.blit(graphics, x, y, Texture.SLOT);
         graphics.renderItem(itemStack, x + 1, y + 1, itemIndex);
         graphics.renderItemDecorations(font, itemStack, x + 1, y + 1);
-        if (itemIndex == selectedSlot) {
+        if (itemIndex == content.getSelectedSlot()) {
             AbstractContainerScreen.renderSlotHighlight(graphics, x + 1, y + 1, 0);
         }
     }
@@ -80,7 +79,7 @@ public class SelectableContainerTooltip implements ClientTooltipComponent {
     }
 
     private int gridSizeX() {
-        return this.items.size();
+        return this.content.getSize();
     }
 
     private int gridSizeY() {

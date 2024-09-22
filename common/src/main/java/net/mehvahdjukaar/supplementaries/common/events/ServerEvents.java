@@ -155,22 +155,6 @@ public class ServerEvents {
         MapLightHandler.sendDataToClient(player);
     }
 
-    @EventCalled
-    public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
-        ModSetup.tagDependantSetup(registryAccess);
-
-        if (!client) {
-            WaySignStructure.recomputeValidStructureCache(registryAccess);
-
-            try {
-                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.EMPTY.getID());
-                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.WATER.getID());
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
-            }
-        }
-    }
-
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();
 
     @EventCalled

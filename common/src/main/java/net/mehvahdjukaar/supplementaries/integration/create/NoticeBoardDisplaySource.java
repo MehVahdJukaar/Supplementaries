@@ -14,7 +14,7 @@ public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
             tile.updateText();
-            return Component.literal(tile.getText());
+            return Component.literal(tile.getText().get(false));
         } else {
             return Component.empty();
         }

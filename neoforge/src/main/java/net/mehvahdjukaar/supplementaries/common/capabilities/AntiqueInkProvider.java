@@ -33,12 +33,12 @@ public class AntiqueInkProvider implements IAntiquable, ICapabilitySerializable<
     }
 
     @Override
-    public boolean isAntique() {
+    public boolean supplementaries$isAntique() {
         return this.hasAntiqueInk;
     }
 
     @Override
-    public void setAntique(boolean hasInk) {
+    public void supplementaries$setAntique(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
     }
 }

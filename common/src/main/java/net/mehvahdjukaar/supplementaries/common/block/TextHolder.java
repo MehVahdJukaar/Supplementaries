@@ -223,14 +223,14 @@ public class TextHolder implements IAntiquable {
         if (item == Items.INK_SAC) {
             if (this.hasGlowingText || this.hasAntiqueInk) {
                 level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setAntique(false);
+                this.supplementaries$setAntique(false);
                 this.hasGlowingText = false;
                 success = true;
             }
         } else if (item == ModRegistry.ANTIQUE_INK.get()) {
             if (!this.hasAntiqueInk) {
                 level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                this.setAntique(true);
+                this.supplementaries$setAntique(true);
                 success = true;
             }
         } else if (item == Items.GLOW_INK_SAC) {
@@ -281,12 +281,12 @@ public class TextHolder implements IAntiquable {
     }
 
     @Override
-    public boolean isAntique() {
+    public boolean supplementaries$isAntique() {
         return this.hasAntiqueInk;
     }
 
     @Override
-    public void setAntique(boolean hasInk) {
+    public void supplementaries$setAntique(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
         for (int i = 0; i < this.messages.length; i++) {
             this.setMessage(i, this.messages[i], this.filteredMessages[i]);
@@ -295,7 +295,7 @@ public class TextHolder implements IAntiquable {
 
     public void clearEffects() {
         this.setColor(DyeColor.BLACK);
-        this.setAntique(false);
+        this.supplementaries$setAntique(false);
         this.setHasGlowingText(false);
     }
 
@@ -332,7 +332,7 @@ public class TextHolder implements IAntiquable {
         return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(),
                 ClientConfigs.getSignColorMult(),
                 combinedLight,
-                this.isAntique() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
+                this.supplementaries$isAntique() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
                 normal, shouldShowGlow);
     }
 

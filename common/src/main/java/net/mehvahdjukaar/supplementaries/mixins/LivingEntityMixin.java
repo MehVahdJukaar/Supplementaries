@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -108,11 +109,10 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @Inject(method = "triggerItemUseEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isUsingItem()Z"))
     private void suppl$eatFromLunchBasket(ItemStack stack, int amount, CallbackInfo ci,
                                           @Local(argsOnly = true) LocalRef<ItemStack> food) {
-        if (stack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getComponentKey(stack);
-            if (data.canEatFrom()) {
-                food.set(data.getSelected());
-            }
+        var data = stack.get(ModComponents.LUNCH_BASKET_CONTENT.get());
+        if (data != null && data.canEatFrom()) {
+            food.set(data.getSelected());
         }
+
     }
 }

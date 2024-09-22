@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -27,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public abstract class SelectableContainerItem<C extends SelectableContainerContent<M>,
         M extends SelectableContainerContent.Mut<C>> extends Item {
@@ -241,5 +241,15 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
     @Deprecated(forRemoval = true)
     public abstract int getMaxSlots();
 
-
+    public boolean modify(ItemStack stack, Function<M, Boolean> consumer) {
+        C data = stack.get(this.getComponentType());
+        if (data != null) {
+            M mutable = data.toMutable();
+            if (consumer.apply(mutable)) {
+                stack.set(this.getComponentType(), mutable.toImmutable());
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -47,10 +47,7 @@ public class SupplementariesForge {
 
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent event) {
-        event.enqueueWork(ModSetup::setup);
-        ModSetup.asyncSetup();
         VillagerScareStuff.setup();
-
     }
 
     @SubscribeEvent

@@ -48,8 +48,8 @@ public class AntiqueInkItem extends Item implements SignApplicator {
 
         boolean success = false;
         if (cap != null) {
-            if (cap.isAntique() != newState) {
-                cap.setAntique(newState);
+            if (cap.supplementaries$isAntique() != newState) {
+                cap.supplementaries$setAntique(newState);
                 tile.setChanged();
                 if (world instanceof ServerLevel serverLevel) {
                     NetworkHelper.sendToAllClientPlayersInRange(serverLevel, pos, 256,
@@ -72,7 +72,7 @@ public class AntiqueInkItem extends Item implements SignApplicator {
     public static void setAntiqueInk(BlockEntity tile, boolean ink) {
         var cap = SuppPlatformStuff.getForgeCap(tile, IAntiquable.class);
         if (cap != null) {
-            cap.setAntique(ink);
+            cap.supplementaries$setAntique(ink);
         }
     }
 

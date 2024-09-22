@@ -16,12 +16,12 @@ public abstract class PageButtonMixin implements IAntiquable {
     private boolean supplementaries$antiqueInk;
 
     @Override
-    public boolean isAntique() {
+    public boolean supplementaries$isAntique() {
         return supplementaries$antiqueInk;
     }
 
     @Override
-    public void setAntique(boolean hasInk) {
+    public void supplementaries$setAntique(boolean hasInk) {
         this.supplementaries$antiqueInk = hasInk;
     }
 

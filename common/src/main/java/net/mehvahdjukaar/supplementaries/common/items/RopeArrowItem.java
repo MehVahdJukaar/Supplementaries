@@ -4,15 +4,18 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArrowItem;
@@ -24,8 +27,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class RopeArrowItem extends ArrowItem {
-    public RopeArrowItem(Properties builder) {
+    protected final int maxCharges;
+
+    public RopeArrowItem(int maxCharges, Properties builder) {
         super(builder);
+        this.maxCharges = maxCharges;
+    }
+
+    @Override
+    public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity livingEntity, @Nullable ItemStack itemStack2) {
+        var arrow = new Arrow(level, livingEntity, itemStack.copyWithCount(1), itemStack2);
+
     }
 
     @Override
@@ -36,11 +48,11 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     public static int getRopes(ItemStack stack) {
-        return stack.getMaxDamage() - stack.getDamageValue();
+        return stack.getOrDefault(ModComponents.CHARGES.get(),0);
     }
 
     public static void addRopes(ItemStack stack, int ropes) {
-        stack.setDamageValue(stack.getDamageValue() - ropes);
+        stack.set(ModComponents.CHARGES.get(), Math.min(getRopeCapacity(), getRopes(stack) + ropes));
     }
 
     public static int getRopeCapacity() {
@@ -51,29 +63,10 @@ public class RopeArrowItem extends ArrowItem {
         return stack.is(ModTags.ROPES);
     }
 
-    @ForgeOverride
-    public int getMaxDamage(ItemStack stack) {
-        return getRopeCapacity();
-    }
-
-    @ForgeOverride
-    public boolean isInfinite(ItemStack stack, ItemStack bow, Player player) {
-        return false;
-    }
-
-    @ForgeOverride
-    public boolean isRepairable(ItemStack stack) {
-        return false;
-    }
-
-    @ForgeOverride
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return false;
-    }
-
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13.0F - stack.getDamageValue() * 13.0F / this.getMaxDamage(stack));
+        int charges = getRopes(stack);
+        return Mth.clamp(Math.round(13.0F - maxCharges * 13.0F / (float) charges), 0, 13);
     }
 
     @Override
@@ -92,30 +85,19 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public int getEnchantmentValue() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        tooltip.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", getRopes(stack), getRopeCapacity()));
-        if (worldIn == null) return;
-        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        tooltipComponents.add(Component.translatable("message.supplementaries.rope_arrow_tooltip", getRopes(stack),
+                this.maxCharges));
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
         var override = CommonConfigs.getRopeOverride();
         if (override != null) {
-
-            tooltip.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location().toString())
+            tooltipComponents.add(Component.translatable("message.supplementaries.rope_arrow", override.key().location().toString())
                     .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
         }
     }
 
-    //TODO
+    //TODO check
     @Override
     public boolean overrideStackedOnOther(ItemStack ropeArrow, Slot pSlot, ClickAction pAction, Player pPlayer) {
         if (pAction != ClickAction.SECONDARY) {

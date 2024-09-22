@@ -2,9 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -53,24 +51,18 @@ public record ServerBoundCycleSelectableContainerItemPacket(int amount, Slot slo
             if (!(stack.getItem() instanceof SelectableContainerItem<?, ?> item)) {
                 Supplementaries.error(); //should not happen
             } else {
-                doStuffTyped(item.getComponentType(), stack);
+                item.modify(stack, data -> {
+                    if (setSlot) {
+                        data.setSelectedSlot(amount);
+                    } else {
+                        data.cycle(amount);
+                    }
+                    return true;
+                });
             }
         } else Supplementaries.error();
     }
 
-    private <T extends SelectableContainerContent<M>, M extends SelectableContainerContent.Mut<T>> void doStuffTyped(
-            DataComponentType<T> key, ItemStack stack) {
-        var data = stack.get(key);
-        if (data != null) {
-            var mutable = data.toMutable();
-            if (setSlot) {
-                mutable.setSelectedSlot(amount);
-            } else {
-                mutable.cycle(amount);
-            }
-            stack.set(key, mutable.toImmutable());
-        }
-    }
 
     public enum Slot {
         MAIN_HAND,

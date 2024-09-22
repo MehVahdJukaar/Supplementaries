@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -29,7 +30,7 @@ public class SoapClearRecipe extends CustomRecipe {
                 Item item = itemstack.getItem();
                 boolean isColored = (BlocksColorAPI.getColor(item) != null &&
                         !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item)));
-                if (isColored || item instanceof DyeableLeatherItem || hasTrim(item)) {
+                if (isColored || itemstack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
                     ++i;
                 } else {
                     if (!itemstack.is(ModRegistry.SOAP.get())) {
@@ -60,7 +61,7 @@ public class SoapClearRecipe extends CustomRecipe {
             if (!stack.isEmpty()) {
                 Item item = stack.getItem();
                 if (BlocksColorAPI.getColor(item) != null ||
-                        item instanceof DyeableLeatherItem) {
+                        stack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
                     toRecolor = stack.copyWithCount(1);
                 }
             }
@@ -68,9 +69,14 @@ public class SoapClearRecipe extends CustomRecipe {
 
         ItemStack result;
         Item i = toRecolor.getItem();
-        if (i instanceof DyeableLeatherItem leatherItem) {
+        if (toRecolor.has(DataComponents.DYED_COLOR)) {
             result = toRecolor.copy();
-            leatherItem.clearColor(result);
+            ItemStack def = toRecolor.getItem().getDefaultInstance();
+            if (def.has(DataComponents.DYED_COLOR)) {
+                result.set(DataComponents.DYED_COLOR, def.get(DataComponents.DYED_COLOR));
+            } else {
+                result.remove(DataComponents.DYED_COLOR);
+            }
             return result;
         } else {
             Item recolored = BlocksColorAPI.changeColor(i, null);
@@ -81,10 +87,6 @@ public class SoapClearRecipe extends CustomRecipe {
             }
         }
 
-        var tag = toRecolor.getTag();
-        if (tag != null) {
-            result.setTag(tag.copy());
-        }
         result.setCount(1);
         return result;
     }

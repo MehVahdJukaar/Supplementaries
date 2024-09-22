@@ -14,6 +14,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.items.EmptySliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.DepthDataHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
@@ -34,10 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(MapItem.class)
 public abstract class MapItemMixin {
@@ -64,15 +62,15 @@ public abstract class MapItemMixin {
                                 @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
                                 @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
                                 @Share("heightLock") LocalIntRef height) {
-        int mapHeight = EmptySliceMapItem.getMapHeight(data);
+        int mapHeight = DepthDataHandler.getMapHeight(data).orElse(Integer.MAX_VALUE);
         height.set(mapHeight);
         colorMap.set(CommonConfigs.Tweaks.TINTED_MAP.get() ? new HashMap<>() : null);
         lightMap.set(MapLightHandler.isActive() ? new HashMap<>() : null);
         if (mapHeight != Integer.MAX_VALUE) {
-            if (!EmptySliceMapItem.canPlayerSee(mapHeight, viewer)) {
+            if (!DepthDataHandler.canPlayerSee(mapHeight, viewer)) {
                 ci.cancel();
             }
-            range.set((int) (range.get() * EmptySliceMapItem.getRangeMultiplier()));
+            range.set((int) (range.get() * DepthDataHandler.getRangeMultiplier()));
         }
     }
 
@@ -103,7 +101,7 @@ public abstract class MapItemMixin {
                                                   @Share("heightLock") LocalIntRef height) {
         MapColor cutoffColor = null;
         if ((height.get() != Integer.MAX_VALUE && height.get() <= w)) {
-            cutoffColor = EmptySliceMapItem.getCutoffColor(pos, chunk);
+            cutoffColor = DepthDataHandler.getCutoffColor(pos, chunk);
         }
 
         if (lightMap.get() != null) {

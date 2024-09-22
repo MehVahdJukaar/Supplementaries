@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,9 +26,9 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
 
     private boolean isEmptySpike(ItemStack stack) {
         if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
-            CompoundTag tag = stack.getTag();
-            return tag != null && tag.getInt("Damage") != 0;
-        } else return stack.getItem() == ModRegistry.BAMBOO_SPIKES_ITEM.get();
+            Integer charges = stack.get(ModComponents.CHARGES.get());
+            return charges == null || charges == 0;
+        } else return stack.is(ModRegistry.BAMBOO_SPIKES.get().asItem());
     }
 
     @Override

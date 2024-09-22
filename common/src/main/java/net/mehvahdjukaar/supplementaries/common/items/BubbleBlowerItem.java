@@ -16,7 +16,6 @@ import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -153,6 +152,12 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @Override
     public int getBarColor(ItemStack stack) {
         return 0xe8a4e4;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        int charges = stack.getOrDefault(ModComponents.CHARGES.get(), 0);
+        return Mth.clamp(Math.round(13.0F - maxCharges * 13.0F / (float) charges), 0, 13);
     }
 
     @ForgeOverride

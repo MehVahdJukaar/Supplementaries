@@ -23,8 +23,5 @@ public class SupplementariesFabric implements ModInitializer {
 
             SupplementariesFabricClient.init();
         }
-        PlatHelper.addCommonSetup(ModSetup::setup);
-        PlatHelper.addCommonSetup(ModSetup::asyncSetup);
-
     }
 }
