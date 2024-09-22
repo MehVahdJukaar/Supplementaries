@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -97,7 +97,7 @@ public class SackItem extends BlockItem {
         if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
             if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
                 var container = pStack.get(DataComponents.CONTAINER);
-                return Optional.of(new InventoryTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
+                return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();

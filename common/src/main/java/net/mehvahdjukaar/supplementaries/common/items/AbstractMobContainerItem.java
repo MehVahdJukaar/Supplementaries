@@ -17,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -100,8 +99,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }
 
     public boolean isFull(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("BlockEntityTag");
+        return stack.has(ModComponents.MOB_HOLDER_CONTENT.get());
     }
 
     //called from event for better compat
@@ -190,18 +188,18 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         Player player = context.getPlayer();
         if (!context.getPlayer().isShiftKeyDown() && content != null) {
             //TODO: add other case
+            var data = content.getDataUnsafe();
             boolean success = false;
             Level world = context.getLevel();
             Vec3 v = context.getClickLocation();
-            if (com.contains("BucketHolder")) {
-                ItemStack bucketStack = ItemStack.of(com.getCompound("BucketHolder").getCompound("Bucket"));
+            if (data instanceof MobContainer.MobData.Bucket b) {
+                ItemStack bucketStack = b.getBucket();
                 if (bucketStack.getItem() instanceof BucketItem bi) {
-                    bi.checkExtraContent(player, world, bucketStack, context.getClickedPos());
+                    bi.checkExtraContent(player, world, bucketStack.copy(), context.getClickedPos());
                     success = true;
                 }
-            } else if (com.contains("MobHolder")) {
-                CompoundTag nbt = com.getCompound("MobHolder");
-                Entity entity = EntityType.loadEntityRecursive(nbt.getCompound("EntityData"), world, o -> o);
+            } else if (data instanceof MobContainer.MobData.Entity e) {
+                Entity entity = EntityType.loadEntityRecursive(e.getTag(), world, o -> o);
                 if (entity != null) {
 
                     success = true;
@@ -219,9 +217,9 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         }
 
                         UUID temp = entity.getUUID();
-                        if (nbt.contains("UUID")) {
-                            UUID id = nbt.getUUID("UUID");
-                            entity.setUUID(id);
+                        UUID dataUUID = e.getUuid();
+                        if (dataUUID != null) {
+                            entity.setUUID(dataUUID);
                         }
                         if (!world.addFreshEntity(entity)) {
                             //spawn failed, reverting to old UUID
@@ -232,17 +230,18 @@ public abstract class AbstractMobContainerItem extends BlockItem {
                         //TODO fix sound categories
                     }
                     //create new uuid for creative itemStack
-                    if (player.isCreative() && nbt.contains("UUID")) {
-                        nbt.putUUID("UUID", Mth.createInsecureUUID(world.random));
+                    if (player.isCreative() && e.getUuid() != null) {
+                        stack.set(ModComponents.MOB_HOLDER_CONTENT.get(),
+                                content.copyWithNewUUID(Mth.createInsecureUUID(world.random)));
                     }
                 } else Supplementaries.LOGGER.error("Failed to load entity from itemstack");
             }
             if (success) {
                 if (!world.isClientSide) {
                     this.playReleaseSound(world, v);
-                    if (!player.isCreative()) {
-                        ItemStack returnItem = new ItemStack(this);
-                        if (stack.hasCustomHoverName()) returnItem.setHoverName(stack.getHoverName());
+                    if (!player.hasInfiniteMaterials()) {
+                        ItemStack returnItem = stack.copyWithCount(1);
+                        returnItem.remove(ModComponents.MOB_HOLDER_CONTENT.get());
                         Utils.swapItemNBT(player, context.getHand(), stack, returnItem);
                     }
                 }
@@ -261,12 +260,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         MobContainerView content = stack.get(ModComponents.MOB_HOLDER_CONTENT.get());
         if (content != null) {
-            CompoundTag tag = content.getUnsafe();
-            CompoundTag com = tag.getCompound("MobHolder");
-            if (com.isEmpty()) com = tag.getCompound("BucketHolder");
-            if (com.contains("Name")) {
-                tooltipComponents.add(Component.translatable(com.getString("Name")).withStyle(ChatFormatting.GRAY));
-            }
+            content.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }
         if (MiscUtils.showsHints(tooltipFlag)) {
             this.addPlacementTooltip(tooltipComponents);

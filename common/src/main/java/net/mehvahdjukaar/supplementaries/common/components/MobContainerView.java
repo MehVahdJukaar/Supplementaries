@@ -5,14 +5,23 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class MobContainerView {
+import java.util.UUID;
+import java.util.function.Consumer;
+
+public class MobContainerView implements TooltipProvider {
 
     public static final Codec<MobContainerView> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             MobContainer.MobData.CODEC.forGetter(v -> v.inner.getData()),
@@ -41,6 +50,14 @@ public class MobContainerView {
         this.inner = container.makeCopy();
     }
 
+    @Nullable
+    public MobContainerView copyWithNewUUID(UUID newUUID) {
+        if (inner.getData() instanceof MobContainer.MobData.Entity e) {
+            return new MobContainerView(e.copyWithNewUUID(newUUID),
+                    this.inner.getWidth(), this.inner.getHeight(), this.inner.isAquarium());
+        } else return null;
+    }
+
     public static MobContainerView of(MobContainer container) {
         Preconditions.checkNotNull(container.getData(), "cannot create mob container view with null container");
         return new MobContainerView(container.makeCopy());
@@ -60,12 +77,25 @@ public class MobContainerView {
 
     public Entity getVisualEntity() {
         //TODO: cache
-     //   Entity e = CapturedMobCache.getOrCreateCachedMob(id, cmp2);
+        //   Entity e = CapturedMobCache.getOrCreateCachedMob(id, cmp2);
         //
         return inner.getDisplayedMob();
     }
 
     public float getRenderScale() {
-        return ((MobContainer.MobData.Entity)inner.getData()).getScale();
+        return ((MobContainer.MobData.Entity) inner.getData()).getScale();
     }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        String name = this.inner.getData().getName();
+        if (name != null) {
+            tooltipAdder.accept(Component.translatable(name).withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    public MobContainer.MobData getDataUnsafe() {
+        return this.inner.getData();
+    }
+
 }

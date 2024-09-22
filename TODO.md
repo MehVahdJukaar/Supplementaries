@@ -44,6 +44,8 @@
 - test quiver actually consuming arrows
 - boakcboard and text holder new interaction (redo). also their tooltips
 - all disepnser behavior. bamboo spikes one too
+- test soap interaction on servers
+- bubble blower chages and tooltip
 
 
 # Soon

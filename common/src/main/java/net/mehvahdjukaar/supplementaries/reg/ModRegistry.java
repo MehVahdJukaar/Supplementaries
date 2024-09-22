@@ -103,8 +103,10 @@ public class ModRegistry {
             .durability(CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
     //soap bubbler
-    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(new Item.Properties()
-            .stacksTo(1).durability(250)));
+    public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
+            250, new Item.Properties()
+            .component(ModComponents.CHARGES.get(), 0)
+            .stacksTo(1)));
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()

@@ -117,8 +117,8 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter p_204510_1_, BlockPos p_204510_2_, BlockState p_204510_3_, Fluid p_204510_4_) {
-        return ILavaAndWaterLoggable.super.canPlaceLiquid(p_204510_1_, p_204510_2_, p_204510_3_, p_204510_4_);
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return ILavaAndWaterLoggable.super.canPlaceLiquid(player, level, pos, state, fluid);
     }
 
     @Override
@@ -139,8 +139,8 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     }
 
     @Override
-    public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
-        return ILavaAndWaterLoggable.super.pickupBlock(pLevel, pPos, pState);
+    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        return ILavaAndWaterLoggable.super.pickupBlock(player, pLevel, pPos, pState);
     }
 
     @Override

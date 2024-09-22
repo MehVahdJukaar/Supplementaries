@@ -86,7 +86,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     @Override
-    protected float getGravity() {
+    protected double getDefaultGravity() {
         return ProjectileStats.CANNONBALL_GRAVITY;
     }
 

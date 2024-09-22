@@ -500,7 +500,7 @@ public class MobContainer {
             return visualFluid;
         }
 
-        protected static class Bucket extends MobData {
+        public static class Bucket extends MobData {
 
             public static final Codec<Bucket> CODEC = RecordCodecBuilder.<Bucket>create(instance -> instance.group(
                             Codec.STRING.optionalFieldOf("Name").forGetter(b -> Optional.ofNullable(b.name)),
@@ -535,6 +535,10 @@ public class MobContainer {
                     return type == null ? "Mob" : type.getDescriptionId();
                 }
                 return name.get();
+            }
+
+            public ItemStack getBucket() {
+                return filledBucket;
             }
         }
 
@@ -576,9 +580,21 @@ public class MobContainer {
                 this.uuid = uuid;
             }
 
+            public MobData copyWithNewUUID(UUID newUUID){
+                return new Entity(this.name, this.fishTexture, Optional.ofNullable(this.visualFluid), this.mobTag, this.scale, newUUID);
+            }
+
 
             public float getScale() {
                 return scale;
+            }
+
+            public CompoundTag getTag() {
+                return mobTag;
+            }
+
+            public @Nullable UUID getUuid() {
+                return uuid;
             }
         }
     }

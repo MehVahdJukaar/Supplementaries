@@ -1,21 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Optional;
@@ -44,9 +41,9 @@ public class SafeItem extends BlockItem {
     @SuppressWarnings("ConstantConditions")
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         if (CompatHandler.QUARK && QuarkClientCompat.canRenderBlackboardTooltip()) {
-            CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
-            if (cmp != null && !cmp.contains("LootTable")) {
-                return Optional.of(new InventoryTooltip(cmp, this, 27));
+            var container = pStack.get(DataComponents.CONTAINER);
+            if (container != null && !pStack.has(DataComponents.CONTAINER_LOOT)) {
+                return Optional.of(new InventoryViewTooltip(container, 27));
             }
         }
         return Optional.empty();

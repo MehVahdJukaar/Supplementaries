@@ -1,14 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -25,8 +22,7 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
     }
 
     private boolean isDrawnBlackboard(ItemStack stack) {
-        CompoundTag tag = stack.getTagElement("BlockEntityTag");
-        return tag != null && tag.contains("Pixels");
+        return stack.has(ModComponents.BLACKBOARD.get());
     }
 
     @Override

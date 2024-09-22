@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.JukeboxSong;
@@ -102,10 +104,10 @@ public class ModSounds {
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
 
 
-    public static final RegSupplier<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = registerJukeboxSong("pancake",
-            PANCAKE_MUSIC, 3 * 60 + 48, 15);
-    public static final RegSupplier<JukeboxSong> AVAST_MUSIC_JUKEBOX = registerJukeboxSong("avast",
-            AVAST_MUSIC, 3 * 60, 7);
+    public static final DynamicHolder<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("pancake"),
+            Registries.JUKEBOX_SONG);
+    public static final DynamicHolder<JukeboxSong> AVAST_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("avast"),
+            Registries.JUKEBOX_SONG);
 
     public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,
             SLIDY_BLOCK_BREAK,

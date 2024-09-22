@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -15,6 +16,7 @@ import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -41,8 +43,11 @@ import java.util.List;
 
 public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
-    public BubbleBlowerItem(Properties properties) {
+    private final int maxCharges;
+
+    public BubbleBlowerItem(int maxCharges, Properties properties) {
         super(properties);
+        this.maxCharges = maxCharges;
     }
 
     @Override
@@ -100,8 +105,9 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                 level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
                 if (!(player.getAbilities().instabuild)) {
-                    int max = stack.getMaxDamage();
-                    stack.setDamageValue(Math.min(max, stack.getDamageValue() + CommonConfigs.Tools.BUBBLE_BLOWER_COST.get()));
+                    int charges = this.getCharges(stack);
+                    stack.set(ModComponents.CHARGES.get(),
+                            Math.clamp(charges - CommonConfigs.Tools.BUBBLE_BLOWER_COST.get(), 0, maxCharges));
                 }
 
                 return InteractionResultHolder.success(stack);
@@ -113,8 +119,10 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (this.getCharges(stack) != 0) {
-            tooltipComponents.add(Component.translatable("message.supplementaries.bubble_blower_tooltip", stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));
+        int charges = this.getCharges(stack);
+        if (charges != 0) {
+            tooltipComponents.add(Component.translatable("message.supplementaries.bubble_blower_tooltip",
+                    charges, this.maxCharges));
         }
     }
 
@@ -129,12 +137,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
     private int getCharges(ItemStack stack) {
-        return stack.getMaxDamage() - stack.getDamageValue();
-    }
-
-    @Override
-    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-        return false;
+        return stack.get(ModComponents.CHARGES.get());
     }
 
     @Override
@@ -153,11 +156,6 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
     @ForgeOverride
-    public boolean isRepairable(ItemStack stack) {
-        return false;
-    }
-
-    @ForgeOverride
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return false;
     }
@@ -173,13 +171,14 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @SuppressWarnings("UnsafePlatformOnlyCall")
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
-        int damage = stack.getDamageValue() + 1;
-        if (damage > stack.getMaxDamage()) {
+        int charges = this.getCharges(stack);
+        int newCharges = charges - 1;
+        if (newCharges < 0) {
             entity.stopUsingItem();
             return;
         }
         if (!(entity instanceof Player player) || !(player.getAbilities().instabuild)) {
-            stack.setDamageValue(damage);
+            stack.set(ModComponents.CHARGES.get(), newCharges);
         }
 
         int soundLength = 4;

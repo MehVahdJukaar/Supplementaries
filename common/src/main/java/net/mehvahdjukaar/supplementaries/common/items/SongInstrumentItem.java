@@ -44,7 +44,7 @@ public abstract class SongInstrumentItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
         if (!level.isClientSide) {
-            SongsManager.playRandomSong(stack, this, entity, getUseDuration(stack) - remainingUseDuration);
+            SongsManager.playRandomSong(stack, this, entity, getUseDuration(stack, entity) - remainingUseDuration);
             if (remainingUseDuration % 10 == 0) {
                 level.gameEvent(entity, GameEvent.INSTRUMENT_PLAY, entity.position());
             }

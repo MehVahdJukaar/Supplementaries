@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.*;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class QuarkClientCompatImpl {
     }
 
     public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
-        event.register(InventoryTooltip.class, InventoryTooltipComponent::new);
+        event.register(InventoryViewTooltip.class, InventoryTooltipComponent::new);
     }
 
     private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));

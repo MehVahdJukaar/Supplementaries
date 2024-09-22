@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -36,7 +36,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private final boolean locked;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
-    public InventoryTooltipComponent(InventoryTooltip tooltip) {
+    public InventoryTooltipComponent(InventoryViewTooltip tooltip) {
         this.tag = tooltip.tag();
         this.item = tooltip.item();
         this.dimensions = VariableSizeContainerMenu.getRatio(tooltip.size());

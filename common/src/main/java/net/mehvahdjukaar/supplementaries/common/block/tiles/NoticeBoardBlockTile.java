@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -15,22 +16,27 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -40,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Filter;
 
 public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, IMapDisplay, ITextHolderProvider {
 
@@ -52,7 +59,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     private UUID playerWhoMayEdit;
 
     //client stuff
-    private String text = null;
+    private Filterable<String> text = null;
     private float fontScale = 1;
     private List<FormattedCharSequence> cachedPageLines = Collections.emptyList();
     //used to tell renderer when it has to slit new line(have to do it there cause i need fontrenderer function)
@@ -121,20 +128,34 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public void updateText() {
         ItemStack itemstack = getDisplayedItem();
         Item item = itemstack.getItem();
-        CompoundTag com = itemstack.getTag();
-        if ((item instanceof WrittenBookItem && WrittenBookItem.makeSureTagIsValid(com)) ||
-                (item instanceof WritableBookItem && WritableBookItem.makeSureTagIsValid(com))) {
-
-            ListTag pages = com.getList("pages", 8).copy();
+        WrittenBookContent written = itemstack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        if (written != null) {
+            var pages = written.pages();
             if (!pages.isEmpty()) {
                 if (this.pageNumber >= pages.size()) {
                     this.pageNumber = this.pageNumber % pages.size();
                 }
 
-                this.text = pages.getString(this.pageNumber);
+                this.text = pages.get(this.pageNumber).map(Component::getString);
             }
+            return;
+        }
+        WritableBookContent writable = itemstack.get(DataComponents.WRITABLE_BOOK_CONTENT);
+        if (writable != null) {
+            var pages = writable.pages();
+            if (!pages.isEmpty()) {
+                if (this.pageNumber >= pages.size()) {
+                    this.pageNumber = this.pageNumber % pages.size();
+                }
+                this.text = pages.get(this.pageNumber);
+            }
+            return;
+        }
 
-        } else if (CompatHandler.COMPUTERCRAFT) {
+
+        //TODO: add back
+        /*
+        if (CompatHandler.COMPUTERCRAFT) {
             if (CCCompat.isPrintedBook(item)) {
 
                 if (com != null) {
@@ -155,7 +176,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                     this.text = combined.toString();
                 }
             }
-        }
+        }*/
     }
 
     @Override
@@ -169,7 +190,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("PageNumber", this.pageNumber);
-        this.textHolder.save(tag);
+        this.textHolder.save(tag, registries);
     }
 
     @Override
@@ -205,7 +226,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return cachedPattern;
     }
 
-    public String getText() {
+    public Filterable<String> getText() {
         return text;
     }
 
@@ -256,7 +277,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.setChanged();
     }
 
-    public InteractionResult interact(Player player, InteractionHand handIn, ItemStack stack, BlockPos pos, BlockState state, BlockHitResult hit) {
+    public ItemInteractionResult interact(Player player, InteractionHand handIn, BlockPos pos,
+                                          BlockState state, BlockHitResult hit, ItemStack stack) {
         Level level = player.level();
 
         if (player.isShiftKeyDown() && !this.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
@@ -266,27 +288,27 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             drop.setDefaultPickUpDelay();
             level.addFreshEntity(drop);
             this.setChanged();
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
         //try place or open
         if (hit.getDirection() == state.getValue(NoticeBoardBlock.FACING)) {
-            InteractionResult res = super.interactWithPlayerItem(player, handIn, stack);
+            ItemInteractionResult res = super.interactWithPlayerItem(player, handIn, stack);
             if (res.consumesAction()) {
                 return res;
             }
         }
-        InteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn);
-        if (r != InteractionResult.PASS) return r;
+        ItemInteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn, stack);
+        if (r != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return r;
 
 
         if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (!level.isClientSide) {
             this.tryOpeningEditGui((ServerPlayer) player, pos, player.getItemInHand(handIn));
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

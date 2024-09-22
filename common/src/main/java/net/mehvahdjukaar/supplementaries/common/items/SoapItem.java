@@ -33,7 +33,7 @@ import net.minecraft.world.level.Level;
 public class SoapItem extends Item {
 
     public static final FoodProperties SOAP_FOOD = (new FoodProperties.Builder())
-            .nutrition(0).saturationMod(0.1F).alwaysEat().effect(
+            .nutrition(0).saturationModifier(0.1F).alwaysEdible().effect(
                     new MobEffectInstance(MobEffects.POISON, 120, 2), 1).build();
 
     public SoapItem(Properties pProperties) {
