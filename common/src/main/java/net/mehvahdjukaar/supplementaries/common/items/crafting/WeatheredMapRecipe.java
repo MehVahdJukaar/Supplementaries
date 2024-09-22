@@ -1,15 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
@@ -82,7 +78,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
                 ItemStack s = stack.copy();
                 s.setCount(1);
                 if (lastLevelHack != null) {
-                    WeatheredMap.setAntique(lastLevelHack.get(), s, antique, false);
+                    WeatheredHandler.setAntique(lastLevelHack.get(), s, antique, false);
                     AntiqueInkItem.setAntiqueInk(s,true);
                 }
                 return s;

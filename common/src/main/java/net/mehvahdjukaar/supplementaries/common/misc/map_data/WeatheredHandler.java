@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
+package net.mehvahdjukaar.supplementaries.common.misc.map_data;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultiset;
@@ -9,15 +9,15 @@ import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -31,20 +31,21 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-public class WeatheredMap {
+public class WeatheredHandler {
 
     private static final String ANTIQUE_KEY = "antique";
 
-    private static final CustomMapData.Type<WeatheredMapData> ANTIQUE_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
-            Supplementaries.res(ANTIQUE_KEY), WeatheredMapData::new
-    );
+    private static final CustomMapData.Type<Boolean, WeatheredMapData> ANTIQUE_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
+            Supplementaries.res(ANTIQUE_KEY), WeatheredMapData::new, ByteBufCodecs.BOOL);
 
     public static void init() {
     }
@@ -53,45 +54,32 @@ public class WeatheredMap {
         return ANTIQUE_DATA_KEY.get(data);
     }
 
-    public static class WeatheredMapData implements CustomMapData<CustomMapData.SimpleDirtyCounter> {
-        private boolean antique = false;
+    public static class WeatheredMapData extends CustomMapData.Simple<Boolean> {
 
         public boolean isAntique() {
-            return antique;
+            return value;
         }
 
         @Override
-        public void load(CompoundTag tag) {
+        public void load(CompoundTag tag, HolderLookup.Provider registries) {
             if (tag.contains(ANTIQUE_KEY)) {
-                antique = tag.getBoolean(ANTIQUE_KEY);
-            } else antique = false;
+                value = tag.getBoolean(ANTIQUE_KEY);
+            } else value = false;
         }
 
         @Override
-        public void loadFromUpdateTag(CompoundTag tag) {
-            if (tag.contains(ANTIQUE_KEY)) {
-                antique = tag.getBoolean(ANTIQUE_KEY);
-            }
+        public void save(CompoundTag tag, HolderLookup.Provider lookup) {
+            if (value) tag.putBoolean(ANTIQUE_KEY, true);
         }
 
         @Override
-        public void save(CompoundTag tag) {
-            if (antique) tag.putBoolean(ANTIQUE_KEY, true);
-        }
-
-        @Override
-        public void saveToUpdateTag(CompoundTag tag, SimpleDirtyCounter dirtyCounter) {
-            tag.putBoolean(ANTIQUE_KEY, antique);
-        }
-
-        @Override
-        public Type<WeatheredMapData> getType() {
+        public Type<Boolean, WeatheredMapData> getType() {
             return ANTIQUE_DATA_KEY;
         }
 
         @Override
         public @Nullable Component onItemTooltip(MapItemSavedData data, ItemStack stack) {
-            if (antique) {
+            if (value) {
                 return Component.translatable("filled_map.antique.tooltip").withStyle(ChatFormatting.GRAY);
             }
             return null;
@@ -105,15 +93,16 @@ public class WeatheredMap {
         // true if it should cancel the normal update
         @Override
         public boolean onItemUpdate(MapItemSavedData data, Entity entity) {
-            if (!antique) return false;
+            if (!value) return false;
             Level level = entity.level();
 
             if (!(level.dimension() == data.dimension && entity instanceof Player pl)) return true;
 
-            int minHeight = SliceMapItem.getMapHeight(data);
+            Optional<Integer> minHeight = DepthDataHandler.getMapHeight(data);
+            int minHeightOrTop = minHeight.orElse(Integer.MAX_VALUE);
 
-            boolean hasDepthLock = minHeight != Integer.MAX_VALUE;
-            if (hasDepthLock && !SliceMapItem.canPlayerSee(minHeight, pl)) {
+            boolean hasDepthLock = minHeight.isPresent();
+            if (hasDepthLock && !DepthDataHandler.canPlayerSee(minHeight.get(), pl)) {
                 return true;
             }
 
@@ -124,7 +113,7 @@ public class WeatheredMap {
             int playerZ = Mth.floor(entity.getZ() - mapZ) / scale + 64;
             int range = 128 / scale;
             if (hasDepthLock) {
-                range = (int) (range * SliceMapItem.getRangeMultiplier());
+                range = (int) (range * DepthDataHandler.getRangeMultiplier());
             }
             boolean hasCeiling = isHasCeiling(level, minHeight);
             if (hasCeiling) {
@@ -201,7 +190,7 @@ public class WeatheredMap {
 
                                     for (int scaleOffsetX = 0; scaleOffsetX < scale; ++scaleOffsetX) {
                                         for (int scaleOffsetZ = 0; scaleOffsetZ < scale; ++scaleOffsetZ) {
-                                            int cY = Math.min(minHeight,
+                                            int cY = Math.min(minHeightOrTop,
                                                     levelchunk.getHeight(Heightmap.Types.WORLD_SURFACE, scaleOffsetX + chunkCoordX, scaleOffsetZ + chunkCoordZ) + 1);
                                             BlockState blockState;
                                             MapColor newColor = null;
@@ -232,8 +221,8 @@ public class WeatheredMap {
                                             data.checkBanners(level, chunkpos.getMinBlockX() + scaleOffsetX + chunkCoordX, chunkpos.getMinBlockZ() + scaleOffsetZ + chunkCoordZ);
                                             maxY += (double) cY / (double) (scale * scale);
 
-                                            if (cY >= minHeight) {
-                                                newColor = SliceMapItem.getCutoffColor(mutable1, levelchunk);
+                                            if (cY >= minHeightOrTop) {
+                                                newColor = DepthDataHandler.getCutoffColor(mutable1, levelchunk);
                                             }
 
                                             multiset.add(newColor);
@@ -304,9 +293,9 @@ public class WeatheredMap {
             return true;
         }
 
-        private static boolean isHasCeiling(Level level, int mapHeight) {
+        private static boolean isHasCeiling(Level level, Optional<Integer> mapHeight) {
             boolean original = level.dimensionType().hasCeiling();
-            if (original && mapHeight != Integer.MAX_VALUE && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
+            if (original && mapHeight.isPresent() && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
                 return false;
             }
             return original;
@@ -314,7 +303,7 @@ public class WeatheredMap {
 
 
         public void set(boolean on) {
-            this.antique = on;
+            this.value = on;
         }
 
         private static boolean isWaterAt(Level level, Map<BlockPos, Boolean> map, int scale, int x, int z) {
@@ -372,15 +361,15 @@ public class WeatheredMap {
 
     public static void setAntique(Level level, ItemStack stack, boolean on, boolean replaceOld) {
         MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
-        Integer mapId = createAntiqueMapData(mapitemsaveddata, level, on, replaceOld);
-        if (mapId != null) stack.getOrCreateTag().putInt("map", mapId);
+        MapId mapId = createAntiqueMapData(mapitemsaveddata, level, on, replaceOld);
+        if (mapId != null) stack.set(DataComponents.MAP_ID, mapId);
 
     }
 
-    public static Integer createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
+    public static MapId createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
-            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.copy();
+            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy();
             WeatheredMapData instance = getAntiqueData(newData);
             var colorData = ColoredMapHandler.getColorData(newData);
             colorData.clear();
@@ -390,10 +379,8 @@ public class WeatheredMap {
             instance.set(on);
             instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
             if (!replaceOld) {
-                int mapId = level.getFreeMapId();
-                String mapKey = MapItem.makeKey(mapId);
-
-                level.setMapData(mapKey, newData);
+                MapId mapId = level.getFreeMapId();
+                level.setMapData(mapId, newData);
                 return mapId;
             }
         }

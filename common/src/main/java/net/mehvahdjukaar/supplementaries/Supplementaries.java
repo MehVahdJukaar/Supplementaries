@@ -11,11 +11,11 @@ import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesMa
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
-import net.mehvahdjukaar.supplementaries.common.items.SliceMapItem;
+import net.mehvahdjukaar.supplementaries.common.items.EmptySliceMapItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -72,8 +72,8 @@ public class Supplementaries {
         ModCreativeTabs.init();
         LootTablesInjects.init();
         InteractEventsHandler.init();
-        SliceMapItem.init();
-        WeatheredMap.init();
+        EmptySliceMapItem.init();
+        WeatheredHandler.init();
         ColoredMapHandler.init();
         MapLightHandler.init();
         DispenserBehaviorsManager.init();

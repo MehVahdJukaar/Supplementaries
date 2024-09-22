@@ -43,6 +43,7 @@
 - re check all forge item extension usage
 - test quiver actually consuming arrows
 - boakcboard and text holder new interaction (redo). also their tooltips
+- all disepnser behavior. bamboo spikes one too
 
 
 # Soon

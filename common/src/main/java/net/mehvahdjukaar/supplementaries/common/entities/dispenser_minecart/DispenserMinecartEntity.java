@@ -277,7 +277,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     }
 
     private ItemStack executeAbstractProjectileBehavior(AbstractProjectileBehaviorAccessor ap, BlockSource source, ItemStack stack) {
-        Level level = source.getLevel();
+        Level level = source.level();
 
         Position position = DispenserBlock.getDispensePosition(source);
         Projectile projectile = ap.invokeGetProjectile(level, position, stack);

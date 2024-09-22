@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.misc.map_markers.WeatheredMap;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -67,7 +67,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
         if (firstSlotStack.is(ModRegistry.ANTIQUE_INK.get()) && !mapItemSavedData.locked && !AntiqueInkItem.hasAntiqueInk(mapStack)) {
 
             ItemStack newMap = mapStack.copyWithCount(1);
-            WeatheredMap.setAntique(level, newMap, true, false);
+            WeatheredHandler.setAntique(level, newMap, true, false);
             AntiqueInkItem.setAntiqueInk(newMap, true);
 
             this.resultContainer.setItem(2, newMap);

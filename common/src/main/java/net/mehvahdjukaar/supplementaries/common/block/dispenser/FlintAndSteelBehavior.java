@@ -23,10 +23,9 @@ class FlintAndSteelBehavior extends DispenserHelper.AdditionalDispenserBehavior 
         BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         BlockState state = world.getBlockState(blockpos);
         if (state.getBlock() instanceof ILightable block) {
-            if (block.lightUp(null, state, blockpos, world, ILightable.FireSoundType.FLINT_AND_STEEL)) {
-                if (stack.hurt(1, world.random, null)) {
-                    stack.setCount(0);
-                }
+            if (block.tryLightUp(null, state, blockpos, world, ILightable.FireSoundType.FLINT_AND_STEEL)) {
+                stack.hurtAndBreak(1, source.level(), null, itemx -> {
+                });
                 return InteractionResultHolder.success(stack);
             }
             return InteractionResultHolder.fail(stack);

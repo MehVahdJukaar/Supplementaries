@@ -33,7 +33,7 @@ class KeyBehavior extends DispenserHelper.AdditionalDispenserBehavior {
             fp.setItemInHand(InteractionHand.MAIN_HAND, stack);
             BlockHitResult blockHitResult = new BlockHitResult(Vec3.atCenterOf(pos), dir, pos, false);
 
-            kt.getBlockState().use(level, fp, InteractionHand.MAIN_HAND, blockHitResult);
+            kt.getBlockState().useItemOn(stack, level, fp, InteractionHand.MAIN_HAND, blockHitResult);
             //var v = stack.useOn(context);
             //doesnt consume key
             return InteractionResultHolder.consume(stack);

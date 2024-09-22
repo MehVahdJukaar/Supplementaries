@@ -1,11 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
@@ -18,11 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -35,26 +27,9 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import java.util.Optional;
 
 public class WrenchItem extends Item {
-    private final float attackDamage;
-    /**
-     * Modifiers applied when the item is in the mainland of a user.
-     */
-    private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public WrenchItem(Properties pProperties) {
         super(pProperties);
-
-        this.attackDamage = (float) 2.5;
-        float pAttackSpeedModifier = -2f;
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", pAttackSpeedModifier, AttributeModifier.Operation.ADDITION));
-        this.defaultModifiers = builder.build();
-    }
-
-    @ForgeOverride
-    public float getDamage() {
-        return this.attackDamage;
     }
 
     @Override
@@ -72,17 +47,8 @@ public class WrenchItem extends Item {
                 ModSounds.WRENCH_HIT.get(), pAttacker.getSoundSource(), 1,
                 0.9f + pAttacker.getRandom().nextFloat() * 0.2f);
 
-        pStack.hurtAndBreak(1, pAttacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        pStack.hurtAndBreak(1, pAttacker, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         return true;
-    }
-
-
-    /**
-     * Gets a map of item attribute modifiers, used by ItemSword to increase hit damage.
-     */
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-        return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
     }
 
     //called both from here and from event just to be sure
@@ -110,7 +76,7 @@ public class WrenchItem extends Item {
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
                 playTurningEffects(pos, shiftDown, dir, level, player);
-                itemstack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
+                itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
 
                 return InteractionResult.sidedSuccess(level.isClientSide);
             } else {
@@ -127,7 +93,7 @@ public class WrenchItem extends Item {
                 dir = dir.getOpposite();
             }
             if (shiftDown) dir = dir.getOpposite();
-            NetworkHelper.sentToAllClientPlayersTrackingEntityAndSelf(player,
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(player,
                     new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
                             dir.get3DDataValue()));
         }
@@ -148,7 +114,7 @@ public class WrenchItem extends Item {
             if (level.isClientSide)
                 playTurningEffects(entity.getOnPos().above(), shiftDown, Direction.UP, level, player);
 
-            stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(pUsedHand));
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(pUsedHand));
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
