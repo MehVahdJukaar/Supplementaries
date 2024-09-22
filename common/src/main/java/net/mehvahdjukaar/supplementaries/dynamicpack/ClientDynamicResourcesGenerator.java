@@ -17,12 +17,15 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeTextureGenerator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -210,6 +213,32 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
+    }
+
+    private void generateGlobes(ResourceManager manager) {
+        try (TextureImage globeT = TextureImage.open(manager,
+                Supplementaries.res("entity/globes/bedrock"))) {
+
+            RandomSource rand = RandomSource.create();
+            for(int i = 0; i<100; i++){
+                ResourceLocation textureRes = Supplementaries.res("entity/globes/globe_"+i);
+                try {
+                    TextureImage newImage = globeT.makeCopy();
+                    byte[][] pixels = GlobeTextureGenerator.generate(rand.nextLong());
+                    for(int x = 0; x< pixels.length; x++){
+                        for(int y = 0; y< pixels[x].length; y++){
+                            newImage.setFramePixel(0,x, y+16,
+                                    GlobeManager.getColorForPalette(pixels[x][y],
+                                            Level.OVERWORLD.location(), false));
+                        }
+                    }
+                    dynamicPack.addAndCloseTexture(textureRes, newImage);
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate Globe entity texture for for {} : {}", i, ex);
+                }
+
+            }
+        }catch (Exception ignored){}
     }
 
 

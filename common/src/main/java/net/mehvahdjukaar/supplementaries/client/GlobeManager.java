@@ -81,7 +81,7 @@ public class GlobeManager {
             for (int y = 0; y < pixels.length; y++) {
                 for (int x = 0; x < pixels[y].length; x++) {
                     this.texture.getPixels().setPixelRGBA(y, x,
-                            getRGBA(pixels[y][x], this.dimensionId, this.sepia));
+                            getColorForPalette(pixels[y][x], this.dimensionId, this.sepia));
                 }
             }
             RenderUtil.setDynamicTexturesToUseMipmap(true);
@@ -94,17 +94,16 @@ public class GlobeManager {
             this.texture.close();
             Minecraft.getInstance().getTextureManager().release(textureLocation);
         }
-
-        private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
-            if (sepia) return SEPIA_COLORS.getInt(b);
-            IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
-            if(l != null){
-               return l.getInt(b);
-            }
-            return 1;
-        }
     }
 
+    public static int getColorForPalette(byte b, ResourceLocation dimension, boolean sepia) {
+        if (sepia) return SEPIA_COLORS.getInt(b);
+        IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
+        if(l != null){
+            return l.getInt(b);
+        }
+        return 1;
+    }
 
     /**
      * Refresh colors and textures
