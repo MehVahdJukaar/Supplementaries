@@ -106,7 +106,7 @@ public class ModRegistry {
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
-            250, new Item.Properties()
+             new Item.Properties()
             .component(ModComponents.CHARGES.get(), 0)
             .stacksTo(1)));
 

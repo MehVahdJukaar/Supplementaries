@@ -64,15 +64,7 @@ public class PresentDyeRecipe extends CustomRecipe {
                 }
             }
         }
-
-        //improve this is crap
-        ItemStack result = BlocksColorAPI.changeColor(itemstack.getItem(), dyecolor).getDefaultInstance();
-
-        if (itemstack.hasTag()) {
-            result.setTag(itemstack.getTag().copy());
-        }
-
-        return result;
+        return itemstack.transmuteCopy(BlocksColorAPI.changeColor(itemstack.getItem(), dyecolor),1);
     }
 
     @Override

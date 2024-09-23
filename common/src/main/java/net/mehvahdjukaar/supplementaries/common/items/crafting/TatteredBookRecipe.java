@@ -6,9 +6,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -47,8 +49,8 @@ public class TatteredBookRecipe extends CustomRecipe {
     }
 
     private static boolean isValidBook(ItemStack stack) {
-        return stack.getItem() == Items.WRITTEN_BOOK &&
-                (!stack.hasTag() || stack.getTag().getInt("generation") == 0);
+        WrittenBookContent content = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        return content == null || content.generation() == 0;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class TatteredBookRecipe extends CustomRecipe {
                 break;
             }
         }
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (isValidBook(stack)) {
                 ItemStack s = stack.copy();
@@ -71,12 +73,6 @@ public class TatteredBookRecipe extends CustomRecipe {
             }
         }
         return ItemStack.EMPTY;
-    }
-
-
-    @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override

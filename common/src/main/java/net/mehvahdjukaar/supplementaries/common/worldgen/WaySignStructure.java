@@ -23,10 +23,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +44,9 @@ public class WaySignStructure extends Structure {
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
-                    Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY)
+                    Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY),
+                    DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
+                    LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
             ).apply(instance, WaySignStructure::new));
 
 
@@ -54,16 +61,21 @@ public class WaySignStructure extends Structure {
     private final Optional<ResourceLocation> startJigsawName;
     private final int minY;
     private final int maxY;
+    private final DimensionPadding dimensionPadding;
+    private final LiquidSettings liquidSettings;
 
     public WaySignStructure(Structure.StructureSettings config,
                             Holder<StructureTemplatePool> startPool,
                             Optional<ResourceLocation> startJigsawName,
-                            int minY, int maxY) {
+                            int minY, int maxY,DimensionPadding dimensionPadding,
+                            LiquidSettings liquidSettings) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
         this.minY = minY;
         this.maxY = maxY;
+        this.dimensionPadding = dimensionPadding;
+        this.liquidSettings = liquidSettings;
     }
 
     @Override
@@ -94,7 +106,11 @@ public class WaySignStructure extends Structure {
                 // Here, blockpos's y value is 60 which means the structure spawn 60 blocks above terrain height.
                 // Set this to false for structure to be place only at the passed in blockpos's Y value instead.
                 // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                32);
+                32,
+                PoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
+                this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
+                this.liquidSettings);  // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
+
     }
 
 

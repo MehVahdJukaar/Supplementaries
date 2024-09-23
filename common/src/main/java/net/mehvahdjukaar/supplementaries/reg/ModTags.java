@@ -5,7 +5,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
@@ -74,7 +73,7 @@ public class ModTags {
     public static final TagKey<Item> QUIVER_BLACKLIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
 
-    public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
+    public static final TagKey<Item> SHULKER_BOXES = CitemTag("shulker_boxes");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
@@ -116,7 +115,7 @@ public class ModTags {
         return TagKey.create(Registries.ITEM, Supplementaries.res(name));
     }
 
-    private static TagKey<Item> MCitemTag(String name) {
+    private static TagKey<Item> CitemTag(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace(name));
     }
 

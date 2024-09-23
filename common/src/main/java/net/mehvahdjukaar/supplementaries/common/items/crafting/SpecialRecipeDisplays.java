@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
@@ -24,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
@@ -204,7 +204,7 @@ public class SpecialRecipeDisplays {
         ItemStack tag = new ItemStack(Items.NAME_TAG);
         var c = Component.literal("Ew sticky!");
         tag.set(DataComponents.ITEM_NAME, c);
-        ItemLoreRecipe.addLore(c, output);
+        output.set(DataComponents.LORE, new ItemLore(List.of(c)));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SLIME_BALL), Ingredient.of(tag));
         ResourceLocation id = Supplementaries.res("item_lore_display");
@@ -222,7 +222,7 @@ public class SpecialRecipeDisplays {
         ItemStack soap = new ItemStack(ModRegistry.SOAP.get());
         var c = Component.literal("Stinky!");
         ItemStack input = output.copy();
-        ItemLoreRecipe.addLore(c, input);
+        input.set(DataComponents.LORE, new ItemLore(List.of(c)));
 
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(soap));
         ResourceLocation id = Supplementaries.res("remove_lore_display");
@@ -280,7 +280,8 @@ public class SpecialRecipeDisplays {
         String group = "tipped_spikes";
 
         for (var potionType : BuiltInRegistries.POTION.holders().toList()) {
-            if (!potionType.value().getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(potionType)) {
+            if (!potionType.value().getEffects().isEmpty() && BambooSpikesTippedItem.isPotionValid(
+                    new PotionContents(potionType))) {
                 recipes.add(makeSpikeRecipe(potionType, group));
             }
         }
@@ -293,7 +294,8 @@ public class SpecialRecipeDisplays {
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
-        ItemStack output = BambooSpikesTippedItem.makeSpikeItem(potionType);
+        ItemStack output = ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
+        output.set(DataComponents.POTION_CONTENTS, new PotionContents(potionType));
         ResourceLocation id = Supplementaries.res(Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
 
         var recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);

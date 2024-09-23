@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -14,22 +15,23 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
 public class SafeRecipe extends CustomRecipe {
-    public SafeRecipe(ResourceLocation resourceLocation, CraftingBookCategory category) {
-        super(resourceLocation, category);
+    public SafeRecipe( CraftingBookCategory category) {
+        super( category);
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level worldIn) {
+    public boolean matches(CraftingInput inv, Level level) {
 
         ItemStack shulker = null;
         ItemStack netherite = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.is(ModTags.SHULKER_BOXES)) {
                 if (shulker != null) {
@@ -49,22 +51,17 @@ public class SafeRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
         ItemStack shulker = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (stack.is(ModTags.SHULKER_BOXES)) {
                 shulker = stack;
                 break;
             }
         }
-        ItemStack result = ModRegistry.SAFE_ITEM.get().getDefaultInstance();
-        CompoundTag tag = shulker.copy().getTag();
-        if (tag != null) {
-            result.setTag(tag);
-        }
-        return result;
+        return shulker.transmuteCopy(ModRegistry.SACK_ITEM.get(), 1);
     }
 
     @Override

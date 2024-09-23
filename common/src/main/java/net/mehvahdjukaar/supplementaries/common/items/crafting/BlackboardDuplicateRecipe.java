@@ -78,7 +78,7 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
                 Optional<ItemStack> container = ForgeHelper.getCraftingRemainingItem(itemstack);
                 if (container.isPresent()) {
                     stacks.set(i, container.get());
-                } else if (itemstack.hasTag() && isDrawnBlackboard(itemstack)) {
+                } else if (isDrawnBlackboard(itemstack)) {
                     ItemStack copy = itemstack.copy();
                     copy.setCount(1);
                     stacks.set(i, copy);

@@ -49,6 +49,9 @@
 - antique ink on written books
 - panitng tooltips
 - buble blower, tipped spikes and rope arrow bars
+- check max banner pattern size in flag to banner recipe
+- test all special recipes
+- key enchantability
 
 
 # Soon

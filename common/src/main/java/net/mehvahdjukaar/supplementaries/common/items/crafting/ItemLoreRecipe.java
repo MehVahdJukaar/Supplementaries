@@ -4,20 +4,21 @@ import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public class ItemLoreRecipe extends CustomRecipe {
     public ItemLoreRecipe(CraftingBookCategory category) {
@@ -32,7 +33,7 @@ public class ItemLoreRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == Items.NAME_TAG && stack.hasCustomHoverName()) {
+            if (stack.getItem() == Items.NAME_TAG && stack.has(DataComponents.CUSTOM_NAME)) {
                 if (nameTag != null) {
                     return false;
                 }
@@ -50,7 +51,7 @@ public class ItemLoreRecipe extends CustomRecipe {
                 item = stack;
             }
         }
-        return nameTag != null && item != null && (!isSoap || hasLore(item));
+        return nameTag != null && item != null && (!isSoap || item.has(DataComponents.LORE));
     }
 
     @Override
@@ -71,47 +72,12 @@ public class ItemLoreRecipe extends CustomRecipe {
         ItemStack result = itemstack.copyWithCount(1);
 
         if (!soap.isEmpty()) {
-            removeLore(result);
+            result.remove(DataComponents.LORE);
         } else {
             Component lore = nameTag.getHoverName();
-            addLore(lore, result);
+            result.set(DataComponents.LORE, new ItemLore(List.of(lore)));
         }
         return result;
-    }
-
-
-    public static boolean hasLore(ItemStack item) {
-        CompoundTag display = item.getTagElement("display");
-        if (display != null) {
-            return display.contains("Lore");
-        }
-        return false;
-    }
-
-    public static void removeLore(ItemStack item) {
-        CompoundTag display = item.getTagElement("display");
-        if (display != null) {
-            display.remove("Lore");
-            if (display.isEmpty()) {
-                item.removeTagKey("display");
-            }
-            if (item.getOrCreateTag().isEmpty()) {
-                item.setTag(null);
-            }
-        }
-    }
-
-    public static void addLore(Component lore, ItemStack result) {
-        CompoundTag tag = result.getOrCreateTagElement("display");
-
-        ListTag list;
-        if (tag.getTagType("Lore") == 9) {
-            list = tag.getList("Lore", 8);
-        } else list = new ListTag();
-
-        list.add(StringTag.valueOf(Component.Serializer.toJson(lore)));
-
-        tag.put("Lore", list);
     }
 
     @Override

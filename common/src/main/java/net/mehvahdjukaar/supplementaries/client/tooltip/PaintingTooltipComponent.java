@@ -17,7 +17,7 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
     private final int width;
 
     public PaintingTooltipComponent(PaintingTooltip tooltip) {
-        this.pattern = tooltip.pattern();
+        this.pattern = tooltip.pattern().value();
         float h = pattern.height() * 16;
         float w = pattern.width() * 16;
         int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();

@@ -9,14 +9,24 @@ import net.mehvahdjukaar.supplementaries.common.items.neoforge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
+
+import java.util.List;
 
 /**
  * Author: MehVahdJukaar
@@ -24,6 +34,43 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 @Mod(Supplementaries.MOD_ID)
 public class SupplementariesForge {
 
+    public static class  e extends Item{
+        public e(Properties properties) {
+            super(properties);
+        }
+
+        @Override
+        public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+            return super.isBookEnchantable(stack, book);
+        }
+
+        @Override
+        public boolean isEnchantable(ItemStack stack) {
+            return super.isEnchantable(stack);
+        }
+
+        @Override
+        public ItemStack applyEnchantments(ItemStack stack, List<EnchantmentInstance> enchantments) {
+            return super.applyEnchantments(stack, enchantments);
+        }
+
+        @Override
+        public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
+            return super.getEnchantmentLevel(stack, enchantment);
+        }
+
+        @Override
+        public int getEnchantmentValue(ItemStack stack) {
+            return super.getEnchantmentValue(stack);
+        }
+
+
+
+        @Override
+        public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
+            return super.getAllEnchantments(stack, lookup);
+        }
+    }
 
     public SupplementariesForge(IEventBus bus) {
         Supplementaries.commonInit();

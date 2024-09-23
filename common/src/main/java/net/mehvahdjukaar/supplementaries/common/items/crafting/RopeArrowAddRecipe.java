@@ -27,12 +27,12 @@ public class RopeArrowAddRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == ModRegistry.ROPE_ARROW_ITEM.get() && stack.getDamageValue() != 0) {
+            if (stack.is(ModRegistry.ROPE_ARROW_ITEM.get()) && RopeArrowItem.getRopes(stack) > 0) {
                 if (arrow != null) {
                     return false;
                 }
                 arrow = stack;
-                missingRopes += arrow.getDamageValue();
+                missingRopes += RopeArrowItem.getRopes(arrow);
             } else if (RopeArrowItem.isValidRope(stack)) {
                 rope = stack;
                 missingRopes--;

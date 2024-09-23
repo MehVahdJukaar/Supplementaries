@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantingTableBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -65,7 +66,7 @@ public class CommonConfigs {
 
 
     private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
-    public static Predicate<Block> xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
+    public static Predicate<Block> xpBottlingOverride = EnchantingTableBlock.class::isInstance;
     private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
@@ -79,7 +80,7 @@ public class CommonConfigs {
         });
 
         String xp = Tweaks.BOTTLING_TARGET.get();
-        if (xp.isEmpty()) xpBottlingOverride = EnchantmentTableBlock.class::isInstance;
+        if (xp.isEmpty()) xpBottlingOverride = EnchantingTableBlock.class::isInstance;
         else xpBottlingOverride = b -> b == Suppliers.memoize(() ->
                 BuiltInRegistries.BLOCK.get(ResourceLocation.parse(xp)));
 

@@ -6,13 +6,14 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -26,14 +27,8 @@ public class KeyItem extends Item {
     }
 
     @ForgeOverride
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment == Enchantments.VANISHING_CURSE;
-    }
-
-    @ForgeOverride
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        var l = EnchantedBookItem.getEnchantments(book);
-        return l.size() == 1 && l.get(0) == Enchantments.VANISHING_CURSE;
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        return enchantment.value().effects().has(EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP);
     }
 
     @ForgeOverride
@@ -53,7 +48,12 @@ public class KeyItem extends Item {
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
             } else if (tile instanceof SafeBlockTile) {
-                return level.getBlockState(pos).use(level, context.getPlayer(), context.getHand(), new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
+                return level.getBlockState(pos).useItemOn(
+                                context.getItemInHand(),
+                                level, context.getPlayer(), context.getHand(),
+                                new BlockHitResult(Vec3.atCenterOf(pos),
+                                        Direction.UP, pos, false))
+                        .result();
             }
         }
         return super.useOn(context);

@@ -162,8 +162,4 @@ public class ModSounds {
     public static RegSupplier<SoundEvent> regSound(String name) {
         return RegHelper.registerSound(Supplementaries.res(name));
     }
-
-    public static RegSupplier<JukeboxSong> registerJukeboxSong(String name, RegSupplier<SoundEvent> sound, float durationInSeconds, int power) {
-        return RegHelper.registerJukeboxSong(Supplementaries.res(name), sound::getHolder, durationInSeconds, power);
-    }
 }

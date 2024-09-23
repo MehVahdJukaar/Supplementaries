@@ -5,34 +5,36 @@ import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.Optional;
 
 public class FlagFromBannerRecipe extends CustomRecipe {
-    public FlagFromBannerRecipe(ResourceLocation idIn, CraftingBookCategory category) {
-        super(idIn, category);
+    public FlagFromBannerRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level world) {
+    public boolean matches(CraftingInput inv, Level world) {
         DyeColor dyecolor = null;
         ItemStack withPatterns = null;
         ItemStack empty = null;
 
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack itemStack = inv.getItem(i);
             Item item = itemStack.getItem();
             if (item instanceof FlagItem flagItem) {
@@ -42,7 +44,8 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(itemStack);
+                BannerPatternLayers patterns = itemStack.get(DataComponents.BANNER_PATTERNS);
+                int j = patterns.layers().size();
                 if (j > getMaxBannerPatterns()) {
                     return false;
                 }
@@ -61,15 +64,15 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                     empty = itemStack;
                 }
 
-            }
-            else if (item instanceof BannerItem banneritem) {
+            } else if (item instanceof BannerItem banneritem) {
                 if (dyecolor == null) {
                     dyecolor = banneritem.getColor();
                 } else if (dyecolor != banneritem.getColor()) {
                     return false;
                 }
 
-                int j = BannerBlockEntity.getPatternCount(itemStack);
+                BannerPatternLayers patterns = itemStack.get(DataComponents.BANNER_PATTERNS);
+                int j = patterns.layers().size();
                 if (j > getMaxBannerPatterns()) {
                     return false;
                 }
@@ -86,8 +89,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
 
                     empty = itemStack;
                 }
-            }
-            else if(!itemStack.isEmpty())return false;
+            } else if (!itemStack.isEmpty()) return false;
         }
 
         return withPatterns != null && empty != null;
@@ -98,29 +100,24 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, RegistryAccess access) {
-        for (int i = 0; i < inv.getContainerSize(); ++i) {
+    public ItemStack assemble(CraftingInput inv, HolderLookup.Provider access) {
+        for (int i = 0; i < inv.size(); ++i) {
             ItemStack withPatterns = inv.getItem(i);
             if (!withPatterns.isEmpty()) {
-                int patternCount = BannerBlockEntity.getPatternCount(withPatterns);
+                BannerPatternLayers patterns = withPatterns.get(DataComponents.BANNER_PATTERNS);
                 //find item with patterns
-                if (patternCount > 0 && patternCount <= getMaxBannerPatterns()) {
-                    for (int k = 0; k < inv.getContainerSize(); ++k) {
-                        if (i != k) {
-                            ItemStack empty = inv.getItem(k);
-
-
-                            //find other which must be empty. exclude banner to banner
-                            Item it = empty.getItem();
-                            if (it instanceof FlagItem || it instanceof BannerItem) {
-                                ItemStack result = empty.copy();
-                                result.setCount(1);
-                                result.setTag(withPatterns.getTag());
-                                return result;
-                            }
+                for (int k = 0; k < inv.size(); ++k) {
+                    if (i != k) {
+                        ItemStack empty = inv.getItem(k);
+                        //find other which must be empty. exclude banner to banner
+                        Item it = empty.getItem();
+                        if (it instanceof FlagItem || it instanceof BannerItem) {
+                            ItemStack result = empty.copy();
+                            result.setCount(1);
+                            result.set(DataComponents.BANNER_PATTERNS, patterns);
+                            return result;
                         }
                     }
-
                 }
             }
         }
@@ -129,8 +126,8 @@ public class FlagFromBannerRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemstack = inv.getItem(i);
@@ -138,7 +135,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 Optional<ItemStack> container = ForgeHelper.getCraftingRemainingItem(itemstack);
                 if (container.isPresent()) {
                     stacks.set(i, container.get());
-                } else if (itemstack.hasTag() && BannerBlockEntity.getPatternCount(itemstack) > 0) {
+                } else if (itemstack.has(DataComponents.BANNER_PATTERNS)) {
                     ItemStack copy = itemstack.copy();
                     copy.setCount(1);
                     stacks.set(i, copy);
