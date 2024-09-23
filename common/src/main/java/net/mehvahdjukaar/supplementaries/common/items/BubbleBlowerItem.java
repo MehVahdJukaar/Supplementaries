@@ -8,10 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModComponents;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -56,8 +53,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
         if (charges > 0) {
 
-            int ench = EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), itemstack);
-            if (ench > 0) {
+            if (ModEnchantments.hasUnitEffect(itemstack, ModEnchantments.SPAWN_BUBBLE_BLOCK.get())) {
                 return this.deployBubbleBlock(itemstack, level, player, hand);
             }
 
@@ -162,14 +158,6 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @ForgeOverride
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return false;
-    }
-
-    @ForgeOverride
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        ListTag enchantments = EnchantedBookItem.getEnchantments(book);
-        return enchantments.size() == 1 &&
-                EnchantmentHelper.getEnchantmentId(enchantments.getCompound(0)).equals(
-                        EnchantmentHelper.getEnchantmentId(ModRegistry.STASIS_ENCHANTMENT.get()));
     }
 
     @SuppressWarnings("UnsafePlatformOnlyCall")

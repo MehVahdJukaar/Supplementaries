@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -12,22 +13,24 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
-import net.mehvahdjukaar.supplementaries.common.misc.StasisEnchantment;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
+import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,6 +39,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +70,6 @@ public class ModRegistry {
     public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
             () -> new LootItemFunctionType<>(RandomArrowFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
 
-    //enchantment
-    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = RegHelper.registerAsync(
-            res(STASIS_NAME), StasisEnchantment::new, Registries.ENCHANTMENT);
 
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
@@ -102,13 +103,13 @@ public class ModRegistry {
     public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get(),
             new Item.Properties()
-            .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
+                    .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
     //soap bubbler
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
-             new Item.Properties()
-            .component(ModComponents.CHARGES.get(), 0)
-            .stacksTo(1)));
+            new Item.Properties()
+                    .component(ModComponents.CHARGES.get(), 0)
+                    .stacksTo(1)));
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()

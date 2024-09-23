@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -262,7 +264,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                     MovingBlockSource<?> blockSource = new MovingBlockSource<>(this, dispenser);
                     // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...
                     ItemStack dispensed;
-                    if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && dispenseitembehavior instanceof AbstractProjectileBehaviorAccessor pb) {
+                    if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && dispenseitembehavior instanceof ProjectileDispenseBehavior pb) {
                         dispensed = executeAbstractProjectileBehavior(pb, blockSource, itemstack);
                     } else dispensed = dispenseitembehavior.dispense(blockSource, itemstack);
 
@@ -276,7 +278,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     }
 
-    private ItemStack executeAbstractProjectileBehavior(AbstractProjectileBehaviorAccessor ap, BlockSource source, ItemStack stack) {
+    private ItemStack executeAbstractProjectileBehavior(ProjectileDispenseBehavior ap, BlockSource source, ItemStack stack) {
         Level level = source.level();
 
         Position position = DispenserBlock.getDispensePosition(source);

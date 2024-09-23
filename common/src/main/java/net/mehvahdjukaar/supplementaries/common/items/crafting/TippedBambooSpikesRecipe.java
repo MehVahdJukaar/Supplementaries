@@ -5,14 +5,10 @@ import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -59,15 +55,17 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
-        Potion potion = Potions.EMPTY;
+        PotionContents potion = PotionContents.EMPTY;
         for (int i = 0; i < inv.size(); ++i) {
-            Potion p = PotionUtils.getPotion(inv.getItem(i));
-            if (p != Potions.EMPTY) {
+            PotionContents p = inv.getItem(i).getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+            if (p != PotionContents.EMPTY) {
                 potion = p;
                 break;
             }
         }
-        return BambooSpikesTippedItem.makeSpikeItem(potion);
+        ItemStack returnStack = ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
+        returnStack.set(DataComponents.POTION_CONTENTS, potion);
+        return returnStack;
 
     }
 

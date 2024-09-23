@@ -52,6 +52,8 @@
 - check max banner pattern size in flag to banner recipe
 - test all special recipes
 - key enchantability
+- check all ehcnamtnemtn stuff (anvil, repair, book, treasure, ench table)
+- disoenser minecart dispense ebahvior
 
 
 # Soon
@@ -209,6 +211,8 @@
 
 # Polytone
 
+- particle modifier appliying on tick
+- bow stuff not working
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
 - entity random model CIM

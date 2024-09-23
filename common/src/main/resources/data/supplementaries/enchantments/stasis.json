@@ -1,0 +1,27 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.supplementaries.stasis"
+  },
+  "effects": {
+    "supplementaries:spawn_bubble_block": {},
+    "supplementaries:projectile_no_gravity": {}
+  },
+  "exclusive_set": "#supplementaries:slingshot_exclusive_set",
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 5
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 5
+  },
+  "slots": [
+    "hand",
+    "offhand",
+    "mainhand"
+  ],
+  "supported_items": "#supplementaries:enchantable/stasis",
+  "weight": 2
+}

@@ -67,6 +67,7 @@ public class Supplementaries {
         ModMenuTypes.init();
         ModEntities.init();
         ModParticles.init();
+        ModEnchantments.init();
         ModCommands.init();
         ModVillagerTrades.init();
         ModWorldgenRegistry.init();

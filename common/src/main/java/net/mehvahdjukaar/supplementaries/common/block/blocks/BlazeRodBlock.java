@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BlazeRodBlock extends StickBlock {
@@ -25,9 +26,8 @@ public class BlazeRodBlock extends StickBlock {
 
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.fireImmune() && entity instanceof LivingEntity le && !EnchantmentHelper.hasFrostWalker(le)) {
-            if (!(entity instanceof Player p && p.isCreative()))
-                entity.setSecondsOnFire(2);
+        if (entity instanceof LivingEntity le) {
+            le.hurt(le.damageSources().inFire(), 0.5f);
         }
         super.stepOn(world, pos, state, entity);
     }

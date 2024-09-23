@@ -3,18 +3,16 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.client.anim.PendulumAnimation;
 import net.mehvahdjukaar.moonlight.api.client.anim.SwingAnimation;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.common.items.HatStandItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -75,7 +73,6 @@ public class HatStandEntity extends LivingEntity {
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
         this.headPose = DEFAULT_HEAD_POSE;
-        this.setMaxUpStep(0.0F);
         if (PlatHelper.getPhysicalSide().isClient()) {
             swingAnimation = new PendulumAnimation(
                     ClientConfigs.Blocks.HAT_STAND_CONFIG, this::getRotationAxis);
@@ -146,7 +143,7 @@ public class HatStandEntity extends LivingEntity {
         super.addAdditionalSaveData(compound);
         ItemStack stack = this.helmet.get(0);
         if (!stack.isEmpty())
-            compound.put("Helmet", stack.save(new CompoundTag()));
+            compound.put("Helmet", stack.save(level().registryAccess(), new CompoundTag()));
         compound.putBoolean("Invisible", this.isInvisible());
         compound.putBoolean("NoBasePlate", this.isNoBasePlate());
         compound.putBoolean("DisabledSlots", this.slotsDisabled);
@@ -472,8 +469,8 @@ public class HatStandEntity extends LivingEntity {
     }
 
     @Override
-    protected void dropAllDeathLoot(DamageSource damageSource) {
-        super.dropAllDeathLoot(damageSource);
+    protected void dropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource) {
+        super.dropAllDeathLoot(serverLevel, damageSource);
         this.spawnAtLocation(this.getPickResult(), 1);
     }
 
@@ -578,7 +575,8 @@ public class HatStandEntity extends LivingEntity {
     public ItemStack getPickResult() {
         ItemStack itemStack = new ItemStack(ModRegistry.HAT_STAND.get());
         if (this.hasCustomName()) {
-            itemStack.setHoverName(this.getCustomName());
+            //TODO: check of this is needed
+            itemStack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
         }
         return itemStack;
     }
@@ -589,7 +587,7 @@ public class HatStandEntity extends LivingEntity {
     }
 
     private void setSkibidiIfInCauldron(@Nullable LivingEntity target) {
-        BlockState state = this.getFeetBlockState();
+        BlockState state = this.getBlockStateOn();
         Block block = state.getBlock();
         if (block instanceof AbstractCauldronBlock || block instanceof ComposterBlock) {
             //skibidi tall
