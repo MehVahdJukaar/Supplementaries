@@ -39,13 +39,4 @@ public class ModEnchantments {
     );
 
     //TBH we could have just use tags here instead with an empty stasis ench definition
-    public static boolean hasUnitEffect(ItemStack stack, DataComponentType<Unit> unitEffect) {
-        ItemEnchantments itemEnchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        for (var ench : itemEnchantments.keySet()) {
-            if (ench.value().effects().has(unitEffect)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

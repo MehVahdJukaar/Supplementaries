@@ -35,14 +35,14 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     @Override
-    public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity livingEntity, @Nullable ItemStack itemStack2) {
-        var arrow = new Arrow(level, livingEntity, itemStack.copyWithCount(1), itemStack2);
+    public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity shooter, @Nullable ItemStack itemStack2) {
+        var arrow = new RopeArrowEntity(level, shooter, itemStack.copyWithCount(1), itemStack2);
+        int charges = getRopes(stack);
 
     }
 
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-        int charges = getRopes(stack);
 
         return new RopeArrowEntity(world, shooter, charges);
     }

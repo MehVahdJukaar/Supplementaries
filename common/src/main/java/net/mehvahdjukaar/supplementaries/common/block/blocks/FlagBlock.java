@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -111,28 +112,28 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof FlagBlockTile) {
-            ItemStack itemstack = player.getItemInHand(hand);
-            if (itemstack.getItem() instanceof MapItem) {
-                if (!world.isClientSide) {
-                    if (MapItem.getSavedData(itemstack, world) instanceof ExpandedMapData data) {
-                        data.ml$toggleCustomDecoration(world, pos);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof FlagBlockTile) {
+            if (stack.getItem() instanceof MapItem) {
+                if (!level.isClientSide) {
+                    if (MapItem.getSavedData(stack, level) instanceof ExpandedMapData data) {
+                        data.ml$toggleCustomDecoration(level, pos);
                     }
                 }
-                return InteractionResult.sidedSuccess(world.isClientSide);
-            } else if (itemstack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            } else if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
                 if (CommonConfigs.Building.FLAG_POLE.get()) {
-                    if (world.isClientSide) return InteractionResult.SUCCESS;
+                    if (level.isClientSide) return ItemInteractionResult.SUCCESS;
                     else {
                         Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
-                        StickBlock.findConnectedFlag(world, pos.below(), Direction.UP, moveDir, 0);
-                        StickBlock.findConnectedFlag(world, pos.above(), Direction.DOWN, moveDir, 0);
+                        StickBlock.findConnectedFlag(level, pos.below(), Direction.UP, moveDir, 0);
+                        StickBlock.findConnectedFlag(level, pos.above(), Direction.DOWN, moveDir, 0);
                     }
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

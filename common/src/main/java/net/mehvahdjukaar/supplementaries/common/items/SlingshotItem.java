@@ -58,7 +58,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
                     List<ItemStack> projectiles = draw(stack, stack, player);
 
-                    boolean noGravity = ModEnchantments.hasUnitEffect(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
+                    boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
                     power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
 
                     if (level instanceof ServerLevel serverLevel && !projectiles.isEmpty()) {

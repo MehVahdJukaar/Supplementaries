@@ -53,7 +53,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
         if (charges > 0) {
 
-            if (ModEnchantments.hasUnitEffect(itemstack, ModEnchantments.SPAWN_BUBBLE_BLOCK.get())) {
+            if (EnchantmentHelper.has(itemstack, ModEnchantments.SPAWN_BUBBLE_BLOCK.get())) {
                 return this.deployBubbleBlock(itemstack, level, player, hand);
             }
 

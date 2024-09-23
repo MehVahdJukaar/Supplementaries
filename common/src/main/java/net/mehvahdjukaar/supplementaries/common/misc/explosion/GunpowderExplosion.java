@@ -18,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -109,12 +110,12 @@ public class GunpowderExplosion extends Explosion {
                 if (block instanceof TntBlock) {
                     this.getToBlow().add(pos);
                 } else if (block == CompatObjects.NUKE_BLOCK.get()) {
-                    igniteTntHack(this.level, pos, block);
+                    igniteTntHack(this.level, pos, state);
                 }
             }
             //lights up burnable blocks
             if (block instanceof ILightable iLightable) {
-                iLightable.lightUp(null, state, pos, this.level, ILightable.FireSoundType.FLAMING_ARROW);
+                iLightable.tryLightUp(null, state, pos, this.level, ILightable.FireSoundType.FLAMING_ARROW);
             } else if (canLight(state)) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.TRUE), 11);
                 ILightable.FireSoundType.FLAMING_ARROW.play(level, pos);
@@ -181,12 +182,13 @@ public class GunpowderExplosion extends Explosion {
 
 
     // specifically for alex caves nukes basically
-    public static void igniteTntHack(Level level, BlockPos blockpos, Block tnt) {
-        Arrow dummyArrow = new Arrow(level, blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5);
-        dummyArrow.setSecondsOnFire(20);
+    public static void igniteTntHack(Level level, BlockPos blockpos, BlockState tnt) {
+        Arrow dummyArrow = new Arrow(level, blockpos.getX() + 0.5, blockpos.getY() + 0.5,
+                blockpos.getZ() + 0.5, Items.ARROW.getDefaultInstance(), null);
+        dummyArrow.setRemainingFireTicks(20);
         BlockState old = level.getBlockState(blockpos);
         //this will remove block above. too bad we are about to explode it anyways
-        tnt.onProjectileHit(level, tnt.defaultBlockState(),
+        tnt.onProjectileHit(level, tnt,
                 new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, blockpos, true),
                 dummyArrow);
         //restore old block

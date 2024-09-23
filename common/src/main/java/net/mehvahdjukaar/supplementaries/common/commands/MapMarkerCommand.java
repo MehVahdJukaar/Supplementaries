@@ -29,14 +29,13 @@ public class MapMarkerCommand {
         CommandSourceStack source = context.getSource();
         ServerLevel level = source.getLevel();
 
-        var decoration = ResourceArgument.getResource(context, "marker", MapDataRegistry.REGISTRY_KEY)
-                .value();
+        var decoration = ResourceArgument.getResource(context, "marker", MapDataRegistry.REGISTRY_KEY);
         var p = source.getPlayer();
         if (p != null) {
             ItemStack stack = p.getMainHandItem();
             var data = MapHelper.getMapData(stack, level, p);
             if (data != null) {
-                MapHelper.addDecorationToMap(stack, p.getOnPos(), decoration, 0);
+                MapHelper.addCustomTargetDecorationToItem(stack, p.getOnPos(), decoration, 0);
             }
         }
         return 0;

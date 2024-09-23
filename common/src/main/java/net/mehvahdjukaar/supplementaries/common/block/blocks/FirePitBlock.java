@@ -67,7 +67,7 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (state.getValue(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+        if (isLitUp(state, level, pos) && entity instanceof LivingEntity) {
             entity.hurt(level.damageSources().inFire(), this.fireDamage);
         }
 
@@ -111,7 +111,7 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(LIT)) {
+        if (isLitUp(state, level, pos)) {
             if (random.nextInt(10) == 0) {
                 level.playLocalSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.6F, false);
             }
@@ -142,6 +142,6 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        return state.getValue(LIT) ? 15 : 0;
+        return isLitUp(state, level, pos) ? 15 : 0;
     }
 }

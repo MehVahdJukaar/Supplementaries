@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -26,45 +27,49 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.Nullable;
 
 public class RopeArrowEntity extends AbstractArrow {
-    private int charges = 0;
     private BlockPos prevPlacedPos = null;
 
-    public RopeArrowEntity(EntityType<? extends RopeArrowEntity> type, Level world) {
-        super(type, world);
+    protected RopeArrowEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
+        super(entityType, level);
     }
 
-    public RopeArrowEntity(Level worldIn, LivingEntity throwerIn, int charges) {
-        super(ModEntities.ROPE_ARROW.get(), throwerIn, worldIn);
-        this.charges = charges;
+    protected RopeArrowEntity(double x, double y, double z, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
+        super(ModEntities.ROPE_ARROW.get(), x, y, z, level, projectile, weapon);
     }
 
-    public RopeArrowEntity(Level worldIn, double x, double y, double z, int charges) {
-        super(ModEntities.ROPE_ARROW.get(), x, y, z, worldIn);
-        this.charges = charges;
+    protected RopeArrowEntity(LivingEntity livingEntity, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
+        super(ModEntities.ROPE_ARROW.get(), livingEntity, level, projectile, weapon);
     }
 
-    public RopeArrowEntity(Level worldIn, double x, double y, double z) {
-        super(ModEntities.ROPE_ARROW.get(), x, y, z, worldIn);
-    }
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
         return PlatHelper.getEntitySpawnPacket(this, serverEntity);
     }
 
+    public int getCharges() {
+        return getPickupItemStackOrigin().getOrDefault(ModComponents.CHARGES.get(), 0);
+    }
+
+    private void removeCharges(int amount) {
+        int newCharges = this.getCharges() - amount;
+        getPickupItemStackOrigin().set(ModComponents.CHARGES.get(), newCharges);
+        //TODO: actual sound event here
+        this.level().playSound(null, this.prevPlacedPos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.2f, 1.7f);
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("Ropes", this.charges);
         if (this.prevPlacedPos != null) {
             compound.put("PrevPlacedPos", NbtUtils.writeBlockPos(this.prevPlacedPos));
         }
@@ -73,20 +78,14 @@ public class RopeArrowEntity extends AbstractArrow {
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.charges = compound.getInt("Ropes");
         if (compound.contains("PrevPlacedPos")) {
-            this.prevPlacedPos = NbtUtils.readBlockPos(compound.getCompound("PrevPlacedPos"));
+            this.prevPlacedPos = NbtUtils.readBlockPos(compound, "PrevPlacedPos").orElse(null);
         }
     }
 
     @Override
-    protected ItemStack getPickupItem() {
-        if (this.charges != 0) {
-            ItemStack stack = new ItemStack(ModRegistry.ROPE_ARROW_ITEM.get());
-            stack.setDamageValue(stack.getMaxDamage() - this.charges);
-            return stack;
-        }
-        return new ItemStack(Items.ARROW);
+    protected ItemStack getDefaultPickupItem() {
+        return ModRegistry.ROPE_ARROW_ITEM.get().getDefaultInstance();
     }
 
     //TODO: add sound
@@ -97,7 +96,7 @@ public class RopeArrowEntity extends AbstractArrow {
         Block ropeBlock = CommonConfigs.getSelectedRope();
         if (ropeBlock == null) return;
 
-        if (this.charges <= 0) return;
+        if (this.getCharges() <= 0) return;
         Level level = this.level();
         if (!level.isClientSide) {
             this.prevPlacedPos = null;
@@ -130,7 +129,7 @@ public class RopeArrowEntity extends AbstractArrow {
                             } else {
                                 this.prevPlacedPos = hitPos;
                             }
-                            this.removeCharge();
+                            this.removeCharges(1);
                             return;
                         }
                     }
@@ -140,7 +139,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 //try adding rope down
                 if (hitBlock == ropeBlock && RopeHelper.addRopeDown(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
                     this.prevPlacedPos = hitPos;
-                    this.removeCharge();
+                    this.removeCharges(1);
                     return;
                 }
                 hitPos = hitPos.relative(rayTraceResult.getDirection());
@@ -148,7 +147,7 @@ public class RopeArrowEntity extends AbstractArrow {
                 //rope to the side
                 if (hitBlock == ropeBlock && RopeHelper.addRopeDown(hitPos, level, player, InteractionHand.MAIN_HAND, ropeBlock)) {
                     this.prevPlacedPos = hitPos;
-                    this.removeCharge();
+                    this.removeCharges(1);
                     return;
                 }
 
@@ -160,17 +159,13 @@ public class RopeArrowEntity extends AbstractArrow {
                     if (state != null) {
                         level.setBlock(context.getClickedPos(), state, 11);
                         this.prevPlacedPos = context.getClickedPos();
-                        this.removeCharge();
+                        this.removeCharges(1);
                     }
                 }
             }
         }
     }
 
-    private void removeCharge() {
-        this.charges = Math.max(0, this.charges - 1);
-        this.level().playSound(null, this.prevPlacedPos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 0.2f, 1.7f);
-    }
 
     private void continueUnwindingRope() {
         Block ropeBlock = CommonConfigs.getSelectedRope();
@@ -187,7 +182,7 @@ public class RopeArrowEntity extends AbstractArrow {
         //hitBlock == ropeBlock &&
         if (RopeHelper.addRopeDown(hitPos.below(), level(), player, InteractionHand.MAIN_HAND, ropeBlock)) {
             this.prevPlacedPos = hitPos.below();
-            this.removeCharge();
+            this.removeCharges(1);
         } else {
             this.prevPlacedPos = null;
         }
@@ -197,7 +192,7 @@ public class RopeArrowEntity extends AbstractArrow {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (this.charges != 0 && this.prevPlacedPos != null) {
+            if (this.getCharges() != 0 && this.prevPlacedPos != null) {
                 this.continueUnwindingRope();
             }
         }
@@ -208,7 +203,7 @@ public class RopeArrowEntity extends AbstractArrow {
         Entity entity = pResult.getEntity();
         int k = entity.getRemainingFireTicks();
         if (this.isOnFire() && entity.getType() != EntityType.ENDERMAN) {
-            entity.setSecondsOnFire(5);
+            entity.setRemainingFireTicks(5);
         }
         entity.setRemainingFireTicks(k);
 

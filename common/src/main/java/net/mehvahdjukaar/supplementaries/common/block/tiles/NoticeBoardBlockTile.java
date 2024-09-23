@@ -122,8 +122,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public void updateText() {
+        this.text = null;
         ItemStack itemstack = getDisplayedItem();
-        Item item = itemstack.getItem();
         WrittenBookContent written = itemstack.get(DataComponents.WRITTEN_BOOK_CONTENT);
         if (written != null) {
             var pages = written.pages();
@@ -222,6 +222,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return cachedPattern;
     }
 
+    @Nullable
     public Filterable<String> getText() {
         return text;
     }

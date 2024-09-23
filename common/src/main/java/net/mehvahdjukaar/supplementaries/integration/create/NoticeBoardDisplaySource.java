@@ -7,6 +7,7 @@ import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.network.Filterable;
 
 public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
 
@@ -14,10 +15,12 @@ public class NoticeBoardDisplaySource extends SingleLineDisplaySource {
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         if (context.getSourceBlockEntity() instanceof NoticeBoardBlockTile tile) {
             tile.updateText();
-            return Component.literal(tile.getText().get(false));
-        } else {
-            return Component.empty();
+            Filterable<String> text = tile.getText();
+            if (text != null) {
+                return Component.literal(text.get(false));
+            }
         }
+        return Component.empty();
     }
 
     @Override

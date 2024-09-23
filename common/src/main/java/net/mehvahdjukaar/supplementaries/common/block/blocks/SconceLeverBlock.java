@@ -10,8 +10,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -36,23 +38,28 @@ public class SconceLeverBlock extends SconceWallBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        InteractionResult result = super.use(state, worldIn, pos, player, handIn, hit);
-        if (result.consumesAction()) {
-            this.updateNeighbors(state, worldIn, pos);
-            return result;
-        }
-        if (worldIn.isClientSide) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) {
             state.cycle(POWERED);
             return InteractionResult.SUCCESS;
         } else {
-            BlockState blockstate = this.setPowered(state, worldIn, pos);
+            BlockState blockstate = this.setPowered(state, level, pos);
             boolean enabled = blockstate.getValue(POWERED);
             float f = enabled ? 0.6F : 0.5F;
-            worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
-            worldIn.gameEvent(player, enabled ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
+            level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            level.gameEvent(player, enabled ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
             return InteractionResult.CONSUME;
         }
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        var r = super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        if (r.consumesAction()) {
+            this.updateNeighbors(state, level, pos);
+
+        }
+        return r;
     }
 
     public BlockState setPowered(BlockState state, Level world, BlockPos pos) {

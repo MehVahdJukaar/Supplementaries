@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModEnchantments;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -26,7 +27,7 @@ public class SlingshotItemOverlayRenderer extends ProjectileWeaponOverlayRendere
                     renderAmmo(graphics, x, y, ammo);
                 }
                 if (outline) {
-                    if (EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), stack) != 0) {
+                    if (EnchantmentHelper.has( stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get())) {
                         SlingshotRendererHelper.grabNewLookPos(player);
                     }
                 }

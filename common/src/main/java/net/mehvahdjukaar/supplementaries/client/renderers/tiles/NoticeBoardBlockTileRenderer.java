@@ -32,6 +32,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
@@ -132,8 +133,9 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         }
 
         //render book
-        String page = tile.getText();
-        if (!(page == null || page.equals(""))) {
+        Filterable<String> text = tile.getText();
+        if (text != null) {
+            String page = text.get(Minecraft.getInstance().isTextFilteringEnabled());
 
             if (!lod.isNearMed()) {
                 return;
