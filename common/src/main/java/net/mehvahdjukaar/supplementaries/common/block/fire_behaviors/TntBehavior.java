@@ -32,7 +32,7 @@ public class TntBehavior implements IFireItemBehavior {
                         firePos.x, firePos.y, firePos.z, 0, false, Explosion.BlockInteraction.KEEP);
                 tnt.wasExploded(level, blockpos, dummyExplosion);
             } else {
-                GunpowderExplosion.igniteTntHack(level, blockpos, tnt);
+                GunpowderExplosion.igniteTntHack(level, blockpos, tnt.defaultBlockState());
             }
 
             var entities = level.getEntities((Entity) null, new AABB(blockpos).move(0, 0.5, 0),

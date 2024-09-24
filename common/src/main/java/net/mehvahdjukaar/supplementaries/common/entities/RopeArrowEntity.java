@@ -38,15 +38,15 @@ import org.jetbrains.annotations.Nullable;
 public class RopeArrowEntity extends AbstractArrow {
     private BlockPos prevPlacedPos = null;
 
-    protected RopeArrowEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
+    public RopeArrowEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
         super(entityType, level);
     }
 
-    protected RopeArrowEntity(double x, double y, double z, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
+    public RopeArrowEntity(double x, double y, double z, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
         super(ModEntities.ROPE_ARROW.get(), x, y, z, level, projectile, weapon);
     }
 
-    protected RopeArrowEntity(LivingEntity livingEntity, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
+    public RopeArrowEntity(LivingEntity livingEntity, Level level, ItemStack projectile, @Nullable ItemStack weapon) {
         super(ModEntities.ROPE_ARROW.get(), livingEntity, level, projectile, weapon);
     }
 

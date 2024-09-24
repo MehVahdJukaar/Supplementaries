@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -15,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArrowItem;
@@ -36,19 +34,11 @@ public class RopeArrowItem extends ArrowItem {
 
     @Override
     public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity shooter, @Nullable ItemStack itemStack2) {
-        var arrow = new RopeArrowEntity(level, shooter, itemStack.copyWithCount(1), itemStack2);
-        int charges = getRopes(stack);
-
-    }
-
-    @Override
-    public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-
-        return new RopeArrowEntity(world, shooter, charges);
+        return new RopeArrowEntity(shooter, level, itemStack.copyWithCount(1), itemStack2);
     }
 
     public static int getRopes(ItemStack stack) {
-        return stack.getOrDefault(ModComponents.CHARGES.get(),0);
+        return stack.getOrDefault(ModComponents.CHARGES.get(), 0);
     }
 
     public static void addRopes(ItemStack stack, int ropes) {
