@@ -755,13 +755,15 @@ public class CommonConfigs {
             LUMISENE_BOTTLE = feature(builder
                     .comment("Enables lumisene bottles and the flammable effect and lumisene bottles. Turn off if you think its over the top and doesnt match with existing effects")
             );
-            FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect")
+            FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect when you drink a lumisene bottle")
                     .gameRestart()
                     .define("flammable_duration", 300, 0, 10000);
-            GLOWING_DURATION = builder.comment("Duration of the glowing effect")
+            GLOWING_DURATION = builder.comment("Duration of the glowing effect when you drink a lumisene bottle")
                     .gameRestart()
                     .define("glowing_duration", 200, 0, 10000);
             builder.pop();
+            FLAMMABLE_FROM_LUMISENE = builder.comment("Gives the flammable effext also when merely stepping on lumisene. Turning this off if you think effects are not something that should be applied like that and just by drinking it.")
+                    .define("flammable_from_lumisene_block_duration", 50,0, 10000);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -827,6 +829,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LUMISENE_BOTTLE;
         public static final Supplier<Integer> FLAMMABLE_DURATION;
         public static final Supplier<Integer> GLOWING_DURATION;
+        public static final Supplier<Integer> FLAMMABLE_FROM_LUMISENE;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;

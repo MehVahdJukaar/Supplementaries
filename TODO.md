@@ -11,6 +11,10 @@
 - heavy key getting overwritten by normal key
 - safe recipe jei
 - no jar of dirt
+- rope not breaking when supporting each other
+- turn table and minecart interaction
+- spring launcher super buggy
+- gunpowder lights up stuff by climbing
 
 # Supplementaries
 
@@ -149,6 +153,8 @@
 
 # Polytone
 
+- cim bow
+- add text onto guis
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
 - entity random model CIM

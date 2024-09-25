@@ -112,8 +112,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
-                if (level.isClientSide) {
-                    level.addDestroyBlockEffect(pos, state);
+                if (!level.isClientSide) {
+                    level.blockEvent(pos, state.getBlock(), 2, 0);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -207,6 +207,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
         super.triggerEvent(state, world, pos, eventID, eventParam);
         BlockEntity tile = world.getBlockEntity(pos);
+
         return tile != null && tile.triggerEvent(eventID, eventParam);
     }
 

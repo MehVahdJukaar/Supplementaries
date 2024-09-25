@@ -64,7 +64,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                             blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, false);
                         }
 
-                        level.setBlock(pos, blockState, 67);
+                        level.setBlock(pos, blockState, 67 | Block.UPDATE_KNOWN_SHAPE);
                         level.neighborChanged(pos, blockState.getBlock(), pos);
 
                         if (level instanceof ServerLevel sl) blockState.tick(sl, pos, sl.random);

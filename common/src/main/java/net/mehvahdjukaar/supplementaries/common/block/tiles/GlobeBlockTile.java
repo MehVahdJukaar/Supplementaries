@@ -138,6 +138,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
                     SoundSource.BLOCKS, 0.65f,
                     MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
+        } else if (id == 2) {
+            level.addDestroyBlockEffect(worldPosition, getBlockState());
+            return true;
         } else {
             return super.triggerEvent(id, type);
         }

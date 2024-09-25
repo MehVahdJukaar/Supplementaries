@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -253,6 +254,8 @@ public class AwningBlock extends WaterBlock implements IColored {
 
                 Vector3f newMovement = movement.toVector3f().reflect(normal);
                 entity.setDeltaMovement(new Vec3(newMovement));
+                level.playSound(null, pos, ModSounds.AWNING_BOUNCES.get(), SoundSource.BLOCKS,
+                        1.0F, 1.0F);
             }
             //we need to stop movement downwards. do what update entity after fall on does
             else {
