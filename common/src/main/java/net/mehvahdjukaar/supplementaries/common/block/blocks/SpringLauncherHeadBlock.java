@@ -97,7 +97,8 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             entityIn.causeFallDamage(fallDistance, 0.0F, level.damageSources().fall());
             //TODO: add falling block entity support. also fix not working on servers
             if ((entityIn instanceof LivingEntity) && !level.isClientSide && fallDistance > (float) CommonConfigs.Redstone.LAUNCHER_HEIGHT.get()) {
-                level.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+                BlockState state1 = ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState();
+                level.setBlock(pos, state1
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
                 if (level.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile tile) {
                     tile.retractOnFallOn();

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
