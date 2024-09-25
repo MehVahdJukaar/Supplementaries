@@ -9,6 +9,15 @@
     ],
     "subtitle": "subtitles.entity.enderman.teleport"
   },
+  "block.awning.bounce": {
+    "sounds": [
+      "supplementaries:block/awning_bounce_0",
+      "supplementaries:item/awning_bounce_1",
+      "supplementaries:item/awning_bounce_2",
+      "supplementaries:item/awning_bounce_3"
+    ],
+    "subtitle": "subtitles.supplementaries.entity.bounce"
+  },
   "entity.cannonball.break": {
     "sounds": [
       "block/copper/break1",
@@ -57,7 +66,7 @@
         "volume": 0.95
       }
     ],
-    "subtitle": "subtitles.supplementaries.cannonball.bounce"
+    "subtitle": "subtitles.supplementaries.entity.bounce"
   },
   "entity.brick.throw": {
     "sounds": [
@@ -79,7 +88,7 @@
       "mob/slime/small4",
       "mob/slime/small5"
     ],
-    "subtitle": "subtitles.supplementaries.slimeball.bounce"
+    "subtitle": "subtitles.supplementaries.entity.bounce"
   },
   "entity.slimed": {
     "sounds": [

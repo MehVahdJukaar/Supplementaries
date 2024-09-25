@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,7 +49,7 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
         BlockState frontState = level.getBlockState(pos.relative(state.getValue(FACING)));
         if (!frontState.is(ModRegistry.MOVING_SLIDY_BLOCK.get()) ||
                 frontState.getValue(FACING) != state.getValue(FACING)) {
-            level.removeBlock(pos, true);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
         }
     }
     //TODO: fix not updating neighboring blocks

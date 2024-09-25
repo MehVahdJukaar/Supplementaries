@@ -45,6 +45,8 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> SOAP_WASH = regSound("item.soap.wash");
 
+    public static final Supplier<SoundEvent> AWNING_BOUNCES = regSound("block.awning.bounce");
+
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");
     public static final Supplier<SoundEvent> PRESENT_STEP = regSound("block.present.step");

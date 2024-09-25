@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -46,6 +47,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         if (!neighbor.isAir() && neighbor.getPistonPushReaction() != PushReaction.DESTROY) {
             return false;
         }
+
         level.destroyBlock(neighborPos, true);
 
         // called on both sides because it becomes smoother
@@ -71,7 +73,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         }
 
         //pistons usually call this from both sides. here sometimes we dont... we must use a custom packet since tile is set manually
-
+        //calling remove on same pst to hopefully fixe some tile entity issues
         level.removeBlock(pos, true);
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
                .defaultBlockState().setValue(BlockStateProperties.FACING, direction), 3);
