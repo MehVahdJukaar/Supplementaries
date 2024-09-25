@@ -52,6 +52,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
+
     // tile entity, leave true
     public SpringLauncherHeadBlock(Properties properties) {
         super(properties);
@@ -80,15 +81,16 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
-        if (entityIn.isSuppressingBounce() || state.getValue(FACING)!=Direction.UP) {
+        if (entityIn.isSuppressingBounce() || state.getValue(FACING) != Direction.UP) {
             super.fallOn(level, state, pos, entityIn, fallDistance);
         } else {
             entityIn.causeFallDamage(fallDistance, 0.0F, level.damageSources().fall());
             //TODO: add falling block entity support. also fix not working on servers
-            if((entityIn instanceof LivingEntity) && !level.isClientSide && fallDistance>(float) CommonConfigs.Redstone.LAUNCHER_HEIGHT.get()){
-                level.setBlock(pos, ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState()
+            if ((entityIn instanceof LivingEntity) && !level.isClientSide && fallDistance > (float) CommonConfigs.Redstone.LAUNCHER_HEIGHT.get()) {
+                BlockState state1 = ModRegistry.SPRING_LAUNCHER_ARM.get().defaultBlockState();
+                level.setBlock(pos, state1
                         .setValue(SpringLauncherArmBlock.EXTENDING, false).setValue(FACING, state.getValue(FACING)), 3);
-                if(level.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile tile){
+                if (level.getBlockEntity(pos) instanceof SpringLauncherArmBlockTile tile) {
                     tile.retractOnFallOn();
                 }
             }
@@ -110,7 +112,6 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
         }
 
     }*/
-
     private void bounceEntity(Entity entity) {
         Vec3 vector3d = entity.getDeltaMovement();
         if (vector3d.y < 0.0D) {
@@ -151,6 +152,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     }
 
     // piston code
+
     /**
      * Called before the Block is set to air in the world. Called regardless of if
      * the player's tool can actually collect this block
@@ -184,7 +186,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
 
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos,
-                                          BlockPos facingPos) {
+                                  BlockPos facingPos) {
         return facing.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(worldIn, currentPos)
                 ? Blocks.AIR.defaultBlockState()
                 : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);

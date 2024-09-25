@@ -57,6 +57,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
                 .setValue(PACKED, false));
     }
 
+
     @Override
     public boolean canBeReplaced(BlockState state, Fluid fluid) {
         return false;

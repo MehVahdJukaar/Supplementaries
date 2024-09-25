@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.AbstractProjectileBehaviorAccessor;
