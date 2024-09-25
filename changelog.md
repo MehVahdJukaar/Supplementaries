@@ -22,6 +22,7 @@ Bug Fixes:
 - bomb smoke particles were changed
 - fixed some issues with jars and goblet fluids
 - wind vane uses an entity model now with proper shading
+- gunpowder can now light up blocks that are one over and 1 up from it. it will also visually connect to them
 - crystal displays can be chained
 - book pile generation fix
 - destroying a safe item will no longer drop its content

@@ -60,7 +60,7 @@ public class GunpowderExplosion extends Explosion {
         int pz = Mth.floor(this.z);
 
         this.radius2 *= 2.0F;
-
+        //is this needed?
         ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius2);
 
         explodeBlock(px + 1, py, pz);
@@ -69,6 +69,12 @@ public class GunpowderExplosion extends Explosion {
         explodeBlock(px, py - 1, pz);
         explodeBlock(px, py, pz + 1);
         explodeBlock(px, py, pz - 1);
+        //explode ones above for gunpowder climb
+        explodeBlock(px, py + 1, pz + 1);
+        explodeBlock(px, py + 1, pz - 1);
+        explodeBlock(px + 1, py + 1, pz);
+        explodeBlock(px - 1, py + 1, pz);
+
 
         BlockPos pos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
