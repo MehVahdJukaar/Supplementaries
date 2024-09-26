@@ -12,6 +12,7 @@ New features:
 - lunch boxes. click to switch mode
 - dispensers can empty bundles, quivers and lunch boxes
 - probably other stuff I forgot
+- wall sign posts
 
 
 Bug Fixes:
