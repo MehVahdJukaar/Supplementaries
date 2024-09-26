@@ -442,7 +442,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
         event.register(Supplementaries.res("blackboard"), new NestedModelLoader("frame", BlackboardBakedModel::new));
-        event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
+        event.register(Supplementaries.res("sign_post"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());

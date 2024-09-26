@@ -3,6 +3,6 @@
 	"parent": "supplementaries:block/sign_posts/template",
 	"textures": {
 		"particle": "supplementaries:block/sign_posts/sign_post_oak",
-		"east": "supplementaries:block/sign_posts/sign_post_oak"
+		"sign": "supplementaries:block/sign_posts/sign_post_oak"
 	}
 }

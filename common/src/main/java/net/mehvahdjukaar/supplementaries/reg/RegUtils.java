@@ -213,7 +213,8 @@ public class RegUtils {
     private static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(ModConstants.SIGN_POST_NAME);
-            SignPostItem item = new SignPostItem(new Item.Properties().stacksTo(16), wood);
+            SignPostItem item = new SignPostItem(ModRegistry.SIGN_POST_WALL.get(),
+                    new Item.Properties().stacksTo(16), wood);
             wood.addChild("supplementaries:sign_post", item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);

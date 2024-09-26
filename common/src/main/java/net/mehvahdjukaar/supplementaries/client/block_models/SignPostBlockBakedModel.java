@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SignPostBlockBakedModel implements CustomBakedModel {
@@ -40,13 +39,14 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
         Boolean isFramed = data.get(ModBlockProperties.FRAMED);
         SignPostBlockTile.Sign up = data.get(ModBlockProperties.SIGN_UP);
         SignPostBlockTile.Sign down = data.get(ModBlockProperties.SIGN_DOWN);
-        Boolean slim = data.get(ModBlockProperties.SLIM);
+        Float zOffset = data.get(ModBlockProperties.RENDER_OFFSET);
 
         boolean framed = CompatHandler.FRAMEDBLOCKS && (isFramed != null && isFramed);
 
         //            if (mimic != null && !mimic.isAir() && (layer == null || (framed || RenderTypeLookup.canRenderInLayer(mimic, layer)))) {
         //always solid.
 
+        List<BakedQuad> quads = new ArrayList<>();
         if (mimic != null && !mimic.isAir()) {
 
             ExtraModelData data2;
@@ -59,21 +59,18 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
             }
             BakedModel model = blockModelShaper.getBlockModel(mimic);
 
-            List<BakedQuad> quads = new ArrayList<>(model.getQuads(mimic, side, rand));
-
-            if(up != null && down != null) {
-                BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
-                builder.setAutoDirection();
-                builder.setAutoBuild(quads::add);
-                SignPostBlockTileRenderer.renderSigns(new PoseStack(),
-                        builder, 0, 0, up, down, slim);
-            }
-
-            return quads;
-
+            quads.addAll(model.getQuads(mimic, side, rand));
         }
 
-        return Collections.emptyList();
+        if (up != null && down != null) {
+            BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
+            builder.setAutoDirection();
+            builder.setAutoBuild(quads::add);
+            SignPostBlockTileRenderer.renderSigns(new PoseStack(),
+                    builder, 0, 0, up, down, zOffset);
+        }
+        return quads;
+
     }
 
     @Override

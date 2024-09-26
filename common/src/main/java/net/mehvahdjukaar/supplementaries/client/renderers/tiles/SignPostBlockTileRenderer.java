@@ -56,11 +56,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     public void render(SignPostBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        renderSignsText(tile, poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
-
-    }
-
-    private void renderSignsText(SignPostBlockTile tile, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockPos pos = tile.getBlockPos();
         Vec3 cameraPos = camera.getPosition();
 
@@ -84,7 +79,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
             if (up) {
                 if (LOD.isOutOfFocus(relAngle, signUp.yaw() + 90, 2)) {
-                    var v = new Vector3f(1,0,0);
+                    var v = new Vector3f(1, 0, 0);
                     v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
                     var textProperties = tile.getTextHolder(0).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
 
@@ -95,7 +90,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             if (down) {
                 if (LOD.isOutOfFocus(relAngle, signDown.yaw() + 90, 2)) {
 
-                    Vector3f normalVector = new Vector3f(1,0,0);
+                    Vector3f normalVector = new Vector3f(1, 0, 0);
                     normalVector.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
                     var textProperties = tile.getTextHolder(1).computeRenderProperties(combinedLightIn, normalVector, lod::isVeryNear);
 
@@ -118,10 +113,8 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
 
-        if (tile.isSlim()) matrixStackIn.translate(0, 0, -1 / 16f);
-
-
-        matrixStackIn.translate(-0.03125 * o, 0.28125, 0.1875 + 0.005);
+        float zOffset = tile.getOffset() - 0.5f + 1/16f;
+        matrixStackIn.translate(-0.03125 * o, 0.28125, zOffset + 0.005);
         matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
         TextUtil.renderLine(tile.getTextHolder(line).getRenderMessages(0, font), font,
@@ -132,7 +125,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
 
     public static void renderSigns(PoseStack poseStack, VertexConsumer builder, int combinedLightIn, int combinedOverlayIn,
-                                   SignPostBlockTile.Sign signUp, SignPostBlockTile.Sign signDown, boolean slim) {
+                                   SignPostBlockTile.Sign signUp, SignPostBlockTile.Sign signDown, Float zOffset) {
 
         boolean up = signUp.active();
         boolean down = signDown.active();
@@ -141,12 +134,12 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             poseStack.pushPose();
 
             if (down) {
-                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signDown, slim);
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signDown, zOffset);
             }
 
             if (up) {
                 poseStack.translate(0, 0.5, 0);
-                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signUp, slim);
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signUp, zOffset);
             }
 
             poseStack.popPose();
@@ -156,14 +149,20 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     public static void renderSign(
             PoseStack posestack, VertexConsumer builder,
             int light, int overlay,
-            SignPostBlockTile.Sign sign, boolean slim) {
+            SignPostBlockTile.Sign sign, Float zOffset) {
         posestack.pushPose();
 
         boolean left = sign.left();
         posestack.translate(0.5, 0.5, 0.5);
         posestack.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
 
-        if (slim) posestack.translate(0, 0, -1 / 16f);
+        //null offset needs to be the same as wall facing one
+        float z = -10/16f;
+        if (zOffset != null) {
+            z += zOffset;
+        }
+        posestack.translate(0, 0, z);
+
 
         //sign block
         if (!left) {
