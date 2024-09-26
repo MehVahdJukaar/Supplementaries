@@ -78,9 +78,8 @@
 - safe recipe jei
 - no jar of dirt
 - rope not breaking when supporting each other
-- turn table and minecart interaction
 - spring launcher super buggy
-- gunpowder lights up stuff by climbing
+- make no grabity ench work on bows
 
 # Supplementaries
 

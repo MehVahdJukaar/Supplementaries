@@ -40,7 +40,6 @@ import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
@@ -83,7 +82,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
         this.setItem(item);
 
         this.setLoyalty(getLoyaltyFromItem(item));
-        this.setNoGravity(EnchantmentHelper.getItemEnchantmentLevel(ModRegistry.STASIS_ENCHANTMENT.get(), throwerStack) != 0);
+        this.setNoGravity(EnchantmentHelper.has(throwerStack, ModEnchantments.PROJECTILE_NO_GRAVITY.get()));
 
         this.yRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
         this.xRotInc = (this.random.nextBoolean() ? 1 : -1) * (float) (4 * this.random.nextGaussian() + 7);
@@ -105,7 +104,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private byte getLoyaltyFromItem(ItemStack itemStack) {
         Level var3 = this.level();
         return var3 instanceof ServerLevel serverLevel
-                ? (byte)Mth.clamp(EnchantmentHelper.getTridentReturnToOwnerAcceleration(serverLevel, itemStack, this), 0, 127)
+                ? (byte) Mth.clamp(EnchantmentHelper.getTridentReturnToOwnerAcceleration(serverLevel, itemStack, this), 0, 127)
                 : 0;
     }
 

@@ -81,7 +81,7 @@ public class AdventurerMapsHandler {
                 color = type.getDefaultMapColor();
             }
         }
-        MapHelper.addDecorationToMap(stack, pos, decoration, color);
+        MapHelper.addTargetDecorationToItem(stack, pos, decoration, color);
 
         if (name != null) {
             stack.set(DataComponents.ITEM_NAME, Component.translatable(name));
