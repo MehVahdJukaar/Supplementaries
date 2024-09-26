@@ -1,24 +1,18 @@
 # Soon
-
-- polytone bow model
+- 
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs
 - anger nearby piglins
-- lumisene sets stuff on fire
 - cannon camera glitchyness
-- globe sheared particle event for servers
 - heavy key getting overwritten by normal key
 - safe recipe jei
 - no jar of dirt
 - rope not breaking when supporting each other
-- turn table and minecart interaction
 - spring launcher super buggy
-- gunpowder lights up stuff by climbing
 
 # Supplementaries
 
-- wall sign posts
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
 - test config saving

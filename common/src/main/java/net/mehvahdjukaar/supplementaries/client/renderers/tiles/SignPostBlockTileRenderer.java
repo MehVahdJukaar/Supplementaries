@@ -56,14 +56,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     public void render(SignPostBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        BlockPos pos = tile.getBlockPos();
-        Vec3 cameraPos = camera.getPosition();
-
-        //don't render signs from far away
-        LOD lod = new LOD(cameraPos, pos);
-
-        if (!lod.isNear()) return;
-
         var signUp = tile.getSignUp();
         var signDown = tile.getSignDown();
 
@@ -71,6 +63,14 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         boolean down = signDown.active();
         //render signs
         if (up || down) {
+
+            BlockPos pos = tile.getBlockPos();
+            Vec3 cameraPos = camera.getPosition();
+
+            //don't render signs from far away
+            LOD lod = new LOD(cameraPos, pos);
+
+            if (!lod.isNear()) return;
 
             float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
