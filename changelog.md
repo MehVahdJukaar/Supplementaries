@@ -31,6 +31,7 @@ Bug Fixes:
 - quiver can now have arrows be inserted from off hand
 - blackboard undo button**
 - improved urns spawning
+- gunpowder can ignite trapped presents
 - added a recipe to clear item lore
 - fixe many issues with slingshot projectiles
 - slingshots can now shoot buckets
