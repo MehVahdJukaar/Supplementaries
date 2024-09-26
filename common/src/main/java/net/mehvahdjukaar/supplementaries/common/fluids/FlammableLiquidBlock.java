@@ -217,7 +217,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 } else {
                     entity.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
                     if (entity.getRemainingFireTicks() == 0) {
-                        entity.setSecondsOnFire(8);
+                        entity.setRemainingFireTicks(8);
                     }
                 }
             }
@@ -229,7 +229,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         }
         Integer duration = CommonConfigs.Functional.FLAMMABLE_FROM_LUMISENE.get();
         if (entity instanceof LivingEntity le && duration > 0) {
-            le.addEffect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), duration,
+            le.addEffect(new MobEffectInstance(ModRegistry.FLAMMABLE.getHolder(), duration,
                     0, false, false));
         }
 

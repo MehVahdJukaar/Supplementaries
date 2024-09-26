@@ -21,9 +21,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -357,22 +359,22 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        InteractionResult lightUp = super.use(state, world, pos, player, hand, hit);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemInteractionResult lightUp = super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         if (lightUp.consumesAction()) return lightUp;
         if (Utils.mayPerformBlockAction(player, pos, player.getItemInHand(hand))) {
             if (isCross(state) || isDot(state)) {
                 BlockState blockstate = isCross(state) ? this.defaultBlockState() : this.crossState;
                 blockstate = blockstate.setValue(BURNING, state.getValue(BURNING));
-                blockstate = this.getConnectionState(world, blockstate, pos);
+                blockstate = this.getConnectionState(level, blockstate, pos);
                 if (blockstate != state) {
-                    world.setBlock(pos, blockstate, 3);
-                    this.updatesOnShapeChange(world, pos, state, blockstate);
-                    return InteractionResult.SUCCESS;
+                    level.setBlock(pos, blockstate, 3);
+                    this.updatesOnShapeChange(level, pos, state, blockstate);
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private void updatesOnShapeChange(Level world, BlockPos pos, BlockState state, BlockState newState) {
@@ -409,7 +411,7 @@ public class GunpowderBlock extends LightUpBlock {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
                     if (isFireSource(world, p)) {
-                        this.lightUp(null, state, pos, world, FireSoundType.FLAMING_ARROW);
+                        this.tryLightUp(null, state, pos, world, FireSoundType.FLAMING_ARROW);
                         world.scheduleTick(pos, this, getDelay());
                         break;
                     }
@@ -427,8 +429,8 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
-        boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
+    public boolean tryLightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
+        boolean ret = super.tryLightUp(entity, state, pos, world, fireSourceType);
         if (ret) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
@@ -502,7 +504,7 @@ public class GunpowderBlock extends LightUpBlock {
     public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
         super.fallOn(world, state, pos, entity, height);
         if (height > 1) {
-            this.extinguish(entity, world.getBlockState(pos), pos, world);
+            this.tryExtinguish(entity, world.getBlockState(pos), pos, world);
         }
     }
 

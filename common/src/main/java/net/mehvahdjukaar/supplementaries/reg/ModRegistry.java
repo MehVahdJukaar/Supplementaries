@@ -75,7 +75,7 @@ public class ModRegistry {
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
             res("overencumbered"), OverencumberedEffect::new);
 
-    public static final Supplier<MobEffect> FLAMMABLE = RegHelper.registerEffect(
+    public static final RegSupplier<MobEffect> FLAMMABLE = RegHelper.registerEffect(
             res("flammable"), FlammableEffect::new);
 
 

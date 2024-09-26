@@ -54,6 +54,7 @@
 - key enchantability
 - check all ehcnamtnemtn stuff (anvil, repair, book, treasure, ench table)
 - disoenser minecart dispense ebahvior
+- rope arrow entity hit and player touch
 
 
 # Soon
@@ -220,6 +221,7 @@
 
 # Polytone
 
+- sheep colors
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
 - entity random model CIM
