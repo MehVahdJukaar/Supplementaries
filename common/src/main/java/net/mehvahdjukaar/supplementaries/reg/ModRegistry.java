@@ -176,12 +176,17 @@ public class ModRegistry {
                 .strength(2f, 3f)
                 .sound(SoundType.WOOD)
                 .noOcclusion();
-        return /*CompatHandler.create ? SchematicCannonStuff.makeSignPost(p) :*/ new SignPostBlock(p);
+        return new SignPostBlock(p);
+    });
+
+    public static final Supplier<Block> SIGN_POST_WALL = regBlock(SIGN_POST_NAME + "_wall", () -> {
+        var p = BlockBehaviour.Properties.copy(SIGN_POST.get());
+        return new SignPostWallBlock(p);
     });
 
     public static final Supplier<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = regTile(
             SIGN_POST_NAME, () -> PlatHelper.newBlockEntityType(
-                    SignPostBlockTile::new, SIGN_POST.get()));
+                    SignPostBlockTile::new, SIGN_POST.get(), SIGN_POST_WALL.get()));
 
     public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
 
@@ -1033,7 +1038,7 @@ public class ModRegistry {
                     .isRedstoneConductor(NEVER)
                     .isViewBlocking(NEVER)
                     .noOcclusion()
-                    ));
+    ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1042,7 +1047,7 @@ public class ModRegistry {
     //cannonball
     public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
-                    .strength(5,6)
+                    .strength(5, 6)
                     .sound(SoundType.COPPER)
                     .isSuffocating(NEVER)
                     .isRedstoneConductor(NEVER)

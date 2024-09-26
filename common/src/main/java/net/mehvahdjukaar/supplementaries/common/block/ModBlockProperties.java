@@ -83,7 +83,7 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC_KEY;
     public static final ModelDataKey<Boolean> FANCY = new ModelDataKey<>(Boolean.class);
     public static final ModelDataKey<Boolean> FRAMED = new ModelDataKey<>(Boolean.class);
-    public static final ModelDataKey<Boolean> SLIM = new ModelDataKey<>(Boolean.class);
+    public static final ModelDataKey<Float> RENDER_OFFSET = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<SignPostBlockTile.Sign> SIGN_UP = new ModelDataKey<>(SignPostBlockTile.Sign.class);
     public static final ModelDataKey<SignPostBlockTile.Sign> SIGN_DOWN = new ModelDataKey<>(SignPostBlockTile.Sign.class);
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);

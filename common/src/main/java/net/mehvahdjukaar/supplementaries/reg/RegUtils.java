@@ -31,13 +31,11 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -222,7 +220,8 @@ public class RegUtils {
     private static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
             String name = wood.getVariantId(ModConstants.SIGN_POST_NAME);
-            SignPostItem item = new SignPostItem(new Item.Properties().stacksTo(16), wood);
+            SignPostItem item = new SignPostItem(ModRegistry.SIGN_POST_WALL.get(),
+                    new Item.Properties().stacksTo(16), wood);
             wood.addChild("supplementaries:sign_post", item);
             event.register(Supplementaries.res(name), item);
             ModRegistry.SIGN_POST_ITEMS.put(wood, item);
