@@ -289,6 +289,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        System.out.println("Event "+id + "_ "+level.isClientSide()+" "+level.getGameTime());
         if (id > 1) return false;
         if (!level.isClientSide) return true;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {

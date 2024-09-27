@@ -32,6 +32,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -56,6 +57,9 @@ import java.util.function.Consumer;
 
 public class ClientEvents {
 
+    protected static final MutableComponent PLACEABLE_TOOLTIP = Component.translatable("message.supplementaries.placeable")
+            .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC);
+
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
         if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
@@ -64,10 +68,11 @@ public class ClientEvents {
 
         if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
             if (AdditionalItemPlacementsAPI.getBehavior(itemStack.getItem()) instanceof SuppAdditionalPlacement) {
-                components.add(Component.translatable("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+                components.add(PLACEABLE_TOOLTIP);
             }
         }
 
+        //TODO: remove in 1.21
         Item item = itemStack.getItem();
         if (item == ModRegistry.ROPE_ARROW_ITEM.get() || item == ModRegistry.BUBBLE_BLOWER.get()) {
 

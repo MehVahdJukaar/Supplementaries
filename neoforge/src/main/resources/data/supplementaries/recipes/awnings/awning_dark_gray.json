@@ -5,11 +5,11 @@
       "item": "supplementaries:awning"
     },
     {
-      "tag": "forge:dyes/dark_gray"
+      "tag": "forge:dyes/gray"
     }
   ],
   "result": {
-    "item": "supplementaries:awning_dark_gray",
+    "item": "supplementaries:awning_gray",
     "count": 1
   },
   "conditions": [

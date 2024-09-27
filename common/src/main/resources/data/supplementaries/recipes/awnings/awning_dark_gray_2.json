@@ -6,14 +6,14 @@
   ],
   "key": {
     "0": {
-      "tag": "minecraft:dark_gray_carpet"
+      "tag": "minecraft:gray_carpet"
     },
     "1": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "supplementaries:awning_dark_gray",
+    "item": "supplementaries:awning_gray",
     "count": 2
   },
   "conditions": [
