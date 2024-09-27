@@ -129,6 +129,11 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
     public ItemStack getProjectile() {
         return this.getItem(1);
     }
@@ -311,9 +316,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (!this.hasFuelAndProjectiles()) return;
 
         if (level.isClientSide) {
-            //call directly on client. is this needed?
+            //call directly on client. happens 1 tick faster is this needed?
             level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
         } else {
+            //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
             if (this.shootProjectile()) {
                 Player p = getPlayerWhoFired();
                 if (p == null || !p.isCreative()) {

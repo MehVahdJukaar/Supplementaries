@@ -1,5 +1,7 @@
 # Soon
-- 
+- cannon anim not working on servers
+- goblet texture broen
+- cannon with block server crash
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs
