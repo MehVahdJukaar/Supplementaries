@@ -11,6 +11,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ArmorStandItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -45,7 +47,7 @@ public class HatStandItem extends Item {
                     if (level instanceof ServerLevel serverLevel) {
                         level.removeBlock(blockpos, false);
                         Consumer<HatStandEntity> consumer = EntityType.createDefaultStackConfig(serverLevel, itemstack, context.getPlayer());
-                        HatStandEntity dummy = type.create(serverLevel, itemstack.getTag(), consumer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
+                        HatStandEntity dummy = type.create(serverLevel, consumer, blockpos, MobSpawnType.SPAWN_EGG, false, false);
                         if (dummy == null) {
                             return InteractionResult.FAIL;
                         }

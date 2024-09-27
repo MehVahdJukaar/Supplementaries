@@ -178,7 +178,7 @@ public class ModRegistry {
     });
 
     public static final Supplier<Block> SIGN_POST_WALL = regBlock(SIGN_POST_NAME + "_wall", () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.OAK_SIGN);
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SIGN);
         return new SignPostWallBlock(p);
     });
 
