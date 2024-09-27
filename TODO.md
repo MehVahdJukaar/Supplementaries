@@ -57,7 +57,9 @@
 - rope arrow entity hit and player touch
 - pickle animation
 - bubble blowr animaton
-
+- bamboo spike drop and pick block
+- redo all loot tables for containers and copy nbt stuff
+- fix the may build stuff
 
 # Soon
 

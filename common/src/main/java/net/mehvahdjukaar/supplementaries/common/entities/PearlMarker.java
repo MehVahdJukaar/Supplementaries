@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.IMovingBlockSource;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -40,6 +41,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +164,7 @@ public class PearlMarker extends Entity {
                     Direction direction = hitResult.getDirection();
                     BlockPos toPos = hitResult.getBlockPos().relative(direction);
                     if (level.getBlockState(toPos).canBeReplaced()) {
-                        CompoundTag nbt = blockEntity.saveWithoutMetadata();
+                        CompoundTag nbt = blockEntity.saveWithoutMetadata(level.registryAccess());
                         blockEntity.setRemoved();
 
                         BlockState newState = getLandingState(state, toPos, direction, level);
@@ -173,7 +175,7 @@ public class PearlMarker extends Entity {
 
                             BlockEntity dstEntity = level.getBlockEntity(toPos);
                             if (isValidBlockEntity(dstEntity)) {
-                                dstEntity.load(nbt);
+                                dstEntity.loadWithComponents(nbt, level.registryAccess());
                             }
                             SoundType type = state.getSoundType();
                             level.playSound(null, toPos, type.getPlaceSound(), SoundSource.BLOCKS, (type.getVolume() + 1.0F) / 2.0F, type.getPitch() * 0.8F);
@@ -200,7 +202,7 @@ public class PearlMarker extends Entity {
 
     @NotNull
     private static BlockState getLandingState(BlockState state, BlockPos pos, Direction direction, Level level) {
-        if(state.hasProperty(DispenserBlock.FACING)) {
+        if (state.hasProperty(DispenserBlock.FACING)) {
             state = state.setValue(DispenserBlock.FACING, direction);
         }
         return Block.updateFromNeighbourShapes(state, level, pos);
@@ -211,9 +213,9 @@ public class PearlMarker extends Entity {
     }
 
     @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
-        super.lerpTo(pX, pY, pZ, pYaw, pPitch, pPosRotationIncrements, pTeleport);
-        this.setPos(pX, pY, pZ);
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        super.lerpTo(x, y, z, yRot, xRot, steps);
+        this.setPos(x, y, z);
     }
 
     public static void onProjectileImpact(Projectile projectile, HitResult hitResult) {
@@ -224,16 +226,19 @@ public class PearlMarker extends Entity {
             markerEntity.event = Pair.of(pearl, hitResult);
         }
     }
-
-
     public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
-        Level level = source.level();
-        BlockPos pos = source.getPos();
+        ServerLevel level = source.level();
+        BlockPos pos = source.pos();
+        Entity dispCart = ((IMovingBlockSource) (Object) source).supp$getEntity();
+        return createPearlToDispenseAndPlaceMarker(level, pos, dispCart, pearlPos);
+    }
+
+    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(ServerLevel level, BlockPos pos, @Nullable Entity owner, Position pearlPos) {
         ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
         pearl.setPos(pearlPos.x(), pearlPos.y(), pearlPos.z());
 
-        if (source instanceof MovingBlockSource<?> movingBlockSource) {
-            pearl.setOwner(movingBlockSource.getMinecartEntity());
+        if (owner != null) {
+            pearl.setOwner(owner);
         } else {
             var entity = level.getEntitiesOfClass(PearlMarker.class, new AABB(pos), (e) -> e.blockPosition().equals(pos)).stream().findAny();
             PearlMarker marker;

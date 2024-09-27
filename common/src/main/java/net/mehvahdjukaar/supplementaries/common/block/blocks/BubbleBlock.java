@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
@@ -120,11 +122,13 @@ public class BubbleBlock extends Block implements EntityBlock {
         }
     }
 
+    private static final DynamicHolder<Enchantment> FEATHER_FALLING = DynamicHolder.of(Enchantments.FEATHER_FALLING);
+
     protected boolean canPopBubble(Entity entity) {
         if (!CommonConfigs.Tools.BUBBLE_BREAK.get()) return false;
         if (entity instanceof LivingEntity le) {
             return !CommonConfigs.Tools.BUBBLE_FEATHER_FALLING.get() ||
-                    EnchantmentHelper.getEnchantmentLevel(Enchantments.FALL_PROTECTION, le) == 0;
+                    EnchantmentHelper.getEnchantmentLevel(FEATHER_FALLING, le) == 0;
         }
         return true;
     }

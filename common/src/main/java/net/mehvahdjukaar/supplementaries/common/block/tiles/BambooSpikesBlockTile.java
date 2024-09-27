@@ -18,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -79,7 +80,7 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     public boolean tryApplyPotion(PotionContents newPotion, int charges) {
         if (!this.hasPotion() || this.potion.equals(newPotion) && this.charges != MAX_CHARGES) {
-            if (BambooSpikesTippedItem.isPotionValid(newPotion)) {
+            if (BambooSpikesTippedItem.isPotionValid(newPotion) && charges > 0) {
                 this.potion = newPotion;
                 this.charges = MAX_CHARGES;
                 this.setChanged();
@@ -190,4 +191,5 @@ public class BambooSpikesBlockTile extends BlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
+
 }

@@ -131,9 +131,4 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new SignPostBlockTile(pPos, pState);
     }
-
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
-    }
 }

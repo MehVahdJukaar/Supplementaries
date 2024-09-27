@@ -1,8 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 
-import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.misc.IMovingBlockSource;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -39,8 +37,6 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.stream.Stream;
 
 //this is a mess and should extend AbstractMinecartContainer
 public class DispenserMinecartEntity extends Minecart implements Container, MenuProvider {
@@ -245,24 +241,24 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         level().broadcastEntityEvent(this, (byte) 46);
     }
 
-    protected void dispenseFrom(ServerLevel pLevel, BlockPos pPos) {
+    protected void dispenseFrom(ServerLevel level, BlockPos pPos) {
 
-        ((ILevelEventRedirect) pLevel).supp$setRedirected(true, this.position());
+        ((ILevelEventRedirect) level).supp$setRedirected(true, this.position());
 
-        int i = this.dispenser.getRandomSlot(pLevel.getRandom());
+        int i = this.dispenser.getRandomSlot(level.getRandom());
 
         if (i < 0) {
             //replace with client side animation
-            pLevel.levelEvent(LevelEvent.SOUND_DISPENSER_FAIL, pPos, 0);
+            level.levelEvent(LevelEvent.SOUND_DISPENSER_FAIL, pPos, 0);
             //TODO:use this game event more
-            pLevel.gameEvent(this, GameEvent.BLOCK_ACTIVATE, pPos);
+            level.gameEvent(this, GameEvent.BLOCK_ACTIVATE, pPos);
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
             try {
-                DispenseItemBehavior dispenseitembehavior =
-                        ((DispenserBlock) Blocks.DISPENSER).getDispenseMethod(itemstack);
+                DispenseItemBehavior dispenseitembehavior = ((DispenserBlock) Blocks.DISPENSER)
+                        .getDispenseMethod(level, itemstack);
                 if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
-                    MovingBlockSource<?> blockSource = new MovingBlockSource<>(this, dispenser);
+                    BlockSource blockSource = IMovingBlockSource.create(level, this, dispenser);
                     // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...
                     ItemStack dispensed;
                     if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && dispenseitembehavior instanceof ProjectileDispenseBehavior pb) {
@@ -275,7 +271,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                 Supplementaries.LOGGER.warn("Failed to execute Dispenser Minecart behavior for item {}", itemstack.getItem());
             }
         }
-        ((ILevelEventRedirect) pLevel).supp$setRedirected(false, Vec3.ZERO);
+        ((ILevelEventRedirect) level).supp$setRedirected(false, Vec3.ZERO);
 
     }
 
@@ -307,7 +303,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         stack.shrink(1);
 
         ap.invokePlaySound(source);
-        source.getLevel().levelEvent(2000, source.getPos(), direction.get3DDataValue());
+        source.level().levelEvent(2000, source.pos(), direction.get3DDataValue());
         return stack;
     }
 

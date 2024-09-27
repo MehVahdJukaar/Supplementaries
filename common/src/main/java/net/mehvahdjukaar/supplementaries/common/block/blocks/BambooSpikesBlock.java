@@ -13,9 +13,11 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.PotionBottleType;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -111,10 +113,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         BlockEntity te = worldIn.getBlockEntity(pos);
         if (te instanceof BambooSpikesBlockTile tile) {
             PotionContents p = getPotion(stack);
-            if (p != PotionContents.EMPTY && stack.isDamaged()) {
-                tile.tryApplyPotion(p);
-                tile.setMissingCharges(stack.getDamageValue());
-            }
+            int charges = stack.getOrDefault(ModComponents.CHARGES.get(), 0);
+            tile.tryApplyPotion(p, charges);
         }
     }
 
@@ -197,7 +197,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (stack.getItem() instanceof LingeringPotionItem) {
-            PotionContents potion = getPotion(stack).potion();
+            PotionContents potion = getPotion(stack);
             if (tryAddingPotion(state, level, pos, potion, player)) {
                 if (!player.isCreative())
                     player.setItemInHand(hand, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
@@ -237,7 +237,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.get(fluid) == PotionBottleType.LINGERING) {
+        if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.getOrDefault(fluid) == PotionBottleType.LINGERING) {
             var content = getPotion(fluid);
             return tryAddingPotion(state, world, pos, content, null);
         }
@@ -280,5 +280,13 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public void moveTick(Level level, BlockPos pos, BlockState movedState, AABB aabb, PistonMovingBlockEntity tile) {
         boolean sameDir = (movedState.getValue(BambooSpikesBlock.FACING).equals(tile.getDirection()));
         if (CompatHandler.QUARK) QuarkCompat.tickPiston(level, pos, movedState, aabb, sameDir, tile);
+    }
+
+    public ItemStack getSpikeItem(@Nullable BlockEntity te) {
+        ItemStack stack = new ItemStack(this);
+        if (te instanceof BambooSpikesBlockTile tile) {
+            return BlockUtil.saveTileToItem(tile);
+        }
+        return stack;
     }
 }

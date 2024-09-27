@@ -9,6 +9,7 @@
     "AbstractHorseMixin",
     "AbstractSkeletonMixin",
     "BannerPatternItemMixin",
+    "BlockSourceMixin",
     "BowMixin",
     "CampfireBlockMixin",
     "CartographyTableInputSlotMixin",

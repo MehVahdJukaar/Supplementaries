@@ -8,6 +8,7 @@ accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGener
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
 #dispenser minecart
+accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
 # camera
 accessible method net/minecraft/client/Camera getMaxZoom (F)F

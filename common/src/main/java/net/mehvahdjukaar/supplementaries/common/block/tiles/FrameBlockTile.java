@@ -13,8 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
@@ -75,7 +75,7 @@ public class FrameBlockTile extends MimicBlockTile {
         return state;
     }
 
-    public static class SelfPlacementContext extends BlockPlaceContext{
+    public static class SelfPlacementContext extends BlockPlaceContext {
 
         public SelfPlacementContext(Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
             super(player, interactionHand, itemStack, blockHitResult);
@@ -86,10 +86,10 @@ public class FrameBlockTile extends MimicBlockTile {
     public ItemInteractionResult interactWithPlayer(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace,
                                                     ItemStack stack, boolean canStrip) {
         Item item = stack.getItem();
-        if (Utils.mayBuild(player,pos) && !trace.isInside()) {
+        if (Utils.mayPerformBlockAction(player, pos, stack) && !trace.isInside()) {
             if (item instanceof BlockItem blockItem && this.getHeldBlock().isAir()) {
                 BlockPlaceContext context = new SelfPlacementContext(player, hand, stack, trace);
-                if(context.getClickedPos().equals(pos)) {
+                if (context.getClickedPos().equals(pos)) {
                     BlockState toPlace = blockItem.getBlock().getStateForPlacement(context);
 
                     if (isValidBlock(toPlace, pos, level)) {
@@ -114,7 +114,7 @@ public class FrameBlockTile extends MimicBlockTile {
                 }
                 level.playSound(player, pos, this.getBlockState().getSoundType().getBreakSound(),
                         SoundSource.BLOCKS, 1, 1);
-                stack.hurtAndBreak(1, player, (l) -> l.broadcastBreakEvent(hand));
+                stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                 level.setBlockAndUpdate(pos, held);
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
