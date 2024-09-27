@@ -173,15 +173,12 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
-        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
-                .strength(2f, 3f)
-                .sound(SoundType.WOOD)
-                .noOcclusion();
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS);
         return new SignPostBlock(p);
     });
 
     public static final Supplier<Block> SIGN_POST_WALL = regBlock(SIGN_POST_NAME + "_wall", () -> {
-        var p = BlockBehaviour.Properties.copy(SIGN_POST.get());
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_SIGN);
         return new SignPostWallBlock(p);
     });
 

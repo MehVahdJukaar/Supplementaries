@@ -144,4 +144,8 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
+    @Override
+    public boolean isPossibleToRespawnInThis(BlockState state) {
+        return true;
+    }
 }
