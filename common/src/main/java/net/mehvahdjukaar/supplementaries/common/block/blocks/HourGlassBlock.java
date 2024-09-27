@@ -80,7 +80,7 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
 
             if (player.isShiftKeyDown() && stack.isEmpty() && state.getValue(FACING).getAxis() == Direction.Axis.Y) {
                 level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1, 1);
@@ -146,11 +146,6 @@ public class HourGlassBlock extends WaterBlock implements EntityBlock {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (!MiscUtils.showsHints(tooltipFlag)) return;
         tooltipComponents.add((Component.translatable("message.supplementaries.hourglass")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
-    }
-
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockUtil.addOptionalOwnership(placer, world, pos);
     }
 
     @Nullable

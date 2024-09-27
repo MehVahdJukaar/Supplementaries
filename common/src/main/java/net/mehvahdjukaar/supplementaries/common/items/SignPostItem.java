@@ -117,7 +117,6 @@ public class SignPostItem extends WoodBasedBlockItem {
                 if (attachType != AttachType.WALL) {
                     if (attachType.needsConversion()) {
                         tile.setHeldBlock(targetBlock.defaultBlockState());
-                        BlockUtil.addOptionalOwnership(player, tile);
                         tile.setChanged();
                     }
 

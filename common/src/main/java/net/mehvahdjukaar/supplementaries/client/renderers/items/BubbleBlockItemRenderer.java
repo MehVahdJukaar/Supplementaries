@@ -24,7 +24,7 @@ public class BubbleBlockItemRenderer extends ItemStackRenderer {
         Minecraft minecraft = Minecraft.getInstance();
 
         VertexModels.renderBubble(buffer.getBuffer(Sheets.translucentCullBlockSheet()), poseStack, light,
-                 BlockPos.ZERO, minecraft.level, minecraft.getFrameTime());
+                 BlockPos.ZERO, minecraft.level, minecraft.getTimer().getGameTimeDeltaTicks());
 
         poseStack.popPose();
     }

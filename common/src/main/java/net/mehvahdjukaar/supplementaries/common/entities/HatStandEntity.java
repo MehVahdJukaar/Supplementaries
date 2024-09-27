@@ -25,7 +25,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -297,11 +296,11 @@ public class HatStandEntity extends LivingEntity {
         if ((this.level() instanceof ServerLevel sl) && !this.isRemoved()) {
 
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                this.dismantle(sl,source);
+                this.dismantle(sl, source);
                 return false;
             } else if (!this.isInvulnerableTo(source) && !this.invisible) {
                 if (source.is(DamageTypeTags.IS_EXPLOSION)) {
-                    this.dismantle(sl,source);
+                    this.dismantle(sl, source);
                     return false;
                 } else if (source.is(DamageTypeTags.IGNITES_ARMOR_STANDS)) {
                     if (this.isOnFire()) {
@@ -312,7 +311,7 @@ public class HatStandEntity extends LivingEntity {
 
                     return false;
                 } else if (source.is(DamageTypeTags.BURNS_ARMOR_STANDS) && this.getHealth() > 0.5F) {
-                    this.causeDamage(source, 4.0F);
+                    this.causeDamage(sl, source, 4.0F);
                     return false;
                 } else {
                     boolean isDirectArrow = source.getDirectEntity() instanceof AbstractArrow;
@@ -328,7 +327,7 @@ public class HatStandEntity extends LivingEntity {
                             }
                         }
                         if (source.isCreativePlayer()) {
-                            this.dismantle(null);
+                            this.dismantle(sl, null);
                             return isPierceArrow;
                         } else {
                             long l = this.level().getGameTime();
@@ -337,7 +336,7 @@ public class HatStandEntity extends LivingEntity {
                                 this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                                 this.lastHit = l;
                             } else {
-                                this.dismantle(source);
+                                this.dismantle(sl, source);
                             }
                             return true;
                         }
@@ -487,7 +486,9 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public void kill() {
-        dismantle(level().damageSources().generic());
+        if (level() instanceof ServerLevel sl) {
+            dismantle(sl, sl.damageSources().generic());
+        }
     }
 
     @Override

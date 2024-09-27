@@ -98,7 +98,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
             if (player instanceof ServerPlayer sp) {
                 if (!(player.isShiftKeyDown() && this.windPulley(state, pos, level, Rotation.COUNTERCLOCKWISE_90, null))) {
                     PlatHelper.openCustomMenu(sp, tile, pos);
@@ -143,8 +143,4 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
-    }
 }

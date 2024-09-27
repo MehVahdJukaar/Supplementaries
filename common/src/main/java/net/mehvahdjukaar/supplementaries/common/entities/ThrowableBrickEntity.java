@@ -61,7 +61,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
 
     private ParticleOptions makeParticle() {
-        ItemStack itemstack = this.getItemRaw();
+        ItemStack itemstack = this.getItem();
         return itemstack.isEmpty() ? new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(this.getDefaultItem())) : new ItemParticleOption(ParticleTypes.ITEM, itemstack);
     }
 

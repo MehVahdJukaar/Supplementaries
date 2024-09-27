@@ -126,8 +126,4 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
         }
     }
 
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        BlockUtil.addOptionalOwnership(placer, world, pos);
-    }
 }

@@ -55,31 +55,28 @@
 - check all ehcnamtnemtn stuff (anvil, repair, book, treasure, ench table)
 - disoenser minecart dispense ebahvior
 - rope arrow entity hit and player touch
+- pickle animation
+- bubble blowr animaton
 
 
 # Soon
 
 - make polytone and supp hourglass use reloadable registries
 - all use action in adventure mode
-- guarded by piglins block tag
-- globe sheared particle event for servers
-- hat for players
 - anger nearby piglins
-- polytone bow model
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs
 - hat for players
 - anger nearby piglins
-- lumisene sets stuff on fire
 - cannon camera glitchyness
-- globe sheared particle event for servers
 - heavy key getting overwritten by normal key
 - safe recipe jei
 - no jar of dirt
 - rope not breaking when supporting each other
 - spring launcher super buggy
 - make no grabity ench work on bows
+- rename way signs
 
 # Supplementaries
 

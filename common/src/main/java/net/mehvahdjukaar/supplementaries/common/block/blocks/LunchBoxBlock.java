@@ -57,12 +57,6 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, entity, stack);
-        BlockUtil.addOptionalOwnership(entity, world, pos);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(HANGING, FACING, OPEN);

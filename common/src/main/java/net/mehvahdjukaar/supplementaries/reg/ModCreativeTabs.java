@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -25,8 +26,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
@@ -715,20 +716,26 @@ public class ModCreativeTabs {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
             items.add(ModRegistry.BAMBOO_SPIKES.get().asItem().getDefaultInstance());
             if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && CommonConfigs.Functional.TIPPED_SPIKES_TAB.get()) {
-                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.POISON));
-                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.LONG_POISON));
-                items.add(BambooSpikesTippedItem.makeSpikeItem(Potions.STRONG_POISON));
+                items.add(makeSpikeItem(Potions.POISON));
+                items.add(makeSpikeItem(Potions.LONG_POISON));
+                items.add(makeSpikeItem(Potions.STRONG_POISON));
                 for (var potion : BuiltInRegistries.POTION.holders().toList()) {
                     var p = potion.value();
                     if (p == Potions.POISON || p == Potions.LONG_POISON || p == Potions.STRONG_POISON)
                         continue;
-                    if (BambooSpikesTippedItem.isPotionValid(potion)) {
-                        items.add(BambooSpikesTippedItem.makeSpikeItem(potion));
+                    if (BambooSpikesTippedItem.isPotionValid(new PotionContents(potion))) {
+                        items.add(makeSpikeItem(potion));
                     }
                 }
             }
         }
         return items.toArray(ItemStack[]::new);
+    }
+
+    public static ItemStack makeSpikeItem(Holder<Potion> pot) {
+        ItemStack stack = ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
+        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(pot));
+        return stack;
     }
 
     private static ItemStack[] getJars() {

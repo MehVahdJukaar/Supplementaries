@@ -110,11 +110,6 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        BlockUtil.addOptionalOwnership(placer, worldIn, pos);
-    }
-
-    @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(FACING)) {
             case SOUTH -> SHAPE_SOUTH;

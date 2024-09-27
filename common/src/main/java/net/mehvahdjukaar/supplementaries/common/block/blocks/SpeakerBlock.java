@@ -71,9 +71,9 @@ public class SpeakerBlock extends Block implements EntityBlock {
         this.updatePower(state, worldIn, pos);
         if (worldIn.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
             if (stack.has(DataComponents.CUSTOM_NAME)) {
+                //TODO: check if its needed
                 tile.setCustomName(stack.getHoverName());
             }
-            BlockUtil.addOptionalOwnership(placer, tile);
         }
     }
 
@@ -102,6 +102,18 @@ public class SpeakerBlock extends Block implements EntityBlock {
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                //TODO: remove owner protected
+                tile.tryOpeningEditGui(serverPlayer, pos, stack);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
@@ -122,9 +134,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
                 }
             }
             // client
-            if (player instanceof ServerPlayer serverPlayer) {
-                tile.tryOpeningEditGui(serverPlayer, pos, stack);
-            }
+
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;

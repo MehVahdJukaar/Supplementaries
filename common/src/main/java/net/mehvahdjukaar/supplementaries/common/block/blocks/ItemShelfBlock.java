@@ -169,9 +169,4 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
             return 0;
     }
 
-    @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, entity, stack);
-        BlockUtil.addOptionalOwnership(entity, world, pos);
-    }
 }

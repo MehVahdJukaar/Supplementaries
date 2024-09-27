@@ -58,20 +58,6 @@ public class BlockUtil {
         return to;
     }
 
-    public static <T extends BlockEntity & IOwnerProtected> void addOptionalOwnership(LivingEntity placer, T tileEntity) {
-        if (CommonConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
-            tileEntity.setOwner(placer.getUUID());
-        }
-    }
-
-    public static void addOptionalOwnership(LivingEntity placer, Level world, BlockPos pos) {
-        if (CommonConfigs.General.SERVER_PROTECTION.get() && placer instanceof Player) {
-            if (world.getBlockEntity(pos) instanceof IOwnerProtected tile) {
-                tile.setOwner(placer.getUUID());
-            }
-        }
-    }
-
     public static void spawnCreativeContainerLoot(Player player, RandomizableContainerBlockEntity tile) {
         Level level = player.level();
         if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {

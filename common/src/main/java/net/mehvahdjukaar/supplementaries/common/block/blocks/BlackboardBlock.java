@@ -70,14 +70,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, placer, stack);
-        if (world.getBlockEntity(pos) instanceof BlackboardBlockTile tile) {
-            BlockUtil.addOptionalOwnership(placer, tile);
-        }
-    }
-
-    @Override
     public BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }

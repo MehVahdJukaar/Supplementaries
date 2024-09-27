@@ -1272,9 +1272,6 @@ public class CommonConfigs {
 
             DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
                     .define("debug_save_dynamic_pack", false);
-            SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
-                            "Useful for protected servers. Note that it will affect only blocks placed after this is turned on and such blocks will keep being protected after this option is disabled")
-                    .define("server_protection", false);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
@@ -1286,7 +1283,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CREATIVE_TAB;
         public static final Supplier<Boolean> DISPENSERS;
         public static final Supplier<Boolean> DEBUG_RESOURCES;
-        public static final Supplier<Boolean> SERVER_PROTECTION;
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder) {

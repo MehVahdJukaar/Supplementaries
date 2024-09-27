@@ -69,7 +69,7 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
-        if (worldIn.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile && tile.isAccessibleBy(player)) {
+        if (worldIn.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
             return tile.interact(player, handIn, pos, state,hit);
         }
         return InteractionResult.PASS;
@@ -84,14 +84,6 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new NoticeBoardBlockTile(pPos, pState);
-    }
-
-
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (worldIn.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-            BlockUtil.addOptionalOwnership(placer, tile);
-        }
     }
 
     @Override

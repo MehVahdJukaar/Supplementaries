@@ -17,6 +17,7 @@ import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LevelEvent;
@@ -113,12 +114,12 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
             newHorse.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
 
             if (this.isSaddled()) {
-                newHorse.equipSaddle(null);
+                newHorse.equipSaddle(new ItemStack(Items.SADDLE), null);
             }
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 ItemStack itemstack = this.getItemBySlot(slot);
                 if (!itemstack.isEmpty()) {
-                    if (EnchantmentHelper.hasBindingCurse(itemstack)) {
+                    if (EnchantmentHelper.has(itemstack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) {
                         newHorse.getSlot(slot.getIndex() + 300).set(itemstack);
                     } else {
                         double d0 = this.getEquipmentDropChance(slot);

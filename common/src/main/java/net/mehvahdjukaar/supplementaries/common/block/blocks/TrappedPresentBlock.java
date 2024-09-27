@@ -119,7 +119,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
         super.neighborChanged(state, world, pos, block, fromPos, isMoving);
         boolean isPowered = world.hasNeighborSignal(pos);
         if (isPowered) {
-            lightUp(null, state, pos, world, FireSourceType.FIRE_CHANGE);
+            tryLightUp(null, state, pos, world, FireSoundType.FIRE_CHANGE);
         }
     }
 
@@ -129,13 +129,15 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
     }
 
     @Override
-    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
-        if (this.isLitUp(state, world, pos) && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
-            if (world instanceof ServerLevel serverLevel) {
-                tile.detonate(serverLevel, pos, state, null);
+    public void setLitUp(BlockState blockState, LevelAccessor level, BlockPos pos, @Nullable Entity entity, boolean b) {
+        if (level.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+            if (level instanceof ServerLevel serverLevel) {
+                tile.detonate(serverLevel, pos, blockState, null);
             }
-            return true;
         }
-        return false;
+    }
+
+    @Override
+    public void playLightUpSound(LevelAccessor world, BlockPos pos, FireSoundType type) {
     }
 }

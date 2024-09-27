@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -36,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
@@ -199,14 +197,12 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (stack.getItem() instanceof LingeringPotionItem) {
-            var potion = getPotion(stack).potion();
-            if (potion.isPresent()) {
-                if (tryAddingPotion(state, level, pos, potion.get(), player)) {
-                    if (!player.isCreative())
-                        player.setItemInHand(hand, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-                }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            PotionContents potion = getPotion(stack).potion();
+            if (tryAddingPotion(state, level, pos, potion, player)) {
+                if (!player.isCreative())
+                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
             }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -243,7 +239,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
         if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.get(fluid) == PotionBottleType.LINGERING) {
             var content = getPotion(fluid);
-                return tryAddingPotion(state, world, pos, content, null);
+            return tryAddingPotion(state, world, pos, content, null);
         }
         return false;
     }

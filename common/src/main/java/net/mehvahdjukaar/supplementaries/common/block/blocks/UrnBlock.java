@@ -202,12 +202,6 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        super.setPlacedBy(world, pos, state, entity, stack);
-        BlockUtil.addOptionalOwnership(entity, world, pos);
-    }
-
-    @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         //needed for when it drops from falling block since it has a block entity
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof UrnBlockTile tile) {
