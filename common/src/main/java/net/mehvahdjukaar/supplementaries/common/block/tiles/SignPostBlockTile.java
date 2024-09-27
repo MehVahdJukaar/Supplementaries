@@ -335,7 +335,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 return InteractionResult.CONSUME;
             }
             //change direction with compass
-            else if (item instanceof CompassItem) {
+            else if (item instanceof CompassItem && !state.hasProperty(HorizontalDirectionalBlock.FACING)) {
                 //itemModelProperties code
                 BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
                         this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);
