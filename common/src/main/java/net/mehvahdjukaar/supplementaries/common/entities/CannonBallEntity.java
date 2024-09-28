@@ -176,9 +176,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
-            Set<Block> blacklist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
+            Set<Block> whitelist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, blacklist);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
             exp.explode();
             exp.finalizeExplosion(true);
 
