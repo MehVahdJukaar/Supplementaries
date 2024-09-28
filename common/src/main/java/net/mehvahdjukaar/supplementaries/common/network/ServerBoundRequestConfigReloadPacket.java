@@ -19,7 +19,8 @@ public class ServerBoundRequestConfigReloadPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        ConfigUtils.configScreenReload((ServerPlayer) context.getSender());
+        if (context.getSender() instanceof ServerPlayer serverPlayer)
+            ConfigUtils.configScreenReload(serverPlayer);
     }
 
 }

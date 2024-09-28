@@ -308,10 +308,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         explosion.finalizeExplosion(true);
 
         for (var p : level().players()) {
-            if (p.distanceToSqr(this) < 64 * 64) {
+            if (p.distanceToSqr(this) < 64 * 64 && p instanceof ServerPlayer sp) {
                 Message message = ClientBoundExplosionPacket.bomb(explosion, p);
 
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) p, message);
+                ModNetwork.CHANNEL.sendToClientPlayer(sp, message);
             }
         }
 

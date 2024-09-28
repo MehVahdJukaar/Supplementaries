@@ -6,10 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.Objects;
 
 public class ServerBoundSetBlackboardPacket implements Message {
     private final BlockPos pos;
@@ -38,15 +35,16 @@ public class ServerBoundSetBlackboardPacket implements Message {
 
     @Override
     public void handle(ChannelHandler.Context context) {
-        Player sender = context.getSender();
-        Level level = Objects.requireNonNull(sender).level();
+        if (context.getSender() instanceof ServerPlayer player) {
+            Level level = player.level();
 
-        BlockPos pos = this.pos;
-        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
-            if (board.tryAcceptingClientPixels((ServerPlayer) sender, this.pixels)) {
-                //updates client
-                //set changed also sends a block update
-                board.setChanged();
+            BlockPos pos = this.pos;
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
+                if (board.tryAcceptingClientPixels(player, this.pixels)) {
+                    //updates client
+                    //set changed also sends a block update
+                    board.setChanged();
+                }
             }
         }
     }

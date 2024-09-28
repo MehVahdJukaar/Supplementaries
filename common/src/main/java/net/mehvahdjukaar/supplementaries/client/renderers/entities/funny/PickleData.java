@@ -38,7 +38,9 @@ public class PickleData {
             var id = e.getKey();
             if (on) {
                 //to client
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) player, new PicklePacket(id, on, e.getValue().isJar));
+                if (player instanceof ServerPlayer sp) {
+                    ModNetwork.CHANNEL.sendToClientPlayer(sp, new PicklePacket(id, on, e.getValue().isJar));
+                }
             }
         }
     }

@@ -12,8 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public class ServerBoundCycleSelectableContainerItemPacket implements Message {
     private final int amount;
     private final Slot slot;
@@ -50,8 +48,8 @@ public class ServerBoundCycleSelectableContainerItemPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         // server world
-        if (itemInstance instanceof SelectableContainerItem<?> instance) {
-            ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
+        if (itemInstance instanceof SelectableContainerItem<?> instance &&
+                context.getSender() instanceof ServerPlayer player) {
             ItemStack stack = ItemStack.EMPTY;
             if (slot == Slot.INVENTORY) {
                 stack = instance.getFirstInInventory(player);

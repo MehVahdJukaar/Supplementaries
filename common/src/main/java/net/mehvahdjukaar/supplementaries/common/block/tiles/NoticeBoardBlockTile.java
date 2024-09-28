@@ -282,8 +282,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         if (!CommonConfigs.Building.NOTICE_BOARD_GUI.get()) {
             return InteractionResult.PASS;
         }
-        if (!level.isClientSide) {
-            this.tryOpeningEditGui((ServerPlayer) player, pos, player.getItemInHand(handIn));
+        if (player instanceof ServerPlayer sp) {
+            this.tryOpeningEditGui(sp, pos, player.getItemInHand(handIn));
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

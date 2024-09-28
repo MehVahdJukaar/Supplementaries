@@ -40,15 +40,16 @@ public class ServerBoundSetSpeakerBlockPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         // server level
-        ServerPlayer sender = (ServerPlayer) context.getSender();
-        Level level = sender.level();
-        BlockPos pos = this.pos;
-        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
-            speaker.setVolume(this.volume);
-            speaker.setMode(this.mode);
-            sender.connection.filterTextPacket(this.str).thenAcceptAsync((l) -> {
-                this.updateSpeakerText(sender, l);
-            }, sender.server);
+        if(context.getSender() instanceof ServerPlayer sender) {
+            Level level = sender.level();
+            BlockPos pos = this.pos;
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
+                speaker.setVolume(this.volume);
+                speaker.setMode(this.mode);
+                sender.connection.filterTextPacket(this.str).thenAcceptAsync((l) -> {
+                    this.updateSpeakerText(sender, l);
+                }, sender.server);
+            }
         }
     }
 
