@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -42,6 +44,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
 
@@ -173,8 +176,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
+            Set<Block> blacklist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, blacklist);
             exp.explode();
             exp.finalizeExplosion(true);
 
