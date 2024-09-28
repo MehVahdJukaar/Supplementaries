@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -88,8 +89,8 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-                VariableSizeContainerMenu.openTileMenu(player, tile);
+            if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile && player instanceof ServerPlayer sp) {
+                VariableSizeContainerMenu.openTileMenu(sp, tile);
                 PiglinAi.angerNearbyPiglins(player, true);
 
                 return InteractionResult.CONSUME;
