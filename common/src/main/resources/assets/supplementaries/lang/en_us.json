@@ -420,6 +420,8 @@
   "message.supplementaries.bubble_blower_tooltip": "Soap: %1$s / %2$s",
   "message.supplementaries.cage.tooltip": "[%s] to place",
   "message.supplementaries.cage.fail": "You can't catch this animal",
+  "message.supplementaries.cage.fail_tamed": "You must tame this animal first",
+  "message.supplementaries.cage.fail_health": "You can only catch animals with less than %s% health",
   "message.supplementaries.candle_holder": "Stackable",
   "message.supplementaries.cartographers_quill": "Unknown",
   "message.supplementaries.command.configs": "Install Configured to access configs",

@@ -18,6 +18,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -133,15 +134,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
         if (entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return false;
-
-            if (CommonConfigs.Functional.CAGE_TAMED.get() && entity instanceof TamableAnimal pet && (!pet.isTame() || !pet.isOwnedBy(player))) {
-                return false;
-            }
-
-            int p = CommonConfigs.Functional.CAGE_HEALTH_THRESHOLD.get();
-            if (p != 100 && (living.getHealth() > living.getMaxHealth() * (p / 100f))) {
-                return false;
-            }
         }
 
         if (entity.getType().is(ModTags.CAPTURE_BLACKLIST)) return false;
@@ -311,7 +303,23 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (hand == null) {
             return InteractionResult.PASS;
         }
-        if (this.canCatch(entity, player)) {
+        boolean canCatch = this.canCatch(entity, player);
+        MutableComponent failedMessage = Component.translatable("message.supplementaries.cage.fail");
+
+        if (canCatch && entity instanceof LivingEntity le) {
+            if (CommonConfigs.Functional.CAGE_TAMED.get() && entity instanceof TamableAnimal pet && (!pet.isTame() || !pet.isOwnedBy(player))) {
+                failedMessage = Component.translatable("message.supplementaries.cage.fail_tamed");
+                canCatch = false;
+            }
+            int percentage = CommonConfigs.Functional.CAGE_HEALTH_THRESHOLD.get();
+            if (percentage != 100 && (le.getHealth() > le.getMaxHealth() * (percentage / 100f))) {
+                failedMessage = Component.translatable("message.supplementaries.cage.fail_health", percentage);
+                canCatch = false;
+            }
+        }
+
+
+        if (canCatch) {
             ItemStack bucket = ItemStack.EMPTY;
             //try getting a filled bucket for any water mobs for aquariums and only catchable for others
 
@@ -340,8 +348,8 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
             entity.remove(Entity.RemovalReason.DISCARDED);
             return InteractionResult.CONSUME;
-        } else if (player.level().isClientSide && entity instanceof LivingEntity) {
-            player.displayClientMessage(Component.translatable("message.supplementaries.cage.fail"), true);
+        } else if (!player.level().isClientSide && entity instanceof LivingEntity) {
+            player.displayClientMessage(failedMessage, true);
         }
         this.playFailSound(player);
         return InteractionResult.PASS;
