@@ -54,6 +54,8 @@ public class ModComponents {
     public static final Supplier<DataComponentType<Integer>> CHARGES = register("charges",
             ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
 
+    public static final Supplier<DataComponentType<CannonballWhitelist>> CANNONBALL_WHITELIST = register("cannonball_whitelist",
+            CannonballWhitelist.CODEC, CannonballWhitelist.STREAM_CODEC);
 
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {

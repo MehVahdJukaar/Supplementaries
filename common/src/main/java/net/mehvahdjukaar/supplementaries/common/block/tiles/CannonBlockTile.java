@@ -1,30 +1,26 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -37,14 +33,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -90,16 +83,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         tag.putByte("fire_power", this.powerLevel);
         if (playerWhoIgnitedUUID != null) tag.putUUID("player_ignited", playerWhoIgnitedUUID);
         if (breakWhitelist != null) {
-            saveBreakWhitelist(breakWhitelist, tag);
+            saveBreakWhitelist(breakWhitelist, tag, registries);
         }
     }
 
-    public static void saveBreakWhitelist(Set<Block> breakWhitelist, CompoundTag tag) {
-        ListTag list = new ListTag();
-        for (Block b : breakWhitelist) {
-            list.add(StringTag.valueOf(BuiltInRegistries.BLOCK.getKey(b).toString()));
-        }
-        tag.put("break_whitelist", list);
+    public static void saveBreakWhitelist(Set<Block> breakWhitelist, CompoundTag tag, HolderLookup.Provider registries) {
+        CannonballWhitelist.CODEC.encodeStart(
+                        registries.createSerializationContext(NbtOps.INSTANCE), new CannonballWhitelist(breakWhitelist))
+                .ifSuccess(t -> tag.put("break_whitelist", t));
     }
 
     @Override
@@ -113,19 +104,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (tag.contains("player_ignited")) {
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
         }
-        this.breakWhitelist = readBreakWhitelist(tag);
+        this.breakWhitelist = readBreakWhitelist(tag, registries);
     }
 
     @Nullable
-    public static Set<Block> readBreakWhitelist(CompoundTag tag) {
+    public static Set<Block> readBreakWhitelist(CompoundTag tag, HolderLookup.Provider registries) {
         if (tag.contains("break_whitelist")) {
-            ListTag list = tag.getList("break_whitelist", 8);
-            var breakWhitelist = new HashSet<Block>();
-            for (int i = 0; i < list.size(); i++) {
-                Block b = BuiltInRegistries.BLOCK.get(new ResourceLocation(list.getString(i)));
-                breakWhitelist.add(b);
-            }
-            return breakWhitelist;
+            return CannonballWhitelist.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE),
+                            tag.get("break_whitelist")).result()
+                    .map(CannonballWhitelist::getBlocks).orElse(Set.of());
         }
         return null;
     }
@@ -179,8 +166,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     public ItemStack getProjectile() {
@@ -321,7 +308,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
         if (player.isSecondaryUseActive()) {
             //same as super but sends custom packet
-            if ( !this.isOtherPlayerEditing(player)) {
+            if (!this.isOtherPlayerEditing(player)) {
                 // open gui (edit sign with empty hand)
                 this.setPlayerWhoMayEdit(player.getUUID());
                 NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
@@ -395,7 +382,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
             //hack for cannonballs
-            saveBreakWhitelist(breakWhitelist, projectile.getOrCreateTag());
+            projectile.set(ModComponents.CANNONBALL_WHITELIST.get(), new CannonballWhitelist(breakWhitelist));
         }
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());

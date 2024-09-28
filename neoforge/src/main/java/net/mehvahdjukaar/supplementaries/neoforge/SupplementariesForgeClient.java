@@ -10,8 +10,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.neoforge.CannonChargeOverlayImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.neoforge.CannonChargeOverlayImpl;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.Util;
@@ -21,9 +21,14 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -93,28 +98,32 @@ public class SupplementariesForgeClient {
     @SuppressWarnings("unchecked")
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skinType : event.getSkins()) {
+        for (PlayerSkin.Model skinType : event.getSkins()) {
             var renderer = event.getSkin(skinType);
-            if (renderer != null) {
-                renderer.addLayer(new QuiverLayer(renderer, false));
-                RenderLayerParent model = renderer;
-                renderer.addLayer(new JarredHeadLayer<>(model, event.getEntityModels()));
-                renderer.addLayer(new PartyHatLayer.Generic(model, event.getEntityModels()));
+            if (renderer instanceof LivingEntityRenderer<?,?> le) {
+                le.addLayer(new QuiverLayer(le, false));
+                le.addLayer(new JarredHeadLayer<>((RenderLayerParent)le, event.getEntityModels()));
+                le.addLayer(new PartyHatLayer.Generic(le, event.getEntityModels()));
+                le.addLayer(new SlimedLayer(le));
             }
         }
+
         var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
-        if (skeletonRenderer != null) {
-            skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
+        if (skeletonRenderer instanceof LivingEntityRenderer<?,?> le) {
+            le.addLayer(new QuiverLayer(le, true));
         }
         var strayRenderer = event.getRenderer(EntityType.STRAY);
-        if (strayRenderer != null) {
-            strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
+        if (strayRenderer instanceof LivingEntityRenderer<?,?> le) {
+            le.addLayer(new QuiverLayer(le, true));
         }
-
+        var creeperRenderer = event.getRenderer(EntityType.CREEPER);
+        if (creeperRenderer instanceof LivingEntityRenderer<?,?> le) {
+            le.addLayer(new PartyHatLayer.Creeper(le, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
+        }
 
         //adds to all entities
         var entityTypes = ImmutableList.copyOf(
-                ForgeRegistries.ENTITY_TYPES.getValues().stream()
+                BuiltInRegistries.ENTITY_TYPE.stream()
                         .filter(DefaultAttributes::hasSupplier)
                         .filter(e -> (e != EntityType.ENDER_DRAGON))
                         .map(entityType -> (EntityType<LivingEntity>) entityType)
@@ -123,20 +132,14 @@ public class SupplementariesForgeClient {
         try {
             entityTypes.forEach((entityType -> {
                 var r = event.getRenderer(entityType);
-                if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
+                if (r instanceof LivingEntityRenderer<?,?> le){
+                    le.addLayer(new SlimedLayer(le));
+                }
             }));
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
         }
 
-        var creeperRenderer = event.getRenderer(EntityType.CREEPER);
-        creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
-
-        //player skins
-        for (String skinType : event.getSkins()) {
-            var r = event.getSkin(skinType);
-            if (r != null) r.addLayer(new SlimedLayer(r));
-        }
     }
 
 
