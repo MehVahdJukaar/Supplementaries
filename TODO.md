@@ -1,4 +1,6 @@
 # Soon
+- globe shear server
+- can keep on shearing it
 - cannon anim not working on servers
 - goblet texture broen
 - cannon with block server crash
@@ -12,6 +14,8 @@
 - no jar of dirt
 - rope not breaking when supporting each other
 - spring launcher super buggy
+- hide cannon circle when on edge
+- cannon blacklist tag
 
 # Supplementaries
 

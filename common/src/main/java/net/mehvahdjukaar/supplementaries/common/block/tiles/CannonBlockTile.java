@@ -6,7 +6,9 @@ import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
@@ -14,9 +16,13 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -28,15 +34,23 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class CannonBlockTile extends OpeneableContainerBlockEntity implements IOnePlayerInteractable {
 
+
+    //no list = normal behavior. empty list = cant break anything
+    //not using a tag as this is meant to be edited with commands immediately without a tag being there
+    @Nullable
+    private Set<Block> breakWhitelist = null;
 
     private float pitch = 0;
     private float prevPitch = 0;
@@ -54,6 +68,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Nullable
     private UUID playerWhoIgnitedUUID = null;
 
+    //not saved
     @Nullable
     private UUID controllingPlayer = null;
 
@@ -69,6 +84,18 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         tag.putInt("cooldown", this.cooldownTimer);
         tag.putInt("fuse_timer", this.fuseTimer);
         tag.putByte("fire_power", this.powerLevel);
+        if (playerWhoIgnitedUUID != null) tag.putUUID("player_ignited", playerWhoIgnitedUUID);
+        if (breakWhitelist != null) {
+            saveBreakWhitelist(breakWhitelist, tag);
+        }
+    }
+
+    public static void saveBreakWhitelist(Set<Block> breakWhitelist, CompoundTag tag) {
+        ListTag list = new ListTag();
+        for (Block b : breakWhitelist) {
+            list.add(StringTag.valueOf(BuiltInRegistries.BLOCK.getKey(b).toString()));
+        }
+        tag.put("break_whitelist", list);
     }
 
     @Override
@@ -79,6 +106,24 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = tag.getInt("fuse_timer");
         this.powerLevel = tag.getByte("fire_power");
+        if (tag.contains("player_ignited")) {
+            this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
+        }
+        this.breakWhitelist = readBreakWhitelist(tag);
+    }
+
+    @Nullable
+    public static Set<Block> readBreakWhitelist(CompoundTag tag) {
+        if (tag.contains("break_whitelist")) {
+            ListTag list = tag.getList("break_whitelist", 8);
+            var breakWhitelist = new HashSet<Block>();
+            for (int i = 0; i < list.size(); i++) {
+                Block b = BuiltInRegistries.BLOCK.get(new ResourceLocation(list.getString(i)));
+                breakWhitelist.add(b);
+            }
+            return breakWhitelist;
+        }
+        return null;
     }
 
     @Override
@@ -95,7 +140,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         } else {
             this.trajectoryData = IBallisticBehavior.LINE;
         }
-        if(trajectoryData == null) {
+        if (trajectoryData == null) {
             Supplementaries.error();
         }
         trajectoryFor = proj.getItem();
@@ -151,7 +196,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     public IBallisticBehavior.Data getTrajectoryData() {
-        if (trajectoryFor != getProjectile().getItem()){
+        if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }
         return trajectoryData;
@@ -315,12 +360,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     private void fire() {
         if (!this.hasFuelAndProjectiles()) return;
 
-        if (level.isClientSide) {
-            //call directly on client. happens 1 tick faster is this needed?
-            level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
-        } else {
+        if (level instanceof ServerLevel sl) {
             //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
-            if (this.shootProjectile()) {
+            if (this.shootProjectile(sl)) {
                 Player p = getPlayerWhoFired();
                 if (p == null || !p.isCreative()) {
                     ItemStack fuel = this.getFuel();
@@ -336,18 +378,25 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
                     level.gameEvent(p, GameEvent.EXPLODE, worldPosition);
                 }
             }
-
+        } else {
+            //call directly on client. happens 1 tick faster is this needed?
+            level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
 
-    private boolean shootProjectile() {
+    private boolean shootProjectile(ServerLevel serverLevel) {
         Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(-1);
-        ItemStack projectile = this.getProjectile();
+        ItemStack projectile = this.getProjectile().copy();
+
+        if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
+            //hack for cannonballs
+            saveBreakWhitelist(breakWhitelist, projectile.getOrCreateTag());
+        }
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
-        return behavior.fire(projectile.copy(), (ServerLevel) level, worldPosition, 0.5f,
+        return behavior.fire(projectile.copy(), serverLevel, worldPosition, 0.5f,
                 facing, getFirePower(), 0, getPlayerWhoFired());
     }
 

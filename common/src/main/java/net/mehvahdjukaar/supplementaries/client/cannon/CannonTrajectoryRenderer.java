@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -64,7 +65,11 @@ public class CannonTrajectoryRenderer {
         poseStack.popPose();
 
 
-        if (!hitAir) renderTargetCircle(poseStack, buffer, yaw, rendersRed);
+        if (!hitAir && hit instanceof BlockHitResult bh) {
+            if (bh.getDirection() == Direction.UP) {
+                renderTargetCircle(poseStack, buffer, yaw, rendersRed);
+            }
+        }
 
         if (!hitAir && debug && hit instanceof BlockHitResult bh)
             renderTargetBlock(poseStack, buffer, cannonPos, bh);
