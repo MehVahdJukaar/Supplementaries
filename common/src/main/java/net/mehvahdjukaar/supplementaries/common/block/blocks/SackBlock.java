@@ -152,9 +152,9 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
+            if (level.getBlockEntity(pos) instanceof SackBlockTile tile && player instanceof ServerPlayer sp) {
 
-                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
+                PlatHelper.openCustomMenu(sp, tile, p -> {
                     p.writeBoolean(true);
                     p.writeBlockPos(pos);
                     p.writeInt(tile.getContainerSize());

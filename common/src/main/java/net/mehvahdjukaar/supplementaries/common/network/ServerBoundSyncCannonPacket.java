@@ -38,19 +38,20 @@ public record ServerBoundSyncCannonPacket(
     public void handle(Context context) {
 
         // server world
-        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getPlayer());
-        Level level = player.level();
+        if(context.getSender() instanceof ServerPlayer player) {
+            Level level = player.level();
 
-        if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
-            cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
-            cannon.setChanged();
-            if (stopControlling) {
-                cannon.setPlayerWhoMayEdit(null);
+            if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
+                cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
+                cannon.setChanged();
+                if (stopControlling) {
+                    cannon.setPlayerWhoMayEdit(null);
+                }
+                //now update all clients
+                level.sendBlockUpdated(pos, cannon.getBlockState(), cannon.getBlockState(), 3);
+
+                return;
             }
-            //now update all clients
-            level.sendBlockUpdated(pos, cannon.getBlockState(), cannon.getBlockState(), 3);
-
-            return;
         }
         // could happen if cannon is broken
         //Supplementaries.error(); //should not happen

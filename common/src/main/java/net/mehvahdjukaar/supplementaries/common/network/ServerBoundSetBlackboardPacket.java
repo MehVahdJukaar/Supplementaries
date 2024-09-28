@@ -8,10 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-
-import java.util.Objects;
 
 public class ServerBoundSetBlackboardPacket implements Message {
 
@@ -44,15 +41,16 @@ public class ServerBoundSetBlackboardPacket implements Message {
 
     @Override
     public void handle(Context context) {
-        Player sender = context.getPlayer();
-        Level level = Objects.requireNonNull(sender).level();
+        if (context.getPlayer() instanceof ServerPlayer player) {
+            Level level = player.level();
 
-        BlockPos pos = this.pos;
-        if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
-            if (board.tryAcceptingClientPixels((ServerPlayer) sender, this.pixels)) {
-                //updates client
-                //set changed also sends a block update
-                board.setChanged();
+            BlockPos pos = this.pos;
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof BlackboardBlockTile board) {
+                if (board.tryAcceptingClientPixels(player, this.pixels)) {
+                    //updates client
+                    //set changed also sends a block update
+                    board.setChanged();
+                }
             }
         }
     }

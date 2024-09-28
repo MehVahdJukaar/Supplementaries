@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public record ServerBoundRequestOpenCannonGuiMessage(BlockPos pos) implements Message {
@@ -26,10 +25,11 @@ public record ServerBoundRequestOpenCannonGuiMessage(BlockPos pos) implements Me
 
     @Override
     public void handle(Context context) {
-        Player player = context.getPlayer();
-        Level level = player.level();
-        if (level.getBlockEntity(this.pos) instanceof CannonBlockTile tile) {
-            tile.tryOpeningEditGui((ServerPlayer) player, this.pos, player.getMainHandItem());
+        if (context.getPlayer() instanceof ServerPlayer player) {
+            Level level = player.level();
+            if (level.getBlockEntity(this.pos) instanceof CannonBlockTile tile) {
+                tile.tryOpeningEditGui(player, this.pos, player.getMainHandItem());
+            }
         }
     }
 

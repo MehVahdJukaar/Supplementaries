@@ -39,7 +39,9 @@ public class PickleData {
             var id = e.getKey();
             if (on) {
                 //to client
-                NetworkHelper.sendToClientPlayer((ServerPlayer) player, new PicklePacket(id, on, e.getValue().isJar));
+                if (player instanceof ServerPlayer sp) {
+                    NetworkHelper.sendToClientPlayer(sp, new PicklePacket(id, on, e.getValue().isJar));
+                }
             }
         }
     }

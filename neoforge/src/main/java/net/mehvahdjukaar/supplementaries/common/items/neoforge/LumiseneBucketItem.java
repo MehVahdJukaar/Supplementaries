@@ -73,8 +73,8 @@ public class LumiseneBucketItem extends BucketItem {
                 BlockPos blockpos2 = this.canBlockContainFluid(level, blockpos, blockstate) ? blockpos : above;
                 if (this.emptyContents(player, level, blockpos2, blockhitresult, itemstack)) {
                     this.checkExtraContent(player, level, itemstack, blockpos2);
-                    if (player instanceof ServerPlayer) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockpos2, itemstack);
+                    if (player instanceof ServerPlayer sp) {
+                        CriteriaTriggers.PLACED_BLOCK.trigger(sp, blockpos2, itemstack);
                     }
 
                     player.awardStat(Stats.ITEM_USED.get(this));

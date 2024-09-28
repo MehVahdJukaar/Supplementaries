@@ -23,7 +23,8 @@ public record ServerBoundRequestConfigReloadPacket() implements Message {
 
     @Override
     public void handle(Context context) {
-        ConfigUtils.configScreenReload((ServerPlayer) context.getPlayer());
+        if (context.getPlayer() instanceof ServerPlayer serverPlayer)
+            ConfigUtils.configScreenReload(serverPlayer);
     }
 
     @Override

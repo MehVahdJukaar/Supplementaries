@@ -64,21 +64,21 @@ public class ServerBoundSetTextHolderPacket implements Message {
     @Override
     public void handle(Context context) {
         // text filtering yay
-        ServerPlayer sender = (ServerPlayer) context.getPlayer();
-
-        CompletableFuture.supplyAsync(() ->
-                Stream.of(textHolderLines)
-                        .map(line -> Stream.of(line)
-                                .map(ChatFormatting::stripFormatting)
-                                .toList()
-                        )
-                        .map(innerList ->
-                                sender.connection.filterTextPacket(innerList))
-                        .map(CompletableFuture::join)
-                        .toList()
-        ).thenAcceptAsync((l) -> {
-            this.updateSignText(sender, l);
-        }, sender.server);
+        if (context.getSender() instanceof ServerPlayer sender) {
+            CompletableFuture.supplyAsync(() ->
+                    Stream.of(textHolderLines)
+                            .map(line -> Stream.of(line)
+                                    .map(ChatFormatting::stripFormatting)
+                                    .toList()
+                            )
+                            .map(innerList ->
+                                    sender.connection.filterTextPacket(innerList))
+                            .map(CompletableFuture::join)
+                            .toList()
+            ).thenAcceptAsync((l) -> {
+                this.updateSignText(sender, l);
+            }, sender.server);
+        }
     }
 
 

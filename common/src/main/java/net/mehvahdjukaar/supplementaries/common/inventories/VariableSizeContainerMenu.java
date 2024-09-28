@@ -25,8 +25,8 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
     public final int unlockedSlots;
 
     //for tile
-    public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(Player player, C tile) {
-        PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
+    public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(ServerPlayer player, C tile) {
+        PlatHelper.openCustomMenu(player, tile, p -> {
             p.writeBoolean(true);
             p.writeBlockPos(tile.getBlockPos());
             p.writeInt(tile.getContainerSize());
@@ -34,8 +34,8 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
     }
 
     //for entity
-    public static <C extends Entity & Container & MenuProvider> void openEntityMenu(Player player, C entity) {
-        PlatHelper.openCustomMenu((ServerPlayer) player, entity, p -> {
+    public static <C extends Entity & Container & MenuProvider> void openEntityMenu(ServerPlayer player, C entity) {
+        PlatHelper.openCustomMenu(player, entity, p -> {
             p.writeBoolean(false);
             p.writeVarInt(entity.getId());
             p.writeInt(entity.getContainerSize());
