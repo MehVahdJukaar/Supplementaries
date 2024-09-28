@@ -18,7 +18,7 @@ public class FireworkBehavior implements IFireItemBehavior {
         FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(level, stack,
                 firePos.x(), firePos.y(), firePos.z(), true);
 
-        fireworkrocketentity.shoot(0, 1, 0, 0.5F, 1.0F);
+        fireworkrocketentity.shoot(direction.x, direction.y, direction.z, power, inaccuracy);
         level.addFreshEntity(fireworkrocketentity);
         stack.shrink(1);
 
