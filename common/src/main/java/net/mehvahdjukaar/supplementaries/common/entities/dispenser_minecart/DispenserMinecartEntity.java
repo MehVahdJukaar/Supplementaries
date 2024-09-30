@@ -26,6 +26,7 @@ import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -261,7 +262,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                     BlockSource blockSource = IMovingBlockSource.create(level, this, dispenser);
                     // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...
                     ItemStack dispensed;
-                    if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && dispenseitembehavior instanceof ProjectileDispenseBehavior pb) {
+                    if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && itemstack.getItem() instanceof ProjectileItem pb) {
                         dispensed = executeAbstractProjectileBehavior(pb, blockSource, itemstack);
                     } else dispensed = dispenseitembehavior.dispense(blockSource, itemstack);
 
@@ -275,16 +276,17 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
     }
 
-    private ItemStack executeAbstractProjectileBehavior(ProjectileDispenseBehavior ap, BlockSource source, ItemStack stack) {
+    private ItemStack executeAbstractProjectileBehavior(ProjectileItem ap, BlockSource source, ItemStack stack) {
         Level level = source.level();
 
-        Position position = DispenserBlock.getDispensePosition(source);
-        Projectile projectile = ap.invokeGetProjectile(level, position, stack);
+        var config = ap.createDispenseConfig();
+        Position position = config.positionFunction().getDispensePosition(source, Direction.UP);
 
+        Projectile projectile = ap.asProjectile(level, position, stack, Direction.UP);
 
         Direction direction = source.state().getValue(DispenserBlock.FACING);
         projectile.shoot(direction.getStepX(), ((float) direction.getStepY() + 0.1F), direction.getStepZ(),
-                ap.invokeGetPower(), ap.invokeGetUncertainty());
+                config.power(), config.uncertainty());
 
         //shit code incoming. server doenst sync xRot. TODO: change in 1.21
         BlockState rail = level.getBlockState(this.blockPosition());
@@ -302,7 +304,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         level.addFreshEntity(projectile);
         stack.shrink(1);
 
-        ap.invokePlaySound(source);
+        source.level().levelEvent(config.overrideDispenseEvent().orElse(1002), source.pos(), 0);
+        //animation
         source.level().levelEvent(2000, source.pos(), direction.get3DDataValue());
         return stack;
     }

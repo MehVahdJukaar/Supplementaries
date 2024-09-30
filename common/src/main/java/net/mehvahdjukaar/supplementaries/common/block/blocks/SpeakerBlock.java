@@ -103,17 +103,6 @@ public class SpeakerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                tile.tryOpeningEditGui(serverPlayer, pos, stack);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
             //ink
@@ -131,8 +120,9 @@ public class SpeakerBlock extends Block implements EntityBlock {
                     return ItemInteractionResult.sidedSuccess(level.isClientSide);
                 }
             }
-            // client
-
+            if (player instanceof ServerPlayer serverPlayer) {
+                tile.tryOpeningEditGui(serverPlayer, pos, stack);
+            }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

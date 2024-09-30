@@ -64,9 +64,12 @@
 - spiky bomb
 - slinghost check all
 - canon camera and selectable container movemnet
+- dispenser behavior sounds
+- dispenser minecart projectiles moving angle
 
 # Soon
 
+add fabric missing events
 - make polytone and supp hourglass use reloadable registries
 - all use action in adventure mode
 - anger nearby piglins

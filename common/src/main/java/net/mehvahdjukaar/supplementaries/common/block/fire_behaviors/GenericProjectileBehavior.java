@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -94,10 +95,10 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         testLevel.setup();
 
         if (projectile.getItem() instanceof ArrowItem ai) {
-            return ai.createArrow(testLevel, projectile, fakePlayer);
+            return ai.createArrow(testLevel, projectile, fakePlayer, null);
         }
         else if (projectile.getItem() instanceof ProjectileItem ti) {
-            return ti.asProjectile(testLevel, fakePlayer, projectile);
+            return ti.asProjectile(testLevel, Vec3.ZERO, projectile, Direction.UP);
         }
         //create from item
 

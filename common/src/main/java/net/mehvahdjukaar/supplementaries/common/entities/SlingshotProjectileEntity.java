@@ -249,7 +249,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 p.setItem(this.getItem());
                 ent = p;
             } else if (item == Items.FIRE_CHARGE) {
-                var p = new SmallFireball(level, le, this.getX(), this.getY(), this.getZ());
+                var p = new SmallFireball(level, le, Vec3.ZERO);
                 p.setPos(this.getX(), this.getY(), this.getZ());
                 p.setItem(this.getItem());
                 ent = p;

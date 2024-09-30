@@ -26,7 +26,7 @@ public abstract class BlockBehaviourPlanterMixin {
     @Shadow
     public abstract boolean is(TagKey<Block> tagKey);
 
-    @ModifyReturnValue(method = "method_49227", at = @At(
+    @ModifyReturnValue(method = "getOffset", at = @At(
             value = "RETURN"))
     @SuppressWarnings("ConstantConditions")
     public Vec3 getOffset(Vec3 original, @Local(argsOnly = true) BlockGetter level, @Local(argsOnly = true) BlockPos pos) {

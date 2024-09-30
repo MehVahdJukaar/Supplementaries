@@ -24,7 +24,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.*;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -190,18 +193,15 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return this.lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        var r = this.lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
+        if (r.consumesAction()) return r;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if (player instanceof ServerPlayer sp) {
-                tile.tryOpeningEditGui(sp, pos, player.getItemInHand(hand));
+                tile.tryOpeningEditGui(sp, pos, stack);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
-        return super.useWithoutItem(state, level, pos, player, hand, hit);
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -289,7 +289,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        System.out.println("Event "+id + "_ "+level.isClientSide()+" "+level.getGameTime());
+        System.out.println("Event " + id + "_ " + level.isClientSide() + " " + level.getGameTime());
         if (id > 1) return false;
         if (!level.isClientSide) return true;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
