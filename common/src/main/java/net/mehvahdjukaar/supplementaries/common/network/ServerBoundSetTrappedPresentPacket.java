@@ -29,7 +29,7 @@ public record ServerBoundSetTrappedPresentPacket(BlockPos pos, boolean packed) i
     @Override
     public void handle(Context context) {
         // server level
-        if (context.getSender() instanceof ServerPlayer player) {
+        if (context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
 
             if (level.hasChunkAt(pos) && level.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {

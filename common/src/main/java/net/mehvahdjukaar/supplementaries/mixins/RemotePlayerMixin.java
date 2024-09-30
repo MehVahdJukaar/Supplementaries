@@ -35,7 +35,7 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverPlayer 
     )
     private void checkIfHasQuiver(CallbackInfo ci) {
         supplementaries$quiverSlotForHUD = QuiverItem.getQuiverSlot(this);
-        supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get();
+        supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }
 
     @Override

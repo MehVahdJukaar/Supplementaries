@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -69,17 +70,15 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
-                                 BlockHitResult hit) {
-        ItemStack itemstack = player.getItemInHand(handIn);
-        if(itemstack.getItem() instanceof SignPostItem) return InteractionResult.PASS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(stack.getItem() instanceof SignPostItem) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (level instanceof ServerLevel serverLevel) {
             if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
-                return tile.handleInteraction(state, serverLevel, pos, player, handIn, hit, itemstack);
+                return tile.handleInteraction(state, serverLevel, pos, player, hand, hitResult, stack);
             }
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else {
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
     }
 

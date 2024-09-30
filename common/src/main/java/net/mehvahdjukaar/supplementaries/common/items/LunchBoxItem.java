@@ -185,15 +185,9 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
     }
 
-    @Override
-    public @NotNull ItemStack getFirstInInventory(Player player) {
-        return getLunchBox(player);
-    }
-
-
     @NotNull
     public static ItemStack getLunchBox(LivingEntity entity) {
-        return getLunchBoxSlot(entity).get();
+        return getLunchBoxSlot(entity).get(entity);
     }
 
     @NotNull

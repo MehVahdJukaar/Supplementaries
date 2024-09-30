@@ -26,12 +26,6 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
         return ModComponents.QUIVER_CONTENT.get();
     }
 
-    @NotNull
-    @Override
-    public ItemStack getFirstInInventory(Player player) {
-        return getQuiver(player);
-    }
-
     @Override
     public int getMaxSlots() {
         return CommonConfigs.Tools.QUIVER_SLOTS.get();
@@ -44,14 +38,14 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
             if (!curioQuiver.isEmpty()) return curioQuiver;
             if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return SlotReference.EMPTY;
         } else if (entity instanceof IQuiverEntity e) {
-            return e::supplementaries$getQuiver;
+            return SlotReference.quiver(e);
         }
 
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
     public static ItemStack getQuiver(LivingEntity entity) {
-        return getQuiverSlot(entity).get();
+        return getQuiverSlot(entity).get(entity);
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {

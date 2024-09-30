@@ -30,6 +30,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
@@ -304,8 +305,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return false;
     }
 
-    public InteractionResult handleInteraction(BlockState state, ServerLevel level, BlockPos pos, Player player,
-                                               InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
+    public ItemInteractionResult handleInteraction(BlockState state, ServerLevel level, BlockPos pos, Player player,
+                                                   InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
         Item item = itemstack.getItem();
 
         boolean emptyHand = itemstack.isEmpty();
@@ -317,7 +318,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
             Sign sign = getSign(ind);
 
-            if (!sign.active && item instanceof SignPostItem) return InteractionResult.PASS;
+            if (!sign.active && item instanceof SignPostItem) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (isSneaking) {
                 sign.toggleDirection();
@@ -325,7 +326,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 this.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-                return InteractionResult.CONSUME;
+                return ItemInteractionResult.CONSUME;
             }
             //change direction with compass
             else if (item instanceof CompassItem && !state.hasProperty(HorizontalDirectionalBlock.FACING)) {
@@ -338,12 +339,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                     }
                     this.setChanged();
                     level.sendBlockUpdated(pos, state, state, 3);
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             } else if (CompatHandler.FRAMEDBLOCKS && this.framed) {
                 boolean success = FramedBlocksCompat.interactWithFramedSignPost(this, player, handIn, itemstack, level, pos);
-                if (success) return InteractionResult.CONSUME;
+                if (success) return ItemInteractionResult.CONSUME;
             }
         }
         return this.textHolderInteract(ind ? 0 : 1, level, pos, state, player, handIn, itemstack);

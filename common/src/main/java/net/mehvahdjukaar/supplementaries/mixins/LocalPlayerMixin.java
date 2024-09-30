@@ -61,7 +61,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     )
     private void suppl$checkIfHasQuiver(CallbackInfo ci) {
        supplementaries$quiverSlotForHUD = QuiverItem.getQuiverSlot(this);
-       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get();
+       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }
 
     @Override

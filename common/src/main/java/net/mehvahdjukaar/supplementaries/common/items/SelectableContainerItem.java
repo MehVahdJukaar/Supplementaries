@@ -50,7 +50,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
             return false;
         } else {
             ItemStack itemstack = pSlot.getItem();
-            //place into slot
+            //place into invSlot
             boolean didStuff = false;
             C c = myStack.get(this.getComponentType());
             if (c == null) return false;
@@ -145,7 +145,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(player, hand));
+                SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(hand), player);
             }
             this.playRemoveOneSound(player);
             myStack.set(this.getComponentType(), mutable.toImmutable());
@@ -163,7 +163,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.EMPTY);
+            SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.EMPTY, livingEntity);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());
@@ -231,14 +231,6 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
         pEntity.playSound(SoundEvents.BUNDLE_DROP_CONTENTS, 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
 
-    // BS instance fields
-
-    //TODO: find a better way to do this
-    @Deprecated(forRemoval = true)
-    @NotNull
-    public abstract ItemStack getFirstInInventory(Player player);
-
-    @Deprecated(forRemoval = true)
     public abstract int getMaxSlots();
 
     public boolean modify(ItemStack stack, Function<M, Boolean> consumer) {

@@ -79,7 +79,7 @@ public class ModTextures {
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
     public static final ResourceLocation VARIABLE_SIZE_CONTAINER_TEXTURE = Supplementaries.res("textures/gui/variable_size_container_gui.png");
-    public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res("textures/gui/slot.png");
+    public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res("textures/gui/invSlot.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
     public static final ResourceLocation PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/present_gui.png");
     public static final ResourceLocation PRESENT_EMPTY_GUI_TEXTURE = Supplementaries.res("textures/gui/present_empty_gui.png");

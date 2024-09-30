@@ -77,7 +77,7 @@ public class ItemsUtil {
 
     public static boolean tryInteractingWithContainerItem(ItemStack containerStack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot) {
         if (action != ClickAction.PRIMARY) {
-            //drop content in empty slot
+            //drop content in empty invSlot
             if (incoming.isEmpty()) {
                 if (!inSlot) {
                     return ItemsUtil.extractFromContainerItemIntoSlot(player, containerStack, slot);

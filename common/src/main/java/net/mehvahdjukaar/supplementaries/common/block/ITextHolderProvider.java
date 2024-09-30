@@ -103,7 +103,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
             return result;
         }
         if (player instanceof ServerPlayer serverPlayer &&
-                this.tryOpeningEditGui(serverPlayer, pos, player.getItemInHand(hand))) {
+                this.tryOpeningEditGui(serverPlayer, pos, stack)) {
             return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.SUCCESS;

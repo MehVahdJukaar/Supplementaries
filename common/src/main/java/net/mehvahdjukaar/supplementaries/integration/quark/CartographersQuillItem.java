@@ -188,9 +188,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     @Override
-    protected ItemStack search(ItemStack stack, ServerLevel level, Player player, int slot) {
+    protected ItemStack search(ItemStack stack, ServerLevel level, Player player, int invSlot) {
         if (mainThread == null) mainThread = Thread.currentThread();
-        return super.search(stack, level, player, slot);
+        return super.search(stack, level, player, invSlot);
     }
 
     private BlockPos getOrCreateStartPos(CompoundTag tag, Player player) {

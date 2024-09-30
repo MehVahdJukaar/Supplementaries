@@ -113,7 +113,7 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
     }
 
     /**
-     * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
+     * Handle when the stack in invSlot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
     @Override

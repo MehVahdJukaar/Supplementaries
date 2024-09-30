@@ -64,7 +64,7 @@ public class ServerBoundSetTextHolderPacket implements Message {
     @Override
     public void handle(Context context) {
         // text filtering yay
-        if (context.getSender() instanceof ServerPlayer sender) {
+        if (context.getPlayer() instanceof ServerPlayer sender) {
             CompletableFuture.supplyAsync(() ->
                     Stream.of(textHolderLines)
                             .map(line -> Stream.of(line)
