@@ -1,4 +1,6 @@
 # Soon
+- empty fluid thing
+- way sign tag broken
 - globe shear server
 - can keep on shearing it
 - cannon anim not working on servers
