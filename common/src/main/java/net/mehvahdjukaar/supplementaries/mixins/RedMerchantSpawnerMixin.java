@@ -12,7 +12,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
-import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.npc.WanderingTraderSpawner;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -33,8 +32,6 @@ import java.util.Optional;
 @Mixin(WanderingTraderSpawner.class)
 public abstract class RedMerchantSpawnerMixin {
 
-    @Shadow protected abstract void tryToSpawnLlamaFor(ServerLevel serverLevel, WanderingTrader trader, int maxDistance);
-
     @Shadow
     @Final
     private RandomSource random;
@@ -47,7 +44,7 @@ public abstract class RedMerchantSpawnerMixin {
 
     //remove
     @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(ServerLevel serverLevel, boolean b, boolean b1, CallbackInfoReturnable<Integer> cir) {
+    public void supp$tickRedMerchant(ServerLevel serverLevel, boolean b, boolean b1, CallbackInfoReturnable<Integer> cir) {
         if (this.supplementaries$redSpawnDelay > 0) {
             this.supplementaries$redSpawnDelay--;
         }
@@ -55,7 +52,7 @@ public abstract class RedMerchantSpawnerMixin {
 
 
     @Inject(method = "spawn", at = @At("RETURN"))
-    public void spawn(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
+    public void supp$spawnRedMerchant(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && supplementaries$redSpawnDelay == 0) {
             //doesn't set cir to true, so it doesn't interfere with wandering trader spawn
             Player player = world.getRandomPlayer();

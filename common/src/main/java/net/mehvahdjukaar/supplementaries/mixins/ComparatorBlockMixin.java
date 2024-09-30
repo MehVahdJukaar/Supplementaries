@@ -19,7 +19,7 @@ public abstract class ComparatorBlockMixin extends DiodeBlock {
     }
 
     @Inject(method = "refreshOutputState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/ComparatorBlock;updateNeighborsInFront(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V"))
-    public void updateSideRelayers(Level level, BlockPos pos, BlockState state, CallbackInfo ci) {
+    public void supp$updateSideRelayers(Level level, BlockPos pos, BlockState state, CallbackInfo ci) {
         var facing = state.getValue(ComparatorBlock.FACING);
         for (var d : Direction.values()) {
             if (d.getAxis() != facing.getAxis()) {

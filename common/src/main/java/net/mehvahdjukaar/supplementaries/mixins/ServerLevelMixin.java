@@ -58,7 +58,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
 
     //for dispenser minecart
     @Inject(method = "levelEvent", at = @At("HEAD"), cancellable = true)
-    private void levelEvent(Player pPlayer, int pType, BlockPos pPos, int pData, CallbackInfo ci) {
+    private void supp$redirectEvent(Player pPlayer, int pType, BlockPos pPos, int pData, CallbackInfo ci) {
         if (this.supplementaries$redirectLevelEvents && ILevelEventRedirect.supp$tryRedirect(this, pPlayer, supplementaries$redirectedEntityPos, pType, pPos, pData)) {
             ci.cancel();
         }
@@ -67,7 +67,7 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
     @Inject(method = "findLightningTargetAround", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z",
             shift = At.Shift.AFTER),
             cancellable = true)
-    private void unluckyLightning(BlockPos pos, CallbackInfoReturnable<BlockPos> cir,
+    private void supp$unluckyLightning(BlockPos pos, CallbackInfoReturnable<BlockPos> cir,
                                   @Local(ordinal = 1) BlockPos blockPos) {
 
         if (this.random.nextFloat() < 0.5 && CommonConfigs.Tweaks.BAD_LUCK_LIGHTNING.get()) {

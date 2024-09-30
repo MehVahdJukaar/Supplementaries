@@ -18,7 +18,7 @@ public abstract class ExplosionMixin {
     public Level level;
 
     @Inject(method = "finalizeExplosion", at = @At("HEAD"))
-    public void explode(CallbackInfo ci) {
+    public void supp$explode(CallbackInfo ci) {
         if (level.isClientSide) ClientEvents.onExplosion((Explosion) (Object) this);
     }
 }

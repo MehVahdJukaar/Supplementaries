@@ -37,7 +37,7 @@ public abstract class FontRendererMixin implements IAntiquable {
     private Function<ResourceLocation, FontSet> fonts;
 
     @Inject(method = "getFontSet", at = @At("HEAD"), cancellable = true)
-    private void getFontSet(ResourceLocation resourceLocation, CallbackInfoReturnable<FontSet> cir) {
+    private void supp$setAntiqueFont(ResourceLocation resourceLocation, CallbackInfoReturnable<FontSet> cir) {
         if (supplementaries$antique) {
             cir.setReturnValue(this.fonts.apply(ModTextures.ANTIQUABLE_FONT));
         }

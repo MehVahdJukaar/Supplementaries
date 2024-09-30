@@ -44,14 +44,14 @@ public abstract class AbstractHorseMixin extends Animal {
     public abstract boolean isTamed();
 
     @Inject(method = "addBehaviourGoals", at = @At("HEAD"))
-    public void addSugarCube(CallbackInfo ci) {
+    public void supp$addSugarCube(CallbackInfo ci) {
         if (CommonConfigs.Building.SUGAR_CUBE_ENABLED.get()) {
             this.goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(ModRegistry.SUGAR_CUBE.get()), false));
         }
     }
 
     @Inject(method = "handleEating", at = @At("HEAD"), cancellable = true)
-    public void eatSugarCube(Player player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    public void supp$eatSugarCube(Player player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.is(ModRegistry.SUGAR_CUBE.get().asItem())) {
             int duration = CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get();
             boolean eat = false;

@@ -61,6 +61,9 @@
 - redo all loot tables for containers and copy nbt stuff
 - fix the may build stuff
 - waxable and glowable stuff
+- spiky bomb
+- slinghost check all
+- canon camera and selectable container movemnet
 
 # Soon
 

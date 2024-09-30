@@ -42,7 +42,7 @@ public abstract class FireBlockMixin {
         if (isLiquid.get()) {
             BlockState targetState = level.getBlockState(pos);
             if (targetState.getBlock() instanceof FlammableLiquidBlock fl) {
-                fl.lightUp(null, targetState, pos, level, ILightable.FireSoundType.FIRE_CHANGE);
+                fl.tryLightUp(null, targetState, pos, level, ILightable.FireSoundType.FIRE_CHANGE);
             }
         }
         return original.call(level, pos, fireState, i);

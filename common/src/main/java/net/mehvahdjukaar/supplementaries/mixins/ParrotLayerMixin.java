@@ -31,7 +31,7 @@ public abstract class ParrotLayerMixin<T extends Player> {
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getString(Ljava/lang/String;)Ljava/lang/String;",
                     shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void renderParty(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T livingEntity,
+    private void supp$renderParty(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T livingEntity,
                              float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch,
                              boolean leftShoulder, CallbackInfo ci, CompoundTag compoundTag) {
         if (compoundTag.getBoolean("record_playing")) {

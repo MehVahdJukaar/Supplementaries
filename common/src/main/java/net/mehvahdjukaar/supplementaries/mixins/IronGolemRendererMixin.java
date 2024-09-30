@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class IronGolemRendererMixin {
 
     @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
-    public void getEntityTexture(@NotNull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
+    public void supp$swag(@NotNull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
         if (entity.getUUID().getLeastSignificantBits() % 420 == 0)
             info.setReturnValue(ModTextures.THICK_GOLEM);
     }

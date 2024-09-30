@@ -19,7 +19,7 @@ public abstract class BowMixin {
     @Inject(method = "getAllSupportedProjectiles", at = @At(
             value = "RETURN"),
             cancellable = true)
-    public void getAllSupportedProjectiles(CallbackInfoReturnable<Predicate<ItemStack>> cir) {
+    public void supp$getAllSupportedProjectiles(CallbackInfoReturnable<Predicate<ItemStack>> cir) {
         if(CommonConfigs.Tools.ROPE_ARROW_CROSSBOW.get()){
             var v = cir.getReturnValue();
             cir.setReturnValue(s->{

@@ -33,7 +33,7 @@ public abstract class StrongholdCrossingSconceMixin extends StructurePiece {
 
 
     @Inject(method = "postProcess", at = @At("TAIL"))
-    public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
+    public void supp$addSconces(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox bb, ChunkPos chunkPos, BlockPos pos, CallbackInfo ci) {
         if (CommonConfigs.Building.SCONCE_ENABLED.get())
             this.placeBlock(level, supplementaries$sconce.setValue(WallTorchBlock.FACING, Direction.SOUTH), 6, 5, 6, bb);
     }

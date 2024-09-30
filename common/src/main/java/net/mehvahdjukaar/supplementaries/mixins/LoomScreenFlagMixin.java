@@ -45,7 +45,7 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
 
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void renderBg(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
+    public void supp$renderFlags(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
         this.supplementaries$bannerFlagBG.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
 
         if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {

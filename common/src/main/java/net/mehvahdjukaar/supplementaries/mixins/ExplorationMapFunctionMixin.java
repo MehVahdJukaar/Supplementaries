@@ -79,7 +79,7 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
     }
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findNearestMapStructure(Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;"), cancellable = true)
-    public void turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir, @Local Vec3 pos,
+    public void supp$turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir, @Local Vec3 pos,
                             @Local ServerLevel level) {
         if (supplementaries$customDecoration != null ||
                 (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get())) {
@@ -112,7 +112,7 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
     }
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
-    private static void init(CallbackInfo ci) {
+    private static void supp$modifyCodec(CallbackInfo ci) {
         CODEC = RecordCodecBuilder.mapCodec(
                 instance -> commonFields(instance)
                         .and(

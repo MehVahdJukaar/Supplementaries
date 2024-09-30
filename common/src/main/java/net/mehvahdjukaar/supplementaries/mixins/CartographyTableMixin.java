@@ -34,7 +34,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
                     ordinal = 0),  locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    public void getItem(Player player, int index, CallbackInfoReturnable<ItemStack> cir,
+    public void supp$getItem(Player player, int index, CallbackInfoReturnable<ItemStack> cir,
                         ItemStack itemStack, Slot slot, ItemStack itemStack2) {
 
         if (itemStack2.is(ModRegistry.ANTIQUE_INK.get())) {
@@ -62,7 +62,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
     @Inject(method = "method_17382",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
                     ordinal = 0), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    public void getItem(ItemStack mapStack, ItemStack firstSlotStack, ItemStack resultSlotStack, Level level,
+    public void supp$getItem(ItemStack mapStack, ItemStack firstSlotStack, ItemStack resultSlotStack, Level level,
                         BlockPos blockPos, CallbackInfo ci, MapItemSavedData mapItemSavedData) {
         if (firstSlotStack.is(ModRegistry.ANTIQUE_INK.get()) && !mapItemSavedData.locked && !AntiqueInkItem.hasAntiqueInk(mapStack)) {
 

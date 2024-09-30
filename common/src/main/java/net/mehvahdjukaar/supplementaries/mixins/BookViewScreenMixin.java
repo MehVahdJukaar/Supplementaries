@@ -27,7 +27,7 @@ public abstract class BookViewScreenMixin {
 
     @ModifyArg(method = "renderBackground", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
-    public ResourceLocation setTatteredBookTexture(ResourceLocation resourceLocation) {
+    public ResourceLocation supp$setTatteredBookTexture(ResourceLocation resourceLocation) {
         IAntiquable antiquable = ((IAntiquable) (Object) this.bookAccess);
         if (antiquable.supplementaries$isAntique()) {
             ((IAntiquable) this.forwardButton).supplementaries$setAntique(true);

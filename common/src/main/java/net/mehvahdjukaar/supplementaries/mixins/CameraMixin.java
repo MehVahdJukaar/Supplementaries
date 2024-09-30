@@ -14,7 +14,7 @@ public abstract class CameraMixin {
 
     @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V",
             shift = At.Shift.BEFORE, ordinal = 0), cancellable = true)
-    public void supplementaries$setupCannonCamera(BlockGetter level, Entity entity, boolean detached,
+    public void supp$setupCannonCamera(BlockGetter level, Entity entity, boolean detached,
                                                   boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
         if (CannonController.setupCamera((Camera) (Object) this,
                 level, entity, detached, thirdPersonReverse, partialTick)) {

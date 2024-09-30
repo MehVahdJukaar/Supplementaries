@@ -33,7 +33,7 @@ public abstract class RemotePlayerMixin extends Player implements IQuiverPlayer 
                     target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
                     shift = At.Shift.AFTER)
     )
-    private void checkIfHasQuiver(CallbackInfo ci) {
+    private void supp$checkIfHasQuiver(CallbackInfo ci) {
         supplementaries$quiverSlotForHUD = QuiverItem.getQuiverSlot(this);
         supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }

@@ -379,6 +379,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             }
         }
 
+        //TODO: add back
         public void afterExploded(BombExplosion exp, Level level) {
             if (this == SPIKY) {
                 Vec3 pos = exp.getDamageSource().getSourcePosition();

@@ -40,7 +40,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
 
     // here since we have to add a mixin anyways. tho we could have used a capability but then again freking fabric...
     @Inject(method = "dropCustomDeathLoot", at = @At("TAIL"))
-    protected void dropCustomDeathLoot(ServerLevel serverLevel, DamageSource damageSource, boolean hitByPlayer, CallbackInfo ci) {
+    protected void supp$dropQuiver(ServerLevel serverLevel, DamageSource damageSource, boolean hitByPlayer, CallbackInfo ci) {
         if (!this.supplementaries$quiver.isEmpty()) {
             //same code as Mob super call for armor
             ItemStack itemStack = this.supplementaries$quiver;

@@ -238,7 +238,7 @@ public class ClientRegistry {
                     if (entity == null || entity.getUseItem() != stack) {
                         return 0.0F;
                     } else {
-                        return (float) (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack);
+                        return (float) (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / SlingshotItem.getChargeDuration(stack, entity);
                     }
                 });
 

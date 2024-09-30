@@ -142,7 +142,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
     }
 
     @Inject(method = "mobInteract", at = @At(value = "HEAD"), cancellable = true)
-    public void interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
+    public void supp$interact(Player pPlayer, InteractionHand pHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (itemstack.is(Items.GOLDEN_CARROT) && this.hasEffect(MobEffects.WEAKNESS) && CommonConfigs.Tweaks.ZOMBIE_HORSE_CONVERSION.get()) {
             if (!pPlayer.getAbilities().instabuild) {

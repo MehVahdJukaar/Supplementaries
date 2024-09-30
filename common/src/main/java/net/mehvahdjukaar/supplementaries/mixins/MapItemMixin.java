@@ -43,7 +43,7 @@ public abstract class MapItemMixin {
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z"))
-    public boolean removeCeiling(boolean original, @Share("heightLock") LocalIntRef height) {
+    public boolean supp$removeCeiling(boolean original, @Share("heightLock") LocalIntRef height) {
         if (original && height.get() != Integer.MAX_VALUE && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
             return false;
         }
@@ -57,7 +57,7 @@ public abstract class MapItemMixin {
             ordinal = 0),
             require = 1,
             cancellable = true)
-    public void checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
+    public void supp$checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
                                 @Local(ordinal = 5) LocalIntRef range,
                                 @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
                                 @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
@@ -78,7 +78,7 @@ public abstract class MapItemMixin {
     @ModifyExpressionValue(method = "update", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/chunk/LevelChunk;getHeight(Lnet/minecraft/world/level/levelgen/Heightmap$Types;II)I"))
-    public int modifySampleHeight(int original, @Share("heightLock") LocalIntRef height) {
+    public int supp$modifySampleHeight(int original, @Share("heightLock") LocalIntRef height) {
         int h = height.get();
         if (h != Integer.MAX_VALUE) return Math.min(original, h);
         return original;
@@ -89,7 +89,7 @@ public abstract class MapItemMixin {
             value = "INVOKE",
             ordinal = 3,
             target = "Lnet/minecraft/world/level/block/state/BlockState;getMapColor(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/MapColor;"))
-    public MapColor removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MapColor> operation,
+    public MapColor supp$removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MapColor> operation,
                                                   @Local(argsOnly = true) Level l,
                                                   @Local LevelChunk chunk,
                                                   @Local(ordinal = 14) int w,
@@ -126,7 +126,7 @@ public abstract class MapItemMixin {
     @ModifyExpressionValue(method = "update", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;updateColor(IIB)Z"
     ))
-    public boolean updateCustomColor(boolean original,
+    public boolean supp$updateCustomColor(boolean original,
                                      Level level, Entity viewer, MapItemSavedData data,
                                      @Local(ordinal = 6) int x,
                                      @Local(ordinal = 7) int z,

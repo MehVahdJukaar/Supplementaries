@@ -21,7 +21,7 @@ public abstract class GameRendererMixin {
 
     //forge has an event for this but doing it this way is better as we can use instance check
     @Inject(method = "checkEntityPostEffect", at = @At("TAIL"))
-    protected void checkEntityPostEffect(Entity entity, CallbackInfo ci) {
+    protected void supp$addCustomPostShaders(Entity entity, CallbackInfo ci) {
         if(entity != null && entity.getType() == EntityType.ENDER_DRAGON){
             this.loadEffect(ClientRegistry.FLARE_SHADER);
         }else if(entity instanceof AbstractSkeleton){

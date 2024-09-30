@@ -25,7 +25,7 @@ public abstract class MapTextureMixin {
 
     @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/DynamicTexture;upload()V",
             shift = At.Shift.BEFORE), method = "updateTexture")
-    public DynamicTexture updateColoredTexture(MapRenderer.MapInstance instance, Operation<DynamicTexture> original) {
+    public DynamicTexture supp$updateColoredTexture(MapRenderer.MapInstance instance, Operation<DynamicTexture> original) {
         ColoredMapHandler.getColorData(this.data).processTexture( this.texture.getPixels(), 0, 0, this.data.colors);
         MapLightHandler.getLightData(this.data).processTexture(this.texture.getPixels(), 0, 0, this.data.dimension);
         return original.call(instance);

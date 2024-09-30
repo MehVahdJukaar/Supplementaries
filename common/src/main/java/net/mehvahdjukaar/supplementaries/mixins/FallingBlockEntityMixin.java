@@ -19,7 +19,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;getFluidState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/FluidState;"))
-    public BlockPos supplementaries$concreteFix(BlockPos original) {
+    public BlockPos supp$concreteFix(BlockPos original) {
         if (original.getY() < this.getY() + Math.min(this.getDeltaMovement().y, 0) - 0.25) return original.above(1);
         return original;
     }

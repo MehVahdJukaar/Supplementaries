@@ -30,6 +30,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +54,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             if (!projectileStack.isEmpty() && this.getAllSupportedProjectiles().test(projectileStack)) {
 
                 int useDuration = this.getUseDuration(stack, entity) - timeCharged;
-                float power = getPowerForTime(useDuration);
+                float power = getPowerForTime(useDuration, stack, entity);
                 if ((power >= 0.085D)) {
 
                     List<ItemStack> projectiles = draw(stack, stack, player);
@@ -131,15 +132,21 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         return 72000;
     }
 
-    // same as bow but with float argument
-    public static float getPowerForTime(float charge) {
-        float f = charge / 20.0F;
+    // same as bow but with float argument AND variable charge duration
+    public static float getPowerForTime(float charge, ItemStack stack, LivingEntity entity) {
+        float f = charge / getChargeDuration(stack, entity);
         f = (f * f + f * 2.0F) / 3.0F;
         if (f > 1.0F) {
             f = 1.0F;
         }
 
         return f;
+    }
+
+    //actual use duration
+    public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
+        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get());
+        return Mth.floor(f * 20.0F);
     }
 
     @Override
@@ -263,7 +270,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
             float useDuration = stack.getUseDuration(entity) - (entity.getUseItemRemainingTicks() - partialTicks + 1.0F);
 
-            float power = getPowerForTime(useDuration);
+            float power = getPowerForTime(useDuration, stack, entity);
 
             if (power > 0.1F) {
                 float f15 = Mth.sin((useDuration - 0.1F) * 1.3F);

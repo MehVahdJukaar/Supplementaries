@@ -20,7 +20,7 @@ public abstract class PlayerSocialManagerMixin {
     private Minecraft minecraft;
 
     @Inject(method = "addPlayer", at = @At("TAIL"))
-    public void addPlayer(PlayerInfo info, CallbackInfo ci) {
+    public void supp$getPlayer(PlayerInfo info, CallbackInfo ci) {
         Screen screen = this.minecraft.screen;
         if (screen instanceof PresentScreen gui) {
             gui.onAddPlayer(info);
@@ -28,7 +28,7 @@ public abstract class PlayerSocialManagerMixin {
     }
 
     @Inject(method = "removePlayer", at = @At("TAIL"))
-    public void removePlayer(UUID id, CallbackInfo ci) {
+    public void supp$removePlayer(UUID id, CallbackInfo ci) {
         Screen screen = this.minecraft.screen;
         if (screen instanceof PresentScreen gui) {
             gui.onRemovePlayer(id);

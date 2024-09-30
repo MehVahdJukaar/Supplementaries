@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PartDefinitionMixin {
 
     @Inject(method = "bake", at = @At("RETURN"))
-    private void onBakeRoot(int texWidth, int texHeight, CallbackInfoReturnable<ModelPart> cir) {
+    private void supp$onBakeRoot(int texWidth, int texHeight, CallbackInfoReturnable<ModelPart> cir) {
         ModelPart returnValue = cir.getReturnValue();
         ((IModelPartExtension) (Object) returnValue).supp$setDimensions(texWidth, texHeight);
         //System.out.println("Baked root");

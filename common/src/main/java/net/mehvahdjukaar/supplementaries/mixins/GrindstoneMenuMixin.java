@@ -33,7 +33,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
 
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
-    private void updateGoldenAppleResult(CallbackInfo ci) {
+    private void supp$updateGoldenAppleResult(CallbackInfo ci) {
         ItemStack stack1 = this.repairSlots.getItem(0);
         ItemStack stack2 = this.repairSlots.getItem(1);
 

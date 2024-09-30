@@ -25,7 +25,7 @@ public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
     private boolean supplementaries$doormat = false;
 
     @Inject(method = "isValidTarget", at = @At("HEAD"), cancellable = true)
-    protected void shouldMoveTo(LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
+    protected void supp$shouldMoveToCarpet(LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {
         Block block = worldIn.getBlockState(pos).getBlock();
         this.supplementaries$doormat = block instanceof DoormatBlock;
         if (block instanceof PlanterBlock || this.supplementaries$doormat) {

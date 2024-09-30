@@ -197,6 +197,7 @@ public class ClientEvents {
 
 
     public static void onExplosion(Explosion explosion) {
+        //for sound
         //  if(ClientConfigs.Tweaks.EXPLOSION_SHAKE.get()) {
 //
         //      }

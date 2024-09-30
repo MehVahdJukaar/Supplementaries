@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class InkSackMixin {
 
     @Inject(method = "tryApplyToSign", at = @At("HEAD"), cancellable = true)
-    public void supplementaries$clearAntiqueInk(Level level, SignBlockEntity signBlockEntity,
+    public void supp$clearAntiqueInk(Level level, SignBlockEntity signBlockEntity,
                                                 boolean bl, Player player, CallbackInfoReturnable<Boolean> cir){
         if(AntiqueInkItem.toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, false)){
             cir.setReturnValue(true);

@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -61,7 +62,7 @@ public class DispenserMinecartItem extends Item {
             }
 
             AbstractMinecart abstractminecart = new DispenserMinecartEntity(level, d0, d1 + d3, d2);
-            if (pStack.hasCustomHoverName()) {
+            if (pStack.has(DataComponents.CUSTOM_NAME)) { //TODO: check if its needed
                 abstractminecart.setCustomName(pStack.getHoverName());
             }
 

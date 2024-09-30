@@ -24,7 +24,7 @@ public abstract class LoomMenuMixin extends AbstractContainerMenu {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;",
                     ordinal = 0))
-    public Item getItem(ItemStack instance, Operation<Item> original) {
+    public Item supp$flagStuff(ItemStack instance, Operation<Item> original) {
         if (instance.getItem() instanceof FlagItem fi) {
             return BannerBlock.byColor(fi.getColor()).asItem();
         }
