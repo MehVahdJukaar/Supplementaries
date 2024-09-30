@@ -45,7 +45,6 @@ public class ModSetup {
             CompatHandler::setup,
             FlowerPotHandler::setup,
             ModSetup::registerCompostables,
-            ModSetup::registerMobFoods,
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
@@ -93,12 +92,6 @@ public class ModSetup {
     private static void registerFabricFlammable() {
         RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(), 60, 100);
         RegHelper.registerBlockFlammability(ModRegistry.BUNTING_BLOCK.get(), 60, 100);
-    }
-
-    private static void registerMobFoods() {
-        RegHelper.registerChickenFood(ModRegistry.FLAX_SEEDS_ITEM.get());
-        RegHelper.registerHorseFood(ModRegistry.FLAX_BLOCK.get(), ModRegistry.SUGAR_CUBE.get(), ModRegistry.FLAX_ITEM.get());
-        RegHelper.registerParrotFood(ModRegistry.FLAX_SEEDS_ITEM.get());
     }
 
     private static void registerFrameBlocks() {

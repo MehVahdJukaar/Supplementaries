@@ -33,12 +33,6 @@ public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, 
         return new ClientBoundExplosionPacket(ExplosionType.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
     }
 
-    public static ClientBoundExplosionPacket gunpowder(GunpowderExplosion expl) {
-        Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(ExplosionType.GUNPOWDER, pos, expl.radius, expl.getToBlow(), null, -1);
-    }
-
-
     static ClientBoundExplosionPacket fromBuffer(RegistryFriendlyByteBuf buffer) {
         double x = buffer.readDouble();
         double y = buffer.readDouble();
@@ -104,7 +98,6 @@ public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, 
 
     public enum ExplosionType {
         BOMB,
-        CANNONBALL,
-        GUNPOWDER
+        CANNONBALL
     }
 }

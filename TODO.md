@@ -82,6 +82,8 @@
 - rename way signs
 - remaining fire ticks/ignite for seconds
 - rope arrow disp stats
+- check gunpowder explosion stuff
+- bellows keeping fire in front when created by gunpowder
 
 # Supplementaries
 

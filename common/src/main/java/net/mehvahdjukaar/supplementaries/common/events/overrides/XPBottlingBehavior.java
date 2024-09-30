@@ -37,7 +37,6 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
     public InteractionResult tryPerformingAction(Level world, Player player, InteractionHand hand,
                                                  ItemStack stack, BlockHitResult hit) {
 
-        JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
 
         BlockPos pos = hit.getBlockPos();
         Item i = stack.getItem();
@@ -53,6 +52,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                 if (i == Items.GLASS_BOTTLE) {
                     returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                 } else if (i instanceof JarItem) {
+                    JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                     dummyTile.clearAllContents();
                     BlockUtil.loadTileFromItem(dummyTile, stack);
 

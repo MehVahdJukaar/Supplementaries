@@ -112,7 +112,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (tag.contains("break_whitelist")) {
             return CannonballWhitelist.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE),
                             tag.get("break_whitelist")).result()
-                    .map(CannonballWhitelist::getBlocks).orElse(Set.of());
+                    .map(CannonballWhitelist::blocks).orElse(Set.of());
         }
         return null;
     }

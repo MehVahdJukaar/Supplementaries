@@ -1,24 +1,27 @@
 package net.mehvahdjukaar.supplementaries.common.misc.explosion;
 
-import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.TrinketsCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -27,8 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -43,13 +44,20 @@ import java.util.ArrayList;
  */
 public class GunpowderExplosion extends Explosion {
 
-    private float radius2;
+    private static final Holder<SoundEvent> EMPTY_SOUND = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.EMPTY);
 
-    public GunpowderExplosion(Level world, Entity entity, double x, double y, double z, float size) {
-        super(world, entity, null, null, x, y, z, size, false,
-                BlockInteraction.DESTROY,  null, null, null);
-        //TODO: fix
-        this.radius2 = size;
+    //same as Level.explode
+    public static void explode(Level world, BlockPos pos) {
+        GunpowderExplosion explosion = new GunpowderExplosion(world, pos.getX(), pos.getY(), pos.getZ());
+        if (ForgeHelper.onExplosionStart(world, explosion)) return;
+        explosion.explode();
+        explosion.finalizeExplosion(false);
+    }
+
+    public GunpowderExplosion(Level world, double x, double y, double z) {
+        super(world, null, null, null,
+                x, y, z, 0.5f, false,
+                BlockInteraction.DESTROY, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, EMPTY_SOUND);
     }
 
     /**
@@ -62,41 +70,39 @@ public class GunpowderExplosion extends Explosion {
         int py = Mth.floor(this.y);
         int pz = Mth.floor(this.z);
 
-        this.radius2 *= 2.0F;
         //is this needed?
-        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius2);
+        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius * 2f);
 
-        explodeBlock(px + 1, py, pz);
-        explodeBlock(px - 1, py, pz);
-        explodeBlock(px, py + 1, pz);
-        explodeBlock(px, py - 1, pz);
-        explodeBlock(px, py, pz + 1);
-        explodeBlock(px, py, pz - 1);
+        explodeSingleBlock(px + 1, py, pz);
+        explodeSingleBlock(px - 1, py, pz);
+        explodeSingleBlock(px, py + 1, pz);
+        explodeSingleBlock(px, py - 1, pz);
+        explodeSingleBlock(px, py, pz + 1);
+        explodeSingleBlock(px, py, pz - 1);
         //explode ones above for gunpowder climb
-        explodeBlock(px, py + 1, pz + 1);
-        explodeBlock(px, py + 1, pz - 1);
-        explodeBlock(px + 1, py + 1, pz);
-        explodeBlock(px - 1, py + 1, pz);
+        explodeSingleBlock(px, py + 1, pz + 1);
+        explodeSingleBlock(px, py + 1, pz - 1);
+        explodeSingleBlock(px + 1, py + 1, pz);
+        explodeSingleBlock(px - 1, py + 1, pz);
 
 
-        BlockPos pos = new BlockPos(px, py, pz);
-        BlockState newFire = BaseFireBlock.getState(this.level, pos);
-        BlockState s = level.getBlockState(pos);
-        if (s.canBeReplaced() || s.is(ModRegistry.GUNPOWDER_BLOCK.get())) { //TODO: change this reg value
-            if (this.hasFlammableNeighbours(pos) || PlatHelper.isFireSource(this.level.getBlockState(pos.below()), level, pos, Direction.UP)
+        BlockPos myPos = new BlockPos(px, py, pz);
+        BlockState newFire = BaseFireBlock.getState(this.level, myPos);
+        BlockState s = level.getBlockState(myPos);
+        if (s.canBeReplaced()) { //kills my own gunpowder block
+            if (this.hasFlammableNeighbours(myPos)
                     || newFire.getBlock() != Blocks.FIRE) {
-                this.level.setBlockAndUpdate(pos, newFire);
+                this.level.setBlockAndUpdate(myPos, newFire);
+                //s.onCaughtFire(arg, arg2, Direction.UP, null);
             }
         }
-
     }
 
     private boolean hasFlammableNeighbours(BlockPos pos) {
         for (Direction direction : Direction.values()) {
             BlockState state = this.level.getBlockState(pos.relative(direction));
-            if (state.ignitedByLava()
-                    || (state.getBlock() == ModRegistry.BELLOWS.get() && state.getValue(BellowsBlock.POWER) != 0 &&
-                    state.getValue(BellowsBlock.FACING) == direction.getOpposite())) {
+            if ((PlatHelper.isFireSource(state, level, pos, direction.getOpposite()) ||
+                    PlatHelper.isFlammable(state, level, pos, direction.getOpposite()))) {
                 return true;
             }
         }
@@ -104,7 +110,7 @@ public class GunpowderExplosion extends Explosion {
     }
 
 
-    private void explodeBlock(int i, int j, int k) {
+    private void explodeSingleBlock(int i, int j, int k) {
         BlockPos pos = new BlockPos(i, j, k);
         FluidState fluidstate = this.level.getFluidState(pos);
         if (fluidstate.getType() == Fluids.EMPTY || fluidstate.getType() == ModFluids.LUMISENE_FLUID.get()) {
@@ -140,52 +146,6 @@ public class GunpowderExplosion extends Explosion {
         }
         return false;
     }
-
-    @Override
-    public ObjectArrayList<BlockPos> getToBlow() {
-        return (ObjectArrayList<BlockPos>) super.getToBlow();
-    }
-
-    //needed cause toBlow is private
-    @Override
-    public void finalizeExplosion(boolean spawnFire) {
-
-        ObjectArrayList<Pair<ItemStack, BlockPos>> drops = new ObjectArrayList<>();
-        Util.shuffle(this.getToBlow(), this.level.random);
-
-        for (BlockPos blockpos : this.getToBlow()) {
-            BlockState blockstate = this.level.getBlockState(blockpos);
-
-            BlockPos immutable = blockpos.immutable();
-            this.level.getProfiler().push("explosion_blocks");
-            if (ForgeHelper.canDropFromExplosion(blockstate, this.level, blockpos, this) && this.level instanceof ServerLevel serverLevel) {
-                BlockEntity blockEntity = blockstate.hasBlockEntity() ? this.level.getBlockEntity(blockpos) : null;
-                LootParams.Builder builder = (new LootParams.Builder(serverLevel))
-                        .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockpos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
-                        .withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, null);
-
-                builder.withParameter(LootContextParams.EXPLOSION_RADIUS, this.radius2);
-
-                blockstate.getDrops(builder).forEach((d) -> addBlockDrops(drops, d, immutable));
-            }
-
-            ForgeHelper.onBlockExploded(blockstate, this.level, blockpos, this);
-            this.level.getProfiler().pop();
-
-        }
-
-        for (Pair<ItemStack, BlockPos> pair : drops) {
-            Block.popResource(this.level, pair.getSecond(), pair.getFirst());
-        }
-
-        if (spawnFire) {
-            BlockPos pos = BlockPos.containing(this.x, this.y, this.z);
-            if (this.level.getBlockState(pos).isAir() && this.level.getBlockState(pos.below()).isSolidRender(this.level, pos.below())) {
-                this.level.setBlockAndUpdate(pos, BaseFireBlock.getState(this.level, pos));
-            }
-        }
-    }
-
 
     // specifically for alex caves nukes basically
     public static void igniteTntHack(Level level, BlockPos blockpos, BlockState tnt) {

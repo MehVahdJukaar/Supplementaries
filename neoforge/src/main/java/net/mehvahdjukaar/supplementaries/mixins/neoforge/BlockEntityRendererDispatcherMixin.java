@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.neoforge.PlatHelperImpl;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.minecraft.client.Minecraft;

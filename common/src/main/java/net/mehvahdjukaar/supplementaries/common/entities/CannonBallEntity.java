@@ -6,10 +6,9 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
@@ -176,7 +175,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
-            Set<Block> whitelist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
+            Set<Block> whitelist = this.getItem().getOrDefault(ModComponents.CANNONBALL_WHITELIST.get(),
+                    CannonballWhitelist.EMPTY).blocks();
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
                     loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
             exp.explode();

@@ -171,7 +171,7 @@ public class PearlMarker extends Entity {
                         if (level.setBlockAndUpdate(fromPos, Blocks.AIR.defaultBlockState()) &&
                                 level.setBlockAndUpdate(toPos, newState)) {
                             // gets rid of triggered state of dispenser
-                            newState.neighborChanged(level, toPos, level.getBlockState(toPos.below()).getBlock(), toPos.below(), true);
+                            newState.handleNeighborChanged(level, toPos, level.getBlockState(toPos.below()).getBlock(), toPos.below(), true);
 
                             BlockEntity dstEntity = level.getBlockEntity(toPos);
                             if (isValidBlockEntity(dstEntity)) {

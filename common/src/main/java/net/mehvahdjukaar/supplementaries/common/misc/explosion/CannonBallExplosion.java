@@ -50,7 +50,7 @@ public class CannonBallExplosion extends Explosion {
     //client factory
     public CannonBallExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
                                float radius, List<BlockPos> toBlow) {
-        super(level, source, toBlowX, toBlowY, toBlowZ, radius, toBlow);
+        super(level, source, toBlowX, toBlowY, toBlowZ, radius, false, BlockInteraction.DESTROY, toBlow);
         this.centerPos = BlockPos.containing(new Vec3(toBlowX, toBlowY, toBlowZ));
         this.maxExplodedAmount = 0;
         this.whitelist = null;

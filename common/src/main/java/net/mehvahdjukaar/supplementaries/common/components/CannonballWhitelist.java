@@ -13,6 +13,8 @@ import java.util.Set;
 
 public record CannonballWhitelist(Set<Block> blocks) {
 
+    public static final CannonballWhitelist EMPTY = new CannonballWhitelist(Set.of());
+
     public CannonballWhitelist(Set<Block> blocks) {
         this.blocks = Set.copyOf(blocks);
     }
@@ -28,7 +30,7 @@ public record CannonballWhitelist(Set<Block> blocks) {
         return this.blocks.contains(block);
     }
 
-    public Set<Block> getBlocks() {
+    public Set<Block> blocks() {
         return Set.copyOf(this.blocks);
     }
 

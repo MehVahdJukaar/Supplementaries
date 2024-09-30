@@ -432,10 +432,6 @@ public class ClientReceivers {
                         le.setDeltaMovement(knockback);
                     }
                 }
-                case GUNPOWDER -> {
-                    Explosion explosion = new GunpowderExplosion(l, null, pos.x, pos.y, pos.z, power);
-                    explosion.finalizeExplosion(true);
-                }
             }
         });
     }

@@ -399,7 +399,7 @@ public class GunpowderBlock extends LightUpBlock {
 
             if (burning == 8) {
                 world.removeBlock(pos, false);
-                createMiniExplosion(world, pos, false);
+                GunpowderExplosion.explode(world, pos);
             } else if (burning > 0) {
                 if (burning >= getSpreadAge()) {
                     this.lightUpNeighbouringWires(pos, state, world);
@@ -421,12 +421,9 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-
+@Deprecated(forRemoval = true)
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
-        if (ForgeHelper.onExplosionStart(world, explosion)) return;
-        explosion.explode();
-        explosion.finalizeExplosion(alwaysFire);
+        GunpowderExplosion.explode(world, pos);
     }
 
     @Override
