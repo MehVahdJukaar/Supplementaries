@@ -48,8 +48,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
 
-    public boolean handleAction(Player player, InteractionHand handIn) {
-        ItemStack stack = player.getItemInHand(handIn);
+    public boolean handleAction(Player player, ItemStack stack) {
         Item item = stack.getItem();
 
         //clear ownership with tripwire

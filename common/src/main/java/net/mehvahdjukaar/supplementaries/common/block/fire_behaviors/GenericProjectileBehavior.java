@@ -96,6 +96,9 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.getItem() instanceof ArrowItem ai) {
             return ai.createArrow(testLevel, projectile, fakePlayer);
         }
+        else if (projectile.getItem() instanceof ProjectileItem ti) {
+            return ti.asProjectile(testLevel, fakePlayer, projectile);
+        }
         //create from item
 
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());

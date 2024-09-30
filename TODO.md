@@ -60,6 +60,7 @@
 - bamboo spike drop and pick block
 - redo all loot tables for containers and copy nbt stuff
 - fix the may build stuff
+- waxable and glowable stuff
 
 # Soon
 
@@ -79,6 +80,8 @@
 - spring launcher super buggy
 - make no grabity ench work on bows
 - rename way signs
+- remaining fire ticks/ignite for seconds
+- rope arrow disp stats
 
 # Supplementaries
 

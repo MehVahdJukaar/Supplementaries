@@ -100,7 +100,7 @@ public class ModRegistry {
             BombEntity.BombType.SPIKY, false));
 
     //rope arrow
-    public static final Supplier<Item> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
+    public static final Supplier<RopeArrowItem> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get(),
             new Item.Properties()
                     .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));

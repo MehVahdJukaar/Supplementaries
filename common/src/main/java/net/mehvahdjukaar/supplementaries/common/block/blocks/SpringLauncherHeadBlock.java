@@ -212,7 +212,7 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if (state.canSurvive(worldIn, pos)) {
             BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
-            worldIn.getBlockState(blockpos).neighborChanged(worldIn, blockpos, blockIn, fromPos, false);
+            worldIn.getBlockState(blockpos).handleNeighborChanged(worldIn, blockpos, blockIn, fromPos, false);
         }
     }
 

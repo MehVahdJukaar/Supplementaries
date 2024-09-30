@@ -38,7 +38,7 @@ public record ServerBoundSyncCannonPacket(
     public void handle(Context context) {
 
         // server world
-        if(context.getSender() instanceof ServerPlayer player) {
+        if(context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
 
             if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {

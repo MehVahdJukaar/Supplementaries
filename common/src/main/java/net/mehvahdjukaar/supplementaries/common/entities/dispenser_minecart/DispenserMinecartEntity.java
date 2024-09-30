@@ -282,7 +282,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         Projectile projectile = ap.invokeGetProjectile(level, position, stack);
 
 
-        Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+        Direction direction = source.state().getValue(DispenserBlock.FACING);
         projectile.shoot(direction.getStepX(), ((float) direction.getStepY() + 0.1F), direction.getStepZ(),
                 ap.invokeGetPower(), ap.invokeGetUncertainty());
 

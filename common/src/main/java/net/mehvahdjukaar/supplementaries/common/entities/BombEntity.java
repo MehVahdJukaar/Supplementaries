@@ -341,7 +341,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             switch (this) {
                 case BLUE -> {
                     entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 30));
-                    entity.setSecondsOnFire(10);
+                    entity.igniteForSeconds(10);
                 }
                 case SPIKY -> {
                     //we are using the explosion method since it has a bigger radius
@@ -401,8 +401,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                         if (entity instanceof LivingEntity livingEntity) {
                             livingEntity.hurt(level.damageSources().magic(), 2);
                             livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (260 * 0.5f)));
-                            var effect = CompatObjects.STUNNED_EFFECT.get();
-                            if (effect != null) {
+                            var effect = CompatObjects.STUNNED_EFFECT;
+                            if (effect.isPresent()) {
                                 livingEntity.addEffect(new MobEffectInstance(effect, (int) (40 * 20 * 0.5f)));
                             }
                         }
