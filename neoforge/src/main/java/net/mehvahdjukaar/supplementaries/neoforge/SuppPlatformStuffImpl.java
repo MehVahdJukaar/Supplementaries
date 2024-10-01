@@ -4,10 +4,12 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -86,10 +88,15 @@ public class SuppPlatformStuffImpl {
 
     public static boolean isEndermanMask(@NotNull EnderMan enderMan, Player player, ItemStack itemstack) {
         try {
-            return itemstack.isEnderMask(player, enderMan);
-        } catch (Exception e) {
-            return false;
+            if (itemstack.isEnderMask(player, enderMan)) return true;
+
+            if (CompatObjects.END_VEIL.isPresent()) {
+                var ench = itemstack.get(DataComponents.ENCHANTMENTS);
+                return ench != null && ench.getLevel(CompatObjects.END_VEIL) > 0;
+            }
+        } catch (Exception ignored) {
         }
+        return false;
     }
 
     public static int getItemLifeSpawn(ItemEntity itemEntity) {

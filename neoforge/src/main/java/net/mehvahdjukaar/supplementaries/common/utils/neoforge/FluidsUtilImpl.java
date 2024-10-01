@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.forge.SoftFluidStackImpl;
+import net.mehvahdjukaar.moonlight.api.fluids.neoforge.SoftFluidStackImpl;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.minecraft.core.BlockPos;
@@ -9,16 +9,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 @SuppressWarnings("ConstantConditions")
 public class FluidsUtilImpl {
 
     public static boolean extractFluidFromTank(BlockEntity tileBack, Direction dir, int amount) {
-        IFluidHandler handlerBack = tileBack.getCapability(ForgeCapabilities.FLUID_HANDLER, dir).orElse(null);
+        IFluidHandler handlerBack = tileBack.getCapability(Capabilities.FluidHandler.BLOCK, dir).orElse(null);
         if (handlerBack != null) {
             //only works in 250 increment
             if (handlerBack.drain(250 * amount, IFluidHandler.FluidAction.SIMULATE).getAmount() != 250 * amount)

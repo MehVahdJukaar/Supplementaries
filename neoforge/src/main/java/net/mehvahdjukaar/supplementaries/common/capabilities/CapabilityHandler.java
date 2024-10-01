@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
-import net.mehvahdjukaar.supplementaries.common.items.neoforge.QuiverItemImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;

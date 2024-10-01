@@ -175,3 +175,11 @@ dependencies {
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
 
 }
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
+    it.options.compilerArgs << "-Xmaxerrs" << "4000"
+
+}

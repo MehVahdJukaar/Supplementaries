@@ -62,22 +62,21 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onClientEndTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            ClientEvents.onClientTick(Minecraft.getInstance());
-        }
+    public static void onClientEndTick(ClientTickEvent.Post event) {
+        ClientEvents.onClientTick(Minecraft.getInstance());
     }
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (Minecraft.getInstance().screen == null &&
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen == null &&
                 ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
-                && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
+                && mc.player instanceof IQuiverPlayer qe) {
             int a = event.getAction();
             if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
             } else if (a == InputConstants.RELEASE) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY);
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY, mc.player);
             }
         }
 

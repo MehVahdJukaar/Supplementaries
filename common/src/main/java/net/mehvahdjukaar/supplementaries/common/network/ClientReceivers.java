@@ -17,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -410,21 +409,13 @@ public class ClientReceivers {
         }
     }
 
-    public static void handleExplosionPacket(ClientBoundExplosionPacket packet) {
+    public static void handleExplosionPacket(ClientBoundCannonballExplosionPacket packet) {
         withLevelDo(l -> {
             Vec3 pos = packet.pos();
             float power = packet.power();
             List<BlockPos> toBlow = packet.toBlow();
             Vec3 knockback = packet.knockback();
             switch (packet.explosionType()) {
-                case BOMB -> {
-                    Explosion explosion = new BombExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow,
-                            BombEntity.BombType.values()[packet.getId()]);
-                    explosion.finalizeExplosion(true);
-                    if (knockback != null) {
-                        withPlayerDo(p -> p.setDeltaMovement(p.getDeltaMovement().add(knockback.x, knockback.y, knockback.z)));
-                    }
-                }
                 case CANNONBALL -> {
                     Explosion explosion = new CannonBallExplosion(l, null, pos.x, pos.y, pos.z, power, toBlow);
                     explosion.finalizeExplosion(true);

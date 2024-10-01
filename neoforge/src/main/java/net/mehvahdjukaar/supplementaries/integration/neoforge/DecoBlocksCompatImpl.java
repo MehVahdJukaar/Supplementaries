@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.util.Lazy;
 
 import java.util.List;
 import java.util.function.Supplier;

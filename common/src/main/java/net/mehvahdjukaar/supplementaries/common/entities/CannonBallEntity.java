@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonballExplosionPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
@@ -192,7 +192,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                     Supplementaries.error();
                 }
                 this.setDeltaMovement(movement.scale(factor));
-                Message message = ClientBoundExplosionPacket.cannonball(exp, this);
+                Message message = ClientBoundCannonballExplosionPacket.cannonball(exp, this);
 
                 NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) this.level(), pos, message);
             }

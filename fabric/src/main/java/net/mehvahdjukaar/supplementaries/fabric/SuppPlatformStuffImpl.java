@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigSpec;
+import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigHolder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -26,7 +26,6 @@ import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -54,9 +53,12 @@ public class SuppPlatformStuffImpl {
     }
 
     public static boolean isEndermanMask(EnderMan enderman, Player player, ItemStack itemstack) {
-        return itemstack.getItem() == Blocks.CARVED_PUMPKIN.asItem() ||
-                EnchantmentHelper.getEnchantments(itemstack)
-                        .containsKey(CompatObjects.END_VEIL.get());
+        if (itemstack.is(Items.CARVED_PUMPKIN)) return true;
+        if (CompatObjects.END_VEIL.isPresent()) {
+            var ench = itemstack.get(DataComponents.ENCHANTMENTS);
+            return ench != null && ench.getLevel(CompatObjects.END_VEIL) > 0;
+        }
+        return false;
     }
 
     public static int getItemLifeSpawn(ItemEntity itemEntity) {
@@ -76,12 +78,12 @@ public class SuppPlatformStuffImpl {
 
     public static void disableAMWarn() {
         ((BoolConfigValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
-        ((FabricConfigSpec) ClientConfigs.CONFIG_HOLDER).saveConfig();
+        ((FabricConfigHolder) ClientConfigs.CONFIG_HOLDER).saveConfig();
     }
 
     public static void disableOFWarn(boolean on) {
         ((BoolConfigValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
-        ((FabricConfigSpec) ClientConfigs.CONFIG_HOLDER).saveConfig();
+        ((FabricConfigHolder) ClientConfigs.CONFIG_HOLDER).saveConfig();
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState maybeSticky) {

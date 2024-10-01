@@ -66,6 +66,11 @@
 - canon camera and selectable container movemnet
 - dispenser behavior sounds
 - dispenser minecart projectiles moving angle
+- bells an doors triggered by bombs
+- spiky bomb stuff
+- gunpowder explosion
+- bomb explosion
+- cannonball explosion
 
 # Soon
 

@@ -4,11 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -21,7 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -256,7 +253,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     // same as can connect but just applies to blocks over and up from it
-    protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir){
+    protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
         return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
                 b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
@@ -421,9 +418,9 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-@Deprecated(forRemoval = true)
+    @Deprecated(forRemoval = true)
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        GunpowderExplosion.explode(world, pos);
+        GunpowderExplosion.explode((ServerLevel) world, pos);
     }
 
     @Override
@@ -485,7 +482,7 @@ public class GunpowderBlock extends LightUpBlock {
         if (state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) && state.hasProperty(BlockStateProperties.LIT)) {
             return state.getValue(BlockStateProperties.LIT);
         }
-        if(state.is(ModTags.LIGHTS_GUNPOWDER)){
+        if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
             return !(state.getBlock() instanceof ILightable l) || l.isLitUp(state, level, pos);
         }
         return false;
@@ -574,9 +571,9 @@ public class GunpowderBlock extends LightUpBlock {
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {
             float f2 = from + f * rand.nextFloat();
-            double x = pos.getX() + 0.5D +  (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
-            double y = pos.getY() + 0.5D +  (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
-            double z = pos.getZ() + 0.5D +  (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
+            double x = pos.getX() + 0.5D + (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
+            double y = pos.getY() + 0.5D + (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
+            double z = pos.getZ() + 0.5D + (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
 
             float velY = (burning / 15.0F) * 0.03F;
             float velX = rand.nextFloat() * 0.02f - 0.01f;

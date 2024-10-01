@@ -15,6 +15,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundExplodePacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -46,18 +49,43 @@ public class GunpowderExplosion extends Explosion {
 
     private static final Holder<SoundEvent> EMPTY_SOUND = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.EMPTY);
 
-    //same as Level.explode
-    public static void explode(Level world, BlockPos pos) {
-        GunpowderExplosion explosion = new GunpowderExplosion(world, pos.getX(), pos.getY(), pos.getZ());
+    //same as Level.explode but with custom subclass. client one just gets the normal one
+    public static void explode(ServerLevel world, BlockPos pos) {
+        //TODO: maybe this could be done just with a custom block interaction
+        Vec3 center = Vec3.atCenterOf(pos);
+        GunpowderExplosion explosion = new GunpowderExplosion(world, center.x, center.y, center.z);
         if (ForgeHelper.onExplosionStart(world, explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(false);
+
+        //same as server level explode
+        if (!explosion.interactsWithBlocks()) {
+            explosion.clearToBlow();
+        }
+
+        for(ServerPlayer serverPlayer : world.players()) {
+            if (serverPlayer.distanceToSqr(center) < 4096.0) {
+                serverPlayer.connection
+                        .send(
+                                new ClientboundExplodePacket(
+                                        center.x, center.y, center.z,
+                                        explosion.radius(),
+                                        explosion.getToBlow(),
+                                        explosion.getHitPlayers().get(serverPlayer),
+                                        explosion.getBlockInteraction(),
+                                        explosion.getSmallExplosionParticles(),
+                                        explosion.getLargeExplosionParticles(),
+                                        explosion.getExplosionSound()
+                                )
+                        );
+            }
+        }
     }
 
     public GunpowderExplosion(Level world, double x, double y, double z) {
         super(world, null, null, null,
                 x, y, z, 0.5f, false,
-                BlockInteraction.DESTROY, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, EMPTY_SOUND);
+                BlockInteraction.DESTROY, ParticleTypes.ASH, ParticleTypes.ASH, EMPTY_SOUND);
     }
 
     /**
@@ -147,6 +175,7 @@ public class GunpowderExplosion extends Explosion {
         return false;
     }
 
+    //TODO: remove
     // specifically for alex caves nukes basically
     public static void igniteTntHack(Level level, BlockPos blockpos, BlockState tnt) {
         Arrow dummyArrow = new Arrow(level, blockpos.getX() + 0.5, blockpos.getY() + 0.5,

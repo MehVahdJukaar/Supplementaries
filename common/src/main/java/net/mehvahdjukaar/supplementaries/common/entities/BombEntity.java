@@ -4,19 +4,12 @@ import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.network.Message;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.core.fake_player.FakeGenericPlayer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -30,7 +23,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerEntity;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -42,21 +35,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SlimeBlock;
-import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.function.Supplier;
 
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
 
@@ -294,24 +278,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         if (this.superCharged) {
             //second explosion when supercharged
             //TODO: check explosion mode
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 6f, breaks, this.getOwner() instanceof Player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 6f,
+                    breaks, this.getOwner() instanceof Player ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.MOB);
         }
-
-        BombExplosion explosion = new BombExplosion(this.level(), this,
-                this.getX(), this.getY() + 0.25, this.getZ(),
-                this.type, breaks ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP);
-
-        explosion.explode();
-        explosion.finalizeExplosion(true);
-
-        for (var p : level().players()) {
-            if (p.distanceToSqr(this) < 64 * 64 && p instanceof ServerPlayer sp) {
-                Message message = ClientBoundExplosionPacket.bomb(explosion, p);
-
-                NetworkHelper.sendToClientPlayer(sp, message);
-            }
+        if (level() instanceof ServerLevel sl) {
+            BombExplosion.createExplosion(this, sl,
+                    this.getX(), this.getY() + 0.25, this.getZ(), this.type, breaks);
         }
-
     }
 
     public enum BreakingMode {
@@ -380,6 +353,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         //TODO: add back
+        /*
         public void afterExploded(BombExplosion exp, Level level) {
             if (this == SPIKY) {
                 Vec3 pos = exp.getDamageSource().getSourcePosition();
@@ -411,6 +385,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 }
             }
         }
+         */
     }
 
 

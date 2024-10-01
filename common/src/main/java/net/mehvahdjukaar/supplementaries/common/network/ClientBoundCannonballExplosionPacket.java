@@ -3,37 +3,29 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, float power, List<BlockPos> toBlow,
-                                         @Nullable Vec3 knockback, int getId) implements Message {
+public record ClientBoundCannonballExplosionPacket(ExplosionType explosionType, Vec3 pos, float power, List<BlockPos> toBlow,
+                                                   @Nullable Vec3 knockback, int getId) implements Message {
 
-    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundExplosionPacket> CODEC = Message.makeType(
-            Supplementaries.res("s2c_explosion"), ClientBoundExplosionPacket::fromBuffer);
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundCannonballExplosionPacket> CODEC = Message.makeType(
+            Supplementaries.res("s2c_cannonball"), ClientBoundCannonballExplosionPacket::fromBuffer);
 
-    public static ClientBoundExplosionPacket bomb(BombExplosion expl, @Nullable Player player) {
+
+    public static ClientBoundCannonballExplosionPacket cannonball(CannonBallExplosion expl, CannonBallEntity source) {
         Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(ExplosionType.BOMB, pos, expl.radius, expl.getToBlow(),
-                expl.getHitPlayers().get(player), expl.bombType().ordinal());
+        return new ClientBoundCannonballExplosionPacket(ExplosionType.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
     }
 
-    public static ClientBoundExplosionPacket cannonball(CannonBallExplosion expl, CannonBallEntity source) {
-        Vec3 pos = new Vec3(expl.x, expl.y, expl.z);
-        return new ClientBoundExplosionPacket(ExplosionType.CANNONBALL, pos, expl.radius, expl.getToBlow(), source.getDeltaMovement(), source.getId());
-    }
-
-    static ClientBoundExplosionPacket fromBuffer(RegistryFriendlyByteBuf buffer) {
+    static ClientBoundCannonballExplosionPacket fromBuffer(RegistryFriendlyByteBuf buffer) {
         double x = buffer.readDouble();
         double y = buffer.readDouble();
         double z = buffer.readDouble();
@@ -56,7 +48,7 @@ public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, 
         }
         ExplosionType type = buffer.readEnum(ExplosionType.class);
         int id = buffer.readVarInt();
-        return new ClientBoundExplosionPacket(type, new Vec3(x, y, z), power, toBlow, knockback, id);
+        return new ClientBoundCannonballExplosionPacket(type, new Vec3(x, y, z), power, toBlow, knockback, id);
     }
 
     @Override
@@ -97,7 +89,6 @@ public record ClientBoundExplosionPacket(ExplosionType explosionType, Vec3 pos, 
     }
 
     public enum ExplosionType {
-        BOMB,
         CANNONBALL
     }
 }

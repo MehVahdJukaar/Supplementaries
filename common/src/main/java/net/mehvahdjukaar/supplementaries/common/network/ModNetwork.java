@@ -25,7 +25,7 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundOpenConfigsPacket.CODEC);
         event.registerClientBound(ClientBoundSyncAmbientLightPacket.CODEC);
         event.registerClientBound(ClientBoundFluteParrotsPacket.CODEC);
-        event.registerClientBound(ClientBoundExplosionPacket.CODEC);
+        event.registerClientBound(ClientBoundCannonballExplosionPacket.CODEC);
         event.registerClientBound(ClientBoundSyncSlimedMessage.CODEC);
         event.registerClientBound(ClientBoundControlCannonPacket.CODEC);
 
