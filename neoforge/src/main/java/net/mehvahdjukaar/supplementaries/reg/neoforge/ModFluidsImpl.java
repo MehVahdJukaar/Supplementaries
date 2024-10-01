@@ -27,6 +27,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -78,7 +79,7 @@ public class ModFluidsImpl {
 
     public static Supplier<FluidType> registerFluidType(String name, Supplier<FluidType> fluidSupplier) {
         return RegHelper.register(Supplementaries.res(name), fluidSupplier,
-                ForgeRegistries.Keys.FLUID_TYPES);
+                NeoForgeRegistries.Keys.FLUID_TYPES);
     }
 
 

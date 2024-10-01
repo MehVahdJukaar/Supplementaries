@@ -72,7 +72,7 @@ public interface IKeyLockable {
         return null;
     }
 
-    default boolean testIfHasCorrectKey(Player player, String lockPassword, boolean feedbackMessage, @Nullable String translName) {
+    static boolean testIfHasCorrectKey(Player player, String lockPassword, boolean feedbackMessage, @Nullable String translName) {
         KeyStatus key = ItemsUtil.hasKeyInInventory(player, lockPassword);
         if (key == KeyStatus.INCORRECT_KEY) {
             if (feedbackMessage)
@@ -83,7 +83,6 @@ public interface IKeyLockable {
             player.displayClientMessage(Component.translatable("message.supplementaries." + translName + ".locked"), true);
         return false;
     }
-
 
 
     enum KeyStatus {

@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -10,9 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.capabilities.*;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
@@ -21,9 +21,11 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class CapabilityHandler {
+
 
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
             .create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Supplementaries.MOD_ID);
@@ -36,6 +38,7 @@ public class CapabilityHandler {
         ATTACHMENT_TYPES.register(bus);
         NeoForge.EVENT_BUS.addListener(CapabilityHandler::register);
     }
+
 
     public static final class AntiquableAttachment implements IAntiquable {
         public static final Codec<AntiquableAttachment> CODEC = Codec.BOOL.xmap(AntiquableAttachment::new, a -> a.on);
@@ -55,7 +58,7 @@ public class CapabilityHandler {
             this.on = hasInk;
         }
 
-        private static AntiquableAttachment get(BlockEntity signBlockEntity, @Nullable Direction direction) {
+        private static AntiquableAttachment get(BlockEntity signBlockEntity, Void direction) {
             return signBlockEntity.getData(ANTIQUABLE_ATTACHMENT);
         }
     }
@@ -73,9 +76,24 @@ public class CapabilityHandler {
     public static final Capability<IQuiverEntity> QUIVER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {
     });*/
 
-    public static final BlockCapability<IAntiquable, @Nullable Direction> ANTIQUE_TEXT_CAP = BlockCapability
-            .create(Supplementaries.res("antique_ink"), IAntiquable.class, Direction.class);
+    public static final BlockCapability<IAntiquable, Void> ANTIQUE_TEXT_CAP = BlockCapability
+            .createVoid(Supplementaries.res("antique_ink"), IAntiquable.class);
 
+    public static final BlockCapability<IWashable, @Nullable Direction> WASHABLE_CAP = BlockCapability
+            .create(Supplementaries.res("washable"), IWashable.class, Direction.class);
+
+    public static final EntityCapability<ICatchableMob, Void> CATCHABLE_MOB = EntityCapability
+            .createVoid(Supplementaries.res("antique_ink"), ICatchableMob.class);
+
+    private static final Map<Class<?>, BaseCapability<?, ?>> TOKENS = Map.of(
+            IAntiquable.class, ANTIQUE_TEXT_CAP,
+            ICatchableMob.class, CATCHABLE_MOB,
+            IWashable.class, WASHABLE_CAP
+    );
+
+    public static <T> BaseCapability<?, ?> getToken(Class<T> capClass) {
+        return TOKENS.get(capClass);
+    }
 
     public static void register(RegisterCapabilitiesEvent event) {
 

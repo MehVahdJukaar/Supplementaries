@@ -12,8 +12,10 @@ import static com.simibubi.create.infrastructure.ponder.AllPonderTags.DISPLAY_TA
 
 public class CreateCompatImpl {
     public static boolean isContraption(MovementContext context, Entity passenger) {
-        return passenger instanceof AbstractContraptionEntity ace
-                && ace.getContraption() == context.contraption;
+        return false;
+        //TODO: add back
+        //return passenger instanceof AbstractContraptionEntity ace
+          //      && ace.getContraption() == context.contraption;
     }
 
     public static void setupClient() {

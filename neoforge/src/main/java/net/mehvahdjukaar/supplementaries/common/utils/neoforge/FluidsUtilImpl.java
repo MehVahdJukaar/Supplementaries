@@ -18,7 +18,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 public class FluidsUtilImpl {
 
     public static boolean extractFluidFromTank(BlockEntity tileBack, Direction dir, int amount) {
-        IFluidHandler handlerBack = tileBack.getCapability(Capabilities.FluidHandler.BLOCK, dir).orElse(null);
+        IFluidHandler handlerBack = tileBack.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                tileBack.getBlockPos(), tileBack.getBlockState(), tileBack, dir);
         if (handlerBack != null) {
             //only works in 250 increment
             if (handlerBack.drain(250 * amount, IFluidHandler.FluidAction.SIMULATE).getAmount() != 250 * amount)
@@ -30,8 +31,9 @@ public class FluidsUtilImpl {
         return false;
     }
 
-    public static Integer fillFluidTank(BlockEntity tileBelow, FluidOffer offer) {
-        IFluidHandler handlerDown = tileBelow.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).orElse(null);
+    public static Integer fillFluidTank(BlockEntity tileBelow, FluidOffer offer, Direction dir) {
+        IFluidHandler handlerDown = tileBelow.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                tileBelow.getBlockPos(), tileBelow.getBlockState(), tileBelow, dir);
         if (handlerDown != null && offer.fluid() instanceof SoftFluidStackImpl impl) {
             FluidStack stack = impl.toForgeFluid();
             if (!stack.isEmpty()) {
@@ -54,7 +56,7 @@ public class FluidsUtilImpl {
     public static SoftFluidStack getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
         var opt = FluidUtil.getFluidHandler(level, pos, dir);
         if (opt.isPresent()) {
-            FluidStack fluidInTank = opt.resolve().get().drain(1000, IFluidHandler.FluidAction.SIMULATE);
+            FluidStack fluidInTank = opt.get().drain(1000, IFluidHandler.FluidAction.SIMULATE);
             if (!fluidInTank.isEmpty()) {
                 if (!Utils.getID(source.getBlockState().getBlock()).getPath().equals("fluid_interface")) {
                     return SoftFluidStackImpl.fromForgeFluid(fluidInTank);

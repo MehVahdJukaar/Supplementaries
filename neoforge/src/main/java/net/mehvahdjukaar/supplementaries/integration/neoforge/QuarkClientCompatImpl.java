@@ -32,7 +32,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class QuarkClientCompatImpl {
-
+    //TODO:add back
+/*
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
@@ -121,6 +122,6 @@ public class QuarkClientCompatImpl {
             }
         }
     }
-
+*/
 
 }

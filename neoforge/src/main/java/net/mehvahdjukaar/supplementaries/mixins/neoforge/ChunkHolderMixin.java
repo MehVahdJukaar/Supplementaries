@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
+import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
@@ -28,14 +29,13 @@ public abstract class ChunkHolderMixin {
             BlockPos pos = te.getBlockPos();
 
             server.tell(new TickTask(server.getTickCount(), () -> {
-                var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-                if (cap.isPresent()) {
-                    cap.ifPresent(c -> {
-                        ServerChunkCache chunkSource = serverLevel.getChunkSource();
-                        chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
-                                NetworkHelper.sendToClientPlayer(p,
-                                        new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
-                    });
+                IAntiquable cap = serverLevel.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP,
+                        pos, te.getBlockState(), te, null);
+                if (cap != null) {
+                    ServerChunkCache chunkSource = serverLevel.getChunkSource();
+                    chunkSource.chunkMap.getPlayers(new ChunkPos(pos), false).forEach(p ->
+                            NetworkHelper.sendToClientPlayer(p,
+                                    new ClientBoundSyncAntiqueInk(pos, cap.supplementaries$isAntique())));
                 }
             }));
         }

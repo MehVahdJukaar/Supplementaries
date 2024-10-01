@@ -74,12 +74,13 @@ public class ClientEventsFabric {
         CannonChargeHud.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
 
-        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
+        Minecraft mc = Minecraft.getInstance();
+        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && mc.player instanceof IQuiverPlayer qe) {
             boolean keyDown = InputConstants.isKeyDown(
-                    Minecraft.getInstance().getWindow().getWindow(),
+                    mc.getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
-            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
         }
     }
 }

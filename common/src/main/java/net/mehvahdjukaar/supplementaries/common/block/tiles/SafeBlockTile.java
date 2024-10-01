@@ -30,6 +30,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,7 +117,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
                 return false;
             }
         } else {
-            return this.testIfHasCorrectKey(player, this.password, feedbackMessage, "safe");
+            return IKeyLockable.testIfHasCorrectKey(player, this.password, feedbackMessage, "safe");
         }
         return true;
     }

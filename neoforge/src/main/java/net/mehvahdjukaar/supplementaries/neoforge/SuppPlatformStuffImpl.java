@@ -30,11 +30,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.Tags;
@@ -54,10 +54,29 @@ public class SuppPlatformStuffImpl {
      * Be sure to provide it with one, or it will fail
      */
     @Nullable
-    public static <T> T getForgeCap(Object object, Class<T> capClass) {
+    public static <T> T getForgeCap(Entity entity, Class<T> capClass) {
         var t = CapabilityHandler.getToken(capClass);
-        if (t != null && object instanceof ICapabilityProvider cp) {
-            return CapabilityHandler.get(cp, t);
+        if (t != null) {
+            return entity.getCapability((net.neoforged.neoforge.capabilities.EntityCapability<T, Void>) t);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static <T> T getForgeCap(Level level, BlockPos pos, Class<T> capClass) {
+        var t = CapabilityHandler.getToken(capClass);
+        if (t != null) {
+            return level.getCapability((net.neoforged.neoforge.capabilities.BlockCapability<T, Void>) t, pos);
+        }
+        return null;
+    }
+
+    @Nullable
+    public static <T> T getForgeCap(BlockEntity object, Class<T> capClass) {
+        var t = CapabilityHandler.getToken(capClass);
+        if (t != null) {
+            return object.getLevel().getCapability((net.neoforged.neoforge.capabilities.BlockCapability<T, Void>) t,
+                    object.getBlockPos(), object.getBlockState(), object);
         }
         return null;
     }

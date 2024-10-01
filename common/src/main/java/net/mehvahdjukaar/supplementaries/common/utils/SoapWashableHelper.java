@@ -117,15 +117,13 @@ public class SoapWashableHelper {
         if (b instanceof IWashable soapWashable) {
             cap = soapWashable;
         } else {
-            cap = SuppPlatformStuff.getForgeCap(b, IWashable.class);
+            cap = SuppPlatformStuff.getForgeCap(level, pos, IWashable.class);
         }
         if (cap == null) {
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile != null) {
                 if (tile instanceof IWashable soapWashable) {
                     cap = soapWashable;
-                } else {
-                    cap = SuppPlatformStuff.getForgeCap(tile, IWashable.class);
                 }
             }
         }

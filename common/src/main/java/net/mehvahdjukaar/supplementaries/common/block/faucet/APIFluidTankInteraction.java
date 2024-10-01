@@ -24,7 +24,7 @@ class APIFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
 
     @Override
     public Integer fill(Level level, BlockPos pos, BlockEntity target, FluidOffer offer) {
-        return FluidsUtil.fillFluidTank(target, offer);
+        return FluidsUtil.fillFluidTank(target, offer, Direction.UP);
     }
 }
 

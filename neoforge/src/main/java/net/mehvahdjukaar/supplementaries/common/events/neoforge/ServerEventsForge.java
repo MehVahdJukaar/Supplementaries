@@ -31,10 +31,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.UsernameCache;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -48,7 +52,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class ServerEventsForge {
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.register(ServerEventsForge.class);
+        NeoForge.EVENT_BUS.register(ServerEventsForge.class);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -88,7 +92,7 @@ public class ServerEventsForge {
     //TODO: soap tool event
     @SubscribeEvent
     public static void toolModification(BlockEvent.BlockToolModificationEvent event) {
-        if (event.getToolAction() == ToolActions.HOE_TILL && CommonConfigs.Tweaks.RAKED_GRAVEL.get()) {
+        if (event.getItemAbility() == ItemAbilities.HOE_TILL && CommonConfigs.Tweaks.RAKED_GRAVEL.get()) {
             LevelAccessor world = event.getLevel();
             BlockPos pos = event.getPos();
             if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
@@ -173,11 +177,10 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(ItemEntityPickupEvent event) {
-        if (event.getResult() != Event.Result.DENY) {
-            if (ServerEvents.onItemPickup(event.getItem(), event.getEntity())) {
-                event.setCanceled(true);
-                event.setResult(Event.Result.DENY);
+    public static void onItemPickup(ItemEntityPickupEvent.Pre event) {
+        if (!event.canPickup().isFalse()) {
+            if (ServerEvents.onItemPickup(event.getItemEntity(), event.getPlayer())) {
+                event.setCanPickup(TriState.FALSE);
             }
         }
     }
@@ -202,11 +205,11 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onLivingDeath(LivingHurtEvent event) {
+    public static void onLivingDeath(LivingDamageEvent.Post event) {
         if (event.getEntity() instanceof Cat cat) {
 
             if (CommonConfigs.Tweaks.BAD_LUCK_CAT.get() &&
-                    cat.getVariant() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
+                    cat.getVariant().value() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
                     event.getSource().getEntity() instanceof LivingEntity p) {
                 p.addEffect(new MobEffectInstance(MobEffects.UNLUCK, 20 * 60 * 5));
             }

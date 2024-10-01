@@ -61,7 +61,7 @@ public class ClientEvents {
             .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC);
 
     @EventCalled
-    public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
+    public static void onItemTooltip(ItemStack itemStack,Item.TooltipContext tooltipContext,  TooltipFlag tooltipFlag, List<Component> components) {
         if (ClientConfigs.General.TOOLTIP_HINTS.get()) {
             InteractEventsHandler.addOverrideTooltips(itemStack, tooltipFlag, components);
         }
@@ -202,4 +202,6 @@ public class ClientEvents {
 //
         //      }
     }
+
+
 }

@@ -130,6 +130,6 @@ public class ItemsUtilImpl {
     }
 
     private static boolean canMergeItems(ItemStack stack1, ItemStack stack2) {
-        return stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.isSameItemSameTags(stack1, stack2);
+        return stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.isSameItemSameComponents(stack1, stack2);
     }
 }

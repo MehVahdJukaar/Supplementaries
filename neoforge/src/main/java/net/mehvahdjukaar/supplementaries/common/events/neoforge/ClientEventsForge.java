@@ -50,7 +50,7 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
         if (event.getEntity() != null) {
-            ClientEvents.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
+            ClientEvents.onItemTooltip(event.getItemStack(), event.getContext(), event.getFlags(), event.getToolTip());
         }
     }
 
@@ -89,11 +89,11 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (SelectableContainerItemHud.INSTANCE.onMouseScrolled(event.getScrollDelta())) {
+        if (SelectableContainerItemHud.INSTANCE.onMouseScrolled(event.getScrollDeltaY())) {
             event.setCanceled(true);
         }
         if (CannonController.isActive()) {
-            CannonController.onMouseScrolled(event.getScrollDelta());
+            CannonController.onMouseScrolled(event.getScrollDeltaY());
             event.setCanceled(true);
         }
     }
@@ -145,8 +145,9 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
+        if (stack.isEmpty()) return;
         Item i = stack.getItem();
-        var pattern = DecoratedPotPatterns.getResourceKey(i);
+        var pattern = DecoratedPotPatterns.getPatternFromItem(i);
         if (pattern != null && i != Items.BRICK) {
             event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
         }

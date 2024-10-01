@@ -8,9 +8,10 @@ import org.violetmoon.quark.addons.oddities.item.BackpackItem;
 
 public class QuarkCompatImpl {
 
-
     public static float getEncumbermentFromBackpack(ItemStack stack) {
         float j = 0;
+        //TODO: add back
+        /*
         if (stack.getItem() instanceof BackpackItem) {
             LazyOptional<IItemHandler> handlerOpt = stack.getCapability(Capabilities.ItemHandler.ITEM, null);
             if (handlerOpt.isPresent()) {
@@ -20,7 +21,7 @@ public class QuarkCompatImpl {
                     j += SackItem.getEncumber(slotItem);
                 }
             }
-        }
+        }*/
         return j;
     }
 

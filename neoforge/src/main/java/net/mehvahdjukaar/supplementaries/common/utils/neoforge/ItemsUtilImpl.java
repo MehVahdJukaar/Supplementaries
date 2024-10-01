@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils.neoforge;
 
-import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -34,9 +33,8 @@ public class ItemsUtilImpl {
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
         if (slot.mayPickup(player) && containerStack.getCount() == 1) {
 
-            var handlerAndTe = getItemHandler(containerStack, player);
-            if (handlerAndTe != null) {
-                IItemHandler handler = handlerAndTe.getFirst();
+            IItemHandler handler = getItemHandler(containerStack, player);
+            if (handler != null) {
                 for (int s = 0; s < handler.getSlots(); s++) {
                     ItemStack selected = handler.getStackInSlot(s);
                     if (!selected.isEmpty()) {
@@ -44,7 +42,6 @@ public class ItemsUtilImpl {
 
                         if (slot.mayPlace(dropped)) {
                             slot.set(dropped);
-                            containerStack.getOrCreateTag().put("BlockEntityTag", handlerAndTe.getSecond().saveWithoutMetadata());
                             return true;
                         }
                         return false;
@@ -58,9 +55,8 @@ public class ItemsUtilImpl {
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
         if (slot.mayPickup(player) && containerStack.getCount() == 1) {
 
-            var handlerAndTe = getItemHandler(containerStack, player);
-            if (handlerAndTe != null) {
-                IItemHandler handler = handlerAndTe.getFirst();
+            IItemHandler handler = getItemHandler(containerStack, player);
+            if (handler != null) {
                 ItemStack result = ItemHandlerHelper.insertItem(handler, stack.copy(), simulate);
                 boolean success = result.isEmpty() || result.getCount() != stack.getCount();
                 if (success) {
@@ -69,19 +65,16 @@ public class ItemsUtilImpl {
                     } else {
                         //this is a mess and probably not even correct
                         CompoundTag newTag = new CompoundTag();
-                        newTag.put("BlockEntityTag", handlerAndTe.getSecond().saveWithoutMetadata());
                         if (inSlot) {
                             stack.setCount(result.getCount());
                             ItemStack newStack = containerStack.copy();
                             if (slot.mayPlace(newStack)) {
-                                newStack.setTag(newTag);
                                 slot.set(newStack);
                                 return true;
                             }
                         } else {
                             int i = stack.getCount() - result.getCount();
                             slot.safeTake(i, i, player);
-                            containerStack.setTag(newTag);
                             return true;
                         }
                     }
@@ -92,19 +85,13 @@ public class ItemsUtilImpl {
     }
 
     @Nullable
-    public static Pair<IItemHandler, BlockEntity> getItemHandler(ItemStack containerStack, Player player) {
-        CompoundTag tag = containerStack.getOrCreateTag();
-        CompoundTag cmp = tag.getCompound("BlockEntityTag");
-        if (!cmp.contains("LootTable")) {
-            BlockEntity te = ItemsUtil.loadBlockEntityFromItem(cmp.copy(), containerStack.getItem());
-
-            if (te != null) {
-                if (te instanceof SafeBlockTile safe && !safe.canPlayerOpen(player, false)) return null;
-                LazyOptional<IItemHandler> handlerHolder = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
-                if (handlerHolder.isPresent()) {
-                    return Pair.of(handlerHolder.orElseGet(EmptyHandler::new), te);
-                }
-            }
+    public static IItemHandler getItemHandler(ItemStack containerStack, Player player) {
+        IItemHandler itemHandler = containerStack.getCapability(Capabilities.ItemHandler.ITEM);
+        if (itemHandler != null) {
+            SafeOwner safeOwer = containerStack.get(ModComponents.SAFE_OWNER.get());
+            //TODO: safe lock cap. also on fabric
+            if (safeOwer != null && !safeOwer.canPlayerOpen(player)) return null;
+            return itemHandler;
         }
         return null;
     }
@@ -133,7 +120,7 @@ public class ItemsUtilImpl {
         if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
 
         AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
-        player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(itemHandler::set);
+        player.getCapability(Capabilities.ItemHandler.ENTITY).ifPresent(itemHandler::set);
         if (itemHandler.get() != null) {
             for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
                 ItemStack stack = itemHandler.get().getStackInSlot(idx);
@@ -150,7 +137,7 @@ public class ItemsUtilImpl {
 
     public static ItemStack tryExtractingItem(Level level, Direction dir, Object tile) {
         if (tile instanceof ICapabilityProvider cp) {
-            IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
+            IItemHandler itemHandler = CapabilityHandler.get(cp, Capabilities.ItemHandler.ITEM_HANDLER, dir);
             if (itemHandler != null) {
                 for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
                     ItemStack itemstack = itemHandler.getStackInSlot(slot);
@@ -169,15 +156,13 @@ public class ItemsUtilImpl {
     }
 
     public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction dir, Object container) {
-        if (container instanceof ICapabilityProvider cp) {
-            IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
-            if (container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im) {
-                //thanks...
-                itemHandler = new RangedWrapper(im, 1, itemHandler.getSlots());
-            }
-            if (itemHandler != null) {
-                return ItemHandlerHelper.insertItem(itemHandler, stack, false);
-            }
+        IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
+        if (container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im) {
+            //thanks...
+            itemHandler = new RangedWrapper(im, 1, itemHandler.getSlots());
+        }
+        if (itemHandler != null) {
+            return ItemHandlerHelper.insertItem(itemHandler, stack, false);
         }
         return stack;
     }

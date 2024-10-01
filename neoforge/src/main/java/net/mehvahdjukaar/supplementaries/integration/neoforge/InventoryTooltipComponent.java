@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
 
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
@@ -12,13 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
-import org.violetmoon.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 public class InventoryTooltipComponent implements ClientTooltipComponent {
 
@@ -26,34 +20,35 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private static final int BUFFER = 1;
     private static final int EDGE = 18;
 
-    private final CompoundTag tag;
-    private final Item item;
+    private final ItemContainerContents contents;
     private final int[] dimensions;
     private final int size;
-    private final boolean locked;
+    private  boolean locked;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
     public InventoryTooltipComponent(InventoryViewTooltip tooltip) {
-        this.tag = tooltip.tag();
-        this.item = tooltip.item();
+        this.contents = tooltip.contents();
         this.dimensions = VariableSizeContainerMenu.getRatio(tooltip.size());
         this.size = tooltip.size();
+      /*
         BlockEntity te = ItemsUtil.loadBlockEntityFromItem(this.tag, this.item);
         if (te instanceof SafeBlockTile safe) {
             this.locked = !safe.canPlayerOpen(Minecraft.getInstance().player, false);
         } else {
             this.locked = false;
-        }
+        }*/
     }
+    //TODO: add back
 
     @Override
     public void renderImage(Font font, int tooltipX, int tooltipY, GuiGraphics graphics) {
+        /*
         if (locked) return;
         BlockEntity te = ItemsUtil.loadBlockEntityFromItem(this.tag, this.item);
         if (te != null) {
             if (te instanceof SafeBlockTile safe && !safe.canPlayerOpen(Minecraft.getInstance().player, false)) return;
 
-            LazyOptional<IItemHandler> handler = te.getCapability(ForgeCapabilities.ITEM_HANDLER, null);
+            IItemHandler handler =  (ForgeCapabilities.ITEM_HANDLER, null);
             handler.ifPresent((capability) -> {
 
                 Minecraft mc = Minecraft.getInstance();
@@ -96,6 +91,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
                 pose.popPose();
             });
         }
+        */
     }
 
     @Override

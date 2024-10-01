@@ -18,7 +18,7 @@ public class FluidsUtilImpl {
         return false;
     }
 
-    public static Integer fillFluidTank(BlockEntity tileBelow, FluidOffer offer) {
+    public static Integer fillFluidTank(BlockEntity tileBelow, FluidOffer offer, Direction dir) {
         return null;
     }
 

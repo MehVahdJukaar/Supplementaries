@@ -62,7 +62,7 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
             return true;
         }
         //open
-        return player.isCreative() || this.testIfHasCorrectKey(player, this.password, true, translName);
+        return player.isCreative() || IKeyLockable.testIfHasCorrectKey(player, this.password, true, translName);
     }
 
     public boolean tryClearingKey(Player player, ItemStack stack) {

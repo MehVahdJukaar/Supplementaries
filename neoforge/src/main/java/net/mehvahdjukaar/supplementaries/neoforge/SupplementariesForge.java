@@ -96,21 +96,6 @@ public class SupplementariesForge {
         VillagerScareStuff.setup();
     }
 
-    @SubscribeEvent
-    public void registerOverrides(RegisterEvent event) {
-        if (event.getRegistryKey() == Registries.ITEM.getRegistryKey()) {
-            if (CommonConfigs.Tweaks.SHULKER_HELMET_ENABLED.get()) {
-                event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
-                        new ShulkerShellItem(new Item.Properties()
-                                .stacksTo(64)
-                                ));
-            }
-        }
-    }
-
-
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
-
-
 
 }

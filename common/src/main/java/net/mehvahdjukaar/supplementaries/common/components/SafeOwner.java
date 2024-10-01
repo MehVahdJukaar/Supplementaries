@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
@@ -86,5 +88,19 @@ public final class SafeOwner implements TooltipProvider {
             return;
         }
         tooltipAdder.accept(UNBOUND);
+    }
+
+    // same as tile
+    public boolean canPlayerOpen(Player player) {
+        if (player == null || player.isCreative()) return true;
+        if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
+            return !this.isNotOwnedBy(player);
+        } else {
+            return IKeyLockable.testIfHasCorrectKey(player, this.password, false, "safe");
+        }
+    }
+
+    private boolean isNotOwnedBy(Player player) {
+        return owner != null && !owner.equals(player.getUUID());
     }
 }

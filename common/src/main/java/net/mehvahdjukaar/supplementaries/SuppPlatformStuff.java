@@ -20,6 +20,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Contract;
@@ -39,7 +40,21 @@ public class SuppPlatformStuff {
     @ExpectPlatform
     @Nullable
     @Contract
-    public static <T> T getForgeCap(@NotNull Object object, Class<T> capClass) {
+    public static <T> T getForgeCap(@NotNull Entity entity, Class<T> capClass) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    @Nullable
+    @Contract
+    public static <T> T getForgeCap(@NotNull BlockEntity entity, Class<T> capClass) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    @Nullable
+    @Contract
+    public static <T> T getForgeCap(Level level, BlockPos entity, Class<T> capClass) {
         throw new AssertionError();
     }
 

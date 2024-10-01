@@ -76,7 +76,8 @@
 
 # Soon
 
-add fabric missing events
+- capability cache
+- add fabric missing events
 - make polytone and supp hourglass use reloadable registries
 - all use action in adventure mode
 - anger nearby piglins

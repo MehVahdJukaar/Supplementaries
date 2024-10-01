@@ -229,7 +229,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
                 new AABB(worldPosition).move(0, -0.75, 0),
                 NON_PLAYER);
         Collections.shuffle(list);
-        for (var o : list) {
+        for (Entity o : list) {
             stack = ItemsUtil.tryAddingItem(stack, level, direction, o);
             if (stack.isEmpty()) return true;
         }
