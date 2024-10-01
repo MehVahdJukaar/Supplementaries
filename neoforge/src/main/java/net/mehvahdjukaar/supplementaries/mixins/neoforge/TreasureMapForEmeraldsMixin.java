@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +33,7 @@ public abstract class TreasureMapForEmeraldsMixin {
 
     @Final
     @Shadow
-    private MapDecoration.Type destinationType;
+    private MapDecorationType destinationType;
 
     @Final
     @Shadow
@@ -50,13 +52,13 @@ public abstract class TreasureMapForEmeraldsMixin {
     public void turnToQuill(Entity trader, RandomSource random, CallbackInfoReturnable<MerchantOffer> cir) {
         if (trader.level() instanceof ServerLevel serverLevel) {
             if (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get()) {
-                ResourceLocation decoration = new ResourceLocation(this.destinationType.toString().toLowerCase(Locale.ROOT));
+                ResourceLocation decoration = ResourceLocation.tryParse(this.destinationType.toString().toLowerCase(Locale.ROOT));
                 ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, this.destination,
                         100, true, 2, decoration, null, 0);
-                map.setHoverName(Component.translatable(this.displayName));
+                map.set(DataComponents.CUSTOM_NAME, Component.translatable(this.displayName));
                 int uses = 2;
                 int xp = (int) ((this.villagerXp * this.maxUses) / (float) uses);
-                int cost = (int) (this.emeraldCost * 1);
+                int cost =  (this.emeraldCost * 1);
                 cir.setReturnValue(new MerchantOffer(new ItemStack(Items.EMERALD, cost),
                         new ItemStack(Items.COMPASS), map, uses, xp, 0.2F));
             }

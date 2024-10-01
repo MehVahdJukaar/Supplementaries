@@ -21,8 +21,8 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.zeta.util.ItemNBTHelper;
@@ -35,9 +35,9 @@ public class QuarkClientCompatImpl {
 
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
-        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
-        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerCount);
-        MinecraftForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerStack);
+        NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
+        NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerCount);
+        NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerStack);
         ClientHelper.addTooltipComponentRegistration(QuarkClientCompatImpl::registerTooltipComponent);
     }
 

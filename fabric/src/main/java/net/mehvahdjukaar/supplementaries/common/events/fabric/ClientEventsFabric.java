@@ -1,28 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.mixin.client.rendering.TooltipComponentMixin;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
-import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.OpeneableContainerBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -59,10 +56,9 @@ public class ClientEventsFabric {
                 e.register(new QuiverLayer(r, true));
             } else if (t == EntityType.STRAY) {
                 e.register(new QuiverLayer(r, true));
-            }else if(t == EntityType.CREEPER){
+            } else if (t == EntityType.CREEPER) {
                 e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
-            }
-            else if(t == EntityType.CREEPER){
+            } else if (t == EntityType.CREEPER) {
                 e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
             }
         });
@@ -72,9 +68,10 @@ public class ClientEventsFabric {
 
     }
 
-    private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
+    private static void onRenderHud(GuiGraphics graphics, DeltaTracker partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
-        SlimedOverlayHudImpl.INSTANCE.render(graphics, partialTicks);
+        SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
+        CannonChargeHud.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
 
         if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {

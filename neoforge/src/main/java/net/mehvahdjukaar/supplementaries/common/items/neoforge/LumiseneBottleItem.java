@@ -20,9 +20,9 @@ import net.minecraft.world.level.Level;
 public class LumiseneBottleItem extends Item {
 
     private static final FoodProperties LUMISENE_FOOD = new FoodProperties.Builder()
-            .nutrition(0).saturationMod(0).alwaysEat()
+            .nutrition(0).saturationModifier(0).alwaysEdible()
             .effect(() -> new MobEffectInstance(MobEffects.GLOWING, CommonConfigs.Functional.GLOWING_DURATION.get(), 0), 1)
-            .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
+            .effect(() -> new MobEffectInstance(ModRegistry.FLAMMABLE.getHolder(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
             .build();
 
     public LumiseneBottleItem(Properties properties) {
@@ -57,7 +57,7 @@ public class LumiseneBottleItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 32;
     }
 

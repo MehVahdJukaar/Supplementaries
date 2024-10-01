@@ -14,6 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Function;
 
 public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverContent.Mutable> {
 
@@ -32,7 +35,7 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
     }
 
     @NotNull
-    public static SlotReference getQuiverSlot(LivingEntity entity) {
+    public static SlotReference getActiveQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
             if (!curioQuiver.isEmpty()) return curioQuiver;
@@ -44,8 +47,16 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
-    public static ItemStack getQuiver(LivingEntity entity) {
-        return getQuiverSlot(entity).get(entity);
+    public static ItemStack getActiveQuiver(LivingEntity entity) {
+        return getActiveQuiverSlot(entity).get(entity);
+    }
+
+    @Nullable
+    public static void modifyActiveQuiver(LivingEntity entity, Function<QuiverContent.Mutable, Boolean> func) {
+        var q = getActiveQuiver(entity);
+        if (!q.isEmpty()) {
+            ((SelectableContainerItem) q.getItem()).modify(q, func);
+        }
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {

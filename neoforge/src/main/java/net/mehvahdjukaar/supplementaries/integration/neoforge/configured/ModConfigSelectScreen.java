@@ -17,8 +17,8 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
 
     public ModConfigSelectScreen(Screen parent) {
         super(Supplementaries.MOD_ID, ModRegistry.GLOBE_ITEM.get().getDefaultInstance(),
-                "§6Supplementaries Configured", ModTextures.CONFIG_BACKGROUND,
-                parent, ModConfigScreen::new, ClientConfigs.CONFIG_HOLDER, CommonConfigs.CONFIG_HOLDER);
+                "§6Supplementaries Configured", parent,
+                ModConfigScreen::new, ClientConfigs.CONFIG_HOLDER, CommonConfigs.CONFIG_HOLDER);
     }
 
 

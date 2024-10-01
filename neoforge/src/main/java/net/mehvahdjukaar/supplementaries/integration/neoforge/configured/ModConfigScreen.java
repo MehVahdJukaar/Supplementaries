@@ -60,7 +60,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("shulker helmet", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
         addIcon("dispensers", Items.DISPENSER);
-        addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM_ON.get());
+        addIcon("blue bomb", ModRegistry.BOMB_BLUE_ITEM.get());
         addIcon("dispensers", Items.DISPENSER);
         addIcon("cave urns", ModRegistry.URN.get());
         addIcon("structures", Items.BRICKS);
@@ -73,7 +73,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
         addIcon("basalt ash", Items.BASALT);
         addIcon("cave urns", Items.BONE);
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(new ResourceLocation("spruce"))));
+        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(ResourceLocation.withDefaultNamespace("spruce"))));
         addIcon("stasis", Items.ENCHANTED_BOOK);
         addIcon("banner pattern tooltip", Items.CREEPER_BANNER_PATTERN);
         addIcon("paintings tooltip", Items.PAINTING);

@@ -4,22 +4,25 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class CannonChargeHud {
+public class CannonChargeHud  implements LayeredDraw.Layer{
 
+    public static final CannonChargeHud INSTANCE = new CannonChargeHud();
     private final Minecraft mc;
 
-    protected CannonChargeHud(Minecraft minecraft) {
-        this.mc = minecraft;
+    protected CannonChargeHud() {
+        this.mc = Minecraft.getInstance();
     }
-
-    public void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
+    @Override
+    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         if (!mc.options.hideGui && CannonController.isActive()) {
 
             setupOverlayRenderState();
@@ -27,11 +30,14 @@ public abstract class CannonChargeHud {
             CannonBlockTile cannon = CannonController.cannon;
 
 
+            int screenWidth = graphics.guiWidth();
+            int screenHeight = graphics.guiHeight();
+
             renderHotBar(graphics, screenWidth, screenHeight, texture, cannon);
 
             renderCrossHair(graphics, screenWidth, screenHeight, texture);
 
-            renderBar(graphics, screenWidth, screenHeight, texture, cannon, partialTicks);
+            renderBar(graphics, screenWidth, screenHeight, texture, cannon, deltaTracker.getGameTimeDeltaPartialTick(false));
 
             renderTrajectoryIcons(graphics, screenWidth, screenHeight, texture);
 
@@ -149,5 +155,6 @@ public abstract class CannonChargeHud {
             guiGraphics.renderItemDecorations(this.mc.font, itemStack, x, y);
         }
     }
+
 
 }

@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface SlotReference {
 
@@ -120,7 +119,7 @@ public interface SlotReference {
         @Override
         public ItemStack get(LivingEntity player) {
             if (player instanceof Player p) {
-                return QuiverItem.getQuiver(p);
+                return QuiverItem.getActiveQuiver(p);
             }
             return ItemStack.EMPTY;
         }

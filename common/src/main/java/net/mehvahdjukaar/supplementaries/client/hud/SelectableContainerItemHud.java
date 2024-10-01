@@ -14,9 +14,11 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-public abstract class SelectableContainerItemHud {
+public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
 
     // singleton instance, changes with loader
     public static SelectableContainerItemHud INSTANCE = makeInstance();
@@ -173,7 +175,8 @@ public abstract class SelectableContainerItemHud {
         return stack;
     }
 
-    public void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
+    @Override
+    public void render(GuiGraphics graphics, DeltaTracker arg2) {
         if (itemUsed == null) return;
         if (!(mc.getCameraEntity() instanceof IQuiverPlayer)) {
             closeHud();
@@ -215,14 +218,14 @@ public abstract class SelectableContainerItemHud {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        int centerX = screenWidth / 2;
+        int centerX = graphics.guiWidth() / 2;
 
         poseStack.pushPose();
         poseStack.translate(0, 0, -90);
 
         int uWidth = slots * 20 + 2;
         int px = uWidth / 2;
-        int py = screenHeight / 2 - 40;
+        int py = graphics.guiHeight() / 2 - 40;
 
         px += ClientConfigs.Items.QUIVER_GUI_X.get();
         py += ClientConfigs.Items.QUIVER_GUI_Y.get();
@@ -244,7 +247,7 @@ public abstract class SelectableContainerItemHud {
 
         ItemStack selectedArrow = items.get(selected);
         if (!selectedArrow.isEmpty()) {
-            drawHighlight(graphics, screenWidth, py, selectedArrow);
+            drawHighlight(graphics, graphics.guiWidth(), py, selectedArrow);
         }
         poseStack.popPose();
     }

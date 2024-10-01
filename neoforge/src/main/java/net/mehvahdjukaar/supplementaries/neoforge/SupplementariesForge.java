@@ -5,16 +5,15 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ServerEventsForge;
-import net.mehvahdjukaar.supplementaries.common.items.neoforge.ShulkerShellItem;
+import net.mehvahdjukaar.supplementaries.common.items.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -23,7 +22,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.List;
@@ -99,7 +98,7 @@ public class SupplementariesForge {
 
     @SubscribeEvent
     public void registerOverrides(RegisterEvent event) {
-        if (event.getRegistryKey() == ForgeRegistries.ITEMS.getRegistryKey()) {
+        if (event.getRegistryKey() == Registries.ITEM.getRegistryKey()) {
             if (CommonConfigs.Tweaks.SHULKER_HELMET_ENABLED.get()) {
                 event.getForgeRegistry().register(new ResourceLocation("minecraft:shulker_shell"),
                         new ShulkerShellItem(new Item.Properties()
@@ -110,7 +109,7 @@ public class SupplementariesForge {
     }
 
 
-    public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
+    public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
 
 
 

@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.client.hud.fabric;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -25,8 +27,9 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
     @Override
     public void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
-        MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().color);
-        if (selectedArrow.hasCustomHoverName()) {
+        MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName())
+                .withStyle(selectedArrow.getRarity().color());
+        if (selectedArrow.has(DataComponents.CUSTOM_NAME)) {
             mutablecomponent.withStyle(ChatFormatting.ITALIC);
         }
         Component highlightTip = selectedArrow.getHoverName();
@@ -43,11 +46,6 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
         nx = (screenWidth - font.width(highlightTip)) / 2;
         graphics.drawString(font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
         RenderSystem.disableBlend();
-    }
-
-    public void render(GuiGraphics graphics, float partialTicks) {
-        var w = this.mc.getWindow();
-        this.render(graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
 }

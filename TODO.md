@@ -71,6 +71,8 @@
 - gunpowder explosion
 - bomb explosion
 - cannonball explosion
+- slimed overlay with frost
+- quiver arrow shrink
 
 # Soon
 

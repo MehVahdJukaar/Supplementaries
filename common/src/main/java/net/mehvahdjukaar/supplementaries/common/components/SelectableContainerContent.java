@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.components;
 
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -8,13 +9,11 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class SelectableContainerContent<M extends SelectableContainerContent.Mut<?>> implements TooltipComponent, TooltipProvider {
@@ -56,7 +55,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         return stacks;
     }
 
-    public ItemStack getSelectedUnsafe(){
+    public ItemStack getSelectedUnsafe() {
         return this.stacks.get(this.selectedSlot);
     }
 
@@ -64,11 +63,11 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         return this.stacks.get(this.selectedSlot).copy();
     }
 
-    public Item getSelectedItem(){
+    public Item getSelectedItem() {
         return this.stacks.get(this.selectedSlot).getItem();
     }
 
-    public int getSelectedCount(){
+    public int getSelectedCount() {
         return this.stacks.get(this.selectedSlot).getCount();
     }
 
@@ -192,7 +191,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return null;
         }
 
-        public boolean isItemValid(ItemStack stack){
+        public boolean isItemValid(ItemStack stack) {
             return isItemValid(0, stack);
         }
 
@@ -332,6 +331,21 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             }
         }
 
+        public void consumeSelected(int toDecrement) {
+            for (int i = this.selectedSlot; i < this.selectedSlot + this.stacks.size(); i = (i + 1) % this.stacks.size()) {
+                ItemStack s = this.stacks.get(i);
+                if (!s.isEmpty()) {
+                    int decrement = Math.min(toDecrement, s.getCount());
+                    s.shrink(decrement);
+                    if(s.isEmpty()){
+                        this.setStackInSlot(i, ItemStack.EMPTY);
+                    }
+                    toDecrement -= decrement;
+                    if (toDecrement <= 0) return;
+                }
+            }
+            Supplementaries.error();
+        }
     }
 
 }

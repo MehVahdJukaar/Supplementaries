@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.EntityType;
@@ -22,15 +23,14 @@ public abstract class PlayerProjectileMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    @Inject(locals = LocalCapture.CAPTURE_FAILHARD, method = "getProjectile",
-            at = @At(value = "INVOKE_ASSIGN", target =  "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z",
+    @Inject(method = "getProjectile",
+            at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z",
                     shift = At.Shift.BEFORE),
             cancellable = true
     )
-    private void getProjectile(ItemStack weaponStack, CallbackInfoReturnable<ItemStack> cir,
-                               Predicate<ItemStack> supporterArrows, int slotIndex, ItemStack itemStack) {
+    private void supp$(ItemStack weaponStack, CallbackInfoReturnable<ItemStack> cir, @Local Predicate predicate) {
         if (itemStack.getItem() instanceof QuiverItem && !CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) {
-            ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(supporterArrows);
+            ItemStack arrow = QuiverItem.getQuiverData(itemStack).getSelected(predicate);
             if (arrow != ItemStack.EMPTY) cir.setReturnValue(arrow);
         }
     }

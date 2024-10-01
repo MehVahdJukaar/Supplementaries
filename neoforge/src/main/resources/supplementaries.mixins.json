@@ -26,13 +26,10 @@
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
-    "self.SelfLunchBoxItemMixin",
     "self.SelfOpenableContainerMixin",
     "self.SelfPlanterMixin",
-    "self.SelfQuiverItemMixin",
     "self.SelfSafeMixin",
     "self.SelfSelectableContainerMixin",
-    "self.SelfSlingshotMixin",
     "self.SelfSoapItemMixin",
     "self.SelfSpeakerBlockTileMixin",
     "self.SelfWrenchMixin"

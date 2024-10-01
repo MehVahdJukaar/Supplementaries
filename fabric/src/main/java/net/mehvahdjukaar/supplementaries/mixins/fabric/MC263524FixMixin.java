@@ -22,8 +22,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer vertex(double x, double y, double z) {
-        this.delegate.vertex(x, y, z);
+    public VertexConsumer addVertex(float x, float y, float z) {
+        this.delegate.addVertex(x, y, z);
         return this;
     }
 
@@ -32,8 +32,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer color(int r, int g, int b, int a) {
-        this.delegate.color(r, g, b, a);
+    public VertexConsumer setColor(int r, int g, int b, int a) {
+        this.delegate.setColor(r, g, b, a);
         return this;
     }
 
@@ -42,8 +42,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer uv(float u, float v) {
-        this.delegate.uv(this.sprite.getU((double)(u * 16.0F)), this.sprite.getV((double)(v * 16.0F)));
+    public VertexConsumer setUv(float u, float v) {
+        this.delegate.setUv(this.sprite.getU(u), this.sprite.getV(v));
         return this;
     }
 
@@ -52,8 +52,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer overlayCoords(int u, int v) {
-        this.delegate.overlayCoords(u, v);
+    public VertexConsumer setUv2(int u, int v) {
+        this.delegate.setUv2(u, v);
         return this;
     }
 
@@ -62,8 +62,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer uv2(int u, int v) {
-        this.delegate.uv2(u, v);
+    public VertexConsumer setUv1(int u, int v) {
+        this.delegate.setUv1(u, v);
         return this;
     }
 
@@ -72,8 +72,8 @@ public abstract class MC263524FixMixin implements VertexConsumer{
      * @reason fixes MC-263524 not working with chained methods
      */
     @Overwrite
-    public VertexConsumer normal(float x, float y, float z) {
-        this.delegate.normal(x, y, z);
+    public VertexConsumer setNormal(float x, float y, float z) {
+        this.delegate.setNormal(x, y, z);
         return this;
     }
 

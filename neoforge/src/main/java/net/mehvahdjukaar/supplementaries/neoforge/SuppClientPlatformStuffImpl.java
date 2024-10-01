@@ -7,7 +7,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfig;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.NeoForgeConfig;
 
 public class SuppClientPlatformStuffImpl {
 
@@ -29,7 +30,7 @@ public class SuppClientPlatformStuffImpl {
     }
 
     public static boolean hasFixedAO() {
-        return CompatHandler.SODIUM || CompatHandler.EMBEDDIUM || ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.get();
+        return CompatHandler.SODIUM || CompatHandler.EMBEDDIUM || NeoForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.get();
     }
 
 }

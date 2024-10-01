@@ -44,7 +44,7 @@
   "depends": {
     "fabric": ">=0.92.0+1.20.1",
     "minecraft": ">=${minecraft_min_version} <${minecraft_max_version}",
-    "moonlight": ">=${required_moonlight_version}"
+    "moonlight": ">=${moonlight_version_range}"
   },
   "suggests": {
     "sleep_tight": "*",

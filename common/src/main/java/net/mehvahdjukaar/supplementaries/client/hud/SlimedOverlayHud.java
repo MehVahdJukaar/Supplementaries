@@ -3,19 +3,23 @@ package net.mehvahdjukaar.supplementaries.client.hud;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 
-public abstract class SlimedOverlayHud {
+public class SlimedOverlayHud implements LayeredDraw.Layer {
+    public static final SlimedOverlayHud INSTANCE = new SlimedOverlayHud();
     protected final Minecraft mc;
 
-    protected SlimedOverlayHud(Minecraft minecraft) {
-        this.mc = minecraft;
+    protected SlimedOverlayHud() {
+        this.mc = Minecraft.getInstance();
     }
 
-    protected void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
-
+    @Override
+    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+        float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(false);
         float alpha = ISlimeable.getAlpha(mc.player, partialTicks);
         if (alpha > 0) {
 
@@ -27,6 +31,8 @@ public abstract class SlimedOverlayHud {
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             graphics.setColor(1.0F, 1.0F, 1.0F, alpha);
+            int screenHeight = graphics.guiHeight();
+            int screenWidth = graphics.guiWidth();
             int slide = (int) (screenHeight / 4f * (1 - alpha));
             graphics.blit(ModTextures.SLIME_GUI_OVERLAY, 0, 0, -90, 0.0F, 0.0F,
                     screenWidth, screenHeight + slide, screenWidth, screenHeight + slide);

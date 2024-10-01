@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
+import com.google.common.base.Suppliers;
 import lilypuree.decorative_blocks.blocks.ChandelierBlock;
 import lilypuree.decorative_blocks.blocks.PalisadeBlock;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -102,16 +104,16 @@ public class DecoBlocksCompatImpl {
 
     public static class RopeChandelierBlock extends ChandelierBlock {
         private final Supplier<Block> mimic;
-        private final Lazy<BlockState> defMimic;
-        protected final Lazy<SimpleParticleType> particleData;
+        private final Supplier<BlockState> defMimic;
+        protected final Supplier<SimpleParticleType> particleData;
 
         public <T extends ParticleType<?>> RopeChandelierBlock(BlockBehaviour.Properties properties, Supplier<Block> chandelier, Supplier<T> particleData) {
             super(properties, false);
 
             this.mimic = chandelier;
-            this.defMimic = Lazy.of(() -> this.mimic.get().defaultBlockState());
+            this.defMimic = Suppliers.memoize(() -> this.mimic.get().defaultBlockState());
 
-            this.particleData = Lazy.of(() -> {
+            this.particleData = Suppliers.memoize(() -> {
                 SimpleParticleType data = (SimpleParticleType) particleData.get();
                 if (data == null) data = ParticleTypes.FLAME;
                 return data;
@@ -124,13 +126,13 @@ public class DecoBlocksCompatImpl {
         }
 
         @Override
-        public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-            return mimic.get().getCloneItemStack(defMimic.get(), target, world, pos, player);
+        public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+            return defMimic.get().getCloneItemStack( target, level, pos, player);
         }
 
         @Override
         public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-            return mimic.get().getDrops(defMimic.get(), builder);
+            return defMimic.get().getDrops(builder);
         }
 
         @Override

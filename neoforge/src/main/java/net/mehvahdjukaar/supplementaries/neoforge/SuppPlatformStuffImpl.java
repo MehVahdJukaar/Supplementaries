@@ -34,13 +34,11 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,10 +72,10 @@ public class SuppPlatformStuffImpl {
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.UP, pos, false));
 
         var modified = state;
-        modified = b.getToolModifiedState(modified, context, ToolActions.AXE_WAX_OFF, false);
+        modified = b.getToolModifiedState(modified, context, ItemAbilities.AXE_WAX_OFF, false);
         if (modified == null) modified = state;
         while (true) {
-            var newMod = b.getToolModifiedState(modified, context, ToolActions.AXE_SCRAPE, false);
+            var newMod = b.getToolModifiedState(modified, context, ItemAbilities.AXE_SCRAPE, false);
 
             if (newMod == null || newMod == modified) break;
             else modified = newMod;
@@ -116,11 +114,11 @@ public class SuppPlatformStuffImpl {
     }
 
     public static void disableAMWarn() {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
+        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
 
     public static void disableOFWarn(boolean on) {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
+        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {
@@ -128,7 +126,7 @@ public class SuppPlatformStuffImpl {
     }
 
     public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
-        var cap = CapabilityHandler.get(entity, ForgeCapabilities.ITEM_HANDLER);
+        var cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {
                 ItemStack quiver = cap.getStackInSlot(i);

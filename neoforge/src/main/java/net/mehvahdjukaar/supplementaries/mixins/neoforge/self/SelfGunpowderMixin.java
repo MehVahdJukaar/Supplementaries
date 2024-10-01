@@ -22,7 +22,7 @@ public abstract class SelfGunpowderMixin extends LightUpBlock {
     @Override
     public void onBlockExploded(BlockState state, Level world, BlockPos pos, Explosion explosion) {
         if (!world.isClientSide && this.canSurvive(state, world, pos)) {
-            this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
+            this.tryLightUp(null, state, pos, world, FireSoundType.FLAMING_ARROW);
         } else {
             super.onBlockExploded(state, world, pos, explosion);
         }

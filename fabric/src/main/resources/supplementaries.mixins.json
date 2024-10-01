@@ -13,11 +13,9 @@
   ],
   "mixins": [
     "BiomeAccessor",
-    "BowMixin",
     "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
     "CropBlockMixin",
-    "CrossbowMixin",
     "FireBlockAccessor",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",

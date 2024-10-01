@@ -39,7 +39,7 @@ issueTrackerURL = "${mod_github}/issues"
 [[dependencies.supplementaries]]
     modId = "moonlight"
     mandatory = true
-    versionRange = "[${required_moonlight_version},]"
+    versionRange = "[${moonlight_version_range},]"
     ordering = "NONE"
     side = "BOTH"
 

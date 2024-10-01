@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.sound.SoundEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.glfw.GLFW;
@@ -171,10 +172,10 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+    public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
         if (CannonController.isActive()) {
-            var overlay = event.getOverlay();
-            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+            var overlay = event.getLayer();
+            if (event.getName() == VanillaGuiLayers.EXPERIENCE_BAR || event.getName() == VanillaGuiLayers.HOTBAR) {
                 event.setCanceled(true);
             }
         }

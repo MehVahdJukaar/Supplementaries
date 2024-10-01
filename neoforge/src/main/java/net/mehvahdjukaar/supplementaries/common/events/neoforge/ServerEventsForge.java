@@ -30,17 +30,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public class ServerEventsForge {
 
@@ -152,13 +153,11 @@ public class ServerEventsForge {
     //forge only
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            if (event.side == LogicalSide.SERVER) {
-                ServerEvents.serverPlayerTick(event.player);
-            } else {
-                ServerEvents.clientPlayerTick(event.player);
-            }
+    public static void onPlayerTick(PlayerTickEvent.Pre event) {
+        if (!event.getEntity().level().isClientSide) {
+            ServerEvents.serverPlayerTick(event.getEntity());
+        } else {
+            ServerEvents.clientPlayerTick(event.getEntity());
         }
     }
 
@@ -177,8 +176,8 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onItemPickup(EntityItemPickupEvent event) {
-        if (!event.isCanceled() && event.getResult() != Event.Result.DENY) {
+    public static void onItemPickup(ItemEntityPickupEvent event) {
+        if (event.getResult() != Event.Result.DENY) {
             if (ServerEvents.onItemPickup(event.getItem(), event.getEntity())) {
                 event.setCanceled(true);
                 event.setResult(Event.Result.DENY);
@@ -196,13 +195,11 @@ public class ServerEventsForge {
     private static boolean flag = false;
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.LevelTickEvent event) {
+    public static void onServerTick(LevelTickEvent.Pre event) {
         if (!flag) {
-            if (event.phase == TickEvent.Phase.START) {
-                if (counter++ > 20) {
-                    VibeChecker.checkVibe(event.level);
-                    flag = true;
-                }
+            if (counter++ > 20) {
+                VibeChecker.checkVibe(event.getLevel());
+                flag = true;
             }
         }
     }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.neoforge;
 
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
@@ -11,16 +12,16 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.UUID;
 
 //shh, go away don't look here
-@Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = {Dist.CLIENT})
+@EventBusSubscriber(modid = Supplementaries.MOD_ID, value = {Dist.CLIENT})
 public class PicklePlayer {
 
     private static boolean jarvis = false;

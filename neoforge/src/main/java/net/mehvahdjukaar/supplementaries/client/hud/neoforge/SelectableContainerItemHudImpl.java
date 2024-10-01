@@ -3,17 +3,18 @@ package net.mehvahdjukaar.supplementaries.client.hud.neoforge;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
-public class SelectableContainerItemHudImpl extends SelectableContainerItemHud implements IGuiOverlay {
+public class SelectableContainerItemHudImpl extends SelectableContainerItemHud  {
 
     protected SelectableContainerItemHudImpl() {
         super(Minecraft.getInstance());
@@ -29,7 +30,7 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud i
         int l;
 
         MutableComponent mutablecomponent = Component.empty().append(selectedArrow.getHoverName()).withStyle(selectedArrow.getRarity().getStyleModifier());
-        if (selectedArrow.hasCustomHoverName()) {
+        if (selectedArrow.has(DataComponents.CUSTOM_NAME)) {
             mutablecomponent.withStyle(ChatFormatting.ITALIC);
         }
         Component highlightTip = selectedArrow.getHighlightTip(mutablecomponent);
@@ -52,11 +53,6 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud i
         RenderSystem.disableBlend();
     }
 
-
-    @Override
-    public void render(ForgeGui forgeGui, GuiGraphics arg, float f, int i, int j) {
-        this.render(arg, f, i, j);
-    }
 
 
 }

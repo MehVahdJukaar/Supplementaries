@@ -10,16 +10,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
-    private final ResourceLocation model3d;
-    private final ResourceLocation model2d;
+    private final ModelResourceLocation model3d;
+    private final ModelResourceLocation model2d;
 
-    public DifferentProspectiveItemRenderer(ResourceLocation model2d, ResourceLocation model3d){
+    public DifferentProspectiveItemRenderer(ModelResourceLocation model2d, ModelResourceLocation model3d){
         this.model2d = model2d;
         this.model3d = model3d;
     }
