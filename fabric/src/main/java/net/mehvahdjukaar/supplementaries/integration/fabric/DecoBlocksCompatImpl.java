@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -123,13 +124,13 @@ public class DecoBlocksCompatImpl {
         }
 
         @Override
-        public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
             return mimic.get().getCloneItemStack(level, pos, defMimic.get());
         }
 
         @Override
         public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-            return mimic.get().getDrops(defMimic.get(), builder);
+            return defMimic.get().getDrops( builder);
         }
 
         @Override

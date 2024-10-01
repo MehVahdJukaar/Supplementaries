@@ -16,15 +16,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class CCCompatImpl {
-
+//TODO: add back
     public static void setup() {
+        /*
         ForgeComputerCraftAPI.registerPeripheralProvider((level, blockPos, direction) -> {
-            var tile = level.getBlockEntity(blockPos);
+            var tile = level.getBlockState(blockPos);
             if (tile instanceof SpeakerBlockTile) {
                 return tile.getCapability(Capabilities.CAPABILITY_PERIPHERAL, direction);
             }
             return LazyOptional.empty();
-        });
+        });*/
     }
 
     public static int getPages(ItemStack itemstack) {
@@ -39,13 +40,14 @@ public class CCCompatImpl {
         return item instanceof PrintoutItem;
     }
 
+    /*
     public static boolean isPeripheralCap(Capability<?> cap) {
         return cap == Capabilities.CAPABILITY_PERIPHERAL;
     }
 
     public static LazyOptional<Object> getPeripheralSupplier(SpeakerBlockTile tile) {
         return LazyOptional.of(() -> new SpeakerPeripheral(tile));
-    }
+    }*/
 
 
     @SuppressWarnings({"ClassCanBeRecord"})

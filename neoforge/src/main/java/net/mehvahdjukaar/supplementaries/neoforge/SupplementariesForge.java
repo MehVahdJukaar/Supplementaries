@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.ShulkerShellItem;
@@ -75,6 +74,7 @@ public class SupplementariesForge {
         Supplementaries.commonInit();
 
         bus.register(this);
+        CapabilityHandler.init(bus);
 
         ServerEventsForge.init();
         VillagerScareStuff.init();

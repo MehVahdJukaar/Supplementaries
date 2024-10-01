@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;

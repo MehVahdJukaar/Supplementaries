@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;

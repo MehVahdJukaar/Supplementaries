@@ -105,10 +105,10 @@ public class ClientRegistry {
     public static final ModelLayerLocation BUNTING_MODEL = loc("bunting");
 
     //special models locations
-    public static final ResourceLocation FLUTE_3D_MODEL = Supplementaries.res("item/flute_in_hand");
-    public static final ResourceLocation FLUTE_2D_MODEL = Supplementaries.res("item/flute_gui");
-    public static final ResourceLocation QUIVER_3D_MODEL = Supplementaries.res("item/quiver_in_hand_dyed");
-    public static final ResourceLocation QUIVER_2D_MODEL = Supplementaries.res("item/quiver_gui_dyed");
+    public static final ModelResourceLocation FLUTE_3D_MODEL = modelRes("item/flute_in_hand");
+    public static final ModelResourceLocation FLUTE_2D_MODEL = modelRes("item/flute_gui");
+    public static final ModelResourceLocation QUIVER_3D_MODEL =modelRes("item/quiver_in_hand_dyed");
+    public static final ModelResourceLocation QUIVER_2D_MODEL =modelRes("item/quiver_gui_dyed");
     public static final ModelResourceLocation ALTIMETER_TEMPLATE = modelRes("item/altimeter_template");
     public static final ModelResourceLocation ALTIMETER_OVERLAY = modelRes("item/altimeter_overlay");
     public static final ModelResourceLocation LUNCH_BOX_ITEM_MODEL = modelRes("item/lunch_basket_gui");

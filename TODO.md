@@ -100,6 +100,8 @@ add fabric missing events
 
 # Supplementaries
 
+- add back capabilities
+- fabric events
 - framed block items pick up
 - explosion shake
 - soap and wax dispenser behaviors

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
@@ -40,6 +41,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -81,11 +83,6 @@ public class ServerEventsForge {
                 event.setCancellationResult(ret.getResult());
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void onAttachTileCapabilities(AttachCapabilitiesEvent<BlockEntity> event) {
-        CapabilityHandler.attachBlockEntityCapabilities(event);
     }
 
     //TODO: soap tool event
@@ -218,16 +215,17 @@ public class ServerEventsForge {
 
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+    public static void onLivingTick(EntityTickEvent.Post event) {
 
         if (CommonConfigs.Tweaks.SLIME_OVERLAY.get()) {
-            LivingEntity entity = event.getEntity();
-            ISlimeable slimed = (ISlimeable) entity;
-            int t = slimed.supp$getSlimedTicks();
-            if (t > 0) {
-                if (entity.isUnderWater()) {
-                    slimed.supp$setSlimedTicks(0, true);
-                } else slimed.supp$setSlimedTicks(t - 1, false);
+            Entity entity = event.getEntity();
+            if(entity instanceof ISlimeable slimed) {
+                int t = slimed.supp$getSlimedTicks();
+                if (t > 0) {
+                    if (entity.isUnderWater()) {
+                        slimed.supp$setSlimedTicks(0, true);
+                    } else slimed.supp$setSlimedTicks(t - 1, false);
+                }
             }
         }
     }
