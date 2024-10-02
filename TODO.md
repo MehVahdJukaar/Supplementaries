@@ -76,6 +76,8 @@
 
 # Soon
 
+- slimeballs bugged dispenser
+- flute skibidi
 - capability cache
 - add fabric missing events
 - make polytone and supp hourglass use reloadable registries

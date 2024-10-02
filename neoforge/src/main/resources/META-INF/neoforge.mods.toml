@@ -7,8 +7,7 @@ issueTrackerURL = "${mod_github}/issues"
 
 [[mixins]]
     config = "${mod_id}.mixins.json"
-[[mixins]]
-    config = "${mod_id}-common.mixins.json"
+
 
 [[mods]]
     modId = "${mod_id}"
@@ -19,41 +18,27 @@ issueTrackerURL = "${mod_github}/issues"
     credits = "${mod_credits}"
     description = '''${mod_description}'''
     modUrl = "${mod_homepage}"
-    updateJSONURL = "${update_url}"
     itemIcon = "supplementaries:globe" #catalogue icon
 
-[[dependencies.supplementaries]]
-    modId = "forge"
-    mandatory = true
+[[dependencies.${mod_id}]]
+    modId = "neoforge"
+    type = "required"
     versionRange = "${neo_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "minecraft"
-    mandatory = true
+    type = "required"
     versionRange = "[${minecraft_min_version},${minecraft_max_version})"
     ordering = "NONE"
     side = "CLIENT"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "moonlight"
-    mandatory = true
+    type = "required"
+    referralUrl = "https://www.curseforge.com/minecraft/mc-mods/selene"
     versionRange = "[${moonlight_version_range},]"
     ordering = "NONE"
-    side = "BOTH"
-
-[[dependencies.supplementaries]]
-    modId = "farmersdelight"
-    mandatory = false
-    versionRange = "[1.19-1.2.0,]"
-    ordering = "NONE"
-    side = "BOTH"
-
-[[dependencies.supplementaries]]
-    modId = "quark"
-    mandatory = false
-    versionRange = "[1.19-3.4-404,]"
-    ordering = "AFTER"
     side = "BOTH"
 
