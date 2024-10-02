@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,9 +22,12 @@ public class ClientLevelMixin {
     @Final
     private Minecraft minecraft;
 //use event instead
-    @Inject(method = "addPlayer", at = @At("RETURN"))
-    private void supp$addRopeSoundInstance(int playerId, AbstractClientPlayer playerEntity, CallbackInfo ci) {
-        if (CommonConfigs.Functional.ROPE_SLIDE.get())
-            this.minecraft.getSoundManager().queueTickingSound(new RopeSlideSoundInstance(playerEntity));
+    //TODO: use event instead 1.21
+    @Inject(method = "addEntity", at = @At("RETURN"))
+    private void supp$addRopeSoundInstance(Entity entity, CallbackInfo ci) {
+        if (entity instanceof Player p) {
+            if (CommonConfigs.Functional.ROPE_SLIDE.get())
+                this.minecraft.getSoundManager().queueTickingSound(new RopeSlideSoundInstance(p));
+        }
     }
 }

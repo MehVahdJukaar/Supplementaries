@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(FireBlock.class)
 public interface FireBlockAccessor {
 
-    @Invoker("tryCatchFire")
+    @Invoker("checkBurnOut")
     void invokeTryCatchFire(Level level, BlockPos pos, int k, RandomSource ran, int age, Direction face);
 
 }

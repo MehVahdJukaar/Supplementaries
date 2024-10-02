@@ -42,7 +42,7 @@ public class SuppPlatformStuffImpl {
 
 
     public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        return ((MobBucketItemAccessor) bucketItem).getType();
+        return  ((MobBucketItemAccessor) bucketItem).getType();
     }
 
     @Nullable
