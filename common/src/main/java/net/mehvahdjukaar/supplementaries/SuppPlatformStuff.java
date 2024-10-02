@@ -33,11 +33,6 @@ import java.util.function.Predicate;
 public class SuppPlatformStuff {
 
     @ExpectPlatform
-    public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
     @Nullable
     @Contract
     public static <T> T getForgeCap(@NotNull Entity entity, Class<T> capClass) {
