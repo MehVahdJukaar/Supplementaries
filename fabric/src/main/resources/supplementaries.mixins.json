@@ -17,7 +17,6 @@
     "CompatFarmersDelightTomatoMixin",
     "CropBlockMixin",
     "FireBlockAccessor",
-    "MobBucketItemAccessor",
     "RedstoneWireBlockMixin"
   ],
   "injectors": {

@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
-import net.mehvahdjukaar.supplementaries.mixins.fabric.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -39,11 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class SuppPlatformStuffImpl {
-
-
-    public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        return  ((MobBucketItemAccessor) bucketItem).getType();
-    }
 
     @Nullable
     public static <T> T getForgeCap(Entity object, Class<T> capClass) {

@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
-import net.mehvahdjukaar.supplementaries.mixins.neoforge.MobBucketItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -50,10 +49,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class SuppPlatformStuffImpl {
-
-    public static EntityType<?> getFishType(MobBucketItem bucketItem) {
-        return ((MobBucketItemAccessor) bucketItem).invokeGetFishType();
-    }
 
     /**
      * Does not check if its instance of ICapabilityProvider

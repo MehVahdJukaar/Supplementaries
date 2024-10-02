@@ -18,7 +18,6 @@
     "CompatFarmersDelightTomatoMixin",
     "FireBlockAccessor",
     "LivingEntityMixin",
-    "MobBucketItemAccessor",
     "TreasureMapForEmeraldsMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",

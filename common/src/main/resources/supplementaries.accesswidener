@@ -14,6 +14,8 @@ accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMeth
 accessible method net/minecraft/client/Camera getMaxZoom (F)F
 accessible method net/minecraft/client/Camera move (FFF)V
 
+accessible field net/minecraft/world/item/MobBucketItem type Lnet/minecraft/world/entity/EntityType;
+
 accessible field net/minecraft/world/level/block/ConcretePowderBlock concrete Lnet/minecraft/world/level/block/Block;
 
 accessible method net/minecraft/world/entity/animal/Wolf setCollarColor (Lnet/minecraft/world/item/DyeColor;)V

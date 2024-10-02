@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
+//TODO. check
 //this is still a mess
 public class BucketHelper {
     //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
@@ -36,16 +37,13 @@ public class BucketHelper {
     //only use this to access the map
     @Nullable
     public static EntityType<?> getEntityTypeFromBucket(Item bucket) {
-        BUCKET_TO_MOB_MAP.clear();
         EntityType<?> type = BUCKET_TO_MOB_MAP.get(bucket);
         if (type != null) {
             return type;
         } else if (bucket instanceof MobBucketItem bucketItem) {
-            EntityType<?> en = SuppPlatformStuff.getFishType(bucketItem);
-            if (en != null) {
-                associateMobToBucketIfAbsent(en, bucket);
-                return en;
-            }
+            EntityType<?> en = bucketItem.type;
+            associateMobToBucketIfAbsent(en, bucket);
+            return en;
         }
         //try parsing
         else {
