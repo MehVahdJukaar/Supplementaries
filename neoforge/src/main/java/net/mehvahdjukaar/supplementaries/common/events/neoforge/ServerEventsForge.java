@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
@@ -150,17 +148,15 @@ public class ServerEventsForge {
     }
 
 
-    //TODO: add these on fabric
-    //forge only
-
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         if (!event.getEntity().level().isClientSide) {
             ServerEvents.serverPlayerTick(event.getEntity());
-        } else {
-            ServerEvents.clientPlayerTick(event.getEntity());
         }
     }
+
+    //TODO: add these on fabric
+    //forge only
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onProjectileImpact(final ProjectileImpactEvent event) {
@@ -222,7 +218,7 @@ public class ServerEventsForge {
 
         if (CommonConfigs.Tweaks.SLIME_OVERLAY.get()) {
             Entity entity = event.getEntity();
-            if(entity instanceof ISlimeable slimed) {
+            if (entity instanceof ISlimeable slimed) {
                 int t = slimed.supp$getSlimedTicks();
                 if (t > 0) {
                     if (entity.isUnderWater()) {

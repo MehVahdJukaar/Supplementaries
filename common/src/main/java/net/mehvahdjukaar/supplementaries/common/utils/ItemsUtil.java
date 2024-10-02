@@ -5,11 +5,13 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -21,6 +23,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,12 +116,18 @@ public class ItemsUtil {
 
     //TODO: move to lib
     @ExpectPlatform
-    public static ItemStack tryExtractingItem(Level level, @Nullable Direction dir, Object container) {
+    public static ItemStack tryExtractingItem(Level level, @Nullable Direction dir, BlockPos pos, @Nullable  BlockEntity container) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction direction, Object container) {
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Entity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Direction direction,
+                                          BlockPos pos, BlockState state, @Nullable BlockEntity tile) {
         throw new AssertionError();
     }
 

@@ -19,7 +19,6 @@
     "FireBlockAccessor",
     "LivingEntityMixin",
     "MobBucketItemAccessor",
-    "PlayerProjectileMixin",
     "TreasureMapForEmeraldsMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",

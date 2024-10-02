@@ -133,7 +133,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             for (var bi : ITEM_INTERACTIONS) {
                 ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
                 if (!removed.isEmpty()) {
-                    if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed, dir)) {
+                    if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed)) {
                         //TODO
                     } else if (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get()) {
                         drop(removed);
@@ -224,13 +224,13 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     public static final Predicate<Entity> NON_PLAYER = e -> e.isAlive() && !(e instanceof Player);
 
-    private boolean fillEntityBelow(ItemStack stack, Direction direction) {
+    private boolean fillEntityBelow(ItemStack stack) {
         List<Entity> list = level.getEntities((Entity) null,
                 new AABB(worldPosition).move(0, -0.75, 0),
                 NON_PLAYER);
         Collections.shuffle(list);
-        for (Entity o : list) {
-            stack = ItemsUtil.tryAddingItem(stack, level, direction, o);
+        for (Entity entity : list) {
+            stack = ItemsUtil.tryAddingItem(stack, level, entity);
             if (stack.isEmpty()) return true;
         }
         return false;

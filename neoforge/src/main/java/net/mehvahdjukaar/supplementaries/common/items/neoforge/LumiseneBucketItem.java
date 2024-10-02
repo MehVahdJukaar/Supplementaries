@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items.neoforge;
 
-import net.mehvahdjukaar.moonlight.api.item.ModBucketItem;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -48,11 +46,7 @@ public class LumiseneBucketItem extends BucketItem {
 
         // changed here
         BlockHitResult blockhitresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
-
-        InteractionResultHolder<ItemStack> ret = ForgeEventFactory.onBucketUse(player, level, itemstack, blockhitresult);
-        if (ret != null) {
-            return ret;
-        } else if (blockhitresult.getType() == HitResult.Type.MISS) {
+        if (blockhitresult.getType() == HitResult.Type.MISS) {
             return InteractionResultHolder.pass(itemstack);
         } else if (blockhitresult.getType() != HitResult.Type.BLOCK) {
             return InteractionResultHolder.pass(itemstack);

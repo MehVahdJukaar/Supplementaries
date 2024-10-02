@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge.self;
 
-import com.google.common.collect.ImmutableSet;
 import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,9 +22,9 @@ public abstract class SelfWrenchMixin extends Item {
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return super.canApplyAtEnchantingTable(stack, enchantment) || ImmutableSet.of(
-                Enchantments.KNOCKBACK).contains(enchantment);
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        if (enchantment.is(Enchantments.KNOCKBACK)) return true;
+        return super.supportsEnchantment(stack, enchantment);
     }
 
     @Override
@@ -37,16 +37,15 @@ public abstract class SelfWrenchMixin extends Item {
 
             hangingEntity.setDirection(dir);
 
-            if (player.level().isClientSide) {
-                WrenchItem.playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level(), player);
-            }
-            stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(player.getUsedItemHand()));
+            WrenchItem.playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level(), player);
+
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
             return true;
 
         } else if (entity instanceof LivingEntity armorStand) {
-           if( this.interactLivingEntity(stack, player, armorStand, InteractionHand.MAIN_HAND).consumesAction()){
-               return true;
-           }
+            if (this.interactLivingEntity(stack, player, armorStand, InteractionHand.MAIN_HAND).consumesAction()) {
+                return true;
+            }
         }
         return super.onLeftClickEntity(stack, player, entity);
     }

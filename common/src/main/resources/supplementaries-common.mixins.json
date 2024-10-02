@@ -39,6 +39,7 @@
     "MineshaftCorridorMixin",
     "MineshaftPiecesMixin",
     "PaintingItemMixin",
+    "PlayerProjectileMixin",
     "ProjectileWeaponItemMixin",
     "ProjectileWeaponMixin",
     "RedMerchantSpawnerMixin",

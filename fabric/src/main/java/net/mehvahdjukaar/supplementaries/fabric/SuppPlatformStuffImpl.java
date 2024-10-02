@@ -77,7 +77,7 @@ public class SuppPlatformStuffImpl {
         return 6000;
     }
 
-    public static void onItemPickup(Player player, ItemEntity itemEntity, ItemStack copy) {
+    public static void fireItemPickupPost(Player player, ItemEntity itemEntity, ItemStack copy) {
     }
 
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {

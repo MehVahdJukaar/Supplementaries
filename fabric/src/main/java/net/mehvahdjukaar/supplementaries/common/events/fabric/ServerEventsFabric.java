@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
@@ -83,7 +84,7 @@ public class ServerEventsFabric {
                     BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
                     if (raked.canSurvive(level, pos)) {
                         level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        stack.hurtAndBreak(1, player, (playerIn) -> playerIn.broadcastBreakEvent(hand));
+                        stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                         level.setBlockAndUpdate(pos, RakedGravelBlock.getConnectedState(raked, level, pos, player.getDirection()));
                         return InteractionResult.sidedSuccess(level.isClientSide);
                     }

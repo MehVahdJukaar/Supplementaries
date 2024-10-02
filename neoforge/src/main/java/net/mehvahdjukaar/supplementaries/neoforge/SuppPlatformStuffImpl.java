@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
+import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -10,6 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -35,9 +39,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -119,8 +125,8 @@ public class SuppPlatformStuffImpl {
         return itemEntity.lifespan;
     }
 
-    public static void onItemPickup(Player player, ItemEntity itemEntity, ItemStack copy) {
-        ForgeEventFactory.firePlayerItemPickupEvent(player, itemEntity, copy);
+    public static void fireItemPickupPost(Player player, ItemEntity itemEntity, ItemStack copy) {
+        EventHooks.fireItemPickupPost(itemEntity, player, copy);
     }
 
     public static CreativeModeTab.Builder searchBar(CreativeModeTab.Builder c) {
@@ -147,10 +153,9 @@ public class SuppPlatformStuffImpl {
         var cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);
         if (cap != null) {
             for (int i = 0; i < cap.getSlots(); i++) {
-                ItemStack quiver = cap.getStackInSlot(i);
-                if (predicate.test(quiver)) {
-                    int finalI = i;
-                    return () -> cap.getStackInSlot(finalI);
+                ItemStack itemInSlot = cap.getStackInSlot(i);
+                if (predicate.test(itemInSlot)) {
+                    return new CapSlotReference(i);
                 }
             }
         }
@@ -184,13 +189,38 @@ public class SuppPlatformStuffImpl {
 
 
     public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
-        var r = ForgeHooks.onItemRightClick(player, hand);
+        var r = CommonHooks.onItemRightClick(player, hand);
         if (r == null) r = InteractionResult.PASS;
         return new InteractionResultHolder<>(r, player.getItemInHand(hand));
     }
 
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         dc.emptyContents(player, level, hit.getBlockPos(), hit, stack);
+    }
+
+    public record CapSlotReference(int slot) implements SlotReference {
+
+        public static final StreamCodec<ByteBuf, CapSlotReference> CODEC = ByteBufCodecs.VAR_INT
+                .map(CapSlotReference::new, CapSlotReference::slot);
+
+
+        @Override
+        public ItemStack get(LivingEntity player) {
+            var cap = player.getCapability(Capabilities.ItemHandler.ENTITY);
+            if (cap != null) {
+                return cap.getStackInSlot(slot);
+            }
+            return null;
+        }
+
+        @Override
+        public StreamCodec<? super RegistryFriendlyByteBuf, ? extends SlotReference> getCodec() {
+            return CODEC;
+        }
+    }
+
+    static {
+        SlotReference.REGISTRY.register("cap_slot", CapSlotReference.CODEC);
     }
 
 }

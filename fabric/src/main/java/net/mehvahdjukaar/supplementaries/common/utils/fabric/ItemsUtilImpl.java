@@ -5,15 +5,19 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.IntStream;
@@ -61,13 +65,13 @@ public class ItemsUtilImpl {
         return found;
     }
 
-    public static ItemStack tryExtractingItem(Level level, @Nullable Direction direction, Object tile) {
+    public static ItemStack tryExtractingItem(Level level, @Nullable Direction direction, BlockPos pos, @Nullable BlockEntity tile) {
         if (tile instanceof Container container) {
             int[] slots;
             if (container instanceof WorldlyContainer wc && direction != null) {
                 slots = wc.getSlotsForFace(direction);
             } else {
-                slots = IntStream.rangeClosed(0, container.getContainerSize()-1).toArray();
+                slots = IntStream.rangeClosed(0, container.getContainerSize() - 1).toArray();
             }
             for (int slot : slots) {
                 ItemStack itemStack = container.getItem(slot);
@@ -87,16 +91,29 @@ public class ItemsUtilImpl {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction direction, Object tile) {
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Direction direction,
+                                          BlockPos pos, BlockState state, @Nullable BlockEntity tile) {
         if (tile instanceof Container container) {
             int[] slots;
             if (container instanceof WorldlyContainer wc && direction != null) {
                 slots = wc.getSlotsForFace(direction);
             } else {
-                slots = IntStream.rangeClosed(0, container.getContainerSize()-1).toArray();
+                slots = IntStream.rangeClosed(0, container.getContainerSize() - 1).toArray();
             }
             for (int i : slots) {
                 stack = tryMoveInItem(container, stack, i, direction);
+                if (stack.isEmpty()) return stack;
+            }
+        }
+        return stack;
+    }
+
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Entity entity) {
+        if (entity instanceof Container container) {
+            int[] slots;
+            slots = IntStream.rangeClosed(0, container.getContainerSize() - 1).toArray();
+            for (int i : slots) {
+                stack = tryMoveInItem(container, stack, i, null);
                 if (stack.isEmpty()) return stack;
             }
         }
@@ -132,4 +149,6 @@ public class ItemsUtilImpl {
     private static boolean canMergeItems(ItemStack stack1, ItemStack stack2) {
         return stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.isSameItemSameComponents(stack1, stack2);
     }
+
+
 }

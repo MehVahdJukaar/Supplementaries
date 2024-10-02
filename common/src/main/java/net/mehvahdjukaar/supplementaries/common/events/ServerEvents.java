@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
@@ -176,13 +175,6 @@ public class ServerEvents {
         CandyItem.checkSweetTooth(player);
     }
 
-    @EventCalled
-    public static void clientPlayerTick(Player player) {
-        if (player instanceof IQuiverEntity) {
-
-        }
-    }
-
     //TODO: fabric
     @EventCalled
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
@@ -195,7 +187,7 @@ public class ServerEvents {
         ) {
             ItemStack old = stack.copy();
             if (takeArrow(itemEntity, player, stack)) {
-                SuppPlatformStuff.onItemPickup(player, itemEntity, old);
+                SuppPlatformStuff.fireItemPickupPost(player, itemEntity, old);
                 player.onItemPickup(itemEntity);
                 player.awardStat(Stats.ITEM_PICKED_UP.get(stack.getItem()), old.getCount() - stack.getCount());
                 return true;

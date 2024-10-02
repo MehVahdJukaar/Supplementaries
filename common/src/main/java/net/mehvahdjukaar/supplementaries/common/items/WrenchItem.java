@@ -87,6 +87,7 @@ public class WrenchItem extends Item {
         return InteractionResult.FAIL;
     }
 
+    //TODO: fix server side
     public static void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
         if (!level.isClientSide) {
             if (dir == Direction.DOWN) {

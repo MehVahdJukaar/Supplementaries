@@ -8,25 +8,26 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.wrapper.RangedWrapper;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ItemsUtilImpl {
 
@@ -98,11 +99,10 @@ public class ItemsUtilImpl {
 
     public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
         float amount = 0;
-        AtomicReference<IItemHandler> reference = new AtomicReference<>();
-        player.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(reference::set);
-        if (reference.get() != null) {
-            for (int idx = 0; idx < reference.get().getSlots(); idx++) {
-                ItemStack slotItem = reference.get().getStackInSlot(idx);
+        IItemHandler itemHandler = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        if (itemHandler != null) {
+            for (int idx = 0; idx < itemHandler.getSlots(); idx++) {
+                ItemStack slotItem = itemHandler.getStackInSlot(idx);
                 amount += SackItem.getEncumber(slotItem);
             }
 
@@ -119,11 +119,10 @@ public class ItemsUtilImpl {
         KeyLockableTile.KeyStatus found = CompatHandler.getKeyFromModsSlots(player, key);
         if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;
 
-        AtomicReference<IItemHandler> itemHandler = new AtomicReference<>();
-        player.getCapability(Capabilities.ItemHandler.ENTITY).ifPresent(itemHandler::set);
-        if (itemHandler.get() != null) {
-            for (int idx = 0; idx < itemHandler.get().getSlots(); idx++) {
-                ItemStack stack = itemHandler.get().getStackInSlot(idx);
+        IItemHandler itemHandler = player.getCapability(Capabilities.ItemHandler.ENTITY);
+        if (itemHandler != null) {
+            for (int idx = 0; idx < itemHandler.getSlots(); idx++) {
+                ItemStack stack = itemHandler.getStackInSlot(idx);
                 KeyLockableTile.KeyStatus status = IKeyLockable.getKeyStatus(stack, key);
                 if (status == KeyLockableTile.KeyStatus.CORRECT_KEY) {
                     return status;
@@ -135,19 +134,18 @@ public class ItemsUtilImpl {
         return found;
     }
 
-    public static ItemStack tryExtractingItem(Level level, Direction dir, Object tile) {
-        if (tile instanceof ICapabilityProvider cp) {
-            IItemHandler itemHandler = CapabilityHandler.get(cp, Capabilities.ItemHandler.ITEM_HANDLER, dir);
-            if (itemHandler != null) {
-                for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-                    ItemStack itemstack = itemHandler.getStackInSlot(slot);
-                    if (!itemstack.isEmpty()) {
-                        ItemStack extracted = itemHandler.extractItem(slot, 1, false);
-                        //empty stack means it can't extract from inventory
-                        if (!extracted.isEmpty()) {
-                            if (cp instanceof Container c) c.setChanged();
-                            return extracted.copy();
-                        }
+    public static ItemStack tryExtractingItem(Level level, Direction dir, BlockPos pos, BlockEntity tile) {
+        IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK,
+                pos, level.getBlockState(pos), tile, dir);
+        if (itemHandler != null) {
+            for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+                ItemStack itemstack = itemHandler.getStackInSlot(slot);
+                if (!itemstack.isEmpty()) {
+                    ItemStack extracted = itemHandler.extractItem(slot, 1, false);
+                    //empty stack means it can't extract from inventory
+                    if (!extracted.isEmpty()) {
+                        if (tile instanceof Container c) c.setChanged();
+                        return extracted.copy();
                     }
                 }
             }
@@ -155,12 +153,17 @@ public class ItemsUtilImpl {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack tryAddingItem(ItemStack stack, Level level, @Nullable Direction dir, Object container) {
-        IItemHandler itemHandler = CapabilityHandler.get(cp, ForgeCapabilities.ITEM_HANDLER, dir);
-        if (container instanceof AbstractChestedHorse && itemHandler instanceof IItemHandlerModifiable im) {
-            //thanks...
-            itemHandler = new RangedWrapper(im, 1, itemHandler.getSlots());
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Entity entity) {
+        IItemHandler itemHandler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
+        if (itemHandler != null) {
+            return ItemHandlerHelper.insertItem(itemHandler, stack, false);
         }
+        return stack;
+    }
+
+    public static ItemStack tryAddingItem(ItemStack stack, Level level, Direction dir,
+                                          BlockPos pos, BlockState state, @Nullable  BlockEntity be) {
+        IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, be, dir);
         if (itemHandler != null) {
             return ItemHandlerHelper.insertItem(itemHandler, stack, false);
         }
