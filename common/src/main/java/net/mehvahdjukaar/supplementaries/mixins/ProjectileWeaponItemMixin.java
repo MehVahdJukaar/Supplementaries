@@ -85,8 +85,8 @@ public abstract class ProjectileWeaponItemMixin {
     }
 
     @ModifyVariable(method = "draw", at = @At("STORE"), ordinal = 1)
-    private static int tryLoadProjectiles(int original, @Local(argsOnly = true) LivingEntity entity,
-                                          @Local(ordinal = 2) ItemStack ammo) {
+    private static int supp$dontShoot2RopeArrows(int original, @Local(argsOnly = true) LivingEntity entity,
+                                                 @Local(ordinal = 2) ItemStack ammo) {
         if (original > 1 && ammo.getItem() instanceof RopeArrowItem) return 1;
         return original;
     }
