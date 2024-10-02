@@ -155,6 +155,10 @@
 
 # Polytone
 
+- composite colormap thingie
+- wildcard rray conditons
+- 2x2 animatedt extures
+- per quad offset
 - cim bow
 - add text onto guis
 - polytone tweak animal sounds
