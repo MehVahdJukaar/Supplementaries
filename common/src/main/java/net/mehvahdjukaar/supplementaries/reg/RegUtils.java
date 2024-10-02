@@ -107,7 +107,7 @@ public class RegUtils {
     }
 
     public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory) {
-        return regWithItem(name, blockFactory);
+        return regWithItem(name, blockFactory, new Item.Properties());
     }
 
     public static <T extends Block> RegSupplier<T> regWithItem(String name, Supplier<T> blockFactory, Item.Properties properties) {

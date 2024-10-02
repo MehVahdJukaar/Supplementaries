@@ -16,18 +16,21 @@ import net.minecraft.world.item.ItemStack;
 public class EndermanHeadItemRenderer extends ItemStackRenderer {
 
 
-    private final EndermanSkullBlockTile dummyTile;
+    private EndermanSkullBlockTile dummyTile;
 
     public EndermanHeadItemRenderer() {
         super();
-        this.dummyTile = new EndermanSkullBlockTile(BlockPos.ZERO, ModRegistry.ENDERMAN_SKULL_BLOCK.get().defaultBlockState());
     }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType,
                              PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlayIn) {
 
-        poseStack.translate(1,0,1);
+        if (dummyTile == null) {
+            dummyTile = new EndermanSkullBlockTile(BlockPos.ZERO, ModRegistry.ENDERMAN_SKULL_BLOCK.get().defaultBlockState());
+        }
+
+        poseStack.translate(1, 0, 1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
     }
