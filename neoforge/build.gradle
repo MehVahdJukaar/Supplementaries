@@ -108,8 +108,8 @@ dependencies {
     //modImplementation("curse.maven:selene-499980:5651445")
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 
-    modRuntimeOnly("curse.maven:modernfix-790626:4599348")
-    modRuntimeOnly("curse.maven:spark-361579:4738952")
+    //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
+    //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
     modCompileOnly("curse.maven:jei-238222:3928388")

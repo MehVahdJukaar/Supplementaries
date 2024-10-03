@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -47,6 +48,12 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
     @Override
     public BlockEntityType<?> getType() {
         return ModRegistry.ENDERMAN_SKULL_TILE.get();
+    }
+
+    @PlatformOnly(value = PlatformOnly.FABRIC)
+    @Override
+    public boolean isValidBlockState(BlockState blockState) {
+        return this.getType().isValid(blockState);
     }
 
     public float getMouthAnimation(float partialTicks) {

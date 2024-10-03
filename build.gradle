@@ -215,8 +215,8 @@ ext{
 task buildAndPublishAll {
     dependsOn ':clean'
     dependsOn ':build'
-    dependsOn ':forge:curseforge'
-    dependsOn ':forge:modrinth'
+    dependsOn ':neoforge:curseforge'
+    dependsOn ':neoforge:modrinth'
     dependsOn ':fabric:curseforge'
     dependsOn ':fabric:modrinth'
 }

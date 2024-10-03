@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 
 public class EndermanHeadItemRenderer extends ItemStackRenderer {
@@ -29,7 +30,6 @@ public class EndermanHeadItemRenderer extends ItemStackRenderer {
         if (dummyTile == null) {
             dummyTile = new EndermanSkullBlockTile(BlockPos.ZERO, ModRegistry.ENDERMAN_SKULL_BLOCK.get().defaultBlockState());
         }
-
         poseStack.translate(1, 0, 1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
         Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
