@@ -719,7 +719,7 @@ public class CommonConfigs {
                                     BlockPredicate.create("sticky_piston"), ResourceLocation.withDefaultNamespace("piston"),
                                     BlockPredicate.create("quark:dirty_glass"), ResourceLocation.withDefaultNamespace("glass"),
                                     BlockPredicate.create("quark:dirty_glass_pane"), ResourceLocation.withDefaultNamespace("glass_pane"),
-                                    BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.withDefaultNamespace("alexscaves:smooth_limestone")
+                                    BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.parse("alexscaves:smooth_limestone")
                             ),
                             Codec.unboundedMap(BlockPredicate.CODEC, ResourceLocation.CODEC));
             builder.pop();

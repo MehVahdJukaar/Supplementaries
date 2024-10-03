@@ -32,44 +32,6 @@ import java.util.List;
 @Mod(Supplementaries.MOD_ID)
 public class SupplementariesForge {
 
-    public static class  e extends Item{
-        public e(Properties properties) {
-            super(properties);
-        }
-
-        @Override
-        public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-            return super.isBookEnchantable(stack, book);
-        }
-
-        @Override
-        public boolean isEnchantable(ItemStack stack) {
-            return super.isEnchantable(stack);
-        }
-
-        @Override
-        public ItemStack applyEnchantments(ItemStack stack, List<EnchantmentInstance> enchantments) {
-            return super.applyEnchantments(stack, enchantments);
-        }
-
-        @Override
-        public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
-            return super.getEnchantmentLevel(stack, enchantment);
-        }
-
-        @Override
-        public int getEnchantmentValue(ItemStack stack) {
-            return super.getEnchantmentValue(stack);
-        }
-
-
-
-        @Override
-        public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
-            return super.getAllEnchantments(stack, lookup);
-        }
-    }
-
     public SupplementariesForge(IEventBus bus) {
         Supplementaries.commonInit();
 
@@ -84,7 +46,6 @@ public class SupplementariesForge {
             ClientEventsForge.init();
         });
     }
-
 
     @SubscribeEvent
     public void registerCapabilities(RegisterCapabilitiesEvent event) {

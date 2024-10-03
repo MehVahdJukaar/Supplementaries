@@ -73,6 +73,7 @@
 - cannonball explosion
 - slimed overlay with frost
 - quiver arrow shrink
+- banner tooltips
 
 # Soon
 

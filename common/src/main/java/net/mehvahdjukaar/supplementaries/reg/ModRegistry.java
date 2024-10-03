@@ -739,7 +739,8 @@ public class ModRegistry {
     ));
 
     //pancakes
-    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME, () -> new PancakeItem(new Item.Properties()
+    public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME,
+            () -> new PancakeItem(new Item.Properties()
             .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
                     new EitherHolder<>(ModSounds.PANCAKE_MUSIC_JUKEBOX.getKey()), false))));
 

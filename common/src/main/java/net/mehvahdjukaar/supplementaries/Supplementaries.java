@@ -63,6 +63,7 @@ public class Supplementaries {
         ModSounds.init();
         ModFluids.init();
         ModRegistry.init();
+        ModComponents.init();
         ModRecipes.init();
         ModMenuTypes.init();
         ModEntities.init();

@@ -24,6 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.sound.PlaySoundSourceEvent;
 import net.neoforged.neoforge.client.event.sound.SoundEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -138,7 +139,7 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onSoundPlay(SoundEvent.SoundSourceEvent event) {
+    public static void onSoundPlay(PlaySoundSourceEvent event) {
         SongsManager.recordNoteFromSound(event.getSound(), event.getName());
     }
 

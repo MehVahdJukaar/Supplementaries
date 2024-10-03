@@ -36,7 +36,7 @@ public class CapabilityHandler {
 
     public static void init(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
-        NeoForge.EVENT_BUS.addListener(CapabilityHandler::register);
+        bus.addListener(CapabilityHandler::register);
     }
 
 
