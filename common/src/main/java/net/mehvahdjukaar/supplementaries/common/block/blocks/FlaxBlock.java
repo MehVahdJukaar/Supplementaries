@@ -158,9 +158,9 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         if (level.getRawBrightness(pos, 0) >= 9) {
             if (this.isValidBonemealTarget(level, pos, state)) {
                 float f = getGrowthSpeed(this, level, pos);
-                if (ForgeHelper.onCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+                if (ForgeHelper.fireOnCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                     this.growCropBy(level, pos, state, 1);
-                    ForgeHelper.onCropsGrowPost(level, pos, state);
+                    ForgeHelper.fireOnCropsGrowPost(level, pos, state);
                 }
             }
         }
@@ -172,7 +172,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         InteractionResult old = super.useWithoutItem(state, level, pos, player, hitResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             // calls use event on lower block
-            var ev = ForgeHelper.onRightClickBlock(player, MAIN_HAND, pos.below(), hitResult);
+            var ev = ForgeHelper.fireOnRightClickBlock(player, MAIN_HAND, pos.below(), hitResult);
             if (ev != null) return ev;
             else {
                 BlockState below = level.getBlockState(pos.below());

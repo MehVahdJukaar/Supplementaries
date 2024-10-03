@@ -54,7 +54,7 @@ public class GunpowderExplosion extends Explosion {
         //TODO: maybe this could be done just with a custom block interaction
         Vec3 center = Vec3.atCenterOf(pos);
         GunpowderExplosion explosion = new GunpowderExplosion(world, center.x, center.y, center.z);
-        if (ForgeHelper.onExplosionStart(world, explosion)) return;
+        if (ForgeHelper.fireOnExplosionStart(world, explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(false);
 
@@ -99,7 +99,7 @@ public class GunpowderExplosion extends Explosion {
         int pz = Mth.floor(this.z);
 
         //is this needed?
-        ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius * 2f);
+        ForgeHelper.fireOnExplosionDetonate(this.level, this, new ArrayList<>(), this.radius * 2f);
 
         explodeSingleBlock(px + 1, py, pz);
         explodeSingleBlock(px - 1, py, pz);

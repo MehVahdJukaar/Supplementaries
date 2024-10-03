@@ -96,15 +96,17 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
     neoForge "net.neoforged:neoforge:${neo_version}"
 
-    implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
-    implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
+    implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
+    implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
+
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+
+
     //modImplementation("curse.maven:selene-499980:5651445")
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 
@@ -176,6 +178,7 @@ dependencies {
 
 }
 
+/*
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
@@ -183,3 +186,5 @@ tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs << "-Xmaxerrs" << "4000"
 
 }
+
+ */

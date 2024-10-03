@@ -1,20 +1,42 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.1' apply false
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.modrinth.minotaur" version "2.+"
-    id "com.github.johnrengelman.shadow" version "7.1.2" apply false
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = minecraft_version
 }
 
-    subprojects {
-        apply plugin: "dev.architectury.loom"
-        apply plugin: "com.github.johnrengelman.shadow"
-        apply plugin: "com.matthewprenger.cursegradle"
-        apply plugin: "com.modrinth.minotaur"
+static def listGameVersions(String string1, String string2) {
+    // Extract the base version and the starting and ending patch numbers
+    String baseVersion = string1
+    int startPatch = 0
+    int endPatch = Integer.parseInt(string2.split('\\.')[2])
+
+    // Initialize an array to hold the generated versions
+    def versions = []
+
+    // Add the base version (string1) to the array
+    versions << baseVersion
+
+    // Generate and add the patch versions
+    for (int i = startPatch + 1; i <= endPatch; i++) {
+        versions << "${baseVersion}.${i}"
+    }
+
+    // Return the generated versions
+    return versions
+}
+
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "com.matthewprenger.cursegradle"
+    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -37,18 +59,20 @@ architectury {
     var changelogFile = rootProject.file("changelog.md")
     var changelogText = changelogFile.exists() ? changelogFile.text : ""
 
+    var versions = listGameVersions(minecraft_min_version, minecraft_version)
+
     if (env.MODRINTH_TOKEN) {
         modrinth {
             projectId = rootProject.mod_id
             uploadFile = tasks.remapJar
-            gameVersions = [rootProject.minecraft_version]
-            if(modLoader == "forge"){
-                loaders = [modLoader, "neoforge"]
-            }else{
-                loaders = [modLoader]
-            }
+            gameVersions = versions
+            if (modLoader == "forge") {
+                loaders = ["neoforge"]
+            } else loaders = [modLoader]
 
             changelog = changelogText
+            versionNumber = modLoader +"_"+ mod_version
+            versionType = release_type
 
             if (modLoader == "fabric") {
                 dependencies {
@@ -67,15 +91,15 @@ architectury {
         curseforge {
             apiKey = env.CURSEFORGE_TOKEN
             project {
-                id = rootProject.project_id
+                id = project_id
                 changelog = changelogText
-                releaseType = 'release'
-                addGameVersion rootProject.minecraft_version
-                addGameVersion modLoader.capitalize()
-                if(modLoader == "forge"){
-                    addGameVersion "NeoForge"
+                releaseType = release_type
+                for (var ver : versions){
+                    addGameVersion ver
                 }
-
+                if (modLoader == "neoforge") {
+                    addGameVersion("NeoForge")
+                } else addGameVersion modLoader.capitalize()
 
                 mainArtifact(tasks.remapJar)
 
@@ -129,9 +153,9 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.mod_id
-    version = rootProject.mod_version
-    group = rootProject.mod_group_id
+    archivesBaseName = mod_id
+    version = mod_version
+    group = mod_group_id
 
     repositories {
 
@@ -140,7 +164,6 @@ allprojects {
         }
 
         mavenCentral()
-
         mavenLocal()
 
         maven { url "https://maven.parchmentmc.org" }
@@ -186,28 +209,28 @@ allprojects {
     }
 }
 
-ext{
+ext {
     replaceProperties = [
-            minecraft_version    : minecraft_version,
-            minecraft_min_version: minecraft_min_version,
-            minecraft_max_version: minecraft_max_version,
-            pack_format_number   : pack_format_number,
+            minecraft_version      : minecraft_version,
+            minecraft_min_version  : minecraft_min_version,
+            minecraft_max_version  : minecraft_max_version,
+            pack_format_number     : pack_format_number,
 
-            mod_id               : mod_id,
-            mod_name             : mod_name,
-            mod_version          : mod_version,
-            mod_license          : mod_license,
-            mod_authors          : mod_authors,
-            mod_description      : mod_description,
-            mod_credits          : mod_credits,
-            mod_homepage         : mod_homepage,
-            mod_github           : mod_github,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_version            : mod_version,
+            mod_license            : mod_license,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+            mod_credits            : mod_credits,
+            mod_homepage           : mod_homepage,
+            mod_github             : mod_github,
 
-            neo_version          : neo_version,
-            neo_version_range    : neo_version_range,
-            loader_version_range : loader_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
 
-            moonlight_version_range : moonlight_version_range,
+            moonlight_version_range: moonlight_version_range,
     ]
 }
 

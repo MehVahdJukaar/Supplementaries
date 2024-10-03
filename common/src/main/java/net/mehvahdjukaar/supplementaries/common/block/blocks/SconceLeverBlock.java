@@ -125,15 +125,15 @@ public class SconceLeverBlock extends SconceWallBlock {
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
-        boolean ret = super.lightUp(entity, state, pos, world, fireSourceType);
+    public boolean tryLightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
+        boolean ret = super.tryLightUp(entity, state, pos, world, fireSourceType);
         if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
         return ret;
     }
 
     @Override
-    public boolean extinguish(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world) {
-        boolean ret = super.extinguish(player, state, pos, world);
+    public boolean tryExtinguish(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world) {
+        boolean ret = super.tryExtinguish(player, state, pos, world);
         if (ret && world instanceof ServerLevel level) updateNeighbors(state, level, pos);
         return ret;
     }

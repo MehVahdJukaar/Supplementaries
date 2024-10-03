@@ -44,9 +44,9 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
     }
 
     @Override
-    public boolean lightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
+    public boolean tryLightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
         if (!state.getValue(WATERLOGGED)) {
-            return super.lightUp(entity, state, pos, world, fireSourceType);
+            return super.tryLightUp(entity, state, pos, world, fireSourceType);
         }
         return false;
     }

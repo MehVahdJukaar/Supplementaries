@@ -109,7 +109,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
                     }
                 }
             }
-            ForgeHelper.onLivingConvert(this, newHorse);
+            ForgeHelper.fireOnLivingConvert(this, newHorse);
         }
 
         if (!this.isSilent()) {
