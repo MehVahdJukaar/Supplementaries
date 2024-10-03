@@ -77,6 +77,8 @@
 
 # Soon
 
+- limisene diepsners
+-soap cleaning from recipe
 - slimeballs bugged dispenser
 - flute skibidi
 - capability cache

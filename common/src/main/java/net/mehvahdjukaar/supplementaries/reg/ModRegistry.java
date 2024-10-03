@@ -439,7 +439,7 @@ public class ModRegistry {
     ));
 
     //spikes
-    public static final Supplier<Block> BAMBOO_SPIKES = regWithItem(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
+    public static final Supplier<Block> BAMBOO_SPIKES = regBlock(BAMBOO_SPIKES_NAME, () -> new BambooSpikesBlock(
             BlockBehaviour.Properties.of()
                     .pushReaction(PushReaction.NORMAL)
                     .mapColor(MapColor.SAND)
@@ -448,6 +448,9 @@ public class ModRegistry {
                     .isRedstoneConductor((a, b, c) -> false)
                     .strength(2)
                     .noOcclusion()));
+
+    public static final Supplier<Item> BAMBOO_SPIKES_ITEM = regItem(BAMBOO_SPIKES_NAME, () -> new BlockItem(
+            BAMBOO_SPIKES.get(), new Item.Properties()));
 
     public static final Supplier<BlockEntityType<BambooSpikesBlockTile>> BAMBOO_SPIKES_TILE = regTile(
             BAMBOO_SPIKES_NAME, () -> PlatHelper.newBlockEntityType(

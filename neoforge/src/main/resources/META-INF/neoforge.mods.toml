@@ -6,6 +6,10 @@ license = "${mod_license}"
 issueTrackerURL = "${mod_github}/issues"
 
 
+[[mixins]]
+    config = "${mod_id}.mixins.json"
+[[mixins]]
+    config = "${mod_id}-common.mixins.json"
 
 [[mods]]
     modId = "${mod_id}"

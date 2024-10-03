@@ -28,6 +28,8 @@ import org.joml.Quaternionf;
 
 import java.util.List;
 
+import static net.mehvahdjukaar.supplementaries.client.ModMaterials.FLAG_BASE_MATERIAL;
+
 public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
     private final ModelPart flag;
@@ -63,86 +65,94 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         BannerPatternLayers patterns = tile.getPatterns();
 
-        if (patterns != BannerPatternLayers.EMPTY) {
 
-            int lu = VertexUtil.lightU(combinedLightIn);
-            int lv = VertexUtil.lightV(combinedLightIn);
-
-            int w = 24;
-            int h = 16;
-
-            poseStack.pushPose();
-            poseStack.translate(0.5, 0, 0.5);
-            poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
-            poseStack.translate(0, 0, (1 / 16f));
-
-            long time = tile.getLevel().getGameTime();
-
-            double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
-            long period = (ClientConfigs.Blocks.FLAG_PERIOD.get());
-            double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
-            double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
-
-            BlockPos bp = tile.getBlockPos();
-            //always from 0 to 1
-            //TODO: fix
-            float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
-
-            if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-                float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-                renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, tile.getColor());
-            } else {
-
-                int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
-                float oldAng = 0;
-                for (int dX = 0; dX < w; dX += segmentLen) {
-
-                    float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
-
-                    renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen, ang, oldAng);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(ang));
-                    poseStack.translate(0, 0, segmentLen / 16f);
-                    poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
-                    oldAng = ang;
-                }
-            }
-
-            poseStack.popPose();
-        }
-
-    }
-
-    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, BannerPatternLayers patterns, int combinedLightIn) {
         int lu = VertexUtil.lightU(combinedLightIn);
         int lv = VertexUtil.lightV(combinedLightIn);
 
-        renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24, 0, 0);
+        int w = 24;
+        int h = 16;
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0, 0.5);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        poseStack.translate(0, 0, (1 / 16f));
+
+        long time = tile.getLevel().getGameTime();
+
+        double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
+        long period = (ClientConfigs.Blocks.FLAG_PERIOD.get());
+        double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
+        double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
+
+        BlockPos bp = tile.getBlockPos();
+        //always from 0 to 1
+        //TODO: fix
+        float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
+
+        if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
+            float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
+            renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, tile.getColor());
+        } else {
+
+            int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
+            float oldAng = 0;
+            for (int dX = 0; dX < w; dX += segmentLen) {
+
+                float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
+
+                renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,
+                        ang, oldAng, tile.getColor());
+                poseStack.mulPose(Axis.YP.rotationDegrees(ang));
+                poseStack.translate(0, 0, segmentLen / 16f);
+                poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
+                oldAng = ang;
+            }
+        }
+
+        poseStack.popPose();
+    }
+
+    public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, BannerPatternLayers patterns,
+                                      int combinedLightIn, DyeColor baseColor) {
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
+
+        renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24,
+                0, 0, baseColor);
     }
 
 
-    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack matrixStackIn, BannerPatternLayers list,
-                                       int lu, int lv, int dX, int w, int h, int segmentlen, float ang, float oldAng) {
+    private static void renderPatterns(MultiBufferSource bufferIn, PoseStack poseStack, BannerPatternLayers list,
+                                       int lu, int lv, int dX, int w, int h, int segmentLen,
+                                       float ang, float oldAng, DyeColor baseColor) {
 
-        List<BannerPatternLayers.Layer> layers = list.layers();
-        for (int p = 0; p < layers.size(); p++) {
+        renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, FLAG_BASE_MATERIAL, true, baseColor);
 
-            Material material = ModMaterials.FLAG_MATERIALS.apply(layers.get(p).pattern().value());
-            if (material == null) {
-                continue;
-            }
-            VertexConsumer builder = material.buffer(bufferIn, p == 0 ? RenderType::entitySolid : RenderType::entityNoOutline);
-
-            matrixStackIn.pushPose();
-
-            int color = layers.get(p).color().getTextureDiffuseColor();
-            float b = FastColor.ARGB32.blue(color) / 255f;
-            float g = FastColor.ARGB32.green(color) / 255f;
-            float r = FastColor.ARGB32.red(color) / 255f;
-
-            renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
-
-            matrixStackIn.popPose();
+        for (BannerPatternLayers.Layer layer : list.layers()) {
+            Material material = ModMaterials.FLAG_MATERIALS.apply(layer.pattern().value());
+            DyeColor dyeColor = layer.color();
+            renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, material, false, dyeColor);
         }
+    }
+
+    private static void renderLayer(MultiBufferSource bufferIn, PoseStack matrixStackIn, int lu, int lv, int dX, int w, int h,
+                                    int segmentlen, float ang, float oldAng, Material material,
+                                    boolean solid, DyeColor dyeColor) {
+        if (material == null) {
+            return;
+        }
+        VertexConsumer builder = material.buffer(bufferIn, solid ? RenderType::entitySolid : RenderType::entityNoOutline);
+
+        matrixStackIn.pushPose();
+
+        int color = dyeColor.getTextureDiffuseColor();
+        float b = FastColor.ARGB32.blue(color) / 255f;
+        float g = FastColor.ARGB32.green(color) / 255f;
+        float r = FastColor.ARGB32.red(color) / 255f;
+
+        renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
+
+        matrixStackIn.popPose();
     }
 
 

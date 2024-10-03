@@ -87,7 +87,7 @@ public class DispenserBehaviorsManager {
         }
         event.register(new FlintAndSteelBehavior(Items.FLINT_AND_STEEL));
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
-            event.registerPlaceBlock(ModRegistry.BAMBOO_SPIKES.get());
+            event.registerPlaceBlock(ModRegistry.BAMBOO_SPIKES_ITEM.get());
         }
         if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());

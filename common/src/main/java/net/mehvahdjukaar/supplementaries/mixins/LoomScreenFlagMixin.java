@@ -48,7 +48,7 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
     public void supp$renderFlags(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
         this.supplementaries$bannerFlagBG.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
 
-        if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem) {
+        if (this.resultBannerPatterns != null && !this.hasMaxPatterns && this.bannerStack.getItem() instanceof FlagItem fi) {
             int i = this.leftPos;
             int j = this.topPos;
             MultiBufferSource.BufferSource renderTypeBuffer = this.minecraft.renderBuffers().bufferSource();
@@ -64,7 +64,8 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
             pose.translate(-1, -0.5, -1.1875);
             Lighting.setupForFlatItems();
 
-            FlagBlockTileRenderer.renderPatterns(pose, renderTypeBuffer, this.resultBannerPatterns, 15728880);
+            FlagBlockTileRenderer.renderPatterns(pose, renderTypeBuffer, this.resultBannerPatterns,
+                    15728880, fi.getColor());
 
             pose.popPose();
             renderTypeBuffer.endBatch();

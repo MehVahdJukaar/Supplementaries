@@ -24,7 +24,7 @@ public class TippedBambooSpikesRecipe extends CustomRecipe {
         if (stack.getItem() == ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get()) {
             Integer charges = stack.get(ModComponents.CHARGES.get());
             return charges == null || charges == 0;
-        } else return stack.is(ModRegistry.BAMBOO_SPIKES.get().asItem());
+        } else return stack.is(ModRegistry.BAMBOO_SPIKES_ITEM.get());
     }
 
     @Override

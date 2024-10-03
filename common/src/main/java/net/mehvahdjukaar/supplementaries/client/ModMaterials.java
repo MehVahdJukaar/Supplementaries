@@ -56,6 +56,8 @@ public class ModMaterials {
             new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/" + pattern.assetId()
                     .toShortLanguageKey().replace(":", "/").replace(".", "/"))
             ));
+    public static final  Material FLAG_BASE_MATERIAL = new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/base"));
+
 
     @Nullable
     public static Material getFlagMaterialForPatternItem(Level level, BannerPatternItem item) {
