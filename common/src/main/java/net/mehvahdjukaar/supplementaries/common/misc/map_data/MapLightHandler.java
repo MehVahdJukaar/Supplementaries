@@ -183,10 +183,16 @@ public class MapLightHandler {
             int maxX = counter.maxDirtyX;
             int minZ = counter.minDirtyZ;
             Int2ObjectArrayMap<byte[]> lights = new Int2ObjectArrayMap<>();
-            for (int x = minX; x <= maxX; x++) {
-                if (data[x] != null) {
-                    lights.put(x, data[x]);
+            if (data != null) {
+                for (int x = minX; x <= maxX; x++) {
+                    if (data[x] != null) {
+                        lights.put(x, data[x]);
+                    }
                 }
+            } else {
+                minZ = 0;
+                maxX = 0;
+                minX = 0;
             }
             return new Patch(minX, maxX, minZ, lights);
         }
@@ -272,7 +278,8 @@ public class MapLightHandler {
                 int maxX = buf.readInt();
                 int minZ = buf.readInt();
                 int size = buf.readVarInt();
-                Int2ObjectArrayMap<byte[]> positions = new Int2ObjectArrayMap<>(size);;
+                Int2ObjectArrayMap<byte[]> positions = new Int2ObjectArrayMap<>(size);
+                ;
                 for (int i = 0; i < size; i++) {
                     int x = buf.readVarInt();
                     byte[] rowData = buf.readByteArray();

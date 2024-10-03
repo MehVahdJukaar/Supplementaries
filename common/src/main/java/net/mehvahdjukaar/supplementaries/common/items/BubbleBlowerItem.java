@@ -131,7 +131,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
     private int getCharges(ItemStack stack) {
-        return stack.get(ModComponents.CHARGES.get());
+        return stack.getOrDefault(ModComponents.CHARGES.get(), 0);
     }
 
     @Override
