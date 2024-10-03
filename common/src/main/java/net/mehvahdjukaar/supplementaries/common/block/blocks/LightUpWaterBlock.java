@@ -33,7 +33,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
     public boolean placeLiquid(LevelAccessor worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
 
-            extinguish(null, state, pos, worldIn);
+            this.tryExtinguish(null, state, pos, worldIn);
 
             worldIn.setBlock(pos, state.setValue(WATERLOGGED, true).setValue(LIT, false), 3);
             worldIn.scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));

@@ -35,8 +35,6 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
-
-    zip64 true
 }
 
 remapJar {
@@ -63,6 +61,8 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+
+    archiveClassifier = "neoforge-sources"
 }
 
 components.java {
@@ -98,6 +98,7 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+
 
     implementation 'org.jetbrains:annotations:22.0.0'
 

@@ -48,13 +48,13 @@ public abstract class LightUpBlock extends Block implements ILightable {
     @Override
     public void onProjectileHit(Level level, BlockState state, BlockHitResult pHit, Projectile projectile) {
         BlockPos pos = pHit.getBlockPos();
-        this.interactWithEntity(level, state, projectile, pos);
+        this.lightableInteractWithEntity(level, state, projectile, pos);
     }
 
     @Override
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof Projectile projectile) {
-            this.interactWithEntity(worldIn, state, projectile, pos);
+            this.lightableInteractWithEntity(worldIn, state, projectile, pos);
         }
     }
 
