@@ -13,7 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CameraMixin {
 
     //TODO: 1.21 this is broken
-    @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V"),
+    @Inject(method = "setup", at = @At(value = "INVOKE",
+            shift = At.Shift.BEFORE,
+            target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F"),
             cancellable = true)
     public void supp$setupCannonCamera(BlockGetter level, Entity entity, boolean detached,
                                                   boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
