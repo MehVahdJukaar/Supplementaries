@@ -169,11 +169,6 @@ public class SuppPlatformStuffImpl {
         blockParticleOption.setPos(pos);
     }
 
-
-    public static boolean isSlimeball(Item item) {
-        return item.builtInRegistryHolder().is(Tags.Items.SLIMEBALLS);
-    }
-
     public static boolean canCatchFire(Level level, BlockPos below, Direction direction) {
         return ((FireBlock) Blocks.FIRE).canCatchFire(level, below, direction);
     }

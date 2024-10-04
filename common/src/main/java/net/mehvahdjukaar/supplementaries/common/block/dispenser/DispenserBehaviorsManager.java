@@ -114,6 +114,12 @@ public class DispenserBehaviorsManager {
             );
         }
 
+        if (CommonConfigs.Tweaks.SLIMED_EFFECT.get()) {
+            BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.SLIMEBALLS).iterator().forEachRemaining(h ->
+                    event.register(new ThrowableSlimeballBehavior(h.value()))
+            );
+        }
+
 
         //bomb
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
@@ -147,9 +153,6 @@ public class DispenserBehaviorsManager {
                     }
                     if (key && i instanceof KeyItem) {
                         event.register(new KeyBehavior(i));
-                    }
-                    if (slimeball && SuppPlatformStuff.isSlimeball(i)) {
-                        event.register(new ThrowableSlimeballBehavior(i));
                     }
                 } catch (Exception e) {
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);

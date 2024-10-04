@@ -121,13 +121,6 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
-    //use c tag
-    @Deprecated(forRemoval = true)
-    @ExpectPlatform
-    public static boolean isSlimeball(Item item) {
-        throw new AssertionError();
-    }
-
     @ExpectPlatform
     public static void tryBurningByFire(ServerLevel level, BlockPos pos, int chance, RandomSource random, int age, Direction direction) {
         throw new AssertionError();

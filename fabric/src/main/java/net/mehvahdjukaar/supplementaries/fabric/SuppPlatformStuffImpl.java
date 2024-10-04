@@ -129,12 +129,6 @@ public class SuppPlatformStuffImpl {
     public static void setParticlePos(BlockParticleOption blockParticleOption, BlockPos pos) {
     }
 
-    @Deprecated(forRemoval = true)
-    public static boolean isSlimeball(Item item) {
-        return item == Items.SLIME_BALL;
-    }
-
-
     public static boolean canCatchFire(Level level, BlockPos pos, Direction direction) {
         return ((FireBlockAccessor) Blocks.FIRE).invokeCanBurn(level.getBlockState(pos));
     }

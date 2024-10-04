@@ -55,6 +55,7 @@ public class ModTags {
     public static final TagKey<Item> SLINGSHOT_DAMAGEABLE = itemTag("slingshot_damageable");
     public static final TagKey<Item> COOKIES = itemTag("cookies");
     public static final TagKey<Item> BRICKS = itemTag("throwable_bricks");
+    public static final TagKey<Item> SLIMEBALLS = itemTag("throwable_slimeballs");
     public static final TagKey<Item> ROPES = itemTag("ropes");
     public static final TagKey<Item> CHAINS = itemTag("chains");
     public static final TagKey<Item> PEDESTAL_UPRIGHT = itemTag("pedestal_upright");
