@@ -115,7 +115,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
-                    var newR = RPUtils.makeSimilarRecipe(recipe2, WoodTypeRegistry.OAK_TYPE, w, "sign_post_oak");
+                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w, "sign_post_oak");
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     this.dynamicPack.addRecipe(newR);
                 } catch (Exception e) {

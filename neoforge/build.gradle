@@ -175,7 +175,6 @@ dependencies {
 
 }
 
-/*
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
@@ -183,5 +182,3 @@ tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs << "-Xmaxerrs" << "4000"
 
 }
-
- */

@@ -1,8 +1,5 @@
 architectury {
-    common(enabled_platforms.split(",")) {
-        // This means map neoforge to forge
-        //it.platformPackage "neoforge", "forge"
-    }
+    common(enabled_platforms.split(","))
 }
 
 loom {
@@ -65,11 +62,10 @@ publishing {
     }
 }
 
-/*
 tasks.withType(JavaCompile).configureEach {
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
 
     it.options.compilerArgs << "-Xmaxerrs" << "4000"
 
-}*/
+}
