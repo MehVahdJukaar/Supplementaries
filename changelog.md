@@ -55,6 +55,8 @@ Bug Fixes:
 - projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox
+- tipped spikes model dont have shading anymore
+- timber braces textures are now flipped on positive axis
 - you can now wash the upper and lower part of a sign post independently
 - fixed soap interaction not spawning bubble particles on servers
 - fixed soap cleaning being able to clean multiple things at once

@@ -10,6 +10,7 @@
 		{
 			"from": [-1.25, 8, 2],
 			"to": [1.25, 8, 15],
+			"shade": false,
 			"rotation": {"angle": -45, "axis": "z", "origin": [0, 0, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [7, 2, 10, 15], "texture": "#1"},
@@ -19,6 +20,7 @@
 		{
 			"from": [6.7, 0, 2],
 			"to": [9.2, 0, 15],
+			"shade": false,
 			"rotation": {"angle": 45, "axis": "z", "origin": [0, 0, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [7, 2, 10, 15], "texture": "#1"},
@@ -28,6 +30,7 @@
 		{
 			"from": [2.75, 12, 2],
 			"to": [5.25, 12, 15],
+			"shade": false,
 			"rotation": {"angle": -45, "axis": "z", "origin": [4, 4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [12, 2, 15, 15], "texture": "#1"},
@@ -37,6 +40,7 @@
 		{
 			"from": [10.7, 4, 2],
 			"to": [13.2, 4, 15],
+			"shade": false,
 			"rotation": {"angle": 45, "axis": "z", "origin": [4, 4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [12, 2, 15, 15], "texture": "#1"},
@@ -46,6 +50,7 @@
 		{
 			"from": [-5.25, 12, 2],
 			"to": [-2.75, 12, 15],
+			"shade": false,
 			"rotation": {"angle": -45, "axis": "z", "origin": [-4, 4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [1, 2, 4, 15], "texture": "#1"},
@@ -55,6 +60,7 @@
 		{
 			"from": [2.7, 4, 2],
 			"to": [5.2, 4, 15],
+			"shade": false,
 			"rotation": {"angle": 45, "axis": "z", "origin": [-4, 4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [1, 2, 4, 15], "texture": "#1"},
@@ -64,6 +70,7 @@
 		{
 			"from": [-5.25, 4, 2],
 			"to": [-2.75, 4, 15],
+			"shade": false,
 			"rotation": {"angle": -45, "axis": "z", "origin": [-4, -4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [1, 2, 4, 15], "texture": "#1"},
@@ -73,6 +80,7 @@
 		{
 			"from": [2.7, -4, 2],
 			"to": [5.2, -4, 15],
+			"shade": false,
 			"rotation": {"angle": 45, "axis": "z", "origin": [-4, -4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [1, 2, 4, 15], "texture": "#1"},
@@ -82,6 +90,7 @@
 		{
 			"from": [2.75, 4, 2],
 			"to": [5.25, 4, 15],
+			"shade": false,
 			"rotation": {"angle": -45, "axis": "z", "origin": [4, -4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [12, 2, 15, 15], "texture": "#1"},
@@ -91,6 +100,7 @@
 		{
 			"from": [10.7, -4, 2],
 			"to": [13.2, -4, 15],
+			"shade": false,
 			"rotation": {"angle": 45, "axis": "z", "origin": [4, -4, 0], "rescale": true},
 			"faces": {
 				"up": {"uv": [12, 2, 15, 15], "texture": "#1"},
