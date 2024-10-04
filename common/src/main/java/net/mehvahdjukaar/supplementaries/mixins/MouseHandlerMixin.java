@@ -20,11 +20,7 @@ public abstract class MouseHandlerMixin {
             at = @At(target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V", value = "INVOKE")
     )
     protected boolean supp$onMoveMouse(LocalPlayer instance, double yRot, double xRot) {
-        if (CannonController.isActive()) {
-            CannonController.onPlayerRotated(yRot, xRot);
-            return true;
-        }
-        return true;
+        return !CannonController.onPlayerRotated(yRot, xRot);
     }
 
     // doesnt care about smooth panning in camera. that's why its here

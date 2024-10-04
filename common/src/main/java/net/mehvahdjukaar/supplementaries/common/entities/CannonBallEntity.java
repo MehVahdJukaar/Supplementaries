@@ -175,8 +175,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
-            Set<Block> whitelist = this.getItem().getOrDefault(ModComponents.CANNONBALL_WHITELIST.get(),
-                    CannonballWhitelist.EMPTY).blocks();
+            CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
+            Set<Block> whitelist = wl != null ? wl.blocks(): null;
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
                     loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
             exp.explode();

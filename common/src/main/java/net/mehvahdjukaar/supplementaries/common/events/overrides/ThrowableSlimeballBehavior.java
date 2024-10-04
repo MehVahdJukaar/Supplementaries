@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.entities.SlimeBallEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundSource;
@@ -32,7 +33,7 @@ class ThrowableSlimeballBehavior implements ItemUseBehavior {
 
     @Override
     public boolean appliesToItem(Item item) {
-        return SuppPlatformStuff.isSlimeball(item);
+        return item.builtInRegistryHolder().is(ModTags.SLIMEBALLS);
     }
 
     @Override

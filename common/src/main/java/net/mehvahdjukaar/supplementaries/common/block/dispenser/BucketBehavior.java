@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.dispenser;
 
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DispensibleContainerItem;
@@ -23,8 +23,8 @@ public class BucketBehavior extends DispenserHelper.AdditionalDispenserBehavior 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         DispensibleContainerItem dispensibleContainerItem = (DispensibleContainerItem) stack.getItem();
-        BlockPos blockPos = source.getPos().relative( source.getBlockState().getValue(DispenserBlock.FACING));
-        Level level = source.getLevel();
+        BlockPos blockPos = source.pos().relative( source.state().getValue(DispenserBlock.FACING));
+        Level level = source.level();
         if (dispensibleContainerItem.emptyContents( null, level, blockPos,  null)) {
             dispensibleContainerItem.checkExtraContent( null, level, stack, blockPos);
             return InteractionResultHolder.success(new ItemStack(Items.BUCKET));

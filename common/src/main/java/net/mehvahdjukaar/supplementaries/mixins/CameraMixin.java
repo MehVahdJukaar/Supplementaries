@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 
-    //TODO: 1.21 this is broken
     @Inject(method = "setup", at = @At(value = "INVOKE",
             shift = At.Shift.BEFORE,
             target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F"),

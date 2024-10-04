@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.minecraft.client.Camera;
@@ -167,15 +168,16 @@ public class CannonController {
         cannon.setRenderYaw(targetYawDeg);
     }
 
-    public static float ud(float a) {
-        return a;
-    }
-
-    public static void onPlayerRotated(double yawAdd, double pitchAdd) {
-        float scale = 0.2f;
-        yawIncrease += (float) (yawAdd * scale);
-        pitchIncrease += (float) (pitchAdd * scale);
-        if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
+    // true cancels the thing
+    public static boolean onPlayerRotated(double yawAdd, double pitchAdd) {
+        if(CannonController.isActive()) {
+            float scale = 0.2f;
+            yawIncrease += (float) (yawAdd * scale);
+            pitchIncrease += (float) (pitchAdd * scale);
+            if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
+            return true;
+        }
+        return false;
     }
 
 
