@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Position;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 
 public class DispenserBehaviorsManager {
 
@@ -81,6 +83,9 @@ public class DispenserBehaviorsManager {
                 event.registerPlaceBlock(s);
             }
         }
+        if(CommonConfigs.Functional.LUMISENE_ENABLED.get()){
+            event.register(new BucketBehavior(ModFluids.LUMISENE_BUCKET.get()));
+        }
         if (CommonConfigs.Functional.JAR_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.JAR_ITEM.get());
             event.register(new AddItemToInventoryBehavior(Items.COOKIE));
@@ -108,6 +113,8 @@ public class DispenserBehaviorsManager {
                     event.register(new ThrowableBricksBehavior(h.value()))
             );
         }
+
+
         //bomb
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
             //default behaviors for modded items
