@@ -28,9 +28,9 @@ public record ServerBoundSyncCannonPacket(
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeFloat(this.yaw);
         buf.writeFloat(this.pitch);
-        buf.writeBlockPos(this.pos);
         buf.writeByte(this.firePower);
         buf.writeBoolean(this.fire);
+        buf.writeBlockPos(this.pos);
         buf.writeBoolean(this.stopControlling);
     }
 
@@ -41,7 +41,8 @@ public record ServerBoundSyncCannonPacket(
         if(context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
 
-            if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon && cannon.isEditingPlayer(player)) {
+            if (level.getBlockEntity(this.pos) instanceof CannonBlockTile cannon &&
+                    cannon.isEditingPlayer(player)) {
                 cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
                 cannon.setChanged();
                 if (stopControlling) {

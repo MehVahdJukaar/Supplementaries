@@ -22,7 +22,7 @@ public abstract class MouseHandlerMixin {
     protected boolean supp$onMoveMouse(LocalPlayer instance, double yRot, double xRot) {
         if (CannonController.isActive()) {
             CannonController.onPlayerRotated(yRot, xRot);
-            return false;
+            return true;
         }
         return true;
     }

@@ -77,6 +77,7 @@
 
 # Soon
 
+-artsandcrafts compat
 - limisene diepsners
 -soap cleaning from recipe
 - slimeballs bugged dispenser
