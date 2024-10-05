@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
@@ -36,7 +35,7 @@ public class ModSetup {
     public static void init(){
         PlatHelper.addCommonSetup(ModSetup::setup);
         PlatHelper.addCommonSetup(ModSetup::asyncSetup);
-        PlatHelper.addReloadableCommonSetup(ModSetup::onCommonTagUpdate);
+        PlatHelper.addReloadableCommonSetup(ModSetup::tagDependantSetup);
     }
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
@@ -105,11 +104,10 @@ public class ModSetup {
         ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK.get().asItem(), 1);
     }
 
-    //events on setup. fire on world load
-    private static void tagDependantSetup(RegistryAccess registryAccess) {
+    @EventCalled
+    public static void tagDependantSetup(RegistryAccess registryAccess, boolean client) {
         if (!firstTagLoad) {
             //using this as a post-setup event that can access tags
-            Stopwatch watch = Stopwatch.createStarted();
             firstTagLoad = true;
             if (!hasFinishedSetup) {
                 //if mod setup fails (without throwing errors) we try to replicate what caused it to crash and printing that error
@@ -121,18 +119,9 @@ public class ModSetup {
                     terminateWhenSetupFails(e);
                 }
             }
-
-
-            Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }
         // this we can properly refresh every time
         InteractEventsHandler.setupOverrides();
-
-    }
-
-    @EventCalled
-    public static void onCommonTagUpdate(RegistryAccess registryAccess, boolean client) {
-        ModSetup.tagDependantSetup(registryAccess);
 
         if (!client) {
             WaySignStructure.recomputeValidStructureCache(registryAccess);
