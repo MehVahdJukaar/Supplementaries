@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -142,9 +143,19 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
                     1.0F, 1.0F, 1.0F,
                     light, overlay);
         } else {
-            Supplementaries.error();
+            Supplementaries.error("Book model not found");
         }
         poseStack.popPose();
+
+        //TODO: improve api
+        //haaack
+        if (builder instanceof BakedQuadBuilder ac) {
+            try {
+                ac.close();
+            } catch (Exception e) {
+                Supplementaries.error();
+            }
+        }
     }
 
 }

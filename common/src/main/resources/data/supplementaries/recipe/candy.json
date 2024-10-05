@@ -12,7 +12,7 @@
     }
   ],
   "result": {
-    "item": "supplementaries:candy",
+    "id": "supplementaries:candy",
     "count": 8
   },
   "conditions": [

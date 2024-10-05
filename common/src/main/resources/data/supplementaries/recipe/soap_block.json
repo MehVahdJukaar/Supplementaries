@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:soap_block",
+    "id": "supplementaries:soap_block",
     "count": 1
   },
   "conditions": [

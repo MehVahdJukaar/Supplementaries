@@ -10,7 +10,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:blackstone_tile_wall",
+    "id": "supplementaries:blackstone_tile_wall",
     "count": 6
   }
 }

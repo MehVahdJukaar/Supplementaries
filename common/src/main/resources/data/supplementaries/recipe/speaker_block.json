@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:speaker_block",
+    "id": "supplementaries:speaker_block",
     "count": 1
   },
   "conditions": [

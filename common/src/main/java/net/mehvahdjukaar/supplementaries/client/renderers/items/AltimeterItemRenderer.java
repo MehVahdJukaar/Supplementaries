@@ -55,7 +55,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
 
         var pair = MODEL_CACHE.getOrDefault(dimension, MODEL_CACHE.get(Level.OVERWORLD));
-        if(pair == null) {
+        if (pair == null) {
             Supplementaries.error();
             return;
         }
@@ -111,30 +111,32 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
             float invDepth = textureH - depth - h;
             float shrink = sprite.uvShrinkRatio();
-            BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
-            builder.setAutoDirection();
-            builder.setAutoBuild(quads::add);
-            PoseStack ps = new PoseStack();
-            float u0 = 0;
-            float u1 = 0.25f;
-            float u3 = 0.25f;
-            float u4 = 0.5f;
-            for (int j = 0; j < 2; j++) {
-                ps.translate(0, 0, 15 / 32f);
-                addScaledQuad(builder, ps, shrink,
-                        false,
-                        0.375f, 0.375f, 0.625f, 0.6875f,
-                        u0, invDepth / textureH, u1, (invDepth + h) / textureH);
-                addScaledQuad(builder, ps, shrink,
-                        true,
-                        0.375f, 0.6875f, 0.625f, 0.75f,
-                        u3, (invDepth - 1) / textureH, u4, invDepth / textureH);
-                ps.scale(-1, 1, -1);
-                ps.translate(-1, 0, -17 / 32f);
-                u0 = 0.25f;
-                u1 = 0;
-                u3 = 0.5f;
-                u4 = 0.25f;
+            try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, quads::add)) {
+                builder.setAutoDirection();
+                PoseStack ps = new PoseStack();
+                float u0 = 0;
+                float u1 = 0.25f;
+                float u3 = 0.25f;
+                float u4 = 0.5f;
+                for (int j = 0; j < 2; j++) {
+                    ps.translate(0, 0, 15 / 32f);
+                    addScaledQuad(builder, ps, shrink,
+                            false,
+                            0.375f, 0.375f, 0.625f, 0.6875f,
+                            u0, invDepth / textureH, u1, (invDepth + h) / textureH);
+                    addScaledQuad(builder, ps, shrink,
+                            true,
+                            0.375f, 0.6875f, 0.625f, 0.75f,
+                            u3, (invDepth - 1) / textureH, u4, invDepth / textureH);
+                    ps.scale(-1, 1, -1);
+                    ps.translate(-1, 0, -17 / 32f);
+                    u0 = 0.25f;
+                    u1 = 0;
+                    u3 = 0.5f;
+                    u4 = 0.25f;
+                }
+            } catch (Exception e) {
+                Supplementaries.error("Failed to create altimeter model");
             }
 
 
@@ -197,7 +199,7 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
             float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
             VertexUtil.addQuad(builder, ps,
                     x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
-                    u0, v0, u1, v1,
+                    u0 / 16f, v0 / 16f, u1 / 16f, v1 / 16f,
                     255, 255, 255, 255,
                     0, 0);
         }

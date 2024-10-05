@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:checker_slab",
+    "id": "supplementaries:checker_slab",
     "count": 6
   },
   "conditions": [

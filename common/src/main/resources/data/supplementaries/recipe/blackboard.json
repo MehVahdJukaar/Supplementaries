@@ -23,7 +23,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:blackboard",
+    "id": "supplementaries:blackboard",
     "count": 2
   }
 }

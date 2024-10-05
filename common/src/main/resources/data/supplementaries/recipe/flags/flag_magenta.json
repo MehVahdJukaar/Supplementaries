@@ -15,7 +15,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:flag_magenta",
+    "id": "supplementaries:flag_magenta",
     "count": 1
   },
   "conditions": [

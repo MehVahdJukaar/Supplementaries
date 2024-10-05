@@ -10,7 +10,7 @@
 
   ],
   "result": {
-    "item": "minecraft:map",
+    "id": "minecraft:map",
     "count": 1
   },
   "conditions": [

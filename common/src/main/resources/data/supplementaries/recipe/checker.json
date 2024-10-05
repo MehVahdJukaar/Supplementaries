@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:checker_block",
+    "id": "supplementaries:checker_block",
     "count": 4
   },
   "conditions": [

@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:lunch_basket",
+    "id": "supplementaries:lunch_basket",
     "count": 1
   },
   "conditions": [

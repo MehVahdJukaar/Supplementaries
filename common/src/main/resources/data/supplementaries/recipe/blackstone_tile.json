@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:blackstone_tile",
+    "id": "supplementaries:blackstone_tile",
     "count": 4
   },
   "conditions": [

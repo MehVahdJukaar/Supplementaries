@@ -10,7 +10,7 @@
 
   ],
   "result": {
-    "item": "quark:clear_shard",
+    "id": "quark:clear_shard",
     "count": 1
   },
   "conditions": [

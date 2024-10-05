@@ -18,7 +18,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:gold_door",
+    "id": "supplementaries:gold_door",
     "count": 3
   }
 }

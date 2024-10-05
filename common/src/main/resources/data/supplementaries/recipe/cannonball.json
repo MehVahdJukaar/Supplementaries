@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:cannonball",
+    "id": "supplementaries:cannonball",
     "count": 8
   },
   "conditions": [

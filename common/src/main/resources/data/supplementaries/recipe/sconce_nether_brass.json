@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:sconce_nether_brass",
+    "id": "supplementaries:sconce_nether_brass",
     "count": 1
   },
   "conditions": [

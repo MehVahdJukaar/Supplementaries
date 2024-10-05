@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "supplementaries:fodder",
+    "id": "supplementaries:fodder",
     "count": 2
   },
   "conditions": [

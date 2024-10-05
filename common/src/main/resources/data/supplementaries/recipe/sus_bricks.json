@@ -10,6 +10,6 @@
     "item": "supplementaries:gravel_bricks"
   },
   "result": {
-    "item": "supplementaries:suspicious_gravel_bricks"
+    "id": "supplementaries:suspicious_gravel_bricks"
   }
 }

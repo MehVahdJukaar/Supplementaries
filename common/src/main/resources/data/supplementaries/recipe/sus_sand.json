@@ -10,6 +10,6 @@
     "item": "minecraft:sand"
   },
   "result": {
-    "item": "minecraft:suspicious_sand"
+    "id": "minecraft:suspicious_sand"
   }
 }

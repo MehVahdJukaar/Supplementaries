@@ -13,7 +13,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:awning",
+    "id": "supplementaries:awning",
     "count": 2
   },
   "conditions": [

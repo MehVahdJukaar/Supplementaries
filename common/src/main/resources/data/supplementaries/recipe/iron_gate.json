@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:iron_gate",
+    "id": "supplementaries:iron_gate",
     "count": 2
   },
   "conditions": [

@@ -9,7 +9,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:soap",
+    "id": "supplementaries:soap",
     "count": 9
   },
   "conditions": [

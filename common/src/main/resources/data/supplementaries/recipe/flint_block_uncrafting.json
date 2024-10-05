@@ -9,7 +9,7 @@
     }
   },
   "result": {
-    "item": "minecraft:flint",
+    "id": "minecraft:flint",
     "count": 9
   },
   "conditions": [

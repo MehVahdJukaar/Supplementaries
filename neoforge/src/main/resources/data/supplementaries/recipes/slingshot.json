@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:slingshot",
+    "id": "supplementaries:slingshot",
     "count": 1
   },
   "conditions": [

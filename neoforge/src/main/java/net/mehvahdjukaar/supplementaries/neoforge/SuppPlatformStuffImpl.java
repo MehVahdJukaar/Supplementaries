@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import io.netty.buffer.ByteBuf;
+import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -19,13 +20,15 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DispensibleContainerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -41,7 +44,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -134,10 +136,15 @@ public class SuppPlatformStuffImpl {
 
     public static void disableAMWarn() {
         ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
+        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
+        fg.getSpec().save();
+
     }
 
     public static void disableOFWarn(boolean on) {
         ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
+        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
+        fg.getSpec().save();
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {

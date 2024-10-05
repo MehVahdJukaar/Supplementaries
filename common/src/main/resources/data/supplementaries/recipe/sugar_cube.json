@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:sugar_cube",
+    "id": "supplementaries:sugar_cube",
     "count": 1
   },
   "conditions": [

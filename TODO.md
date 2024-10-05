@@ -108,6 +108,7 @@
 
 # Supplementaries
 
+- quark post rope connection
 - add back capabilities
 - fabric events
 - framed block items pick up

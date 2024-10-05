@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:turn_table",
+    "id": "supplementaries:turn_table",
     "count": 1
   },
   "conditions": [

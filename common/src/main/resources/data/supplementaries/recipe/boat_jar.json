@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "supplementaries:jar_boat",
+    "id": "supplementaries:jar_boat",
     "count": 1
   },
   "conditions": [

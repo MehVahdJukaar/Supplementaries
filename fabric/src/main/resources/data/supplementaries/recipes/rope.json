@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:rope",
+    "id": "supplementaries:rope",
     "count": 3
   },
   "conditions": [

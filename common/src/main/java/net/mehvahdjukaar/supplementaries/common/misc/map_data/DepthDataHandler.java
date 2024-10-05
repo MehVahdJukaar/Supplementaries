@@ -91,7 +91,7 @@ public class DepthDataHandler {
     public static class DepthMapData extends CustomMapData.Simple<Optional<Integer>> {
 
         public DepthMapData() {
-            this.value = Optional.empty();
+            super(Optional.empty());
         }
 
         @NotNull

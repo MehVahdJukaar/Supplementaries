@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:flint_block",
+    "id": "supplementaries:flint_block",
     "count": 1
   },
   "conditions": [

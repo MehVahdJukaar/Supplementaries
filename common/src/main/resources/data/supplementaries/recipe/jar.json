@@ -15,7 +15,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:jar",
+    "id": "supplementaries:jar",
     "count": 1
   },
   "conditions": [

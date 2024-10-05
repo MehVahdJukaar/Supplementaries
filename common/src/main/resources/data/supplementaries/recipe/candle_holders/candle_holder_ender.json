@@ -13,7 +13,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:candle_holder_ender",
+    "id": "supplementaries:candle_holder_ender",
     "count": 1
   },
   "conditions": [

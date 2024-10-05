@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BuntingBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
@@ -33,18 +34,16 @@ public class BuntingsBakedModel implements CustomBakedModel {
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
-        try {
-            if (!data.get(BuntingBlockTile.IS_FANCY)) {
-                DyeColor north = data.get(BuntingBlockTile.NORTH_BUNTING);
-                DyeColor south = data.get(BuntingBlockTile.SOUTH_BUNTING);
-                DyeColor east = data.get(BuntingBlockTile.EAST_BUNTING);
-                DyeColor west = data.get(BuntingBlockTile.WEST_BUNTING);
-                PoseStack poseStack = new PoseStack();
-                poseStack.translate(0.5, 0.5, 0.5);
-                BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
+        if (!data.get(BuntingBlockTile.IS_FANCY)) {
+            DyeColor north = data.get(BuntingBlockTile.NORTH_BUNTING);
+            DyeColor south = data.get(BuntingBlockTile.SOUTH_BUNTING);
+            DyeColor east = data.get(BuntingBlockTile.EAST_BUNTING);
+            DyeColor west = data.get(BuntingBlockTile.WEST_BUNTING);
+            PoseStack poseStack = new PoseStack();
+            poseStack.translate(0.5, 0.5, 0.5);
+            try (BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE, quads::add)) {
                 builder.setAutoDirection();
                 builder.setAmbientOcclusion(false);
-                builder.setAutoBuild(quads::add);
                 if (north != null) {
                     BuntingBlockTileRenderer.renderBunting(north, Direction.NORTH,
                             0, poseStack, builder, null,
@@ -65,8 +64,9 @@ public class BuntingsBakedModel implements CustomBakedModel {
                             0, poseStack, builder, null,
                             0, OverlayTexture.NO_OVERLAY, BlockPos.ZERO, 0);
                 }
+            } catch (Exception ignored) {
+                Supplementaries.error();
             }
-        } catch (Exception ignored) {
         }
 
         return quads;

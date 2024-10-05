@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:flower_box",
+    "id": "supplementaries:flower_box",
     "count": 2
   },
   "conditions": [

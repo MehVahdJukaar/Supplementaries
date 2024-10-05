@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:cannon",
+    "id": "supplementaries:cannon",
     "count": 1
   },
   "conditions": [

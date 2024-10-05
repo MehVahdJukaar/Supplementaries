@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:faucet",
+    "id": "supplementaries:faucet",
     "count": 1
   }
 }

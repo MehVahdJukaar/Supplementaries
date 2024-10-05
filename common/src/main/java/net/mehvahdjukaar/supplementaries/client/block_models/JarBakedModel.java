@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.client.renderer.RenderType;
@@ -27,7 +28,7 @@ public class JarBakedModel implements CustomBakedModel {
     private static final boolean SINGLE_PASS = true;//  PlatHelper.getPlatform().isFabric();
 
     //hacky
-    private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8/16f, 12/16f, 1/16f);
+    private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f);
 
     private final BakedModel jar;
     private final float width;
@@ -55,21 +56,23 @@ public class JarBakedModel implements CustomBakedModel {
                 float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
                 TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
-                BakedQuadBuilder builder = BakedQuadBuilder.create(sprite);
-                builder.setAutoDirection();
-                builder.lightEmission(fluid.getEmissivity());
-                builder.setTint(1);
-                var poseStack = new PoseStack();
-                poseStack.translate(0.5, yOffset, 0.5);
-                builder.setAutoBuild(quads::add);
-                VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
-                        height * amount,
-                        0, -1);
-                //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
+                try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, quads::add)) {
+                    builder.setAutoDirection();
+                    builder.lightEmission(fluid.getEmissivity());
+                    builder.setTint(1);
+                    var poseStack = new PoseStack();
+                    poseStack.translate(0.5, yOffset, 0.5);
+                    VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
+                            height * amount,
+                            0, -1);
+                    //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
+                } catch (Exception e) {
+                    Supplementaries.error();
+                }
             }
             if (!SINGLE_PASS) return quads;
         }
-        if(renderType == RenderType.cutout()) {
+        if (renderType == RenderType.cutout()) {
             quads.addAll(jar.getQuads(state, side, rand));
         }
         return quads;

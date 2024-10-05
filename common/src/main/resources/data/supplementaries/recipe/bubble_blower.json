@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:bubble_blower",
+    "id": "supplementaries:bubble_blower",
     "count": 1,
     "nbt": {
       "Damage": 250

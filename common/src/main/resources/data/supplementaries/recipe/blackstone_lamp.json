@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:blackstone_lamp",
+    "id": "supplementaries:blackstone_lamp",
     "count": 1
   },
   "conditions": [

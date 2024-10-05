@@ -9,7 +9,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:item_shelf",
+    "id": "supplementaries:item_shelf",
     "count": 2
   },
   "conditions": [

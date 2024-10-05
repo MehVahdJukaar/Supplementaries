@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:blackstone_tile_slab",
+    "id": "supplementaries:blackstone_tile_slab",
     "count": 6
   },
   "conditions": [

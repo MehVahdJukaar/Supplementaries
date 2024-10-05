@@ -23,7 +23,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:redstone_illuminator",
+    "id": "supplementaries:redstone_illuminator",
     "count": 1
   },
   "conditions": [

@@ -15,7 +15,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:candle_holder_purple",
+    "id": "supplementaries:candle_holder_purple",
     "count": 1
   },
   "conditions": [

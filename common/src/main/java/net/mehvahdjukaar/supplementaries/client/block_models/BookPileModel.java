@@ -40,14 +40,13 @@ public class BookPileModel implements CustomBakedModel {
             BookPileBlockTileRenderer.renderBookPile(state.getBlock() instanceof BookPileHorizontalBlock,
                     books, new PoseStack(),
                     b -> {
-                        BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
+                        BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE, quads::add);
                         builder.setAutoDirection();
-                        builder.setAutoBuild(quads::add);
                         return builder;
                     },
                     0, OverlayTexture.NO_OVERLAY, state);
         }
-        return quads ;
+        return quads;
     }
 
 

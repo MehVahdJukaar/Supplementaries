@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:bunting",
+    "id": "supplementaries:bunting",
     "nbt": {
       "Color": "cyan"
     },

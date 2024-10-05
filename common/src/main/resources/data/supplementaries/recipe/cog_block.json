@@ -20,7 +20,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:cog_block",
+    "id": "supplementaries:cog_block",
     "count": 6
   }
 }

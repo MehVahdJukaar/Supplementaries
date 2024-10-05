@@ -41,7 +41,7 @@ public class FiniteFluidInteraction implements FaucetTarget.Fluid, FaucetSource.
         if (source.getType() instanceof FiniteFluid ff) {
             int amount = layersToBottles(ff, source.getAmount());
             if (amount > 0) {
-                return FluidOffer.of(SoftFluidStack.fromFluid(ff, amount, null));
+                return FluidOffer.of(SoftFluidStack.fromFluid(ff, amount));
             }
         }
         return null;

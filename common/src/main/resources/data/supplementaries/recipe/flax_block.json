@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:flax_block",
+    "id": "supplementaries:flax_block",
     "count": 1
   },
   "conditions": [

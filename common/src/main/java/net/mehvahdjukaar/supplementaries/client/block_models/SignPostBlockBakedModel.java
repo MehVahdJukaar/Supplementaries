@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.DummySprite;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -63,11 +64,14 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
         }
 
         if (up != null && down != null) {
-            BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE);
-            builder.setAutoDirection();
-            builder.setAutoBuild(quads::add);
-            SignPostBlockTileRenderer.renderSigns(new PoseStack(),
-                    builder, 0, 0, up, down, zOffset);
+            try (BakedQuadBuilder builder = BakedQuadBuilder.create(DummySprite.INSTANCE, quads::add)) {
+                builder.setAutoDirection();
+                builder.setAmbientOcclusion(false); //looks bad as they go beyond 1 block
+                SignPostBlockTileRenderer.renderSigns(new PoseStack(),
+                        builder, 0, 0, up, down, zOffset);
+            } catch (Exception e) {
+                Supplementaries.error();
+            }
         }
         return quads;
 

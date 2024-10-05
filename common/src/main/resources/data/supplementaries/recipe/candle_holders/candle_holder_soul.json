@@ -13,7 +13,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:candle_holder_soul",
+    "id": "supplementaries:candle_holder_soul",
     "count": 1
   },
   "conditions": [

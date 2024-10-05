@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:stone_tile_stairs",
+    "id": "supplementaries:stone_tile_stairs",
     "count": 4
   }
 }

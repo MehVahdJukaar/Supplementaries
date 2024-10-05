@@ -15,7 +15,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:candle_holder_light_blue",
+    "id": "supplementaries:candle_holder_light_blue",
     "count": 1
   },
   "conditions": [

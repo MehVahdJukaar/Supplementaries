@@ -10,7 +10,7 @@
 
   ],
   "result": {
-    "item": "minecraft:arrow",
+    "id": "minecraft:arrow",
     "count": 1
   },
   "conditions": [

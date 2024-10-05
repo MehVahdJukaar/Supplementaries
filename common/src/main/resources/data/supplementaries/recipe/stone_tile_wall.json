@@ -10,7 +10,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:stone_tile_wall",
+    "id": "supplementaries:stone_tile_wall",
     "count": 6
   }
 }

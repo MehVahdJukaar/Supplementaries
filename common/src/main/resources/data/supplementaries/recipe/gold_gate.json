@@ -24,7 +24,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:gold_gate",
+    "id": "supplementaries:gold_gate",
     "count": 2
   }
 }

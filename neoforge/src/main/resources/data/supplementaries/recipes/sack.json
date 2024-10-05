@@ -24,7 +24,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:sack",
+    "id": "supplementaries:sack",
     "count": 1
   }
 }

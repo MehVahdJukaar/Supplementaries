@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:clock_block",
+    "id": "supplementaries:clock_block",
     "count": 1
   },
   "conditions": [

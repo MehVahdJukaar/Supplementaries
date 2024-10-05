@@ -42,7 +42,7 @@ public abstract class LightUpBlock extends Block implements ILightable {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return interactWithPlayerItem(state, level, pos, player, hand, stack);
+        return lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
     }
 
     @Override

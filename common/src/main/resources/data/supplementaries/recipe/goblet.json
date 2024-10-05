@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:goblet",
+    "id": "supplementaries:goblet",
     "count": 1
   },
   "conditions": [

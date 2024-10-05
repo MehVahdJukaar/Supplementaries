@@ -4,11 +4,14 @@ import com.mojang.math.Transformation;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -23,6 +26,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BlackboardBakedModel implements CustomBakedModel {
 
@@ -134,17 +138,20 @@ public class BlackboardBakedModel implements CustomBakedModel {
         float u1 = 1 - (x + width);
         float v1 = 1 - (y + height);
 
-        BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform);
+        AtomicReference<BakedQuad> quad = new AtomicReference<>();
+        try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform, quad::set)) {
+            builder.setAutoDirection();
 
-        builder.setAutoDirection();
-
-        putVertex(builder, x + width, y + height, u1, v1, color);
-        putVertex(builder, x + width, y, u1, v0, color);
-        putVertex(builder, x, y, u0, v0, color);
-        putVertex(builder, x, y + height, u0, v1, color);
-
-        if (emissive) builder.lightEmission(15);
-        return builder.getQuad();
+            putVertex(builder, x + width, y + height, u1, v1, color);
+            putVertex(builder, x + width, y, u1, v0, color);
+            putVertex(builder, x, y, u0, v0, color);
+            putVertex(builder, x, y + height, u0, v1, color);
+            
+            if (emissive) builder.lightEmission(15);
+        } catch (Exception e) {
+            Supplementaries.error();
+        }
+        return quad.get();
     }
 
 
@@ -155,7 +162,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
         builder.addVertex(posV.x, posV.y, posV.z);
         builder.setColor(color);
-        builder.setUv(u, v);
+        builder.setUv(u/16, v/16);
         builder.setNormal(0, 0, -1);
     }
 
