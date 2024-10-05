@@ -56,6 +56,11 @@ public class WeatheredHandler {
 
     public static class WeatheredMapData extends CustomMapData.Simple<Boolean> {
 
+        public WeatheredMapData() {
+            super();
+            this.value = false;
+        }
+
         public boolean isAntique() {
             return value;
         }

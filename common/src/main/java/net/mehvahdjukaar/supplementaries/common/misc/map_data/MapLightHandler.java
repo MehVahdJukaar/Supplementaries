@@ -164,7 +164,7 @@ public class MapLightHandler {
             int maxX = patch.maxX;
             int minZ = patch.minZ;
 
-            for (int x = minX; x <= maxX; x++) {
+            for (int x = minX; x < maxX; x++) {
                 byte[] rowData = patch.lights.get(x);
 
                 if (data == null) {
@@ -279,7 +279,6 @@ public class MapLightHandler {
                 int minZ = buf.readInt();
                 int size = buf.readVarInt();
                 Int2ObjectArrayMap<byte[]> positions = new Int2ObjectArrayMap<>(size);
-                ;
                 for (int i = 0; i < size; i++) {
                     int x = buf.readVarInt();
                     byte[] rowData = buf.readByteArray();

@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -89,6 +90,11 @@ public class DepthDataHandler {
 
     public static class DepthMapData extends CustomMapData.Simple<Optional<Integer>> {
 
+        public DepthMapData() {
+            this.value = Optional.empty();
+        }
+
+        @NotNull
         public Optional<Integer> getValue() {
             return this.value;
         }
