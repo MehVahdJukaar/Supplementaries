@@ -77,6 +77,7 @@
 
 # Soon
 
+- cannon stalling eachother when triggered consitnosly
 -artsandcrafts compat
 - limisene diepsners
 -soap cleaning from recipe
