@@ -29,6 +29,7 @@ public class AwningModelLoader implements CustomModelLoader {
             // vanilla AO code is so shit, full of bugs
             json.addProperty("ambientocclusion", false);
         }
+        json.remove("loader");
         BlockModel modelHack = DESERIALIZER.deserialize(json, BlockModel.class, context);
         if (json.has("elements")) {
             JsonArray ja = GsonHelper.getAsJsonArray(json, "elements");

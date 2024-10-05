@@ -1,11 +1,9 @@
 # Soon
-- empty fluid thing
+- dont spawn fire with gunpoweder when fire tck is off
+- lumisene when fire tick is off
 - way sign tag broken
 - globe shear server
 - can keep on shearing it
-- cannon anim not working on servers
-- goblet texture broen
-- cannon with block server crash
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs

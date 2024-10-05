@@ -213,6 +213,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
         }
+        int aa = 1;
+
     }
 
     private void generateGlobes(ResourceManager manager) {
@@ -220,14 +222,14 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 Supplementaries.res("entity/globes/bedrock"))) {
 
             RandomSource rand = RandomSource.create();
-            for(int i = 0; i<100; i++){
-                ResourceLocation textureRes = Supplementaries.res("entity/globes/globe_"+i);
+            for (int i = 0; i < 100; i++) {
+                ResourceLocation textureRes = Supplementaries.res("entity/globes/globe_" + i);
                 try {
                     TextureImage newImage = globeT.makeCopy();
                     byte[][] pixels = GlobeTextureGenerator.generate(rand.nextLong());
-                    for(int x = 0; x< pixels.length; x++){
-                        for(int y = 0; y< pixels[x].length; y++){
-                            newImage.setFramePixel(0,x, y+16,
+                    for (int x = 0; x < pixels.length; x++) {
+                        for (int y = 0; y < pixels[x].length; y++) {
+                            newImage.setFramePixel(0, x, y + 16,
                                     GlobeManager.getColorForPalette(pixels[x][y],
                                             Level.OVERWORLD.location(), false));
                         }
@@ -238,7 +240,9 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 }
 
             }
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
+
     }
 
 
