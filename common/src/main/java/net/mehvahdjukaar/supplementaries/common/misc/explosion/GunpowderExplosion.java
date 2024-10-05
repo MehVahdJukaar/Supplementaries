@@ -26,6 +26,7 @@ import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -117,7 +118,7 @@ public class GunpowderExplosion extends Explosion {
         BlockPos myPos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, myPos);
         BlockState s = level.getBlockState(myPos);
-        if (s.canBeReplaced()) { //kills my own gunpowder block
+        if (s.canBeReplaced() && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) { //kills my own gunpowder block
             if (this.hasFlammableNeighbours(myPos)
                     || newFire.getBlock() != Blocks.FIRE) {
                 this.level.setBlockAndUpdate(myPos, newFire);

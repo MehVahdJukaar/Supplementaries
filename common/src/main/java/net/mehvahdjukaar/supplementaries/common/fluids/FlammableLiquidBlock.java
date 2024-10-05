@@ -289,9 +289,9 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (!level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) return;
         int age = state.getValue(AGE);
         FireStage stage = FireStage.fromAge(age);
+        boolean fireTickOn = level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK);
 
         if (stage == FireStage.OFF) {
             // lights up from neighbors
@@ -319,7 +319,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             if (missingLayers == 15) {
                 // cant remove block or liquid would be left behind
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                if (SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP)) {
+                if (SuppPlatformStuff.canCatchFire(level, pos.below(), Direction.UP) && fireTickOn) {
                     // replace with fire block if it has flammable below. Since we cant burn down
                     int newAge = random.nextInt(8);
                     level.setBlock(pos, getFireDelegate().getStateWithAge(level, pos, newAge), 3);
@@ -333,7 +333,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             return;
         }
 
-        if (stage == FireStage.RAGING) {
+        if (stage == FireStage.RAGING && fireTickOn) {
             level.scheduleTick(pos, this, getFireTickDelay(level.random));
 
             //tick normal fire
