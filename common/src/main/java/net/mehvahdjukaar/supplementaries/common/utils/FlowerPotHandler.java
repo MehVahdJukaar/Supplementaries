@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IFlowerModelProvider;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -50,8 +53,8 @@ public class FlowerPotHandler {
 
     //flower box stuff
 
-    private static final Map<Item, ModelResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
-    private static final Map<Item, ModelResourceLocation> SPECIAL_TALL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
+    private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
+    private static final Map<Item, ResourceLocation> SPECIAL_TALL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
 
     /**
      * for mods: use this or #Link(IFlowerModelProvider) to register plants that go into a flower box and have a custom model
@@ -59,14 +62,14 @@ public class FlowerPotHandler {
      * @param item  target item
      * @param model resource location of the block model to be used
      */
-    public static void registerCustomFlower(Item item, ModelResourceLocation model) {
+    public static void registerCustomFlower(Item item, ResourceLocation model) {
         SPECIAL_FLOWER_BOX_FLOWERS.put(item, model);
     }
-
+//TODO: split in common and client
     /**
      * Same as above but just used for the "simple" mode. Ideally this just contains tall flowers
      */
-    public static void registerCustomSimpleFlower(Item item, ModelResourceLocation model) {
+    public static void registerCustomSimpleFlower(Item item, ResourceLocation model) {
         SPECIAL_TALL_FLOWER_BOX_FLOWERS.put(item, model);
     }
 
@@ -76,14 +79,14 @@ public class FlowerPotHandler {
         if (opt.isPresent()) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
             CUSTOM_MODELS.add(res);
-            registerCustomFlower(opt.get(), RenderUtil.getStandaloneModelLocation(res));
+            registerCustomFlower(opt.get(), res);
         }
     }
 
     private static void registerSimpleFlower(Item item) {
         ResourceLocation res = Supplementaries.res("block/plants/simple/" + Utils.getID(item).getPath());
         CUSTOM_MODELS.add(res);
-        registerCustomSimpleFlower(item, RenderUtil.getStandaloneModelLocation(res));
+        registerCustomSimpleFlower(item, res);
     }
 
     //to manually add
@@ -194,9 +197,10 @@ public class FlowerPotHandler {
 
     }
 
+    //cant return model resource loc as thats client only. ideally this should be split in client and common
     @Nullable
-    public static ModelResourceLocation getSpecialFlowerModel(Item i, boolean forRenderer) {
-        ModelResourceLocation res;
+    public static ResourceLocation getSpecialFlowerModel(Item i, boolean forRenderer) {
+        ResourceLocation res;
         if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) {
             res = SPECIAL_TALL_FLOWER_BOX_FLOWERS.get(i);
             if (res != null || !forRenderer) return res;

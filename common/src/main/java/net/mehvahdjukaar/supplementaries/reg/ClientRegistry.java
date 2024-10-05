@@ -41,6 +41,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Paintin
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;

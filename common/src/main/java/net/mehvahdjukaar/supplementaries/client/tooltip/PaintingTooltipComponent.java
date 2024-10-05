@@ -8,6 +8,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.PaintingTextureManager;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 
 public class PaintingTooltipComponent implements ClientTooltipComponent {
@@ -17,7 +19,9 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
     private final int width;
 
     public PaintingTooltipComponent(PaintingTooltip tooltip) {
-        this.pattern = tooltip.pattern().value();
+        var ra = Minecraft.getInstance().level.registryAccess();
+        var painting = tooltip.data().read(ra.createSerializationContext(NbtOps.INSTANCE), Painting.VARIANT_MAP_CODEC);
+        this.pattern = painting.getOrThrow().value();
         float h = pattern.height() * 16;
         float w = pattern.width() * 16;
         int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();

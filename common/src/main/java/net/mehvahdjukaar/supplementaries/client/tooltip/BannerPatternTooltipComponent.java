@@ -46,17 +46,11 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
             RenderSystem.enableBlend();
             var contents = sprite.contents();
 
-            var c = sprite.contents();
-            float u= 1;
-            float v = 1;
-            int vH = 12;
-            int uW = 12;
-            //TODO: re add 1.21
-            /*
-            graphics.blitSprite(sprite.contents().name(), x, y, size, size,
-                    sprite.getU(u),
-                    sprite.getV(v), uW, vH, contents.width(), contents.height());
-*/
+            int width = contents.width();
+            int height = contents.height();
+            RenderUtil.blitSpriteSection(graphics, x, y, size, size,
+                    1f / width, (1f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
+
             graphics.pose().popPose();
         }
     }

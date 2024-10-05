@@ -40,7 +40,8 @@ public class SherdTooltipComponent implements ClientTooltipComponent {
             var contents = sprite.contents();
             int width = contents.width();
             int height = contents.height();
-            RenderUtil.blitSpriteSection(graphics, x, y, size, size, 2 * (16f / width), 2 * (16f / height), (int) (12 * (16f / width)), (int) (12 * (16f / width)), sprite);
+            RenderUtil.blitSpriteSection(graphics, x, y, size, size,
+                    2 * (1f / width), 2 * (1f / height), (int) (12 * (16f / width)), (int) (12 * (16f / width)), sprite);
         }
     }
 }

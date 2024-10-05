@@ -102,13 +102,13 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
     @Override
     protected float getV0() {
         float p = (this.age / (float) this.lifetime);
-        return sprite.getV((p * 16) / 24 * 16);
+        return sprite.getV((p) / 24);
     }
 
     @Override
     protected float getV1() {
         float p = (this.age / (float) this.lifetime);
-        return sprite.getV((8 + p * 16) / 24 * 16);
+        return sprite.getV(((8 + p * 16) / 24 * 16) / 16f);
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

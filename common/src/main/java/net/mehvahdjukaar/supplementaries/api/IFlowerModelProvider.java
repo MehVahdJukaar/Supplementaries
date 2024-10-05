@@ -14,6 +14,5 @@ public interface IFlowerModelProvider {
     /**
      * @return resource location of the model to be used in flower boxes
      */
-    @Environment(EnvType.CLIENT)
-    ModelResourceLocation getModel();
+    ResourceLocation getModel();
 }

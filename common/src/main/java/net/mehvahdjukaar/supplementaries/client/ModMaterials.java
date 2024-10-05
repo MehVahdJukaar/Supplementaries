@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -56,7 +55,7 @@ public class ModMaterials {
             new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/" + pattern.assetId()
                     .toShortLanguageKey().replace(":", "/").replace(".", "/"))
             ));
-    public static final  Material FLAG_BASE_MATERIAL = new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/base"));
+    public static final Material FLAG_BASE_MATERIAL = new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/base"));
 
 
     @Nullable
@@ -87,5 +86,9 @@ public class ModMaterials {
             throw new RuntimeException(e);
         }
     }
+
+    public static Function<ResourceLocation, ModelResourceLocation> TO_STANDALONE_MODEL = Util.memoize(
+            RenderUtil::getStandaloneModelLocation
+    );
 
 }

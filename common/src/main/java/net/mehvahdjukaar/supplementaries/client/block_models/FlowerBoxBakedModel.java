@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -22,7 +22,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -129,7 +128,8 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                                  PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
         BakedModel model;
         //for special flowers
-        ModelResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true);
+        ModelResourceLocation res = ModMaterials.TO_STANDALONE_MODEL.apply(
+                FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true));
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants
