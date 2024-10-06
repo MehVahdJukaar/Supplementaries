@@ -22,7 +22,7 @@
       "flag": "awning"
     },
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
         "value": {
             "type": "supplementaries:flag",
             "flag": "flax"

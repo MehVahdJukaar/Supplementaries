@@ -22,11 +22,11 @@
       "flag": "candle_holder"
     },
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "buzzier_bees"
     },
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "caverns_and_chasms"
     }
   ]

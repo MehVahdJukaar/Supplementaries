@@ -14,7 +14,7 @@
   },
   "conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
           "type": "supplementaries:flag",

@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "modid": "buzzier_bees",
-      "type": "forge:mod_loaded"
+      "type": "neoforge:mod_loaded"
     }
   ],
   "type": "minecraft:block",

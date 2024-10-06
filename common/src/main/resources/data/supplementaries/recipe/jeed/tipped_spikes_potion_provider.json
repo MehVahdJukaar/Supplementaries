@@ -1,7 +1,7 @@
 {
   "global_conditions": [
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "jeed"
     }
   ],

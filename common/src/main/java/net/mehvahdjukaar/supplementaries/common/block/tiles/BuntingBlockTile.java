@@ -13,6 +13,10 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -141,6 +145,27 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return null;
+    }
+
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+
+        //NBT items backward compat
+
+        ListTag listTag = tag.getList("Items", 10);
+
+        for (int i = 0; i < listTag.size(); ++i) {
+            CompoundTag compoundTag = listTag.getCompound(i);
+            int j = compoundTag.getByte("Slot") & 255;
+
+            CompoundTag nbt = compoundTag.getCompound("nbt");
+            if (!nbt.isEmpty()) {
+                DyeColor dye = DyeColor.byName(compoundTag.getString("Color"), DyeColor.WHITE);
+                this.getItem(j).set(DataComponents.BASE_COLOR, dye);
+            }
+        }
     }
 
 }

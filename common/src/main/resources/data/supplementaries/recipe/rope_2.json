@@ -16,10 +16,10 @@
   },
   "conditions": [
     {
-      "type": "forge:and",
+      "type": "neoforge:and",
       "values": [
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "type": "supplementaries:flag",
             "flag": "flax"

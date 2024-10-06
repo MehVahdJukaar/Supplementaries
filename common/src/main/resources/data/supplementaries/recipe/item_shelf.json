@@ -18,10 +18,10 @@
       "flag": "item_shelf"
     },
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "modid": "suppsquared",
-        "type": "forge:mod_loaded"
+        "type": "neoforge:mod_loaded"
       }
     }
   ]

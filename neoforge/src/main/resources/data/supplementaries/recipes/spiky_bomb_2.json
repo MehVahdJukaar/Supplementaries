@@ -1,17 +1,17 @@
 {
   "conditions": [
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "type": "forge:tag_empty",
         "tag": "forge:ingots/lead"
       }
     },
     {
-      "type": "forge:not",
+      "type": "neoforge:not",
       "value": {
         "modid": "oreganized",
-        "type": "forge:mod_loaded"
+        "type": "neoforge:mod_loaded"
       }
     },
     {

@@ -8,14 +8,14 @@
       "type": "forge:or",
       "values": [
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "modid": "farmersdelight",
-            "type": "forge:mod_loaded"
+            "type": "neoforge:mod_loaded"
           }
         },
         {
-          "type": "forge:not",
+          "type": "neoforge:not",
           "value": {
             "flag": "rich_soil_planter",
             "type": "supplementaries:flag"

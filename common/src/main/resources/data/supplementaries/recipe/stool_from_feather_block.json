@@ -22,7 +22,7 @@
       "flag": "feather_block"
     },
     {
-      "type": "forge:mod_loaded",
+      "type": "neoforge:mod_loaded",
       "modid": "quark"
     }
   ]
