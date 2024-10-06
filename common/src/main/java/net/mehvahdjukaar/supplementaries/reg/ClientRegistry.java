@@ -82,6 +82,7 @@ public class ClientRegistry {
     public static final ResourceLocation RAGE_SHADER = Supplementaries.res("shaders/post/rage.json");
     public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
+    public static final ResourceLocation GLITTER_SHADER = Supplementaries.res("shaders/post/glitter.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
     public static final ResourceLocation VANILLA_DESATURATE_SHADER = new ResourceLocation("shaders/post/desaturate.json");
     public static final ResourceLocation GLITTER_SHADE = new ResourceLocation("shaders/post/desaturate.json");
