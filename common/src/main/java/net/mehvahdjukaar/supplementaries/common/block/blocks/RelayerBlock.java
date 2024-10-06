@@ -70,10 +70,9 @@ public class RelayerBlock extends DirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        if (state.getValue(FACING) == direction && level instanceof Level l)
-            this.updatePowerNextTick(state, l, currentPos);
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        this.updatePowerNextTick(state, level, pos);
     }
 
     @Override

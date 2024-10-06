@@ -113,7 +113,7 @@ public class TextHolder implements IAntiquable {
                         this.renderMessages[j] = null;
                     }
                 }catch (Exception e){
-                    Supplementaries.LOGGER.error("Failed to load textholder data for block at {}", pos);
+                    Supplementaries.LOGGER.error("Failed to load textholder data for block at {}", pos, e);
                 }
             }
         }

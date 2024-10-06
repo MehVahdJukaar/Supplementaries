@@ -77,6 +77,8 @@
 
 # Soon
 
+- flip awning texture
+- relayer broken when reading solid block
 - cannon stalling eachother when triggered consitnosly
 -artsandcrafts compat
 - limisene diepsners

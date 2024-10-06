@@ -151,7 +151,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-
         //NBT items backward compat
 
         ListTag listTag = tag.getList("Items", 10);
@@ -160,7 +159,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
             CompoundTag nbt = compoundTag.getCompound("tag");
             if (!nbt.isEmpty()) {
                 int j = compoundTag.getByte("Slot") & 255;
-                DyeColor dye = DyeColor.byName(compoundTag.getString("Color"), DyeColor.WHITE);
+                DyeColor dye = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
                 this.getItem(j).set(DataComponents.BASE_COLOR, dye);
             }
         }
