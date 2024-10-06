@@ -12,20 +12,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MapAtlasTexture.class)
 public class CompatIFMapAtlasTextureMixin {
 
-    @Inject(
-            method = "<init>",
+    @WrapOperation(
+            method = {"<init>"},
+            require = 0,
             at = {@At(
-                    value = "moonlight:INVOKE_UNRESTRICTED",
-                    target = "Ljava/lang/Object;<init>()V",
+                    value = "NEW",
+                    target = "(IIZ)Lnet/minecraft/client/renderer/texture/DynamicTexture;",
                     remap = false
             )}
     )
-    private void forceMipMapOn(int id, CallbackInfo ci) {
+    private DynamicTexture forceMipMapOn(int width, int height, boolean useCalloc, Operation<DynamicTexture> original) {
         MoonlightClient.setMipMap(true);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void forceMipMapOff(int id, CallbackInfo ci) {
+        var t = original.call(width, height, useCalloc);
         MoonlightClient.setMipMap(false);
+        return t;
     }
 }
