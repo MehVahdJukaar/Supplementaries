@@ -136,6 +136,15 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        var stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof StatueBlockTile tile && tile.hasCustomName()) {
+            stack.setHoverName(tile.getCustomName());
+        }
+        return stack;
+    }
+
+    @Override
     public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
         if (stateIn.getValue(LIT)) {
             Direction direction = stateIn.getValue(FACING).getOpposite();

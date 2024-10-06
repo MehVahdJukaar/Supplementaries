@@ -26,6 +26,7 @@ Bug Fixes:
 - gunpowder can now light up blocks that are one over and 1 up from it. it will also visually connect to them
 - crystal displays can be chained
 - book pile generation fix
+- fixed relayer not updating properly from indirect power
 - destroying a safe item will no longer drop its content
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand

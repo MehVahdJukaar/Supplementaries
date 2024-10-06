@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -100,6 +101,15 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 leve.blockEvent(pos, state.getBlock(), 1, 0);
             }
         }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        var stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile && tile.hasCustomName()) {
+            stack.setHoverName(tile.getCustomName());
+        }
+        return stack;
     }
 
     @Override

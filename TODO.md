@@ -16,9 +16,11 @@
 - spring launcher super buggy
 - hide cannon circle when on edge
 - cannon blacklist tag
+- statue broken
 
 # Supplementaries
 
+- statue pick block
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
 - test config saving

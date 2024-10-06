@@ -40,7 +40,8 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
     public FlagBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, false));
 
         if(PlatHelper.getPlatform().isFabric())
             RegHelper.registerBlockFlammability(this,60,60);
