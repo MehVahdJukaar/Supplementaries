@@ -9,6 +9,8 @@ uniform vec2 InSize;
 
 out vec4 fragColor;
 
+#define intensity 4.5// Default is 1.0
+#define yellowTarget vec3(1.0, 0.95, 0.0)// The yellow color target
 
 float colorDistance(vec3 color, vec3 target) {
     return length(color - target);
@@ -25,10 +27,9 @@ vec3 RGBtoHCV(in vec3 rgb)
     return vec3(h, c, q.x);
 }
 
-#define intensity 4.5// Default is 1.0
-#define yellowTarget RGBtoHCV(vec3(1.0, 0.95, 0.0))// The yellow color target
-
-float hueDistance(vec3 hsvColor, vec3 hsvTarget) {
+float hueDistance(vec3 color, vec3 target) {
+    vec3 hsvColor = RGBtoHCV(color);
+    vec3 hsvTarget = RGBtoHCV(target);
 
     // Calculate hue distance with circular wrapping
     float hueDist = abs(hsvColor.x - hsvTarget.x);
@@ -43,7 +44,7 @@ float hueDistance(vec3 hsvColor, vec3 hsvTarget) {
 
 float yellowFactor(vec3 color) {
     // Invert the distance so that pixels closer to yellow have higher values
-    float dist = hueDistance(RGBtoHCV(color), yellowTarget);
+    float dist = hueDistance(color, yellowTarget);
     return smoothstep(0.77, 0.90, 1.0 - dist);// A smooth transition for colors close to yellow
 }
 
