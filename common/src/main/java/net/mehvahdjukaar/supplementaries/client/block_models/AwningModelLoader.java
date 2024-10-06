@@ -7,15 +7,11 @@ import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.Variant;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-
-import java.util.function.Function;
 
 public class AwningModelLoader implements CustomModelLoader {
 
@@ -53,12 +49,14 @@ public class AwningModelLoader implements CustomModelLoader {
 
         ResourceLocation finalParentLocation = parentLocation;
         return (modelBaker, spriteGetter, modelState) -> {
-            // resolve model and fix parent texture map as fore doesn't do that. if a child has parent of custom geometry, just THAT will be baked
-            var parent = modelBaker.getModel(finalParentLocation);
-            if (parent instanceof BlockModel bm) {
-                // super hacky
+            // resolve model and fix parent texture map as forge doesn't do that. if a child has parent of custom geometry, just THAT will be baked
+            if (modelState instanceof Variant bm) {
+                // super hacky. Should have used IGeometryBakingContext from forge instead which has sstuff for sprites
+                var parent = modelBaker.getModel(bm.getModelLocation());
+                if (parent instanceof BlockModel m) {
+                    modelHack.textureMap.putAll(m.textureMap);
 
-                modelHack.textureMap.putAll(bm.textureMap);
+                }
             }
             return modelHack.bake(modelBaker, spriteGetter, modelState);
         };
