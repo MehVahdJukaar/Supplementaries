@@ -1,0 +1,6 @@
+{
+	"parent": "supplementaries:item/key",
+	"textures": {
+		"layer0": "item/trial_key"
+	}
+}
