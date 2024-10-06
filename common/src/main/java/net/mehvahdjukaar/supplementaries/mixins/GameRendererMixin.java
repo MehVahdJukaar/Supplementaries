@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.piglin.Piglin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,6 +31,8 @@ public abstract class GameRendererMixin {
             this.loadEffect(ClientRegistry.VANILLA_DESATURATE);
         }else if(entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL){
             this.loadEffect(ClientRegistry.RAGE_SHADER);
+        }else if(entity instanceof Piglin){
+            this.loadEffect(ClientRegistry.GLITTER_SHADER);
         }
     }
 }
