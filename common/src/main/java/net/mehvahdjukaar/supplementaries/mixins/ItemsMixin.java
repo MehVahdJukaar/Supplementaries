@@ -13,9 +13,12 @@ import org.spongepowered.asm.mixin.injection.Slice;
 public abstract class ItemsMixin {
 
     @WrapOperation(method = "<clinit>", at = @At(value = "NEW",
+            ordinal = 0,
             target = "(Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;"
 
     ),
+            allow = 1,
+            require = 1,
             slice = @Slice(
                     from = @At(
                             value = "CONSTANT",
