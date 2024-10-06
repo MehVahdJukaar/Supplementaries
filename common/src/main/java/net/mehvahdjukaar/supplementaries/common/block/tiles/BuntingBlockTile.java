@@ -155,13 +155,11 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         //NBT items backward compat
 
         ListTag listTag = tag.getList("Items", 10);
-
         for (int i = 0; i < listTag.size(); ++i) {
             CompoundTag compoundTag = listTag.getCompound(i);
-            int j = compoundTag.getByte("Slot") & 255;
-
-            CompoundTag nbt = compoundTag.getCompound("nbt");
+            CompoundTag nbt = compoundTag.getCompound("tag");
             if (!nbt.isEmpty()) {
+                int j = compoundTag.getByte("Slot") & 255;
                 DyeColor dye = DyeColor.byName(compoundTag.getString("Color"), DyeColor.WHITE);
                 this.getItem(j).set(DataComponents.BASE_COLOR, dye);
             }
