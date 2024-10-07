@@ -8,11 +8,11 @@
       "y": 90
     },
     "slanted=true,facing=south,bottom=true": {
-      "model": "supplementaries:block/awnings/gray_bottom_slanted",
+      "model": "supplementaries:block/awnings/gray_bottom_slanted_f",
       "y": 180
     },
     "slanted=true,facing=west,bottom=true": {
-      "model": "supplementaries:block/awnings/gray_bottom_slanted",
+      "model": "supplementaries:block/awnings/gray_bottom_slanted_f",
       "y": 270
     },
     "slanted=true,facing=north,bottom=false": {
@@ -23,11 +23,11 @@
       "y": 90
     },
     "slanted=true,facing=south,bottom=false": {
-      "model": "supplementaries:block/awnings/gray_top_slanted",
+      "model": "supplementaries:block/awnings/gray_top_slanted_f",
       "y": 180
     },
     "slanted=true,facing=west,bottom=false": {
-      "model": "supplementaries:block/awnings/gray_top_slanted",
+      "model": "supplementaries:block/awnings/gray_top_slanted_f",
       "y": 270
     },
     "slanted=false,facing=north,bottom=true": {
@@ -38,11 +38,11 @@
       "y": 90
     },
     "slanted=false,facing=south,bottom=true": {
-      "model": "supplementaries:block/awnings/gray_bottom",
+      "model": "supplementaries:block/awnings/gray_bottom_f",
       "y": 180
     },
     "slanted=false,facing=west,bottom=true": {
-      "model": "supplementaries:block/awnings/gray_bottom",
+      "model": "supplementaries:block/awnings/gray_bottom_f",
       "y": 270
     },
     "slanted=false,facing=north,bottom=false": {
@@ -53,11 +53,11 @@
       "y": 90
     },
     "slanted=false,facing=south,bottom=false": {
-      "model": "supplementaries:block/awnings/gray_top",
+      "model": "supplementaries:block/awnings/gray_top_f",
       "y": 180
     },
     "slanted=false,facing=west,bottom=false": {
-      "model": "supplementaries:block/awnings/gray_top",
+      "model": "supplementaries:block/awnings/gray_top_f",
       "y": 270
     }
   }

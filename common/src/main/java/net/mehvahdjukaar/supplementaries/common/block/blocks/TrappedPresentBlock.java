@@ -125,7 +125,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
 
     @Override
     public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
-        return state.getValue(PACKED);
+        return !state.getValue(PACKED);
     }
 
     @Override

@@ -254,6 +254,7 @@ public class AwningBlock extends WaterBlock implements IColored {
 
                 Vector3f newMovement = movement.toVector3f().reflect(normal);
                 entity.setDeltaMovement(new Vec3(newMovement));
+                entity.hasImpulse = true;
                 level.playSound(null, pos, ModSounds.AWNING_BOUNCES.get(), SoundSource.BLOCKS,
                         1.0F, 1.0F);
             }

@@ -187,6 +187,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return getLunchBox(player);
     }
 
+    @NotNull
     @ExpectPlatform
     public static Data getLunchBoxData(ItemStack stack) {
         throw new AssertionError();
