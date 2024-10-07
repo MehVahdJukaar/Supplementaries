@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -31,6 +30,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 
@@ -55,7 +55,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
             HitResult hit = Minecraft.getInstance().hitResult;
             if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
                 BlockPos pos = tile.getBlockPos();
-                BlockPos hitPos = BlockPos.containing(hit.getLocation());
+                BlockPos hitPos = ((BlockHitResult) hit).getBlockPos();
                 if (pos.equals(hitPos)) {
                     double d0 = entityRenderer.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                     return d0 < 16 * 16;
@@ -135,7 +135,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         if (capeTexture != null) {
             RenderType capeType = RenderType.entityTranslucent(capeTexture);
             VertexConsumer capeBuffer = bufferIn.getBuffer(capeType);
-            this.model.renderCloak(poseStack, capeBuffer, combinedLightIn, combinedOverlayIn);
+            this.model.renderCloak(poseStack, capeBuffer, combinedLightIn, combinedOverlayIn,
+                    tile, partialTicks);
         }
 
         poseStack.popPose();

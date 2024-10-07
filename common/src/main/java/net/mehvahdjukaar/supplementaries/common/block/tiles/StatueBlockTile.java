@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.UUID;
 
 import static net.minecraft.world.level.block.entity.SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR;
@@ -89,8 +91,8 @@ public class StatueBlockTile extends ItemDisplayTile {
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
             Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
-                GameProfile gameProfile = new GameProfile(profile.getFirst(), profile.getSecond());
-                this.setPlayerSkin(new ResolvableProfile(gameProfile));
+                this.setPlayerSkin(new ResolvableProfile(
+                        Optional.empty(), Optional.of(profile.getFirst()),  new PropertyMap()));
             }
         } else this.playerSkin = null;
 

@@ -114,8 +114,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.framed = tag.getBoolean("Framed");
-        this.signUp.load(tag.getCompound("SignUp"), this.level, this.worldPosition);
-        this.signDown.load(tag.getCompound("SignDown"), this.level, this.worldPosition);
+        this.signUp.load(tag.getCompound("SignUp"), registries, this.worldPosition);
+        this.signDown.load(tag.getCompound("SignDown"), registries, this.worldPosition);
         this.loadOwner(tag);
         if (tag.contains("Waxed")) {
             this.isWaxed = tag.getBoolean("Waxed");
@@ -214,12 +214,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.text = new TextHolder(1, 90);
         }
 
-        public void load(CompoundTag compound, Level level, BlockPos pos) {
+        public void load(CompoundTag compound, HolderLookup.Provider registries, BlockPos pos) {
             this.active = compound.getBoolean("Active");
             this.left = compound.getBoolean("Left");
             this.yaw = compound.getFloat("Yaw");
             this.woodType = WoodTypeRegistry.fromNBT(compound.getString("WoodType"));
-            this.text.load(compound, level, pos);
+            this.text.load(compound, registries, pos);
 
         }
 

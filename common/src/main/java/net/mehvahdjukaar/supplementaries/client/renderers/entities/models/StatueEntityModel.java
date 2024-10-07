@@ -7,7 +7,9 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
@@ -68,7 +70,13 @@ public class StatueEntityModel extends Model {
         this.ear.render(poseStack, consumer, light, overlay);
     }
 
-    public void renderCloak(PoseStack poseStack, VertexConsumer consumer, int light, int overlay) {
+    public void renderCloak(PoseStack poseStack, VertexConsumer consumer, int light, int overlay, StatueBlockTile tile, float partialTick) {
+        BlockPos pos=tile.getBlockPos();
+        long gameTime = tile.getLevel() == null ? 0 : tile.getLevel().getGameTime();
+        float time = ((float)Math.floorMod((pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L) + gameTime, 100L) + partialTick) / 100.0F;
+        this.cloak.xRot = (-0.04F + 0.01F * Mth.cos((float) (Math.PI * 2) * time)) * (float) Math.PI;
+       this.cloak.yRot = Mth.PI;
+        this.cloak.z = 2;
         this.cloak.render(poseStack, consumer, light, overlay);
     }
 
