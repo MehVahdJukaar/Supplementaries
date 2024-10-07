@@ -179,7 +179,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.pageNumber = tag.getInt("PageNumber");
-        this.textHolder.load(tag, level, worldPosition);
+        this.textHolder.load(tag, registries, worldPosition);
     }
 
     @Override

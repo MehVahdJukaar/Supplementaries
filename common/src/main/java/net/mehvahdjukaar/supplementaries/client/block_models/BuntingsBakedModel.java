@@ -34,7 +34,8 @@ public class BuntingsBakedModel implements CustomBakedModel {
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (!data.get(BuntingBlockTile.IS_FANCY)) {
+        Boolean b = data.get(BuntingBlockTile.IS_FANCY);
+        if (b != null && !b) {
             DyeColor north = data.get(BuntingBlockTile.NORTH_BUNTING);
             DyeColor south = data.get(BuntingBlockTile.SOUTH_BUNTING);
             DyeColor east = data.get(BuntingBlockTile.EAST_BUNTING);

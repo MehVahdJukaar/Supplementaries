@@ -46,7 +46,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.textHolder.load(tag, this.level, this.getBlockPos());
+        this.textHolder.load(tag, registries, this.getBlockPos());
         if (tag.contains("Waxed")) {
             this.isWaxed = tag.getBoolean("Waxed");
         }

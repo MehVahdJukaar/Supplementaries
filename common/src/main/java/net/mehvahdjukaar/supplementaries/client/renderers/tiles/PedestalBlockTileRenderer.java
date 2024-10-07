@@ -58,7 +58,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
         poseStack.translate(0, h, 0);
         poseStack.mulPose(mc.getEntityRenderDispatcher().cameraOrientation());
-        poseStack.scale(-0.025F, -0.025F, 0.025F);
+        poseStack.scale(0.025F, -0.025F, -0.025F);
         Matrix4f matrix4f = poseStack.last().pose();
         float f1 = mc.options.getBackgroundOpacity(0.25F);
         int j = (int) (f1 * 255.0F) << 24;

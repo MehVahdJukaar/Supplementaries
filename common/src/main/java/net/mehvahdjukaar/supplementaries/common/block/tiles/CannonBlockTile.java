@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
@@ -191,6 +193,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }
+
         return trajectoryData;
     }
 

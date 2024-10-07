@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -24,6 +25,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
@@ -91,7 +93,7 @@ public class TextHolder implements IAntiquable {
     }
 
     //removing command source crap
-    public void load(CompoundTag compound, Level level, BlockPos pos) {
+    public void load(CompoundTag compound, HolderLookup.Provider registries, BlockPos pos) {
         if (compound.contains("TextHolder")) {
 
             CompoundTag com = compound.getCompound("TextHolder");
@@ -100,11 +102,11 @@ public class TextHolder implements IAntiquable {
             this.hasAntiqueInk = com.getBoolean("has_antique_ink");
             if (lines != 0) {
                 try {
-                    var v = decodeMessage(com.get("message"), level, pos);
+                    var v = decodeMessage(com.get("message"), registries, pos);
                     System.arraycopy(v, 0, messages, 0, v.length);
                     var filtered = com.get("filtered_message");
                     if (filtered != null) {
-                        v = decodeMessage(filtered, level, pos);
+                        v = decodeMessage(filtered, registries, pos);
                         System.arraycopy(v, 0, filteredMessages, 0, v.length);
                     } else {
                         System.arraycopy(messages, 0, filteredMessages, 0, messages.length);
@@ -119,12 +121,13 @@ public class TextHolder implements IAntiquable {
         }
     }
 
-    private Component[] decodeMessage(Tag com, Level level, BlockPos pos) {
-        var ops = level.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+    private Component[] decodeMessage(Tag com, HolderLookup.Provider registries, BlockPos pos) {
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
 
         return Arrays.stream(compCodec(lines).decode(ops, com).getOrThrow()
                 .getFirst()).map(c -> {
-            if (level instanceof ServerLevel sl) {
+            MinecraftServer currentServer = PlatHelper.getCurrentServer();
+            if (currentServer != null && currentServer.overworld() instanceof ServerLevel sl) {
                 try {
                     return ComponentUtils.updateForEntity(createCommandSourceStack(null, sl, pos),
                             c, null, 0);

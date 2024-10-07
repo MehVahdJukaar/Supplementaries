@@ -35,6 +35,11 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     }
 
     @Override
+    public int getViewDistance() {
+        return 96;
+    }
+
+    @Override
     public boolean shouldRenderOffScreen(CannonBlockTile blockEntity) {
         return true;
     }

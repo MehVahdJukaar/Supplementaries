@@ -74,19 +74,23 @@
 - slimed overlay with frost
 - quiver arrow shrink
 - banner tooltips
+- can click on hat stands
+- all liquids broken
+- metal frames turning to timber frames
 
 # Soon
 
-- snowball not working in cannon
+- slidy block slipperyness
+- lumisene spawning bubble on armor stand
+- lumisene from faucet
+- lumisene in jars
+ - snowball not working in cannon
 - cannon fire event not figig sometimes
-- flip awning texture
 - awning bounce nerf
-- relayer broken when reading solid block
 - cannon stalling eachother when triggered consitnosly
--artsandcrafts compat
+- artsandcrafts compat
 - limisene diepsners
 -soap cleaning from recipe
-- slimeballs bugged dispenser
 - flute skibidi
 - capability cache
 - add fabric missing events
@@ -99,7 +103,6 @@
 - hat for players
 - anger nearby piglins
 - cannon camera glitchyness
-- heavy key getting overwritten by normal key
 - safe recipe jei
 - no jar of dirt
 - rope not breaking when supporting each other

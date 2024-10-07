@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -37,6 +38,12 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
     @Override
     public BlockEntityType<?> getType() {
         return ModRegistry.MOVING_SLIDY_BLOCK_TILE.get();
+    }
+
+    @PlatformOnly(value = PlatformOnly.FABRIC)
+    @Override
+    public boolean isValidBlockState(BlockState blockState) {
+        return this.getType().isValid(blockState);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, MovingSlidyBlockEntity t) {
