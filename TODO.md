@@ -77,7 +77,10 @@
 
 # Soon
 
+- snowball not working in cannon
+- cannon fire event not figig sometimes
 - flip awning texture
+- awning bounce nerf
 - relayer broken when reading solid block
 - cannon stalling eachother when triggered consitnosly
 -artsandcrafts compat
