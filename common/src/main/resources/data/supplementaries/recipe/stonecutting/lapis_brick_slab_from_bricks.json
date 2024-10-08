@@ -9,6 +9,8 @@
       "flag": "lapis_bricks"
     }
   ],
-  "result": "supplementaries:lapis_bricks_slab",
-  "count": 2
+  "result": {
+    "count": 2,
+    "id": "supplementaries:lapis_bricks_slab"
+  }
 }

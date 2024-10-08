@@ -121,7 +121,7 @@ public class GunpowderExplosion extends Explosion {
         if (s.canBeReplaced() && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) { //kills my own gunpowder block
             if (this.hasFlammableNeighbours(myPos)
                     || newFire.getBlock() != Blocks.FIRE) {
-                 if(s.is(ModRegistry.GUNPOWDER_BLOCK.get()) && !s.getValue(GunpowderBlock.HIDDEN))return;
+                 if(s.is(ModRegistry.GUNPOWDER_BLOCK.get()) && s.getValue(GunpowderBlock.TYPE).isHidden())return;
 
                     this.level.setBlockAndUpdate(myPos, newFire);
                 //s.onCaughtFire(arg, arg2, Direction.UP, null);

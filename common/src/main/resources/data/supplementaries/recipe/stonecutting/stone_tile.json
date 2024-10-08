@@ -9,6 +9,8 @@
       "flag": "stone_tile"
     }
   ],
-  "result": "supplementaries:stone_tile",
-  "count": 1
+  "result": {
+    "count": 1,
+    "id": "supplementaries:stone_tile"
+  }
 }

@@ -9,6 +9,8 @@
       "flag": "stone_tile"
     }
   ],
-  "result": "supplementaries:blackstone_tile_wall",
-  "count": 1
+  "result": {
+    "count": 1,
+    "id": "supplementaries:blackstone_tile_wall"
+  }
 }

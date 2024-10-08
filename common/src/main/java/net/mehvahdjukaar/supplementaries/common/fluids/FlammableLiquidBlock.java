@@ -195,7 +195,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         Level level = context.getLevel();
         boolean shouldBeOnFire = false;
         for (Direction direction : context.getNearestLookingDirections()) {
-            if (GunpowderBlock.isFireSource(level, pos.relative(direction))) {
+            if (GunpowderBlock.canBlockLightMeOnFire(level, pos.relative(direction))) {
                 shouldBeOnFire = true;
                 break;
             }
@@ -297,7 +297,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             // lights up from neighbors
             for (Direction dir : Direction.values()) {
                 if (dir == Direction.DOWN) continue;
-                if (GunpowderBlock.isFireSource(level, pos.relative(dir))) {
+                if (GunpowderBlock.canBlockLightMeOnFire(level, pos.relative(dir))) {
                     //plays sound too
                     this.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
                     return;

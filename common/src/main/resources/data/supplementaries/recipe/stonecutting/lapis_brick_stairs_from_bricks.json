@@ -9,6 +9,8 @@
       "flag": "lapis_bricks"
     }
   ],
-  "result": "supplementaries:lapis_bricks_stairs",
-  "count": 1
+  "result": {
+    "count": 1,
+    "id": "supplementaries:lapis_bricks_stairs"
+  }
 }

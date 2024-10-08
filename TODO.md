@@ -80,6 +80,9 @@
 
 # Soon
 
+-stackable skula nd sskull converson not working
+-candles igniting gunpowder
+- soap banner
 - slidy block slipperyness
 - lumisene spawning bubble on armor stand
 - lumisene from faucet
