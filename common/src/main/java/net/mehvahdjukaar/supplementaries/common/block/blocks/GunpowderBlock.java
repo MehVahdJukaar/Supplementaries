@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -409,7 +408,7 @@ public class GunpowderBlock extends LightUpBlock {
             else {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
-                    if (isFireSource(world, p)) {
+                    if (canLightMeOnFire(world, p)) {
                         this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
                         world.scheduleTick(pos, this, getDelay());
                         break;
@@ -479,23 +478,23 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isFireSource(BlockState state, BlockGetter level, BlockPos pos) {
+    public static boolean canLightMeOnFire(BlockState state, BlockGetter level, BlockPos pos) {
         Block b = state.getBlock();
+
+        if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
+            if (state.getBlock() instanceof ILightable l) return l.isLitUp(state, level, pos);
+            if (state.hasProperty(BlockStateProperties.LIT)) return state.getValue(BlockStateProperties.LIT);
+            return true;
+        }
         if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
-        if (state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) && state.hasProperty(BlockStateProperties.LIT)) {
-            return state.getValue(BlockStateProperties.LIT);
-        }
-        if(state.is(ModTags.LIGHTS_GUNPOWDER)){
-            return !(state.getBlock() instanceof ILightable l) || l.isLitUp(state, level, pos);
-        }
         return false;
     }
 
-    public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
+    public static boolean canLightMeOnFire(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
-        return isFireSource(state, world, pos);
+        return canLightMeOnFire(state, world, pos);
     }
 
     //TODO: this is not working
