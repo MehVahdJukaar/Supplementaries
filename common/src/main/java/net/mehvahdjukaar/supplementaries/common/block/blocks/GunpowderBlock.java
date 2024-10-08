@@ -32,10 +32,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.properties.RedstoneSide;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -53,6 +50,8 @@ import java.util.Map;
  */
 public class GunpowderBlock extends LightUpBlock {
 
+
+    public static final BooleanProperty HIDDEN = BlockStateProperties.DISARMED;
 
     public static final EnumProperty<RedstoneSide> NORTH = BlockStateProperties.NORTH_REDSTONE;
     public static final EnumProperty<RedstoneSide> EAST = BlockStateProperties.EAST_REDSTONE;
@@ -81,7 +80,8 @@ public class GunpowderBlock extends LightUpBlock {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, RedstoneSide.NONE)
                 .setValue(EAST, RedstoneSide.NONE).setValue(SOUTH, RedstoneSide.NONE)
-                .setValue(WEST, RedstoneSide.NONE).setValue(BURNING, 0));
+                .setValue(WEST, RedstoneSide.NONE).setValue(BURNING, 0)
+                .setValue(HIDDEN, false));
         this.crossState = this.defaultBlockState().setValue(NORTH, RedstoneSide.SIDE)
                 .setValue(EAST, RedstoneSide.SIDE).setValue(SOUTH, RedstoneSide.SIDE)
                 .setValue(WEST, RedstoneSide.SIDE).setValue(BURNING, 0);
@@ -98,7 +98,15 @@ public class GunpowderBlock extends LightUpBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(NORTH, EAST, SOUTH, WEST, BURNING);
+        builder.add(NORTH, EAST, SOUTH, WEST, BURNING, HIDDEN);
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        if (state.getValue(HIDDEN)) {
+            return RenderShape.INVISIBLE;
+        }
+        return super.getRenderShape(state);
     }
 
     private VoxelShape calculateVoxelShape(BlockState state) {
@@ -171,6 +179,13 @@ public class GunpowderBlock extends LightUpBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, LevelAccessor world, BlockPos pos, BlockPos otherPos) {
         //should be server only
+        if (otherState.is(this) && !otherState.getValue(HIDDEN) && state.getValue(HIDDEN) && otherState.getValue(BURNING) == 0) {
+            return state.setValue(HIDDEN, false);
+        }
+        if (otherState.is(Blocks.RED_MUSHROOM_BLOCK) && state.getValue(HIDDEN)) {
+            return state.setValue(HIDDEN, false);
+        }
+
         BlockState newState;
         if (direction == Direction.DOWN) {
             newState = this.canSurvive(state, world, pos) ? state : Blocks.AIR.defaultBlockState();
@@ -182,7 +197,27 @@ public class GunpowderBlock extends LightUpBlock {
                     state.setValue(PROPERTY_BY_DIRECTION.get(direction), redstoneside) :
                     this.getConnectionState(world, this.crossState.setValue(BURNING, state.getValue(BURNING)).setValue(PROPERTY_BY_DIRECTION.get(direction), redstoneside), pos);
         }
+        if (newState.is(this)) {
+            newState = newState.setValue(HIDDEN, state.getValue(HIDDEN));
+        }
         return newState;
+    }
+
+
+    private void bs(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (true) return;
+        for (Direction dir : Direction.values()) {
+            BlockPos abovePos = pos.above().relative(dir);
+            BlockState up = world.getBlockState(abovePos);
+            if (up.is(this) && up.getValue(HIDDEN) && up.getValue(BURNING) == 0) {
+                world.setBlock(abovePos, up.setValue(HIDDEN, false), 3);
+            }
+            BlockPos belowPos = pos.below().relative(dir);
+            BlockState down = world.getBlockState(belowPos);
+            if (down.is(this) && down.getValue(HIDDEN) && up.getValue(BURNING) == 0) {
+                world.setBlock(belowPos, down.setValue(HIDDEN, false), 3);
+            }
+        }
     }
 
     private static boolean isCross(BlockState state) {
@@ -200,21 +235,36 @@ public class GunpowderBlock extends LightUpBlock {
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             RedstoneSide redstoneside = state.getValue(PROPERTY_BY_DIRECTION.get(direction));
+
             if (redstoneside != RedstoneSide.NONE && !world.getBlockState(mutable.setWithOffset(pos, direction)).is(this)) {
                 mutable.move(Direction.DOWN);
-                BlockState blockstate = world.getBlockState(mutable);
-                if (!blockstate.is(Blocks.OBSERVER)) {
+                BlockState downState = world.getBlockState(mutable);
+
+
+                if (!downState.is(Blocks.OBSERVER)) {
+
                     BlockPos blockpos = mutable.relative(direction.getOpposite());
-                    BlockState blockstate1 = blockstate.updateShape(direction.getOpposite(), world.getBlockState(blockpos), world, mutable, blockpos);
-                    updateOrDestroy(blockstate, blockstate1, world, mutable, var1, var2);
+                    BlockState blockstate1 = downState.updateShape(direction.getOpposite(), world.getBlockState(blockpos), world, mutable, blockpos);
+                    updateOrDestroy(downState, blockstate1, world, mutable, var1, var2);
+
+                    if (downState.is(this) && !state.getValue(HIDDEN) &&
+                            downState.getValue(HIDDEN)) {
+                        world.setBlock(mutable, downState.setValue(HIDDEN, false), 3);
+                    }
                 }
 
                 mutable.setWithOffset(pos, direction).move(Direction.UP);
-                BlockState blockstate3 = world.getBlockState(mutable);
-                if (!blockstate3.is(Blocks.OBSERVER)) {
+                BlockState upState = world.getBlockState(mutable);
+                if (!upState.is(Blocks.OBSERVER)) {
+
                     BlockPos pos1 = mutable.relative(direction.getOpposite());
-                    BlockState blockstate2 = blockstate3.updateShape(direction.getOpposite(), world.getBlockState(pos1), world, mutable, pos1);
-                    updateOrDestroy(blockstate3, blockstate2, world, mutable, var1, var2);
+                    BlockState blockstate2 = upState.updateShape(direction.getOpposite(), world.getBlockState(pos1), world, mutable, pos1);
+                    updateOrDestroy(upState, blockstate2, world, mutable, var1, var2);
+
+                    if (upState.is(this) && !state.getValue(HIDDEN) &&
+                            upState.getValue(HIDDEN)) {
+                        world.setBlock(mutable, upState.setValue(HIDDEN, false), 3);
+                    }
                 }
             }
         }
@@ -390,13 +440,23 @@ public class GunpowderBlock extends LightUpBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        if (state.getValue(HIDDEN)) {
+
+            return;
+        }
         int burning = state.getValue(BURNING);
 
         if (!world.isClientSide) {
 
             if (burning == 8) {
-                world.removeBlock(pos, false);
+                //world.removeBlock(pos, false);
                 GunpowderExplosion.explode(world, pos);
+                world.setBlock(pos, state.setValue(BURNING, 0)
+                        .setValue(HIDDEN, true), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                if (world.getBlockState(pos.below(2)).is(Blocks.REDSTONE_BLOCK)) {
+                    world.setBlock(pos.below(2), Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState(), 3);
+                }
+
             } else if (burning > 0) {
                 if (burning >= getSpreadAge()) {
                     this.lightUpNeighbouringWires(pos, state, world);
@@ -425,6 +485,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     @Override
     public boolean tryLightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
+        if (state.getValue(HIDDEN)) return false;
         boolean ret = super.tryLightUp(entity, state, pos, world, fireSourceType);
         if (ret) {
             //spawn particles when first lit
@@ -439,6 +500,7 @@ public class GunpowderBlock extends LightUpBlock {
 
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor level) {
+        if (state.getValue(HIDDEN)) return;
         if (!this.isLitUp(state, level, pos)) {
             //spawn particles when first lit
             if (!level.isClientSide()) {
@@ -447,6 +509,9 @@ public class GunpowderBlock extends LightUpBlock {
             setLitUp(state, level, pos, true);
             level.playSound(null, pos, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
                     1.9f + level.getRandom().nextFloat() * 0.1f);
+            if (level.getBlockState(pos.below(2)).is(Blocks.BROWN_MUSHROOM_BLOCK)) {
+                level.setBlock(pos.below(2), Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+            }
         }
     }
 
@@ -467,7 +532,7 @@ public class GunpowderBlock extends LightUpBlock {
                     neighbourState = world.getBlockState(p);
                 }
             } else continue;
-            if (neighbourState.is(this)) {
+            if (neighbourState.is(this) && !neighbourState.getValue(HIDDEN)) {
                 world.scheduleTick(p, this, Math.max(getDelay() - 1, 1));
                 this.lightUpByWire(neighbourState, p, world);
             }
