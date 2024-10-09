@@ -49,7 +49,9 @@ public class FirePitBlock extends LightUpWaterBlock {
     public FirePitBlock(float fireDamage, BlockBehaviour.Properties properties) {
         super(properties.lightLevel((state) -> state.getValue(LIT) ? 15 : 0));
         this.fireDamage = fireDamage;
-        this.registerDefaultState(this.defaultBlockState().setValue(HANGING, false));
+        this.registerDefaultState(this.defaultBlockState()
+                        .setValue(WATERLOGGED,false)
+                .setValue(HANGING, false));
     }
 
     @ForgeOverride

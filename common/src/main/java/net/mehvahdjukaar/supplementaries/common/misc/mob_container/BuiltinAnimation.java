@@ -76,7 +76,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
                     this.jumpY = Math.max(0, this.jumpY + this.yVel);
                 if (jumpY != 0) {
                     //decelerate
-                    this.yVel = this.yVel - 0.010f;
+                    this.yVel = this.yVel - 0.04f;
                 }
                 //on ground
                 else {
@@ -87,7 +87,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
                     }
                     if (world.getRandom().nextFloat() > 0.985) {
                         //jump
-                        this.yVel = 0.08f;
+                        this.yVel = 0.153f;
                         mob.targetSquish = 1.0F;
                     }
                 }

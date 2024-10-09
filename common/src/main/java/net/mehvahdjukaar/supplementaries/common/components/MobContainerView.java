@@ -98,4 +98,17 @@ public class MobContainerView implements TooltipProvider {
         return this.inner.getData();
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MobContainerView other) {
+            return this.inner.getData().equals(other.inner.getData());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.inner.getData().hashCode();
+    }
 }

@@ -531,16 +531,15 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static boolean canBlockLightMeOnFire(BlockState state, BlockGetter level, BlockPos pos) {
         Block b = state.getBlock();
-        if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
-            return true;
         if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
             if (state.getBlock() instanceof ILightable l) return l.isLitUp(state, level, pos);
             if (state.hasProperty(BlockStateProperties.LIT)) return state.getValue(BlockStateProperties.LIT);
             return true;
         }
+        if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
+            return true;
         return false;
     }
 

@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.RecordBuilder;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -47,6 +48,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -84,9 +86,12 @@ public class MobContainer {
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         if (this.data != null) {
             RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
-            //TODO:check if existing tags are preserved
-            var mapBuilder = MobData.CODEC.encode(this.data, ops, ops.mapBuilder());
-            mapBuilder.build(tag);
+            RecordBuilder<Tag> mapBuilder = ops.mapBuilder();
+            MobData.CODEC.encode(this.data, ops, mapBuilder);
+            var newTag = mapBuilder.build(tag);
+            if (newTag.isSuccess() && newTag.getOrThrow() instanceof CompoundTag ct) {
+                tag.merge(ct);
+            }
         }
         return tag;
     }
@@ -95,7 +100,8 @@ public class MobContainer {
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
 
         ops.getMap(tag).ifSuccess(map ->
-                MobData.CODEC.decode(ops, map).ifSuccess(this::setData));
+                MobData.CODEC.decode(ops, map)
+                        .ifSuccess(this::setData));
     }
 
     public float getWidth() {
@@ -540,6 +546,20 @@ public class MobContainer {
             public ItemStack getBucket() {
                 return filledBucket;
             }
+
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                Bucket bucket = (Bucket) o;
+                return Objects.equals(filledBucket, bucket.filledBucket);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hashCode(filledBucket);
+            }
         }
 
         public static class Entity extends MobData {
@@ -580,7 +600,7 @@ public class MobContainer {
                 this.uuid = uuid;
             }
 
-            public MobData copyWithNewUUID(UUID newUUID){
+            public MobData copyWithNewUUID(UUID newUUID) {
                 return new Entity(this.name, this.fishTexture, Optional.ofNullable(this.visualFluid), this.mobTag, this.scale, newUUID);
             }
 
@@ -595,6 +615,20 @@ public class MobContainer {
 
             public @Nullable UUID getUuid() {
                 return uuid;
+            }
+
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                Entity entity = (Entity) o;
+                return Float.compare(scale, entity.scale) == 0 && Objects.equals(mobTag, entity.mobTag) && Objects.equals(uuid, entity.uuid);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(mobTag, scale, uuid);
             }
         }
     }

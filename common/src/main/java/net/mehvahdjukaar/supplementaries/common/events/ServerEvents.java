@@ -144,10 +144,10 @@ public class ServerEvents {
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-        CapturedMobHandler.sendDataToClient(player);
-        GlobeData.sendDataToClient(player);
-        HourglassTimesManager.sendDataToClient(player);
-        MapLightHandler.sendDataToClient(player);
+       // CapturedMobHandler.sendDataToClient(player);
+       // GlobeData.sendDataToClient(player);
+       // HourglassTimesManager.sendDataToClient(player);
+       // MapLightHandler.sendDataToClient(player);
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

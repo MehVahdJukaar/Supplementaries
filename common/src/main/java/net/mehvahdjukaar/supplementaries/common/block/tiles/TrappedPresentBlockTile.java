@@ -2,12 +2,14 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,6 +32,16 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     public TrappedPresentBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.TRAPPED_PRESENT_TILE.get(), pos, state);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if(this.level != null && !this.level.isClientSide){
+            boolean empty = this.getItem(0).isEmpty();
+            this.level.setBlock(this.getBlockPos(),
+                    this.getBlockState().setValue(PresentBlock.PACKED, !empty), 3);
+        }
     }
 
     @Override

@@ -270,8 +270,8 @@ public class ColoredMapHandler {
 
         @Override
         public void load(CompoundTag tag, HolderLookup.Provider provider) {
-            if (tag.contains("lights")) {
-                CompoundTag t = tag.getCompound("lights");
+            if (tag.contains("palette")) {
+                CompoundTag t = tag.getCompound("palette");
 
                 int minX = 0;
                 int maxX = 127;
@@ -327,7 +327,7 @@ public class ColoredMapHandler {
                         t.putByteArray("pos_" + x, rowData);
                     }
                 }
-                tag.put("lights", t);
+                tag.put("palette", t);
 
                 if (!biomesIndexesPalette.isEmpty()) {
                     ListTag biomesList = new ListTag();
@@ -371,13 +371,8 @@ public class ColoredMapHandler {
             boolean biome = dc.biomesDirty;
             Int2ObjectArrayMap<byte[]> positions = null;
 
-            if (pos && data != null) {
+            if (pos && data != null && ((minX != maxX) || (minZ != maxZ))) {
                 positions = new Int2ObjectArrayMap<>();
-                CompoundTag t = new CompoundTag();
-                if (minX != 0) t.putInt(MIN_X, minX);
-                if (maxX != 127) t.putInt(MAX_X, maxX);
-                if (minZ != 0) t.putInt(MIN_Z, minZ);
-
                 for (int x = minX; x <= maxX; x++) {
                     if (data[x] != null) {
                         byte[] rowData = new byte[maxZ - minZ + 1];
@@ -403,7 +398,6 @@ public class ColoredMapHandler {
                 int minZ = patch.minZ;
 
                 for (int x = minX; x <= maxX; x++) {
-                    byte[] rowData = positions.get(x);
 
                     if (data == null) {
                         data = new byte[128][];
@@ -411,7 +405,14 @@ public class ColoredMapHandler {
                     if (data[x] == null) {
                         data[x] = new byte[128];
                     }
-                    System.arraycopy(rowData, 0, data[x], minZ, rowData.length);
+
+                    byte[] rowData = positions.get(x);
+                    if (rowData != null) { //TODO:change. this cant happen!!! but it does how??
+                        System.arraycopy(rowData, 0, data[x], minZ, rowData.length);
+                    } else {
+                        Supplementaries.error();
+                        Supplementaries.LOGGER.error("Null row data in color data");
+                    }
                 }
             }
             if (patch.biomes.isPresent()) {
@@ -633,7 +634,11 @@ public class ColoredMapHandler {
                     for (int i = 0; i < size; i++) {
                         int x = buf.readVarInt();
                         byte[] rowData = buf.readByteArray();
-                        positions.put(x, rowData);
+                        if (rowData == null) {
+                            Supplementaries.error();
+                            //TODO: figure out why this can be null
+                            int aa = 1;
+                        } else positions.put(x, rowData);
                     }
                 }
 

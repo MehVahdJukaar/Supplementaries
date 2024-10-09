@@ -95,7 +95,8 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }
-            this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
+            this.level.setBlock(this.getBlockPos(),
+                    this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
         }
     }
 
@@ -145,6 +146,11 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         if (tag.contains("Recipient")) this.recipient = tag.getString("Recipient");
         if (tag.contains("Sender")) this.sender = tag.getString("Sender");
         if (tag.contains("Description")) this.description = tag.getString("Description");
+        if(this.level != null && !this.level.isClientSide){
+            boolean empty = this.getItem(0).isEmpty();
+            this.level.setBlock(this.getBlockPos(),
+                    this.getBlockState().setValue(PresentBlock.PACKED, !empty), 3);
+        }
     }
 
     @Override

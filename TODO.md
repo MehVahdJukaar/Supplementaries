@@ -75,11 +75,25 @@
 - quiver arrow shrink
 - banner tooltips
 - can click on hat stands
-- all liquids broken
 - metal frames turning to timber frames
+- cage mob duplication
+- cage flickering
 
 # Soon
-
+- bubble blower not blowing bubbles
+- colored map data crash row Data null
+- enderman eyes dont work
+- slice map crash
+- hat stand wearing nbt data helmet
+- jar insert sound not server side
+- sniffer egg directional
+- turn table oh by default
+-cannon spectator
+- barrier block light block
+- flute not working
+- play song command
+- amke canon face the way camera faces whe first manovering
+slidy double pulse
 -stackable skula nd sskull converson not working
 -candles igniting gunpowder
 - soap banner
