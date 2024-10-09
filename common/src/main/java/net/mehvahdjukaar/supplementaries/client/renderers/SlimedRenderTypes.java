@@ -5,13 +5,14 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.RenderType;
 import org.joml.Matrix4f;
 
-public class SlimedRenderType extends RenderType {
+public class SlimedRenderTypes extends RenderType {
 
-    public SlimedRenderType(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean b, boolean b1, Runnable runnable, Runnable aSuper) {
+    public SlimedRenderTypes(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean b, boolean b1, Runnable runnable, Runnable aSuper) {
         super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
 
@@ -33,6 +34,10 @@ public class SlimedRenderType extends RenderType {
     //will have few entries
     private static final Int2ObjectArrayMap<RenderType> TYPES = new Int2ObjectArrayMap<>();
 
+    public static void clear() {
+        TYPES.clear();
+    }
+
     public static RenderType get(int width, int height) {
         return TYPES.computeIfAbsent((width << 16) | (height & 0xFFFF), k -> create("slimed",
                 DefaultVertexFormat.NEW_ENTITY,
@@ -40,14 +45,16 @@ public class SlimedRenderType extends RenderType {
                 256,
                 false, true,
                 CompositeState.builder()
-                        .setShaderState(new ShaderStateShard(SuppClientPlatformStuff::getEntityOffsetShader))
                         .setTextureState(new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, false, false))
                         .setCullState(NO_CULL)
+                        .setShaderState(new ShaderStateShard(ClientRegistry.ENTITY_OFFSET_SHADER::get))
                         .setOverlayState(OVERLAY)
                         .setLightmapState(LIGHTMAP)
                         .setDepthTestState(EQUAL_DEPTH_TEST)
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setTexturingState(new OffsetTexturing(width, height))
-                        .createCompositeState(false)));
+                        .createCompositeState(false)
+        ));
     }
+
 }

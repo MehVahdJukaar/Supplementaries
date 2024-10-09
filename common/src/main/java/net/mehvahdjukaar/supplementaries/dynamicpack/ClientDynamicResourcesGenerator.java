@@ -16,6 +16,7 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeTextureGenerator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -61,6 +62,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         //need this here for reasons I forgot
         GlobeManager.refreshColorsAndTextures(manager);
         ColorHelper.refreshBubbleColors(manager);
+        SlimedRenderTypes.clear();
 
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
             try (var text = TextureImage.open(manager, new ResourceLocation("entity/enderman/enderman"));

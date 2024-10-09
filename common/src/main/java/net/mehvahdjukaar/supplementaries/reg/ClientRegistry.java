@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -52,6 +53,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -69,17 +71,23 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ClientRegistry {
 
+    // post shaders
     public static final ResourceLocation RAGE_SHADER = Supplementaries.res("shaders/post/rage.json");
     public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
     public static final ResourceLocation VANILLA_DESATURATE = new ResourceLocation("shaders/post/desaturate.json");
+    // core shaders
+    public static final AtomicReference<ShaderInstance> ENTITY_OFFSET_SHADER = new AtomicReference<>();
+    public static final AtomicReference<ShaderInstance> NOISE_SHADER = new AtomicReference<>();
+
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
@@ -139,6 +147,7 @@ public class ClientRegistry {
         ClientHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
         ClientHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
+        ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
     }
 
     public static void setup() {
@@ -401,6 +410,12 @@ public class ClientRegistry {
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
+    }
+
+    @EventCalled
+    private static void registerShaders(ClientHelper.ShaderEvent event) {
+        event.register(Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY, NOISE_SHADER::set);
+        event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::set);
     }
 
     @EventCalled

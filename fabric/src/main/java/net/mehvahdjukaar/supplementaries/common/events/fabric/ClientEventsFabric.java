@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.mehvahdjukaar.moonlight.core.mixins.fabric.ShaderInstanceMixin;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.CannonChargeHudImpl;
@@ -16,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerIt
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -24,6 +26,7 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
 
@@ -70,6 +73,7 @@ public class ClientEventsFabric {
             } else if (t == EntityType.CREEPER) {
                 e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
             }
+            e.register(new SlimedLayer<>(r));
         });
 
         //hack. good enough
@@ -86,7 +90,6 @@ public class ClientEventsFabric {
         SlimedOverlayHudImpl.INSTANCE.render(graphics, partialTicks);
         CannonChargeHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
-
         Minecraft mc = Minecraft.getInstance();
         if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && mc.player instanceof IQuiverPlayer qe) {
             boolean keyDown = InputConstants.isKeyDown(

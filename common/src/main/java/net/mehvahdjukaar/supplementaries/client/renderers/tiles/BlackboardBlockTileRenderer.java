@@ -9,10 +9,12 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -71,14 +73,14 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
-            SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(1.0f);
+            ClientRegistry.NOISE_SHADER.get().getUniform("Intensity").set(1.0f);
 
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
             poseStack.mulPose(RotHlpr.rot(dir));
             poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
-            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, SuppClientPlatformStuff::staticNoise);
+            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, NoiseRenderType.STATIC_NOISE);
 
 
             VertexUtil.addQuad(builder, poseStack, 0, 0, 1, 1,

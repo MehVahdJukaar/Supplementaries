@@ -10,8 +10,7 @@
     "CompatEmbFluidRendererMixin",
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
-    "LevelRendererMixin",
-    "net.mehvahdjukaar.supplementaries.mixins.LiquidBlockRendererMixin"
+    "LevelRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",
