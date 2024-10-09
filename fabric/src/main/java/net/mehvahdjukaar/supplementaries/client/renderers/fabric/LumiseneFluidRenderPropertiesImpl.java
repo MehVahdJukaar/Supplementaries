@@ -17,10 +17,10 @@ public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProper
     @Override
     public TextureAtlasSprite[] getFluidSprites(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state) {
         if (pos == null) return single;
-
         int x = Math.floorMod(pos.getX(), 4);
         int y = Math.floorMod(pos.getZ(), 4);
-        return multiple[x][y];
+        return multiple[y][x];
+
     }
 
     @Override

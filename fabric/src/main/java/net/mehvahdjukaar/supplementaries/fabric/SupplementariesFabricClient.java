@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.ShaderInstance;
 
 public class SupplementariesFabricClient implements ClientModInitializer {
 

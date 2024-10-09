@@ -145,6 +145,4 @@ public class SuppPlatformStuffImpl {
         dc.emptyContents(player, level, hit.getBlockPos(), hit);
     }
 
-    public static FoodProperties makeLumiseneFood() {
-    }
 }

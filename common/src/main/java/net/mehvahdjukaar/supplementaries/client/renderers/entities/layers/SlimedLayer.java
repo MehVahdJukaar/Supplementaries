@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
-import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderType;
+import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.mixins.AgeableListAccessor;
 import net.minecraft.client.model.EntityModel;
@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.LivingEntity;
+
 
 public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
@@ -46,7 +47,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
             width = part.supp$getTextWidth();
         }
 
-        VertexConsumer consumer = buffer.getBuffer(SlimedRenderType.get(width, height));
+        VertexConsumer consumer = buffer.getBuffer(SlimedRenderTypes.get(width, height));
 
         poseStack.pushPose();
         model.renderToBuffer(poseStack, consumer, packedLight,

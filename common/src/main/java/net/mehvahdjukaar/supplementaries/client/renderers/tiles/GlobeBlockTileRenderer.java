@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -143,9 +144,9 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
                 float c = (float) Mth.clamp(si, -2, 2);
-                SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
+                ClientRegistry.NOISE_SHADER.get().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-                builder = buffer.getBuffer(SuppClientPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
+                builder = buffer.getBuffer(NoiseRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
             } else {
                 builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
             }

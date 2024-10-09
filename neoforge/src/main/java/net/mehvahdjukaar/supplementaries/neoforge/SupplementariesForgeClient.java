@@ -56,40 +56,6 @@ public class SupplementariesForgeClient {
         VibeChecker.checkVibe();
     }
 
-
-    private static ShaderInstance staticNoiseShader;
-    private static ShaderInstance entityOffsetShader;
-
-    public static ShaderInstance getStaticNoiseShader() {
-        return staticNoiseShader;
-    }
-
-    public static ShaderInstance getEntityOffsetShader() {
-        return entityOffsetShader;
-    }
-
-    public static RenderType staticNoise(ResourceLocation location) {
-        return RenderTypeAccessor.STATIC_NOISE.apply(location);
-    }
-
-    @SubscribeEvent
-    public static void registerShader(RegisterShadersEvent event) {
-        try {
-            ShaderInstance noiseShader = new ShaderInstance(event.getResourceProvider(),
-                    Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY);
-
-            event.registerShader(noiseShader, s -> staticNoiseShader = s);
-
-            ShaderInstance slimeShader = new ShaderInstance(event.getResourceProvider(),
-                    Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY);
-
-            event.registerShader(slimeShader, s -> entityOffsetShader = s);
-
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed to parse shader: {}", String.valueOf(e));
-        }
-    }
-
     @SubscribeEvent
     public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {
         event.registerSkullModel(EndermanSkullBlock.TYPE,
@@ -167,24 +133,6 @@ public class SupplementariesForgeClient {
     }
 
 
-    private abstract static class RenderTypeAccessor extends RenderType {
-        protected static final ShaderStateShard STATIC_NOISE_SHARD = new ShaderStateShard(SupplementariesForgeClient::getStaticNoiseShader);
 
-        static final Function<ResourceLocation, RenderType> STATIC_NOISE = Util.memoize((resourceLocation) -> {
-            CompositeState compositeState = RenderType.CompositeState.builder()
-                    .setShaderState(STATIC_NOISE_SHARD)
-                    .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
-                    .setTransparencyState(NO_TRANSPARENCY)
-                    .setLightmapState(LIGHTMAP)
-                    .setOverlayState(OVERLAY)
-                    .createCompositeState(true);
-            return create("static_noise", DefaultVertexFormat.NEW_ENTITY,
-                    VertexFormat.Mode.QUADS, 256, true, false, compositeState);
-        });
-
-        public RenderTypeAccessor(String string, VertexFormat arg, VertexFormat.Mode arg2, int i, boolean bl, boolean bl2, Runnable runnable, Runnable runnable2) {
-            super(string, arg, arg2, i, bl, bl2, runnable, runnable2);
-        }
-    }
 
 }
