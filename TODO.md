@@ -95,13 +95,13 @@
 - amke canon face the way camera faces whe first manovering
 slidy double pulse
 -stackable skula nd sskull converson not working
--candles igniting gunpowder
 - soap banner
 - slidy block slipperyness
 - lumisene spawning bubble on armor stand
 - lumisene from faucet
 - lumisene in jars
  - snowball not working in cannon
+ - cannon infinite momentum
 - cannon fire event not figig sometimes
 - awning bounce nerf
 - cannon stalling eachother when triggered consitnosly
