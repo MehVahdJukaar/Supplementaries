@@ -144,4 +144,7 @@ public class SuppPlatformStuffImpl {
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         dc.emptyContents(player, level, hit.getBlockPos(), hit);
     }
+
+    public static FoodProperties makeLumiseneFood() {
+    }
 }

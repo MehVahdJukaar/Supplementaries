@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 public class CannonChargeHud  implements LayeredDraw.Layer{
 
     public static final CannonChargeHud INSTANCE = new CannonChargeHud();
-    private final Minecraft mc;
+    protected final Minecraft mc;
 
     protected CannonChargeHud() {
         this.mc = Minecraft.getInstance();

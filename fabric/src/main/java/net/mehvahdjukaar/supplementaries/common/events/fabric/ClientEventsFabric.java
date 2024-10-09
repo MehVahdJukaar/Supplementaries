@@ -9,8 +9,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
+import net.mehvahdjukaar.supplementaries.client.hud.fabric.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
@@ -43,6 +46,16 @@ public class ClientEventsFabric {
                 });
             }
         });
+
+        ClientPreAttackCallback.EVENT.register((minecraft, localPlayer, i) -> {
+            if (CannonController.isActive()) {
+                CannonController.onPlayerAttack();
+                return true;
+            }
+            return false;
+        });
+
+
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
 
 
@@ -68,10 +81,15 @@ public class ClientEventsFabric {
 
     }
 
+    private static boolean wasJumpDown = false;
+    private static boolean wasShiftDown = false;
+    private static boolean wasInventoryDown = false;
+
     private static void onRenderHud(GuiGraphics graphics, DeltaTracker partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
         SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
         CannonChargeHud.INSTANCE.render(graphics, partialTicks);
+        CannonChargeHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
 
         Minecraft mc = Minecraft.getInstance();
@@ -81,6 +99,21 @@ public class ClientEventsFabric {
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
             if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
+        }
+
+        if (CannonController.isActive()) {
+            if (mc.options.keyJump.isDown() && !wasJumpDown) {
+                wasJumpDown = true;
+                CannonController.onKeyJump();
+            } else wasJumpDown = false;
+            if (mc.options.keyShift.isDown() && !wasShiftDown) {
+                wasShiftDown = true;
+                CannonController.onKeyShift();
+            } else wasShiftDown = false;
+            if (mc.options.keyInventory.isDown() && !wasInventoryDown) {
+                wasInventoryDown = true;
+                CannonController.onKeyInventory();
+            } else wasInventoryDown = false;
         }
     }
 }

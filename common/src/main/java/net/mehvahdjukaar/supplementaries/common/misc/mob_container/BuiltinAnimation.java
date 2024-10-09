@@ -76,7 +76,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
                     this.jumpY = Math.max(0, this.jumpY + this.yVel);
                 if (jumpY != 0) {
                     //decelerate
-                    this.yVel = this.yVel - 0.04f;
+                    this.yVel = this.yVel - 0.040f;
                 }
                 //on ground
                 else {

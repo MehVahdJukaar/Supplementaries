@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;

@@ -180,24 +180,19 @@ public class CannonController {
         return false;
     }
 
-
-    public static void onKeyPressed(int key, int action, int modifiers) {
-        if (action != GLFW.GLFW_PRESS) return;
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.screen != null) return;
-        Options options = mc.options;
-        if (options.keyShift.matches(key, action)) {
-            stopControllingAndSync();
-        } else if (options.keyInventory.matches(key, action)) {
-            NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
-
-            //Minecraft.getInstance().player.openMenu()
-        } else if (options.keyJump.matches(key, action)) {
-            if (trajectory != null && trajectory.gravity() != 0) {
-                shootingMode = shootingMode.cycle();
-                needsToUpdateServer = true;
-            }
+    public static void onKeyJump(){
+        if (trajectory != null && trajectory.gravity() != 0) {
+            shootingMode = shootingMode.cycle();
+            needsToUpdateServer = true;
         }
+    }
+
+    public static void onKeyInventory(){
+        NetworkHelper.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+    }
+
+    public static void onKeyShift(){
+        stopControllingAndSync();
     }
 
     public static void onMouseScrolled(double scrollDelta) {

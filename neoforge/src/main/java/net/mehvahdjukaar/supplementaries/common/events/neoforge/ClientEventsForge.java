@@ -71,20 +71,29 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
+        int action = event.getAction();
         if (mc.screen == null &&
                 ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
                 && mc.player instanceof IQuiverPlayer qe) {
-            int a = event.getAction();
-            if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
+            if (action == InputConstants.REPEAT || action == InputConstants.PRESS) {
                 SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
-            } else if (a == InputConstants.RELEASE) {
+            } else if (action == InputConstants.RELEASE) {
                 SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY, mc.player);
             }
         }
 
-        if (CannonController.isActive()) {
-            CannonController.onKeyPressed(event.getKey(), event.getAction(), event.getModifiers());
-            //event.setCanceled(true);
+        if (CannonController.isActive() && action == GLFW.GLFW_PRESS) {
+            int key = event.getKey();
+            int scanCode = event.getScanCode();
+            if (mc.options.keyJump.matches(key, scanCode)) {
+                CannonController.onKeyJump();
+            }
+            if (mc.options.keyShift.matches(key, scanCode)) {
+                CannonController.onKeyShift();
+            }
+            if (mc.options.keyInventory.matches(key, scanCode)) {
+                CannonController.onKeyInventory();
+            }
         }
     }
 
@@ -96,6 +105,19 @@ public class ClientEventsForge {
         if (CannonController.isActive()) {
             CannonController.onMouseScrolled(event.getScrollDeltaY());
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
+        if (CannonController.isActive()) {
+            event.setCanceled(true);
+            event.setSwingHand(false);
+            if (event.isAttack()) {
+                CannonController.onPlayerAttack();
+            } else if (event.isUseItem()) {
+                CannonController.onPlayerUse();
+            }
         }
     }
 
@@ -151,19 +173,6 @@ public class ClientEventsForge {
         var pattern = DecoratedPotPatterns.getPatternFromItem(i);
         if (pattern != null && i != Items.BRICK) {
             event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-        if (CannonController.isActive()) {
-            event.setCanceled(true);
-            event.setSwingHand(false);
-            if (event.isAttack()) {
-                CannonController.onPlayerAttack();
-            } else if (event.isUseItem()) {
-                CannonController.onPlayerUse();
-            }
         }
     }
 

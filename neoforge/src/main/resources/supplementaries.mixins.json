@@ -9,7 +9,7 @@
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
     "LevelRendererMixin",
-    "LiquidBlockRendererMixin"
+    "net.mehvahdjukaar.supplementaries.mixins.LiquidBlockRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",
@@ -20,6 +20,9 @@
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
+    "self.SelfLumiseneFluidMixin",
+    "self.SelfLunchBoxItemMixin",
+    "self.SelfOpenableContainerMixin",
     "self.SelfPlanterMixin",
     "self.SelfSafeMixin",
     "self.SelfSoapItemMixin",
