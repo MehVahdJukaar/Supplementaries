@@ -65,6 +65,7 @@
     "IronGolemRendererMixin",
     "KeyboardHandlerMixin",
     "LevelRendererMixin",
+    "LiquidBlockRendererMixin",
     "LocalPlayerMixin",
     "LoomScreenFlagMixin",
     "MapTextureMixin",

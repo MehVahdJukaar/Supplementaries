@@ -20,6 +20,7 @@
 
 # Supplementaries
 
+- check all mobs pathfinding on blocs
 - statue pick block
 - soap and wax dispenser behaviors
 - waxable dispenser behavior

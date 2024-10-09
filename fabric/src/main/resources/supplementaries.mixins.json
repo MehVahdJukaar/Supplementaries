@@ -8,6 +8,7 @@
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
     "MC263524FixMixin",
+    "MinecraftInputMixin",
     "MouseScrollMixin",
     "SkullBlockRendererMixin"
   ],
@@ -16,6 +17,7 @@
     "BowMixin",
     "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
+    "CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "CrossbowMixin",
     "FireBlockAccessor",

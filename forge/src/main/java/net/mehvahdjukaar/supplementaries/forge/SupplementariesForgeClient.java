@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.forge.CannonChargeOverlayImpl;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
@@ -157,7 +157,7 @@ public class SupplementariesForgeClient {
                 (SelectableContainerItemHudImpl) SelectableContainerItemHudImpl.INSTANCE);
 
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
-                new CannonChargeOverlayImpl());
+                new CannonChargeHudImpl());
 
         event.registerBelow(VanillaGuiOverlay.FROSTBITE.id(), "slimed_overlay",
                 new SlimedOverlayHudImpl());

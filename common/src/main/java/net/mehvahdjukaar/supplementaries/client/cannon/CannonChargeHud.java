@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class CannonChargeHud {
 
-    private final Minecraft mc;
+    protected final Minecraft mc;
 
     protected CannonChargeHud(Minecraft minecraft) {
         this.mc = minecraft;

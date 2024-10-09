@@ -8,14 +8,15 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.client.hud.fabric.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.OpeneableContainerBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -43,6 +44,16 @@ public class ClientEventsFabric {
                 });
             }
         });
+
+        ClientPreAttackCallback.EVENT.register((minecraft, localPlayer, i) -> {
+            if (CannonController.isActive()) {
+                CannonController.onPlayerAttack();
+                return true;
+            }
+            return false;
+        });
+
+
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
 
 
@@ -56,8 +67,7 @@ public class ClientEventsFabric {
                 e.register(new QuiverLayer(r, true));
             } else if (t == EntityType.STRAY) {
                 e.register(new QuiverLayer(r, true));
-            }
-            else if(t == EntityType.CREEPER){
+            } else if (t == EntityType.CREEPER) {
                 e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
             }
         });
@@ -67,17 +77,38 @@ public class ClientEventsFabric {
 
     }
 
+    private static boolean wasJumpDown = false;
+    private static boolean wasShiftDown = false;
+    private static boolean wasInventoryDown = false;
+
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
         SlimedOverlayHudImpl.INSTANCE.render(graphics, partialTicks);
+        CannonChargeHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
 
-        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
+        Minecraft mc = Minecraft.getInstance();
+        if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && mc.player instanceof IQuiverPlayer qe) {
             boolean keyDown = InputConstants.isKeyDown(
-                    Minecraft.getInstance().getWindow().getWindow(),
+                    mc.getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
             if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+        }
+
+        if (CannonController.isActive()) {
+            if (mc.options.keyJump.isDown() && !wasJumpDown) {
+                wasJumpDown = true;
+                CannonController.onKeyJump();
+            } else wasJumpDown = false;
+            if (mc.options.keyShift.isDown() && !wasShiftDown) {
+                wasShiftDown = true;
+                CannonController.onKeyShift();
+            } else wasShiftDown = false;
+            if (mc.options.keyInventory.isDown() && !wasInventoryDown) {
+                wasInventoryDown = true;
+                CannonController.onKeyInventory();
+            } else wasInventoryDown = false;
         }
     }
 }

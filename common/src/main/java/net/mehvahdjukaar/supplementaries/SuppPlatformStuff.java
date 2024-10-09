@@ -137,4 +137,5 @@ public class SuppPlatformStuff {
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         throw new AssertionError();
     }
+
 }
