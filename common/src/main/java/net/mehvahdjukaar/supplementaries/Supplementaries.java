@@ -47,7 +47,7 @@ public class Supplementaries {
     //called on mod creation
     public static void commonInit() {
 
-        //TODO: fire lunch box item use events
+
         Credits.fetchFromServer();
         CommonConfigs.init();
 

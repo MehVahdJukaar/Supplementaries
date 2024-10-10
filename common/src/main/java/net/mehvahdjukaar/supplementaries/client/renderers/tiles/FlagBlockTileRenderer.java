@@ -86,7 +86,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         BlockPos bp = tile.getBlockPos();
         //always from 0 to 1
-        //TODO: fix
+
         float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {

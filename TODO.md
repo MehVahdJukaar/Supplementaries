@@ -80,6 +80,7 @@
 - cage flickering
 
 # Soon
+- netherite door radstone trailer
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
 - slime jumpong not wokring on fabric
@@ -139,6 +140,7 @@ slidy double pulse
 
 # Supplementaries
 
+- fire lunch box item use events
 - quark post rope connection
 - add back capabilities
 - fabric events

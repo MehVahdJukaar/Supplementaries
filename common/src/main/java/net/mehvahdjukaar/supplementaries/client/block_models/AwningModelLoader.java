@@ -42,12 +42,7 @@ public class AwningModelLoader implements CustomModelLoader {
                 }
             }
         }
-        ResourceLocation parentLocation = null;
-        if (json.has("parent")) {
-            parentLocation = ResourceLocation.tryParse(json.get("parent").getAsString());
-        }
 
-        ResourceLocation finalParentLocation = parentLocation;
         return (modelBaker, spriteGetter, modelState) -> {
             // resolve model and fix parent texture map as forge doesn't do that. if a child has parent of custom geometry, just THAT will be baked
             if (modelState instanceof Variant bm) {
@@ -55,7 +50,6 @@ public class AwningModelLoader implements CustomModelLoader {
                 var parent = modelBaker.getModel(bm.getModelLocation());
                 if (parent instanceof BlockModel m) {
                     modelHack.textureMap.putAll(m.textureMap);
-
                 }
             }
             return modelHack.bake(modelBaker, spriteGetter, modelState);
