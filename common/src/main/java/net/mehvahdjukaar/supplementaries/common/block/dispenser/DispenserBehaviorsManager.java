@@ -140,7 +140,6 @@ public class DispenserBehaviorsManager {
         boolean axe = CommonConfigs.Tweaks.AXE_DISPENSER_BEHAVIORS.get();
         boolean jar = CommonConfigs.Functional.JAR_ENABLED.get();
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
-        boolean slimeball = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
 
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {

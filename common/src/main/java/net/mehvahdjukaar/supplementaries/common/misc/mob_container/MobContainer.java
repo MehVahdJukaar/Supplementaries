@@ -118,7 +118,6 @@ public class MobContainer {
 
     public void setData(@Nullable MobContainer.MobData data) {
         this.data = data;
-        this.mobInstance = null;
         this.needsInitialization = true;
     }
 

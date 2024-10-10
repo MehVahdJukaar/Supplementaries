@@ -692,7 +692,7 @@ public class ModRegistry {
     ));
 
     //gold trapdoor
-    public static final Supplier<Block> GOLD_TRAPDOOR = regWithItem(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(Blocks.IRON_DOOR
+    public static final Supplier<Block> GOLD_TRAPDOOR = regWithItem(GOLD_TRAPDOOR_NAME, () -> new GoldTrapdoorBlock(
             BlockBehaviour.Properties.ofFullCopy(GOLD_DOOR.get())
                     .isValidSpawn((a, b, c, d) -> false)
     ));
