@@ -71,6 +71,7 @@ dependencies {
     modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
+    modImplementation("maven.modrinth:flashback:0.11.0") // Get latest version from releases
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 

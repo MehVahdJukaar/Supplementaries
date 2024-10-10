@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -15,9 +16,9 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchant
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
+import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -130,7 +131,7 @@ public class ServerEvents {
     }
 
     @EventCalled
-    public static void onServerStopped(){
+    public static void onServerStopped() {
         if (PlatHelper.getPhysicalSide().isClient()) {
             CapturedMobCache.clear();
         } else {
@@ -144,10 +145,10 @@ public class ServerEvents {
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-       // CapturedMobHandler.sendDataToClient(player);
-       // GlobeData.sendDataToClient(player);
-       // HourglassTimesManager.sendDataToClient(player);
-       // MapLightHandler.sendDataToClient(player);
+        CapturedMobHandler.sendDataToClient(player);
+        GlobeData.sendDataToClient(player);
+        HourglassTimesManager.sendDataToClient(player);
+        MapLightHandler.sendDataToClient(player);
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

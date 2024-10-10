@@ -14,7 +14,6 @@ import net.mehvahdjukaar.moonlight.core.mixins.fabric.ShaderInstanceMixin;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
-import net.mehvahdjukaar.supplementaries.client.hud.fabric.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
@@ -93,7 +92,6 @@ public class ClientEventsFabric {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
         SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
         CannonChargeHud.INSTANCE.render(graphics, partialTicks);
-        CannonChargeHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
         Minecraft mc = Minecraft.getInstance();
         if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && mc.player instanceof IQuiverPlayer qe) {

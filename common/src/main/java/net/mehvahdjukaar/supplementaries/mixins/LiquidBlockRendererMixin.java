@@ -1,16 +1,8 @@
-<<<<<<< HEAD:neoforge/src/main/java/net/mehvahdjukaar/supplementaries/mixins/neoforge/LiquidBlockRendererMixin.java
-package net.mehvahdjukaar.supplementaries.mixins.neoforge;
-=======
 package net.mehvahdjukaar.supplementaries.mixins;
->>>>>>> d3bf945d7 (ported stuff to fabric):common/src/main/java/net/mehvahdjukaar/supplementaries/mixins/LiquidBlockRendererMixin.java
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
-<<<<<<< HEAD:neoforge/src/main/java/net/mehvahdjukaar/supplementaries/mixins/neoforge/LiquidBlockRendererMixin.java
-import net.mehvahdjukaar.supplementaries.reg.neoforge.ModFluidsImpl;
-=======
->>>>>>> d3bf945d7 (ported stuff to fabric):common/src/main/java/net/mehvahdjukaar/supplementaries/mixins/LiquidBlockRendererMixin.java
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;

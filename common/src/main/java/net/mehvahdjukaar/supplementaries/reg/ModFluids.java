@@ -75,12 +75,11 @@ public class ModFluids {
                         .stacksTo(1)
                         .craftRemainder(Items.GLASS_BOTTLE)
                         .food(new FoodProperties.Builder()
-                                .nutrition(0).saturationMod(0).alwaysEat()
+                                .nutrition(0).saturationModifier(0).alwaysEdible()
                                 .effect(new MobEffectInstance(MobEffects.GLOWING, CommonConfigs.Functional.GLOWING_DURATION.get(), 0), 1)
-                               // .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
+                                .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.getHolder(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
                                 .build())
                 ));
-        //TODO: add back flammable effect
     }
 
     @ExpectPlatform

@@ -188,7 +188,7 @@ public class CannonController {
     }
 
     public static void onKeyInventory(){
-        NetworkHelper.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+        NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
     }
 
     public static void onKeyShift(){

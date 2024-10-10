@@ -80,6 +80,12 @@
 - cage flickering
 
 # Soon
+- bomb dont ignite gunpowder
+- netherite doors opeing on clientfor split seconds on server
+- slime jumpong not wokring on fabric
+- GLOBE NOT WORIJG
+- CANNON EXIT AND GUI
+- slimed effect notgoing away
 - bubble blower not blowing bubbles
 - colored map data crash row Data null
 - enderman eyes dont work

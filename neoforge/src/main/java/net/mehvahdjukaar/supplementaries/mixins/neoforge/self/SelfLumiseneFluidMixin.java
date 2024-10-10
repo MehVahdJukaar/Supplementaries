@@ -1,15 +1,15 @@
-package net.mehvahdjukaar.supplementaries.mixins.forge.self;
+package net.mehvahdjukaar.supplementaries.mixins.neoforge.self;
 
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.LumiseneFluid;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.forge.ModFluidsImpl.LUMISENE_FLUID_TYPE;
+import static net.mehvahdjukaar.supplementaries.reg.neoforge.ModFluidsImpl.LUMISENE_FLUID_TYPE;
 
 @Mixin(LumiseneFluid.class)
 public abstract class SelfLumiseneFluidMixin extends FiniteFluid {

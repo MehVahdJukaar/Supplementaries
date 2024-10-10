@@ -20,8 +20,6 @@
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
     "self.SelfLumiseneFluidMixin",
-    "self.SelfLunchBoxItemMixin",
-    "self.SelfOpenableContainerMixin",
     "self.SelfPlanterMixin",
     "self.SelfSafeMixin",
     "self.SelfSoapItemMixin",
