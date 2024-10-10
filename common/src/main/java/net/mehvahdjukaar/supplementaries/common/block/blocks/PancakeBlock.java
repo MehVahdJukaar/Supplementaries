@@ -77,11 +77,11 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
                                      InteractionHand handIn, BlockHitResult hit) {
         Item item = stack.getItem();
         var found = Topping.fromItem(stack.getItem());
-        if (setTopping(state, worldIn, pos, found.getFirst())) {
+        if (setTopping(state, level, pos, found.getFirst())) {
             Item empty = found.getSecond();
             ItemStack returnItem = empty.getDefaultInstance();
             if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         } else if (item == this.asItem()) {
             return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }

@@ -255,7 +255,6 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         if (i < 0) {
             //replace with client side animation
             level.levelEvent(LevelEvent.SOUND_DISPENSER_FAIL, pPos, 0);
-            //TODO:use this game event more
             level.gameEvent(this, GameEvent.BLOCK_ACTIVATE, pPos);
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
@@ -268,7 +267,9 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                     ItemStack dispensed;
                     if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && itemstack.getItem() instanceof ProjectileItem pb) {
                         dispensed = executeAbstractProjectileBehavior(pb, blockSource, itemstack);
-                    } else dispensed = dispenseitembehavior.dispense(blockSource, itemstack);
+                    } else {
+                        dispensed = dispenseitembehavior.dispense(blockSource, itemstack);
+                    }
 
                     this.dispenser.setItem(i, dispensed);
                 }

@@ -418,8 +418,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new CannonContainerMenu(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        //thanks mojank
+        if (inv.player.isSpectator()) return null;
+        return new CannonContainerMenu(id, inv, this);
     }
 
 

@@ -77,7 +77,8 @@ public class LumiseneBucketItem extends BucketItem {
         BlockState blockStateAt = level.getBlockState(pos);
         Block blockAt = blockStateAt.getBlock();
         boolean canReplaceBlock = blockStateAt.canBeReplaced(this.content);
-        boolean canPlaceLiquidIn = blockStateAt.isAir() || canReplaceBlock || blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(level, pos, blockStateAt, this.content);
+        boolean canPlaceLiquidIn = blockStateAt.isAir() || canReplaceBlock || blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(
+                player, level, pos, blockStateAt, this.content);
         if (!canPlaceLiquidIn) {
             return result != null && this.emptyContents(player, level, result.getBlockPos().relative(result.getDirection()), null);
         } else {
