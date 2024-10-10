@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
@@ -114,5 +115,26 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
             food.set(data.getSelected());
         }
 
+    }
+
+    // yes thiscould be called with forge event instead. doesn't make much difference really. needed for fabric and couldn't be another make a fabric only mixin
+    @PlatformOnly(PlatformOnly.FABRIC)
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void suppl$slimeTick(CallbackInfo ci) {
+        ISlimeable.tickEntity((LivingEntity) (Object) this);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void suppl$readSlimedTicks(net.minecraft.nbt.CompoundTag compound, CallbackInfo ci) {
+        if (compound.contains("supplementaries:slimed_ticks")) {
+            this.supp$setSlimedTicks(compound.getInt("supplementaries:slimed_ticks"), true);
+        }
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void suppl$writeSlimedTicks(net.minecraft.nbt.CompoundTag compound, CallbackInfo ci) {
+        if (this.supp$getSlimedTicks() > 0) {
+            compound.putInt("supplementaries:slimed_ticks", this.supp$getSlimedTicks());
+        }
     }
 }

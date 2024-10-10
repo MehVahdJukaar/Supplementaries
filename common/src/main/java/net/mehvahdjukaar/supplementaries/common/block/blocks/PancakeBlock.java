@@ -76,24 +76,28 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     public ItemInteractionResult useItemOn(ItemStack stack,BlockState state, Level level, BlockPos pos, Player player,
                                      InteractionHand handIn, BlockHitResult hit) {
         Item item = stack.getItem();
-        var found = Topping.fromItem(stack);
-        Topping t = found.getFirst();
-        if (t != Topping.NONE) {
-            if (state.getValue(TOPPING) == Topping.NONE) {
-                if (!level.isClientSide) {
-                    level.setBlock(pos, state.setValue(TOPPING, t), 3);
-                    level.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
-                }
-                Item empty = found.getSecond();
-                ItemStack returnItem = empty == null ? ItemStack.EMPTY : empty.getDefaultInstance();
-                if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
-                //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
+        var found = Topping.fromItem(stack.getItem());
+        if (setTopping(state, worldIn, pos, found.getFirst())) {
+            Item empty = found.getSecond();
+            ItemStack returnItem = empty.getDefaultInstance();
+            if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         } else if (item == this.asItem()) {
             return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    public static boolean setTopping(BlockState state, Level worldIn, BlockPos pos, Topping topping) {
+
+        if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
+            if (!worldIn.isClientSide) {
+                worldIn.setBlock(pos, state.setValue(TOPPING, topping), 3);
+                worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
+            }
+            return true;
+        }
+        return false;
     }
 
 

@@ -51,17 +51,17 @@ public class LumiseneBucketItem extends BucketItem {
         } else if (blockhitresult.getType() != HitResult.Type.BLOCK) {
             return InteractionResultHolder.pass(itemstack);
         } else {
-            BlockPos blockpos = blockhitresult.getBlockPos();
+            BlockPos hitPos = blockhitresult.getBlockPos();
             Direction direction = blockhitresult.getDirection();
-            BlockPos above = blockpos.relative(direction);
+            BlockPos above = hitPos.relative(direction);
             //manual check since we manually raytrace
 
 
-            if (!level.mayInteract(player, blockpos) || !player.mayUseItemAt(above, direction, itemstack)) {
+            if (!level.mayInteract(player, hitPos) || !player.mayUseItemAt(above, direction, itemstack)) {
                 return InteractionResultHolder.fail(itemstack);
             } else {
-                BlockState blockstate = level.getBlockState(blockpos);
-                BlockPos blockpos2 = this.canBlockContainFluid(player, level, blockpos, blockstate) ? blockpos : above;
+                BlockState blockstate = level.getBlockState(hitPos);
+                BlockPos blockpos2 = this.canBlockContainFluid(player, level, hitPos, blockstate) ? hitPos : above;
                 if (this.emptyContents(player, level, blockpos2, blockhitresult, itemstack)) {
                     this.checkExtraContent(player, level, itemstack, blockpos2);
                     if (player instanceof ServerPlayer sp) {
@@ -79,45 +79,33 @@ public class LumiseneBucketItem extends BucketItem {
 
 
     // we have to override this because we need to place different layers or something
-//TODO: floats on water here
     @Override
-    public boolean emptyContents(@Nullable Player player, Level level, BlockPos pos, @Nullable BlockHitResult arg4, @Nullable ItemStack container) {
-        BlockState blockstate = level.getBlockState(pos);
-        Block block = blockstate.getBlock();
-        boolean flag = blockstate.canBeReplaced(content);
-        boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer lc &&
-                lc.canPlaceLiquid(player, level, pos, blockstate, content);
+    public boolean emptyContents(@Nullable Player player, Level level, BlockPos pos, @Nullable BlockHitResult hitResult, @Nullable ItemStack container) {
+        BlockState stateAt = level.getBlockState(pos);
+        Block blockAt = stateAt.getBlock();
+        boolean canReplaceBlock = stateAt.canBeReplaced(content);
+        boolean canFillBlock = stateAt.isAir() || canReplaceBlock || blockAt instanceof LiquidBlockContainer lc &&
+                lc.canPlaceLiquid(player, level, pos, stateAt, content);
         Optional<FluidStack> containedFluidStack = Optional.ofNullable(container).flatMap(FluidUtil::getFluidContained);
-        if (!flag1) {
-            return arg4 != null && this.emptyContents(player, level, arg4.getBlockPos().relative(arg4.getDirection()), null, container);
+        if (!canFillBlock) {
+            //try above
+            return hitResult != null && this.emptyContents(player, level, hitResult.getBlockPos().relative(hitResult.getDirection()), null, container);
         } else if (containedFluidStack.isPresent() && content.getFluidType().isVaporizedOnPlacement(level, pos, containedFluidStack.get())) {
             content.getFluidType().onVaporize(player, level, pos, containedFluidStack.get());
             return true;
-        } else if (level.dimensionType().ultraWarm() && content.is(FluidTags.WATER)) {
-            //TODO: instant catch fire here
-            int i = pos.getX();
-            int j = pos.getY();
-            int k = pos.getZ();
-            level.playSound(player, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
-
-            for (int l = 0; l < 8; ++l) {
-                level.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0, 0.0, 0.0);
-            }
-
-            return true;
-        } else if (block instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(player, level, pos, blockstate, content)) {
-            lc.placeLiquid(level, pos, blockstate, content.defaultFluidState()
+        } if (blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(level, pos, stateAt, myFluid)) {
+            lc.placeLiquid(level, pos, stateAt, myFluid.defaultFluidState()
                     .setValue(FiniteFluid.LEVEL, capacity));
             this.playEmptySound(player, level, pos);
             return true;
         } else {
-            if (!level.isClientSide && flag && !blockstate.liquid()) {
+            if (!level.isClientSide && canReplaceBlock && !stateAt.liquid()) {
                 level.destroyBlock(pos, true);
             }
 
             BlockState newState = content.defaultFluidState().createLegacyBlock()
                     .setValue(FlammableLiquidBlock.MISSING_LEVELS, 16 - capacity);
-            if (!level.setBlock(pos, newState, 11) && !blockstate.getFluidState().isSource()) {
+            if (!level.setBlock(pos, newState, 11) && !stateAt.getFluidState().isSource()) {
                 return false;
             } else {
                 this.playEmptySound(player, level, pos);

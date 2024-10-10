@@ -147,6 +147,11 @@ public class ServerEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        ISlimeable.tickEntity(event.getEntity());
+    }
+
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
@@ -213,21 +218,6 @@ public class ServerEventsForge {
     }
 
 
-    @SubscribeEvent
-    public static void onLivingTick(EntityTickEvent.Post event) {
-
-        if (CommonConfigs.Tweaks.SLIME_OVERLAY.get()) {
-            Entity entity = event.getEntity();
-            if (entity instanceof ISlimeable slimed) {
-                int t = slimed.supp$getSlimedTicks();
-                if (t > 0) {
-                    if (entity.isUnderWater()) {
-                        slimed.supp$setSlimedTicks(0, true);
-                    } else slimed.supp$setSlimedTicks(t - 1, false);
-                }
-            }
-        }
-    }
 
 
 }
