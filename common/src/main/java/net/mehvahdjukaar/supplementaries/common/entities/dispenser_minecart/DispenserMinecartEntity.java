@@ -66,12 +66,16 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
     protected void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.put("Dispenser", this.dispenser.saveWithoutMetadata(level().registryAccess()));
+        pCompound.putBoolean("Powered", this.powered);
+        pCompound.putBoolean("OnActivator", this.onActivator);
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         this.dispenser.loadWithComponents(pCompound.getCompound("Dispenser"), level().registryAccess());
+        this.powered = pCompound.getBoolean("Powered");
+        this.onActivator = pCompound.getBoolean("OnActivator");
     }
 
     @Override
