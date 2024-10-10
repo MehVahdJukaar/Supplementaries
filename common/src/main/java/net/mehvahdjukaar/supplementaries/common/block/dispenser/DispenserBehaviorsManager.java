@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
@@ -29,11 +30,10 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
 
 public class DispenserBehaviorsManager {
 
-    public static void init(){
+    public static void init() {
         RegHelper.addDynamicDispenserBehaviorRegistration(DispenserBehaviorsManager::registerBehaviors);
     }
 
@@ -42,14 +42,10 @@ public class DispenserBehaviorsManager {
 
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
-        if(CommonConfigs.Tweaks.BUNDLE_DISPENSER.get()){
+        if (CommonConfigs.Tweaks.BUNDLE_DISPENSER.get()) {
             event.register(new EmptyBundleItemBehavior(Items.BUNDLE));
             event.register(new EmptyContainerItemBehavior(ModRegistry.LUNCH_BASKET_ITEM.get()));
             event.register(new EmptyContainerItemBehavior(ModRegistry.QUIVER_ITEM.get()));
-        }
-
-        if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
-            event.register(new PancakeBehavior(Items.HONEY_BOTTLE));
         }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
@@ -83,7 +79,7 @@ public class DispenserBehaviorsManager {
                 event.registerPlaceBlock(s);
             }
         }
-        if(CommonConfigs.Functional.LUMISENE_ENABLED.get()){
+        if (CommonConfigs.Functional.LUMISENE_ENABLED.get()) {
             event.register(new BucketBehavior(ModFluids.LUMISENE_BUCKET.get()));
         }
         if (CommonConfigs.Functional.JAR_ENABLED.get()) {
@@ -152,12 +148,19 @@ public class DispenserBehaviorsManager {
         boolean jar = CommonConfigs.Functional.JAR_ENABLED.get();
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
         boolean slimeball = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
+        boolean pancake = CommonConfigs.isEnabled(ModConstants.PANCAKE_NAME);
+        if (CommonConfigs.Building.PANCAKES_ENABLED.get()) {
+        }
 
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
                         event.register(new FishBucketJarBehavior(i));
+                    }
+                    if (pancake && ModBlockProperties.Topping.fromItem(i)
+                            .getFirst() != ModBlockProperties.Topping.NONE) {
+                        event.register(new PancakeBehavior(i));
                     }
                     if (isForge && axe && i instanceof AxeItem) {
                         event.register(new FakePlayerUseItemBehavior(i));

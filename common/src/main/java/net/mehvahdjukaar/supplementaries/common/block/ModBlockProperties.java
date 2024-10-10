@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -145,7 +146,7 @@ public class ModBlockProperties {
             PostType type = null;
             //if (state.getBlock().hasTileEntity(state)) return type;
             if (state.is(ModTags.POSTS)) {
-                if(!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
+                if (!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
                     type = PostType.POST;
                 }
             } else if (state.is(ModTags.PALISADES) || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isPalisade(state))) {
@@ -198,15 +199,15 @@ public class ModBlockProperties {
             var cat = holder.getSecond();
             if (cat.isEmpty() || cat.getAmount() != 1) return null;
             Topping t = fromFluid(s);
-            if(t != NONE){
+            if (t != NONE) {
                 return Pair.of(t, cat.getEmptyContainer());
             }
-            return null;
+            return Pair.of(NONE, null);
         }
 
         public static Topping fromFluid(SoftFluid s) {
             if (s.isEmptyFluid()) return NONE;
-            if (s == BuiltInSoftFluids.HONEY.get()) {
+            if (s == BuiltInSoftFluids.HONEY.value()) {
                 return HONEY;
             }
             String name = Utils.getID(s).getPath();
@@ -223,18 +224,21 @@ public class ModBlockProperties {
         }
 
         //topping and empty item
-        public static Pair<Topping, Item> fromItem(ItemStack stack) {
-            Item item = stack.getItem();
+        public static Pair<Topping, Item> fromItem(Item item) {
             var ff = fromFluidItem(item);
-            if (ff != null) return ff;
-            if (stack.is(Items.SWEET_BERRIES)) return Pair.of(JAM, null);
-            if (stack.is(ModTags.SYRUP)) return Pair.of(SYRUP, null);
-            if (item instanceof HoneyBottleItem) return Pair.of(HONEY, null);
-            var tag = BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS);
-            if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
-                return Pair.of(CHOCOLATE, null);
-            }
-            return Pair.of(NONE, null);
+            if (ff.getFirst() != NONE) return ff;
+            var holder = item.builtInRegistryHolder();
+            Topping t;
+            if (item == Items.SWEET_BERRIES) t = JAM;
+            else if (holder.is(ModTags.SYRUP)) t = SYRUP;
+
+            else if (item instanceof HoneyBottleItem) t = HONEY;
+            else if (item == Items.COCOA_BEANS && (BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) ||
+                    BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).get().stream().findAny().isEmpty()) {
+                t = CHOCOLATE;
+            } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
+            else t = NONE;
+            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item.getDefaultInstance()).map(ItemStack::getItem).orElse(null));
         }
     }
 
@@ -332,7 +336,6 @@ public class ModBlockProperties {
             return this.name;
         }
     }
-
 
 
     public enum DisplayStatus implements StringRepresentable {

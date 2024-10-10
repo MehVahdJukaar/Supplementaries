@@ -20,6 +20,8 @@
 
 # Supplementaries
 
+- slingshot projectile not targeting liquis
+- boom piles, hourglass and other empty hand interactable tagetingfirst hand slot first making it hard to use. ropes too
 - check all mobs pathfinding on blocs
 - statue pick block
 - soap and wax dispenser behaviors

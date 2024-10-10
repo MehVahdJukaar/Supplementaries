@@ -56,20 +56,12 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
         Item item = stack.getItem();
-        var found = Topping.fromItem(stack);
-        Topping t = found.getFirst();
-        if (t != Topping.NONE) {
-            if (state.getValue(TOPPING) == Topping.NONE) {
-                if (!worldIn.isClientSide) {
-                    worldIn.setBlock(pos, state.setValue(TOPPING, t), 3);
-                    worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
-                }
-                Item empty = found.getSecond();
-                ItemStack returnItem = empty == null ? ItemStack.EMPTY : empty.getDefaultInstance();
-                if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
-                //player.setHeldItem(handIn, DrinkHelper.fill(stack.copy(), player, new ItemStack(Items.GLASS_BOTTLE), false));
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
-            }
+        var found = Topping.fromItem(stack.getItem());
+        if (setTopping(state, worldIn, pos, found.getFirst())) {
+            Item empty = found.getSecond();
+            ItemStack returnItem = empty.getDefaultInstance();
+            if (!player.isCreative()) Utils.swapItem(player, handIn, returnItem);
+            return InteractionResult.sidedSuccess(worldIn.isClientSide);
         } else if (item == this.asItem()) {
             return InteractionResult.PASS;
         } else if (player.canEat(false)) {
@@ -85,6 +77,18 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    public static boolean setTopping(BlockState state, Level worldIn, BlockPos pos, Topping topping) {
+
+        if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
+            if (!worldIn.isClientSide) {
+                worldIn.setBlock(pos, state.setValue(TOPPING, topping), 3);
+                worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
+            }
+            return true;
+        }
+        return false;
     }
 
 

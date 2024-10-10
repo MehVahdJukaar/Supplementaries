@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
-import net.mehvahdjukaar.moonlight.core.mixins.fabric.ShaderInstanceMixin;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.fabric.CannonChargeHudImpl;
@@ -26,7 +25,6 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
 
@@ -81,9 +79,9 @@ public class ClientEventsFabric {
 
     }
 
-    private static boolean wasJumpDown = false;
-    private static boolean wasShiftDown = false;
-    private static boolean wasInventoryDown = false;
+    private static boolean wasJumpDown = true;
+    private static boolean wasShiftDown = true;
+    private static boolean wasInventoryDown = true;
 
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
@@ -100,18 +98,23 @@ public class ClientEventsFabric {
         }
 
         if (CannonController.isActive()) {
-            if (mc.options.keyJump.isDown() && !wasJumpDown) {
+            if (mc.options.keyJump.isDown()) {
+                if (!wasJumpDown) CannonController.onKeyJump();
                 wasJumpDown = true;
-                CannonController.onKeyJump();
             } else wasJumpDown = false;
-            if (mc.options.keyShift.isDown() && !wasShiftDown) {
+            if (mc.options.keyShift.isDown()) {
+                if (!wasShiftDown) CannonController.onKeyShift();
                 wasShiftDown = true;
-                CannonController.onKeyShift();
+
             } else wasShiftDown = false;
-            if (mc.options.keyInventory.isDown() && !wasInventoryDown) {
+            if (mc.options.keyInventory.isDown()) {
+                if (!wasInventoryDown) CannonController.onKeyInventory();
                 wasInventoryDown = true;
-                CannonController.onKeyInventory();
             } else wasInventoryDown = false;
+        } else {
+            wasJumpDown = true;
+            wasShiftDown = true;
+            wasInventoryDown = true;
         }
     }
 }
