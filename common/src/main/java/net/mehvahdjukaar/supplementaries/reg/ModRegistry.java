@@ -1018,7 +1018,9 @@ public class ModRegistry {
 
     //gunpowder block
     public static final Supplier<Block> GUNPOWDER_BLOCK = regBlock(GUNPOWDER_BLOCK_NAME, () -> new GunpowderBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE).sound(SoundType.SAND)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.REDSTONE_WIRE)
+                    .forceSolidOn()
+                    .sound(SoundType.SAND)));
 
     //fire pit
     public static final Supplier<Block> FIRE_PIT = regWithItem(FIRE_PIT_NAME, () -> new FirePitBlock(1,
