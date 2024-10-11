@@ -53,7 +53,7 @@
       "y": 90
     },
     "slanted=false,facing=south,bottom=false": {
-      "model": "supplementaries:block/awnings/blue_top_F",
+      "model": "supplementaries:block/awnings/blue_top_f",
       "y": 180
     },
     "slanted=false,facing=west,bottom=false": {
