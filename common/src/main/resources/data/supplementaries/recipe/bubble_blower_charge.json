@@ -1,5 +1,20 @@
 {
-  "type": "supplementaries:bubble_blower_charge",
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:bubble_blower"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:bubble_blower",
+    "count": 1,
+    "components": {
+      "supplementaries:charges": 250
+    }
+  },
   "conditions": [
     {
       "type": "supplementaries:flag",

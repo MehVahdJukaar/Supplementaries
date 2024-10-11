@@ -15,10 +15,7 @@
   },
   "result": {
     "id": "supplementaries:bubble_blower",
-    "count": 1,
-    "nbt": {
-      "Damage": 250
-    }
+    "count": 1
   },
   "conditions": [
     {

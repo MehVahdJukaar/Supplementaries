@@ -116,6 +116,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         return null;
     }
 
+    //fabric override
+    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
+        return false;
+    }
+
+
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());

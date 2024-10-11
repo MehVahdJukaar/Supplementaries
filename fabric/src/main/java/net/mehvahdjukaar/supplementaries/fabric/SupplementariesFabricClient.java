@@ -12,7 +12,9 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.world.item.ItemDisplayContext;
+
+import java.util.Set;
 
 public class SupplementariesFabricClient implements ClientModInitializer {
 
@@ -35,10 +37,15 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     }
 
     private static void fabricSetup() {
+        Set<ItemDisplayContext> set = Set.of(ItemDisplayContext.GUI, ItemDisplayContext.GROUND, ItemDisplayContext.FIXED);
+
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.FLUTE_ITEM.get(),
-                new DifferentProspectiveItemRenderer(ClientRegistry.FLUTE_2D_MODEL, ClientRegistry.FLUTE_3D_MODEL));
+                new DifferentProspectiveItemRenderer(ClientRegistry.FLUTE_2D_MODEL, ClientRegistry.FLUTE_3D_MODEL, set));
         BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.QUIVER_ITEM.get(),
-                new DifferentProspectiveItemRenderer(ClientRegistry.QUIVER_2D_MODEL, ClientRegistry.QUIVER_3D_MODEL));
+                new DifferentProspectiveItemRenderer(ClientRegistry.QUIVER_2D_MODEL, ClientRegistry.QUIVER_3D_MODEL, set));
+        BuiltinItemRendererRegistry.INSTANCE.register(ModRegistry.CONFETTI_POPPER.get(),
+                new DifferentProspectiveItemRenderer(ClientRegistry.POPPER_HEAD_MODEL, ClientRegistry.POPPER_GUI_MODEL,
+                        Set.of(ItemDisplayContext.HEAD)));
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.LUMISENE_FLUID.get(), new LumiseneFluidRenderPropertiesImpl());
 

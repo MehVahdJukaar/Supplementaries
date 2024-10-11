@@ -80,6 +80,7 @@
 - cage flickering
 
 # Soon
+- fabric hat popper
 - netherite door radstone trailer
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server

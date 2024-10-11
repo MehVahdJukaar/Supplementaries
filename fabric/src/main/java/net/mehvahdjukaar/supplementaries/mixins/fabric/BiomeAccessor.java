@@ -11,4 +11,5 @@ public interface BiomeAccessor {
 
     @Accessor("climateSettings")
     Biome.ClimateSettings getClimateSettings();
+
 }

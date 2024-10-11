@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.fabricmc.fabric.impl.item.ItemExtensions;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;

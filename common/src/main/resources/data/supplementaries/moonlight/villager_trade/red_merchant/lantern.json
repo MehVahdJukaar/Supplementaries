@@ -1,7 +1,7 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:not",
+      "type": "fabric:not",
       "value": {
         "modid": "suppsquared",
         "type": "neoforge:mod_loaded"

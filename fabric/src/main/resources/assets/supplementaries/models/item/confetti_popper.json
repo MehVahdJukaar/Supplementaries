@@ -1,6 +1,14 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "supplementaries:item/confetti_popper"
+  "parent": "builtin/entity",
+  "gui_light": "front",
+  "display": {
+    "head": {
+      "translation": [
+        0,
+        6,
+        0
+      ]
+    }
   }
 }
+

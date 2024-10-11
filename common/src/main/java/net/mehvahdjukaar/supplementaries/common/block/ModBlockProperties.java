@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
@@ -25,6 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -195,13 +195,15 @@ public class ModBlockProperties {
 
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
-            if (holder == null) return null;
-            SoftFluid s = holder.getFirst().fluid();
-            var cat = holder.getSecond();
-            if (cat.isEmpty() || cat.getAmount() != 1) return null;
-            Topping t = fromFluid(s);
-            if (t != NONE) {
-                return Pair.of(t, cat.getEmptyContainer());
+            if (holder != null) {
+                SoftFluid s = holder.getFirst().fluid();
+                var cat = holder.getSecond();
+                if (cat.getAmount() > 0) {
+                    Topping t = fromFluid(s);
+                    if (t != NONE) {
+                        return Pair.of(t, cat.getEmptyContainer());
+                    }
+                }
             }
             return Pair.of(NONE, null);
         }
@@ -225,6 +227,7 @@ public class ModBlockProperties {
         }
 
         //topping and empty item
+        @NotNull
         public static Pair<Topping, Item> fromItem(Item item) {
             var ff = fromFluidItem(item);
             if (ff.getFirst() != NONE) return ff;
@@ -234,8 +237,8 @@ public class ModBlockProperties {
             else if (holder.is(ModTags.SYRUP)) t = SYRUP;
 
             else if (item instanceof HoneyBottleItem) t = HONEY;
-            else if (item == Items.COCOA_BEANS && (BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) ||
-                    BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).get().stream().findAny().isEmpty()) {
+            else if (item == Items.COCOA_BEANS && (BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty() ||
+                    BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).get().stream().findAny().isEmpty())) {
                 t = CHOCOLATE;
             } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
             else t = NONE;

@@ -26,8 +26,6 @@ public class ModRecipes {
             "rope_arrow_create", RopeArrowCreateRecipe::new);
     public static final Supplier<RecipeSerializer<RopeArrowAddRecipe>> ROPE_ARROW_ADD = reg(
             "rope_arrow_add", RopeArrowAddRecipe::new);
-    public static final Supplier<RecipeSerializer<RepairBubbleBlowerRecipe>> BUBBLE_BLOWER_REPAIR = reg(
-            "bubble_blower_charge", RepairBubbleBlowerRecipe::new);
     public static final Supplier<RecipeSerializer<FlagFromBannerRecipe>> FLAG_FROM_BANNER = reg(
             "flag_from_banner", FlagFromBannerRecipe::new);
     public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> ANTIQUE_MAP = reg(

@@ -11,18 +11,22 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Set;
 
 public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
 
     private final ModelResourceLocation model3d;
     private final ModelResourceLocation model2d;
+    private final Set<ItemDisplayContext> isFirst;
 
-    public DifferentProspectiveItemRenderer(ModelResourceLocation model2d, ModelResourceLocation model3d){
-        this.model2d = model2d;
-        this.model3d = model3d;
+    public DifferentProspectiveItemRenderer(ModelResourceLocation first, ModelResourceLocation second,
+                                            Set<ItemDisplayContext> isFirst){
+        this.model2d = first;
+        this.model3d = second;
+        this.isFirst = isFirst;
     }
 
     @Override
@@ -31,10 +35,10 @@ public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegi
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
             matrixStack.pushPose();
-            boolean gui = transform == ItemDisplayContext.GUI || transform == ItemDisplayContext.GROUND || transform == ItemDisplayContext.FIXED;
+            boolean isFirst = this.isFirst.contains(transform);
 
             BakedModel model;
-            if (gui) {
+            if (isFirst) {
                 model = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model2d);
             } else {
                 model = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model3d);

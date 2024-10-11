@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -107,6 +109,7 @@ public class ModSetup {
     @EventCalled
     public static void tagDependantSetup(RegistryAccess registryAccess, boolean client) {
         if (!firstTagLoad) {
+
             //using this as a post-setup event that can access tags
             firstTagLoad = true;
             if (!hasFinishedSetup) {
