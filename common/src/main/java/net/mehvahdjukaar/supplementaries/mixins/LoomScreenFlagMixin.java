@@ -1,8 +1,12 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -14,7 +18,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.LoomMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -72,6 +79,14 @@ public abstract class LoomScreenFlagMixin extends AbstractContainerScreen<LoomMe
 
             Lighting.setupFor3DItems();
         }
+    }
+
+    @ModifyExpressionValue(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;getItem()Lnet/minecraft/world/item/ItemStack;"))
+    public ItemStack supp$swapFlag(ItemStack original) {
+        if(original.getItem() instanceof FlagItem fi){
+            return BannerBlock.byColor(fi.getColor()).asItem().getDefaultInstance();
+        }
+        return null;
     }
 
     @Override

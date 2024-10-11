@@ -89,9 +89,10 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
 
+        DyeColor color = tile.getColor();
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
             float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-            renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, tile.getColor());
+            renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
         } else {
 
             int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
@@ -101,7 +102,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
                 float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
                 renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,
-                        ang, oldAng, tile.getColor());
+                        ang, oldAng, color);
                 poseStack.mulPose(Axis.YP.rotationDegrees(ang));
                 poseStack.translate(0, 0, segmentLen / 16f);
                 poseStack.mulPose(Axis.YP.rotationDegrees(-ang));

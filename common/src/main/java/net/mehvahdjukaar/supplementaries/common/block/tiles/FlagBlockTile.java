@@ -8,6 +8,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
@@ -15,6 +17,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,6 +77,26 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
                 this.patterns = bannerPatternLayers;
             });
         }
+    }
+
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        this.patterns = componentInput.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY);
+        this.name = componentInput.get(DataComponents.CUSTOM_NAME);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(DataComponents.BANNER_PATTERNS, this.patterns);
+        components.set(DataComponents.CUSTOM_NAME, this.name);
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        tag.remove("patterns");
+        tag.remove("CustomName");
     }
 
     @Override
