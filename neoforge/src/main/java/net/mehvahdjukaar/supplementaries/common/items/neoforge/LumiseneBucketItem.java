@@ -93,8 +93,8 @@ public class LumiseneBucketItem extends BucketItem {
         } else if (containedFluidStack.isPresent() && content.getFluidType().isVaporizedOnPlacement(level, pos, containedFluidStack.get())) {
             content.getFluidType().onVaporize(player, level, pos, containedFluidStack.get());
             return true;
-        } if (blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(level, pos, stateAt, myFluid)) {
-            lc.placeLiquid(level, pos, stateAt, myFluid.defaultFluidState()
+        } if (blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(player, level, pos, stateAt, content)) {
+            lc.placeLiquid(level, pos, stateAt, content.defaultFluidState()
                     .setValue(FiniteFluid.LEVEL, capacity));
             this.playEmptySound(player, level, pos);
             return true;

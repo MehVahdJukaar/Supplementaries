@@ -14,7 +14,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.*;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -28,10 +31,10 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.isEmpty()) {
             return IBallisticBehavior.LINE;
         }
-        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1,0,0));
+        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1, 0, 0));
         if (proj != null) {
             double speed = proj.getDeltaMovement().length();
-            if(speed == 0 && proj instanceof AbstractArrow){
+            if (speed == 0 && proj instanceof AbstractArrow) {
                 //TODO;
                 speed = 2; //crossbow is 3..
             }
@@ -48,7 +51,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
-                        Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
+                             Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, ProjectileTestLevel.get(level.registryAccess()), facing);
 
         if (entity != null) {
@@ -66,7 +69,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
                 pr.setOwner(owner);
 
                 pr.shoot(facing.x, facing.y, facing.z,
-                        scalePower , inaccuracy);
+                        scalePower, inaccuracy);
             }
 
             //  float radius = entity.getBbWidth() * 1.42f;
@@ -97,21 +100,32 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.getItem() instanceof ArrowItem ai) {
             return ai.createArrow(testLevel, projectile, fakePlayer, null);
         }
+        // let player shoot them instead.
+        //TODO: check.
+        // this is mostly relevant for stuff like potions which has way more power in dispensers for some reason
         else if (projectile.getItem() instanceof ProjectileItem ti) {
-            return ti.asProjectile(testLevel, Vec3.ZERO, projectile, Direction.UP);
+            var config = ti.createDispenseConfig();
+            //apply config
+            var p = ti.asProjectile(testLevel, Vec3.ZERO, projectile, Direction.UP);
+            float power = config.power();
+            //hardcoded bs for potions since hand throw and dispenser throw are so different
+            if (p instanceof ThrownPotion) {
+                power *= 0.75f;
+            }
+            p.shoot(0, 1, 0, power, config.uncertainty());
+            return p;
         }
         //create from item
 
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
 
         var eventResult = SuppPlatformStuff.fireItemUseEvent(fakePlayer, InteractionHand.MAIN_HAND);
-        if(!eventResult.getResult().consumesAction()) {
+        if (!eventResult.getResult().consumesAction()) {
             projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         }
 
         return testLevel.projectile;
     }
-
 
 
 }

@@ -137,9 +137,19 @@ slidy double pulse
 - rope arrow disp stats
 - check gunpowder explosion stuff
 - bellows keeping fire in front when created by gunpowder
+- replace lumisene gunpowder
 
 # Supplementaries
 
+- ceiling skulls
+- cant eat pancake 
+-trapped prsents not updating inventory whenshot
+- blaze powder texture broken hourglass
+- glowstone dust in hourglass
+- lumisene fire punch crash
+- slidy block connection down ropes
+- slimeall and bricks projectile angle from disp minecart
+- cannon target infinite reach
 - fire lunch box item use events
 - quark post rope connection
 - add back capabilities

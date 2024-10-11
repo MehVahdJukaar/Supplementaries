@@ -148,12 +148,6 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        ISlimeable.tickEntity(event.getEntity());
-    }
-
-
-    @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
         if (!event.getEntity().level().isClientSide) {
             ServerEvents.serverPlayerTick(event.getEntity());

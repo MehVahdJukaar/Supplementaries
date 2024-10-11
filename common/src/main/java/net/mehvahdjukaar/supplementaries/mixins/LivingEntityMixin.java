@@ -118,7 +118,6 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     }
 
     // yes thiscould be called with forge event instead. doesn't make much difference really. needed for fabric and couldn't be another make a fabric only mixin
-    @PlatformOnly(PlatformOnly.FABRIC)
     @Inject(method = "tick", at = @At("HEAD"))
     private void suppl$slimeTick(CallbackInfo ci) {
         ISlimeable.tickEntity((LivingEntity) (Object) this);

@@ -62,8 +62,8 @@ public class Credits implements Serializable {
         addSpecialPlayer("Dev", true, false, false, "380df991-f603-344c-a090-369bad2a924a");
         addSpecialPlayer("Dev", true, false, true, "5084e6f3-8f54-43f1-8df5-1dca109e430f");
         addSpecialPlayer("MehVahdJukaar", true, false, true, "898b3a39-e486-405c-a873-d6b472dc3ba2", "TheEvilGolem");
-        addSpecialPlayer("Plantkillable", true, true, true, "351a126a-705e-4c5f-9ab1-3051f18e16f0");
-        addSpecialPlayer("DarkShrek_", true, false, true, "90ceb598-9983-4da3-9cae-436d5afb9d81");
+        addSpecialPlayer("Plantkillable", true, true, true, "720f165c-b066-4113-9622-63fc63c65696");
+        addSpecialPlayer("DarkShrek_", true, false, true, "351a126a-705e-4c5f-9ab1-3051f18e16f0");
         addSpecialPlayer("Agrona", true, true, false, (UUID) null, "Pancake", "Pancakes");
 
         this.supporters.forEach((n, s) -> addSpecialPlayer(n, false, s.has_globe, s.has_statue, s.uuid,
