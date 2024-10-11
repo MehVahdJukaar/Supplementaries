@@ -92,6 +92,7 @@ Bug Fixes:
 - (fabric fix) redstone wire will only connect to back of a relayer
 - fixed overencumbered tag not taking stack tag into account
 - changed slingshot particle
+- fixed some hourglass textures being misaligned
 - you can now have a 2 faced clock block
 - wind vanes compat for wilder wild
 - fixed an issue with FD stick logged tomatoes compat
