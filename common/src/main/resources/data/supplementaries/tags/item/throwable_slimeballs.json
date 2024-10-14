@@ -1,6 +1,10 @@
 {
   "replace": false,
-    "values": [
-    {"id":"#c:slime_balls","required":false}
+  "values": [
+    "minecraft:slimeball",
+    {
+      "id": "#c:slime_balls",
+      "required": false
+    }
   ]
 }

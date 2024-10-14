@@ -23,8 +23,8 @@ public record ClientBoundPlaySongNotesPacket(IntList notes, int entityID) implem
 
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeVarInt(this.entityID);
         buf.writeIntIdList(this.notes);
+        buf.writeVarInt(this.entityID);
     }
 
     @Override

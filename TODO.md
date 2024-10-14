@@ -78,17 +78,14 @@
 - metal frames turning to timber frames
 - cage mob duplication
 - cage flickering
+- add lantern trade back
+- feather block no particles on fabric. WHEN FALLING TOO
+- sign post middle click 
 
 # Soon
 - fabric hat popper
-- netherite door radstone trailer
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
-- slime jumpong not wokring on fabric
-- GLOBE NOT WORIJG
-- CANNON EXIT AND GUI
-- slimed effect notgoing away
-- bubble blower not blowing bubbles
 - colored map data crash row Data null
 - enderman eyes dont work
 - slice map crash

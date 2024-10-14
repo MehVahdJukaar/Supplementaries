@@ -40,6 +40,7 @@ public class DispenserBehaviorsManager {
     public static void registerBehaviors(DispenserHelper.Event event) {
         boolean isForge = PlatHelper.getPlatform().isForge();
 
+        Supplementaries.LOGGER.info("Registering custom dispenser behaviors");
         if (!CommonConfigs.General.DISPENSERS.get()) return;
 
         if (CommonConfigs.Tweaks.BUNDLE_DISPENSER.get()) {
@@ -115,6 +116,9 @@ public class DispenserBehaviorsManager {
                     event.register(new ThrowableSlimeballBehavior(h.value()))
             );
         }
+
+
+        event.register(new ThrowableSlimeballBehavior(Items.SLIME_BALL));
 
 
         //bomb

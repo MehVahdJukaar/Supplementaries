@@ -1,11 +1,8 @@
 {
   "fabric:load_conditions": [
     {
-      "type": "fabric:not",
-      "value": {
-        "modid": "suppsquared",
-        "type": "neoforge:mod_loaded"
-      }
+      "modid": "suppsquared",
+      "condition": "fabric:mod_loaded"
     }
   ],
   "type": "simple",

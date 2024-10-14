@@ -296,9 +296,14 @@ public class ColoredMapHandler {
                     CompoundTag c = biomes.getCompound(j);
                     int i = c.getByte("index");
                     String id = c.getString("id");
-                    provider.lookupOrThrow(Registries.BIOME).get(
-                                    ResourceKey.create(Registries.BIOME, ResourceLocation.parse(id)))
-                            .ifPresent(b -> biomesIndexesPalette.add(i, b));
+                    try {
+                        ResourceKey<Biome> resourceKey = ResourceKey.create(Registries.BIOME, ResourceLocation.parse(id));
+                        provider.lookupOrThrow(Registries.BIOME).get(
+                                        resourceKey)
+                                .ifPresent(b -> biomesIndexesPalette.add(i, b));
+                    }catch (Exception error){
+                        Supplementaries.error();
+                    }
                 }
             }
             if (tag.contains("blocks")) {

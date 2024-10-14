@@ -2,16 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class FeatherParticle extends TextureSheetParticle {
     private final float rotSpeed;
@@ -23,18 +20,18 @@ public class FeatherParticle extends TextureSheetParticle {
 
     private FeatherParticle(ClientLevel worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double speedX, double speedY, double speedZ) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
-        this.quadSize *= 1.3125F + this.random.nextFloat() * 0.15;
+        this.quadSize *= (float) (1.3125F + this.random.nextFloat() * 0.15);
         this.lifetime = 360 + this.random.nextInt(60);
         this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f);
         this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
-        this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) *  0.008F;
+        this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * 0.008F;
         this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
-        this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) *  0.008F;
+        this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) * 0.008F;
         this.gravity = 0.007F;
     }
 
     public void setRotOffset(int spriteIndex) {
-        int[] offsets = new int[]{-45, 0, 16};
+        int[] offsets = new int[]{43, 0, -16};
         this.rotOffset = offsets[spriteIndex] * Mth.DEG_TO_RAD;
     }
 
@@ -51,7 +48,7 @@ public class FeatherParticle extends TextureSheetParticle {
         if (++this.age >= this.lifetime || this.groundTime > 20) {
             this.remove();
         } else {
-            this.yd -= 0.04D * (double)this.gravity;
+            this.yd -= 0.04D * (double) this.gravity;
             this.move(this.xd, this.yd, this.zd);
 
             this.xd *= this.friction;
@@ -120,10 +117,6 @@ public class FeatherParticle extends TextureSheetParticle {
 
     @Override
     public void render(VertexConsumer builder, Camera info, float partialTicks) {
-        Vec3 vector3d = info.getPosition();
-        float f = (float) (Mth.lerp(partialTicks, this.xo, this.x) - vector3d.x());
-        float f1 = (float) (Mth.lerp(partialTicks, this.yo, this.y) - vector3d.y());
-        float f2 = (float) (Mth.lerp(partialTicks, this.zo, this.z) - vector3d.z());
         Quaternionf quaternion;
         if (this.roll == 0.0F) {
             quaternion = info.rotation();
@@ -134,29 +127,19 @@ public class FeatherParticle extends TextureSheetParticle {
                     (this.rotOffset + this.roll) * p);
             quaternion.mul(Axis.ZP.rotation(f3 / p));
         }
-        Vector3f[] avector3f = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float f4 = this.getQuadSize(partialTicks);
 
-        for (int i = 0; i < 4; ++i) {
-            Vector3f vector3f = avector3f[i];
-            vector3f.rotate(quaternion);
-            vector3f.mul(f4);
-            vector3f.add(f, f1, f2);
-        }
+        this.renderRotatedQuad(builder, info, quaternion, partialTicks);
+    }
 
-        float f7 = this.getU0();
-        float f8 = this.getU1();
-        float f5 = this.getV0();
-        float f6 = this.getV1();
-        int lightColor = this.getLightColor(partialTicks);
-        int lu = VertexUtil.lightU(lightColor);
-        int lv = VertexUtil.lightV(lightColor);
-
+    @Override
+    protected void renderRotatedQuad(VertexConsumer vertexConsumer, Camera camera, Quaternionf quaternionf, float f) {
+        Vec3 vec3 = camera.getPosition();
         float offset = 0.125f;
-        builder.addVertex(avector3f[0].x(), avector3f[0].y() + offset, avector3f[0].z()).setUv(f8, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
-        builder.addVertex(avector3f[1].x(), avector3f[1].y() + offset, avector3f[1].z()).setUv(f8, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
-        builder.addVertex(avector3f[2].x(), avector3f[2].y() + offset, avector3f[2].z()).setUv(f7, f5).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
-        builder.addVertex(avector3f[3].x(), avector3f[3].y() + offset, avector3f[3].z()).setUv(f7, f6).setColor(this.rCol, this.gCol, this.bCol, this.alpha).setUv2(lu,lv);
+
+        float g = (float) (Mth.lerp(f, this.xo, this.x) - vec3.x());
+        float h = (float) (Mth.lerp(f, this.yo, this.y) - vec3.y()) + offset;
+        float i = (float) (Mth.lerp(f, this.zo, this.z) - vec3.z());
+        this.renderRotatedQuad(vertexConsumer, quaternionf, g, h, i, f);
     }
 
 

@@ -21,10 +21,6 @@
     "divider": "BOWL",
     "item": "farmersdelight:vegetable_soup"
   },
-  "food": {
-    "divider": "1",
-    "item": "miners_delight:vegetable_soup_cup"
-  },
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid"
 }
