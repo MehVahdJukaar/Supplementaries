@@ -162,7 +162,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
 
         if (!level().isClientSide) {
-            float radius = 1.1f;
+            double radius = CommonConfigs.Functional.CANNONBALL_RADIUS.get();
 
             Vec3 movement = this.getDeltaMovement();
             double vel = Math.abs(movement.length());
@@ -178,7 +178,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             Set<Block> whitelist = wl != null ? wl.blocks(): null;
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float)radius, whitelist);
             exp.explode();
             exp.finalizeExplosion(true);
 

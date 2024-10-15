@@ -732,7 +732,11 @@ public class CommonConfigs {
                     .define("fuse_time", 40, 0, 500);
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
-            CANNONBALL_ENABLED = feature(builder, "cannonball");
+            builder.push("cannonball");
+            CANNONBALL_ENABLED = feature(builder);
+            CANNONBALL_RADIUS = builder.comment("Cannonball pierce radius. The bigger this is the less piercing power it will have as it will waste more energy breaking these blocks")
+                    .define("radius", 1.1d, 0, 5);
+            builder.pop();
             AVAST_DISC_ENABLED = feature(builder, ModConstants.AVAST_DISC_NAME);
             builder.pop();
 
@@ -839,6 +843,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
+        public static final Supplier<Double> CANNONBALL_RADIUS;
         public static final Supplier<Boolean> AVAST_DISC_ENABLED;
     }
 

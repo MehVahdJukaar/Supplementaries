@@ -50,21 +50,21 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
         //same as bow
         if (entity instanceof Player player) {
-            ItemStack projectileStack = player.getProjectile(stack);
-            if (!projectileStack.isEmpty() && this.getAllSupportedProjectiles().test(projectileStack)) {
+            ItemStack ammo = player.getProjectile(stack);
+            if (!ammo.isEmpty()) {
 
                 int useDuration = this.getUseDuration(stack, entity) - timeCharged;
                 float power = getPowerForTime(useDuration, stack, entity);
                 if ((power >= 0.085D)) {
 
-                    List<ItemStack> projectiles = draw(stack, stack, player);
+                    List<ItemStack> projectiles = draw(stack, ammo, player);
 
                     boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
                     power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
 
                     if (level instanceof ServerLevel serverLevel && !projectiles.isEmpty()) {
-                        this.shoot(serverLevel, player, player.getUsedItemHand(), stack, projectiles,
-                                power, 1.0F, false, null);
+                        this.shoot(serverLevel, player, player.getUsedItemHand(), stack,
+                                projectiles, power, 1.0F, false, null);
                     }
 
 
@@ -100,7 +100,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), velocity, inaccuracy);
         float pitch = getShotPitch(shooter.getRandom(), index);
-        shooter.level().playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(), SoundEvents.CROSSBOW_SHOOT, shooter.getSoundSource(), 1.0F, pitch);
+        shooter.level().playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
+                ModSounds.SLINGSHOT_SHOOT.get() , shooter.getSoundSource(), 1.0F, pitch);
     }
 
     private static Vector3f getProjectileShotVector(LivingEntity shooter, Vec3 distance, float angle) {
@@ -145,7 +146,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
     //actual use duration
     public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
-        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get());
+        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get())/20f;
         return Mth.floor(f * 20.0F);
     }
 
