@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
@@ -20,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -298,13 +300,16 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             PoseStack poseStack = new PoseStack();
             poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
+            if(tile.isBig()){
+                poseStack.scale(3, 3, 3);
+            }
 
             poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
             poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
             poseStack.translate(0, 0, -1.4);
 
             if (id == 1) {
-                playFiringEffects(pos, level, poseStack, pitch, yaw, tile.getPowerLevel());
+                playFiringEffects(pos, level, poseStack, pitch, yaw, tile.getPowerLevel(), tile.isBig());
             } else {
                 playIgniteEffects(pos, level, poseStack);
             }
@@ -324,23 +329,27 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
 
-    private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power) {
+    private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power, boolean isBig) {
         level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, 0);
+                pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, isBig? 3 : 1);
+
         RandomSource ran = level.random;
 
-        this.spawnDustRing(level, poseStack);
-        this.spawnSmokeTrail(level, poseStack, ran);
+        this.spawnDustRing(level, poseStack, isBig);
+        this.spawnSmokeTrail(level, poseStack, ran, isBig);
 
         // power from 1 to 4
         float soundPitch = 1.3f - power * 0.1f;
+        if (isBig) soundPitch -= 0.2f;
         float soundVolume = 2f + power * 0.6f;
+        if (isBig) soundVolume += 0.5f;
         level.playLocalSound(pos, ModSounds.CANNON_FIRE.get(), SoundSource.BLOCKS,
                 soundVolume, soundPitch, false);
     }
 
-    private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
+    private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran, boolean isBig) {
         int smokeCount = 40;
+        if (isBig) smokeCount *= 3;
         for (int i = 0; i < smokeCount; i += 1) {
 
             poseStack.pushPose();
@@ -348,6 +357,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
 
             float aperture = 0.5f;
+            if (isBig) aperture *= 3;
             poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
 
             Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
@@ -359,12 +369,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         }
     }
 
-    private void spawnDustRing(Level level, PoseStack poseStack) {
+    private void spawnDustRing(Level level, PoseStack poseStack, boolean isBig) {
         poseStack.pushPose();
 
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
 
         int dustCount = 16;
+        if (isBig) dustCount *= 3;
         for (int i = 0; i < dustCount; i += 1) {
 
             poseStack.pushPose();
@@ -372,8 +383,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             poseStack.mulPose(Axis.YP.rotationDegrees(90));
 
             poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, 0.05f, 0));
-            level.addParticle(ModParticles.BOMB_SMOKE_PARTICLE.get(),
+            float vel = 0.05f;
+            if(isBig) vel /=1.5f;
+
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, vel, 0));
+            SimpleParticleType campfireCosySmoke = isBig ?
+                    ParticleTypes.CAMPFIRE_COSY_SMOKE : ModParticles.BOMB_SMOKE_PARTICLE.get();
+            level.addParticle(campfireCosySmoke,
                     p.x, p.y, p.z,
                     speed.x, speed.y, speed.z);
             poseStack.popPose();

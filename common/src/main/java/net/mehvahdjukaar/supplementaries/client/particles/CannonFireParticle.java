@@ -31,7 +31,7 @@ public class CannonFireParticle extends TextureSheetParticle {
     private TextureAtlasSprite boomSprite;
 
     private CannonFireParticle(ClientLevel world, double x, double y, double z, double pitch, double yaw,
-                               SpriteSet ringSprites, SpriteSet boomSprites) {
+                               SpriteSet ringSprites, SpriteSet boomSprites, float size) {
         super(world, x, y, z, 0, 0, 0);
         this.setParticleSpeed(0, 0, 0);
         this.pitch = pitch;
@@ -40,7 +40,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         this.boomSprites = boomSprites;
         this.lifetime = 5;
         this.hasPhysics = false;
-        this.quadSize = 1.25f;
+        this.quadSize = 1.25f * size;
 
         this.setSpriteFromAge(ringSprites);
     }
@@ -166,13 +166,15 @@ public class CannonFireParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z,
-                                       double pitch, double yaw, double zSpeed) {
+                                       double pitch, double yaw, double size) {
             Vec3 offset = Vec3.directionFromRotation((float) pitch * Mth.RAD_TO_DEG, -(float) yaw * Mth.RAD_TO_DEG);
             offset = offset.scale(-6.501 / 16f);
+            offset =  offset.add(0, 1/16f, 0);
+            offset =  offset.scale(size);
 
 
             return new CannonFireParticle(worldIn, x + offset.x, y + offset.y+1/16f, z + offset.z, pitch, yaw,
-                    sprites, sprites2.get());
+                    sprites, sprites2.get(), (float) size);
         }
     }
 

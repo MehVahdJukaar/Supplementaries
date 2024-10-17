@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.mojang.serialization.Codec;
-import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
@@ -40,7 +38,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
 import java.util.Set;
 import java.util.UUID;
 
@@ -72,8 +69,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Nullable
     private UUID controllingPlayer = null;
 
+    private boolean isBig = false;
+
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
+    }
+
+    public boolean isBig() {
+        return isBig;
     }
 
     @Override
@@ -87,6 +90,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (playerWhoIgnitedUUID != null) tag.putUUID("player_ignited", playerWhoIgnitedUUID);
         if (breakWhitelist != null) {
             saveBreakWhitelist(breakWhitelist, tag, registries);
+        }
+        if (isBig) {
+            tag.putBoolean("big", true);
         }
     }
 
@@ -108,6 +114,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
         }
         this.breakWhitelist = readBreakWhitelist(tag, registries);
+        if (tag.contains("big")) {
+            this.isBig = true;
+        }
     }
 
     @Nullable

@@ -17,7 +17,9 @@ public class PopperBehavior implements IFireItemBehavior {
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
         ClientBoundParticlePacket packet = new ClientBoundParticlePacket(firePos,
                 ClientBoundParticlePacket.Kind.CONFETTI, (int) power, direction);
-        NetworkHelper.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos), packet);
+        BlockPos pos = BlockPos.containing(firePos);
+
+        NetworkHelper.sendToAllClientPlayersInDefaultRange(level, pos, packet);
 
         level.gameEvent(owner, GameEvent.EXPLODE, firePos);
         return true;
