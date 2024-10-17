@@ -139,6 +139,9 @@ slidy double pulse
 
 # Supplementaries
 
+- data driven book textures
+- config command
+- slingshot blocks desync (anvils)
 - ceiling skulls
 - cant eat pancake 
 -trapped prsents not updating inventory whenshot

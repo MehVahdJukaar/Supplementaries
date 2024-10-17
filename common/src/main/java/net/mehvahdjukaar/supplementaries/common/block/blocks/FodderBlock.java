@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -126,7 +127,7 @@ public class FodderBlock extends WaterBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.getItem() instanceof HoeItem) {
+        if (stack.getItem() instanceof HoeItem && Utils.mayPerformBlockAction( player, pos, stack)) {
             level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.PLAYERS, 1.0F, 1.0F);
             if (!level.isClientSide) {
 
