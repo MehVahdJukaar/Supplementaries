@@ -1,5 +1,5 @@
-New features:
-- cannon
+# New features:
+- cannon (can shoot anything)
 - cannonball
 - throwable slimeballs and slimed effect (from slimes)
 - buntings, placeable on ropes
@@ -13,89 +13,92 @@ New features:
 - dispensers can empty bundles, quivers and lunch boxes
 - probably other stuff I forgot
 - wall sign posts
+- added /supplementaries registry command, lists all the content of a registry
 
-
-Bug Fixes:
-- fixed faucet fluid dupe
-- fixed blackboard item renderer
+# Improvements
+- new present sounds
+- new crank textures and model
+- new gold door, trapdoor and hourglass textures
+- new faucet texture and model
 - improved quiver logic to use mouse sensitivity
 - improved bomb particle emission to be bigger, centered on a circle
 - bomb smoke particles were changed
-- fixed some issues with jars and goblet fluids
 - wind vane uses an entity model now with proper shading
 - gunpowder can now light up blocks that are one over and 1 up from it. it will also visually connect to them
+- blackboard undo button
+- improved urns spawning logic
+- added a recipe to clear item lore
+- slingshots can now shoot buckets (try with loyalty)
+- trapped presents will hide their names when in item form to look like regular ones
+- flower boxes can be hung from ceilings
+- flower boxes can now only exist when against a solid block
+- dispenser minecraft projectiles will retain the minecart velocity and be shot at an angle when on a rail slope
+- sprinting on flint blocks with iron boots will cause sparks
+- you can now wash the upper and lower part of a sign post independently
+- Ash can no longer spawn from non solid blocks
+- you can now have a 2 faced clock block
+- changed many sounds to have their own sound event with their own subtitles
+- changed slingshot particle to be smoother
+- wind vanes and cannons now use a flywheel model (when flywheel is on)
+- tipped spikes model dont have shading anymore
+- Added /supplementaries dimension command, allows to teleport to dimensions
+- timber braces textures are now flipped on positive axis
+- projectile weapons can now show their arrow as preview
+- suds particles will break when in contact with a block
+- Feather falling can now prevent all kind of bubble block breaking, not just from falling
+
+
+# Bug Fixes:
+- fixed faucet fluid dupe
+- fixed blackboard item renderer
+- fixed some issues with jars and goblet fluids
 - crystal displays can be chained
-- book pile generation fix
 - fixed relayer not updating properly from indirect power
+- book pile generation fix
 - destroying a safe item will no longer drop its content
+- wind vanes compat for wilder wild
 - quiver pick up arrow fix
 - quiver can now have arrows be inserted from off hand
-- blackboard undo button**
-- improved urns spawning
 - gunpowder can ignite trapped presents
-- added a recipe to clear item lore
 - fixe many issues with slingshot projectiles
-- slingshots can now shoot buckets
 - fixed dispenser ender pearl not having proper particles and not updating the dispenser properly
 - fixed feather block particles not showing for other players
 - fixed crank particles not showing for other players
-- trapped presents will hide their names
 - by default, flower boxes will now only accept double flowers
 - double flowers in flower boxes will have a new model
 - you can enable the old mode in the configs
-- flower boxes can now only exist when against a solid block
-- flower boxes can be hung from ceilings
 - safe crafting recipe correctly retains items in shulker boxes
 - trapped presents can now correctly dispense ender pearls
 - plants above planters will appear centered even when sodium is on
 - you can now insert ropes into rope arrows from your inventory
-- sprinting on flint blocks with iron boots will cause sparks
-- dispenser minecraft projectiles will retain the minecart velocity and be shot at an angle when on a rail slope
 - fixed a rare issue with enderman heads
 - fixed wrench particles and sounds not showing for other players
-- projectile weapons can now show their arrow as preview
 - cages and jars cant go in container items anymore
 - Fixed bellows hitbox
-- tipped spikes model dont have shading anymore
-- timber braces textures are now flipped on positive axis
-- you can now wash the upper and lower part of a sign post independently
 - fixed soap interaction not spawning bubble particles on servers
 - fixed soap cleaning being able to clean multiple things at once
 - changed and standardized all mod projectiles attributes
 - fixed throwable bricks from dispensers not using correct item texture when non standard bricks were used
 - Fixed a very rare crash with quivers and server players
-- Ash can no longer spawn from non solid blocks
-- suds particles will break when in contact with a block
 - playing flute and using bubble blower will emit sculk vibrations
 - placing sign post will emit sculk vibrations. So will tipped spikes
 - using lock blocks and hourglass will also emit sculk vibrations
-- Feather falling can now prevent all kind of bubble block breaking, not just from falling
 - Fixed some containers causing issues in spectator
-- Added /supplementaries dimension command, allows to teleport to dimensions
 - Playing a flute will make parrots dance (in cages and on shoulder too)
 - thrown bricks and bombs renderer is how centered on their hitbox
 - added record command to fabric (thanks ot laite07)
-- wind vanes and cannons now use a flywheel model (when flywheel is on)
 - fixed some client desync issues with bomb explosions
-- added /supplementaries registry command, lists all the content of a registry
 - improved turn table and wrench rotation logic fixing some bugs and inconsistencies
 - Fixed some dupes with falling urns
 - added cannon map marker
 - slingshot can shoot buckets
 - slingshot can shoot damaging projectiles in a tag
 - fixed quill maps not supporting vanilla decorations properly
-- new present sounds
-- new crank textures and model
-- new gold door, trapdoor and hourglass textures
-- new faucet texture and model
+- fixed gunpowder explosion being offcentered
 - fixed mob head effects not clearing properly
 - mob head effects will now only work in first person
 - (fabric fix) redstone wire will only connect to back of a relayer
 - fixed overencumbered tag not taking stack tag into account
-- changed slingshot particle
 - fixed some hourglass textures being misaligned
-- you can now have a 2 faced clock block
-- wind vanes compat for wilder wild
 - fixed an issue with FD stick logged tomatoes compat
 - improved dispenser projectiles behaviors (slimeballs ender pears and bricks) to fail when a solid face block is placed against the dispenser, falling back on existing behaviors
-- changed many sounds to have their own sound event with their own subtitles

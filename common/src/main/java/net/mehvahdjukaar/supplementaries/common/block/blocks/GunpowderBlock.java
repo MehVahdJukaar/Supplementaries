@@ -253,7 +253,7 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     // same as can connect but just applies to blocks over and up from it
-    protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir){
+    protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
         return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
                 b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
@@ -420,7 +420,8 @@ public class GunpowderBlock extends LightUpBlock {
 
 
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
+        GunpowderExplosion explosion = new GunpowderExplosion(world, null,
+                pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.5f);
         if (ForgeHelper.onExplosionStart(world, explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(alwaysFire);
@@ -574,9 +575,9 @@ public class GunpowderBlock extends LightUpBlock {
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {
             float f2 = from + f * rand.nextFloat();
-            double x = pos.getX() + 0.5D +  (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
-            double y = pos.getY() + 0.5D +  (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
-            double z = pos.getZ() + 0.5D +  (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
+            double x = pos.getX() + 0.5D + (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
+            double y = pos.getY() + 0.5D + (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
+            double z = pos.getZ() + 0.5D + (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
 
             float velY = (burning / 15.0F) * 0.03F;
             float velX = rand.nextFloat() * 0.02f - 0.01f;
