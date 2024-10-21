@@ -743,8 +743,8 @@ public class ModRegistry {
                     .sound(SoundType.WOOL))
     );
 
-    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
-            ModSounds.AVAST_MUSIC, new Item.Properties()
+    public static final Supplier<Item> PIRATE_DISC = regItem(PIRATE_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
+            ModSounds.PIRATE_MUSIC, new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.RARE),
             20 * 60 * 3));
