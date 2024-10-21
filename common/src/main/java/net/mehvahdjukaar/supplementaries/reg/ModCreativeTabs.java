@@ -328,8 +328,8 @@ public class ModCreativeTabs {
                 ModRegistry.CANNON);
 
         after(e, i -> i.getItem().components().get(DataComponents.JUKEBOX_PLAYABLE) != null, CreativeModeTabs.TOOLS_AND_UTILITIES,
-                ModConstants.AVAST_DISC_NAME,
-                ModRegistry.AVAST_DISC);
+                ModConstants.PIRATE_DISC_NAME,
+                ModRegistry.PIRATE_DISC);
 
         after(e, Items.LAVA_BUCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUMISENE_NAME,

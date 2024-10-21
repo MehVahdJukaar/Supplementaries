@@ -764,9 +764,9 @@ public class ModRegistry {
                     .sound(SoundType.WOOL))
     );
 
-    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> new Item(new Item.Properties()
+    public static final Supplier<Item> PIRATE_DISC = regItem(PIRATE_DISC_NAME, () -> new Item(new Item.Properties()
             .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
-                    new EitherHolder<>(ModSounds.AVAST_MUSIC_JUKEBOX.getKey()), true))
+                    new EitherHolder<>(ModSounds.PIRATE_MUSIC_JUKEBOX.getKey()), true))
             .stacksTo(1)
             .rarity(Rarity.RARE)));
 

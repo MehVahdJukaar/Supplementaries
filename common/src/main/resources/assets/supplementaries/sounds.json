@@ -204,10 +204,10 @@
       }
     ]
   },
-  "music.avast": {
+  "music.heave_ho": {
     "sounds": [
       {
-        "name": "supplementaries:music/avast",
+        "name": "supplementaries:music/heave_ho",
         "stream": true
       }
     ]

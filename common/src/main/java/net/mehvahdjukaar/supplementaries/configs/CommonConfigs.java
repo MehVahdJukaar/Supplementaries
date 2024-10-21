@@ -742,7 +742,7 @@ public class CommonConfigs {
             CANNONBALL_RADIUS = builder.comment("Cannonball pierce radius. The bigger this is the less piercing power it will have as it will waste more energy breaking these blocks")
                     .define("radius", 1.1d, 0, 5);
             builder.pop();
-            AVAST_DISC_ENABLED = feature(builder, ModConstants.AVAST_DISC_NAME);
+            PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
             builder.pop();
 
             builder.push("present");
@@ -850,7 +850,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
         public static final Supplier<Double> CANNONBALL_RADIUS;
-        public static final Supplier<Boolean> AVAST_DISC_ENABLED;
+        public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }
 
 

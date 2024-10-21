@@ -23,7 +23,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CLOCK_TICK_2 = regSound("block.clock.tick_2");
     public static final RegSupplier<SoundEvent> BOMB_EXPLOSION = regSound("item.bomb");
     public static final RegSupplier<SoundEvent> PANCAKE_MUSIC = regSound("music.pancake");
-    public static final RegSupplier<SoundEvent> AVAST_MUSIC = regSound("music.avast");
+    public static final RegSupplier<SoundEvent> PIRATE_MUSIC = regSound("music.heave_ho");
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final Supplier<SoundEvent> CRANK = regSound("block.crank");
 
@@ -108,7 +108,7 @@ public class ModSounds {
 
     public static final DynamicHolder<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("pancake"),
             Registries.JUKEBOX_SONG);
-    public static final DynamicHolder<JukeboxSong> AVAST_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("avast"),
+    public static final DynamicHolder<JukeboxSong> PIRATE_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("heave_ho"),
             Registries.JUKEBOX_SONG);
 
     public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,

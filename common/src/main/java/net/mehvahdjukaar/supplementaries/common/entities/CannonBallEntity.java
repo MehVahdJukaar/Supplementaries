@@ -335,9 +335,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     private void maybeDropDisc(LivingEntity le) {
-        if (!le.isAlive() && CommonConfigs.Functional.AVAST_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
+        if (!le.isAlive() && CommonConfigs.Functional.PIRATE_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
             if (((LivingEntityAccessor) le).invokeShouldDropLoot() && this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
-                le.spawnAtLocation(ModRegistry.AVAST_DISC.get());
+                le.spawnAtLocation(ModRegistry.PIRATE_DISC.get());
                 // we cant use global loot modifiers because we dont have access to damage value there
             }
         }
