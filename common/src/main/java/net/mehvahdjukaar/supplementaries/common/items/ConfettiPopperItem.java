@@ -61,7 +61,6 @@ public class ConfettiPopperItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int remainingUseDuration) {
-        super.onUseTick(level, player, stack, remainingUseDuration);
         //no clue why im doing this from server side
         Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
         //hack
@@ -71,7 +70,7 @@ public class ConfettiPopperItem extends Item {
                 null, player.getLookAngle());
         player.setXRot(oldRot);
         if (!level.isClientSide) {
-            NetworkHelper.sendToAllClientPlayersTrackingEntity(player, packet);
+           // NetworkHelper.sendToAllClientPlayersTrackingEntity(player, packet);
 
             level.gameEvent(player, GameEvent.EXPLODE, player.position());
         } else {
@@ -82,7 +81,7 @@ public class ConfettiPopperItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
-        return 1;
+        return 3;
     }
 
     @Override
