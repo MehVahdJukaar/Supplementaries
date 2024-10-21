@@ -83,6 +83,7 @@
 - sign post middle click 
 
 # Soon
+- wraped sign post + not rotating
 - fabric hat popper
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
