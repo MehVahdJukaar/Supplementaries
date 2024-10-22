@@ -41,7 +41,7 @@ public class ModNetwork {
         event.registerServerBound(ServerBoundSyncCannonPacket.CODEC);
         event.registerServerBound(ServerBoundRequestOpenCannonGuiMessage.CODEC);
 
-        event.registerBidirectional(SyncSkellyQuiverPacket.CODEC);
+        event.registerBidirectional(SyncEquippedQuiverPacket.CODEC);
         event.registerBidirectional(SyncPartyCreeperPacket.CODEC);
         event.registerBidirectional(PicklePacket.CODEC);
     }

@@ -60,7 +60,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER)
     )
     private void suppl$checkIfHasQuiver(CallbackInfo ci) {
-       supplementaries$quiverSlotForHUD = QuiverItem.getActiveQuiverSlot(this);
+       supplementaries$quiverSlotForHUD = QuiverItem.findActiveQuiverSlot(this);
        supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }
 

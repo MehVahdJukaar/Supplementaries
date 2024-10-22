@@ -35,7 +35,7 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
     }
 
     @NotNull
-    public static SlotReference getActiveQuiverSlot(LivingEntity entity) {
+    public static SlotReference findActiveQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
             if (!curioQuiver.isEmpty()) return curioQuiver;
@@ -47,13 +47,12 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
-    public static ItemStack getActiveQuiver(LivingEntity entity) {
-        return getActiveQuiverSlot(entity).get(entity);
+    public static ItemStack findActiveQuiver(LivingEntity entity) {
+        return findActiveQuiverSlot(entity).get(entity);
     }
 
-    @Nullable
     public static void modifyActiveQuiver(LivingEntity entity, Function<QuiverContent.Mutable, Boolean> func) {
-        var q = getActiveQuiver(entity);
+        var q = findActiveQuiver(entity);
         if (!q.isEmpty()) {
             ((SelectableContainerItem) q.getItem()).modify(q, func);
         }

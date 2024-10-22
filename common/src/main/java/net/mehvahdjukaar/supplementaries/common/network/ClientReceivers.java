@@ -15,7 +15,6 @@ import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
@@ -338,11 +337,11 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncQuiverPacket(SyncSkellyQuiverPacket message) {
+    public static void handleSyncQuiverPacket(SyncEquippedQuiverPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.entityID());
             if (e instanceof IQuiverEntity qe) {
-                qe.supplementaries$setQuiver(message.on() ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
+                qe.supplementaries$setQuiver(message.heldQuiver());
             }
         });
     }

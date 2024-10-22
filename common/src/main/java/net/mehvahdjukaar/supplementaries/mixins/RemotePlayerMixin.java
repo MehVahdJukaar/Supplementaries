@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.authlib.GameProfile;
+import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -15,32 +16,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// not much functionality here, just to hold the quiver itemstack for rendering. Synced by server player
 @Mixin(RemotePlayer.class)
-public abstract class RemotePlayerMixin extends Player implements IQuiverPlayer {
+public abstract class RemotePlayerMixin extends Player implements IQuiverEntity {
 
-    @Unique
-    private SlotReference supplementaries$quiverSlotForHUD = SlotReference.EMPTY;
     @Unique
     private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
 
     protected RemotePlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
-    }
-
-    //this isn't optimal but still better than checking every render tick the whole inventory
-    @Inject(method = "tick",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/AbstractClientPlayer;tick()V",
-                    shift = At.Shift.AFTER)
-    )
-    private void supp$checkIfHasQuiver(CallbackInfo ci) {
-        supplementaries$quiverSlotForHUD = QuiverItem.getActiveQuiverSlot(this);
-        supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
-    }
-
-    @Override
-    public SlotReference supplementaries$getQuiverSlot() {
-        return supplementaries$quiverSlotForHUD;
     }
 
     @Override

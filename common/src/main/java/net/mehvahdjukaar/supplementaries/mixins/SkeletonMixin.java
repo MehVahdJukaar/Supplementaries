@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -89,7 +89,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
         if (!level().isClientSide) {
             //only needed when entity is alraedy spawned
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                    new SyncSkellyQuiverPacket(this));
+                    new SyncEquippedQuiverPacket( this));
         }
     }
 

@@ -69,7 +69,7 @@ public abstract class ProjectileWeaponItemMixin {
                                                     @Local(argsOnly = true) LivingEntity shooter) {
         //check if has exact match in iv. if it does it means it wasnt a quiver arrow
         if (shooter instanceof Player p && !p.getInventory().hasAnyMatching(s -> s == ammo)) {
-            var q = QuiverItem.getActiveQuiver(shooter);
+            var q = QuiverItem.findActiveQuiver(shooter);
             if (!q.isEmpty()) {
                 var data = q.get(ModComponents.QUIVER_CONTENT.get());
                 if (data != null) {

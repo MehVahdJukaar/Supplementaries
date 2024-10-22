@@ -2,8 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -20,9 +19,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Stray.class)
 public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEntity {
@@ -88,10 +84,10 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
-        if(!level().isClientSide){
+        if (!level().isClientSide) {
             //only needed when entity is alraedy spawned
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                    new SyncSkellyQuiverPacket(this));
+                    new SyncEquippedQuiverPacket(this));
         }
     }
 
@@ -103,7 +99,7 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
 
     @Override
     public ItemStack equipItemIfPossible(ItemStack stack) {
-        if(stack.getItem() == ModRegistry.QUIVER_ITEM.get() && this.supplementaries$quiver.isEmpty()){
+        if (stack.getItem() == ModRegistry.QUIVER_ITEM.get() && this.supplementaries$quiver.isEmpty()) {
             this.supplementaries$setQuiver(stack);
             this.supplementaries$quiverDropChance = 1;
             return stack;

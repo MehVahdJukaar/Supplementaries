@@ -119,7 +119,7 @@ public interface SlotReference {
         @Override
         public ItemStack get(LivingEntity player) {
             if (player instanceof Player p) {
-                return QuiverItem.getActiveQuiver(p);
+                return QuiverItem.findActiveQuiver(p);
             }
             return ItemStack.EMPTY;
         }
@@ -137,6 +137,7 @@ public interface SlotReference {
         m.register("inv", Inv.CODEC);
         m.register("empty", Empty.CODEC);
         m.register("eq_slot", EqSlot.CODEC);
+        m.register("quiver", Quiver.CODEC);
         return m;
     });
 

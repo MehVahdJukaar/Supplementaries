@@ -8,25 +8,29 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.item.ItemStack;
 
-public record SyncSkellyQuiverPacket(int entityID, boolean on) implements Message {
+public record SyncEquippedQuiverPacket(int entityID, ItemStack heldQuiver) implements Message {
 
-    public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncSkellyQuiverPacket> CODEC = Message.makeType(
-            Supplementaries.res("sync_skelly_quiver"), SyncSkellyQuiverPacket::new);
+    public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncEquippedQuiverPacket> CODEC = Message.makeType(
+            Supplementaries.res("sync_equipped_quiver"), SyncEquippedQuiverPacket::new);
 
-    public SyncSkellyQuiverPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readVarInt(), buf.readBoolean());
+    public SyncEquippedQuiverPacket(RegistryFriendlyByteBuf buf) {
+        this(buf.readVarInt(), ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
     }
 
-    public SyncSkellyQuiverPacket(AbstractSkeleton entity) {
-        this(entity.getId(), entity instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver());
+    public <A extends Entity & IQuiverEntity> SyncEquippedQuiverPacket(A entity) {
+        this(entity, entity);
     }
 
+    public SyncEquippedQuiverPacket(Entity entity, IQuiverEntity qe) {
+        this(entity.getId(), qe.supplementaries$getQuiver());
+    }
 
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(this.entityID);
-        buf.writeBoolean(this.on);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, heldQuiver);
     }
 
     @Override
@@ -36,7 +40,7 @@ public record SyncSkellyQuiverPacket(int entityID, boolean on) implements Messag
             //relay actual status to client
             Entity e = context.getPlayer().level().getEntity(entityID);
             if (e instanceof AbstractSkeleton q && e instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver()) {
-                NetworkHelper.sendToAllClientPlayersTrackingEntity(e, new SyncSkellyQuiverPacket(q));
+                NetworkHelper.sendToAllClientPlayersTrackingEntity(e, new SyncEquippedQuiverPacket(q, qe));
             }
         } else ClientReceivers.handleSyncQuiverPacket(this);
     }
