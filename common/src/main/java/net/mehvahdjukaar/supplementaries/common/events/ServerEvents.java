@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -19,6 +21,9 @@ import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
+import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -179,6 +184,17 @@ public class ServerEvents {
     @EventCalled
     public static void serverPlayerTick(Player player) {
         CandyItem.checkSweetTooth(player);
+
+        //refresh quiver for remote players
+        if (player instanceof IQuiverPlayer q) {
+            var oldSlot = q.supplementaries$getQuiverSlot();
+            SlotReference newSlot = QuiverItem.findActiveQuiverSlot(player);
+            if (!oldSlot.get(player).equals(newSlot.get(player))) {
+                q.supplementaries$setQuiverSlot(newSlot);
+                NetworkHelper.sendToAllClientPlayersTrackingEntity(player,
+                        new SyncEquippedQuiverPacket(player, q));
+            }
+        }
     }
 
     @EventCalled
@@ -218,8 +234,8 @@ public class ServerEvents {
         return false;
     }
 
-    private static boolean takeArrow(Entity itemEntity, Player player, ItemStack stack) {
-        ItemStack quiverItem = QuiverItem.getQuiver(player);
+    private static boolean takeArrow(Entity itemEntity, Player player, ItemStack toPickUp) {
+        ItemStack quiverItem = QuiverItem.findActiveQuiver(player);
         if (!quiverItem.isEmpty()) {
             var data = QuiverItem.getQuiverData(quiverItem);
             if (data != null) {

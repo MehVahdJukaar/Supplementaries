@@ -46,7 +46,7 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @NotNull
-    public static SlotReference getQuiverSlot(LivingEntity entity) {
+    public static SlotReference findActiveQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
             if (!curioQuiver.isEmpty()) return curioQuiver;
@@ -58,8 +58,8 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
-    public static ItemStack getQuiver(LivingEntity entity) {
-        return getQuiverSlot(entity).get();
+    public static ItemStack findActiveQuiver(LivingEntity entity) {
+        return findActiveQuiverSlot(entity).get();
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {

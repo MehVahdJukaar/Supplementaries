@@ -13,6 +13,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
+import net.mehvahdjukaar.supplementaries.client.CoreShaderContainer;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
@@ -52,6 +53,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
@@ -71,7 +73,6 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -85,9 +86,8 @@ public class ClientRegistry {
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
     public static final ResourceLocation VANILLA_DESATURATE = new ResourceLocation("shaders/post/desaturate.json");
     // core shaders
-    public static final AtomicReference<ShaderInstance> ENTITY_OFFSET_SHADER = new AtomicReference<>();
-    public static final AtomicReference<ShaderInstance> NOISE_SHADER = new AtomicReference<>();
-
+    public static final CoreShaderContainer ENTITY_OFFSET_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntityCutoutShader);
+    public static final CoreShaderContainer NOISE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
@@ -414,8 +414,8 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerShaders(ClientHelper.ShaderEvent event) {
-        event.register(Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY, NOISE_SHADER::set);
-        event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::set);
+        event.register(Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY, NOISE_SHADER::assign);
+        event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::assign);
     }
 
     @EventCalled

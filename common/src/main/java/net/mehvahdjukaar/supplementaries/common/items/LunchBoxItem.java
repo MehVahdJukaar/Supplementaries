@@ -194,12 +194,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
     }
 
     @NotNull
-    public static ItemStack getLunchBox(LivingEntity entity) {
-        return getLunchBoxSlot(entity).get();
+    public static ItemStack findActiveLunchBox(LivingEntity entity) {
+        return findActiveLunchBoxSlot(entity).get();
     }
 
     @NotNull
-    public static SlotReference getLunchBoxSlot(LivingEntity entity) {
+    public static SlotReference findActiveLunchBoxSlot(LivingEntity entity) {
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
     }
 

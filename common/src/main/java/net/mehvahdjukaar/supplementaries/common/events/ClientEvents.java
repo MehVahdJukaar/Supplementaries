@@ -13,9 +13,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
-import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -185,9 +184,9 @@ public class ClientEvents {
 
     //TODO: this isnt ideal. Improve
     public static void onEntityLoad(Entity entity, Level clientLevel) {
-        if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
+        if (entity instanceof AbstractSkeleton && entity instanceof IQuiverEntity q) {
             //ask server to send quiver data
-            ModNetwork.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
+            ModNetwork.CHANNEL.sendToServer(new SyncEquippedQuiverPacket(entity, q));
         }
         if (entity instanceof IPartyCreeper && entity instanceof Creeper c) {
             ModNetwork.CHANNEL.sendToServer(new SyncPartyCreeperPacket(c));
