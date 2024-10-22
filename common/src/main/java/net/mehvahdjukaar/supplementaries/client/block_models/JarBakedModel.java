@@ -5,9 +5,12 @@ import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadBuilder;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -16,7 +19,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
 
@@ -51,23 +56,27 @@ public class JarBakedModel implements CustomBakedModel {
     public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
         List<BakedQuad> quads = new ArrayList<>();
         if (!SINGLE_PASS && renderType == RenderType.translucent()) {
-            var fluid = data.get(ModBlockProperties.FLUID);
-            if (fluid != null && !fluid.isEmptyFluid()) {
-                float amount = data.get(ModBlockProperties.FILL_LEVEL);
+            ResourceKey<SoftFluid> fluidKey = data.get(ModBlockProperties.FLUID);
+            Level level = Minecraft.getInstance().level;
+            if (fluidKey != null && level != null) {
+                SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
+                if (fluid != null && fluid.isEmptyFluid()) {
+                    float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
-                TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
-                try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, quads::add)) {
-                    builder.setAutoDirection();
-                    builder.lightEmission(fluid.getEmissivity());
-                    builder.setTint(1);
-                    var poseStack = new PoseStack();
-                    poseStack.translate(0.5, yOffset, 0.5);
-                    VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
-                            height * amount,
-                            0, -1);
-                    //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
-                } catch (Exception e) {
-                    Supplementaries.error();
+                    TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
+                    try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, quads::add)) {
+                        builder.setAutoDirection();
+                        builder.lightEmission(fluid.getEmissivity());
+                        builder.setTint(1);
+                        var poseStack = new PoseStack();
+                        poseStack.translate(0.5, yOffset, 0.5);
+                        VertexUtil.addCube(builder, poseStack, 0.5f - width / 2f, 0, width,
+                                height * amount,
+                                0, -1);
+                        //VertexUtils.addQuad(builder, poseStack, 0,0,1,1,1,1);
+                    } catch (Exception e) {
+                        Supplementaries.error();
+                    }
                 }
             }
             if (!SINGLE_PASS) return quads;

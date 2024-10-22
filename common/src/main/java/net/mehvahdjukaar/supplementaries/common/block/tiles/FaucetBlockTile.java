@@ -20,6 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -51,7 +52,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.Fluid> TARGET_FLUID_INTERACTIONS = new ArrayList<>();
 
-    public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
     public static final int COOLDOWN_PER_BOTTLE = 20;
 
@@ -69,7 +70,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         if (level != null) {
             color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
         }
-        builder.with(FLUID, tempFluidHolder.getFluidValue());
+        builder.with(FLUID, tempFluidHolder.getFluid().getHolder().unwrapKey().get());
         builder.with(FLUID_COLOR, color);
     }
 

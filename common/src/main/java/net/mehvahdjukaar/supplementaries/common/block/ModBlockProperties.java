@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
@@ -91,7 +92,8 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
-    public static final ModelDataKey<SoftFluid> FLUID = new ModelDataKey<>(SoftFluid.class);
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = (ModelDataKey<ResourceKey<SoftFluid>>) new ModelDataKey(ResourceKey.class);
+
     public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
     public static final ModelDataKey<Float> FILL_LEVEL = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<BlackboardData> BLACKBOARD = new ModelDataKey<>(BlackboardData.class);
