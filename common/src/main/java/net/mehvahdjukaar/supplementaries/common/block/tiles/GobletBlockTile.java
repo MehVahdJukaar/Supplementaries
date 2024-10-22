@@ -15,6 +15,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     private UUID owner = null;
 
     public final SoftFluidTank fluidHolder;
-    public static final ModelDataKey<SoftFluid> FLUID_ID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID_ID = ModBlockProperties.FLUID;
 
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
@@ -40,7 +41,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
-        builder.with(FLUID_ID, getSoftFluidTank().getFluidValue());
+        builder.with(FLUID_ID, getSoftFluidTank().getFluid().getHolder().unwrapKey().get());
     }
 
     @Nullable

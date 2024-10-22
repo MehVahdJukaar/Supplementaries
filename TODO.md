@@ -15,11 +15,10 @@
 - rope not breaking when supporting each other
 - spring launcher super buggy
 - hide cannon circle when on edge
-- cannon blacklist tag
-- statue broken
 
 # Supplementaries
 
+-glowon particlestuff
 - slingshot projectile not targeting liquis
 - boom piles, hourglass and other empty hand interactable tagetingfirst hand slot first making it hard to use. ropes too
 - check all mobs pathfinding on blocs

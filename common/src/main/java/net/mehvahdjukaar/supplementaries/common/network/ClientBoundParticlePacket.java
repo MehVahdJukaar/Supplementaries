@@ -106,6 +106,7 @@ public class ClientBoundParticlePacket implements Message {
         DISPENSER_MINECART,
         FLINT_BLOCK_IGNITE,
         WAX_ON,
+        GLOW_ON,
         CONFETTI,
         CONFETTI_EXPLOSION,
         FEATHER,

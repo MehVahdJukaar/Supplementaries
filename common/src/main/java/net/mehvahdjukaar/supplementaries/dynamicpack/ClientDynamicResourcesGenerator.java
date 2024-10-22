@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeTextureGenerator;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -272,6 +273,11 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
         ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
+        if (MiscUtils.FESTIVITY.isAprilsFool()) {
+            lang.addEntry("block.suppsquared.metal_frame", "Galvanized Square Steel Frame");
+            lang.addEntry("block.suppsquared.metal_brace", "Galvanized Square Steel Brace");
+            lang.addEntry("block.suppsquared.metal_cross_brace", "Galvanized Square Steel Cross Brace");
+        }
 
     }
 

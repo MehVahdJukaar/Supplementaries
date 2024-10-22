@@ -7,26 +7,32 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.item.ItemStack;
 
-public class SyncSkellyQuiverPacket implements Message {
+public class SyncEquippedQuiverPacket implements Message {
     public final int entityID;
-    public final boolean on;
+    public final ItemStack quiver;
 
-    public SyncSkellyQuiverPacket(FriendlyByteBuf buf) {
+    public SyncEquippedQuiverPacket(FriendlyByteBuf buf) {
         this.entityID = buf.readVarInt();
-        this.on = buf.readBoolean();
+        this.quiver = buf.readItem();
     }
 
-    public SyncSkellyQuiverPacket(AbstractSkeleton entity) {
+    public <T extends Entity & IQuiverEntity> SyncEquippedQuiverPacket(T entity) {
         this.entityID = entity.getId();
-        this.on = ((IQuiverEntity) entity).supplementaries$hasQuiver();
+        this.quiver = entity.supplementaries$getQuiver();
+    }
+
+    public SyncEquippedQuiverPacket(Entity entity, IQuiverEntity quiverEntity) {
+        this.entityID = entity.getId();
+        this.quiver = quiverEntity.supplementaries$getQuiver();
     }
 
 
     @Override
     public void writeToBuffer(FriendlyByteBuf buf) {
         buf.writeVarInt(this.entityID);
-        buf.writeBoolean(this.on);
+        buf.writeItem(this.quiver);
     }
 
     @Override
@@ -35,8 +41,8 @@ public class SyncSkellyQuiverPacket implements Message {
         if (context.getDirection() == NetworkDir.PLAY_TO_SERVER) {
             //relay actual status to client
             Entity e = context.getSender().level().getEntity(entityID);
-            if (e instanceof AbstractSkeleton q && e instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver()) {
-                ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(e, new SyncSkellyQuiverPacket(q));
+            if (e instanceof AbstractSkeleton && e instanceof IQuiverEntity qe && qe.supplementaries$hasQuiver()) {
+                ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(e, new SyncEquippedQuiverPacket(e, qe));
             }
         } else ClientReceivers.handleSyncQuiverPacket(this);
     }
