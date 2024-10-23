@@ -83,6 +83,7 @@
 - sign post middle click 
 
 # Soon
+- QUiver for other players.check 1.20 too
 - wraped sign post + not rotating
 - fabric hat popper
 - bomb dont ignite gunpowder

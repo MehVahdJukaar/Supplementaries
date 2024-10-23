@@ -43,6 +43,7 @@
     "RedMerchantSpawnerMixin",
     "ServerGamePacketListenerMixin",
     "ServerLevelMixin",
+    "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
     "SkeletonMixin",
     "SkellyHorseMixin",

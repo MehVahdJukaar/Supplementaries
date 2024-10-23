@@ -66,7 +66,7 @@ public abstract class CompatSodiumFluidRendererMixin {
                 light.lm[j] = LightTexture.pack(bl, sl);
 
                 // no shading on emissive stuff!
-                //TODO: this cant be correct! without however stuff is shader when against blocks
+                //TODO: this cant be correct! without however stuff is modShader when against blocks
                 light.br[j] = 1.0F;
             }
         }

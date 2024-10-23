@@ -2,15 +2,7 @@ package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 public class SuppClientPlatformStuff {
 
@@ -21,7 +13,7 @@ public class SuppClientPlatformStuff {
     }
 
     @ExpectPlatform
-    public static boolean hasFixedAO(){
+    public static boolean hasFixedAO() {
         throw new AssertionError();
     }
 

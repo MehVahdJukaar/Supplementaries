@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.reg.fabric;
 
-import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.items.fabric.LumiseneBucketItem;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.material.Fluids;
 
 import static net.mehvahdjukaar.supplementaries.reg.ModFluids.LUMISENE_MAX_LAYERS;
 

@@ -26,6 +26,7 @@ public class CompatHandler {
     public static final boolean EMI = isLoaded("emi");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");
     public static final boolean GOATED = isLoaded("goated");
+    public static final boolean IRIS = isLoaded("goated") || isLoaded("oculus");
     public static final boolean IMMEDIATELY_FAST = isLoaded("immediatelyfast");
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d");

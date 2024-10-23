@@ -18,6 +18,8 @@ dependencies {
     //modImplementation("curse.maven:selene-common:499980:5651445")
     modImplementation("net.mehvahdjukaar:moonlight:${moonlight_version}")
 
+    modCompileOnly("curse.maven:irisshaders-455508:5726473")
+
 
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
