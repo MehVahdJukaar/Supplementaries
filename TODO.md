@@ -18,6 +18,7 @@
 
 # Supplementaries
 
+- flower box quad rotation
 -glowon particlestuff
 - slingshot projectile not targeting liquis
 - boom piles, hourglass and other empty hand interactable tagetingfirst hand slot first making it hard to use. ropes too
