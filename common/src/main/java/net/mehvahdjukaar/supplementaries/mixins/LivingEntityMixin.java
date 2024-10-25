@@ -4,9 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
-import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -14,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -54,12 +53,15 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
         int old = this.supp$getSlimedTicks();
         this.supp$slimedTicks = newSlimedTicks;
         if (sync && !this.level().isClientSide) {
-            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(this,
-                    new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
-            if (newSlimedTicks > old) {
-                //send packet
-                level().playSound(null, this.getX(), this.getY(), this.getZ(),
-                        ModSounds.SLIME_SPLAT.get(), this.getSoundSource(), 1, 1);
+            // players need manual syncing when player first connects
+            if (!(((Object) this) instanceof ServerPlayer p) || p.connection != null) {
+                NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(this,
+                        new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
+                if (newSlimedTicks > old) {
+                    //send packet
+                    level().playSound(null, this.getX(), this.getY(), this.getZ(),
+                            ModSounds.SLIME_SPLAT.get(), this.getSoundSource(), 1, 1);
+                }
             }
         }
     }
@@ -70,7 +72,8 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     @Shadow
     public abstract boolean isSuppressingSlidingDownLadder();
 
-    @Shadow public abstract @Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
+    @Shadow
+    public abstract @Nullable MobEffectInstance getEffect(Holder<MobEffect> effect);
 
     @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
     private float suppl$checkOverencumbered(float original) {
