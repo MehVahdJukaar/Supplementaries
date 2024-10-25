@@ -11,7 +11,7 @@ public class VibeCheckerImpl {
 
         if(PlatHelper.isModLoaded("woldedit")){
             throw new VibeChecker.BadModError("!!! WorldEdit is not supported! " +
-                    "This is due to a World Edit bug!! Please remove it to continue and dont report to Supplementaries. Nothing we can do here.");
+                    "This is due to a World Edit bug!! Please remove it to continue and dont report to Supplementaries unless a new world edit that fixed this is released. Nothing we can do here.");
         }
     }
 

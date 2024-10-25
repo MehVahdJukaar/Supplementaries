@@ -10,6 +10,8 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -108,6 +110,10 @@ public class ServerEvents {
 
     @EventCalled
     public static void onPlayerLoggedIn(ServerPlayer player) {
+        if (player instanceof ISlimeable s) {
+            //needs to happen here after connection
+            s.supp$setSlimedTicks(s.supp$getSlimedTicks(), true);
+        }
     }
 
     @EventCalled
