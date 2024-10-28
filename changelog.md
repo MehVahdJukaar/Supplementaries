@@ -1,18 +1,18 @@
 # New features:
-- cannon (can shoot anything)
+- cannon
 - cannonball
-- throwable slimeballs and slimed effect (from slimes)
-- buntings, placeable on ropes
-- awnings, can be used and tilted
-- sus gravel brick, land or jump to break
+- throwable slimeballs and slimed effect
+- buntings
+- awnings
+- sus gravel brick
 - sus stuff recipes
-- lumisene, very flammable
-- slidy block, it slides. try it on soap and ice
+- lumisene
+- slidy block
 - confetti and party creeper
-- lunch boxes. click to switch mode
+- lunch boxes
 - dispensers can empty bundles, quivers and lunch boxes
-- probably other stuff I forgot
 - wall sign posts
+- shader effect from piglin heads
 - added /supplementaries registry command, lists all the content of a registry
 
 # Improvements

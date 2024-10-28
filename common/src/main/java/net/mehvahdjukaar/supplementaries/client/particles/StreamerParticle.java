@@ -18,7 +18,7 @@ public class StreamerParticle extends DirectionOrientedBillboardParticle {
 
     private static PerlinSimplexNoise noise(int seed) {
         return new PerlinSimplexNoise(new LegacyRandomSource(seed),
-                List.of(-4 - 3, -2, -1, 0, 1, 2));
+                List.of(- 7, -2, -1, 0, 1, 2));
     }
 
     private final int particleRandom;
