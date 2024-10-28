@@ -5,8 +5,6 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -21,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
+import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -191,7 +190,7 @@ public class ServerEvents {
             SlotReference newSlot = QuiverItem.findActiveQuiverSlot(player);
             if (!oldSlot.get(player).equals(newSlot.get(player))) {
                 q.supplementaries$setQuiverSlot(newSlot);
-                NetworkHelper.sendToAllClientPlayersTrackingEntity(player,
+                ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(player,
                         new SyncEquippedQuiverPacket(player, q));
             }
         }
@@ -234,7 +233,8 @@ public class ServerEvents {
         return false;
     }
 
-    private static boolean takeArrow(Entity itemEntity, Player player, ItemStack toPickUp) {
+    //TODO: check
+    private static boolean takeArrow(Entity itemEntity, Player player, ItemStack stack) {
         ItemStack quiverItem = QuiverItem.findActiveQuiver(player);
         if (!quiverItem.isEmpty()) {
             var data = QuiverItem.getQuiverData(quiverItem);

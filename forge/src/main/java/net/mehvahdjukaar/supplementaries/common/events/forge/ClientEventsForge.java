@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -73,20 +74,21 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
         int action = event.getAction();
-        if (Minecraft.getInstance().screen == null &&
+        Minecraft mc = Minecraft.getInstance();
+        var player = mc.player;
+        if (mc.screen == null &&
                 ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
-                && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
+                && player instanceof IQuiverPlayer qe) {
             if (action == InputConstants.REPEAT || action == InputConstants.PRESS) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), player);
             } else if (action == InputConstants.RELEASE) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY);
+                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY, player);
             }
         }
 
         if (CannonController.isActive() && action == GLFW.GLFW_PRESS) {
             int key = event.getKey();
             int scanCode = event.getScanCode();
-            Minecraft mc = Minecraft.getInstance();
             if (mc.options.keyJump.matches(key, scanCode)) {
                 CannonController.onKeyJump();
             }

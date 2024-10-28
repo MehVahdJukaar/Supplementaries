@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -130,8 +132,7 @@ public class SuppPlatformStuffImpl {
             for (int i = 0; i < cap.getSlots(); i++) {
                 ItemStack quiver = cap.getStackInSlot(i);
                 if (predicate.test(quiver)) {
-                    int finalI = i;
-                    return () -> cap.getStackInSlot(finalI);
+                    return new CapSlotReference(i);
                 }
             }
         }
@@ -174,5 +175,29 @@ public class SuppPlatformStuffImpl {
         dc.emptyContents(player, level, hit.getBlockPos(), hit, stack);
     }
 
+    public record CapSlotReference(int slot) implements SlotReference {
+
+        public static final Codec<CapSlotReference> CODEC = Codec.INT
+                .xmap(CapSlotReference::new, CapSlotReference::slot);
+
+
+        @Override
+        public ItemStack get(LivingEntity player) {
+            var cap = player.getCapability(ForgeCapabilities.ITEM_HANDLER);
+            if (cap.isPresent()) {
+                return cap.orElse(null).getStackInSlot(slot);
+            }
+            return null;
+        }
+
+        @Override
+        public Codec<? extends SlotReference> getCodec() {
+            return CODEC;
+        }
+    }
+
+    static {
+        SlotReference.REGISTRY.register("cap_slot", CapSlotReference.CODEC);
+    }
 
 }

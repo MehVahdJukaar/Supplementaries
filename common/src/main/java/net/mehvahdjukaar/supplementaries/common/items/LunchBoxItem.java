@@ -182,10 +182,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return getLunchBoxData(stack);
     }
 
-    @Override
-    public @NotNull ItemStack getFirstInInventory(Player player) {
-        return getLunchBox(player);
-    }
 
     @NotNull
     @ExpectPlatform
@@ -195,7 +191,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @NotNull
     public static ItemStack findActiveLunchBox(LivingEntity entity) {
-        return findActiveLunchBoxSlot(entity).get();
+        return findActiveLunchBoxSlot(entity).get(entity);
     }
 
     @NotNull
