@@ -165,7 +165,7 @@ public class ClientEvents {
         map.put(Items.WITHER_SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
         map.put(Items.ZOMBIE_HEAD, "minecraft:shaders/post/desaturate.json");
         map.put(Items.DRAGON_HEAD, ClientRegistry.FLARE_SHADER.toString());
-        map.put(Items.PIGLIN_HEAD, ClientRegistry.GL.toString());
+        map.put(Items.PIGLIN_HEAD, ClientRegistry.GLITTER_SHADER.toString());
         map.put(ModRegistry.CAGE_ITEM.get(), ClientRegistry.RAGE_SHADER.toString());
         map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
 
