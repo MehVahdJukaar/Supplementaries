@@ -83,6 +83,9 @@
 - sign post middle click 
 
 # Soon
+
+- way signs not working
+- zobie zkeleton head shader not wroking
 - QUiver for other players.check 1.20 too
 - wraped sign post + not rotating
 - fabric hat popper
