@@ -28,7 +28,7 @@ public abstract class GameRendererMixin {
         }else if(entity instanceof AbstractSkeleton){
             this.loadEffect(ClientRegistry.BLACK_AND_WHITE_SHADER);
         }else if(entity instanceof Zombie){
-            this.loadEffect(ClientRegistry.VANILLA_DESATURATE);
+            this.loadEffect(ClientRegistry.VANILLA_DESATURATE_SHADER);
         }else if(entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL){
             this.loadEffect(ClientRegistry.RAGE_SHADER);
         }else if(entity instanceof Piglin){
