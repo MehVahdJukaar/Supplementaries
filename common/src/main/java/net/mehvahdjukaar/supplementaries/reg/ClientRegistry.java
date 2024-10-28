@@ -55,7 +55,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
@@ -84,7 +83,8 @@ public class ClientRegistry {
     public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
-    public static final ResourceLocation VANILLA_DESATURATE = new ResourceLocation("shaders/post/desaturate.json");
+    public static final ResourceLocation VANILLA_DESATURATE_SHADER = new ResourceLocation("shaders/post/desaturate.json");
+    public static final ResourceLocation GLITTER_SHADE = new ResourceLocation("shaders/post/desaturate.json");
     // core shaders
     public static final CoreShaderContainer ENTITY_OFFSET_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntityCutoutShader);
     public static final CoreShaderContainer NOISE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
