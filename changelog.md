@@ -83,6 +83,8 @@
 - playing flute and using bubble blower will emit sculk vibrations
 - placing sign post will emit sculk vibrations. So will tipped spikes
 - using lock blocks and hourglass will also emit sculk vibrations
+- drawing on a blackboard will also emit vibrations
+- same for presents
 - Fixed some containers causing issues in spectator
 - Playing a flute will make parrots dance (in cages and on shoulder too)
 - thrown bricks and bombs renderer is how centered on their hitbox

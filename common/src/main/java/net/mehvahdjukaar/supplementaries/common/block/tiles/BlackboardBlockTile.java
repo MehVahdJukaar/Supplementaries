@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
@@ -290,16 +291,19 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (this.isEditingPlayer(player)) {
-            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
-                    SoundSource.BLOCKS, 1, 1);
-            this.setPixels(pixels);
-            this.setPlayerWhoMayEdit(null);
-            return true;
-        } else {
+        if (!this.isEditingPlayer(player)) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }
+        if (!Arrays.deepEquals(pixels, this.pixels)) {
+            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
+                    SoundSource.BLOCKS, 1, 1);
+
+            this.setPlayerWhoMayEdit(null);
+            this.setPixels(pixels);
+            return true;
+        }
         return false;
+
     }
 }

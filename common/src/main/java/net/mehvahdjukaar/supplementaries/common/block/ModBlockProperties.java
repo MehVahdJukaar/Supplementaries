@@ -26,6 +26,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -195,12 +196,13 @@ public class ModBlockProperties {
             return this.name;
         }
 
+        @NotNull
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
-            if (holder == null) return null;
+            if (holder == null) return  Pair.of(NONE, null);
             SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
-            if (cat.isEmpty() || cat.getAmount() != 1) return null;
+            if (cat.isEmpty() || cat.getAmount() != 1) return Pair.of(NONE, null);
             Topping t = fromFluid(s);
             if (t != NONE) {
                 return Pair.of(t, cat.getEmptyContainer());

@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ServerBoundSetBlackboardPacket implements Message {
     private final BlockPos pos;
@@ -44,6 +45,7 @@ public class ServerBoundSetBlackboardPacket implements Message {
                     //updates client
                     //set changed also sends a block update
                     board.setChanged();
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
             }
         }

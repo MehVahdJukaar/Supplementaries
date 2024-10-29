@@ -2,7 +2,6 @@
 - dont spawn fire with gunpoweder when fire tck is off
 - lumisene when fire tick is off
 - way sign tag broken
-- globe shear server
 - can keep on shearing it
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
@@ -22,14 +21,11 @@
 - slingshot projectile not targeting liquis
 - boom piles, hourglass and other empty hand interactable tagetingfirst hand slot first making it hard to use. ropes too
 - check all mobs pathfinding on blocs
-- statue pick block
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
 - test config saving
 - lumisene on fire cauldron
 - lumisene burns in nether
-- present open sculk
-- blackboard draw sculk
 - rope pull down candle holders and lanterns
 - fire charge speed up when fired from present
 - lumisene cauldron with particles
@@ -38,12 +34,10 @@
 - hat stand wobble not synced
 - check particle collision with blocks
 - bunding pulled up by ropes voided
-- planter root  only happen with 2x2
 - slingshot proj not interacting with entities
 - ash bonemeal
 - pulley piston
 - fix stasis on fabric
-- dispenser brick use same texture
 - quiver not rendering in curio
 - pulley flint
 (Quill Maps) another bug I found is that when u use the item in your off-hand, the generated map will duplicate and replace any item in the 1st hotbar slot
@@ -61,14 +55,11 @@
 - soap signs & finish notice board dye (add dye interface)
 - spring launcher broken on servers
 - create moving dynamic blocks like rope knot
-- emi world interaction (ash)
-- wrench rotation overlay
 - ash makes mobs jump
 - clicking on cage with lead will put the leashed animal inside
 - more flywheel stuff
 - Fix doormat highlight text box
 - brush remove 1 layer ash or snow
-- brush works on blackboards
 
 # Amendments
 

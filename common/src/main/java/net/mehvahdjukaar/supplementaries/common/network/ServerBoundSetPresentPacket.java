@@ -8,6 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Objects;
 
@@ -51,8 +52,8 @@ public class ServerBoundSetPresentPacket implements Message {
 
             if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof PresentBlockTile present) {
                 //TODO: sound here
-//TODO: check if 2 players cant edit at once of it it needs OnePlyaerInteractable
-                present.updateState(this.packed, this.recipient, this.sender, this.description);
+                //TODO: check if 2 players cant edit at once of it it needs OnePlyaerInteractable
+                present.updateState(this.packed, this.recipient, this.sender, this.description, player);
 
                 BlockState state = level.getBlockState(pos);
                 present.setChanged();
