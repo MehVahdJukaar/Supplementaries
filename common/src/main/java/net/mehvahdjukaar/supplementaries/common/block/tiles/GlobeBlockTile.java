@@ -107,6 +107,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         }
         this.yaw = tag.getFloat("Yaw");
         this.sheared = tag.getBoolean("Sheared");
+        if (level != null && level.isClientSide) {
+            this.updateRenderData();
+        }
     }
 
     @Override

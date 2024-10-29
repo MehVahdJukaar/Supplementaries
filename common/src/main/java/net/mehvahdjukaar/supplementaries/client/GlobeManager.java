@@ -98,7 +98,7 @@ public class GlobeManager {
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
             if (sepia) return SEPIA_COLORS.getInt(b);
             IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(ResourceLocation.withDefaultNamespace("overworld")));
-            if(l != null){
+            if (l != null) {
                return l.getInt(b);
             }
             return 1;
@@ -119,7 +119,7 @@ public class GlobeManager {
                 r -> r.getPath().endsWith(".png")).keySet()) {
             var l = SpriteUtils.parsePaletteStrip(manager, res, targetColors);
             String name = res.getPath();
-            name = name.substring(name.lastIndexOf("/")+1).replace(".png","");
+            name = name.substring(name.lastIndexOf("/") + 1).replace(".png", "");
             if (name.equals("sepia")) {
                 SEPIA_COLORS.clear();
                 SEPIA_COLORS.addAll(l);
@@ -127,7 +127,7 @@ public class GlobeManager {
                 DIMENSION_COLOR_MAP.put(ResourceLocation.tryParse(name.replace(".", ":")), new IntArrayList(l));
             }
         }
-        if(DIMENSION_COLOR_MAP.isEmpty()){
+        if (DIMENSION_COLOR_MAP.isEmpty()) {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
@@ -164,7 +164,6 @@ public class GlobeManager {
     private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
     public static final List<ResourceLocation> TEXTURES = new ArrayList<>();
 
-
     public static void recomputeCache() {
         NAME_CACHE.clear();
         for (Type type : Type.values()) {
@@ -190,7 +189,7 @@ public class GlobeManager {
         }
         TEXTURES.clear();
         NAME_CACHE.values().forEach(o -> {
-            if(!TEXTURES.contains(o.getSecond())) TEXTURES.add(o.getSecond());
+            if (!TEXTURES.contains(o.getSecond())) TEXTURES.add(o.getSecond());
         });
         Collections.sort(TEXTURES);
         MODEL_ID_MAP.clear();

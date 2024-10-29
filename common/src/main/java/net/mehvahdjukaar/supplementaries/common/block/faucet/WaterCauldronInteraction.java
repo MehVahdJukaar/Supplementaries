@@ -32,7 +32,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.CAULDRON)) {
-            if (offer.fluid().is(BuiltInSoftFluids.WATER.get())) {
+            if (offer.fluid().is(BuiltInSoftFluids.WATER)) {
                 int minAmount = offer.minAmount();
                 int am = Math.min(minAmount, 3);
                 level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState()
@@ -42,7 +42,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
         }
         if (state.is(Blocks.WATER_CAULDRON)) {
             SoftFluidStack fluid = offer.fluid();
-            if (fluid.is(BuiltInSoftFluids.WATER.get()) &&
+            if (fluid.is(BuiltInSoftFluids.WATER) &&
                     state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
                 int amount = fluid.getCount();
 

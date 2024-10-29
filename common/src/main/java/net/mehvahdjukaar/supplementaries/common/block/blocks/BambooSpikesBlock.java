@@ -88,8 +88,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
-            var fakePlayer =  FakePlayerManager.get(SPIKE_PLAYER, level);
-            if(fakePlayer instanceof ServerPlayer sp) {
+            var fakePlayer = FakePlayerManager.get(SPIKE_PLAYER, level);
+            if (fakePlayer instanceof ServerPlayer sp) {
                 sp.getAdvancements().stopListening();
                 sp.setGameMode(GameType.SPECTATOR);
             }
