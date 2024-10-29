@@ -32,7 +32,7 @@ public class JarBakedModel implements CustomBakedModel {
     private static final boolean SINGLE_PASS = true;//  PlatHelper.getPlatform().isFabric();
 
     //hacky
-    private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8/16f, 12/16f, 1/16f);
+    private static final Vector3f LAST_KNOWN_DIMENSIONS = new Vector3f(8 / 16f, 12 / 16f, 1 / 16f);
 
     private final BakedModel jar;
     private final float width;
@@ -59,7 +59,7 @@ public class JarBakedModel implements CustomBakedModel {
             Level level = Minecraft.getInstance().level;
             if (key != null && level != null) {
                 var fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(key);
-                if(fluid != null && !fluid.isEmptyFluid()) {
+                if (fluid != null) {
                     float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
@@ -78,7 +78,7 @@ public class JarBakedModel implements CustomBakedModel {
             }
             if (!SINGLE_PASS) return quads;
         }
-        if(renderType == RenderType.cutout()) {
+        if (renderType == RenderType.cutout()) {
             quads.addAll(jar.getQuads(state, side, rand));
         }
         return quads;

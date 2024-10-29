@@ -90,8 +90,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
-            var fakePlayer =  FakePlayerManager.get(SPIKE_PLAYER, level);
-            if(fakePlayer instanceof ServerPlayer sp) {
+            var fakePlayer = FakePlayerManager.get(SPIKE_PLAYER, level);
+            if (fakePlayer instanceof ServerPlayer sp) {
                 sp.getAdvancements().stopListening();
                 sp.setGameMode(GameType.SPECTATOR);
             }
@@ -252,7 +252,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is( BuiltInSoftFluids.POTION.get()) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
+        if (fluid.is(BuiltInSoftFluids.POTION) && fluid.hasTag() && fluid.getTag().getString("PotionType").equals("Lingering")) {
             return tryAddingPotion(state, world, pos, PotionUtils.getPotion(fluid.getTag()), null);
         }
         return false;

@@ -106,7 +106,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         this.yaw = compound.getFloat("Yaw");
         this.sheared = compound.getBoolean("Sheared");
         super.load(compound);
-
+        if(level != null && level.isClientSide){
+            this.updateRenderData();
+        }
     }
 
     @Override

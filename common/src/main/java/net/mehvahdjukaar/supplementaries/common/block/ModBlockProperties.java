@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
@@ -197,7 +198,7 @@ public class ModBlockProperties {
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
             if (holder == null) return null;
-            SoftFluid s = holder.getFirst().fluid();
+            SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
             if (cat.isEmpty() || cat.getAmount() != 1) return null;
             Topping t = fromFluid(s);
@@ -207,12 +208,12 @@ public class ModBlockProperties {
             return Pair.of(NONE, null);
         }
 
-        public static Topping fromFluid(SoftFluid s) {
-            if (s.isEmptyFluid()) return NONE;
-            if (s == BuiltInSoftFluids.HONEY.value()) {
+        public static Topping fromFluid(SoftFluidStack stack) {
+            if (stack.isEmpty()) return NONE;
+            if (stack.is(BuiltInSoftFluids.HONEY)) {
                 return HONEY;
             }
-            String name = Utils.getID(s).getPath();
+            String name = stack.fluidKey().location().getPath();
             if (name.contains("jam")) {
                 return JAM;
             }

@@ -99,7 +99,7 @@ public class GlobeManager {
     public static int getColorForPalette(byte b, ResourceLocation dimension, boolean sepia) {
         if (sepia) return SEPIA_COLORS.getInt(b);
         IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(new ResourceLocation("overworld")));
-        if(l != null){
+        if (l != null) {
             return l.getInt(b);
         }
         return 1;
@@ -118,7 +118,7 @@ public class GlobeManager {
                 r -> r.getPath().endsWith(".png")).keySet()) {
             var l = SpriteUtils.parsePaletteStrip(manager, res, targetColors);
             String name = res.getPath();
-            name = name.substring(name.lastIndexOf("/")+1).replace(".png","");
+            name = name.substring(name.lastIndexOf("/") + 1).replace(".png", "");
             if (name.equals("sepia")) {
                 SEPIA_COLORS.clear();
                 SEPIA_COLORS.addAll(l);
@@ -126,7 +126,7 @@ public class GlobeManager {
                 DIMENSION_COLOR_MAP.put(new ResourceLocation(name.replace(".", ":")), new IntArrayList(l));
             }
         }
-        if(DIMENSION_COLOR_MAP.isEmpty()){
+        if (DIMENSION_COLOR_MAP.isEmpty()) {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
@@ -153,7 +153,7 @@ public class GlobeManager {
         public final ResourceLocation texture;
 
         private static final Map<String, Pair<Model, ResourceLocation>> nameCache = new HashMap<>();
-        private static final Map<String,Integer> idMap = new HashMap<>();
+        private static final Map<String, Integer> idMap = new HashMap<>();
         public static final List<ResourceLocation> textures = new ArrayList<>();
 
         public static void recomputeCache() {
@@ -181,7 +181,7 @@ public class GlobeManager {
             }
             textures.clear();
             nameCache.values().forEach(o -> {
-                if(!textures.contains(o.getSecond())) textures.add(o.getSecond());
+                if (!textures.contains(o.getSecond())) textures.add(o.getSecond());
             });
             Collections.sort(textures);
             idMap.clear();

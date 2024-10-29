@@ -45,12 +45,13 @@ public class GobletBakedModel implements CustomBakedModel {
             Level level = Minecraft.getInstance().level;
             if (fluidKey != null && level != null) {
                 SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
-                if (fluid != null && fluid.isEmptyFluid()) {
+                if (fluid != null) {
                     List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
                     if (!liquidQuads.isEmpty()) {
                         TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();
                         BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
                                 .applyingSprite(sprite)
+                                .applyingAmbientOcclusion(false)
                                 .applyingEmissivity(fluid.getEmissivity());
                         quads.addAll(transformer.transformAll(liquidQuads));
                     }

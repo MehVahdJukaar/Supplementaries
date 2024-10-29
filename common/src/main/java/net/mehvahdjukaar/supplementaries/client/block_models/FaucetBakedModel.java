@@ -45,7 +45,7 @@ public class FaucetBakedModel implements CustomBakedModel {
             Level level = Minecraft.getInstance().level;
             if (fluidKey != null && level != null) {
                 SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
-                if(fluid != null && fluid.isEmptyFluid()) {
+                if(fluid != null) {
                     List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
                     if (!liquidQuads.isEmpty()) {
                         int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
@@ -54,6 +54,7 @@ public class FaucetBakedModel implements CustomBakedModel {
 
                         BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
                                 .applyingSprite(sprite)
+                                .applyingAmbientOcclusion(false)
                                 .applyingColor(i -> {
                                     if (i == 1 || i == 2) return col2;
                                     return color;

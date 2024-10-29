@@ -14,8 +14,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -124,13 +124,26 @@ public class ClientEvents {
     private static String currentlyAppliedMobShader = null;
 
     private static void applyMobHeadShaders(Player p, Minecraft mc) {
-        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get() && !p.isSpectator()) {
+        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
             String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
+
+            if (p.isSpectator()) {
+                if (current != null && currentlyAppliedMobShader != null) {
+                    renderer.shutdownEffect();
+                    currentlyAppliedMobShader = null;
+                }
+                return;
+            }
+
             if (current == null && currentlyAppliedMobShader != null) {
                 currentlyAppliedMobShader = null; //clear when something else unsets it
                 return;
+            }
+            // for some reason this weird edge cases happens when swithing gamemode
+            if (current != null && currentlyAppliedMobShader != null && !renderer.effectActive) {
+                renderer.togglePostEffect();
             }
 
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);

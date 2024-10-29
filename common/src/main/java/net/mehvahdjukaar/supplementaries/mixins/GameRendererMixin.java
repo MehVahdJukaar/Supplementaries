@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.piglin.Piglin;
@@ -33,6 +34,8 @@ public abstract class GameRendererMixin {
             this.loadEffect(ClientRegistry.RAGE_SHADER);
         }else if(entity instanceof Piglin){
             this.loadEffect(ClientRegistry.GLITTER_SHADER);
+        }else if(entity instanceof WitherBoss){
+            this.loadEffect(ClientRegistry.BLACK_AND_WHITE_SHADER);
         }
     }
 }

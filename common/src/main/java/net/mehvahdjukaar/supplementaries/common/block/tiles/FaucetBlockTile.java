@@ -65,12 +65,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
-        int color = -1;
-        if (level != null) {
-            color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
+        if (level != null && !tempFluidHolder.isEmpty()) {
+            int color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
+            builder.with(FLUID, tempFluidHolder.getFluid().fluidKey());
+            builder.with(FLUID_COLOR, color);
         }
-        builder.with(FLUID, tempFluidHolder.getFluid().getHolder().unwrapKey().get());
-        builder.with(FLUID_COLOR, color);
     }
 
     public void updateLight() {
@@ -96,7 +95,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
     }
 
-    //------fluids------
+//------fluids------
 
     //returns true if it has water animation
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
@@ -197,7 +196,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return null;
     }
 
-    //------end-fluids------
+//------end-fluids------
 
     public boolean isOpen() {
         return (this.getBlockState().getValue(BlockStateProperties.POWERED) ^ this.getBlockState().getValue(BlockStateProperties.ENABLED));
@@ -211,7 +210,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return this.getBlockState().getValue(FaucetBlock.CONNECTED);
     }
 
-    //------items------
+//------items------
 
     private void drop(ItemStack extracted) {
         BlockPos pos = worldPosition;

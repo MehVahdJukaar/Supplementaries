@@ -7,6 +7,8 @@ accessible method net/minecraft/world/entity/decoration/HangingEntity setDirecti
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/level/levelgen/structure/placement/ConcentricRingsStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
+accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
+
 #bundle
 accessible method net/minecraft/world/item/BundleItem removeOne (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
 accessible method net/minecraft/world/item/BundleItem add (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)I
