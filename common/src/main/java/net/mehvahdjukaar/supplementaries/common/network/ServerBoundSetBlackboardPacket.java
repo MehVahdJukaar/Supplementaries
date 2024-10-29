@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ServerBoundSetBlackboardPacket implements Message {
 
@@ -50,6 +51,7 @@ public class ServerBoundSetBlackboardPacket implements Message {
                     //updates client
                     //set changed also sends a block update
                     board.setChanged();
+                    level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 }
             }
         }

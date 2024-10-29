@@ -196,17 +196,16 @@ public class ModBlockProperties {
             return this.name;
         }
 
+        @NotNull
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
-            if (holder != null) {
-                SoftFluidStack s = holder.getFirst();
-                var cat = holder.getSecond();
-                if (cat.getAmount() > 0) {
-                    Topping t = fromFluid(s);
-                    if (t != NONE) {
-                        return Pair.of(t, cat.getEmptyContainer());
-                    }
-                }
+            if (holder == null) return  Pair.of(NONE, null);
+            SoftFluidStack s = holder.getFirst();
+            var cat = holder.getSecond();
+            if (cat.isEmpty() || cat.getAmount() != 1) return Pair.of(NONE, null);
+            Topping t = fromFluid(s);
+            if (t != NONE) {
+                return Pair.of(t, cat.getEmptyContainer());
             }
             return Pair.of(NONE, null);
         }

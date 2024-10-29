@@ -72,7 +72,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         this.setRecipient(PUBLIC_KEY);
     }
 
-    public void updateState(boolean shouldPack, String newRecipient, String sender, String description) {
+    public void updateState(boolean shouldPack, String newRecipient, String sender, String description, Player playerWhoChanged) {
         if (shouldPack) {
             if (newRecipient.isEmpty()) newRecipient = PUBLIC_KEY;
             this.recipient = newRecipient;
@@ -95,6 +95,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }
+            level.gameEvent(playerWhoChanged, GameEvent.BLOCK_CHANGE, worldPosition);
             this.level.setBlock(this.getBlockPos(),
                     this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
         }

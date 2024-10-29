@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
@@ -30,6 +32,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 
 public class DispenserBehaviorsManager {
 
@@ -55,7 +58,6 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Redstone.DISPENSER_MINECART_ENABLED.get()) {
             event.register(ModRegistry.DISPENSER_MINECART_ITEM.get(), DispenserMinecartItem.DISPENSE_ITEM_BEHAVIOR);
         }
-        //TODO: shulker shell
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
             DispenseItemBehavior armorBehavior = new OptionalDispenseItemBehavior() {
                 @Override
@@ -142,6 +144,7 @@ public class DispenserBehaviorsManager {
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
         boolean pancake = CommonConfigs.isEnabled(ModConstants.PANCAKE_NAME);
 
+
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {
                 try {
@@ -159,6 +162,7 @@ public class DispenserBehaviorsManager {
                         event.register(new KeyBehavior(i));
                     }
                 } catch (Exception e) {
+                    Supplementaries.error();
                     Supplementaries.LOGGER.warn("Error white registering dispenser behavior for item {}: {}", i, e);
                 }
             }
