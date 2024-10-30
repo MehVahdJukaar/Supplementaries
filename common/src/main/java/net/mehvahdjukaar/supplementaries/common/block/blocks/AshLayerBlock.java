@@ -3,22 +3,31 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.common.block.ISimpleBrushable;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingAshEntity;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.particle.AshParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.BrushItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -39,6 +48,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -46,18 +56,53 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class AshLayerBlock extends FallingBlock {
+public class AshLayerBlock extends FallingBlock implements ISimpleBrushable {
     private static final int MAX_LAYERS = 8;
     public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS + 1];
 
     static {
-        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D, l * 2d, 16.0D));
+        Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(0.0D, 0.0D, 0.0D, 16.0D,
+                Math.max(0.5, l * 2d), 16.0D));
     }
 
     public AshLayerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 1));
+    }
+
+    @Override
+    public boolean brush(BlockState state, BlockPos pos, Level level, ItemStack stack, Player livingEntity,
+                         HumanoidArm arm, BlockHitResult hit, Vec3 particlesDir) {
+        int layers = state.getValue(LAYERS);
+        if (layers > 1) {
+            level.setBlockAndUpdate(pos, state.setValue(LAYERS, layers - 1));
+        } else {
+            level.removeBlock(pos, false);
+        }
+
+        //same as brush but dif sound and partiles
+        spawnBrushParticles(level, hit, ModParticles.ASH_PARTICLE.get(), particlesDir, arm);
+        level.playSound(livingEntity, pos, SoundEvents.BRUSH_SAND, SoundSource.BLOCKS);
+
+        return true;
+    }
+
+    private void spawnBrushParticles(Level level, BlockHitResult hitResult, ParticleOptions particles,
+                                     Vec3 del, HumanoidArm arm) {
+        int i = arm == HumanoidArm.RIGHT ? 1 : -1;
+        int j = level.getRandom().nextInt(12, 16);
+        Direction direction = hitResult.getDirection();
+        Vec3 pos = hitResult.getLocation();
+
+        del = del.scale(0.1f);
+        for(int k = 0; k < j; ++k) {
+            level.addParticle(particles, pos.x - (double)(direction == Direction.WEST ? 1.0E-6F : 0.0F),
+                    pos.y, pos.z - (double)(direction == Direction.NORTH ? 1.0E-6F : 0.0F),
+                    del.x() * (double)i * 3.0 * level.getRandom().nextDouble(),
+                    0.0, del.z() * (double)i * 3.0 * level.getRandom().nextDouble());
+        }
+
     }
 
     @Override
@@ -71,6 +116,8 @@ public class AshLayerBlock extends FallingBlock {
             }
         }
     }
+
+
 
     @Override
     public int getDustColor(BlockState state, BlockGetter reader, BlockPos pos) {

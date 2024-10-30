@@ -11,6 +11,7 @@
     "AbstractSkeletonMixin",
     "BannerPatternItemMixin",
     "BowMixin",
+    "BrushItemMixin",
     "CampfireBlockMixin",
     "CartographyTableInputSlotMixin",
     "CartographyTableMixin",

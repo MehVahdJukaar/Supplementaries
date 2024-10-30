@@ -1,0 +1,14 @@
+{
+  "type": "supplementaries:replace_rope",
+  "conditions": [
+    {
+      "condition": "moonlight:iconditions",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ]
+    }
+  ]
+}

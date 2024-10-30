@@ -1,7 +1,6 @@
 # Soon
 - dont spawn fire with gunpoweder when fire tck is off
 - lumisene when fire tick is off
-- way sign tag broken
 - can keep on shearing it
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
@@ -12,7 +11,6 @@
 - safe recipe jei
 - rope not breaking when supporting each other
 - spring launcher super buggy
-- hide cannon circle when on edge
 
 # Supplementaries
 

@@ -1,9 +1,7 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.jodah.typetools.TypeResolver;
-import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
@@ -13,26 +11,22 @@ import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import vectorwing.farmersdelight.FarmersDelight;
+
+import java.util.function.Supplier;
 
 /**
  * Author: MehVahdJukaar
@@ -54,6 +48,8 @@ public class SupplementariesForge {
             ClientRegistry.init();
             ClientEventsForge.init();
         });
+
+        LOOT_MODIFIERS.register(bus);
     }
 
 
@@ -85,6 +81,12 @@ public class SupplementariesForge {
 
     public static final ToolAction SOAP_CLEAN = ToolAction.get("soap_clean");
 
+
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
+            ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Supplementaries.MOD_ID);
+
+    public static final Supplier<Codec<ReplaceRopeByConfigModifier>> REPLACE_ROPE =
+            LOOT_MODIFIERS.register("replace_rope", ReplaceRopeByConfigModifier.CODEC);
 
 
 }
