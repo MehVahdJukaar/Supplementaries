@@ -373,7 +373,11 @@ public class ClientRegistry {
         @Override
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            if (p != null) p.setColor(108 / 255f, 103 / 255f, 103 / 255f);
+            if (p != null) {
+                float yellow = pLevel.random.nextFloat() * 0.05f;
+                p.setColor(108 / 255f
+                        + yellow, 103 / 255f + yellow, 103 / 255f);
+            }
             return p;
         }
     }

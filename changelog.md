@@ -36,11 +36,15 @@
 - sprinting on flint blocks with iron boots will cause sparks
 - you can now wash the upper and lower part of a sign post independently
 - Ash can no longer spawn from non solid blocks
+- you can now brush ash layers... for some reason
+- ash particles have some color variation
+- you can brush clean blackboards...
 - you can now have a 2 faced clock block
 - changed many sounds to have their own sound event with their own subtitles
 - changed slingshot particle to be smoother
 - wind vanes and cannons now use a flywheel model (when flywheel is on)
 - tipped spikes model dont have shading anymore
+- added a config that allow replacing rope loot tables from the #ropes tag
 - Added /supplementaries dimension command, allows to teleport to dimensions
 - timber braces textures are now flipped on positive axis
 - projectile weapons can now show their arrow as preview

@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.ISimpleBrushable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -20,8 +21,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BrushItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,7 +50,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashable {
+public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashable, ISimpleBrushable {
 
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
@@ -137,6 +140,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                                               InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
             ItemInteractionResult result = te.tryWaxing(level, pos, player, hand, stack);
+
+            if (stack.getItem() instanceof BrushItem) return InteractionResult.SKIP;
 
             if (result.consumesAction()) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
@@ -244,6 +249,20 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                 te.setChanged();
                 return true;
             }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean brush(BlockState state, BlockPos pos, Level level, ItemStack stack, Player livingEntity, HumanoidArm arm, BlockHitResult hit, Vec3 particlesDir) {
+
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(livingEntity) &&
+                !te.isWaxed() && !te.isEmpty()) {
+            te.clear();
+            te.setChanged();
+            level.playSound(livingEntity, pos, SoundEvents.BRUSH_GENERIC, SoundSource.BLOCKS);
+
+            return true;
         }
         return false;
     }

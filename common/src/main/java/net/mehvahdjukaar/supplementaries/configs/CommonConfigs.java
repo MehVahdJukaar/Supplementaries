@@ -632,6 +632,9 @@ public class CommonConfigs {
                     .define("rope_override", Supplementaries.res("rope"));
             ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
+            ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
+                    builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaies:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
+                            .define("replace_in_loot_tables", ReplaceTableMode.NONE);
             builder.pop();
 
             builder.push("jar");
@@ -766,7 +769,7 @@ public class CommonConfigs {
                     .define("glowing_duration", 200, 0, 10000);
             builder.pop();
             FLAMMABLE_FROM_LUMISENE = builder.comment("Gives the flammable effext also when merely stepping on lumisene. Turning this off if you think effects are not something that should be applied like that and just by drinking it.")
-                    .define("flammable_from_lumisene_block_duration", 50,0, 10000);
+                    .define("flammable_from_lumisene_block_duration", 50, 0, 10000);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -817,6 +820,7 @@ public class CommonConfigs {
         public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
         public static final Supplier<Boolean> ROPE_UNRESTRICTED;
         public static final Supplier<Boolean> ROPE_HORIZONTAL;
+        public static final Supplier<ReplaceTableMode> ROPE_REPLACE_LOOT_TABLES;
         public static final Supplier<Boolean> ROPE_SLIDE;
 
         public static final Supplier<Boolean> URN_ENABLED;
@@ -1340,4 +1344,10 @@ public class CommonConfigs {
         }
     }
 
+
+    public enum ReplaceTableMode {
+        REPLACE,
+        NONE,
+        REMOVE
+    }
 }
