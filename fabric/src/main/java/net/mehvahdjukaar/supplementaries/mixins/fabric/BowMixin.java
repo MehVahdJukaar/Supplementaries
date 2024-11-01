@@ -23,7 +23,7 @@ public abstract class BowMixin {
                                    int timeCharged, CallbackInfo ci, Player player,
                                    boolean bl, ItemStack arrowStack, int i, float f, boolean bl2) {
         if (!player.getInventory().hasAnyMatching(s -> s == arrowStack)) {
-            var q = QuiverItem.getQuiver(shooter);
+            var q = QuiverItem.findActiveQuiver(shooter);
             if (!q.isEmpty()) {
                 var data = QuiverItem.getQuiverData(q);
                 if (data != null) data.consumeSelected();

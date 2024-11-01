@@ -90,11 +90,11 @@ public class SuppPlatformStuffImpl {
     public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         ItemStack mainHand = entity.getMainHandItem();
         if (predicate.test(mainHand)) {
-            return SlotReference.slot(entity, EquipmentSlot.MAINHAND);
+            return SlotReference.slot(EquipmentSlot.MAINHAND);
         }
         ItemStack offHand = entity.getOffhandItem();
         if (predicate.test(offHand)) {
-            return SlotReference.slot(entity, EquipmentSlot.OFFHAND);
+            return SlotReference.slot(EquipmentSlot.OFFHAND);
         }
 
         if (entity instanceof Player player) {
@@ -102,7 +102,7 @@ public class SuppPlatformStuffImpl {
             for (int i = 0; i < inv.getContainerSize(); i++) {
                 ItemStack s = inv.getItem(i);
                 if (predicate.test(s)) {
-                    return SlotReference.inv(player, i);
+                    return SlotReference.inv(i);
                 }
             }
         }
