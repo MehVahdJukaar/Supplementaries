@@ -97,7 +97,8 @@ public class ClientEventsFabric {
                     mc.getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
-            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
+            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(
+                    qe.supplementaries$getQuiverSlot(), mc.player);
         }
 
         if (CannonController.isActive()) {
