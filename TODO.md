@@ -1,7 +1,6 @@
 # Soon
 - dont spawn fire with gunpoweder when fire tck is off
 - lumisene when fire tick is off
-- can keep on shearing it
 - gravel bricks exploded particles
 - bomb bounce on slime blocks
 - awning slimeball bounce, boundy block tag for cannonbals and bombs
@@ -9,6 +8,7 @@
 - cannon camera glitchyness
 - heavy key getting overwritten by normal key
 - safe recipe jei
+- bomb rework
 - rope not breaking when supporting each other
 - spring launcher super buggy
 
@@ -42,11 +42,9 @@
    and also some bricks (including the og one) when thrown from a hotbar with more than a single brick will make the player throw two at once with one returning as an item and the other shattered
 - hat + present jack in the box anim
 - non continous slibe block rope elevator
-- rope arrow work for other mods
 - sign post highlight text bug
 - blue bomb charge animation and sound (total overhaul, sound or smoke bomb)
 - rope like quark chain stuff pull puston blocks
-- flammable blocks with tile (notice board and timber) burn forever
 - faucet pulling stuff game event
 - ash auto bonemeal, improve bubbles
 - better fodder pathfinding
@@ -61,13 +59,11 @@
 
 # Amendments
 
-- royal jelly bug
 - fluid offer ignoring min amount
 - faucet behaviors update on data reload
 - dye cauldon 1.21
 - finish 1.21 (fire damage, event..)
 - cauldron bottle conversion from dispensers
-- wall lantern quad order inverted . visible when embeddum is on
 - rope bell doesnt work
 - make bell connectto the side
 - hanging signs dont work with antique ink
@@ -82,6 +78,8 @@
 
 # Haunted Harvest
 
+- memory module not persisting properly
+- improvepoi AI
 - fix paper bag give 2 sides
 - egg crack sound HH
 

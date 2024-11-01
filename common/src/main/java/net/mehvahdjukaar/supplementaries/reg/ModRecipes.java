@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.fabricmc.loader.api.metadata.Person;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.*;
@@ -7,6 +8,8 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.function.Supplier;
 
 public class ModRecipes {

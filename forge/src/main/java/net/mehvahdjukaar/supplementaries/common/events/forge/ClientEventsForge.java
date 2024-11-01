@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -125,6 +124,20 @@ public class ClientEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void renderHandEvent(RenderHandEvent event) {
+        if (CannonController.isActive()) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+        if (CannonController.isActive()) {
+            var overlay = event.getOverlay();
+            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+                event.setCanceled(true);
+            }
+        }
+    }
 
     //forge only below
 
@@ -176,22 +189,6 @@ public class ClientEventsForge {
         var pattern = DecoratedPotPatterns.getResourceKey(i);
         if (pattern != null && i != Items.BRICK) {
             event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
-        }
-    }
-
-    @SubscribeEvent
-    public static void renderHandEvent(RenderHandEvent event) {
-        if (CannonController.isActive())
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
-        if (CannonController.isActive()) {
-            var overlay = event.getOverlay();
-            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
-                event.setCanceled(true);
-            }
         }
     }
 

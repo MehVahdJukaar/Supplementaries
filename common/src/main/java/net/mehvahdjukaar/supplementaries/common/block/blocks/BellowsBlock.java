@@ -154,7 +154,7 @@ public class BellowsBlock extends Block implements EntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (state.getValue(POWER) == 0 && level.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
             tile.setManualPress();
-            level.playSound(null, pos,
+            level.playSound(player, pos,
                     ModSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 0.1f, 1.5f);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
