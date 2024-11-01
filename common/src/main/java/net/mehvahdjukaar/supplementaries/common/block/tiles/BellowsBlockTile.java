@@ -62,6 +62,8 @@ public class BellowsBlockTile extends BlockEntity {
 
     public void setManualPress() {
         manualPress = 10;
+        this.setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
 
     @ForgeOverride

@@ -7,6 +7,8 @@
   "client": [
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
+    "GuiMixin",
+    "ItemInHandRendererMixin",
     "LevelRendererMixin",
     "MC263524FixMixin",
     "MinecraftInputMixin",

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
@@ -22,9 +24,13 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Author: MehVahdJukaar
@@ -45,6 +51,8 @@ public class SupplementariesForge {
             ClientRegistry.init();
             ClientEventsForge.init();
         });
+
+        LOOT_MODIFIERS.register(bus);
     }
 
     @SubscribeEvent
@@ -58,5 +66,14 @@ public class SupplementariesForge {
     }
 
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
+
+
+
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
+            NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Supplementaries.MOD_ID);
+
+    public static final Supplier<MapCodec<ReplaceRopeByConfigModifier>> REPLACE_ROPE =
+            LOOT_MODIFIERS.register("replace_rope", ReplaceRopeByConfigModifier.CODEC);
+
 
 }

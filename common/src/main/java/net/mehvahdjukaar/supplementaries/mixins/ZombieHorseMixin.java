@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.integration.IrisCompat;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IConvertableHorse;
@@ -74,7 +75,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
     }
 
     @Unique
-    private void supp$doHorseConvertion() {
+    private void supp$doHorseConversion() {
 
         float yBodyRot = this.yBodyRot;
         float yHeadRot = this.yHeadRot;
@@ -135,7 +136,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
                 --this.supplementaries$conversionTime;
 
                 if (this.supplementaries$conversionTime == 0) {
-                    this.supp$doHorseConvertion();
+                    this.supp$doHorseConversion();
                 }
             }
         }

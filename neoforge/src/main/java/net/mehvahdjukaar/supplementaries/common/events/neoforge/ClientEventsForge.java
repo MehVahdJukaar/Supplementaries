@@ -121,6 +121,20 @@ public class ClientEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void renderHandEvent(RenderHandEvent event) {
+        if (CannonController.isActive()) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+        if (CannonController.isActive()) {
+            var overlay = event.getOverlay();
+            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+                event.setCanceled(true);
+            }
+        }
+    }
 
     //forge only below
 
@@ -173,22 +187,6 @@ public class ClientEventsForge {
         var pattern = DecoratedPotPatterns.getPatternFromItem(i);
         if (pattern != null && i != Items.BRICK) {
             event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
-        }
-    }
-
-    @SubscribeEvent
-    public static void renderHandEvent(RenderHandEvent event) {
-        if (CannonController.isActive())
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
-        if (CannonController.isActive()) {
-            var overlay = event.getLayer();
-            if (event.getName() == VanillaGuiLayers.EXPERIENCE_BAR || event.getName() == VanillaGuiLayers.HOTBAR) {
-                event.setCanceled(true);
-            }
         }
     }
 

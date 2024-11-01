@@ -1,7 +1,8 @@
-package net.mehvahdjukaar.supplementaries.forge;
+package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -10,15 +11,15 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 public class ReplaceRopeByConfigModifier extends LootModifier {
-    public static final Supplier<Codec<ReplaceRopeByConfigModifier>> CODEC = Suppliers.memoize(() ->
-            RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, ReplaceRopeByConfigModifier::new)));
+    public static final Supplier<MapCodec<ReplaceRopeByConfigModifier>> CODEC = Suppliers.memoize(() ->
+            RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, ReplaceRopeByConfigModifier::new)));
 
     protected ReplaceRopeByConfigModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -43,7 +44,7 @@ public class ReplaceRopeByConfigModifier extends LootModifier {
     }
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public MapCodec<? extends IGlobalLootModifier> codec() {
         return CODEC.get();
     }
 }
