@@ -35,7 +35,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -698,9 +697,8 @@ public class ModRegistry {
     ));
 
     //netherite doors
-    public static final Supplier<Block> NETHERITE_DOOR = regBlock(NETHERITE_DOOR_NAME, () ->new DoorBlock(BlockSetType.IRON,
+    public static final Supplier<Block> NETHERITE_DOOR = regBlock(NETHERITE_DOOR_NAME, () -> new NetheriteDoorBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK)
-
                     .noOcclusion()
     ));
     public static final Supplier<Item> NETHERITE_DOOR_ITEM = regItem(NETHERITE_DOOR_NAME, () -> new BlockItem(
