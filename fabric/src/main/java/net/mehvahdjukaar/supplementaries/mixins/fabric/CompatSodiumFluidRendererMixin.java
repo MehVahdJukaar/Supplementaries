@@ -35,17 +35,18 @@ public abstract class CompatSodiumFluidRendererMixin {
     @Final
     private QuadLightData quadLightData;
 
-    @WrapOperation(method = "fluidHeight", remap = false,
-            require = 0,
+    @WrapOperation(method = "fluidHeight",
+            remap = false,
             at = @At(value = "INVOKE",
+                    remap = true,
                     target = "Lnet/minecraft/world/level/material/Fluid;isSame(Lnet/minecraft/world/level/material/Fluid;)Z"))
     public boolean supplementaries$modifyLumiseneHeight(Fluid instance, Fluid above, Operation<Boolean> original) {
         return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
     }
 
     @Inject(method = "updateQuad",
-            require = 0,
             at = @At(value = "INVOKE",
+                    remap = false,
                     shift = At.Shift.AFTER,
                     target = "Lme/jellysquid/mods/sodium/client/model/color/ColorProvider;getColors(Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
             remap = false)
@@ -87,9 +88,11 @@ public abstract class CompatSodiumFluidRendererMixin {
        return ModFluidsImpl.messWithFluidLight(original, fluid);
     }*/
 
-    @ModifyArg(method = "render", remap = false,
-            require = 0,
-            at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/model/light/LightPipelineProvider;getLighter(Lme/jellysquid/mods/sodium/client/model/light/LightMode;)Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;"))
+    @ModifyArg(method = "render",
+            remap = false,
+            at = @At(value = "INVOKE",
+                    remap = false,
+                    target = "Lme/jellysquid/mods/sodium/client/model/light/LightPipelineProvider;getLighter(Lme/jellysquid/mods/sodium/client/model/light/LightMode;)Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;"))
     public LightMode supplementaries$modifyLumiseneLight(LightMode lightMode, @Local Fluid fluid) {
         if (fluid == ModFluids.LUMISENE_FLUID.get()) {
             return Minecraft.getInstance().options.ambientOcclusion().get() ? LightMode.SMOOTH : LightMode.FLAT;

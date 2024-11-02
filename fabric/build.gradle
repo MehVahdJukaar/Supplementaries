@@ -51,7 +51,17 @@ dependencies {
     modCompileOnly("curse.maven:flan-404578:3902630")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
 
-    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5215751")
+
+    modImplementation("curse.maven:farmers-delight-refabricated-993166:5684645")
+
+    for (String module in port_lib_modules.split(",")) {
+        modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")
+    }
+
+    modImplementation("com.github.Chocohead:Fabric-ASM:${fabric_asm_version}") {
+        exclude (group: "net.fabricmc.fabric-api")
+    }
+
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modImplementation("curse.maven:motion-capture-mod-mocap-656300:5769049")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
