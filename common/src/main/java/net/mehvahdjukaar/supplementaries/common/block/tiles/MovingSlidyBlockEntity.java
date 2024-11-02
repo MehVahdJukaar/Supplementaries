@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3f;
 
 public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
@@ -95,6 +94,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                 t.progress = 1.0F;
 
                 Direction direction = t.getDirection();
+                if (direction.getAxis() == Direction.Axis.Y) return;
                 if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
                     MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
                     level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
