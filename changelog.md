@@ -1,4 +1,6 @@
-# New features:
+# The Canon Update
+
+## New features:
 - cannon
 - cannonball
 - throwable slimeballs and slimed effect
@@ -15,7 +17,7 @@
 - shader effect from piglin heads
 - added /supplementaries registry command, lists all the content of a registry
 
-# Improvements
+## Improvements
 - new present sounds
 - new crank textures and model
 - new gold door, trapdoor and hourglass textures
@@ -52,7 +54,7 @@
 - Feather falling can now prevent all kind of bubble block breaking, not just from falling
 
 
-# Bug Fixes:
+## Bug Fixes:
 - fixed faucet fluid dupe
 - fixed blackboard item renderer
 - fixed some issues with jars and goblet fluids
