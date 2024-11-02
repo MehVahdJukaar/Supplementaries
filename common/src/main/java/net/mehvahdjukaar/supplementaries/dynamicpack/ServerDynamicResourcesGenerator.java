@@ -111,8 +111,8 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
     }
 
     private void addSignPostRecipes(ResourceManager manager) {
-        Recipe<?> recipe = RPUtils.readRecipe(manager, ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
-        Recipe<?> recipe2 = RPUtils.readRecipe(manager, ResType.RECIPES.getPath(Supplementaries.res("sign_post_mod_template")));
+        Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("sign_post_oak"));
+        Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("sign_post_mod_template"));
 
         WoodType oak = WoodTypeRegistry.OAK_TYPE;
 
