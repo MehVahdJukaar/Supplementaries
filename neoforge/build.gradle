@@ -121,6 +121,8 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:5296876")
     modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
     modCompileOnly("curse.maven:cobweb-968456:5441209")
+    modImplementation("curse.maven:better-archeology-835687:5668732")
+    modImplementation("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     modCompileOnly("curse.maven:quark-243121:5594847")
