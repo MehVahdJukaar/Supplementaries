@@ -1,23 +1,12 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ServerEventsForge;
-import net.mehvahdjukaar.supplementaries.common.items.ShulkerShellItem;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -27,9 +16,7 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.RegisterEvent;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -39,6 +26,7 @@ import java.util.function.Supplier;
 public class SupplementariesForge {
 
     public SupplementariesForge(IEventBus bus) {
+        RegHelper.startRegisteringFor(bus);
         Supplementaries.commonInit();
 
         bus.register(this);
@@ -66,7 +54,6 @@ public class SupplementariesForge {
     }
 
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
-
 
 
     public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
