@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BubbleBlock extends Block implements EntityBlock {
+
     public BubbleBlock(Properties properties) {
         super(properties);
     }
