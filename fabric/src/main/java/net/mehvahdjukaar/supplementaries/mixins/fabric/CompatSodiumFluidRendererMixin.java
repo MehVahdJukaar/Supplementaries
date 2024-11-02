@@ -50,7 +50,10 @@ public abstract class CompatSodiumFluidRendererMixin {
                     shift = At.Shift.AFTER,
                     target = "Lme/jellysquid/mods/sodium/client/model/color/ColorProvider;getColors(Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
             remap = false)
-    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos, LightPipeline lighter, Direction dir, float brightness, ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
+    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos,
+                                                         LightPipeline lighter, Direction dir,
+                                                         float brightness, ColorProvider<FluidState> colorProvider,
+                                                         FluidState fluidState, CallbackInfo ci) {
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
