@@ -20,6 +20,7 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
         super(properties);
     }
 
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
@@ -47,4 +48,6 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
             //we need to update all for falling blocks
         }
     }
+
+
 }

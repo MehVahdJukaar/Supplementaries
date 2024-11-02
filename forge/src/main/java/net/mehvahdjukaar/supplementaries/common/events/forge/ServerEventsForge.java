@@ -36,6 +36,7 @@ import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -251,7 +252,6 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onLivingDeath(LivingHurtEvent event) {
         if (event.getEntity() instanceof Cat cat) {
-
             if (CommonConfigs.Tweaks.BAD_LUCK_CAT.get() &&
                     cat.getVariant() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
                     event.getSource().getEntity() instanceof LivingEntity p) {
@@ -259,7 +259,6 @@ public class ServerEventsForge {
             }
         }
     }
-
 
 
 

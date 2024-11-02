@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlockSource;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.ObserverBlock;
@@ -19,6 +20,6 @@ public class ObserverBlockMixin {
                     "INVOKE", target = "Lnet/minecraft/world/level/block/ObserverBlock;startSignal(Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)V"))
     public boolean supp$preventSlidyBlockUpdates(ObserverBlock instance, LevelAccessor level, BlockPos pos,
                                                  @Local(ordinal = 1, argsOnly = true) BlockState neighbor) {
-        return !(neighbor.getBlock() instanceof MovingSlidyBlockSource);
+        return !MovingSlidyBlockEntity.shouldCancelObserverUpdateHack(neighbor);
     }
 }
