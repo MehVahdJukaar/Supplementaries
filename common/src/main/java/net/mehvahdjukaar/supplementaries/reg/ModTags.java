@@ -49,6 +49,7 @@ public class ModTags {
     public static final TagKey<Block> NOT_TINTED_ON_MAPS = blockTag("map_tint_blacklist");
     public static final TagKey<Block> FAST_FALL_ROPES = blockTag("fast_fall_climbable");
     public static final TagKey<Block> BOUNCY_BLOCKS = blockTag("bouncy_blocks");
+    public static final TagKey<Block> TURN_TABLE_CANT_SHUFFLE = blockTag("turn_table_cant_shuffle");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

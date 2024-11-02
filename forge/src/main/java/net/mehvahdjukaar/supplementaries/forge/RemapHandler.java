@@ -34,8 +34,6 @@ public class RemapHandler {
     public static void onRemapBlocks(MissingMappingsEvent event) {
         remapAll(event, BuiltInRegistries.BLOCK);
         remapAll(event, BuiltInRegistries.ITEM);
-
-        BowlFoodItem
     }
 
 
