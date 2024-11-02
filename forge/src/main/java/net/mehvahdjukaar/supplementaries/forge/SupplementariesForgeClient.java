@@ -1,37 +1,29 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.hud.forge.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.hud.forge.SlimedOverlayHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredHeadLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
-import net.mehvahdjukaar.supplementaries.client.hud.forge.CannonChargeHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
-import net.minecraft.Util;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,7 +31,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -72,13 +63,21 @@ public class SupplementariesForgeClient {
                 renderer.addLayer(new PartyHatLayer.Generic(model, event.getEntityModels()));
             }
         }
-        var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
-        if (skeletonRenderer != null) {
-            skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
+        try {
+            var skeletonRenderer = event.getRenderer(EntityType.SKELETON);
+            if (skeletonRenderer != null) {
+                skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
+            }
+        } catch (Exception e) {
+            Supplementaries.LOGGER.error("!!!!Failed to add quiver layer to skeleton. This bug was cause by forge! Use neo:   ", e);
         }
-        var strayRenderer = event.getRenderer(EntityType.STRAY);
-        if (strayRenderer != null) {
-            strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
+        try {
+            var strayRenderer = event.getRenderer(EntityType.STRAY);
+            if (strayRenderer != null) {
+                strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
+            }
+        } catch (Exception e) {
+            Supplementaries.LOGGER.error("!!!!Failed to add quiver layer to stray. This bug was cause by forge! Use neo:   ", e);
         }
 
 
@@ -90,18 +89,24 @@ public class SupplementariesForgeClient {
                         .map(entityType -> (EntityType<LivingEntity>) entityType)
                         .collect(Collectors.toList()));
 
-        try {
-            entityTypes.forEach((entityType -> {
+        entityTypes.forEach((entityType -> {
+            try {
+
                 var r = event.getRenderer(entityType);
                 if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
-            }));
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
-        }
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("!!!!Failed to add slimed layer to entity: " + entityType, e);
+            }
+        }));
 
-        var creeperRenderer = event.getRenderer(EntityType.CREEPER);
-        if (creeperRenderer != null) {
-            creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
+
+        try {
+            var creeperRenderer = event.getRenderer(EntityType.CREEPER);
+            if (creeperRenderer != null) {
+                creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
+            }
+        } catch (Exception e) {
+            Supplementaries.LOGGER.error("!!!!Failed to add party hat layer to creeper. This bug was cause by forge! Use neo:   ", e);
         }
         //player skins
         for (String skinType : event.getSkins()) {
@@ -129,8 +134,6 @@ public class SupplementariesForgeClient {
         event.registerBelow(VanillaGuiOverlay.FROSTBITE.id(), "slimed_overlay",
                 new SlimedOverlayHudImpl());
     }
-
-
 
 
 }
