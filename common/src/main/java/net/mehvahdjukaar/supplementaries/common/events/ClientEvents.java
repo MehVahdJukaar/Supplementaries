@@ -143,7 +143,7 @@ public class ClientEvents {
             }
             // for some reason this weird edge cases happens when swithing gamemode
             if (current != null && currentlyAppliedMobShader != null && !renderer.effectActive) {
-                renderer.togglePostEffect();
+                currentlyAppliedMobShader = null;
             }
 
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
