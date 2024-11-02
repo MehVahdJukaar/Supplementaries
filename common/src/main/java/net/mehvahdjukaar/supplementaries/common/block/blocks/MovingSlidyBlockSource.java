@@ -41,10 +41,10 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
         BlockState frontState = level.getBlockState(pos.relative(state.getValue(FACING)));
         if (!frontState.is(ModRegistry.MOVING_SLIDY_BLOCK.get()) ||
                 frontState.getValue(FACING) != state.getValue(FACING)) {
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(),
+                    Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
+            //mixin suppresses obserber updates
+            //we need to update all for falling blocks
         }
     }
-    //TODO: fix not updating neighboring blocks
-
-
 }
