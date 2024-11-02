@@ -114,7 +114,7 @@ public class BlockUtil {
         // container shuffle stuff
         if (!level.isClientSide && CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
                 dir.getAxis() != Direction.Axis.Y && state.hasProperty(BarrelBlock.FACING)) {
-            if (state.getBlock() != ModRegistry.HOURGLASS.get() && level.getBlockEntity(targetPos) instanceof Container c) {
+            if (!state.is(ModTags.TURN_TABLE_CANT_SHUFFLE) && level.getBlockEntity(targetPos) instanceof Container c) {
                 shuffleContainerContent(c, level);
                 //continue normally below
             }
