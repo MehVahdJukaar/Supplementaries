@@ -121,8 +121,8 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:5296876")
     modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
     modCompileOnly("curse.maven:cobweb-968456:5441209")
-    modImplementation("curse.maven:better-archeology-835687:5668732")
-    modImplementation("curse.maven:supermartijn642s-config-lib-438332:4715408")
+    modCompileOnly("curse.maven:better-archeology-835687:5668732")
+    modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
     modCompileOnly("curse.maven:quark-243121:5594847")
@@ -138,6 +138,7 @@ dependencies {
     modCompileOnly("curse.maven:supplementaries-squared-838411:5130385")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
+    modImplementation("curse.maven:legendary-tooltips-532127:5591027")
     modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")

@@ -51,7 +51,7 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.destroyBlock(neighborPos, true);
 
         // called on both sides because it becomes smoother
-       // if(level.isClientSide)return true; (can causeproblem with flashback)
+        //if(level.isClientSide)return true; //(can causeproblem with flashback)
         MovingSlidyBlock.move(state, level, pos, direction, neighborPos);
         if (!level.isClientSide) {
             level.playSound(null, pos, ModSounds.SLIDY_BLOCK_SLIDE.get(), SoundSource.BLOCKS,
