@@ -127,10 +127,10 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+    public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
         if (CannonController.isActive()) {
-            var overlay = event.getOverlay();
-            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+            var overlay = event.getName();
+            if (overlay ==  (VanillaGuiLayers.EXPERIENCE_BAR) || overlay == (VanillaGuiLayers.HOTBAR)) {
                 event.setCanceled(true);
             }
         }

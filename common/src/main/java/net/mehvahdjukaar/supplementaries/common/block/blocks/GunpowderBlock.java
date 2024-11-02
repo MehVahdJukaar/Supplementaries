@@ -203,24 +203,32 @@ public class GunpowderBlock extends LightUpBlock {
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             RedstoneSide redstoneside = state.getValue(PROPERTY_BY_DIRECTION.get(direction));
+
             if (redstoneside != RedstoneSide.NONE && !world.getBlockState(mutable.setWithOffset(pos, direction)).is(this)) {
                 mutable.move(Direction.DOWN);
-                BlockState blockstate = world.getBlockState(mutable);
-                if (!blockstate.is(Blocks.OBSERVER)) {
+                BlockState downState = world.getBlockState(mutable);
+
+
+                if (!downState.is(Blocks.OBSERVER)) {
+
                     BlockPos blockpos = mutable.relative(direction.getOpposite());
                     BlockState blockstate1 = downState.updateShape(direction.getOpposite(), world.getBlockState(blockpos), world, mutable, blockpos);
                     updateOrDestroy(downState, blockstate1, world, mutable, var1, var2);
                 }
 
                 mutable.setWithOffset(pos, direction).move(Direction.UP);
-                BlockState blockstate3 = world.getBlockState(mutable);
-                if (!blockstate3.is(Blocks.OBSERVER)) {
+                BlockState upState = world.getBlockState(mutable);
+                if (!upState.is(Blocks.OBSERVER)) {
+
                     BlockPos pos1 = mutable.relative(direction.getOpposite());
                     BlockState blockstate2 = upState.updateShape(direction.getOpposite(), world.getBlockState(pos1), world, mutable, pos1);
                     updateOrDestroy(upState, blockstate2, world, mutable, var1, var2);
                 }
             }
         }
+
+    }
+
 
 
     //gets connection to blocks diagonally above

@@ -742,7 +742,7 @@ public class ModCreativeTabs {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
                 if (!s.isEnabled()) continue;
-                if (h.is(BuiltInSoftFluids.POTION) || s.isEmptyFluid()) continue;
+                if (h.is(BuiltInSoftFluids.POTION) || h.is(BuiltInSoftFluids.EMPTY)) continue;
                 fluidHolder.clear();
                 fluidHolder.setFluid(SoftFluidStack.of(h, 100));
                 fluidHolder.capCapacity();

@@ -10,9 +10,6 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
 accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 
-#bundle
-accessible method net/minecraft/world/item/BundleItem removeOne (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
-accessible method net/minecraft/world/item/BundleItem add (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)I
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 

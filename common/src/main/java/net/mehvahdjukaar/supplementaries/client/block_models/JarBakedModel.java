@@ -60,7 +60,7 @@ public class JarBakedModel implements CustomBakedModel {
             Level level = Minecraft.getInstance().level;
             if (fluidKey != null && level != null) {
                 SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
-                if (fluid != null && fluid.isEmptyFluid()) {
+                if (fluid != null) {
                     float amount = data.get(ModBlockProperties.FILL_LEVEL);
 
                     TextureAtlasSprite sprite = ModMaterials.get(fluid.getStillTexture()).sprite();

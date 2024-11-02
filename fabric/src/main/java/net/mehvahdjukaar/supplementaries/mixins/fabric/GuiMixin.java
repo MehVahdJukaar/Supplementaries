@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +17,8 @@ public class GuiMixin {
         if (CannonController.isActive()) ci.cancel();
     }
 
-    @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
-    public void supp$cannonCancelHotbar(float partialTick, GuiGraphics guiGraphics, CallbackInfo ci) {
+    @Inject(method = "renderHotbarAndDecorations", at = @At("HEAD"), cancellable = true)
+    public void supp$cannonCancelHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (CannonController.isActive()) ci.cancel();
     }
 }
