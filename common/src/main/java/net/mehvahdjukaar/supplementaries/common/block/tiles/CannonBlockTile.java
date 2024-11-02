@@ -327,6 +327,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     public void ignite(@Nullable Entity entityWhoIgnited) {
+        //do nothing if its already ignited
+        if (this.fuseTimer > 0) return;
+
         if (this.getProjectile().isEmpty()) return;
 
         // called from server when firing
