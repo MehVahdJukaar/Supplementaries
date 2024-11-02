@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.moonlight.api.integration.IrisCompat;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IConvertableHorse;

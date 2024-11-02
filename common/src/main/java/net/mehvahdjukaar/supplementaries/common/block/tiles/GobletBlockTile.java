@@ -45,7 +45,7 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     public void addExtraModelData(ExtraModelData.Builder builder) {
         SoftFluidTank softFluidTank = getSoftFluidTank();
         if (!softFluidTank.isEmpty()) {
-            builder.with(FLUID_ID, softFluidTank.getFluid().fluidKey());
+            builder.with(FLUID_ID, softFluidTank.getFluid().getHolder().unwrapKey().get());
         }
     }
 

@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.TrinketsCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
@@ -99,6 +98,7 @@ public class GunpowderExplosion extends Explosion {
         int px = Mth.floor(this.x);
         int py = Mth.floor(this.y);
         int pz = Mth.floor(this.z);
+
         //is this needed?
         ForgeHelper.fireOnExplosionDetonate(this.level, this, new ArrayList<>(), this.radius * 2f);
 
@@ -121,8 +121,6 @@ public class GunpowderExplosion extends Explosion {
         if (s.canBeReplaced() && level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) { //kills my own gunpowder block
             if (this.hasFlammableNeighbours(myPos)
                     || newFire.getBlock() != Blocks.FIRE) {
-                 if(s.is(ModRegistry.GUNPOWDER_BLOCK.get()) && s.getValue(GunpowderBlock.TYPE).isHidden())return;
-
                     this.level.setBlockAndUpdate(myPos, newFire);
                 //s.onCaughtFire(arg, arg2, Direction.UP, null);
             }

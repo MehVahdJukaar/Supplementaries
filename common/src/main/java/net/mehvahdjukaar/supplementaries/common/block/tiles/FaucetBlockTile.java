@@ -68,7 +68,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     public void addExtraModelData(ExtraModelData.Builder builder) {
         if (level != null && !tempFluidHolder.isEmpty()) {
             int color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
-            builder.with(FLUID, tempFluidHolder.getFluid().fluidKey());
+            builder.with(FLUID, tempFluidHolder.getFluid().getHolder().unwrapKey().get());
             builder.with(FLUID_COLOR, color);
         }
     }

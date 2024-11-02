@@ -141,7 +141,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
             ItemInteractionResult result = te.tryWaxing(level, pos, player, hand, stack);
 
-            if (stack.getItem() instanceof BrushItem) return InteractionResult.SKIP;
+            if (stack.getItem() instanceof BrushItem) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
             if (result.consumesAction()) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
@@ -258,7 +258,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
 
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(livingEntity) &&
                 !te.isWaxed() && !te.isEmpty()) {
-            te.clear();
+            te.clearPixels();
             te.setChanged();
             level.playSound(livingEntity, pos, SoundEvents.BRUSH_GENERIC, SoundSource.BLOCKS);
 

@@ -60,12 +60,11 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
         RenderSystem.setShaderTexture(0, atlasLocation);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f = gui.pose().last().pose();
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.vertex(matrix4f, x1, y1, blitOffset).uv(minU, minV).endVertex();
-        bufferBuilder.vertex(matrix4f, x1, y2, blitOffset).uv(minU, maxV).endVertex();
-        bufferBuilder.vertex(matrix4f, x2, y2, blitOffset).uv(maxU, maxV).endVertex();
-        bufferBuilder.vertex(matrix4f, x2, y1, blitOffset).uv(maxU, minV).endVertex();
-        BufferUploader.drawWithShader(bufferBuilder.end());
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder.addVertex(matrix4f, x1, y1, blitOffset).setUv(minU, minV);
+        bufferBuilder.addVertex(matrix4f, x1, y2, blitOffset).setUv(minU, maxV);
+        bufferBuilder.addVertex(matrix4f, x2, y2, blitOffset).setUv(maxU, maxV);
+        bufferBuilder.addVertex(matrix4f, x2, y1, blitOffset).setUv(maxU, minV);
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 }

@@ -57,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class AshLayerBlock extends ColoredFallingBlock {
+public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushable{
     public static final MapCodec<AshLayerBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter((coloredFallingBlock) -> coloredFallingBlock.dustColor),
             propertiesCodec()).apply(instance, AshLayerBlock::new));
