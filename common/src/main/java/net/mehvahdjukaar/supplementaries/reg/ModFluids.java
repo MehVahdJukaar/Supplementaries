@@ -57,6 +57,7 @@ public class ModFluids {
                         BlockBehaviour.Properties.of()
                                 .replaceable()
                                 .instabreak()
+                                .noParticlesOnBreak()
                                 .mapColor(DyeColor.ORANGE)
                                 .pushReaction(PushReaction.DESTROY)
                                 .liquid()
