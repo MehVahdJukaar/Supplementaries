@@ -139,6 +139,8 @@ dependencies {
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modImplementation("curse.maven:legendary-tooltips-532127:5591027")
+    modImplementation("curse.maven:prism-lib-638111:5625115")
+    modImplementation("curse.maven:iceberg-520110:5804224")
     modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")

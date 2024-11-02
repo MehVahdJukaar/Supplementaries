@@ -32,11 +32,6 @@ public class ConfettiPopperItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, InteractionHand hand) {
 
-        if(true){
-            player.startUsingItem(hand);
-            return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
-        }
-
         //no clue why im doing this from server side
         Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
         //hack
@@ -57,31 +52,6 @@ public class ConfettiPopperItem extends Item {
         ItemStack heldItem = player.getItemInHand(hand);
         heldItem.consume(1, player);
         return InteractionResultHolder.sidedSuccess(heldItem, level.isClientSide);
-    }
-
-    @Override
-    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int remainingUseDuration) {
-        //no clue why im doing this from server side
-        Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
-        //hack
-        float oldRot = player.getXRot();
-        player.setXRot((float) (oldRot - 20 * Math.cos(oldRot * Mth.DEG_TO_RAD)));
-        ClientBoundParticlePacket packet = new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI,
-                null, player.getLookAngle());
-        player.setXRot(oldRot);
-        if (!level.isClientSide) {
-           // NetworkHelper.sendToAllClientPlayersTrackingEntity(player, packet);
-
-            level.gameEvent(player, GameEvent.EXPLODE, player.position());
-        } else {
-            //play immediately for client
-            ClientReceivers.spawnConfettiParticles(packet, level, level.random);
-        }
-    }
-
-    @Override
-    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
-        return 3;
     }
 
     @Override

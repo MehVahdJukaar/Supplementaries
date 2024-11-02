@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
@@ -202,7 +203,6 @@ public class ServerEventsForge {
     @SubscribeEvent
     public static void onLivingDeath(LivingDamageEvent.Post event) {
         if (event.getEntity() instanceof Cat cat) {
-
             if (CommonConfigs.Tweaks.BAD_LUCK_CAT.get() &&
                     cat.getVariant().value() == BuiltInRegistries.CAT_VARIANT.get(CatVariant.ALL_BLACK) &&
                     event.getSource().getEntity() instanceof LivingEntity p) {
@@ -210,7 +210,6 @@ public class ServerEventsForge {
             }
         }
     }
-
 
 
 
