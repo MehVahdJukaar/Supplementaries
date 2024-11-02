@@ -11,6 +11,7 @@
 - bomb rework
 - rope not breaking when supporting each other
 - spring launcher super buggy
+- trident loyalty in cannon
 
 # Supplementaries
 
