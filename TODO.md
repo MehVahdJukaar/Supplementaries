@@ -12,6 +12,7 @@
 - rope not breaking when supporting each other
 - spring launcher super buggy
 - trident loyalty in cannon
+- cannon ghost block ad slingshot
 
 # Supplementaries
 
