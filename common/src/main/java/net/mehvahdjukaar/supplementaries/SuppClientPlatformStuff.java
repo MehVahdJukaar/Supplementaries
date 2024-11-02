@@ -3,6 +3,13 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.FireBlock;
 
 public class SuppClientPlatformStuff {
 

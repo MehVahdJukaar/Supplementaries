@@ -88,7 +88,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return FireStage.fromAge(state.getValue(AGE)).isBurning() ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
     @ForgeOverride

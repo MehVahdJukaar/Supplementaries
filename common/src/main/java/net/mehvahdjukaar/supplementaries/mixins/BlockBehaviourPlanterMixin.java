@@ -29,7 +29,7 @@ public abstract class BlockBehaviourPlanterMixin {
     @ModifyReturnValue(method = "getOffset", at = @At(
             value = "RETURN"))
     @SuppressWarnings("ConstantConditions")
-    public Vec3 getOffset(Vec3 original, @Local(argsOnly = true) BlockGetter level, @Local(argsOnly = true) BlockPos pos) {
+    public Vec3 supp$modifyPlanterOffset(Vec3 original, @Local(argsOnly = true) BlockGetter level, @Local(argsOnly = true) BlockPos pos) {
         //null check for world since some mods like to throw a null world here...
         // be sure you aren't checking other chunks
         if (level != null && !original.equals(Vec3.ZERO)) {
