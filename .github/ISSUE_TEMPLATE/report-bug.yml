@@ -30,11 +30,14 @@ body:
       label: Version
       description: The Version of Minecraft?
       options:
+        - 1.21.1-FORGE
+        - 1.21.1-FABRIC
+        - 1.21-FORGE
+        - 1.21-FABRIC
         - 1.20.1-FORGE
         - 1.20.1-FABRIC
         - 1.19.2-FORGE
         - 1.19.2-FABRIC
-        - 1.18.2-FORGE
       default: 0
     validations:
       required: true
