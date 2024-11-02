@@ -49,7 +49,6 @@ public class ModFluids {
             Supplementaries.res(ModConstants.LUMISENE_NAME), SoftFluidRegistry.KEY);
 
     static {
-
         LUMISENE_FLUID = registerFluid(ModConstants.LUMISENE_NAME, LumiseneFluid::new);
 
         LUMISENE_BLOCK = RegHelper.registerBlock(Supplementaries.res(ModConstants.LUMISENE_NAME),
@@ -57,7 +56,7 @@ public class ModFluids {
                         BlockBehaviour.Properties.of()
                                 .replaceable()
                                 .instabreak()
-                                .noParticlesOnBreak()
+                                .noTerrainParticles()
                                 .mapColor(DyeColor.ORANGE)
                                 .pushReaction(PushReaction.DESTROY)
                                 .liquid()
