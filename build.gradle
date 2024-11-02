@@ -10,11 +10,11 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
-    subprojects {
-        apply plugin: "dev.architectury.loom"
-        apply plugin: "com.github.johnrengelman.shadow"
-        apply plugin: "com.matthewprenger.cursegradle"
-        apply plugin: "com.modrinth.minotaur"
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "com.matthewprenger.cursegradle"
+    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -42,9 +42,9 @@ architectury {
             projectId = rootProject.mod_id
             uploadFile = tasks.remapJar
             gameVersions = [rootProject.minecraft_version]
-            if(modLoader == "forge"){
+            if (modLoader == "forge") {
                 loaders = [modLoader, "neoforge"]
-            }else{
+            } else {
                 loaders = [modLoader]
             }
 
@@ -72,7 +72,7 @@ architectury {
                 releaseType = 'release'
                 addGameVersion rootProject.minecraft_version
                 addGameVersion modLoader.capitalize()
-                if(modLoader == "forge"){
+                if (modLoader == "forge") {
                     addGameVersion "NeoForge"
                 }
 
@@ -167,6 +167,14 @@ allprojects {
             url = 'https://maven.neoforged.net'
         }
 
+        maven { // Reach Entity Attributes
+            url = "https://maven.jamieswhiteshirt.com/libs-release"
+            content { includeGroup("com.jamieswhiteshirt") }
+        }
+
+        maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
+        maven { url = "https://mvn.devos.one/releases/" }
+
         maven {
             url = "https://api.modrinth.com/maven"
         }
@@ -186,28 +194,28 @@ allprojects {
     }
 }
 
-ext{
+ext {
     replaceProperties = [
-            minecraft_version    : minecraft_version,
-            minecraft_min_version: minecraft_min_version,
-            minecraft_max_version: minecraft_max_version,
-            pack_format_number   : pack_format_number,
+            minecraft_version         : minecraft_version,
+            minecraft_min_version     : minecraft_min_version,
+            minecraft_max_version     : minecraft_max_version,
+            pack_format_number        : pack_format_number,
 
-            mod_id               : mod_id,
-            mod_name             : mod_name,
-            mod_version          : mod_version,
-            mod_license          : mod_license,
-            mod_authors          : mod_authors,
-            mod_description      : mod_description,
-            mod_credits          : mod_credits,
-            mod_homepage         : mod_homepage,
-            mod_github           : mod_github,
-            update_url           : update_url,
+            mod_id                    : mod_id,
+            mod_name                  : mod_name,
+            mod_version               : mod_version,
+            mod_license               : mod_license,
+            mod_authors               : mod_authors,
+            mod_description           : mod_description,
+            mod_credits               : mod_credits,
+            mod_homepage              : mod_homepage,
+            mod_github                : mod_github,
+            update_url                : update_url,
 
-            neo_version          : neo_version,
-            neo_version_range    : neo_version_range,
-            loader_version_range : loader_version_range,
-            required_moonlight_version : required_moonlight_version
+            neo_version               : neo_version,
+            neo_version_range         : neo_version_range,
+            loader_version_range      : loader_version_range,
+            required_moonlight_version: required_moonlight_version
     ]
 }
 
