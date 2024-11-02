@@ -8,6 +8,11 @@ import net.minecraft.core.Direction;
 public class VibeCheckerImpl {
     public static void checkVibe() {
         crashIfOptifineHasNukedForge();
+
+        if(PlatHelper.isModLoaded("woldedit")){
+            throw new VibeChecker.BadModError("!!! WorldEdit is not supported! " +
+                    "This is due to a World Edit bug!! Please remove it to continue and dont report to Supplementaries. Nothing we can do here.");
+        }
     }
 
     //will crash anyways. we just end the suffering earlier

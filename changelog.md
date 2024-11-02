@@ -1,5 +1,4 @@
 CHECK PREVIOUS PATCH NOTES!!
 
-- hotfix: fixed a crash due to compat mixins into other mods
-- fixed confetti popper not having cooldown
-- fixed sliding block not updating blocks around
+- removed a mixin from fabric that was causing issues and i couldn't fix. goodbye lumisene luminescent
+- fixed some stuff with cannon trajectory
