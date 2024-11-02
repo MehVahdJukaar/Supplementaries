@@ -12,9 +12,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -262,18 +260,33 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    private static void shuffleContainerContent(Container c, Level level) {
-        ObjectArrayList<ItemStack> content = ObjectArrayList.of();
-        for (int i = 0; i < c.getContainerSize(); i++) {
-            content.add(c.removeItemNoUpdate(i));
-        }
-        Util.shuffle(content, level.random);
+    public static void shuffleContainerContent(Container c, Level level) {
+        int size = c.getContainerSize();
+        boolean changed = false;
 
-        for (int i = 0; i < content.size(); i++) {
-            c.setItem(i, content.get(i));
+        for (int i = size - 1; i > 0; i--) {
+            // Pick a random index from 0 to i
+            int j = level.random.nextInt(i + 1);
+
+            if (i == j) continue;
+
+            // Swap items if allowed
+            ItemStack firstItem = c.getItem(i);
+            ItemStack secondItem = c.getItem(j);
+
+            if (c.canTakeItem(c, i, firstItem) && c.canTakeItem(c, j, secondItem) &&
+                    c.canPlaceItem(j, firstItem) && c.canPlaceItem(i, secondItem)) {
+                c.setItem(i, secondItem);
+                c.setItem(j, firstItem);
+                changed = true;
+            }
         }
-        c.setChanged();
+
+        if (changed) {
+            c.setChanged();
+        }
     }
+
 
 
     //TODO: add rotation vertical slabs & doors
