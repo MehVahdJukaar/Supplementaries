@@ -12,7 +12,9 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRend
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -65,23 +67,19 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        var data = getData(stack);
+        ItemStack basket = player.getItemInHand(hand);
+        var data = getData(basket);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
             if (food.isEmpty()) {
-                return InteractionResultHolder.fail(stack);
+                return InteractionResultHolder.fail(basket);
             }
-            if (food.isEdible()) {
-                if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
-                    player.startUsingItem(hand);
-                    return InteractionResultHolder.consume(stack);
-                } else {
-                    return InteractionResultHolder.fail(stack);
-                }
-            }
+            player.setItemInHand(hand, food);
+            var result = food.use(pLevel, player, hand);
+            ((LivingEntityAccessor) player).setUseItem(basket);
+            player.setItemInHand(hand, basket);
 
-            return InteractionResultHolder.pass(stack);
+            return new InteractionResultHolder<>(result.getResult(), basket);
         }
         return super.use(pLevel, player, hand);
     }
@@ -201,6 +199,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     public static boolean canAcceptItem(ItemStack toInsert) {
         if (!toInsert.getItem().canFitInsideContainerItems()) return false;
+        if (toInsert.is(ModTags.LUNCH_BASKET_BLACKLIST)) return false;
         var animation = toInsert.getItem().getUseAnimation(toInsert);
         return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }

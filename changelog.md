@@ -1,4 +1,9 @@
 CHECK PREVIOUS PATCH NOTES!!
 
-- removed a mixin from fabric that was causing issues and i couldn't fix. goodbye lumisene luminescent
-- fixed some stuff with cannon trajectory
+- fix slidy block being pushable from Y axis and related crash
+- luch block now uses more compatible logic
+- added lunch box blacklist tag
+- fixed cannon screen not updating the cannon when manouvering it after
+- improved turn table shuffle container logic. added related blacklist tag
+- removed some random hard casts
+- fixed cannon stalling when triggered while firing

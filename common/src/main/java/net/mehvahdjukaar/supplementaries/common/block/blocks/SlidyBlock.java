@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -99,13 +100,12 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
-        if (hitResult.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
+        if (hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
         if (MovingSlidyBlock.maybeMove(state, level, pos, hit.getDirection().getOpposite())) {
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }
-
 
 }
