@@ -9,7 +9,7 @@
       "item": "minecraft:oak_planks"
     },
     "2": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {

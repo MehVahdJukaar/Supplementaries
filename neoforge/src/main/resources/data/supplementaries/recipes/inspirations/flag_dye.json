@@ -6,7 +6,7 @@
       "conditions": [
         {
           "flag": "flag",
-          "type": "supplementaries:flag"
+          "condition": "supplementaries:flag"
         },
         {
           "modid": "inspirations",

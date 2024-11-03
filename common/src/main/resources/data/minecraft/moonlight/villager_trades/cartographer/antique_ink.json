@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "flag": "antique_ink",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "simple",

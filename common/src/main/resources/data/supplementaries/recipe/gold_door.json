@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "flag": "gold_door",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -14,7 +14,7 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     }
   },
   "result": {

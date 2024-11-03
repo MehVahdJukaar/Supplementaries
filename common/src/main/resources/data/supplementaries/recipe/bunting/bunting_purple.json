@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "purple_dye"
+        "tag": "c:dyes/purple"
     }
   ],
   "result": {

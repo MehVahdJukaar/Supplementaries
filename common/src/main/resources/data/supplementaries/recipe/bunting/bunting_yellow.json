@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "yellow_dye"
+        "tag": "c:dyes/yellow"
     }
   ],
   "result": {

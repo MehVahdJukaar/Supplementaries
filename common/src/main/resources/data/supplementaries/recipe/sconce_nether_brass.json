@@ -26,7 +26,7 @@
           "modid": "architects_palette"
         },
         {
-          "type": "supplementaries:flag",
+          "condition": "supplementaries:flag",
           "flag": "sconce"
         }
       ]

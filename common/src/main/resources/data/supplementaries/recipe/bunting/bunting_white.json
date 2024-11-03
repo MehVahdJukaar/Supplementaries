@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "white_dye"
+        "tag": "c:dyes/white"
     }
   ],
   "result": {

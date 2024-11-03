@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"minecraft:chain","required":false},
+    {"id":"c:chains","required":false},
     {"id":"decorative_blocks:chain","required":false},
     {"id":"muchmoremodcompat:ice_chain","required":false},
     {"id":"muchmoremodcompat:gold_chain","required":false},

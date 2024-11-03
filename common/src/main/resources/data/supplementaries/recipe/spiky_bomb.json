@@ -1,0 +1,34 @@
+{
+  "conditions": [
+    {
+      "modid": "oreganized",
+      "type": "neoforge:mod_loaded"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "bomb",
+  "pattern": [
+    " 12",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "0": {
+      "item": "oreganized:shrapnel_bomb"
+    },
+    "1": {
+      "tag": "c:ingots/iron"
+    },
+    "2": {
+      "tag": "c:strings"
+    }
+  },
+  "result": {
+    "id": "supplementaries:bomb_spiky",
+    "count": 4
+  }
+}

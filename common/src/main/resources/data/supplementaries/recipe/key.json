@@ -7,10 +7,10 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     },
     "1": {
-      "item": "minecraft:gold_nugget"
+      "tag": "c:nuggets/gold"
     }
   },
   "result": {

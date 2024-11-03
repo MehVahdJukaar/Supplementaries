@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:dyes/light_gray"
+    },
+    {
+      "item": "supplementaries:candle_holder"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:candle_holder_light_gray",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "candle_holder"
+    }
+  ]
+}

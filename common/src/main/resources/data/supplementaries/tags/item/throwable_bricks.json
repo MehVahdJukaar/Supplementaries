@@ -1,8 +1,8 @@
 {
   "replace": false,
     "values": [
-    {"id":"#forge:ingots/nether_brick","required":false},
-    {"id":"#forge:ingots/brick","required":false},
+    {"id":"#c:ingots/nether_brick","required":false},
+    {"id":"#c:ingots/brick","required":false},
     {"id":"deeperdarker:grime_brick","required":false},
     {"id":"supplementaries:ash_brick","required":false},
     {"id":"minecraft:brick","required":false},

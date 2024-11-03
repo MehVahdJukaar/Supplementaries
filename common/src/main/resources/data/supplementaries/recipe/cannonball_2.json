@@ -7,7 +7,7 @@
   ],
   "key": {
     "1": {
-      "item": "forge:storage_blocks/lead"
+      "tag": "c:storage_blocks/lead"
     }
   },
   "result": {
@@ -22,8 +22,8 @@
     {
       "condition": "neoforge:not",
       "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:storage_blocks/lead"
+        "condition": "neoneoforge:tag_empty",
+        "tag": "c:storage_blocks/lead"
       }
     }
   ]

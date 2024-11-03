@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "light_gray_dye"
+        "tag": "c:dyes/light_gray"
     }
   ],
   "result": {

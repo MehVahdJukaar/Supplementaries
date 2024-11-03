@@ -3,7 +3,6 @@
   "values": [
     {"id":"#minecraft:campfires","required":false},
     {"id":"minecraft:furnace","required":false},
-    {"id":"#forge:furnaces","required":false},
     {"id":"#c:furnaces","required":false},
     {"id":"minecraft:blast_furnace","required":false},
     {"id":"minecraft:smoker","required":false},

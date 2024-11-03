@@ -7,7 +7,7 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   },
   "result": {
@@ -21,12 +21,12 @@
         {
           "type": "neoforge:not",
           "value": {
-            "type": "supplementaries:flag",
+            "condition": "supplementaries:flag",
             "flag": "flax"
           }
         },
         {
-          "type": "supplementaries:flag",
+          "condition": "supplementaries:flag",
           "flag": "rope"
         }
       ]

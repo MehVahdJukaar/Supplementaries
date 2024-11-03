@@ -9,7 +9,7 @@
       "condition": "moonlight:iconditions",
       "values": [
         {
-          "type": "supplementaries:flag",
+          "condition": "supplementaries:flag",
           "flag": "antique_ink"
         }
       ]

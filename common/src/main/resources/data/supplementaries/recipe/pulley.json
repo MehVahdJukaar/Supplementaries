@@ -10,7 +10,7 @@
       "tag": "minecraft:planks"
     },
     "0": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     },
     "2": {
       "tag": "minecraft:wooden_slabs"

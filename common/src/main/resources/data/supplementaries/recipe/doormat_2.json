@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "doormat"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "11 ",
+    "   ",
+    "   "
+  ],
+  "key": {
+    "1": {
+      "tag": "forge:crops/flax"
+    }
+  },
+  "result": {
+    "id": "supplementaries:doormat",
+    "count": 1
+  }
+}

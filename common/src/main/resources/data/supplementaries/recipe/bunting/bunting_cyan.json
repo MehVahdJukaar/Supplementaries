@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "cyan_dye"
+        "tag": "c:dyes/cyan"
     }
   ],
   "result": {

@@ -1,5 +1,5 @@
 {
-  "type": "supplementaries:flag_from_banner",
+  "condition": "supplementaries:flag_from_banner",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

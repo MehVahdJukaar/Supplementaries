@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "flag": "deepslate_lamp",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "minecraft:crafting_shaped",

@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "orange_dye"
+        "tag": "c:dyes/orange"
     }
   ],
   "result": {

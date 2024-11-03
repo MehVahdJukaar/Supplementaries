@@ -7,7 +7,7 @@
       "conditions": [
         {
           "flag": "blackboard",
-          "type": "supplementaries:flag"
+          "condition": "supplementaries:flag"
         },
         {
           "modid": "inspirations",

@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "flag": "iron_gate",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     },
     {
       "modid": "quark",
@@ -17,10 +17,10 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:gold_nugget"
+      "tag": "c:nuggets/gold"
     },
     "0": {
-      "item": "minecraft:gold_ingot"
+      "tag": "c:ingots/gold"
     }
   },
   "result": {

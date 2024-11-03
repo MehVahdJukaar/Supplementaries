@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " 1 ",
+    "333"
+  ],
+  "key": {
+    "1": {
+      "tag": "c:rods/wooden"
+    },
+    "3": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "id": "supplementaries:crank",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "crank"
+    }
+  ]
+}

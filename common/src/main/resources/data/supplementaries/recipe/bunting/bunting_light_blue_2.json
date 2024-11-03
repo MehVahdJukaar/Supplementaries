@@ -13,7 +13,7 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     },
     "0": {
       "item": "minecraft:light_blue_wool"

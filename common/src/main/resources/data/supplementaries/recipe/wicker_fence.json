@@ -9,7 +9,7 @@
       "item": "minecraft:sugar_cane"
     },
     "1": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {

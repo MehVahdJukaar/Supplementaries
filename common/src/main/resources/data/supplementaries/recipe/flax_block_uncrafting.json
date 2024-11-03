@@ -17,7 +17,7 @@
       "condition": "neoforge:and",
       "values": [
         {
-          "type": "supplementaries:flag",
+          "condition": "supplementaries:flag",
           "flag": "flax"
         }
       ]

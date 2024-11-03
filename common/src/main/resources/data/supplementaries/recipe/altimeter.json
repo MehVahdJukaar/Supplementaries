@@ -13,7 +13,7 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:copper_ingot"
+      "tag": "c:ingots/copper"
     },
     "0": {
       "item": "minecraft:redstone"

@@ -5,7 +5,7 @@
       "condition": "moonlight:iconditions",
       "values": [
         {
-          "type": "supplementaries:flag",
+          "condition": "supplementaries:flag",
           "flag": "ash_from_burning"
         }
       ]

@@ -11,7 +11,7 @@
       "item": "minecraft:yellow_wool"
     },
     "2": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {

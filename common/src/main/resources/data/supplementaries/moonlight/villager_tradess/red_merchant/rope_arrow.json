@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "flag": "rope_arrow",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "simple",

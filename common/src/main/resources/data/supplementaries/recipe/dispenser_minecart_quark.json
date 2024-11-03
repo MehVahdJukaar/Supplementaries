@@ -9,7 +9,7 @@
       "item": "minecraft:dispenser"
     },
     "1": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {

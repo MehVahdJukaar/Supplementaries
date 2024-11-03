@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "flag": "adventurer_maps",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "supplementaries:adventurer_map",

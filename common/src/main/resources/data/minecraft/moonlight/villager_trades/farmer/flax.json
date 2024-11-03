@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "flag": "flax",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "simple",

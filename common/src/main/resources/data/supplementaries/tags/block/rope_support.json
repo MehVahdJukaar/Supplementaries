@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"#forge:ropes","required":false},
+    {"id":"#c:ropes","required":false},
     {"id":"minecraft:bell","required":false},
     {"id":"minecraft:grindstone","required":false},
     {"id":"create:peculiar_bell","required":false},

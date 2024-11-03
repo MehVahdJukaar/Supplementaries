@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:awning"
+    },
+    {
+      "tag": "c:dyes/orange"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:awning_orange",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ]
+}

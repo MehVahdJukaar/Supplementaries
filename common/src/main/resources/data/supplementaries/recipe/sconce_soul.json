@@ -10,7 +10,7 @@
       "item": "minecraft:soul_torch"
     },
     "2": {
-      "item": "minecraft:iron_nugget"
+      "tag": "c:nuggets/iron"
     }
   },
   "result": {

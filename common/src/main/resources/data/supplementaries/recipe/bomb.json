@@ -11,10 +11,10 @@
       "item": "minecraft:tnt"
     },
     "1": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     },
     "2": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   },
   "result": {

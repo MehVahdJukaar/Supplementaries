@@ -2,8 +2,7 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:rope","required":false},
-    {"id":"#forge:ropes","required":false},
+    {"id":"c:ropes","required":false},
     {"id":"quark:rope","required":false},
     {"id":"xercamod:rope","required":false},
     {"id":"druidcraft:rope","required":false},

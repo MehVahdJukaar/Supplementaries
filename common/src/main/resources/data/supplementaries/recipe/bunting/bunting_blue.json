@@ -12,7 +12,7 @@
       "item": "supplementaries:bunting"
     },
     {
-      "item": "blue_dye"
+      "tag": "c:dyes/blue"
     }
   ],
   "result": {

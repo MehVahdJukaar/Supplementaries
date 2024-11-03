@@ -11,7 +11,7 @@
       "item": "minecraft:red_wool"
     },
     "2": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {

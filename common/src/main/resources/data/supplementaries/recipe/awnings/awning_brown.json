@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:awning"
+    },
+    {
+      "tag": "c:dyes/brown"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:awning_brown",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ]
+}

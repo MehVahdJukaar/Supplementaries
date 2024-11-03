@@ -13,7 +13,7 @@
       "item": "minecraft:cobblestone"
     },
     "2": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     }
   },
   "fabric:load_conditions": [

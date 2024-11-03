@@ -13,7 +13,7 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:iron_nugget"
+      "tag": "c:nuggets/iron"
     },
     "1": {
       "item": "minecraft:tuff"

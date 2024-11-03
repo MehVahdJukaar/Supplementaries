@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "323",
+    "101",
+    " 1 "
+  ],
+  "key": {
+    "1": {
+      "tag": "c:rods/wooden"
+    },
+    "2": {
+      "item": "minecraft:rabbit_hide"
+    },
+    "3": {
+      "tag": "c:strings"
+    },
+    "0": {
+      "item": "c:slime_balls"
+    }
+  },
+  "result": {
+    "id": "supplementaries:slingshot",
+    "count": 1
+  },
+  "conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "slingshot"
+    }
+  ]
+}

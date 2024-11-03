@@ -9,7 +9,7 @@
       "item": "buzzier_bees:soul_candle"
     },
     "2": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {

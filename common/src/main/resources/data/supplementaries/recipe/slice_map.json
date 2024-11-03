@@ -3,7 +3,7 @@
     {
       "condition": "neoforge:not",
       "value":     {
-        "type": "forge:tag_empty",
+        "type": "neoforge:tag_empty",
         "tag": "supplementaries:altimeters"
       }
     },

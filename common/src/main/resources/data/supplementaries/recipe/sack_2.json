@@ -3,7 +3,7 @@
     {
       "condition": "neoforge:not",
       "value": {
-        "type": "supplementaries:flag",
+        "condition": "supplementaries:flag",
         "flag": "flax"
       }
     },
@@ -23,7 +23,7 @@
       "item": "minecraft:wheat"
     },
     "2": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   },
   "result": {

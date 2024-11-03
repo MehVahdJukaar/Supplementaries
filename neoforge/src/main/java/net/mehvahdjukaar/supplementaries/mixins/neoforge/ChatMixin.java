@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import net.mehvahdjukaar.supplementaries.client.renderers.neoforge.PicklePlayer;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.neoforged.neoforge.common.loot.LootModifierManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

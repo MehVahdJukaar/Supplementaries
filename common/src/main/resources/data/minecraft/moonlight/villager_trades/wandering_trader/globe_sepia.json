@@ -2,11 +2,11 @@
   "global_conditions": [
     {
       "flag": "globe",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     },
     {
       "flag": "antique_ink",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "simple",

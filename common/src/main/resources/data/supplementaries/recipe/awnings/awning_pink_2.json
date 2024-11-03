@@ -9,7 +9,7 @@
       "tag": "minecraft:pink_carpet"
     },
     "1": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "result": {
@@ -24,7 +24,7 @@
     {
       "condition": "neoforge:not",
         "value": {
-            "type": "supplementaries:flag",
+            "condition": "supplementaries:flag",
             "flag": "flax"
         }
     }

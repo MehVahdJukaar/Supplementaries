@@ -18,7 +18,7 @@
           "type": "neoforge:not",
           "value": {
             "flag": "rich_soil_planter",
-            "type": "supplementaries:flag"
+            "condition": "supplementaries:flag"
           }
         }
       ]

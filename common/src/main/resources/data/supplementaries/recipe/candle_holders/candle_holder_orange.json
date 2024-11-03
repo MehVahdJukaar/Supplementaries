@@ -11,7 +11,7 @@
       "item": "minecraft:orange_candle"
     },
     "N": {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:ingots/iron"
     }
   },
   "result": {

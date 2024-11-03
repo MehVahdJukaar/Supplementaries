@@ -52,7 +52,7 @@ dependencies {
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
 
 
-    modImplementation("curse.maven:farmers-delight-refabricated-993166:5852406")
+    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5852406")
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")

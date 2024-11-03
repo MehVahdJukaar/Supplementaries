@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "flag": "cannonball",
-      "type": "supplementaries:flag"
+      "condition": "supplementaries:flag"
     }
   ],
   "type": "simple",
