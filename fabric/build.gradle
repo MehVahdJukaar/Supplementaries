@@ -55,7 +55,7 @@ dependencies {
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
-    modCompileOnly("curse.maven:jei-238222:4405345")
+    modImplementation("curse.maven:jei-238222:4405345")
     modImplementation("curse.maven:jei-fabric-waystones-410902:4950461")
     modImplementation("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"

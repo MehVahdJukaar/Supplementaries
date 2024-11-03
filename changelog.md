@@ -7,3 +7,4 @@ CHECK PREVIOUS PATCH NOTES!!
 - improved turn table shuffle container logic. added related blacklist tag
 - removed some random hard casts
 - fixed cannon stalling when triggered while firing
+- fixed dispenser behaviors being registered for wrong items
