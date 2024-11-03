@@ -32,14 +32,17 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
 
     public SlimeBallEntity(Level world, double x, double y, double z) {
         super(ModEntities.THROWABLE_SLIMEBALL.get(), x, y, z, world);
+        this.maxAge = 400;
     }
 
     public SlimeBallEntity(LivingEntity thrower) {
         super(ModEntities.THROWABLE_SLIMEBALL.get(), thrower, thrower.level());
+        this.maxAge = 400;
     }
 
     public SlimeBallEntity(EntityType<SlimeBallEntity> type, Level level) {
         super(type, level);
+        this.maxAge = 400;
     }
 
     @Override

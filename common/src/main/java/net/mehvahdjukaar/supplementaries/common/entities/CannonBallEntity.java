@@ -261,7 +261,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
         double speed = this.getDeltaMovement().lengthSqr();
         double minSpeed = 0.2f;
-        if (!this.level().isClientSide && !state.isAir() && speed > minSpeed) {
+        if (this.level() instanceof ServerLevel sl && !state.isAir() && speed > minSpeed) {
             double x = hit.getLocation().x;
             double y = hit.getLocation().y;
             double z = hit.getLocation().z;
@@ -270,7 +270,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             BlockParticleOption blockParticleOption = new BlockParticleOption(ParticleTypes.BLOCK, state);
             SuppPlatformStuff.setParticlePos(blockParticleOption, pos);
-            ((ServerLevel) this.level()).sendParticles(blockParticleOption,
+            sl.sendParticles(blockParticleOption,
                     x, y, z, count, 0.0, 0.0, 0.0, 0.15);
 
         }

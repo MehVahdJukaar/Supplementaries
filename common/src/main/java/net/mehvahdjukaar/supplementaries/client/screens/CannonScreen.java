@@ -60,7 +60,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     private void onManeuverPressed(Button button) {
         CannonController.startControlling(tile);
         //dont sync cannon and dont clear owner
-        super.onClose();
+        this.onClose();
     }
 
     @Override

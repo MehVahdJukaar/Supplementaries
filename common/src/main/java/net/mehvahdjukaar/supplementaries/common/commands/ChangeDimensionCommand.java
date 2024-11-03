@@ -59,7 +59,7 @@ public class ChangeDimensionCommand {
 
 
     private static int teleportToPos(CommandContext<CommandSourceStack> context, Collection<? extends Entity> targets,
-                                     Level level,
+                                     ServerLevel level,
                                      Coordinates position) throws CommandSyntaxException {
         var source = context.getSource();
 
@@ -95,14 +95,14 @@ public class ChangeDimensionCommand {
 
     }
 
-    private static void performTeleport(CommandSourceStack source, Entity entity, Level level, double x, double y, double z, Set<RelativeMovement> relativeList) throws CommandSyntaxException {
+    private static void performTeleport(CommandSourceStack source, Entity entity, ServerLevel level, double x, double y, double z, Set<RelativeMovement> relativeList) throws CommandSyntaxException {
         BlockPos blockPos = BlockPos.containing(x, y, z);
         if (!Level.isInSpawnableBounds(blockPos)) {
             throw INVALID_POSITION.create();
         } else {
             float f = Mth.wrapDegrees(entity.getYRot());
             float g = Mth.wrapDegrees(entity.getXRot());
-            if (entity.teleportTo((ServerLevel) level, x, y, z, relativeList, f, g)) {
+            if (entity.teleportTo( level, x, y, z, relativeList, f, g)) {
 
                 label23:
                 {

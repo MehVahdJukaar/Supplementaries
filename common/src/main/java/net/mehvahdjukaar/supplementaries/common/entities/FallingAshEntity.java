@@ -69,6 +69,9 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
             super.tick();
             return;
         }
+        if (!(level instanceof ServerLevel sl)) {
+            return;
+        }
         BlockState blockState = this.getBlockState();
         if (!blockState.is(ModRegistry.ASH_BLOCK.get())) {
             this.discard();
@@ -126,7 +129,7 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
                         }
 
                         if (level.setBlock(pos, blockState, 3)) {
-                            ((ServerLevel) level).getChunkSource().chunkMap.broadcast(this,
+                            sl.getChunkSource().chunkMap.broadcast(this,
                                     new ClientboundBlockUpdatePacket(pos, level.getBlockState(pos)));
 
                             if (block instanceof Fallable fallable) {
@@ -139,7 +142,7 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
                                 blockState = blockState.setValue(AshLayerBlock.LAYERS, remaining);
                                 if (level.getBlockState(above).canBeReplaced()) {
                                     if (!level.setBlock(above, blockState, 3)) {
-                                        ((ServerLevel) level).getChunkSource().chunkMap.broadcast(this,
+                                        sl.getChunkSource().chunkMap.broadcast(this,
                                                 new ClientboundBlockUpdatePacket(above, level.getBlockState(above)));
                                         this.dropBlockContent(blockState, pos);
                                     }

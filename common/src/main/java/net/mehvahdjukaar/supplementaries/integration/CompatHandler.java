@@ -69,6 +69,7 @@ public class CompatHandler {
     public static final boolean SNOWYSPIRIT = isLoaded("snowyspirit");
     public static final boolean HAUNTEDHARVEST = isLoaded("hauntedharvest");
     public static final boolean CLOTH_CONFIG = isLoaded("cloth_config");
+    public static final boolean YACL = isLoaded("yacl") || isLoaded("yet_another_config_lib");
     public static final boolean FLAN = isLoaded("flan");
     public static final boolean BREEZY = isLoaded("breezy");
     public static final boolean WILDER_WILD = isLoaded("wilder-wild");

@@ -37,7 +37,7 @@ public class ClientEventsFabric {
 
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            if (CompatHandler.CLOTH_CONFIG) {
+            if (CompatHandler.CLOTH_CONFIG || CompatHandler.YACL) {
                 List<? extends GuiEventListener> listeners = s.children();
                 ClientEvents.addConfigButton(s, listeners, e -> {
                     List<GuiEventListener> c = (List<GuiEventListener>) s.children();
