@@ -33,8 +33,8 @@
   "block.supplementaries.blackstone_tile_vertical_slab": "ブラックストーンタイルの縦ハーフブロック",
   "block.supplementaries.blackstone_tile_wall": "ブラックストーンタイルの塀",
   "block.supplementaries.blaze_rod": "ブレイズロッド",
-  "block.supplementaries.book_pile": "本の束",
-  "block.supplementaries.book_pile_horizontal": "本の束",
+  "block.supplementaries.book_pile": "重ね置きされた本",
+  "block.supplementaries.book_pile_horizontal": "重ね置きされた本",
   "block.supplementaries.brass_lantern": "真鍮のランタン",
   "block.supplementaries.bubble_block": "泡ブロック",
   "block.supplementaries.cage": "ケージ",
@@ -252,9 +252,9 @@
   "death.attack.supplementaries.slingshot.item": "%1$sは%2$sの%3$sによって石打ちにされた",
 
   "effect.supplementaries.overencumbered": "重量超過",
-  "effect.supplementaries.overencumbered.description": "ダッシュができなくなります。レベルが上がるとジャンプの高さが半減し、歩行速度も低下します",
-  "effect.supplementaries.flammable": "可燃",
-  "effect.supplementaries.flammable.description": "炎上の持続時間が増加し、歩いた地点に炎を残します",
+  "effect.supplementaries.overencumbered.description": "ダッシュができなくなります。レベルが上がるとジャンプの高さが半減し、歩行速度も低下します。",
+  "effect.supplementaries.flammable": "引火",
+  "effect.supplementaries.flammable.description": "炎上の持続時間が増加し、歩いた地点に炎を残すようになります。",
 
   "enchantment.supplementaries.soul_fire_aspect": "輝油火属性",
   "enchantment.supplementaries.soul_flame": "輝油フレイム",
