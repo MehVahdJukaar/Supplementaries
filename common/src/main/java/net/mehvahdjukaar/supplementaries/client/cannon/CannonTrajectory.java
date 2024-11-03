@@ -299,6 +299,7 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
 
             // Update the search interval based on the comparison of distances
             if (distance1 < distance2) {
+                if (r1 == null) break;
                 bestPoint = r1.getFirst();
                 bestAngle = midAngle1;
                 bestPointTime = r1.getSecond();
@@ -312,6 +313,7 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
                 midAngle2 = midAngle1;
                 midAngle1 = startAngle + goldenRatio * (endAngle - startAngle);
             } else {
+                if (r2 == null) break;
                 bestPoint = r2.getFirst();
                 bestAngle = midAngle2;
                 bestPointTime = r2.getSecond();
@@ -328,6 +330,10 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
             }
             if (endAngle < startAngle) {
                 Supplementaries.error();
+            }
+
+            if (!(Math.abs(endAngle - startAngle) > angleTolerance)) {
+                int aa = 1;
             }
 
             // Update the best result if a closer point is found
@@ -511,8 +517,9 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
 
     public BlockPos getHitPos(BlockPos cannonPos, float yaw) {
         Vec2 v = this.point;
-        Vec3 localPos = new Vec3(0, v.y - 1, -v.x).yRot(-yaw);
-        return BlockPos.containing(cannonPos.getCenter().add(localPos));
+        Vec3 localPos = new Vec3(0, v.y, -v.x).yRot(-yaw);
+        float offsetDown = -1 / 16f; //so we pick the block below
+        return BlockPos.containing(cannonPos.getCenter().add(localPos).add(0, offsetDown, 0));
     }
 
 

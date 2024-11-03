@@ -44,13 +44,19 @@ public abstract class CompatSodiumFluidRendererMixin {
         return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
     }
 
-    @Inject(method = "updateQuad",
+    @Inject(method = "updateQuad(Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;Lnet/minecraft/core/Direction;FLme/jellysquid/mods/sodium/client/model/color/ColorProvider;Lnet/minecraft/world/level/material/FluidState;)V",
+            require = 0, //WHYYYY TODO: FIX MEEE
             at = @At(value = "INVOKE",
                     remap = false,
+
+                    args = "log=true",
                     shift = At.Shift.AFTER,
                     target = "Lme/jellysquid/mods/sodium/client/model/color/ColorProvider;getColors(Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
             remap = false)
-    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos, LightPipeline lighter, Direction dir, float brightness, ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
+    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos,
+                                                         LightPipeline lighter, Direction dir,
+                                                         float brightness, ColorProvider<FluidState> colorProvider,
+                                                         FluidState fluidState, CallbackInfo ci) {
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
