@@ -239,8 +239,7 @@ public class ModBlockProperties {
             else if (holder.is(ModTags.SYRUP)) t = SYRUP;
 
             else if (item instanceof HoneyBottleItem) t = HONEY;
-            else if (item == Items.COCOA_BEANS && (BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty() ||
-                    BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).get().stream().findAny().isEmpty())) {
+            else if (item == Items.COCOA_BEANS && BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) {
                 t = CHOCOLATE;
             } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
             else t = NONE;
