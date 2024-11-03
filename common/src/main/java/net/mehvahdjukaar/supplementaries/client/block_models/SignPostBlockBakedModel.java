@@ -84,12 +84,12 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
 
     @Override
     public boolean isGui3d() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean usesBlockLight() {
-        return false;
+        return true;
     }
 
     @Override
