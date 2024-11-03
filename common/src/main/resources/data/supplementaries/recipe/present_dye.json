@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:present_dye",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "present"
     }
   ]

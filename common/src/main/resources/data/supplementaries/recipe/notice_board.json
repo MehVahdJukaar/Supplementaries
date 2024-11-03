@@ -17,9 +17,9 @@
     "id": "supplementaries:notice_board",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "notice_board"
     }
   ]

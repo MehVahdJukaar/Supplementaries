@@ -16,9 +16,9 @@
     "id": "minecraft:white_bed",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "feather_block"
     }
   ]

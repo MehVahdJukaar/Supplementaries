@@ -10,13 +10,13 @@
       "item": "supplementaries:bamboo_spikes"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "create",
       "type": "neoforge:mod_loaded"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "bamboo_spikes_tipped"
     }
   ]

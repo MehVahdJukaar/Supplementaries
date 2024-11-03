@@ -17,9 +17,9 @@
     "id": "supplementaries:clock_block",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "clock_block"
     }
   ]

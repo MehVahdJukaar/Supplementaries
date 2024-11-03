@@ -9,9 +9,9 @@
     "id": "supplementaries:sign_post_acacia",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "sign_post"
     }
   ]

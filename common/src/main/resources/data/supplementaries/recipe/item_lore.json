@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:item_lore",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "item_lore"
     }
   ]

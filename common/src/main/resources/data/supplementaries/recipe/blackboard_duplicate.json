@@ -1,3 +1,10 @@
 {
-  "type": "supplementaries:blackboard_duplicate"
+  "type": "supplementaries:blackboard_duplicate",
+
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ]
 }

@@ -10,17 +10,17 @@
       "item": "supplementaries:sconce_soul"
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "create",
       "type": "neoforge:mod_loaded"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "sconce"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "sconce_soul"
     }
   ]

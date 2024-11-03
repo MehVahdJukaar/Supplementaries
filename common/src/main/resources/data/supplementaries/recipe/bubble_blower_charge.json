@@ -15,13 +15,13 @@
       "supplementaries:charges": 250
     }
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "bubble_blower"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "soap"
     }
   ]

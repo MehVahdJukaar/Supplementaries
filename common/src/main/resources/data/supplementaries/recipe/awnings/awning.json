@@ -16,13 +16,13 @@
     "id": "supplementaries:awning",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "awning"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "flax"
     }
   ]

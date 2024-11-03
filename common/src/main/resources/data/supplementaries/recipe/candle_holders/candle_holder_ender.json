@@ -16,17 +16,17 @@
     "id": "supplementaries:candle_holder_ender",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "candle_holder"
     },
     {
-      "type": "neoforge:mod_loaded",
+      "condition": "neoforge:mod_loaded",
       "modid": "buzzier_bees"
     },
     {
-      "type": "neoforge:mod_loaded",
+      "condition": "neoforge:mod_loaded",
       "modid": "endergetic"
     }
   ]

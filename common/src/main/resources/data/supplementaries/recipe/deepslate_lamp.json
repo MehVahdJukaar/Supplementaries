@@ -1,5 +1,5 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "flag": "deepslate_lamp",
       "type": "supplementaries:flag"

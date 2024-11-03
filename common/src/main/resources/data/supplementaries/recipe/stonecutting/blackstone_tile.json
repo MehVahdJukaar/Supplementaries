@@ -3,9 +3,9 @@
   "ingredient": {
     "item": "minecraft:polished_blackstone_bricks"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "stone_tile"
     }
   ],

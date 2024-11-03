@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "condition": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:sticky_piston"
@@ -13,9 +13,9 @@
     "id": "minecraft:piston",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "soap"
     }
   ]

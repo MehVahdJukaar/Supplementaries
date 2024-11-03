@@ -17,9 +17,9 @@
     "id": "supplementaries:checker_block",
     "count": 4
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "checker_block"
     }
   ]

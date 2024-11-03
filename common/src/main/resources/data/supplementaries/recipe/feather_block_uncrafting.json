@@ -12,9 +12,9 @@
     "id": "minecraft:feather",
     "count": 9
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:and",
+      "condition": "neoforge:and",
       "values": [
         {
           "type": "supplementaries:flag",

@@ -18,9 +18,9 @@
     "id": "supplementaries:candle_holder_green",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "candle_holder"
     }
   ]

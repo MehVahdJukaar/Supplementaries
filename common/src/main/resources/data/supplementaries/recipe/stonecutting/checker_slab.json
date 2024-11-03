@@ -3,9 +3,9 @@
   "ingredient": {
     "item": "supplementaries:checker_block"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "checker_block"
     }
   ],

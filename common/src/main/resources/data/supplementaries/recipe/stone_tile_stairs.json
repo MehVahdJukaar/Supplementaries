@@ -13,5 +13,11 @@
   "result": {
     "id": "supplementaries:stone_tile_stairs",
     "count": 4
-  }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ]
 }

@@ -1,11 +1,11 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "immersive_weathering",
       "type": "neoforge:mod_loaded"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "ash"
     }
   ],

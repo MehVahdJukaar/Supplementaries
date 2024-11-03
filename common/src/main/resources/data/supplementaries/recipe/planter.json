@@ -1,11 +1,11 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "planter"
     },
     {
-      "type": "forge:or",
+      "condition": "forge:or",
       "values": [
         {
           "type": "neoforge:not",

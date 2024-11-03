@@ -17,9 +17,9 @@
     "id": "supplementaries:sconce_glow",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:and",
+      "condition": "neoforge:and",
       "values": [
         {
           "type": "neoforge:mod_loaded",

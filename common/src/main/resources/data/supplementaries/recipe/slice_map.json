@@ -1,14 +1,14 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:not",
+      "condition": "neoforge:not",
       "value":     {
         "type": "forge:tag_empty",
         "tag": "supplementaries:altimeters"
       }
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "slice_map"
     }
   ],

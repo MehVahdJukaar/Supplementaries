@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:antique_book",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "antique_ink"
     }
   ]

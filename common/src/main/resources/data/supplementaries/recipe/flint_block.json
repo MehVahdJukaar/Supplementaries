@@ -14,9 +14,9 @@
     "id": "supplementaries:flint_block",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "flint_block"
     }
   ]

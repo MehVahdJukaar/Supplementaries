@@ -9,9 +9,9 @@
       "item": "minecraft:lapis_lazuli"
     }
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "lapis_bricks"
     }
   ],

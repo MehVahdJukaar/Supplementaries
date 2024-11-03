@@ -14,9 +14,9 @@
     "id": "supplementaries:blackstone_tile",
     "count": 4
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "stone_tile"
     }
   ]

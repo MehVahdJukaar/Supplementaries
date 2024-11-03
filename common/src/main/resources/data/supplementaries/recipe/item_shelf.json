@@ -12,13 +12,13 @@
     "id": "supplementaries:item_shelf",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "item_shelf"
     },
     {
-      "type": "neoforge:not",
+      "condition": "neoforge:not",
       "value": {
         "modid": "suppsquared",
         "type": "neoforge:mod_loaded"

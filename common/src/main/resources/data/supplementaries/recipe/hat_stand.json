@@ -15,9 +15,9 @@
   "result": {
     "id": "supplementaries:hat_stand"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "hat_stand"
     }
   ]

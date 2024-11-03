@@ -15,13 +15,13 @@
     "type": "farmersdelight:tool_action",
     "action": "pickaxe_dig"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "farmersdelight",
       "type": "neoforge:mod_loaded"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "ash_bricks"
     }
   ]

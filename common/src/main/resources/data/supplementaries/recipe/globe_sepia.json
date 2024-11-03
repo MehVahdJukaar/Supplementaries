@@ -12,13 +12,13 @@
     "id": "supplementaries:globe_sepia",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "globe_sepia"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "antique_ink"
     }
   ]

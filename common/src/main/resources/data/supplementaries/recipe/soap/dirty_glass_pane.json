@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "condition": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "quark:dirty_glass_pane"

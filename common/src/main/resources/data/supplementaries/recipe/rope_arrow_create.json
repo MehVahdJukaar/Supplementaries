@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:rope_arrow_create",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "rope_arrow"
     }
   ]

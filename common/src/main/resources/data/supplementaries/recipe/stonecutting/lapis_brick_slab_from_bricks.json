@@ -3,9 +3,9 @@
   "ingredient": {
     "item": "supplementaries:lapis_bricks"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "lapis_bricks"
     }
   ],

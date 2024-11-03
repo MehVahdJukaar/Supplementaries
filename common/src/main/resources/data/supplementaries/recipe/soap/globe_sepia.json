@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "condition": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "supplementaries:globe_sepia"
@@ -13,13 +13,13 @@
     "id": "supplementaries:globe",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "globe"
     },
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "soap"
     }
   ]

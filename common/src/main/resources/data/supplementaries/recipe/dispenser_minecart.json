@@ -15,9 +15,9 @@
   "result": {
     "id": "supplementaries:dispenser_minecart"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "dispenser_minecart"
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "condition": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "quark:dirty_shard"
@@ -13,13 +13,13 @@
     "id": "quark:clear_shard",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "soap"
     },
     {
-      "type": "neoforge:mod_loaded",
+      "condition": "neoforge:mod_loaded",
       "modid": "quark"
     }
   ]

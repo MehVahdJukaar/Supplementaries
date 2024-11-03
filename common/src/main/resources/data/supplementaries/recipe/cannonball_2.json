@@ -14,13 +14,13 @@
     "id": "supplementaries:cannonball",
     "count": 10
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "cannonball"
     },
     {
-      "type": "neoforge:not",
+      "condition": "neoforge:not",
       "value": {
         "type": "forge:tag_empty",
         "tag": "forge:storage_blocks/lead"

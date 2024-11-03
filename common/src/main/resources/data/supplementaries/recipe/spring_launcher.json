@@ -23,9 +23,9 @@
     "id": "supplementaries:spring_launcher",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "spring_launcher"
     }
   ]

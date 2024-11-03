@@ -16,13 +16,13 @@
     "id": "supplementaries:fire_pit",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "fire_pit"
     },
     {
-      "type": "neoforge:not",
+      "condition": "neoforge:not",
       "value": {
         "type": "supplementaries:flag",
         "flag": "lumisene"

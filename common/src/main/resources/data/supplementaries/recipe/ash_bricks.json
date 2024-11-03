@@ -9,9 +9,9 @@
       "item": "supplementaries:ash_brick"
     }
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "ash_bricks"
     }
   ],

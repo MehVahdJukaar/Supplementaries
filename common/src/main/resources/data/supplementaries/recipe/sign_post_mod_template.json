@@ -16,9 +16,9 @@
     "id": "supplementaries:sign_post_oak",
     "count": 3
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:false"
+      "condition": "forge:false"
     }
   ]
 }

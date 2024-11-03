@@ -14,9 +14,9 @@
     "id": "supplementaries:rope",
     "count": 3
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:and",
+      "condition": "neoforge:and",
       "values": [
         {
           "type": "neoforge:not",

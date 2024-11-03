@@ -23,9 +23,9 @@
     "id": "supplementaries:turn_table",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "turn_table"
     }
   ]

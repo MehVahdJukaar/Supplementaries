@@ -12,9 +12,9 @@
     "id": "minecraft:flint",
     "count": 9
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "flint_block"
     }
   ]

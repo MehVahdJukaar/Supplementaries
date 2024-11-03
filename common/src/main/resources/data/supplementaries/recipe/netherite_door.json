@@ -11,9 +11,9 @@
   "result": {
     "id": "supplementaries:netherite_door"
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "netherite_door"
     }
   ]

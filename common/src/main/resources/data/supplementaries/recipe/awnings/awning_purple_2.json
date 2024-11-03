@@ -16,13 +16,13 @@
     "id": "supplementaries:awning_purple",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "awning"
     },
     {
-      "type": "neoforge:not",
+      "condition": "neoforge:not",
         "value": {
             "type": "supplementaries:flag",
             "flag": "flax"

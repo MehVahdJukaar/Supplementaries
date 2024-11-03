@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:trapped_present",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "trapped_present"
     }
   ]

@@ -12,9 +12,9 @@
     "id": "minecraft:sugar",
     "count": 9
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "sugar_cube"
     }
   ]
