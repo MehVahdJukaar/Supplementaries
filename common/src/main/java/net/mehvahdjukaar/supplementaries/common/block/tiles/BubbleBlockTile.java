@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BubbleBlock;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -7,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -40,7 +40,7 @@ public class BubbleBlockTile extends BlockEntity {
                 }
             }
             if (tile.age > lifetime && pLevel.random.nextInt(500) == 0) {
-                ModRegistry.BUBBLE_BLOCK.get().breakBubble((ServerLevel) pLevel, pPos, pState);
+                BubbleBlock.breakBubble(pLevel, pPos, pState);
             }
         }
     }
@@ -52,7 +52,7 @@ public class BubbleBlockTile extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putInt("age",age);
+        tag.putInt("age", age);
     }
 
     @Override
