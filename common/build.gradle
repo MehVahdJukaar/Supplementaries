@@ -39,7 +39,8 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("curse.maven:zeta-968868:5597406")
     modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
-    modCompileOnly("curse.maven:farmers-delight-398521:5051242")
+    modCompileOnly("curse.maven:farmers-delight-398521:5772720")
+
     modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
 
     modCompileOnly("curse.maven:immediatelyfast-686911:4937545")

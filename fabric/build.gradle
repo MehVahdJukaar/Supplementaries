@@ -52,7 +52,7 @@ dependencies {
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
 
 
-    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5684645")
+    modImplementation("curse.maven:farmers-delight-refabricated-993166:5852406")
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
@@ -74,7 +74,7 @@ dependencies {
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
 
-    modCompileOnly("curse.maven:immediatelyfast-686911:4937544")
+    modCompileOnly("curse.maven:immediatelyfast-686911:5861163")
     //modImplementation("curse.maven:spectrum-556967:5080474")
     modCompileOnly("curse.maven:create-328085:4835191")
 

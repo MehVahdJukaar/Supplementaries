@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.integration.neoforge.configured.ModConf
 import net.minecraft.client.Minecraft;
 
 public class ConfigUtilsImpl {
+
     public static void openModConfigs() {
         if (CompatHandler.CONFIGURED) {
             Minecraft mc = Minecraft.getInstance();

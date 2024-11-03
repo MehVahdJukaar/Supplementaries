@@ -1,6 +1,8 @@
 {
   "loader": "neoforge:separate_transforms",
-  "base": "supplementaries:confetti_popper_in_hand",
+  "base": {
+    "parent": "supplementaries:item/confetti_popper_in_hand"
+  },
   "perspectives": {
     "head": {
       "parent": "supplementaries:item/confetti_popper_head"

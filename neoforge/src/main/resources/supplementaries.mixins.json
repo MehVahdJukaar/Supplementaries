@@ -13,6 +13,7 @@
   "mixins": [
     "ChunkHolderMixin",
     "CompatFarmersDelightTomatoMixin",
+    "CompatSodiumFluidRendererMixin",
     "FireBlockAccessor",
     "LivingEntityMixin",
     "TreasureMapForEmeraldsMixin",

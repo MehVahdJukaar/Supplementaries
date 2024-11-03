@@ -13,13 +13,13 @@
     "id": "minecraft:glass_pane",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "supplementaries:flag",
+      "condition": "supplementaries:flag",
       "flag": "soap"
     },
     {
-      "type": "neoforge:mod_loaded",
+      "condition": "fabric:mod_loaded",
       "modid": "quark"
     }
   ]

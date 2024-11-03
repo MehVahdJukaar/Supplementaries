@@ -262,7 +262,7 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
                 DispenseItemBehavior dispenseitembehavior = ((DispenserBlock) Blocks.DISPENSER)
                         .getDispenseMethod(level, itemstack);
                 if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
-                    BlockSource blockSource = IMovingBlockSource.create(level, this, dispenser, pLevel);
+                    BlockSource blockSource = IMovingBlockSource.create(level, this, dispenser);
                     // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...
                     ItemStack dispensed;
                     if (CommonConfigs.Redstone.DISPENSER_MINECART_ANGLE.get() && itemstack.getItem() instanceof ProjectileItem pb) {

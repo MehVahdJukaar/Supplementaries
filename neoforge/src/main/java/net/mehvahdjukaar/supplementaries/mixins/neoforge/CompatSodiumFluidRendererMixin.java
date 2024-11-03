@@ -3,6 +3,15 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.caffeinemc.mods.sodium.client.model.color.ColorProvider;
+import net.caffeinemc.mods.sodium.client.model.light.LightMode;
+import net.caffeinemc.mods.sodium.client.model.light.LightPipeline;
+import net.caffeinemc.mods.sodium.client.model.light.data.QuadLightData;
+import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadViewMutable;
+import net.caffeinemc.mods.sodium.client.model.quad.properties.ModelQuadFacing;
+import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.DefaultFluidRenderer;
+import net.caffeinemc.mods.sodium.client.world.LevelSlice;
+import net.mehvahdjukaar.moonlight.api.resources.recipe.neoforge.ResourceConditionsBridge;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -10,13 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import org.embeddedt.embeddium.impl.model.color.ColorProvider;
-import org.embeddedt.embeddium.impl.model.light.LightMode;
-import org.embeddedt.embeddium.impl.model.light.LightPipeline;
-import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
-import org.embeddedt.embeddium.impl.model.quad.ModelQuadView;
-import org.embeddedt.embeddium.impl.render.chunk.compile.pipeline.FluidRenderer;
-import org.embeddedt.embeddium.impl.world.WorldSlice;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -27,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Mixin(FluidRenderer.class)
-public abstract class CompatEmbFluidRendererMixin {
+@Mixin(DefaultFluidRenderer.class)
+public abstract class CompatSodiumFluidRendererMixin {
 
     @Shadow
     @Final
@@ -46,9 +48,10 @@ public abstract class CompatEmbFluidRendererMixin {
             at = @At(value = "INVOKE",
                     remap = true,
                     shift = At.Shift.AFTER,
-                    target = "Lorg/embeddedt/embeddium/impl/model/color/ColorProvider;getColors(Lorg/embeddedt/embeddium/api/render/chunk/EmbeddiumBlockAndTintGetter;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lorg/embeddedt/embeddium/impl/model/quad/ModelQuadView;[I)V"),
+                    target = "Lnet/caffeinemc/mods/sodium/client/model/color/ColorProvider;getColors(Lnet/caffeinemc/mods/sodium/client/world/LevelSlice;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos$MutableBlockPos;Ljava/lang/Object;Lnet/caffeinemc/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
             remap = false)
-    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos, LightPipeline lighter, Direction dir, float brightness, ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
+    public void supplementaries$modifyLumiseneEmissivity(ModelQuadViewMutable quad, LevelSlice level, BlockPos pos, LightPipeline lighter, Direction dir, ModelQuadFacing facing, float brightness,
+                                                         ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
@@ -90,7 +93,7 @@ public abstract class CompatEmbFluidRendererMixin {
             remap = false,
             at = @At(value = "INVOKE",
                     remap = false,
-                    target = "Lorg/embeddedt/embeddium/impl/model/light/LightPipelineProvider;getLighter(Lorg/embeddedt/embeddium/impl/model/light/LightMode;)Lorg/embeddedt/embeddium/impl/model/light/LightPipeline;"))
+                    target = "Lnet/caffeinemc/mods/sodium/client/model/light/LightPipelineProvider;getLighter(Lnet/caffeinemc/mods/sodium/client/model/light/LightMode;)Lnet/caffeinemc/mods/sodium/client/model/light/LightPipeline;"))
     public LightMode supplementaries$modifyLumiseneLight(LightMode lightMode, @Local Fluid fluid) {
         if (fluid == ModFluids.LUMISENE_FLUID.get()) {
             return Minecraft.getInstance().options.ambientOcclusion().get() ? LightMode.SMOOTH : LightMode.FLAT;

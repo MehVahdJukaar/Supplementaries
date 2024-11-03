@@ -105,7 +105,7 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
+        if (hitResult.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
         if (MovingSlidyBlock.maybeMove(state, level, pos, hitResult.getDirection().getOpposite())) {
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);

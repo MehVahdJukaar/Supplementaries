@@ -108,24 +108,11 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    //this could be improved
-    @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(worldIn, pos, state, placer, stack);
-        BlockEntity te = worldIn.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile tile) {
-            PotionContents p = getPotion(stack);
-            int charges = stack.getOrDefault(ModComponents.CHARGES.get(), 0);
-            tile.tryApplyPotion(p, charges);
-        }
-    }
-
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         ItemStack stack = context.getItemInHand();
-        var damage = stack.get(DataComponents.DAMAGE);
+        var charges = stack.getOrDefault(ModComponents.CHARGES.get(), 0);
         boolean hasPotion = stack.has(DataComponents.POTION_CONTENTS);
-        int charges = damage != null ? stack.getMaxDamage() - damage : 0;
         return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace())
                 .setValue(TIPPED, charges != 0 && hasPotion);
     }

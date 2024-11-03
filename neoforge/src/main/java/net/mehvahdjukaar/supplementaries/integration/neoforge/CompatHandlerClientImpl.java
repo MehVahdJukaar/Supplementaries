@@ -19,10 +19,10 @@ public class CompatHandlerClientImpl {
             QuarkClientCompat.setupClient();
         }
 
-        if(CompatHandler.CREATE){
+        if (CompatHandler.CREATE) {
             CreateCompat.setupClient();
         }
-        if(CompatHandler.FLYWHEEL){
+        if (CompatHandler.FLYWHEEL) {
             FlywheelCompat.setupClient();
         }
     }
