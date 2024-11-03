@@ -8,3 +8,4 @@ CHECK PREVIOUS PATCH NOTES!!
 - removed some random hard casts
 - fixed cannon stalling when triggered while firing
 - fixed dispenser behaviors being registered for wrong items
+- fixed cannonball recipe
