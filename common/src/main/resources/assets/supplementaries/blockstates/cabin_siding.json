@@ -2,15 +2,13 @@
   "variants": {
     "axis=x": {
       "model": "supplementaries:block/cabin_siding_horizontal",
-      "x": 90,
       "y": 90
     },
     "axis=y": {
       "model": "supplementaries:block/cabin_siding"
     },
     "axis=z": {
-      "model": "supplementaries:block/cabin_siding_horizontal",
-      "x": 90
+      "model": "supplementaries:block/cabin_siding_horizontal"
     }
   }
 }

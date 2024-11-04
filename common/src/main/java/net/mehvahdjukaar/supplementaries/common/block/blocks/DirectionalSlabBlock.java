@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import org.jetbrains.annotations.Nullable;
 
 public class DirectionalSlabBlock extends SlabBlock {
@@ -27,8 +29,16 @@ public class DirectionalSlabBlock extends SlabBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context)
-                .setValue(AXIS, context.getHorizontalDirection().getAxis());
+        BlockPos blockPos = context.getClickedPos();
+        BlockState blockState = context.getLevel().getBlockState(blockPos);
+        BlockState newState = super.getStateForPlacement(context);
+        if (blockState.getBlock() == this) {
+            if (blockState.getValue(TYPE) == SlabType.BOTTOM) {
+                return newState.setValue(AXIS, blockState.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
+            }
+            return newState;
+        }
+        return newState.setValue(AXIS, context.getHorizontalDirection().getAxis());
     }
 
     @Override
