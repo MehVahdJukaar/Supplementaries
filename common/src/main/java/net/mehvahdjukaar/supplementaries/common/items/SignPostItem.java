@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostWallBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
@@ -104,9 +105,11 @@ public class SignPostItem extends WoodBasedBlockItem {
         }
         //normal wall placement
         else if (attachType == AttachType.WALL) {
+            //same operation that oseOn will do. before we actually place it
+            BlockPlaceContext bpc = this.updatePlacementContext(new BlockPlaceContext(context));
             if (super.useOn(context).consumesAction()) {
-                context = this.updatePlacementContext(new BlockPlaceContext(context));
-                blockpos = context.getClickedPos();
+                blockpos = bpc.getClickedPos();
+                context = bpc;
             } else return InteractionResult.PASS;
         }
 
@@ -133,6 +136,8 @@ public class SignPostItem extends WoodBasedBlockItem {
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
+        } else {
+            Supplementaries.error();
         }
 
         return InteractionResult.PASS;
