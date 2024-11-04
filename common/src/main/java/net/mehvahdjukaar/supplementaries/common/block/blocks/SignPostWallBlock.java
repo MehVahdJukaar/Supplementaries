@@ -61,6 +61,7 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction direction = context.getClickedFace();
+        if (direction.getAxis() == Direction.Axis.Y) return null;
         return super.getStateForPlacement(context).setValue(FACING, direction);
     }
 
@@ -71,7 +72,7 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(stack.getItem() instanceof SignPostItem) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (stack.getItem() instanceof SignPostItem) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (level instanceof ServerLevel serverLevel) {
             if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile && tile.isAccessibleBy(player)) {
                 return tile.handleInteraction(state, serverLevel, pos, player, hand, hitResult, stack);

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "supplementaries:block/cabin_siding_end",
+    "side": "supplementaries:block/cabin_siding_side"
+  }
+}

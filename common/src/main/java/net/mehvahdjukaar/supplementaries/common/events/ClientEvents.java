@@ -132,6 +132,7 @@ public class ClientEvents {
 
             String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
+            //no shaders in spectator
             if (p.isSpectator()) {
                 if (rendererShader != null && lastAppliedShader != null) {
                     renderer.shutdownEffect();
@@ -143,8 +144,10 @@ public class ClientEvents {
             if (rendererShader == null && lastAppliedShader != null) {
                 lastAppliedShader = null; //clear when something else unsets it
             }
+
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
+
             Item item = stack.getItem();
             String newShader;
             if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
@@ -161,9 +164,6 @@ public class ClientEvents {
                 //remove my effect
                 renderer.shutdownEffect();
                 lastAppliedShader = null;
-            }
-            if (newShader != null && !renderer.effectActive) {
-                int aa = 1;
             }
         }
     }
