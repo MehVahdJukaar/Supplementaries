@@ -47,11 +47,9 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class ClientEvents {
@@ -124,31 +122,25 @@ public class ClientEvents {
         CannonController.onClientTick(minecraft);
     }
 
-    private static String currentlyAppliedMobShader = null;
+    private static String lastAppliedShader = null;
 
     private static void applyMobHeadShaders(Player p, Minecraft mc) {
         if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
-            String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
+            String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
             if (p.isSpectator()) {
-                if (current != null && currentlyAppliedMobShader != null) {
+                if (rendererShader != null && lastAppliedShader != null) {
                     renderer.shutdownEffect();
-                    currentlyAppliedMobShader = null;
+                    lastAppliedShader = null;
                 }
                 return;
             }
 
-            if (current == null && currentlyAppliedMobShader != null) {
-                currentlyAppliedMobShader = null; //clear when something else unsets it
-                return;
+            if (rendererShader == null && lastAppliedShader != null) {
+                lastAppliedShader = null; //clear when something else unsets it
             }
-            // for some reason this weird edge cases happens when swithing gamemode
-            if (current != null && currentlyAppliedMobShader != null && !renderer.effectActive) {
-                currentlyAppliedMobShader = null;
-            }
-
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
             if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
             Item item = stack.getItem();
@@ -160,12 +152,16 @@ public class ClientEvents {
             if (newShader == null && shouldHaveGoatedEffect(p, item)) {
                 newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
             }
-            if (newShader != null && !newShader.equals(current)) {
+            if (newShader != null && (!newShader.equals(rendererShader) || !renderer.effectActive)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
-                currentlyAppliedMobShader = newShader;
-            } else if (current != null && (!current.equals(currentlyAppliedMobShader) || newShader == null)) {
+                lastAppliedShader = newShader;
+            } else if (rendererShader != null && newShader == null && MY_SHADERS.contains(rendererShader)) {
+                //remove my effect
                 renderer.shutdownEffect();
-                currentlyAppliedMobShader = null;
+                lastAppliedShader = null;
+            }
+            if (newShader != null && !renderer.effectActive) {
+                int aa = 1;
             }
         }
     }
@@ -184,9 +180,11 @@ public class ClientEvents {
         map.put(Items.PIGLIN_HEAD, ClientRegistry.GLITTER_SHADER.toString());
         map.put(ModRegistry.CAGE_ITEM.get(), ClientRegistry.RAGE_SHADER.toString());
         map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
-
         return map;
     });
+
+    private static final Set<String> MY_SHADERS = EFFECTS_PER_ITEM.values().stream()
+            .collect(Collectors.toUnmodifiableSet());
 
     private static boolean isOnRope;
 

@@ -38,8 +38,8 @@ public class SignPostItem extends WoodBasedBlockItem {
     }
 
     @Override
-    protected String getOrCreateDescriptionId() {
-        return this.getOrCreateDescriptionId();
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
     }
 
     private AttachType getAttachType(BlockState state) {

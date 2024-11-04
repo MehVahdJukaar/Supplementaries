@@ -65,6 +65,7 @@ dependencies {
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
+    modImplementation("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
     //modImplementation("curse.maven:selene-499980:5651442")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
@@ -74,7 +75,6 @@ dependencies {
     modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.11")
 
     modImplementation("curse.maven:immediatelyfast-686911:4937544")
-    modImplementation("org.uiutils:uiutils")
     //modImplementation("curse.maven:spectrum-556967:5080474")
     modCompileOnly("curse.maven:create-328085:4835191")
 
