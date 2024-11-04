@@ -50,6 +50,7 @@ dependencies {
     //modCompileOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
+    modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
 
 
     modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5852406")

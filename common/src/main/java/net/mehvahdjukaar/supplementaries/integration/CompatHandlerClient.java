@@ -21,6 +21,10 @@ public class CompatHandlerClient {
         if (INFERNALEXP) InfernalExpCompat.setupClient();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.setupClient();
         if (ENDERGETIC) EndergeticCompat.setupClient();
+        if (QUARK) QuarkClientCompat.setupClient();
+        if (CREATE) CreateCompat.setupClient();
+        if (FLYWHEEL) FlywheelCompat.setupClient();
+
     }
 
     @ExpectPlatform
