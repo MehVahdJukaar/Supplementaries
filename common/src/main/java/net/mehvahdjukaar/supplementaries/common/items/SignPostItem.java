@@ -37,6 +37,11 @@ public class SignPostItem extends WoodBasedBlockItem {
         super(block, properties, wood, 100);
     }
 
+    @Override
+    protected String getOrCreateDescriptionId() {
+        return this.getOrCreateDescriptionId();
+    }
+
     private AttachType getAttachType(BlockState state) {
         Block b = state.getBlock();
         if (b instanceof SignPostWallBlock) return AttachType.WAY_SIGN_WALL;

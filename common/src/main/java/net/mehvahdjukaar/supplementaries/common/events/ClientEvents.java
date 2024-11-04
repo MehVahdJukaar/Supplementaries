@@ -103,6 +103,9 @@ public class ClientEvents {
         if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
             newScreen = WelcomeMessageScreen.createAmendments(newScreen);
         }
+        if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat()) {
+            newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
+        }
         if (newScreen != screen) Minecraft.getInstance().setScreen(newScreen);
     }
 

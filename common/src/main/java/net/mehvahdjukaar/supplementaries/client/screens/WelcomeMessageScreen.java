@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -13,10 +14,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 // Credits to Twilight Forest
 public class WelcomeMessageScreen extends Screen {
     private final Screen lastScreen;
     private final Component text;
+    @Nullable
     private final Component url;
     private final Runnable onTurnOff;
     private int ticksUntilEnable;
@@ -27,7 +32,7 @@ public class WelcomeMessageScreen extends Screen {
     private Button disaleButton;
 
     public WelcomeMessageScreen(Screen screen, int ticksUntilEnable,
-                                Component title, Component text, Component url,
+                                Component title, Component text, @Nullable Component url,
                                 Runnable onTurnOff) {
         super(title);
         this.message = MultiLineLabel.EMPTY;
@@ -60,7 +65,8 @@ public class WelcomeMessageScreen extends Screen {
         this.disaleButton.active = false;
 
         this.message = MultiLineLabel.create(this.font, text, this.width - 50);
-        this.suggestions = MultiLineLabel.create(this.font, url, this.width - 50);
+        this.suggestions = url == null ? MultiLineLabel.EMPTY :
+                MultiLineLabel.create(this.font, url, this.width - 50);
     }
 
     @Override
@@ -94,9 +100,9 @@ public class WelcomeMessageScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (pMouseY > 180.0 && pMouseY < 190.0) {
+        if (pMouseY > 180.0 && pMouseY < 190.0 && this.url != null) {
             Style style = this.getClickedComponentStyleAt((int) pMouseX);
-            if (style != null && style.getClickEvent() != null && style.getClickEvent().getAction() == ClickEvent.Action.OPEN_URL) {
+            if (url != null && style != null && style.getClickEvent() != null && style.getClickEvent().getAction() == ClickEvent.Action.OPEN_URL) {
                 this.handleComponentClicked(style);
                 return false;
             }
@@ -124,7 +130,8 @@ public class WelcomeMessageScreen extends Screen {
             .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD);
 
     public static WelcomeMessageScreen createOptifine(Screen screen) {
-        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT, OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
+        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT,
+                OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
     }
 
     private static final Component AM_TEXT = Component.translatable("gui.supplementaries.amendments.message");
@@ -137,7 +144,31 @@ public class WelcomeMessageScreen extends Screen {
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
 
     public static WelcomeMessageScreen createAmendments(Screen screen) {
-        return new WelcomeMessageScreen(screen, 100, AM_TITLE, AM_TEXT, AM_URL, SuppPlatformStuff::disableAMWarn);
+        return new WelcomeMessageScreen(screen, 100, AM_TITLE, AM_TEXT,
+                AM_URL, SuppPlatformStuff::disableAMWarn);
+    }
+
+    private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
+            .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+
+    public static WelcomeMessageScreen createIncompatibleMods(Screen screen) {
+        return new WelcomeMessageScreen(screen, 60, IM_TITLE,
+                Component.translatable("gui.supplementaries.incompatible_mods.message",
+                        Component.literal(IM_LIST).withStyle(ChatFormatting.RED)),
+                null, SuppPlatformStuff::disableIMWarn);
+    }
+
+    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of("lithium", "canary", "worldedit");
+
+    private static final String IM_LIST = MODS_WITH_KNOWN_ISSUES.stream()
+            .filter(PlatHelper::isModLoaded) // Change this condition as needed
+            .collect(Collectors.joining(", "));
+
+    public static boolean hasIncompat() {
+        for (String s : MODS_WITH_KNOWN_ISSUES) {
+            if (PlatHelper.isModLoaded(s)) return true;
+        }
+        return false;
     }
 
 }

@@ -82,6 +82,11 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
+    public static void disableIMWarn() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static void disableOFWarn(boolean on) {
         throw new AssertionError();
     }

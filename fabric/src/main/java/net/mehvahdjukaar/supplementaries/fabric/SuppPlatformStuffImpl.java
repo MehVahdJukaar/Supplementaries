@@ -83,6 +83,11 @@ public class SuppPlatformStuffImpl {
         ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
     }
 
+    public static void disableIMWarn() {
+        ((BoolConfigValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
+        ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
+    }
+
     public static boolean canStickTo(BlockState movedState, BlockState maybeSticky) {
         return maybeSticky.getBlock() == Blocks.SLIME_BLOCK || maybeSticky.getBlock() == Blocks.HONEY_BLOCK;
     }
