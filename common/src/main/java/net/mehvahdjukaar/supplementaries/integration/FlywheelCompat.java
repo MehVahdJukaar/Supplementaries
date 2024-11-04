@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import net.mehvahdjukaar.supplementaries.integration.flywheel.BellowsInstance;
 import net.mehvahdjukaar.supplementaries.integration.flywheel.CannonInstance;
@@ -17,7 +18,7 @@ public class FlywheelCompat {
     }
 
 
-
-
-
+    public static boolean isOn() {
+        return Backend.isOn();
+    }
 }
