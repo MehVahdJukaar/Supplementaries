@@ -153,9 +153,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
             return true;
         }
         if (block == Blocks.AIR) {
-            if (SUPPRESS_OBSERVER_HACK.get()) {
-                return true;
-            }
+            return SUPPRESS_OBSERVER_HACK.get();
         }
         return false;
     }

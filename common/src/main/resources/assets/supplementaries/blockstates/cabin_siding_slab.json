@@ -1,25 +1,27 @@
 {
   "variants": {
     "type=bottom,axis=x": {
-      "model": "supplementaries:block/cabin_siding_slab"
-    },
-    "type=double,axis=x": {
-      "model": "supplementaries:block/cabin_siding_horizontal"
-    },
-    "type=top,axis=x": {
-      "model": "supplementaries:block/cabin_siding_slab_top"
-    },
-    "type=bottom,axis=z": {
       "model": "supplementaries:block/cabin_siding_slab",
       "y": 90
     },
-    "type=double,axis=z": {
+    "type=double,axis=x": {
       "model": "supplementaries:block/cabin_siding_horizontal",
+      "x": 90,
       "y": 90
     },
-    "type=top,axis=z": {
+    "type=top,axis=x": {
       "model": "supplementaries:block/cabin_siding_slab_top",
       "y": 90
+    },
+    "type=bottom,axis=z": {
+      "model": "supplementaries:block/cabin_siding_slab"
+    },
+    "type=double,axis=z": {
+      "model": "supplementaries:block/cabin_siding_horizontal",
+      "x": 90
+    },
+    "type=top,axis=z": {
+      "model": "supplementaries:block/cabin_siding_slab_top"
     }
   }
 }

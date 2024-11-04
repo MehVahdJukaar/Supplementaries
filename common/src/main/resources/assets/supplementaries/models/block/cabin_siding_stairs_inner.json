@@ -2,6 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/inner_stairs",
 	"textures": {
+		"particle": "supplementaries:block/cabin_siding_side",
 		"side_2": "supplementaries:block/cabin_siding_end",
 		"top": "supplementaries:block/cabin_siding_side"
 	},

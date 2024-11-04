@@ -130,6 +130,10 @@ public class ClientEvents {
 
             String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
+            if (rendererShader != null && !MY_SHADERS.contains(rendererShader)) {
+                return;
+            }
+
             //no shaders in spectator
             if (p.isSpectator()) {
                 if (rendererShader != null && lastAppliedShader != null) {
@@ -158,7 +162,7 @@ public class ClientEvents {
             if (newShader != null && (!newShader.equals(rendererShader) || !renderer.effectActive)) {
                 renderer.loadEffect(new ResourceLocation(newShader));
                 lastAppliedShader = newShader;
-            } else if (rendererShader != null && newShader == null && MY_SHADERS.contains(rendererShader)) {
+            } else if (rendererShader != null && newShader == null) {
                 //remove my effect
                 renderer.shutdownEffect();
                 lastAppliedShader = null;

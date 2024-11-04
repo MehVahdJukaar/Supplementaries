@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "minecraft:block/stairs",
+	"parent": "minecraft:block/outer_stairs",
 	"textures": {
 		"particle": "supplementaries:block/cabin_siding_side",
 		"side_2": "supplementaries:block/cabin_siding_end",
@@ -20,14 +20,14 @@
 			}
 		},
 		{
-			"from": [8, 8, 0],
+			"from": [8, 8, 8],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 8, 8], "texture": "#side_2", "cullface": "north"},
-				"east": {"uv": [0, 0, 8, 16], "rotation": 90, "texture": "#top", "cullface": "east"},
+				"north": {"uv": [0, 0, 8, 8], "texture": "#side_2"},
+				"east": {"uv": [0, 8, 8, 16], "rotation": 90, "texture": "#top", "cullface": "east"},
 				"south": {"uv": [8, 0, 16, 8], "texture": "#side_2", "cullface": "south"},
-				"west": {"uv": [0, 0, 8, 16], "rotation": 90, "texture": "#top"},
-				"up": {"uv": [8, 0, 16, 16], "texture": "#top", "cullface": "up"}
+				"west": {"uv": [0, 0, 8, 8], "rotation": 90, "texture": "#top"},
+				"up": {"uv": [8, 8, 16, 16], "texture": "#top", "cullface": "up"}
 			}
 		}
 	]

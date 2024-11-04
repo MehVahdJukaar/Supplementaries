@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:cabin_siding"
+    }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cabin_siding"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:cabin_siding_slab",
+    "count": 6
+  }
+}
