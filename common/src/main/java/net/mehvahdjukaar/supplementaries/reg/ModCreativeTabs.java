@@ -579,6 +579,10 @@ public class ModCreativeTabs {
                 ModRegistry.CHECKER_BLOCK, ModRegistry.CHECKER_SLAB);
 
         add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.CABIN_SIDING_NAME,
+                ModRegistry.CABIN_SIDING, ModRegistry.CABIN_SIDING_STAIRS, ModRegistry.CABIN_SIDING_SLAB);
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.DAUB_NAME,
                 ModRegistry.DAUB);
 
