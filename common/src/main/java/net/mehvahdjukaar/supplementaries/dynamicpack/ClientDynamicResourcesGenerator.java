@@ -25,6 +25,8 @@ import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 

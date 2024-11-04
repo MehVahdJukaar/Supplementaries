@@ -2,13 +2,12 @@ package net.mehvahdjukaar.supplementaries.neoforge;
 
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
+import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -21,8 +20,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -143,6 +140,10 @@ public class SuppPlatformStuffImpl {
         ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
         fg.getSpec().save();
 
+    }
+
+    public static void disableIMWarn() {
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
     }
 
     public static void disableOFWarn(boolean on) {

@@ -313,6 +313,11 @@
   "gui.supplementaries.amendments.message": "As of update 2.8.0 some of Supplementaries features in the Tweaks section were moved to a dedicated mod, Amendments.\n\n The mods are meant to function separately, but if you wish to keep all the already-existing old blocks you must install Amendments.\n\n The features moved are the following: WALL LANTERNS, SKULL CANDLES, CEILING POTS, CEILING BANNERS and SKULL PILES. \n\nNote that if you proceed without it, all those existing blocks will be lost.",
   "gui.supplementaries.amendments.suggestions": "You can get the mod HERE",
   "gui.supplementaries.amendments.title": "Warning: Amendments is not installed",
+  "gui.supplementaries.incompatible_mods.title": "Warning: Incompatible mods found",
+  "gui.supplementaries.incompatible_mods.message": "Supplementaries has detected the following mods that are known to cause crashes:\n\n %s\n\nThese issues are not fixable by supplementaries as they are from these mods instead and are merely triggered by it. In other words they should be fixed by those mods instead as they are their issues.\nPlease remove them or be advised of random crashes and that the mod might not allow the game to boot in future versions instead",
+
+
+
   "gui.supplementaries.blackboard.clear": "Clear",
   "gui.supplementaries.blackboard.undo": "Undo",
   "gui.supplementaries.blackboard.edit": "Edit Blackboard",
