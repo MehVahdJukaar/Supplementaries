@@ -59,7 +59,7 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction direction = context.getHorizontalDirection().getOpposite();
+        Direction direction = context.getClickedFace();
         return super.getStateForPlacement(context).setValue(FACING, direction);
     }
 
