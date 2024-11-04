@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -243,6 +245,16 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
+
+    public static final Supplier<Block> CABIN_SIDING = regWithItem(CABIN_SIDING_NAME, () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
+    public static final Supplier<Block> CABIN_SIDING_STAIRS = regWithItem(CABIN_SIDING_NAME + "_stairs", () -> new ModStairBlock(
+                    CABIN_SIDING, BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
+    public static final Supplier<Block> CABIN_SIDING_SLAB = regWithItem(CABIN_SIDING_NAME + "_slab", () -> new DirectionalSlabBlock(
+                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
