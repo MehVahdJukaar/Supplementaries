@@ -14,23 +14,10 @@ public class CompatHandlerClientImpl {
         if (CompatHandler.CONFIGURED && ClientConfigs.General.CUSTOM_CONFIGURED_SCREEN.get()) {
             ModConfigSelectScreen.registerConfigScreen(Supplementaries.MOD_ID, ModConfigSelectScreen::new);
         }
-
-        if (CompatHandler.QUARK) {
-            QuarkClientCompat.setupClient();
-        }
-
-        if (CompatHandler.CREATE) {
-            CreateCompat.setupClient();
-        }
-        if (CompatHandler.FLYWHEEL) {
-            FlywheelCompat.setupClient();
-        }
     }
 
-    public static void init() {
-        if (CompatHandler.QUARK) {
-            QuarkClientCompat.initClient();
-        }
+    public static void doInit() {
+
     }
 
 }

@@ -27,8 +27,15 @@ public class CompatHandlerClient {
 
     }
 
-    @ExpectPlatform
     public static void init() {
+        doInit();
+        if (CompatHandler.QUARK) {
+            QuarkClientCompat.initClient();
+        }
+    }
+
+    @ExpectPlatform
+    public static void doInit(){
         throw new AssertionError();
     }
 }

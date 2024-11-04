@@ -5,6 +5,6 @@ public class CompatHandlerClientImpl {
     public static void doSetup() {
     }
 
-    public static void init() {
+    public static void doInit() {
     }
 }
