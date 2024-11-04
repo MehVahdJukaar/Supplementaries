@@ -488,6 +488,7 @@ public class CommonConfigs {
             STATUE_ENABLED = feature(builder, ModConstants.STATUE_NAME);
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
+            CABIN_SIDING_ENABLED = feature(builder, ModConstants.CABIN_SIDING_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
@@ -586,6 +587,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FEATHER_BLOCK_ENABLED;
 
         public static final Supplier<Boolean> FLINT_BLOCK_ENABLED;
+        public static final Supplier<Boolean> CABIN_SIDING_ENABLED;
 
         public static final Supplier<Boolean> DOORMAT_ENABLED;
 
