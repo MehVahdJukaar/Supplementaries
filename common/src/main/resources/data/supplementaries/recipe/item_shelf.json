@@ -18,10 +18,10 @@
       "flag": "item_shelf"
     },
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "modid": "suppsquared",
-        "condition": "neoforge:mod_loaded"
+        "condition": "fabric:mod_loaded"
       }
     }
   ]

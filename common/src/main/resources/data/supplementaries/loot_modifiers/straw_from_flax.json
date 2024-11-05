@@ -23,7 +23,7 @@
         },
         {
           "modid": "farmersdelight",
-          "condition": "neoforge:mod_loaded"
+          "condition": "fabric:mod_loaded"
         }
       ]
     }

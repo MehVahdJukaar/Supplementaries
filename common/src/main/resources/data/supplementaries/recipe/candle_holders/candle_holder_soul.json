@@ -22,7 +22,7 @@
       "flag": "candle_holder"
     },
     {
-      "condition": "neoforge:mod_loaded",
+      "condition": "fabric:mod_loaded",
       "modid": "buzzier_bees"
     }
   ]

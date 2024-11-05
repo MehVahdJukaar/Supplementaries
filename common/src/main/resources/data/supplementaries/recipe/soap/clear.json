@@ -1,5 +1,5 @@
 {
-  "condition": "supplementaries:soap_clearing",
+  "type": "supplementaries:soap_clearing",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

@@ -1,7 +1,7 @@
 {
   "global_conditions": [
     {
-      "condition": "neoforge:mod_loaded",
+      "condition": "fabric:mod_loaded",
       "modid": "jeed"
     }
   ],

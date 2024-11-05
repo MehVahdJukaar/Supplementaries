@@ -5,17 +5,17 @@
       "flag": "planter"
     },
     {
-      "condition": "neoforge:or",
+      "condition": "fabric:or",
       "values": [
         {
-          "condition": "neoforge:not",
+          "condition": "fabric:not",
           "condition": {
             "modid": "farmersdelight",
-            "condition": "neoforge:mod_loaded"
+            "condition": "fabric:mod_loaded"
           }
         },
         {
-          "condition": "neoforge:not",
+          "condition": "fabric:not",
           "condition": {
             "flag": "rich_soil_planter",
             "condition": "supplementaries:flag"

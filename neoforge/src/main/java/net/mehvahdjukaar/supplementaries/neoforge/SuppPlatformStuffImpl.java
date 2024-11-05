@@ -143,7 +143,9 @@ public class SuppPlatformStuffImpl {
     }
 
     public static void disableIMWarn() {
-        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
+        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
+        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
+        fg.getSpec().save();
     }
 
     public static void disableOFWarn(boolean on) {

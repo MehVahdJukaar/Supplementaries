@@ -24,10 +24,10 @@
       "flag": "pancake"
     },
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "modid": "farmersdelight",
-        "condition": "neoforge:mod_loaded"
+        "condition": "fabric:mod_loaded"
       }
     }
   ]

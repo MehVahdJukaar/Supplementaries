@@ -17,7 +17,6 @@
 - doormat add item sound
 - check all iOwner protected and openable container stuff
 - render backgrounds
-- check mob holder serialization
 - bombprojectile item model
 - quiver color and default color
 - check all guis
@@ -85,10 +84,8 @@
 # Soon
 
 - way signs not working
-- zobie zkeleton head shader not wroking
 - QUiver for other players.check 1.20 too
 - wraped sign post + not rotating
-- fabric hat popper
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
 - colored map data crash row Data null

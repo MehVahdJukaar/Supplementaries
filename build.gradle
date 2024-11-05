@@ -194,7 +194,7 @@ allprojects {
         maven {
             url = "https://api.modrinth.com/maven"
         }
-
+        maven { url = "https://maven.tterrag.com/" } // Flywheel
         maven {
             url = "https://maven.blamejared.com/"
         }

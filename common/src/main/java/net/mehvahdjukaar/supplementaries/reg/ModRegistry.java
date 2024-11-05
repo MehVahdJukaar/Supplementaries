@@ -247,14 +247,11 @@ public class ModRegistry {
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
 
     public static final Supplier<Block> CABIN_SIDING = regWithItem(CABIN_SIDING_NAME, () -> new RotatedPillarBlock(
-                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
-            300);
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
     public static final Supplier<Block> CABIN_SIDING_STAIRS = regWithItem(CABIN_SIDING_NAME + "_stairs", () -> new ModStairBlock(
-                    CABIN_SIDING, BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
-            300);
+                    CABIN_SIDING, BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
     public static final Supplier<Block> CABIN_SIDING_SLAB = regWithItem(CABIN_SIDING_NAME + "_slab", () -> new DirectionalSlabBlock(
-                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
-            300);
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(

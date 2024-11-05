@@ -19,17 +19,12 @@
   },
   "fabric:load_conditions": [
     {
-      "condition": "neoforge:and",
-      "values": [
-        {
-          "condition": "neoforge:mod_loaded",
-          "modid": "infernalexp"
-        },
-        {
-          "condition": "supplementaries:flag",
-          "flag": "sconce"
-        }
-      ]
+      "condition": "fabric:mod_loaded",
+      "modid": "infernalexp"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sconce"
     }
   ]
 }

@@ -6,7 +6,7 @@
     },
     {
       "modid": "quark",
-      "condition": "neoforge:mod_loaded"
+      "condition": "fabric:mod_loaded"
     }
   ],
   "type": "minecraft:crafting_shaped",

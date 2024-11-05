@@ -14,13 +14,8 @@
   },
   "fabric:load_conditions": [
     {
-      "condition": "neoforge:and",
-      "values": [
-        {
-          "condition": "supplementaries:flag",
-          "flag": "feather_block"
-        }
-      ]
+      "condition": "supplementaries:flag",
+      "flag": "feather_block"
     }
   ]
 }

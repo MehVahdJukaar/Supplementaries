@@ -1,7 +1,7 @@
 {
   "fabric:load_conditions": [
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value":     {
         "condition": "neoforge:tag_empty",
         "tag": "supplementaries:altimeters"

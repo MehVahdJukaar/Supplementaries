@@ -13,7 +13,7 @@
   "fabric:load_conditions": [
     {
       "modid": "create",
-      "condition": "neoforge:mod_loaded"
+      "condition": "fabric:mod_loaded"
     },
     {
       "condition": "supplementaries:flag",

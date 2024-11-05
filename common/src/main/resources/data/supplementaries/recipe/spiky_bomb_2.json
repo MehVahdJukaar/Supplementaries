@@ -1,17 +1,17 @@
 {
   "conditions": [
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "condition": "neoforge:tag_empty",
         "tag": "c:ingots/lead"
       }
     },
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "modid": "oreganized",
-        "condition": "neoforge:mod_loaded"
+        "condition": "fabric:mod_loaded"
       }
     },
     {

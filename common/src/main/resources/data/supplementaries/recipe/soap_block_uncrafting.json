@@ -14,13 +14,8 @@
   },
   "fabric:load_conditions": [
     {
-      "condition": "neoforge:and",
-      "values": [
-        {
-          "condition": "supplementaries:flag",
-          "flag": "soap"
-        }
-      ]
+      "condition": "supplementaries:flag",
+      "flag": "soap"
     }
   ]
 }

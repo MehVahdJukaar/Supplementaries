@@ -6,7 +6,7 @@
     },
     {
       "modid": "oreganized",
-      "condition": "neoforge:mod_loaded"
+      "condition": "fabric:mod_loaded"
     }
   ],
   "type": "simple",

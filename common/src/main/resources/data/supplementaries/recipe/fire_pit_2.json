@@ -22,7 +22,7 @@
       "flag": "fire_pit"
     },
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "condition": "supplementaries:flag",
         "flag": "lumisene"

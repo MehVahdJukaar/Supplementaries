@@ -94,7 +94,7 @@ public class SuppPlatformStuffImpl {
 
     public static void disableIMWarn() {
         ((BoolConfigValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
-        ((FabricConfigSpec) ClientConfigs.SPEC).saveConfig();
+        ((FabricConfigHolder) ClientConfigs.CONFIG_HOLDER).saveConfig();
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState maybeSticky) {

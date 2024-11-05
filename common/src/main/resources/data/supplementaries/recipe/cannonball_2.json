@@ -20,7 +20,7 @@
       "flag": "cannonball"
     },
     {
-      "condition": "neoforge:not",
+      "condition": "fabric:not",
       "value": {
         "condition": "neoneoforge:tag_empty",
         "tag": "c:storage_blocks/lead"

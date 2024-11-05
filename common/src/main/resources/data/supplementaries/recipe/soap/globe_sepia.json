@@ -1,5 +1,5 @@
 {
-  "condition": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "supplementaries:globe_sepia"

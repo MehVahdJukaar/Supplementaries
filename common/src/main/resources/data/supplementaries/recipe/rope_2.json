@@ -16,20 +16,15 @@
   },
   "fabric:load_conditions": [
     {
-      "condition": "neoforge:and",
-      "values": [
-        {
-          "condition": "neoforge:not",
-          "condition": {
-            "condition": "supplementaries:flag",
-            "flag": "flax"
-          }
-        },
-        {
-          "condition": "supplementaries:flag",
-          "flag": "rope"
-        }
-      ]
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rope"
     }
   ]
 }

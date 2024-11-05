@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "modid": "buzzier_bees",
-      "condition": "neoforge:mod_loaded"
+      "condition": "fabric:mod_loaded"
     }
   ],
   "type": "minecraft:block",

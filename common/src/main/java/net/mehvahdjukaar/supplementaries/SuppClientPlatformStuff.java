@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 
 public class SuppClientPlatformStuff {
 
