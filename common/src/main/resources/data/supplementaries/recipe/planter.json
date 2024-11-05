@@ -9,14 +9,14 @@
       "values": [
         {
           "condition": "fabric:not",
-          "condition": {
+          "value": {
             "modid": "farmersdelight",
             "condition": "fabric:mod_loaded"
           }
         },
         {
           "condition": "fabric:not",
-          "condition": {
+          "value": {
             "flag": "rich_soil_planter",
             "condition": "supplementaries:flag"
           }

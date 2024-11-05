@@ -20,11 +20,16 @@
           "name": "supplementaries:bamboo_spikes_tipped",
           "functions": [
             {
-              "function": "set_nbt",
-              "tag": "{Potion:\"minecraft:poison\"}"
+              "function": "set_components",
+              "components": [
+                {
+                  "type": "minecraft:potion_content",
+                  "potion": "minecraft:poison"
+                }
+              ]
             },
             {
-              "function": "set_damage",
+              "function": "supplementaries:set_charges",
               "damage": {
                 "min": 0.2,
                 "max": 0.9

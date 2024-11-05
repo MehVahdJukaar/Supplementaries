@@ -11,7 +11,7 @@
             {
               "function": "minecraft:exploration_map",
               "destination": "minecraft:village",
-              "custom_decoration": "supplementaries:village",
+              "custom_decoration": "supplementaries:igloo",
               "zoom": 2,
               "skip_existing_chunks": true
             }

@@ -10,7 +10,7 @@
       "item": "supplementaries:cabin_siding"
     }
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "type": "cabin_siding:flag",
       "flag": "ash_bricks"

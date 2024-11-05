@@ -8,7 +8,7 @@
       "item": "supplementaries:cabin_siding"
     }
   },
-  "conditions": [
+  "fabric:load_conditios": [
     {
       "type": "supplementaries:flag",
       "flag": "cabin_siding"

@@ -13,7 +13,7 @@
     "id": "supplementaries:cabin_siding",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "type": "supplementaries:flag",
       "flag": "cabin_siding"

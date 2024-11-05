@@ -1,5 +1,5 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "oreganized",
       "condition": "fabric:mod_loaded"

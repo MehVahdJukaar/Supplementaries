@@ -20,6 +20,8 @@ public class WindVaneBlockTile extends BlockEntity {
     private float prevYaw = 0;
     private float offset = 0;
 
+    private int windChargedTicks = 0;
+
     public WindVaneBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.WIND_VANE_TILE.get(), pos, state);
     }
@@ -27,8 +29,17 @@ public class WindVaneBlockTile extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        this.windChargedTicks = tag.getInt("wind_charged_ticks");
+
+
         float tp = (float) (Math.PI * 2);
         this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("wind_charged_ticks", this.windChargedTicks);
     }
 
     public float getYaw(float partialTicks) {
@@ -66,7 +77,15 @@ public class WindVaneBlockTile extends BlockEntity {
 
             tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
 
+            tile.yaw += (float) (tile.windChargedTicks*0.2);
 
+            if (tile.windChargedTicks > 0) {
+                tile.windChargedTicks--;
+            }
         }
+    }
+
+    public void setWindCharged() {
+        this.windChargedTicks = 40;
     }
 }

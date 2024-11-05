@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -30,6 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class WindVaneBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 16, 14);
@@ -39,6 +41,14 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
     public WindVaneBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(WIND_STRENGTH, 0));
+    }
+
+    @Override
+    protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        super.onExplosionHit(state, level, pos, explosion, dropConsumer);
+        if(explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile){
+            tile.setWindCharged();
+        }
     }
 
     @Override
