@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "modid": "immersive_weathering",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     },
     {
       "condition": "supplementaries:flag",

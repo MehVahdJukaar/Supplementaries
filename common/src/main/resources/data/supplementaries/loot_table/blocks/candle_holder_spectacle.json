@@ -2,7 +2,7 @@
   "global_conditions": [
     {
       "modid": "cave_enhancements",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     }
   ],
   "type": "minecraft:block",

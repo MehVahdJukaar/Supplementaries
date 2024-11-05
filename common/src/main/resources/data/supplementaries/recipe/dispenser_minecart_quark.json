@@ -22,7 +22,7 @@
     },
     {
       "modid": "quark",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     }
   ]
 }

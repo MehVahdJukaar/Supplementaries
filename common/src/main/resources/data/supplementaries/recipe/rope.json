@@ -16,17 +16,12 @@
   },
   "conditions": [
     {
-      "type": "neoforge:and",
-      "values": [
-        {
-          "condition": "supplementaries:flag",
-          "flag": "rope"
-        },
-        {
-          "condition": "supplementaries:flag",
-          "flag": "flax"
-        }
-      ]
+      "condition": "supplementaries:flag",
+      "flag": "rope"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
     }
   ]
 }

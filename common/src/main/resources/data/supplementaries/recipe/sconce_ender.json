@@ -22,7 +22,7 @@
       "condition": "neoforge:and",
       "values": [
         {
-          "type": "neoforge:mod_loaded",
+          "condition": "neoforge:mod_loaded",
           "modid": "endergetic"
         },
         {

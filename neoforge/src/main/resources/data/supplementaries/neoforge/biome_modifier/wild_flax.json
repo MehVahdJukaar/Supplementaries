@@ -1,5 +1,5 @@
 {
-  "type": "forge:add_features",
+  "type": "neoforge:add_features",
   "biomes": "#supplementaries:has_wild_flax",
   "features": "supplementaries:wild_flax",
   "step": "vegetal_decoration"

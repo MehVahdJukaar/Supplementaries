@@ -10,7 +10,7 @@
     },
     {
       "modid": "farmersdelight",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     }
   ],
   "type": "minecraft:crafting_shaped",

@@ -21,7 +21,7 @@
       "condition": "neoforge:not",
       "value": {
         "modid": "suppsquared",
-        "type": "neoforge:mod_loaded"
+        "condition": "neoforge:mod_loaded"
       }
     }
   ]

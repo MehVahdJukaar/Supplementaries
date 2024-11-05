@@ -1,7 +1,7 @@
 
 
 {
-  "type": "forge:conditional",
+  "type": "neoforge:conditional",
   "recipes": [
     {
       "conditions": [
@@ -11,7 +11,7 @@
         },
         {
           "modid": "inspirations",
-          "type": "neoforge:mod_loaded"
+          "condition": "neoforge:mod_loaded"
         }
       ],
       "recipe": {

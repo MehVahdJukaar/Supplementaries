@@ -19,8 +19,8 @@
       "condition": "neoforge:and",
       "values": [
         {
-          "type": "neoforge:not",
-          "value": {
+          "condition": "neoforge:not",
+          "condition": {
             "condition": "supplementaries:flag",
             "flag": "flax"
           }

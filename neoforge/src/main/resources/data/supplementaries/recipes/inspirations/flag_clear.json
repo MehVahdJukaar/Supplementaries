@@ -1,7 +1,7 @@
 
 
 {
-  "type": "forge:conditional",
+  "type": "neoforge:conditional",
   "recipes": [
     {
       "conditions": [
@@ -11,11 +11,10 @@
         },
         {
           "modid": "inspirations",
-          "type": "neoforge:mod_loaded"
+          "condition": "neoforge:mod_loaded"
         }
       ],
       "recipe": {
-
         "type": "supplementaries:cauldron_flag_clear",
         "conditions": [
           {

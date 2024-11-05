@@ -1,5 +1,5 @@
 {
-  "type": "forge:add_features",
+  "type": "neoforge:add_features",
   "biomes": "#supplementaries:has_cave_urns",
   "features": "supplementaries:cave_urns",
   "step": "underground_decoration"

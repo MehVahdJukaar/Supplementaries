@@ -5,18 +5,18 @@
       "flag": "planter"
     },
     {
-      "condition": "forge:or",
+      "condition": "neoforge:or",
       "values": [
         {
-          "type": "neoforge:not",
-          "value": {
+          "condition": "neoforge:not",
+          "condition": {
             "modid": "farmersdelight",
-            "type": "neoforge:mod_loaded"
+            "condition": "neoforge:mod_loaded"
           }
         },
         {
-          "type": "neoforge:not",
-          "value": {
+          "condition": "neoforge:not",
+          "condition": {
             "flag": "rich_soil_planter",
             "condition": "supplementaries:flag"
           }

@@ -2,11 +2,11 @@
   "global_conditions": [
     {
       "modid": "buzzier_bees",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     },
     {
       "modid": "caverns_and_chasms",
-      "type": "neoforge:mod_loaded"
+      "condition": "neoforge:mod_loaded"
     }
   ],
   "type": "minecraft:block",
