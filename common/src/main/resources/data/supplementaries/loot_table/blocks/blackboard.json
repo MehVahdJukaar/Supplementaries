@@ -15,7 +15,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "minecraft:blackboard"
+          "name": "supplementaries:blackboard"
         }
       ],
       "rolls": 1.0

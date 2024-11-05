@@ -20,7 +20,7 @@
     "id": "supplementaries:confetti_popper",
     "count": 2
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "confetti_popper"

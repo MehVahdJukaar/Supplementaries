@@ -16,7 +16,7 @@
     "id": "supplementaries:crank",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "crank"

@@ -23,7 +23,7 @@
     "id": "supplementaries:slingshot",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "slingshot"

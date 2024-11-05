@@ -1,6 +1,6 @@
 {
   "type": "moonlight:add_item",
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "minecraft:match_tool",
       "predicate": {

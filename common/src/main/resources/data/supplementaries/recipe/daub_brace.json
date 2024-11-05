@@ -1,5 +1,5 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "wattle_and_daub"

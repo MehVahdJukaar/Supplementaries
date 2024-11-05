@@ -10,7 +10,7 @@
     }
   },
   "result": {
-    "item": "supplementaries:cabin_siding",
+    "id": "supplementaries:cabin_siding",
     "count": 2
   },
   "conditions": [

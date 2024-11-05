@@ -22,7 +22,7 @@
     {
       "condition": "fabric:not",
       "value": {
-        "condition": "neoneoforge:tag_empty",
+        "condition": "neofabric:tag_empty",
         "tag": "c:storage_blocks/lead"
       }
     }

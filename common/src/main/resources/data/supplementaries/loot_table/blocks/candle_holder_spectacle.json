@@ -1,5 +1,5 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
       "modid": "cave_enhancements",
       "condition": "fabric:mod_loaded"

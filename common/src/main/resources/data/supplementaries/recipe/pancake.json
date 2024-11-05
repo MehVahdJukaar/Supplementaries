@@ -18,7 +18,7 @@
     "id": "supplementaries:pancake",
     "count": 3
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "pancake"

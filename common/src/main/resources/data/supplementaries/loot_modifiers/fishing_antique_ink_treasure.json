@@ -1,6 +1,6 @@
 {
   "type": "moonlight:add_item",
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:gameplay/fishing/treasure"

@@ -25,7 +25,7 @@
     "id": "supplementaries:soap",
     "count": 6
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "soap"

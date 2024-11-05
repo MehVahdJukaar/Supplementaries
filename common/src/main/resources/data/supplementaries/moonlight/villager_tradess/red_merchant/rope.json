@@ -1,5 +1,5 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
       "flag": "rope",
       "condition": "supplementaries:flag"

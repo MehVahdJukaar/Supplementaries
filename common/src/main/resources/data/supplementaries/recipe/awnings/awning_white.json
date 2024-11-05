@@ -12,7 +12,7 @@
     "id": "supplementaries:awning_white",
     "count": 1
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "awning"

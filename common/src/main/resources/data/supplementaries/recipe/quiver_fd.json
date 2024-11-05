@@ -14,7 +14,7 @@
       "count": 2
     }
   ],
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "quiver"

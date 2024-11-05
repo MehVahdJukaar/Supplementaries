@@ -1,9 +1,9 @@
 {
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "fabric:not",
       "value": {
-        "condition": "neoforge:tag_empty",
+        "condition": "fabric:tag_empty",
         "tag": "c:ingots/lead"
       }
     },

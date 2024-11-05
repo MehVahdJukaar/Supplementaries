@@ -1,5 +1,5 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "pancake"

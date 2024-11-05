@@ -1,5 +1,5 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
       "flag": "antique_ink",
       "condition": "supplementaries:flag"

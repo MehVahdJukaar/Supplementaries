@@ -3,7 +3,7 @@
     {
       "condition": "fabric:not",
       "value":     {
-        "condition": "neoforge:tag_empty",
+        "condition": "fabric:tag_empty",
         "tag": "supplementaries:altimeters"
       }
     },

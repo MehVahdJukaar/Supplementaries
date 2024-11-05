@@ -14,7 +14,7 @@
     "id": "supplementaries:rope",
     "count": 3
   },
-  "conditions": [
+  "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "rope"

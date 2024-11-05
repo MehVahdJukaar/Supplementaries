@@ -15,7 +15,7 @@
                   "condition": "minecraft:block_state_property",
                   "block": "supplementaries:clock_block",
                   "properties": {
-                    "two_faced": true
+                    "two_faced": "true"
                   }
                 }
               ],
