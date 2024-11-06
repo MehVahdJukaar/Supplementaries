@@ -64,7 +64,7 @@ public class ModBlockProperties {
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
     public static final IntegerProperty LIGHT_LEVEL_5_15 = IntegerProperty.create("light_level", 5, 15);
     public static final IntegerProperty LIGHT_LEVEL_0_7 = IntegerProperty.create("light_level", 0, 7);
-    public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 3);
+    public static final IntegerProperty WIND_STRENGTH = IntegerProperty.create("wind_strength", 0, 4);
     public static final IntegerProperty PANCAKES_1_8 = IntegerProperty.create("pancakes", 1, 8);
     public static final IntegerProperty ROTATION_4 = IntegerProperty.create("rotation", 0, 4);
     public static final IntegerProperty BURNING = IntegerProperty.create("burning", 0, 8);

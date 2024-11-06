@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "jukebox_song.supplementaries.pancake"
+  },
+  "length_in_seconds": 228,
+  "sound_event": "supplementaries:music_disc.pancake"
+}

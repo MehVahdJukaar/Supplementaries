@@ -75,7 +75,6 @@ public class ModTextures {
     //gui
     public static final ResourceLocation SLIME_GUI_OVERLAY = Supplementaries.res("textures/gui/slime_overlay.png");
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
-    public static final ResourceLocation BLACKBOARD_BLANK_TEXTURE = Supplementaries.res("textures/gui/blackboard_blank.png");
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
     public static final ResourceLocation VARIABLE_SIZE_CONTAINER_TEXTURE = Supplementaries.res("textures/gui/variable_size_container_gui.png");
@@ -90,6 +89,9 @@ public class ModTextures {
     public static final ResourceLocation CANNON_ICONS_TEXTURE = Supplementaries.res("textures/gui/cannon_icons.png");
     public static final ResourceLocation QUIVER_HUD = Supplementaries.res("textures/gui/quiver_hud.png");
     public static final ResourceLocation QUIVER_TOOLTIP = ResourceLocation.withDefaultNamespace("container/bundle/background");
+
+    // sprites
+    public static final ResourceLocation BLACKBOARD_DYE_SPRITE = Supplementaries.res("blackboard/dye_button");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

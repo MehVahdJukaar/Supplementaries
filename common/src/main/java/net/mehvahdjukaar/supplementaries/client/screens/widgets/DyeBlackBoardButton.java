@@ -2,12 +2,15 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.DyeColor;
 
 
@@ -34,10 +37,8 @@ public class DyeBlackBoardButton extends BlackboardButton {
         float g = Mth.clamp(FastColor.ARGB32.green(rgb) / 255f * mul,0,1);
 
         RenderSystem.setShaderColor(r, g, b, 1.0F);
-        graphics.blit(ModTextures.BLACKBOARD_BLANK_TEXTURE,
-                this.x, this.y,
-                (float) 0,0,
-                size, size, 8, 8);
+        graphics.blitSprite(ModTextures.BLACKBOARD_DYE_SPRITE,
+                this.x, this.y, size, size);
         this.shouldDrawOverlay = parent.getSelectedColor() == this.color;
     }
 

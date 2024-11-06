@@ -11,7 +11,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -52,10 +51,7 @@ public class WindVaneBlockTile extends BlockEntity {
         tile.prevYaw = currentYaw;
         if (!pLevel.isClientSide()) {
             if (pLevel.getGameTime() % 20L == 0L) {
-                Block block = pState.getBlock();
-                if (block instanceof WindVaneBlock) {
-                    WindVaneBlock.updatePower(pState, pLevel, pPos);
-                }
+                WindVaneBlock.updatePower(pState, pLevel, pPos, tile.windChargedTicks != 0);
             }
         } else {
             int power = pState.getValue(WindVaneBlock.WIND_STRENGTH);
@@ -77,10 +73,16 @@ public class WindVaneBlockTile extends BlockEntity {
 
             tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
 
-            tile.yaw += (float) (tile.windChargedTicks*0.2);
+            tile.yaw += (float) (tile.windChargedTicks * 0.2);
 
-            if (tile.windChargedTicks > 0) {
-                tile.windChargedTicks--;
+
+        }
+
+        if (tile.windChargedTicks > 0) {
+            tile.windChargedTicks--;
+
+            if (tile.windChargedTicks == 0 && !pLevel.isClientSide) {
+                WindVaneBlock.updatePower(pState, pLevel, pPos, false);
             }
         }
     }

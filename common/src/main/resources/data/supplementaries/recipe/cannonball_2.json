@@ -22,7 +22,7 @@
     {
       "condition": "fabric:not",
       "value": {
-        "condition": "neofabric:tag_empty",
+        "condition": "fabric:tag_empty",
         "tag": "c:storage_blocks/lead"
       }
     }

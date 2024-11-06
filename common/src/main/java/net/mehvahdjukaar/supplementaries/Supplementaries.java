@@ -25,6 +25,8 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.core.HolderSet;
+import net.minecraft.resources.HolderSetCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +48,6 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
 
         Credits.fetchFromServer();
         CommonConfigs.init();

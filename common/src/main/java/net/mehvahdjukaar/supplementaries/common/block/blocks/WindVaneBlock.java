@@ -46,7 +46,7 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
     @Override
     protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
-        if(explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile){
+        if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile) {
             tile.setWindCharged();
         }
     }
@@ -64,12 +64,15 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
         return RenderShape.MODEL;
     }
 
-    public static void updatePower(BlockState bs, Level world, BlockPos pos) {
+    public static void updatePower(BlockState bs, Level world, BlockPos pos, boolean isWindCharged) {
         int weather = 0;
         if (world.isThundering()) {
             weather = 2;
         } else if (world.isRaining()) {
             weather = 1;
+        }
+        if (isWindCharged) {
+            weather = 3;
         }
         if (weather != bs.getValue(WIND_STRENGTH)) {
             world.setBlock(pos, bs.setValue(WIND_STRENGTH, weather), 3);
