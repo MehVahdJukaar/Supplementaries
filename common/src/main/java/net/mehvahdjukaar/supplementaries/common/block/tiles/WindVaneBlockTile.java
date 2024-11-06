@@ -15,11 +15,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WindVaneBlockTile extends BlockEntity {
+    private static final int WIND_CHARGED_DURATION = 40;
+
+    private int windChargedTicks = 0;
+
     private float yaw = 0;
     private float prevYaw = 0;
     private float offset = 0;
 
-    private int windChargedTicks = 0;
 
     public WindVaneBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.WIND_VANE_TILE.get(), pos, state);
@@ -42,7 +45,7 @@ public class WindVaneBlockTile extends BlockEntity {
     }
 
     public float getYaw(float partialTicks) {
-        return Mth.lerp(partialTicks, prevYaw, yaw);
+        return yaw;//Mth.lerp(partialTicks, prevYaw, yaw);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
@@ -65,16 +68,26 @@ public class WindVaneBlockTile extends BlockEntity {
             float newYaw = (float) (maxAngle1 * Mth.sin((float) (tp * ((t * b / period1) % 360)))
                     + maxAngle2 * Mth.sin((float) (tp * ((t * b / period2) % 360))));
 
+
+//TODO: this is shit, not smooth and bad. redo
+            float windCharged = (float) tile.windChargedTicks / WIND_CHARGED_DURATION;
+            float rise = 0.3f;
+            float trapezoidal = trapezoidal(1 - windCharged, rise);
+            tile.yaw = (1 - trapezoidal) * newYaw;
+
             if (CompatHandler.WILDER_WILD) {
-                newYaw += WilderWildCompat.getWindAngle(pPos, pLevel);
+                tile.yaw += WilderWildCompat.getWindAngle(pPos, pLevel);
             } else if (CompatHandler.BREEZY) {
-                newYaw += BreezyCompat.getWindAngle(pPos, pLevel);
+                tile.yaw += BreezyCompat.getWindAngle(pPos, pLevel);
             }
 
-            tile.yaw = Mth.clamp(newYaw, currentYaw - 8, currentYaw + 8);
+            //tile.yaw = Mth.clamp(tile.yaw, currentYaw - 8, currentYaw + 8);
 
-            tile.yaw += (float) (tile.windChargedTicks * 0.2);
+            float p = 1 - (windCharged * windCharged);
+            if (windCharged < rise) p = 1;
+            tile.yaw += (p * 360 * 5f);
 
+            tile.yaw = Mth.wrapDegrees(tile.yaw);
 
         }
 
@@ -87,7 +100,31 @@ public class WindVaneBlockTile extends BlockEntity {
         }
     }
 
+    private static float trapezoidal(float x, float rise) {
+        // End of rise phase
+        float fallStart = 1f - rise;        // Start of fall phase
+
+        if (x < 0f) {
+            // Before the start, return 0
+            return 0f;
+        } else if (x < rise) {
+            // Quadratic increase from 0 to 1 over [0, riseEnd]
+            float a = (x - rise) / rise;
+            return 1 - a * a;
+        } else if (x < fallStart) {
+            // Constant at 1 over [riseEnd, fallStart]
+            return 1f;
+        } else if (x <= 1.0) {
+            // Quadratic fall from 1 to 0 over [fallStart, 1]
+            float normalizedX = (x - fallStart) / rise;
+            return (1 - normalizedX) * (1 - normalizedX) * (3 - 2 * (1 - normalizedX));
+        } else {
+            // After the end, return 0
+            return 0f;
+        }
+    }
+
     public void setWindCharged() {
-        this.windChargedTicks = 40;
+        this.windChargedTicks = WIND_CHARGED_DURATION;
     }
 }

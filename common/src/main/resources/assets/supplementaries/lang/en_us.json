@@ -131,7 +131,7 @@
   "block.supplementaries.netherite_trapdoor": "Netherite Trapdoor",
   "block.supplementaries.notice_board": "Notice Board",
   "block.supplementaries.pancake": "Pancake",
-  "block.supplementaries.pancake.desc": "Hlzfss - Pancake Music",
+  "jukebox_song.supplementaries.pancake": "Hlzfss - Pancake Music",
   "block.supplementaries.pedestal": "Pedestal",
   "block.supplementaries.planter": "Planter",
   "block.supplementaries.potted_flax": "Potted Flax",
@@ -410,7 +410,7 @@
   "item.supplementaries.confetti_popper": "Confetti Popper",
   "fluid.supplementaries.lumisene": "Lumisene",
   "item.supplementaries.music_disc_heave_ho": "Music Disc",
-  "item.supplementaries.music_disc_heave_ho.desc": "Hlzfss - Heave Ho!",
+  "jukebox_song.supplementaries.heave_ho": "Hlzfss - Heave Ho!",
 
   "itemGroup.jars": "Jars",
   "itemGroup.supplementaries": "Supplementaries",

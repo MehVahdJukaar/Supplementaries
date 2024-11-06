@@ -15,7 +15,7 @@
           "name": "minecraft:enchanted_book",
           "functions": [
             {
-              "function": "set_components",f
+              "function": "set_components",
               "tag": "{StoredEnchantments:[{lvl:1s,id:\"supplementaries:stasis\"}]}"
             }
           ]
