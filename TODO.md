@@ -84,9 +84,7 @@
 
 # Soon
 
-- way signs not working
 - QUiver for other players.check 1.20 too
-- wraped sign post + not rotating
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
 - colored map data crash row Data null
@@ -206,7 +204,6 @@ slidy double pulse
 - Fix doormat highlight text box
 - brush remove 1 layer ash or snow
 - brush works on blackboards
-- cape on statues
 
 # Amendments
 
