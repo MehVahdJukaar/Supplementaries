@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
-import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -20,7 +19,7 @@ public class CreateCompatImpl {
 
     public static void setupClient() {
         PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.NOTICE_BOARD.get());
-        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.WAY_SIGN_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         //PonderRegistry.TAGS.forTag(PonderTag.DISPLAY_TARGETS).add(ModRegistry.DOORMAT.get());
         PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.SPEAKER_BLOCK.get());
         PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(ModRegistry.BLACKBOARD.get());

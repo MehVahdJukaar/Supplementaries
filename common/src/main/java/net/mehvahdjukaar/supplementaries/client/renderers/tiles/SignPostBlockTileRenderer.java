@@ -40,7 +40,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         this.font = context.getFont();
         ModelManager manager = Minecraft.getInstance().getModelManager();
         MODELS.clear();
-        for (var e : ClientRegistry.SIGN_POST_MODELS.get().entrySet()) {
+        for (var e : ClientRegistry.WAY_SIGN_MODELS.get().entrySet()) {
             MODELS.put(e.getKey(), ClientHelper.getModel(manager, e.getValue()));
         }
         renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();

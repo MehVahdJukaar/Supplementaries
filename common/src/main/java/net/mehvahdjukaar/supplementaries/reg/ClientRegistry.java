@@ -127,9 +127,9 @@ public class ClientRegistry {
 
     public static final ModelResourceLocation BOAT_MODEL = modelRes("block/jar_boat_ship");
     public static final ModelResourceLocation BLACKBOARD_FRAME = modelRes("block/blackboard_frame");
-    public static final Supplier<Map<WoodType, ModelResourceLocation>> SIGN_POST_MODELS = Suppliers.memoize(() ->
+    public static final Supplier<Map<WoodType, ModelResourceLocation>> WAY_SIGN_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
-                    w -> modelRes("block/sign_posts/" + w.getVariantId("sign_post"))))
+                    w -> modelRes("block/way_signs/" + w.getVariantId("way_sign"))))
     );
     public static final Function<BookType, ModelResourceLocation> BOOK_MODELS = Util.memoize(type ->
             RenderUtil.getStandaloneModelLocation(Supplementaries.res("block/books/book_" + type.name()))
@@ -197,7 +197,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.GLOBE.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.GLOBE_SEPIA.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), cutout);
-        ClientHelper.registerRenderType(ModRegistry.SIGN_POST.get(), cutout);
+        ClientHelper.registerRenderType(ModRegistry.WAY_SIGN.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BELLOWS.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.SCONCE.get(), cutout);
@@ -413,7 +413,7 @@ public class ClientRegistry {
         event.register(ModRegistry.NOTICE_BOARD_TILE.get(), NoticeBoardBlockTileRenderer::new);
         event.register(ModRegistry.JAR_TILE.get(), JarBlockTileRenderer::new);
         event.register(ModRegistry.SPRING_LAUNCHER_ARM_TILE.get(), SpringLauncherArmBlockTileRenderer::new);
-        event.register(ModRegistry.SIGN_POST_TILE.get(), SignPostBlockTileRenderer::new);
+        event.register(ModRegistry.WAY_SIGN_TILE.get(), SignPostBlockTileRenderer::new);
         event.register(ModRegistry.BELLOWS_TILE.get(), BellowsBlockTileRenderer::new);
         event.register(ModRegistry.FLAG_TILE.get(), FlagBlockTileRenderer::new);
         event.register(ModRegistry.ITEM_SHELF_TILE.get(), ItemShelfBlockTileRenderer::new);
@@ -440,7 +440,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
-        SIGN_POST_MODELS.get().values().forEach(event::register);
+        WAY_SIGN_MODELS.get().values().forEach(event::register);
         PlaceableBookManager.getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
@@ -466,7 +466,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
         event.register(Supplementaries.res("blackboard"), new NestedModelLoader("frame", BlackboardBakedModel::new));
-        event.register(Supplementaries.res("sign_post"), SignPostBlockBakedModel::new);
+        event.register(Supplementaries.res("way_sign"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
@@ -506,7 +506,7 @@ public class ClientRegistry {
     private static void registerBlockColors(ClientHelper.BlockColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
-        event.register(new MimicBlockColor(), ModRegistry.SIGN_POST.get(), ModRegistry.TIMBER_BRACE.get(),
+        event.register(new MimicBlockColor(), ModRegistry.WAY_SIGN.get(), ModRegistry.TIMBER_BRACE.get(),
                 ModRegistry.TIMBER_FRAME.get(), ModRegistry.TIMBER_CROSS_BRACE.get(),
                 ModRegistry.ROPE_KNOT.get());
         event.register(new CogBlockColor(), ModRegistry.COG_BLOCK.get());

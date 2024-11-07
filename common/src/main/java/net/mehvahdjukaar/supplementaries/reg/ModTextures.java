@@ -51,7 +51,6 @@ public class ModTextures {
     public static final ResourceLocation ENDERMAN_HEAD_EYES = Supplementaries.res("textures/entity/enderman_head_eyes.png");
     public static final ResourceLocation CANNON_TRAJECTORY = Supplementaries.res("textures/entity/cannon_trajectory.png");
     public static final ResourceLocation CANNON_TRAJECTORY_RED = Supplementaries.res("textures/entity/cannon_trajectory_charging.png");
-    public static final ResourceLocation BLACKBOARD_GUI_GRID = Supplementaries.res("textures/gui/blackboard_grid.png");
     public static final ResourceLocation CANNONBALL_TEXTURE = Supplementaries.res("textures/entity/cannonball.png");
 
 
@@ -92,6 +91,8 @@ public class ModTextures {
 
     // sprites
     public static final ResourceLocation BLACKBOARD_DYE_SPRITE = Supplementaries.res("blackboard/dye_button");
+    public static final ResourceLocation BLACKBOARD_DYE_OUTLINE_SPRITE = Supplementaries.res("blackboard/dye_outline");
+    public static final ResourceLocation BLACKBOARD_OUTLINE_SPRITE = Supplementaries.res("blackboard/outline");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

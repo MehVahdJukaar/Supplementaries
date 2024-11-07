@@ -43,14 +43,14 @@ public class ModMapMarkers {
     public static final DynamicHolder<MLMapDecorationType<?, ?>> DEATH_MARKER =
             DynamicHolder.of(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
 
-    public static final ResourceLocation SIGN_POST_FACTORY_ID = Supplementaries.res("sign_post");
+    public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
     public static final ResourceLocation BANNER_FACTORY_ID = Supplementaries.res("banner");
     public static final ResourceLocation BED_FACTORY_ID = Supplementaries.res("bed");
     public static final ResourceLocation FLAG_FACTORY_ID = Supplementaries.res("flag");
 
     public static void init() {
-        MapDataRegistry.registerSpecialMapDecorationTypeFactory(SIGN_POST_FACTORY_ID, () ->
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAY_SIGN_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::signPost));
         MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAYSTONE_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::waystone));

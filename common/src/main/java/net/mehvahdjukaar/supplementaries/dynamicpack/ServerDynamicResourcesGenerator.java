@@ -45,13 +45,13 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
     public void regenerateDynamicAssets(ResourceManager manager) {
         //sing posts
         {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
-            builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
+            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));
+            builder.addEntries(ModRegistry.WAY_SIGN_ITEMS.values());
             dynamicPack.addTag(builder, Registries.ITEM);
         }
 
         //recipes
-        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
             addSignPostRecipes(manager);
         }
 
@@ -60,7 +60,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             //way signs tag
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+                if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
                     builder.addTag(BiomeTags.IS_OVERWORLD);
                 }
                 dynamicPack.addTag(builder, Registries.BIOME);
@@ -103,18 +103,18 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
     }
 
     private void addSignPostRecipes(ResourceManager manager) {
-        Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("sign_post_oak"));
-        Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("sign_post_mod_template"));
+        Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_oak"));
+        Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_mod_template"));
 
         WoodType oak = WoodTypeRegistry.OAK_TYPE;
 
-        ModRegistry.SIGN_POST_ITEMS.forEach((w, i) -> {
+        ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
             if (w != oak) {
                 try {
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
-                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w, "sign_post_oak");
+                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w, "way_sign_oak");
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     this.dynamicPack.addRecipe(newR);
                 } catch (Exception e) {

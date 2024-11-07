@@ -425,11 +425,11 @@ public class CommonConfigs {
             GLOBE_SEPIA = feature(builder, "sepia_globe");
             builder.pop();
 
-            builder.push("sign_post");
-            SIGN_POST_ENABLED = feature(builder);
-            builder.push("way_sign");
-            WAY_SIGN_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : feature(builder.comment("Entirely disables them from spawning"));
-            WAY_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
+            builder.push(ModConstants.WAY_SIGN_NAME);
+            WAY_SIGN_ENABLED = feature(builder);
+            builder.push("road_signs");
+            ROAD_SIGN_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : feature(builder.comment("Entirely disables them from spawning"));
+            ROAD_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
             builder.pop();
 
@@ -531,9 +531,9 @@ public class CommonConfigs {
         public static final Supplier<Boolean> PLANTER_BREAKS;
         public static final Supplier<Boolean> FD_PLANTER;
 
-        public static final Supplier<Boolean> SIGN_POST_ENABLED;
-        public static final Supplier<Boolean> WAY_SIGN_DISTANCE_TEXT;
         public static final Supplier<Boolean> WAY_SIGN_ENABLED;
+        public static final Supplier<Boolean> ROAD_SIGN_DISTANCE_TEXT;
+        public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
 
         public static final Supplier<Boolean> GLOBE_ENABLED;
         public static final Supplier<Boolean> GLOBE_SEPIA;

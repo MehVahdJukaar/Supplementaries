@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,18 +16,22 @@ import java.util.function.Predicate;
 public class QuiverContent extends SelectableContainerContent<QuiverContent.Mutable> {
 
     public static final Codec<QuiverContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ItemStack.CODEC.listOf().fieldOf("items").forGetter(QuiverContent::getContentCopy),
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("items").forGetter(QuiverContent::getContentCopy),
             Codec.INT.fieldOf("selected_slot").forGetter(QuiverContent::getSelectedSlot)
     ).apply(instance, QuiverContent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, QuiverContent> STREAM_CODEC = StreamCodec.composite(
-            ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), QuiverContent::getContentCopy,
+            ItemStack.OPTIONAL_LIST_STREAM_CODEC, QuiverContent::getContentCopy,
             ByteBufCodecs.INT, QuiverContent::getSelectedSlot,
             QuiverContent::new
     );
 
     QuiverContent(List<ItemStack> stacks, int selected) {
         super(stacks, selected);
+    }
+
+    public static QuiverContent empty(int count) {
+        return new QuiverContent(NonNullList.withSize(count, ItemStack.EMPTY), 0);
     }
 
     public ItemStack getSelected() {

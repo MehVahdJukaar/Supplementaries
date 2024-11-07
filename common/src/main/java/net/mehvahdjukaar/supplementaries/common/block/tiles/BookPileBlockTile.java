@@ -94,7 +94,9 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+
         int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
             if (b == 0) {
@@ -106,8 +108,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 }
             } else {
                 //shifts books. Assumes at most one has been removed
-                consolidateBookPile();
-                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+             //   consolidateBookPile();
+              //  this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
             }
         }
         this.enchantPower = 0;
@@ -121,6 +123,11 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 this.enchantPower += CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
             else this.enchantPower += CommonConfigs.Tweaks.BOOK_POWER.get() / 4f;
         }
+    }
+
+    @Override
+    public void updateTileOnInventoryChanged() {
+        super.updateTileOnInventoryChanged();
     }
 
     private void consolidateBookPile() {

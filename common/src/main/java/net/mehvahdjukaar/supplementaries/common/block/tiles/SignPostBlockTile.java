@@ -29,7 +29,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CompassItem;
@@ -68,7 +67,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     private UUID playerWhoMayEdit;
 
     public SignPostBlockTile(BlockPos pos, BlockState state) {
-        super(ModRegistry.SIGN_POST_TILE.get(), pos, state);
+        super(ModRegistry.WAY_SIGN_TILE.get(), pos, state);
     }
 
     @Override
@@ -285,7 +284,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
 
         public ItemStack getItem() {
-            return new ItemStack(ModRegistry.SIGN_POST_ITEMS.get(woodType));
+            return new ItemStack(ModRegistry.WAY_SIGN_ITEMS.get(woodType));
         }
     }
 

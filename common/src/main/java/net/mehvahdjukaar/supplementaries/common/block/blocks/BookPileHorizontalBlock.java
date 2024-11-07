@@ -86,14 +86,14 @@ public class BookPileHorizontalBlock extends BookPileBlock {
 
     private static VoxelShape getVoxelShape(BlockState state, boolean x) {
         return switch (state.getValue(BOOKS)) {
-            default -> x ? SHAPE_1_X : SHAPE_1_Z;
             case 2 -> x ? SHAPE_2_X : SHAPE_2_Z;
             case 3 -> x ? SHAPE_3_X : SHAPE_3_Z;
             case 4 -> x ? SHAPE_4_X : SHAPE_4_Z;
+            default -> x ? SHAPE_1_X : SHAPE_1_Z;
         };
     }
 
-
+    @Override
     protected int getBookIndex(BlockState state, BlockPos pos, Vec3 location) {
         Direction dir = state.getValue(FACING);
         double dist = dir.getAxis() == Direction.Axis.Z ? location.x - pos.getX() : location.z - pos.getZ();

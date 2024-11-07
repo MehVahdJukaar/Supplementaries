@@ -20,9 +20,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.network.Filterable;
@@ -304,7 +301,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
             }
 
 
-            level.setBlockAndUpdate(pos, ModRegistry.SIGN_POST.get().defaultBlockState());
+            level.setBlockAndUpdate(pos, ModRegistry.WAY_SIGN.get().defaultBlockState());
             if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
                 tile.setHeldBlock(c.fence);
 
@@ -331,7 +328,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                 }
 
 
-                if (CommonConfigs.Building.WAY_SIGN_DISTANCE_TEXT.get()) {
+                if (CommonConfigs.Building.ROAD_SIGN_DISTANCE_TEXT.get()) {
                     tile.getTextHolder(0).setMessage(0, getSignText(dist1));
                     if (twoSigns)
                         tile.getTextHolder(1).setMessage(0, getSignText(dist2));

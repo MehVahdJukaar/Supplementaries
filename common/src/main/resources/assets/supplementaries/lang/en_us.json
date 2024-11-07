@@ -172,7 +172,7 @@
   "block.supplementaries.sconce_soul": "Soul Sconce",
   "block.supplementaries.sconce_soul_wall": "Soul Sconce",
   "block.supplementaries.sconce_wall": "Sconce",
-  "block.supplementaries.sign_post": "Sign Post",
+  "block.supplementaries.way_sign": "Way Sign",
   "block.supplementaries.silver_door": "Silver Door",
   "block.supplementaries.silver_lantern": "Silver Lantern",
   "block.supplementaries.silver_trapdoor": "Silver Trapdoor",
@@ -396,7 +396,7 @@
   "item.supplementaries.quiver": "Quiver",
   "item.supplementaries.red_merchant_spawn_egg": "Red Merchant Spawn Egg",
   "item.supplementaries.rope_arrow": "Rope Arrow",
-  "item.supplementaries.sign_post": "%s Sign Post",
+  "item.supplementaries.way_sign": "%s Way Sign",
   "item.supplementaries.slice_map": "Slice Map",
   "item.supplementaries.slingshot": "Slingshot",
   "item.supplementaries.soap": "Soap",
@@ -547,8 +547,7 @@
   "leaves_type.twilightforest.dark": "Darkwood",
   "leaves_type.ulterlands.souldrained": "Petrified",
 
-  "block_type.supplementaries.hanging_sign": "Hanging Sign",
-  "block_type.supplementaries.sign_post": "Sign Post",
+  "block_type.supplementaries.way_sign": "Sign Post",
 
   "wood_type.domum_ornamentum.cactus": "Green Cactus",
   "wood_type.domum_ornamentum.cactus_extra": "Cactus",

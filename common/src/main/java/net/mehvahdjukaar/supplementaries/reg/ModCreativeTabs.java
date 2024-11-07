@@ -215,8 +215,8 @@ public class ModCreativeTabs {
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);
 
-        if (CommonConfigs.Building.SIGN_POST_ENABLED.get() && !PlatHelper.isDev()) {
-            for (var v : ModRegistry.SIGN_POST_ITEMS.entrySet()) {
+        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && !PlatHelper.isDev()) {
+            for (var v : ModRegistry.WAY_SIGN_ITEMS.entrySet()) {
                 var w = v.getKey();
                 e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> {
                     if (i.is(ItemTags.HANGING_SIGNS)) {

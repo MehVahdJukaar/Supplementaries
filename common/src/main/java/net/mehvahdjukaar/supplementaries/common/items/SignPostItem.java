@@ -95,7 +95,7 @@ public class SignPostItem extends WoodBasedBlockItem {
                 }
             }
             boolean waterlogged = level.getFluidState(blockpos).getType() == Fluids.WATER;
-            level.setBlock(blockpos, ModRegistry.SIGN_POST.get()
+            level.setBlock(blockpos, ModRegistry.WAY_SIGN.get()
                     .getStateForPlacement(new BlockPlaceContext(context)).setValue(SignPostBlock.WATERLOGGED, waterlogged), 3);
         }
         //normal wall placement

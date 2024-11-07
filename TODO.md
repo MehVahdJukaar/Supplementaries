@@ -1,4 +1,5 @@
 # 1.21
+- book pile completely broken. rethink
 - fix and re assing all isPathfindables
 - recipes codecs with customizaton
 - burn time data map

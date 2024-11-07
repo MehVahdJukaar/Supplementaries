@@ -12,11 +12,14 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 
 
 public abstract class BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
     protected final BlackBoardScreen parent;
+    private final ResourceLocation outlineTexture;
     public final int size;
     public final int x;
     public final int y;
@@ -24,12 +27,14 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
     protected byte color;
     protected boolean focused;
 
-    public BlackboardButton(BlackBoardScreen screen, int x, int y, byte color, int size) {
+    public BlackboardButton(BlackBoardScreen screen, int x, int y, byte color, int size,
+                            ResourceLocation outlineTexture) {
         this.x = x;
         this.y = y;
         this.parent = screen;
         this.color = color;
         this.size = size;
+        this.outlineTexture = outlineTexture;
     }
 
     public byte getColor() {
@@ -55,10 +60,8 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
 
         pose.translate(0, 0, 90);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        graphics.blit(ModTextures.BLACKBOARD_GUI_GRID,
-                this.x - 1, this.y - 1, size + 2, size + 2,
-                0, 0,
-                16, 16, 16, 16);
+        graphics.blitSprite(this.outlineTexture,
+                this.x - 1, this.y - 1, size + 2, size + 2);
 
         pose.popPose();
     }

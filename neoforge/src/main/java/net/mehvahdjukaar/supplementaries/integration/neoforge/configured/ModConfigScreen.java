@@ -34,7 +34,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("turn particles", ModRegistry.TURN_TABLE.get());
         addIcon("captured mobs", ModRegistry.CAGE_ITEM.get());
         addIcon("flag", ModRegistry.FLAGS.get(DyeColor.WHITE).get());
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        addIcon("way sign", ModRegistry.WAY_SIGN_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("dispenser tweaks", Items.DISPENSER);
         addIcon("golden apple disenchant", Items.ENCHANTED_GOLDEN_APPLE);
         addIcon("throwable bricks", Items.BRICK);
@@ -55,7 +55,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("lumisene", ModFluids.LUMISENE_BUCKET.get());
         addIcon("server protection", Items.COMMAND_BLOCK);
         addIcon("placeable books", Items.ENCHANTED_BOOK);
-        addIcon("sign post", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
+        addIcon("sign post", ModRegistry.WAY_SIGN_ITEMS.get(WoodTypeRegistry.OAK_TYPE));
         addIcon("wattle and daub", ModRegistry.DAUB_BRACE.get());
         addIcon("shulker helmet", Items.SHULKER_SHELL);
         addIcon("jar tab", ModRegistry.JAR_ITEM.get());
@@ -73,7 +73,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         addIcon("traders open doors", Items.WANDERING_TRADER_SPAWN_EGG);
         addIcon("basalt ash", Items.BASALT);
         addIcon("cave urns", Items.BONE);
-        addIcon("way sign", ModRegistry.SIGN_POST_ITEMS.get(WoodTypeRegistry.getValue(ResourceLocation.withDefaultNamespace("spruce"))));
+        addIcon("way sign", ModRegistry.WAY_SIGN_ITEMS.get(WoodTypeRegistry.getValue(ResourceLocation.withDefaultNamespace("spruce"))));
         addIcon("stasis", Items.ENCHANTED_BOOK);
         addIcon("banner pattern tooltip", Items.CREEPER_BANNER_PATTERN);
         addIcon("paintings tooltip", Items.PAINTING);

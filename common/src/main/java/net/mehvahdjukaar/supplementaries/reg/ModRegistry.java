@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -10,6 +9,8 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
+import net.mehvahdjukaar.supplementaries.common.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
@@ -20,28 +21,22 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
-import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.item.enchantment.ConditionalEffect;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,10 +139,13 @@ public class ModRegistry {
     //quiver
     public static final Supplier<QuiverItem> QUIVER_ITEM = regItem(QUIVER_NAME, () -> new QuiverItem((new Item.Properties())
             .stacksTo(1)
+            .component(ModComponents.QUIVER_CONTENT.get(), QuiverContent.empty(CommonConfigs.Tools.QUIVER_SLOTS.get()))
             .rarity(Rarity.RARE)));
 
     //lunch basket
     public static final Supplier<LunchBoxItem> LUNCH_BASKET_ITEM = regItem(LUNCH_BASKET_NAME, () -> new LunchBoxItem((new Item.Properties())
+            .component(ModComponents.LUNCH_BASKET_CONTENT.get(),
+                    LunchBaskedContent.empty(CommonConfigs.Tools.LUNCH_BOX_SLOTS.get()))
             .stacksTo(1)));
 
     public static final Supplier<Block> LUNCH_BASKET = regBlock(LUNCH_BASKET_NAME, () -> new LunchBoxBlock(
@@ -174,21 +172,21 @@ public class ModRegistry {
     //blocks
 
     //sign posts
-    public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
+    public static final Supplier<Block> WAY_SIGN = regBlock(WAY_SIGN_NAME, () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS);
         return new SignPostBlock(p);
     });
 
-    public static final Supplier<Block> SIGN_POST_WALL = regBlock(SIGN_POST_NAME + "_wall", () -> {
+    public static final Supplier<Block> WAY_SIGN_WALL = regBlock(WAY_SIGN_NAME + "_wall", () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SIGN);
         return new SignPostWallBlock(p);
     });
 
-    public static final Supplier<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = regTile(
-            SIGN_POST_NAME, () -> PlatHelper.newBlockEntityType(
-                    SignPostBlockTile::new, SIGN_POST.get(), SIGN_POST_WALL.get()));
+    public static final Supplier<BlockEntityType<SignPostBlockTile>> WAY_SIGN_TILE = regTile(
+            WAY_SIGN_NAME, () -> PlatHelper.newBlockEntityType(
+                    SignPostBlockTile::new, WAY_SIGN.get(), WAY_SIGN_WALL.get()));
 
-    public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Map<WoodType, SignPostItem> WAY_SIGN_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
 
     //flags
     public static final Map<DyeColor, Supplier<Block>> FLAGS = RegUtils.registerFlags(FLAG_NAME);

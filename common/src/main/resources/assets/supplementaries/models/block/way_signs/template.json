@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube",
 	"textures": {
-		"particle": "supplementaries:block/sign_posts/sign_post_oak",
-		"sign": "supplementaries:block/sign_posts/sign_post_oak"
+		"particle": "supplementaries:block/way_sign/way_sign_oak",
+		"sign": "supplementaries:block/way_sign/way_sign_oak"
 	},
 	"elements": [
 		{

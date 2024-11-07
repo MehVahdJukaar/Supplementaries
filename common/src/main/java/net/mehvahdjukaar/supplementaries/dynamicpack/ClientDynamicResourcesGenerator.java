@@ -25,8 +25,6 @@ import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -122,17 +120,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         //------sing posts-----
         {
             StaticResource spItemModel = StaticResource.getOrLog(manager,
-                    ResType.ITEM_MODELS.getPath(Supplementaries.res("sign_post_oak")));
+                    ResType.ITEM_MODELS.getPath(Supplementaries.res("way_sign_oak")));
             StaticResource spBlockModel = StaticResource.getOrLog(manager,
-                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("sign_posts/sign_post_oak")));
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
+                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("way_signs/way_sign_oak")));
+            ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) return;
                 String id = Utils.getID(sign).getPath();
-                //langBuilder.addEntry(sign, wood.getVariantReadableName("sign_post"));
+                //langBuilder.addEntry(sign, wood.getVariantReadableName("way_sign"));
 
                 try {
-                    addSimilarJsonResource(manager, spItemModel, "sign_post_oak", id);
-                    addSimilarJsonResource(manager, spBlockModel, "sign_post_oak", id);
+                    addSimilarJsonResource(manager, spItemModel, "way_sign_oak", id);
+                    addSimilarJsonResource(manager, spBlockModel, "way_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }
@@ -141,12 +139,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         //sign posts item textures
         try (TextureImage template = TextureImage.open(manager,
-                Supplementaries.res("item/sign_posts/template"))) {
+                Supplementaries.res("item/way_signs/template"))) {
 
             Respriter respriter = Respriter.of(template);
 
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
-                ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
+            ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
+                ResourceLocation textureRes = Supplementaries.res("item/way_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;
@@ -162,7 +160,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
                                 Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res("item/sign_posts/scribbles_template"))) {
+                                Supplementaries.res("item/way_signs/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
                             getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
@@ -193,13 +191,13 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
         //sign posts block textures
         try (TextureImage template = TextureImage.open(manager,
-                Supplementaries.res("block/sign_posts/sign_post_oak"))) {
+                Supplementaries.res("block/way_signs/way_sign_oak"))) {
 
             Respriter respriter = Respriter.of(template);
 
-            ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
+            ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
-                var textureRes = Supplementaries.res("block/sign_posts/" + Utils.getID(sign).getPath());
+                var textureRes = Supplementaries.res("block/way_signs/" + Utils.getID(sign).getPath());
                 if (alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 try (TextureImage plankTexture = TextureImage.open(manager,
@@ -241,8 +239,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     @Override
     public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
-        ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
-                LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
+        ModRegistry.WAY_SIGN_ITEMS.forEach((type, item) ->
+                LangBuilder.addDynamicEntry(lang, "item.supplementaries.way_sign", type, item));
 
     }
 

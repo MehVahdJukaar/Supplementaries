@@ -31,7 +31,7 @@ public final class ModConstants {
     public static final String SLICE_MAP_NAME = "slice_map";
     public static final String CONFETTI_POPPER_NAME = "confetti_popper";
 
-    public static final String SIGN_POST_NAME = "sign_post";
+    public static final String WAY_SIGN_NAME = "way_sign";
     public static final String FLAG_NAME = "flag";
     public static final String LUMISENE_NAME = "lumisene";
     public static final String LUMISENE_BOTTLE_NAME = "lumisene_bottle";

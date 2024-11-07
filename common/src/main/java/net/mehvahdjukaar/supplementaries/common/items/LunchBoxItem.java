@@ -39,8 +39,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, LunchBaskedContent.Mutable
-        > implements ICustomItemRendererProvider, ILeftClickReact {
+public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, LunchBaskedContent.Mutable>
+        implements ICustomItemRendererProvider, ILeftClickReact {
 
     public LunchBoxItem(Properties properties) {
         super(properties);

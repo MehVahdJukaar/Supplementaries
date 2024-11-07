@@ -46,7 +46,7 @@ public class CreateCompat {
             DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
 
-            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
+            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.WAY_SIGN_TILE.get());
             AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
             AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
 
