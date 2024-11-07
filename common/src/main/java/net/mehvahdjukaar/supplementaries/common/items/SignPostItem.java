@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostWallBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -61,11 +60,7 @@ public class SignPostItem extends WoodBasedBlockItem {
         FENCE, STICK, WALL, WAY_SIGN_POST, WAY_SIGN_WALL;
 
         int getRot(UseOnContext context) {
-            if (!this.needsConversion()) {
-                return 0;
-            } else {
-                return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
-            }
+            return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
         }
 
         public boolean needsConversion() {
@@ -125,8 +120,8 @@ public class SignPostItem extends WoodBasedBlockItem {
                 if (attachType != AttachType.WALL) {
                     if (attachType.needsConversion()) {
                         tile.setHeldBlock(targetBlock.defaultBlockState());
-                        tile.setChanged();
                     }
+                    tile.setChanged();
 
                     level.sendBlockUpdated(blockpos, state, state, 3);
                     SoundType soundtype = this.getBlockType().getSound();
