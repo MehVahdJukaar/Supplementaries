@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "supplementaries:item/sign_posts/sign_post_spruce"
-  }
-}

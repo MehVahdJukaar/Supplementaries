@@ -93,6 +93,10 @@ public class ModTextures {
     public static final ResourceLocation BLACKBOARD_DYE_SPRITE = Supplementaries.res("blackboard/dye_button");
     public static final ResourceLocation BLACKBOARD_DYE_OUTLINE_SPRITE = Supplementaries.res("blackboard/dye_outline");
     public static final ResourceLocation BLACKBOARD_OUTLINE_SPRITE = Supplementaries.res("blackboard/outline");
+    public static final ResourceLocation TRAPPED_PRESENT_BUTTON_SPRITE = Supplementaries.res("trapped_present/button");
+    public static final ResourceLocation TRAPPED_PRESENT_BUTTON_HIGHLIGHTED_SPRITE = Supplementaries.res("trapped_present/button_highlighted");
+    public static final ResourceLocation TRAPPED_PRESENT_BUTTON_SELECTED_SPRITE = Supplementaries.res("trapped_present/button_selected");
+    public static final ResourceLocation TRAPPED_PRESENT_BUTTON_DISABLED_SPRITE = Supplementaries.res("trapped_present/button_disabled");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

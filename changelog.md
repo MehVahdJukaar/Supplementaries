@@ -1,4 +1,5 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- fixed even more tags, recipes and data things
-- wind charged can hit wind vanes and power them. not finished
+- renamed sign post to way signs
+- started to port some guis sprites to the new system
+- 

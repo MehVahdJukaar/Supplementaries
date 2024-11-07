@@ -10,11 +10,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -147,7 +148,8 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     }
 
     public class PackButton extends AbstractButton {
-        private static final Tooltip TOOLTIP = Tooltip.create(Component.translatable("gui.supplementaries.present.trapped"));
+        private static final Tooltip TOOLTIP = Tooltip.create(
+                Component.translatable("gui.supplementaries.present.trapped"));
 
         private boolean packed;
 
@@ -157,16 +159,17 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
 
         @Override
         public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-            int i = 198;
-            int j = 0;
+            ResourceLocation texture;
             if (!this.active) {
-                j += this.width * 2;
+                texture = ModTextures.TRAPPED_PRESENT_BUTTON_SELECTED_SPRITE;
             } else if (this.packed) {
-                j += this.width * 1;
+                texture = ModTextures.TRAPPED_PRESENT_BUTTON_DISABLED_SPRITE;
             } else if (this.isHovered) {
-                j += this.width * 3;
+               texture = ModTextures.TRAPPED_PRESENT_BUTTON_HIGHLIGHTED_SPRITE;
+            }else{
+                texture = ModTextures.TRAPPED_PRESENT_BUTTON_SPRITE;
             }
-            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, this.getX(), this.getY(), j, i, this.width, this.height);
+            graphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {
