@@ -1,10 +1,12 @@
 # 1.21
 
+- fix urn loot table
+- soap recipe broken
 - Lumisene has no sound when bucketed.
 - Lunch Basket UI container slots are not highlighted when hovering over them.
 - Sack, Present, Cannon, Lunch Basket, Pulley UIs do not show item tooltips when hovering over an item.
 - Quiver color
-- Bubbleblower doesn't work.
+- Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
 
 - present The confirm button is visually and functionally bugged.
@@ -21,7 +23,6 @@ Causes a server disconnect when pick blocking when filled with anything.
 Entities do not render correctly in the inventory icon.
 jars somehow duplicating lumisene buckets?
 
-- soap recipe broken 
 - sus sand crash when broken (due to item)
 - lunch box gui completly broken
 - lumisene doesnt go in jars
@@ -29,12 +30,11 @@ jars somehow duplicating lumisene buckets?
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - check bubble blower statis enchantment
-- fix urn loot table
 - safe craetive drop
 - lunch basked tooltip not showing content
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
-- burn time data map
+- burn time data map (for forge). For fabric add a new class that assigns burn times
 - check if the all tile entities that have them keep their custom names when placed from items
 - check bellows block place power
 - test all map markers & with names
