@@ -1,4 +1,33 @@
 # 1.21
+
+- cannon rotation gimbal when placed makes them turn wrong visually
+- Lumisene has no sound when bucketed.
+- Lunch Basket UI container slots are not highlighted when hovering over them.
+- Sack, Present, Cannon, Lunch Basket, Pulley UIs do not show item tooltips when hovering over an item.
+- Ash does not drop anything when broken.
+- Ash cannot be smelted into Ash Brick.
+- Quiver doesn't work.
+- Bubbleblower doesn't work.
+- Placeable books do not work, but still consumes the item as if it did.
+
+- present The confirm button is visually and functionally bugged.
+- preset The message input is broken.
+
+- hat stand Cannot be equipped with items.
+- hat standDispensing equippable onto them will delete the item.
+
+Sign Post
+All variants use their oak variant particles.
+Variants with unique sounds (Cherry, Bamboo, etc) do not use their correct block sounds. (prob fabric only so not an issue)
+
+Jar
+Cannot be filled to the top with buckets, bottles do work however.
+Causes a server disconnect when pick blocking when filled with anything.
+Entities do not render correctly in the inventory icon.
+
+Tags
+Fire Pits are missing a mineable tag.
+
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
 - recipes codecs with customizaton

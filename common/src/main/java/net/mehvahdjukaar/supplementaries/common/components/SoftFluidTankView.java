@@ -18,6 +18,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 // immutable view of a SoftFluidTank
@@ -98,5 +99,17 @@ public class SoftFluidTankView implements TooltipProvider {
                 contents.addPotionTooltip(tooltipAdder, 1.0F, context.tickRate());
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SoftFluidTankView tankView)) return false;
+        return inner.getFluid().isSameFluidSameComponents(tankView.inner.getFluid());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(inner.getFluid());
     }
 }

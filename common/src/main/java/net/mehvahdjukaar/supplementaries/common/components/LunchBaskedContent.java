@@ -15,12 +15,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.BundleContents;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedContent.Mutable> {
 
-    protected final MutableComponent CLOSED_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.closed");
-    protected final MutableComponent OPEN_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.open");
+    protected static final MutableComponent CLOSED_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.closed");
+    protected static final MutableComponent OPEN_TOOLTIP = Component.translatable("message.supplementaries.lunch_box.tooltip.open");
 
     public static final Codec<LunchBaskedContent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.OPTIONAL_CODEC.listOf().fieldOf("items").forGetter(LunchBaskedContent::getContentCopy),
@@ -86,4 +87,17 @@ public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedCo
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LunchBaskedContent that = (LunchBaskedContent) o;
+        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount && Objects.equals(stacks, that.stacks)
+                && isOpen == that.isOpen;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stacks, selectedSlot, isOpen);
+    }
 }

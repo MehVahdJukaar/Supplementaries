@@ -14,11 +14,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public abstract class SelectableContainerContent<M extends SelectableContainerContent.Mut<?>> implements TooltipComponent, TooltipProvider {
 
-    private final NonNullList<ItemStack> stacks;
+    protected final NonNullList<ItemStack> stacks;
     protected final int selectedSlot;
     protected final int selectedItemCount;
     protected final boolean empty;
@@ -348,4 +349,16 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SelectableContainerContent<?> that = (SelectableContainerContent<?>) o;
+        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount && Objects.equals(stacks, that.stacks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stacks, selectedSlot);
+    }
 }

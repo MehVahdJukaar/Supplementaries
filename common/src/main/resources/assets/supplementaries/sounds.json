@@ -196,7 +196,7 @@
       "supplementaries:item/bomb_explosion_3"
     ]
   },
-  "music.pancake": {
+  "music_disc.pancake": {
     "sounds": [
       {
         "name": "supplementaries:music/pancake",
@@ -204,7 +204,7 @@
       }
     ]
   },
-  "music.heave_ho": {
+  "music_disc.heave_ho": {
     "sounds": [
       {
         "name": "supplementaries:music/heave_ho",
