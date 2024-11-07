@@ -12,7 +12,7 @@
   },
   "fabric:load_conditions": [
     {
-      "type": "cabin_siding:flag",
+      "condition": "cabin_siding:flag",
       "flag": "ash_bricks"
     }
   ],
