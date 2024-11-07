@@ -61,11 +61,7 @@ public class SignPostItem extends WoodBasedBlockItem {
         FENCE, STICK, WALL, WAY_SIGN_POST, WAY_SIGN_WALL;
 
         int getRot(UseOnContext context) {
-            if (!this.needsConversion()) {
-                return 0;
-            } else {
-                return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
-            }
+            return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
         }
 
         public boolean needsConversion() {
