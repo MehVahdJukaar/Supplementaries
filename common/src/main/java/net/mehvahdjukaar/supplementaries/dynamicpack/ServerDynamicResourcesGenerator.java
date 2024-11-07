@@ -18,6 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;

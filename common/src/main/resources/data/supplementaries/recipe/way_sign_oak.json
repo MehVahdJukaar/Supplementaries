@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "sign_post"
+      "flag": "way_sign"
     }
   ],
   "type": "minecraft:crafting_shapeless",
@@ -12,7 +12,7 @@
     }
   ],
   "result": {
-    "id": "supplementaries:sign_post_oak",
+    "id": "supplementaries:way_sign_oak",
     "count": 2
   }
 }

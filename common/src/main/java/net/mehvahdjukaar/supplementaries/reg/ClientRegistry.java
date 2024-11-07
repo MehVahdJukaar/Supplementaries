@@ -34,6 +34,8 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
@@ -496,6 +498,8 @@ public class ClientRegistry {
     @EventCalled
     private static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(BlackboardData.class, BlackboardTooltipComponent::new);
+        event.register(QuiverContent.class, SelectableContainerTooltip::new);
+        event.register(LunchBaskedContent.class, SelectableContainerTooltip::new);
         event.register(SelectableContainerContent.class, SelectableContainerTooltip::new);
         event.register(BannerPatternTooltip.class, BannerPatternTooltipComponent::new);
         event.register(PaintingTooltip.class, PaintingTooltipComponent::new);

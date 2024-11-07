@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -102,5 +104,17 @@ public final class SafeOwner implements TooltipProvider {
 
     private boolean isNotOwnedBy(Player player) {
         return owner != null && !owner.equals(player.getUUID());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SafeOwner safeOwner)) return false;
+        return Objects.equals(owner, safeOwner.owner) && Objects.equals(ownerName, safeOwner.ownerName) && Objects.equals(password, safeOwner.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, ownerName, password);
     }
 }

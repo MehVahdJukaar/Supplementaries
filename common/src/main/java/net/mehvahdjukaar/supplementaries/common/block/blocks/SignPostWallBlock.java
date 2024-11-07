@@ -84,8 +84,8 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
     }
 
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        if (world.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             var sign = tile.getClickedSign(target.getLocation());
             if (sign.active()) {
                 return sign.getItem();

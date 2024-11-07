@@ -87,7 +87,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
                     }
                     if (world.getRandom().nextFloat() > 0.985) {
                         //jump
-                        this.yVel = 0.153f;
+                        this.yVel = 0.15f;
                         mob.targetSquish = 1.0F;
                     }
                 }

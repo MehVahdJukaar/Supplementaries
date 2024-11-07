@@ -128,8 +128,8 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     }
 
     @ForgeOverride
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-        if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        if (level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             return tile.getItem(getBookIndex(state, pos, target.getLocation()));
         }
         return Items.BOOK.getDefaultInstance();

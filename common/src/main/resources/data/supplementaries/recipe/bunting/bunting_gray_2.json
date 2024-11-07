@@ -16,13 +16,13 @@
       "tag": "c:strings"
     },
     "0": {
-      "item": "minecraft:yellow_wool"
+      "item": "minecraft:gray_wool"
     }
   },
   "result": {
     "id": "supplementaries:bunting",
     "components": {
-      "base_colo": "yellow"
+      "base_color": "gray"
     },
     "count": 6
   }

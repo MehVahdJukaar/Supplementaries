@@ -21,8 +21,8 @@
   },
   "result": {
     "id": "supplementaries:bunting",
-    "nbt": {
-      "Color": "black"
+    "components": {
+      "base_color": "black"
     },
     "count": 6
   }

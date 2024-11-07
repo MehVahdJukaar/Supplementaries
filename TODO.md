@@ -4,9 +4,7 @@
 - Lumisene has no sound when bucketed.
 - Lunch Basket UI container slots are not highlighted when hovering over them.
 - Sack, Present, Cannon, Lunch Basket, Pulley UIs do not show item tooltips when hovering over an item.
-- Ash does not drop anything when broken.
-- Ash cannot be smelted into Ash Brick.
-- Quiver doesn't work.
+- Quiver color
 - Bubbleblower doesn't work.
 - Placeable books do not work, but still consumes the item as if it did.
 
@@ -17,31 +15,34 @@
 - hat standDispensing equippable onto them will delete the item.
 
 Sign Post
-All variants use their oak variant particles.
-Variants with unique sounds (Cherry, Bamboo, etc) do not use their correct block sounds. (prob fabric only so not an issue)
+All variants use their oak variant particles &  have incorrect sounds
 
 Jar
 Cannot be filled to the top with buckets, bottles do work however.
 Causes a server disconnect when pick blocking when filled with anything.
 Entities do not render correctly in the inventory icon.
+jars somehow duplicating lumisene buckets?
 
-Tags
-Fire Pits are missing a mineable tag.
-
+- sus sand crash when broken (due to item)
+- lunch box gui completly broken
+- lumisene doesnt go in jars
+- jars being completely busted
+- check all forge override to see if they are still overriding stuff
+- check slingshot enchantments 6(stasis, loyalty, multi shot)
+- check bubble blower statis enchantment
+- fix urn loot table
+- safe craetive drop
+- lunch basked tooltip not showing content
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
-- recipes codecs with customizaton
 - burn time data map
-- check if sacks safes and lunch boxes work with creative drop
-- check if the above keep their custom names
+- check if the all tile entities that have them keep their custom names when placed from items
 - check bellows block place power
-- strip recipe conditions from signpost2 recipe
 - test all map markers & with names
 - check all forge overrides
 - check all clone itemstacks (flags, safes...)
 - wearhered map soap clearing
 - present screen mouse scrolled
-- pack button tooltip positioner
 - named block being placed retaining name
 - antique ink book signing
 - doormat add item sound
@@ -101,18 +102,15 @@ Fire Pits are missing a mineable tag.
 - bomb explosion
 - cannonball explosion
 - slimed overlay with frost
-- quiver arrow shrink
+- quiver arrow shrink check
 - banner tooltips
 - can click on hat stands
-- metal frames turning to timber frames
 - cage mob duplication
 - cage flickering
 - add lantern trade back
 - feather block no particles on fabric. WHEN FALLING TOO
-- sign post middle click 
 
-# Soon
-
+- soap item recipe broken
 - QUiver for other players.check 1.20 too
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
@@ -169,6 +167,7 @@ slidy double pulse
 
 # Supplementaries
 
+- frame blocks particle texture i json
 - data driven book textures
 - config command
 - slingshot blocks desync (anvils)

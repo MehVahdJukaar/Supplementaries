@@ -13,6 +13,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile.PUBLIC_KEY;
@@ -105,5 +106,17 @@ public final class PresentAddress implements TooltipProvider {
 
     public boolean isPublic() {
         return recipient.equalsIgnoreCase(PUBLIC_KEY);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PresentAddress that)) return false;
+        return Objects.equals(recipient, that.recipient) && Objects.equals(sender, that.sender) && Objects.equals(description, that.description) && Objects.equals(recipientComp, that.recipientComp) && Objects.equals(senderComp, that.senderComp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(recipient, sender, description, recipientComp, senderComp);
     }
 }
