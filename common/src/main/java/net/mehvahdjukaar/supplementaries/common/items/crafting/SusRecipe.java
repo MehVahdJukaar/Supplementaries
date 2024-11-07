@@ -3,11 +3,13 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.*;
@@ -60,7 +62,7 @@ public class SusRecipe extends CustomRecipe {
         result.applyComponents(gravel.getComponentsPatch());
 
         CompoundTag tag = new CompoundTag();
-        tag.put("item", something.save(provider, new CompoundTag()));
+        tag.put("item", something.saveOptional(provider));
         result.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
 
         return result;

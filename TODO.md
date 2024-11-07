@@ -1,6 +1,5 @@
 # 1.21
 
-- cannon rotation gimbal when placed makes them turn wrong visually
 - Lumisene has no sound when bucketed.
 - Lunch Basket UI container slots are not highlighted when hovering over them.
 - Sack, Present, Cannon, Lunch Basket, Pulley UIs do not show item tooltips when hovering over an item.
@@ -14,8 +13,7 @@
 - hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
-Sign Post
-All variants use their oak variant particles &  have incorrect sounds
+- sign posts All variants use their oak variant particles &  have incorrect sounds
 
 Jar
 Cannot be filled to the top with buckets, bottles do work however.
@@ -23,6 +21,7 @@ Causes a server disconnect when pick blocking when filled with anything.
 Entities do not render correctly in the inventory icon.
 jars somehow duplicating lumisene buckets?
 
+- soap recipe broken 
 - sus sand crash when broken (due to item)
 - lunch box gui completly broken
 - lumisene doesnt go in jars
@@ -40,6 +39,7 @@ jars somehow duplicating lumisene buckets?
 - check bellows block place power
 - test all map markers & with names
 - check all forge overrides
+- cannon rotation gimbal when placed makes them turn wrong visually
 - check all clone itemstacks (flags, safes...)
 - wearhered map soap clearing
 - present screen mouse scrolled
@@ -110,13 +110,15 @@ jars somehow duplicating lumisene buckets?
 - add lantern trade back
 - feather block no particles on fabric. WHEN FALLING TOO
 
+- add sus recipe in jei
 - soap item recipe broken
-- QUiver for other players.check 1.20 too
+- Quiver for other players. check 1.20 too
 - bomb dont ignite gunpowder
 - netherite doors opeing on clientfor split seconds on server
 - colored map data crash row Data null
 - enderman eyes dont work
 - slice map crash
+- lunch box and quiver missing back texture
 - hat stand wearing nbt data helmet
 - jar insert sound not server side
 - sniffer egg directional
@@ -176,11 +178,9 @@ slidy double pulse
 -trapped prsents not updating inventory whenshot
 - blaze powder texture broken hourglass
 - glowstone dust in hourglass
-- lumisene fire punch crash
 - slidy block connection down ropes
 - slimeall and bricks projectile angle from disp minecart
 - cannon target infinite reach
-- fire lunch box item use events
 - quark post rope connection
 - add back capabilities
 - fabric events
