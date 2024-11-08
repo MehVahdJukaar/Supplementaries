@@ -1,10 +1,9 @@
-# 1.21
+# 1.21 bugs and stuff
 
 - fix urn loot table
 - soap recipe broken
 - Lumisene has no sound when bucketed.
-- Lunch Basket UI container slots are not highlighted when hovering over them.
-- Sack, Present, Cannon, Lunch Basket, Pulley UIs do not show item tooltips when hovering over an item.
+- Lunch Basket UI container slots are not highlighted when hovering over them. (prob wrong z level of slot)
 - Quiver color
 - Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
@@ -17,16 +16,11 @@
 
 - sign posts All variants use their oak variant particles &  have incorrect sounds
 
-Jar
-Cannot be filled to the top with buckets, bottles do work however.
-Causes a server disconnect when pick blocking when filled with anything.
-Entities do not render correctly in the inventory icon.
-jars somehow duplicating lumisene buckets?
+- jar Causes a server disconnect when pick blocking when filled with anything.
+- jar Entities do not render correctly in the inventory icon.
 
 - sus sand crash when broken (due to item)
-- lunch box gui completly broken
-- lumisene doesnt go in jars
-- jars being completely busted
+- lunch box hud not showing up
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - check bubble blower statis enchantment
@@ -40,23 +34,22 @@ jars somehow duplicating lumisene buckets?
 - test all map markers & with names
 - check all forge overrides
 - cannon rotation gimbal when placed makes them turn wrong visually
-- check all clone itemstacks (flags, safes...)
+- check all clone itemstacks methods (flags, safes...)
 - wearhered map soap clearing
-- present screen mouse scrolled
+- present screen mouse scrolled action
 - named block being placed retaining name
 - antique ink book signing
 - doormat add item sound
-- check all iOwner protected and openable container stuff
-- render backgrounds
-- bombprojectile item model
+- check all iOwner protected and openable container stuff (need multiplayer)
+- check all screens render backgrounds methods as that was changed
+- check bombprojectile item model
 - quiver color and default color
 - check all guis
-- cannon screen number box tick
-- jar item fluids
+- check cannon screen number box tick
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement
-- quiver shulker like tooltips
+- check quiver shulker box like tooltips
 - filled present state for placement
 - bomb block interaction
 - welcome message screen button
@@ -166,6 +159,7 @@ slidy double pulse
 - check gunpowder explosion stuff
 - bellows keeping fire in front when created by gunpowder
 - replace lumisene gunpowder
+- test config saving
 
 # Supplementaries
 
@@ -188,11 +182,8 @@ slidy double pulse
 - explosion shake
 - soap and wax dispenser behaviors
 - waxable dispenser behavior
-- test config saving
 - lumisene on fire cauldron
 - lumisene burns in nether
-- present open sculk
-- blackboard draw sculk
 - rope pull down candle holders and lanterns
 - fire charge speed up when fired from present
 - lumisene cauldron with particles
@@ -205,7 +196,6 @@ slidy double pulse
 - slingshot proj not interacting with entities
 - ash bonemeal
 - pulley piston
-- fix stasis on fabric
 - dispenser brick use same texture
 - quiver not rendering in curio
 - pulley flint
@@ -235,7 +225,8 @@ slidy double pulse
 
 # Amendments
 
-- royal jelly bug
+- fireballs add
+- disepnser bucker cauldron interaction not wroking
 - fluid offer ignoring min amount
 - faucet behaviors update on data reload
 - dye cauldon 1.21

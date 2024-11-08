@@ -97,6 +97,19 @@ public class ModTextures {
     public static final ResourceLocation TRAPPED_PRESENT_BUTTON_HIGHLIGHTED_SPRITE = Supplementaries.res("trapped_present/button_highlighted");
     public static final ResourceLocation TRAPPED_PRESENT_BUTTON_SELECTED_SPRITE = Supplementaries.res("trapped_present/button_selected");
     public static final ResourceLocation TRAPPED_PRESENT_BUTTON_DISABLED_SPRITE = Supplementaries.res("trapped_present/button_disabled");
+    public static final ResourceLocation PRESENT_BUTTON_SPRITE = Supplementaries.res("present/button");
+    public static final ResourceLocation PRESENT_BUTTON_HIGHLIGHTED_SPRITE = Supplementaries.res("present/button_highlighted");
+    public static final ResourceLocation PRESENT_BUTTON_SELECTED_SPRITE = Supplementaries.res("present/button_selected");
+    public static final ResourceLocation PRESENT_BUTTON_DISABLED_SPRITE = Supplementaries.res("present/button_disabled");
+    public static final ResourceLocation PRESENT_OVERLAY_SPRITE = Supplementaries.res("present/overlay");
+    public static final ResourceLocation CANNON_POWER_SPRITE = Supplementaries.res("cannon/power");
+    public static final ResourceLocation CANNON_POWER_HOVERED_SPRITE = Supplementaries.res("cannon/power_highlighted");
+    public static final ResourceLocation CANNON_EMPTY_SPRITE = Supplementaries.res("cannon/empty");
+    public static final ResourceLocation CANNON_EMPTY_HOVERED_SPRITE = Supplementaries.res("cannon/empty_highlighted");
+    public static final ResourceLocation CANNON_DEPLETED_SPRITE = Supplementaries.res("cannon/depleted");
+    public static final ResourceLocation CANNON_DEPLETED_HOVERED_SPRITE = Supplementaries.res("cannon/depleted_highlighted");
+    public static final ResourceLocation CANNON_MANEUVER_SPRITE = Supplementaries.res("cannon/maneuver");
+    public static final ResourceLocation CANNON_MANEUVER_HOVERED_SPRITE = Supplementaries.res("cannon/maneuver_highlighted");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

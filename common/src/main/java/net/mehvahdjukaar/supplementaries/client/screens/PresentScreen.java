@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBox
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetPresentPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
@@ -15,8 +14,6 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -63,7 +60,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
 
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int i = this.leftPos;
-        int j = this.height;
+        int j = this.topPos;
 
         this.packButton = this.addRenderableWidget(new PackButton(i + 14, j + 45));
 
@@ -170,14 +167,8 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             int l = this.topPos;
             Slot slot = this.menu.getSlot(0);
 
-            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 300, 12, 232, 16, 16, 256, 256);
+            graphics.blitSprite(ModTextures.PRESENT_OVERLAY_SPRITE, k + slot.x, l + slot.y,  16, 16);
         }
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics poseStack, int x, int y) {
-        super.renderLabels(poseStack, x, y);
-        //packButton.renderToolTip(poseStack, x - this.leftPos, y - this.topPos);
     }
 
     @Override
@@ -229,18 +220,18 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
         }
 
         @Override
-        public void renderWidget(GuiGraphics graphics, int i1, int i2, float v) {
-            int i = 198;
-            int j = 0;
+        public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            ResourceLocation texture;
             if (!this.active) {
-                j += this.width * 2;
+                texture = ModTextures.PRESENT_BUTTON_SELECTED_SPRITE;
             } else if (this.packed) {
-                j += this.width * 1;
+                texture = ModTextures.PRESENT_BUTTON_DISABLED_SPRITE;
             } else if (this.isHovered) {
-                j += this.width * 3;
+                texture = ModTextures.PRESENT_BUTTON_HIGHLIGHTED_SPRITE;
+            } else {
+                texture = ModTextures.PRESENT_BUTTON_SPRITE;
             }
-
-            graphics.blit(ModTextures.PRESENT_GUI_TEXTURE, this.getX(), this.getY(), j, i, this.width, this.height);
+            graphics.blitSprite(texture, this.getX(),this.getY(), this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {

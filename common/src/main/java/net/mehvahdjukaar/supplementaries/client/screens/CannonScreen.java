@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
@@ -44,7 +43,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = this.leftPos;
         int j = this.topPos;
-        this.addRenderableWidget(new ManouverButton(i + 154, j + 10 + 6));
+        this.addRenderableWidget(new ManeuverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(tile.getYaw());
@@ -116,21 +115,17 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     }
 
 
-    private final class ManouverButton extends Button {
+    private final class ManeuverButton extends Button {
 
-        public ManouverButton(int x, int y) {
+        public ManeuverButton(int x, int y) {
             super(x, y, 10, 10, Component.empty(), CannonScreen.this::onManeuverPressed, Button.DEFAULT_NARRATION);
             this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
         }
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
-            int x = 176;
-            int y = 36;
-            if (this.isHovered())
-                x += this.width;
-
-            guiGraphics.blit(ModTextures.CANNON_GUI_TEXTURE, this.getX(), this.getY(), x, y, this.width, this.height);
+            var texture = this.isHovered() ? ModTextures.CANNON_MANEUVER_HOVERED_SPRITE : ModTextures.CANNON_MANEUVER_SPRITE;
+            guiGraphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
         }
     }
 
@@ -195,8 +190,15 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
                 } else if (p > actualPower) {
                     x += this.width * 4;
                 }
-                guiGraphics.blit(Supplementaries.res("textures/gui/cannon_gui.png"), this.getX(), this.getY() + y, x, y,
-                        this.width, levelH);
+                /*
+                this.getX(),
+                        this.getY() + y, x, y,
+                        this.width, levelH
+                 */
+                guiGraphics.blitSprite(ModTextures.CANNON_POWER_SPRITE,
+                        16, 16, 0, 0,
+                        this.getX(), this.getY() + y,
+                        7, 7);
             }
         }
 

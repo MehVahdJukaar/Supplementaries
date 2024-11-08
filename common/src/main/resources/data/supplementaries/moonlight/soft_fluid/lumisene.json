@@ -18,6 +18,10 @@
   "equivalent_fluids": [
     "supplementaries:lumisene"
   ],
+  "food": {
+    "divider": 1,
+    "item": "supplementaries:lumisene_bottle"
+  },
   "flowing_texture": "supplementaries:block/lumisene/lumisene_flowing",
   "still_texture": "supplementaries:block/lumisene/lumisene",
   "translation_key": "block.supplementaries.lumisene"

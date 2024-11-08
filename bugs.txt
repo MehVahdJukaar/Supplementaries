@@ -1,0 +1,167 @@
+# 1.21 bugs and stuff
+
+- fix urn loot table
+- soap recipe broken
+- Lumisene has no sound when bucketed.
+- Lunch Basket UI container slots are not highlighted when hovering over them. (prob wrong z level of slot)
+- Quiver color
+- Bubbleblower doesn't work (prob recipe or components)
+- Placeable books do not work, but still consumes the item as if it did.
+
+- present The confirm button is visually and functionally bugged.
+- preset The message input is broken.
+
+- hat stand Cannot be equipped with items.
+- hat standDispensing equippable onto them will delete the item.
+
+- sign posts All variants use their oak variant particles &  have incorrect sounds
+
+- Jar:
+Cannot be filled to the top with buckets, bottles do work however.
+Causes a server disconnect when pick blocking when filled with anything.
+Entities do not render correctly in the inventory icon.
+jars somehow duplicating lumisene buckets?
+
+- sus sand crash when broken (due to item)
+- lunch box hud not showing up
+- lumisene doesnt go in jars
+- jars being completely busted
+- check all forge override to see if they are still overriding stuff
+- check slingshot enchantments 6(stasis, loyalty, multi shot)
+- check bubble blower statis enchantment
+- safe craetive drop
+- lunch basked tooltip not showing content
+- book pile completely broken. rethink
+- fix and re assing all isPathfindables
+- burn time data map (for forge). For fabric add a new class that assigns burn times
+- check if the all tile entities that have them keep their custom names when placed from items
+- check bellows block place power
+- test all map markers & with names
+- check all forge overrides
+- cannon rotation gimbal when placed makes them turn wrong visually
+- check all clone itemstacks methods (flags, safes...)
+- wearhered map soap clearing
+- present screen mouse scrolled action
+- named block being placed retaining name
+- antique ink book signing
+- doormat add item sound
+- check all iOwner protected and openable container stuff (need multiplayer)
+- check all screens render backgrounds methods as that was changed
+- check bombprojectile item model
+- quiver color and default color
+- check all guis
+- check cannon screen number box tick
+- cage catching sound
+- check ALL new enchantment components stuff everywhere
+- stick flag movement
+- check quiver shulker box like tooltips
+- filled present state for placement
+- bomb block interaction
+- welcome message screen button
+- test cannon trajectory renderer
+- glowing blackboard persistence
+- waxed too
+- standardize and make IWaxable IGlowable and IAntiquable
+- all quiver and lunch
+- all tipped and configs
+- urn broken extra particles
+- test all containers with loot table in spectator
+- all jar tooltips
+- minecart and other entities spawned with cusutom name
+- re check all forge item extension usage
+- test quiver actually consuming arrows
+- boakcboard and text holder new interaction (redo). also their tooltips
+- all disepnser behavior. bamboo spikes one too
+- test soap interaction on servers
+- bubble blower chages and tooltip
+- antique ink on written books
+- panitng tooltips
+- buble blower, tipped spikes and rope arrow bars
+- check max banner pattern size in flag to banner recipe
+- test all special recipes
+- key enchantability
+- check all ehcnamtnemtn stuff (anvil, repair, book, treasure, ench table)
+- disoenser minecart dispense ebahvior
+- rope arrow entity hit and player touch
+- pickle animation
+- bubble blowr animaton
+- bamboo spike drop and pick block
+- redo all loot tables for containers and copy nbt stuff
+- fix the may build stuff
+- waxable and glowable stuff
+- spiky bomb
+- slinghost check all
+- canon camera and selectable container movemnet
+- dispenser behavior sounds
+- dispenser minecart projectiles moving angle
+- bells an doors triggered by bombs
+- spiky bomb stuff
+- gunpowder explosion
+- bomb explosion
+- cannonball explosion
+- slimed overlay with frost
+- quiver arrow shrink check
+- banner tooltips
+- can click on hat stands
+- cage mob duplication
+- cage flickering
+- add lantern trade back
+- feather block no particles on fabric. WHEN FALLING TOO
+
+- add sus recipe in jei
+- soap item recipe broken
+- Quiver for other players. check 1.20 too
+- bomb dont ignite gunpowder
+- netherite doors opeing on clientfor split seconds on server
+- colored map data crash row Data null
+- enderman eyes dont work
+- slice map crash
+- lunch box and quiver missing back texture
+- hat stand wearing nbt data helmet
+- jar insert sound not server side
+- sniffer egg directional
+- turn table oh by default
+-cannon spectator
+- barrier block light block
+- flute not working
+- play song command
+- amke canon face the way camera faces whe first manovering
+slidy double pulse
+-stackable skula nd sskull converson not working
+- soap banner
+- slidy block slipperyness
+- lumisene spawning bubble on armor stand
+- lumisene from faucet
+- lumisene in jars
+ - snowball not working in cannon
+ - cannon infinite momentum
+- cannon fire event not figig sometimes
+- awning bounce nerf
+- cannon stalling eachother when triggered consitnosly
+- artsandcrafts compat
+- limisene diepsners
+-soap cleaning from recipe
+- flute skibidi
+- capability cache
+- add fabric missing events
+- make polytone and supp hourglass use reloadable registries
+- all use action in adventure mode
+- anger nearby piglins
+- gravel bricks exploded particles
+- bomb bounce on slime blocks
+- awning slimeball bounce, boundy block tag for cannonbals and bombs
+- hat for players
+- anger nearby piglins
+- cannon camera glitchyness
+- safe recipe jei
+- no jar of dirt
+- rope not breaking when supporting each other
+- spring launcher super buggy
+- make no grabity ench work on bows
+- rename way signs
+- remaining fire ticks/ignite for seconds
+- rope arrow disp stats
+- check gunpowder explosion stuff
+- bellows keeping fire in front when created by gunpowder
+- replace lumisene gunpowder
+- test config saving
