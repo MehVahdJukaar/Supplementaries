@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -184,21 +185,19 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
                 int selectedH = levelH * p;
 
                 int y = this.height - selectedH;
-                int x = 176 + (p == hoveredLevel ? this.width : 0);
+                ResourceLocation texture;
+                boolean hovered = p == hoveredLevel;
                 if (p > power) {
-                    x += this.width * 2;
+                    texture = hovered ? ModTextures.CANNON_EMPTY_HOVERED_SPRITE : ModTextures.CANNON_EMPTY_SPRITE;
                 } else if (p > actualPower) {
-                    x += this.width * 4;
+                    texture = hovered ? ModTextures.CANNON_DEPLETED_HOVERED_SPRITE : ModTextures.CANNON_DEPLETED_SPRITE;
+                } else {
+                    texture = hovered ? ModTextures.CANNON_POWER_HOVERED_SPRITE : ModTextures.CANNON_POWER_SPRITE;
                 }
-                /*
-                this.getX(),
-                        this.getY() + y, x, y,
-                        this.width, levelH
-                 */
-                guiGraphics.blitSprite(ModTextures.CANNON_POWER_SPRITE,
-                        16, 16, 0, 0,
+                guiGraphics.blitSprite(texture,
+                        this.width, this.height, 0, y,
                         this.getX(), this.getY() + y,
-                        7, 7);
+                        this.width, levelH);
             }
         }
 

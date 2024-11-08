@@ -8,9 +8,6 @@
 - Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
 
-- present The confirm button is visually and functionally bugged.
-- preset The message input is broken.
-
 - hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
@@ -52,8 +49,6 @@
 - check quiver shulker box like tooltips
 - filled present state for placement
 - bomb block interaction
-- welcome message screen button
-- test cannon trajectory renderer
 - glowing blackboard persistence
 - waxed too
 - standardize and make IWaxable IGlowable and IAntiquable
@@ -86,7 +81,6 @@
 - waxable and glowable stuff
 - spiky bomb
 - slinghost check all
-- canon camera and selectable container movemnet
 - dispenser behavior sounds
 - dispenser minecart projectiles moving angle
 - bells an doors triggered by bombs
@@ -96,7 +90,6 @@
 - cannonball explosion
 - slimed overlay with frost
 - quiver arrow shrink check
-- banner tooltips
 - can click on hat stands
 - cage mob duplication
 - cage flickering

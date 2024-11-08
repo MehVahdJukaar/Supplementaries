@@ -28,7 +28,6 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
-import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.Item;
@@ -111,8 +110,8 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
             }
 
             Level level = this.level();
-            if (!this.getOffers().isEmpty()) {
-                if (!level.isClientSide) {
+            if (!level.isClientSide) {
+                if (!this.getOffers().isEmpty()) {
                     this.setTradingPlayer(player);
                     this.openTradingScreen(player, this.getDisplayName(), 1);
                 }
