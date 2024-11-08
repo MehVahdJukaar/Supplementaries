@@ -57,4 +57,7 @@ issueTrackerURL = "${mod_github}/issues"
     ordering = "AFTER"
     side = "BOTH"
 
+[lithium:options]
+    block.moving_block_shapes = false
+
 
