@@ -50,5 +50,10 @@
     "sleep_tight": "*",
     "embeddium": "*",
     "amendments": "*"
+  },
+  "custom": {
+    "lithium:options": {
+      "block.moving_block_shapes"
+    }
   }
 }
