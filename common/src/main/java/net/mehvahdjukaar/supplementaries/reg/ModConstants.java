@@ -44,7 +44,7 @@ public final class ModConstants {
     public static final String SAFE_NAME = "safe";
     public static final String CAGE_NAME = "cage";
     public static final String JAR_NAME = "jar";
-    public static final String CABIN_SIDING_NAME = "cabin_siding";
+    public static final String FINE_WOOD_NAME = "fine_wood";
     public static final String SACK_NAME = "sack";
     public static final String BLACKBOARD_NAME = "blackboard";
     public static final String GLOBE_NAME = "globe";
