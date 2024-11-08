@@ -244,11 +244,11 @@ public class ModRegistry {
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
 
-    public static final Supplier<Block> CABIN_SIDING = regWithItem(CABIN_SIDING_NAME, () -> new RotatedPillarBlock(
+    public static final Supplier<Block> FINE_WOOD = regWithItem(FINE_WOOD_NAME, () -> new RotatedPillarBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
-    public static final Supplier<Block> CABIN_SIDING_STAIRS = regWithItem(CABIN_SIDING_NAME + "_stairs", () -> new ModStairBlock(
-                    CABIN_SIDING, BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
-    public static final Supplier<Block> CABIN_SIDING_SLAB = regWithItem(CABIN_SIDING_NAME + "_slab", () -> new DirectionalSlabBlock(
+    public static final Supplier<Block> FINE_WOOD_STAIRS = regWithItem(FINE_WOOD_NAME + "_stairs", () -> new ModStairBlock(
+            FINE_WOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
+    public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 
     //safe

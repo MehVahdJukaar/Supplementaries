@@ -1,21 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "#  ",
+    "## ",
     "###"
   ],
   "key": {
     "#": {
-      "item": "supplementaries:cabin_siding"
+      "item": "supplementaries:fine_wood"
     }
   },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "cabin_siding"
+      "flag": "fine_wood"
     }
   ],
   "result": {
-    "id": "supplementaries:cabin_siding_slab",
-    "count": 6
+    "id": "supplementaries:fine_wood_stairs",
+    "count": 4
   }
 }

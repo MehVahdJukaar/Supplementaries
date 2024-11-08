@@ -1,22 +1,26 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "1",
-    "1"
+    "111",
+    "121",
+    "111"
   ],
   "key": {
     "1": {
       "tag": "minecraft:logs"
+    },
+    "2": {
+      "item": "minecraft:honeycomb"
     }
   },
   "result": {
-    "id": "supplementaries:cabin_siding",
-    "count": 2
+    "id": "supplementaries:fine_wood",
+    "count": 8
   },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "cabin_siding"
+      "flag": "fine_wood"
     }
   ]
 }
