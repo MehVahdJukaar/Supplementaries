@@ -29,8 +29,11 @@ dependencies {
 
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")))
 
-    //modImplementation("curse.maven:selene-499980:5651442")
-    modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+    if (isMyPc) {
+        modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+    } else {
+        modImplementation("curse.maven:selene-499980:5882410")
+    }
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'

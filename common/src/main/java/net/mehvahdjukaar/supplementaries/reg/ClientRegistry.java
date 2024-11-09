@@ -77,6 +77,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.crafting.ArmorDyeRecipe;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.jetbrains.annotations.Nullable;
 
@@ -524,8 +525,8 @@ public class ClientRegistry {
     private static void registerItemColors(ClientHelper.ItemColorEvent event) {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
-        event.register((itemStack, i) -> i > 0 ? -1 :
-                        DyedItemColor.getOrDefault(itemStack, -1),
+        event.register((itemStack, i) -> i == 0 ? -1 :
+                        DyedItemColor.getOrDefault(itemStack, -6265536),
                 ModRegistry.QUIVER_ITEM.get());
     }
 

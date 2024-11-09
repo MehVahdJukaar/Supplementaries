@@ -4,7 +4,7 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    neoForge ()
+    neoForge()
 }
 
 loom {
@@ -27,8 +27,6 @@ configurations {
         canBeConsumed = false
     }
 }
-
-
 
 
 processResources {
@@ -101,10 +99,12 @@ dependencies {
     implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
     implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
 
-    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    if (isMyPc) {
+        modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    } else {
+       // modImplementation("curse.maven:selene-499980:5878698")
+    }
 
-
-    //modImplementation("curse.maven:selene-499980:5651445")
     modImplementation("curse.maven:farmers-delight-398521:5772720")
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
@@ -112,8 +112,8 @@ dependencies {
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
     modImplementation("curse.maven:jei-238222:5846880")
-    modCompileOnly ("curse.maven:configured-457570:5180900")
-    modCompileOnly ("curse.maven:amendments-896746:5692774")
+    modCompileOnly("curse.maven:configured-457570:5180900")
+    modCompileOnly("curse.maven:amendments-896746:5692774")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 

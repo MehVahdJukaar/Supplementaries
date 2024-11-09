@@ -1,6 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.forge;
-
-import squeek.appleskin.client.TooltipOverlayHandler;
+package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
 public class AppleSkinCompatImpl {
     public static void addTooltipImage() {

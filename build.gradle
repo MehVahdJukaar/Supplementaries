@@ -211,6 +211,8 @@ allprojects {
 }
 
 ext {
+    isMyPc =  System.getenv().MY_PC == "1"
+    print "isMyPc: $isMyPc"
     replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_min_version  : minecraft_min_version,

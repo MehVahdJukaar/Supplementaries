@@ -43,7 +43,6 @@
 - check all screens render backgrounds methods as that was changed
 - check bombprojectile item model
 - quiver color and default color
-- check all guis
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement

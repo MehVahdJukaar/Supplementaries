@@ -32,6 +32,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.allay.Allay;

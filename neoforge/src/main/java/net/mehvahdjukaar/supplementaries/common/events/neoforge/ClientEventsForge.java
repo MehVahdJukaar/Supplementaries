@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
+import net.mehvahdjukaar.supplementaries.common.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.sound.PlaySoundSourceEvent;
-import net.neoforged.neoforge.client.event.sound.SoundEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -131,7 +131,7 @@ public class ClientEventsForge {
     public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
         if (CannonController.isActive()) {
             var overlay = event.getName();
-            if (overlay ==  (VanillaGuiLayers.EXPERIENCE_BAR) || overlay == (VanillaGuiLayers.HOTBAR)) {
+            if (overlay == (VanillaGuiLayers.EXPERIENCE_BAR) || overlay == (VanillaGuiLayers.HOTBAR)) {
                 event.setCanceled(true);
             }
         }
@@ -201,14 +201,16 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onAddTooltips(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
-        if (stack.getItem() instanceof SelectableContainerItem<?> si) {
-            ItemStack selected = si.getData(stack).getSelected();
-            if (selected.getItem() instanceof SelectableContainerItem<?>) {
+        if (stack.getItem() instanceof SelectableContainerItem<?, ?> si) {
+            SelectableContainerContent<?> data = stack.get(si.getComponentType());
+            if (data == null) return;
+            ItemStack selected = data.getSelected();
+            if (selected.getItem() instanceof SelectableContainerItem<?, ?>) {
                 return;
             }
             RenderTooltipEvent.GatherComponents newEvent = new RenderTooltipEvent.GatherComponents(selected,
                     event.getScreenWidth(), event.getScreenHeight(), event.getTooltipElements(), event.getMaxWidth());
-            MinecraftForge.EVENT_BUS.post(newEvent);
+            NeoForge.EVENT_BUS.post(newEvent);
         }
     }
 
