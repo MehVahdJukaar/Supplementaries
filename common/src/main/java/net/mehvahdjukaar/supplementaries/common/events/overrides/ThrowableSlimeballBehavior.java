@@ -33,7 +33,7 @@ class ThrowableSlimeballBehavior implements ItemUseBehavior {
 
     @Override
     public boolean appliesToItem(Item item) {
-        return item.builtInRegistryHolder().is(ModTags.SLIMEBALLS);
+        return item.builtInRegistryHolder().is(ModTags.SLIMEBALLS) && !item.isEdible();
     }
 
     @Override

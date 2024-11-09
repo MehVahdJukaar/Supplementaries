@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:cabin_siding"
+          "name": "supplementaries:fine_wood"
         }
       ],
       "conditions": [

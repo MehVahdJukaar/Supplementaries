@@ -12,7 +12,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "supplementaries:cabin_siding_slab",
+                  "block": "supplementaries:fine_wood_slab",
                   "properties": {
                     "type": "double"
                   }
