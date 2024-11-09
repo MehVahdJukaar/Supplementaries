@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -14,6 +15,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
@@ -87,7 +90,8 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     // facing is likely not needed
     @Nullable
-    protected Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
+    @VisibleForTesting
+    public Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
 
         // fake player living in fake level
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, testLevel);

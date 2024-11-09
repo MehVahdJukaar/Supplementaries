@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public class SlingshotBehavior extends GenericProjectileBehavior {
 
     @Override
-    protected @Nullable Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
+    public @Nullable Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
         var s = new SlingshotProjectileEntity(testLevel, projectile, ItemStack.EMPTY);
         s.setDeltaMovement(facing.normalize().scale(ProjectileStats.SLINGSHOT_SPEED));
         return s;

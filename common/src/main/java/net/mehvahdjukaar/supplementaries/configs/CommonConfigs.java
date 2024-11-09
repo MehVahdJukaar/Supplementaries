@@ -1289,6 +1289,8 @@ public class CommonConfigs {
 
             DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
                     .define("debug_save_dynamic_pack", false);
+            SANITY_CHECKS_MESSAGES = builder.comment("Disable startup messages and sanity check that the mod performs to inform of possible detected crashes that might occur due to issues")
+                    .define("sanity_checks_messages", true);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
@@ -1300,6 +1302,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CREATIVE_TAB;
         public static final Supplier<Boolean> DISPENSERS;
         public static final Supplier<Boolean> DEBUG_RESOURCES;
+        public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder) {

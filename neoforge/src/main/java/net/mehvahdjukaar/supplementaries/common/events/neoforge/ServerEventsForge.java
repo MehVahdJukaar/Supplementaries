@@ -3,13 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.neoforge.VillagerScareStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -20,12 +18,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
@@ -44,8 +40,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public class ServerEventsForge {
@@ -110,7 +104,7 @@ public class ServerEventsForge {
                 NetworkHelper.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
             } catch (Exception exception) {
-                Supplementaries.LOGGER.warn("failed to send login message: " + exception);
+                Supplementaries.LOGGER.warn("failed to send login message: {}", String.valueOf(exception));
             }
             ServerEvents.onPlayerLoggedIn(player);
         }
@@ -187,19 +181,6 @@ public class ServerEventsForge {
     }
 
 
-    private static int counter = 0;
-    private static boolean flag = false;
-
-    @SubscribeEvent
-    public static void onServerTick(LevelTickEvent.Pre event) {
-        if (!flag) {
-            if (counter++ > 20) {
-                VibeChecker.checkVibe(event.getLevel());
-                flag = true;
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void onLivingDeath(LivingDamageEvent.Post event) {
         if (event.getEntity() instanceof Cat cat) {
@@ -210,7 +191,6 @@ public class ServerEventsForge {
             }
         }
     }
-
 
 
 }

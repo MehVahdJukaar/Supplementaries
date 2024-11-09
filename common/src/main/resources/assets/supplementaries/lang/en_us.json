@@ -314,7 +314,7 @@
   "gui.supplementaries.amendments.suggestions": "You can get the mod HERE",
   "gui.supplementaries.amendments.title": "Warning: Amendments is not installed",
   "gui.supplementaries.incompatible_mods.title": "Warning: Incompatible mods found",
-  "gui.supplementaries.incompatible_mods.message": "Supplementaries has detected the following mods that are known to cause crashes:\n\n %s\n\nThese issues are not fixable by supplementaries as they are from these mods instead and are merely triggered by it. In other words they should be fixed by those mods instead as they are their issues.\nPlease remove them or be advised of random crashes and that the mod might not allow the game to boot in future versions instead",
+  "gui.supplementaries.incompatible_mods.message": "Supplementaries has detected the following mods that are known to cause crashes:\n\n %s\n\nThese issues are not fixable by supplementaries as they are from these mods instead.\nPlease remove them or be advised of random crashes. If you think this issue has been solve please contact us instead.",
 
 
 
