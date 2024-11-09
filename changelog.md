@@ -1,5 +1,5 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- cannon and present guis now use sprites. fixed some related bugs
-- fixed red merchant crash
-- fixed some stuff with fluids not working
+- updated many guis to use sprites
+- fixed many other random bugs
+- used lithium api to disable one of its optimization as it was causing a crash
