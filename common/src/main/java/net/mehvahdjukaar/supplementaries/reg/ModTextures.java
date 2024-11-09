@@ -71,7 +71,6 @@ public class ModTextures {
     public static final ResourceLocation CANNON_GUI_TEXTURE = Supplementaries.res("textures/gui/cannon_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
-    public static final ResourceLocation QUIVER_HUD = Supplementaries.res("textures/gui/quiver_hud.png");
     public static final ResourceLocation QUIVER_TOOLTIP = ResourceLocation.withDefaultNamespace("container/bundle/background");
 
     // sprites
@@ -106,6 +105,8 @@ public class ModTextures {
     public static final ResourceLocation CANNON_CROSSHAIR_AIM_SPRITE = Supplementaries.res("hud/cannon_crosshair_ami");
     public static final ResourceLocation CANNON_CHARGE_BACKGROUND_SPRITE = Supplementaries.res("hud/cannon_charge_background");
     public static final ResourceLocation CANNON_CHARGE_PROGRESS_SPRITE = Supplementaries.res("hud/cannon_charge_progress");
+    public static final ResourceLocation SELECTABLE_ITEM_BAR = Supplementaries.res("hud/selectable_item_bar");
+    public static final ResourceLocation SELECTABLE_ITEM_OVERLAY = Supplementaries.res("hud/selectable_item_overlay");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

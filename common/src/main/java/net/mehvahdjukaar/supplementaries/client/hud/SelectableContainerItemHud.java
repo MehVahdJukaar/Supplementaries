@@ -20,7 +20,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 
 public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
@@ -70,7 +68,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
     //todo: test key and use combinaton
     public void setUsingItem(SlotReference slot, LivingEntity player) {
         stackSlot = slot;
-        if (slot.getItem(player) instanceof SelectableContainerItem<?,?> selectable) {
+        if (slot.getItem(player) instanceof SelectableContainerItem<?, ?> selectable) {
             itemUsed = selectable;
         } else {
             itemUsed = null;
@@ -102,7 +100,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
     public void ohMouseMoved(double deltaX) {
         if (itemUsed != null && ClientConfigs.Items.QUIVER_MOUSE_MOVEMENT.get()) {
 
-            double scale =mc.options.sensitivity().get() * 0.02;
+            double scale = mc.options.sensitivity().get() * 0.02;
             int oldI = (int) (lastCumulativeMouseDx * scale);
             lastCumulativeMouseDx += deltaX;
             int slotsMoved = (int) (lastCumulativeMouseDx * scale) - oldI;
@@ -158,7 +156,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         int number = key - 48;
         if (number >= 1 && number <= 9) {
             if (number <= itemUsed.getMaxSlots()) {
-                sendSetSlot( number - 1);
+                sendSetSlot(number - 1);
             }
             //cancels all number keys to prevent switching items
             return true;
@@ -197,11 +195,11 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         }
 
         ItemStack stack = getItemUsed();
-        if (stack.isEmpty()) {
+        if (stack.isEmpty() ||! (stack.getItem() instanceof SelectableContainerItem<?,?> sc)) {
             closeHud();
             return;
         }
-        var data = stack.get(ModComponents.QUIVER_CONTENT.get());
+        var data = stack.get(sc.getComponentType());
         if (data == null) {
             closeHud();
             return;
@@ -230,9 +228,9 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         px += ClientConfigs.Items.QUIVER_GUI_X.get();
         py += ClientConfigs.Items.QUIVER_GUI_Y.get();
 
-        graphics.blit(ModTextures.QUIVER_HUD, centerX - px, py, 0, 0, uWidth - 1, 22);
-        graphics.blit(ModTextures.QUIVER_HUD, centerX + px - 1, py, 0, 0, 1, 22);
-        graphics.blit(ModTextures.QUIVER_HUD, centerX - px - 1 + selected * 20, py - 1, 24, 22, 24, 24);
+        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_BAR, 182, 22, 0, 0, centerX - px, py, uWidth - 1, 22);
+        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_BAR, 182, 22, 181, 0, centerX + px - 1, py,1, 22);
+        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_OVERLAY, centerX - px - 1 + selected * 20, py - 1,  24, 24);
 
         poseStack.popPose();
 

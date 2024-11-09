@@ -51,6 +51,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -524,7 +525,7 @@ public class ClientRegistry {
         event.register(new TippedSpikesColor(), ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
         event.register(new DefaultWaterColor(), ModRegistry.JAR_BOAT.get());
         event.register((itemStack, i) -> i > 0 ? -1 :
-                        DyedItemColor.getOrDefault(itemStack, -6265536),
+                        DyedItemColor.getOrDefault(itemStack, -1),
                 ModRegistry.QUIVER_ITEM.get());
     }
 

@@ -25,7 +25,6 @@
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - check bubble blower statis enchantment
-- lunch basked tooltip not showing content
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
 - burn time data map (for forge). For fabric add a new class that assigns burn times
@@ -48,7 +47,6 @@
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement
-- check quiver shulker box like tooltips
 - filled present state for placement
 - bomb block interaction
 - glowing blackboard persistence
