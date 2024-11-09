@@ -4,7 +4,6 @@
 - soap recipe broken
 - Lumisene has no sound when bucketed.
 - Lunch Basket UI container slots are not highlighted when hovering over them. (prob wrong z level of slot)
-- Quiver color
 - Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
 
@@ -15,13 +14,12 @@
 - jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.
 
-- candle skull broen
-- notice board interface
+- finish moonlight projectile stuff
+- candle skull broken
 - key inn trinkets not wok
 - wildflax loot table
 - jar fish crash
 - sus sand crash when broken (due to item)
-- lunch box hud not showing up
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - check bubble blower statis enchantment
@@ -84,15 +82,13 @@
 - dispenser minecart projectiles moving angle
 - bells an doors triggered by bombs
 - spiky bomb stuff
-- gunpowder explosion
+- check gunpowder explosion
 - bomb explosion
 - cannonball explosion
 - slimed overlay with frost
 - quiver arrow shrink check
 - can click on hat stands
 - cage mob duplication
-- cage flickering
-- add lantern trade back
 - feather block no particles on fabric. WHEN FALLING TOO
 
 - add sus recipe in jei

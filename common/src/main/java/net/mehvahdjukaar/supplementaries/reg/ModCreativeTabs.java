@@ -81,7 +81,6 @@ public class ModCreativeTabs {
                 } else l.addAll(list);
             }
         };
-
         registerItemsToTabs(dummy);
         for (var e : map.values()) {
             NON_HIDDEN_ITEMS.addAll(e);
@@ -106,7 +105,14 @@ public class ModCreativeTabs {
             }
         }
         if (MOD_TAB != null && !isRunningSetup) {
-            e.add(MOD_TAB.getHolder().unwrapKey().get(), NON_HIDDEN_ITEMS.toArray(ItemStack[]::new));
+            List<ItemStack> toAdd = new ArrayList<>();
+            for (var i : NON_HIDDEN_ITEMS) {
+                if (toAdd.stream().noneMatch(a -> ItemStack.isSameItemSameComponents(a, i))) {
+                    toAdd.add(i);
+                }
+            }
+
+            e.add(MOD_TAB.getHolder().unwrapKey().get(), toAdd.toArray(ItemStack[]::new));
             return;
         }
 

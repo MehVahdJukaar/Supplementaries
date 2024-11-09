@@ -343,7 +343,6 @@ public class ModRegistry {
                     .mapColor(MapColor.TERRACOTTA_ORANGE)
                     .sound(SoundType.METAL)
                     .strength(2, 4)
-                    .requiresCorrectToolForDrops()
     ));
     public static final Supplier<Item> GLOBE_ITEM = regItem(GLOBE_NAME, () -> new BlockItem(GLOBE.get(),
             new Item.Properties().rarity(Rarity.RARE)));
