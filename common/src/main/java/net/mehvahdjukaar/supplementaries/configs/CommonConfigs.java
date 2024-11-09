@@ -467,6 +467,12 @@ public class CommonConfigs {
                     .define("simple_mode", true);
             builder.pop();
 
+            builder.push("netherite_doors");
+            NETHERITE_DOOR_ENABLED = builder.define("door",true);
+            NETHERITE_TRAPDOOR_ENABLED = builder.define("trapdoor",true);
+            NETHERITE_DOOR_UNBREAKABLE = builder.comment("Makes netherite doors and trapdoors unbreakable")
+                    .define("unbreakable", false);
+            builder.pop();
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
@@ -479,8 +485,8 @@ public class CommonConfigs {
             SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
-            NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
-            NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
+
+
             CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
             RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
             FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
@@ -572,8 +578,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
 
         public static final Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
-
         public static final Supplier<Boolean> NETHERITE_DOOR_ENABLED;
+        public static final Supplier<Boolean> NETHERITE_DOOR_UNBREAKABLE;
 
         public static final Supplier<Boolean> PANCAKES_ENABLED;
 

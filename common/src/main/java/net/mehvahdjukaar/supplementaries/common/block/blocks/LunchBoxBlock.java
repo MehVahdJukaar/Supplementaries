@@ -1,19 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -104,7 +100,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            BlockUtil.spawnCreativeContainerLoot(player, tile);
+            BlockUtil.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(level, pos, state, player);
     }

@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -19,10 +17,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -173,7 +169,7 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            BlockUtil.spawnCreativeContainerLoot(player, tile);
+            BlockUtil.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(worldIn, pos, state, player);
     }

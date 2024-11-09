@@ -90,7 +90,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-            BlockUtil.spawnCreativeContainerLoot(player, tile);
+            BlockUtil.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(worldIn, pos, state, player);
     }

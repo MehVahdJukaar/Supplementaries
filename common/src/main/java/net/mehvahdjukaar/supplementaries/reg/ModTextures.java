@@ -16,24 +16,15 @@ public class ModTextures {
     //minecraft
     public static final ResourceLocation WHITE_CONCRETE_TEXTURE = ResourceLocation.withDefaultNamespace("block/white_concrete_powder");
     public static final ResourceLocation SAND_TEXTURE = ResourceLocation.withDefaultNamespace("block/sand");
-    public static final ResourceLocation CHAIN_TEXTURE = ResourceLocation.withDefaultNamespace("block/chain");
-    public static final ResourceLocation HONEY_TEXTURE = ResourceLocation.withDefaultNamespace("block/honey_block_side");
-    public static final ResourceLocation SLIME_TEXTURE = ResourceLocation.withDefaultNamespace("block/slime_block");
 
 
     public static final ResourceLocation FISHIES_TEXTURE = Supplementaries.res("block/fishies");
     public static final ResourceLocation BELLOWS_TEXTURE = Supplementaries.res("block/bellows");
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
-    public static final ResourceLocation HOURGLASS_REDSTONE = Supplementaries.res("block/hourglass_redstone");
-    public static final ResourceLocation HOURGLASS_GLOWSTONE = Supplementaries.res("block/hourglass_glowstone");
-    public static final ResourceLocation HOURGLASS_BLAZE = Supplementaries.res("block/hourglass_blaze");
-    public static final ResourceLocation HOURGLASS_GUNPOWDER = Supplementaries.res("block/hourglass_gunpowder");
     public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("block/blackboard_grid");
     public static final ResourceLocation CANNON_TEXTURE = Supplementaries.res("block/cannon");
 
 
-    public static final ResourceLocation SUGAR = Supplementaries.res("block/sugar");
-    public static final ResourceLocation ASH = Supplementaries.res("block/ash");
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("block/timber_cross_brace");
     public static final ResourceLocation BLACKBOARD_TEXTURE = Supplementaries.res("block/blackboard");
     public static final ResourceLocation BLACKBOARD_WHITE_TEXTURE = Supplementaries.res("block/blackboard_white");
@@ -52,8 +43,6 @@ public class ModTextures {
     public static final ResourceLocation CANNON_TRAJECTORY = Supplementaries.res("textures/entity/cannon_trajectory.png");
     public static final ResourceLocation CANNON_TRAJECTORY_RED = Supplementaries.res("textures/entity/cannon_trajectory_charging.png");
     public static final ResourceLocation CANNONBALL_TEXTURE = Supplementaries.res("textures/entity/cannonball.png");
-
-
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
     public static final ResourceLocation RED_MERCHANT = Supplementaries.res("textures/entity/misc/red_merchant.png");
     public static final ResourceLocation ORANGE_MERCHANT = Supplementaries.res("textures/entity/misc/orange_merchant.png");
@@ -61,9 +50,6 @@ public class ModTextures {
     public static final ResourceLocation STATUE = Supplementaries.res("textures/entity/statue.png");
     public static final ResourceLocation HAT_STAND = Supplementaries.res("textures/entity/hat_stand.png");
 
-    public static final ResourceLocation FIREFLY_TEXTURE = Supplementaries.res("textures/entity/firefly.png");
-    public static final ResourceLocation BELL_ROPE_TEXTURE = Supplementaries.res("textures/entity/bell_rope.png");
-    public static final ResourceLocation BELL_CHAIN_TEXTURE = Supplementaries.res("textures/entity/bell_chain.png");
     public static final ResourceLocation THICK_GOLEM = Supplementaries.res("textures/entity/misc/iron_golem.png");
     public static final ResourceLocation SEA_PICKLE_RICK = Supplementaries.res("textures/entity/misc/sea_pickle.png");
     public static final ResourceLocation JAR_MAN = Supplementaries.res("textures/entity/misc/jar_man.png");
@@ -85,7 +71,6 @@ public class ModTextures {
     public static final ResourceLocation CANNON_GUI_TEXTURE = Supplementaries.res("textures/gui/cannon_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
-    public static final ResourceLocation CANNON_ICONS_TEXTURE = Supplementaries.res("textures/gui/cannon_icons.png");
     public static final ResourceLocation QUIVER_HUD = Supplementaries.res("textures/gui/quiver_hud.png");
     public static final ResourceLocation QUIVER_TOOLTIP = ResourceLocation.withDefaultNamespace("container/bundle/background");
 
@@ -110,6 +95,17 @@ public class ModTextures {
     public static final ResourceLocation CANNON_DEPLETED_HOVERED_SPRITE = Supplementaries.res("cannon/depleted_highlighted");
     public static final ResourceLocation CANNON_MANEUVER_SPRITE = Supplementaries.res("cannon/maneuver");
     public static final ResourceLocation CANNON_MANEUVER_HOVERED_SPRITE = Supplementaries.res("cannon/maneuver_highlighted");
+    public static final ResourceLocation CANNON_HOTBAR_SPRITE = Supplementaries.res("hud/cannon_hotbar");
+    public static final ResourceLocation CANNON_TRAJECTORY_0_SPRITE = Supplementaries.res("hud/cannon_trajectory_0");
+    public static final ResourceLocation CANNON_TRAJECTORY_1_SPRITE = Supplementaries.res("hud/cannon_trajectory_1");
+    public static final ResourceLocation CANNON_TRAJECTORY_2_SPRITE = Supplementaries.res("hud/cannon_trajectory_2");
+    public static final ResourceLocation CANNON_TRAJECTORY_SHOWN_SPRITE = Supplementaries.res("hud/cannon_trajectory_shown");
+    public static final ResourceLocation CANNON_TRAJECTORY_HIDDEN_SPRITE = Supplementaries.res("hud/cannon_trajectory_hidden");
+    public static final ResourceLocation CANNON_CROSSHAIR_HIT_SPRITE = Supplementaries.res("hud/cannon_crosshair_hit");
+    public static final ResourceLocation CANNON_CROSSHAIR_MISS_SPRITE = Supplementaries.res("hud/cannon_crosshair_miss");
+    public static final ResourceLocation CANNON_CROSSHAIR_AIM_SPRITE = Supplementaries.res("hud/cannon_crosshair_ami");
+    public static final ResourceLocation CANNON_CHARGE_BACKGROUND_SPRITE = Supplementaries.res("hud/cannon_charge_background");
+    public static final ResourceLocation CANNON_CHARGE_PROGRESS_SPRITE = Supplementaries.res("hud/cannon_charge_progress");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

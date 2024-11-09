@@ -25,6 +25,11 @@
     {"id":"idas:beekeepers_house","required":false},
     {"id":"idas:desert_market/desert_market","required":false},
     {"id":"idas:desert_market/desert_market_red","required":false},
-    {"id":"idas:desert_market/desert_market_orange","required":false}
+    {"id":"idas:desert_market/desert_market_orange","required":false},
+    {"id": "revampedvillages:desert_village", "required": false},
+    {"id": "revampedvillages:plains_village", "required": false},
+    {"id": "revampedvillages:savanna_village", "required": false},
+    {"id": "revampedvillages:snowy_village", "required": false},
+    {"id": "revampedvillages:taiga_village", "required": false}
   ]
 }

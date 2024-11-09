@@ -62,11 +62,19 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
             return true;
         }
         //open
-        return player.isCreative() || IKeyLockable.testIfHasCorrectKey(player, this.password, true, translName);
+        KeyStatus status = getKeyInInventoryStatus(player);
+        status.sendMessage(player, translName);
+        return status.isCorrect();
+    }
+
+    @Override
+    public KeyStatus getKeyInInventoryStatus(Player player) {
+        if (player.isCreative()) return KeyStatus.CORRECT_KEY;
+        return IKeyLockable.super.getKeyInInventoryStatus(player);
     }
 
     public boolean tryClearingKey(Player player, ItemStack stack) {
-        if ((player.isCreative() || this.getKeyStatus(stack) == KeyStatus.CORRECT_KEY)) {
+        if ((player.isCreative() || this.getKeyStatus(stack).isCorrect())) {
             this.clearPassword();
             this.onPasswordCleared(player, worldPosition);
             return true;

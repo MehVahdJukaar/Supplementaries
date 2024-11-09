@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -158,7 +157,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            BlockUtil.saveTileToItem(tile);
+            BlockUtil.spawnItemWithTileData(player, tile);
             //forge has a better override for this (no particls)
             if (PlatHelper.getPlatform().isFabric()) {
                 if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get()) {

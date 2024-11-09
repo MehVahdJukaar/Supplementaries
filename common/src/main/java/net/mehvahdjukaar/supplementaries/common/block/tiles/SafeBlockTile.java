@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,7 +96,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
                     return true;
                 }
             }
-            if(player instanceof ServerPlayer sp) {
+            if (player instanceof ServerPlayer sp) {
                 PlatHelper.openCustomMenu(sp, this, worldPosition);
             }
             PiglinAi.angerNearbyPiglins(player, true);
@@ -107,6 +105,13 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
         return true;
     }
 
+    @Override
+    public KeyStatus getKeyInInventoryStatus(Player player) {
+        if (player.isCreative()) return KeyStatus.CORRECT_KEY;
+        return IKeyLockable.super.getKeyInInventoryStatus(player);
+    }
+
+    //call this instead of above one..
     public boolean canPlayerOpen(Player player, boolean feedbackMessage) {
         if (player == null || player.isCreative()) return true;
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
@@ -117,7 +122,9 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
                 return false;
             }
         } else {
-            return IKeyLockable.testIfHasCorrectKey(player, this.password, feedbackMessage, "safe");
+            KeyStatus status = getKeyInInventoryStatus(player);
+            status.sendMessage(player, feedbackMessage ? "safe" : null);
+            return status.isCorrect();
         }
         return true;
     }

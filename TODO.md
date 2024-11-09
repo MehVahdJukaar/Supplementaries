@@ -11,17 +11,20 @@
 - hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
-- sign posts All variants use their oak variant particles &  have incorrect sounds
-
+- sign posts have incorrect sounds for weird wood types
 - jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.
 
+- candle skull broen
+- notice board interface
+- key inn trinkets not wok
+- wildflax loot table
+- jar fish crash
 - sus sand crash when broken (due to item)
 - lunch box hud not showing up
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - check bubble blower statis enchantment
-- safe craetive drop
 - lunch basked tooltip not showing content
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
@@ -42,7 +45,6 @@
 - check bombprojectile item model
 - quiver color and default color
 - check all guis
-- check cannon screen number box tick
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement

@@ -47,7 +47,7 @@ public class ItemsUtilImpl {
     }
 
 
-    public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
+    public static KeyLockableTile.KeyStatus getPlayerKeyStatus(Player player, String key) {
         if (key == null) return KeyLockableTile.KeyStatus.CORRECT_KEY;
         KeyLockableTile.KeyStatus found = CompatHandler.getKeyFromModsSlots(player, key);
         if (found == KeyLockableTile.KeyStatus.CORRECT_KEY) return found;

@@ -43,7 +43,7 @@ public class BlockUtil {
         return to;
     }
 
-    public static void spawnCreativeContainerLoot(Player player, RandomizableContainerBlockEntity tile) {
+    public static void spawnItemWithTileData(Player player, RandomizableContainerBlockEntity tile) {
         Level level = player.level();
         if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
             BlockPos pos = tile.getBlockPos();

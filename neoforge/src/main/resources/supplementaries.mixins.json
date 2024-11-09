@@ -21,6 +21,7 @@
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
     "self.SelfLumiseneFluidMixin",
+    "self.SelfNetheriteDoorMixin",
     "self.SelfPlanterMixin",
     "self.SelfSafeMixin",
     "self.SelfSoapItemMixin",

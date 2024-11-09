@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.BubbleBlockItemRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 

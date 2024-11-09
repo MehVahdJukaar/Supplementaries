@@ -102,7 +102,7 @@ public class ModRegistry {
             new Item.Properties()
                     .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
-    //soap bubbler
+    //bubble blower
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
             new Item.Properties()
                     .component(ModComponents.CHARGES.get(), 0)
@@ -244,10 +244,13 @@ public class ModRegistry {
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
 
+    //fine wood
     public static final Supplier<Block> FINE_WOOD = regWithItem(FINE_WOOD_NAME, () -> new RotatedPillarBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
+
     public static final Supplier<Block> FINE_WOOD_STAIRS = regWithItem(FINE_WOOD_NAME + "_stairs", () -> new ModStairBlock(
             FINE_WOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
+
     public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 

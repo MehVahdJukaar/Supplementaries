@@ -24,6 +24,7 @@ public interface IKeyLockable {
 
     void clearPassword();
 
+    //TODO: add custom sounds
     default void onPasswordCleared(Player player, BlockPos pos) {
         player.displayClientMessage(Component.translatable("message.supplementaries.safe.cleared"), true);
         player.level().playSound(null, pos,
@@ -46,9 +47,12 @@ public interface IKeyLockable {
                 SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
     }
 
-
     default KeyLockableTile.KeyStatus getKeyStatus(ItemStack key) {
         return getKeyStatus(key, this.getPassword());
+    }
+
+    default KeyLockableTile.KeyStatus getKeyInInventoryStatus(Player player) {
+        return ItemsUtil.getPlayerKeyStatus(player, this.getPassword());
     }
 
 
@@ -72,18 +76,6 @@ public interface IKeyLockable {
         return null;
     }
 
-    static boolean testIfHasCorrectKey(Player player, String lockPassword, boolean feedbackMessage, @Nullable String translName) {
-        KeyStatus key = ItemsUtil.hasKeyInInventory(player, lockPassword);
-        if (key == KeyStatus.INCORRECT_KEY) {
-            if (feedbackMessage)
-                player.displayClientMessage(Component.translatable("message.supplementaries.safe.incorrect_key"), true);
-            return false;
-        } else if (key == KeyStatus.CORRECT_KEY) return true;
-        if (feedbackMessage)
-            player.displayClientMessage(Component.translatable("message.supplementaries." + translName + ".locked"), true);
-        return false;
-    }
-
 
     enum KeyStatus {
         CORRECT_KEY,
@@ -92,6 +84,14 @@ public interface IKeyLockable {
 
         public boolean isCorrect() {
             return this == CORRECT_KEY;
+        }
+
+        public void sendMessage(Player player, String translName) {
+            if (this == INCORRECT_KEY) {
+                player.displayClientMessage(Component.translatable("message.supplementaries.safe.incorrect_key"), true);
+            } else if (this == NO_KEY) {
+                player.displayClientMessage(Component.translatable("message.supplementaries." + translName + ".locked"), true);
+            }
         }
     }
 }

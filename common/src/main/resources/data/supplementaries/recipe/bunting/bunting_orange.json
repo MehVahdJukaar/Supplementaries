@@ -18,8 +18,8 @@
   "result": {
     "id": "supplementaries:bunting",
     "count": 1,
-    "nbt": {
-      "Color": "orange"
+    "components": {
+      "base_color": "orange"
     }
   }
 }

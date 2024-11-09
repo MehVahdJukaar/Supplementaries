@@ -1,7 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -35,6 +39,20 @@ public class NetheriteDoorBlock extends DoorBlock implements EntityBlock {
     @Override
     public SoundType getSoundType(BlockState state) {
         return SoundType.NETHERITE_BLOCK;
+    }
+
+    //overrides creative drop
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (level.getBlockEntity(pos) instanceof KeyLockableTile tile) {
+            //forge has a better override for this (no particles)
+            if (PlatHelper.getPlatform().isFabric()) {
+                if (CommonConfigs.Building.NETHERITE_DOOR_UNBREAKABLE.get()) {
+                    if (!tile.getKeyInInventoryStatus(player).isCorrect()) return state;
+                }
+            }
+        }
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

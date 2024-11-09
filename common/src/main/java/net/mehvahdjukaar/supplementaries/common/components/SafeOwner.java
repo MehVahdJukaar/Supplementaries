@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
@@ -98,7 +96,7 @@ public final class SafeOwner implements TooltipProvider {
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             return !this.isNotOwnedBy(player);
         } else {
-            return IKeyLockable.testIfHasCorrectKey(player, this.password, false, "safe");
+            return ItemsUtil.getPlayerKeyStatus(player, this.password).isCorrect();
         }
     }
 

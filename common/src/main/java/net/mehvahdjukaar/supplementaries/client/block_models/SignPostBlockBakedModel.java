@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -103,6 +104,18 @@ public class SignPostBlockBakedModel implements CustomBakedModel {
         if (mimic != null && !mimic.isAir()) {
 
             BakedModel model = blockModelShaper.getBlockModel(mimic);
+            try {
+                return model.getParticleIcon();
+            } catch (Exception ignored) {
+            }
+        }
+        var sign = data.get(SignPostBlockTile.SIGN_UP_KEY);
+        if (sign == null || !sign.active()) {
+            sign = data.get(SignPostBlockTile.SIGN_DOWN_KEY);
+        }
+        if (sign != null && sign.active()) {
+            BlockState planks = sign.woodType().planks.defaultBlockState();
+            BakedModel model = blockModelShaper.getBlockModel(planks);
             try {
                 return model.getParticleIcon();
             } catch (Exception ignored) {

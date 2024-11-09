@@ -109,7 +109,7 @@ public class ItemsUtil {
     }
 
     @ExpectPlatform
-    public static KeyLockableTile.KeyStatus hasKeyInInventory(Player player, String key) {
+    public static KeyLockableTile.KeyStatus getPlayerKeyStatus(Player player, String key) {
         throw new AssertionError();
     }
 
