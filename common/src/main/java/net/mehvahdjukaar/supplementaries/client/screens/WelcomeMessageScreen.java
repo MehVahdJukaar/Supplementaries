@@ -158,8 +158,7 @@ public class WelcomeMessageScreen extends Screen {
                 null, SuppPlatformStuff::disableIMWarn);
     }
 
-    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of("lithium", "canary",
-            "worldedit","open-parties-and-claims");
+    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of("worldedit","open-parties-and-claims");
 
     private static final String IM_LIST = MODS_WITH_KNOWN_ISSUES.stream()
             .filter(PlatHelper::isModLoaded) // Change this condition as needed

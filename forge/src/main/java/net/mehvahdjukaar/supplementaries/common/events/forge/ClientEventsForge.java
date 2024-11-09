@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.events.forge;
 
-import com.github.alexthe666.citadel.repack.jaad.Play;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -197,6 +197,20 @@ public class ClientEventsForge {
     public static void onRenderOutline(RenderHighlightEvent.Block event) {
         if (CannonController.isActive()) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAddTooltips(RenderTooltipEvent.GatherComponents event) {
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof SelectableContainerItem<?> si) {
+            ItemStack selected = si.getData(stack).getSelected();
+            if (selected.getItem() instanceof SelectableContainerItem<?>) {
+                return;
+            }
+            RenderTooltipEvent.GatherComponents newEvent = new RenderTooltipEvent.GatherComponents(selected,
+                    event.getScreenWidth(), event.getScreenHeight(), event.getTooltipElements(), event.getMaxWidth());
+            MinecraftForge.EVENT_BUS.post(newEvent);
         }
     }
 

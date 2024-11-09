@@ -73,6 +73,7 @@ dependencies {
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
     modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.11")
+    modImplementation ("curse.maven:appleskin-248787:5586598")
 
     modImplementation("curse.maven:immediatelyfast-686911:4937544")
     //modImplementation("curse.maven:spectrum-556967:5080474")
