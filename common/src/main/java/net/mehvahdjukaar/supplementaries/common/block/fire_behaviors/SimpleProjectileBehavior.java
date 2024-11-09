@@ -20,7 +20,7 @@ public class SimpleProjectileBehavior<T extends Projectile> extends GenericProje
     }
 
     @Override
-    protected @Nullable Entity createEntity(ItemStack stack, ProjectileTestLevel testLevel, Vec3 facing) {
+    public @Nullable Entity createEntity(ItemStack stack, ProjectileTestLevel testLevel, Vec3 facing) {
         var e = entityType.create(testLevel);
         e.setDeltaMovement(facing.normalize().scale(initialSpeed));
         if (e instanceof ThrowableItemProjectile ip) {

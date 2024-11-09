@@ -2,11 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.events.forge;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.GravelBricksBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
@@ -15,29 +13,21 @@ import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecip
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendLoginPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.forge.VillagerScareStuff;
-import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
-import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.ObserverBlock;
-import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -48,17 +38,14 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.level.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -133,7 +120,7 @@ public class ServerEventsForge {
                 ModNetwork.CHANNEL.sendToClientPlayer(player,
                         new ClientBoundSendLoginPacket(UsernameCache.getMap()));
             } catch (Exception exception) {
-                Supplementaries.LOGGER.warn("failed to send login message: " + exception);
+                Supplementaries.LOGGER.warn("failed to send login message: {}", String.valueOf(exception));
             }
             ServerEvents.onPlayerLoggedIn(player);
         }
@@ -182,7 +169,6 @@ public class ServerEventsForge {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         ISlimeable.tickEntity(event.getEntity());
     }
-
 
     //TODO: add these on fabric
     //forge only
@@ -234,21 +220,6 @@ public class ServerEventsForge {
     }
 
 
-    private static int counter = 0;
-    private static boolean flag = false;
-
-    @SubscribeEvent
-    public static void onServerTick(TickEvent.LevelTickEvent event) {
-        if (!flag) {
-            if (event.phase == TickEvent.Phase.START) {
-                if (counter++ > 20) {
-                    VibeChecker.checkVibe(event.level);
-                    flag = true;
-                }
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void onLivingDeath(LivingHurtEvent event) {
         if (event.getEntity() instanceof Cat cat) {
@@ -259,7 +230,6 @@ public class ServerEventsForge {
             }
         }
     }
-
 
 
 }

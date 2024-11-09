@@ -1,15 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -18,7 +14,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -32,10 +29,10 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.isEmpty()) {
             return IBallisticBehavior.LINE;
         }
-        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1,0,0));
+        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1, 0, 0));
         if (proj != null) {
             double speed = proj.getDeltaMovement().length();
-            if(speed == 0 && proj instanceof AbstractArrow){
+            if (speed == 0 && proj instanceof AbstractArrow) {
                 //TODO;
                 speed = 2; //crossbow is 3..
             }
@@ -52,7 +49,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
-                        Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
+                             Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
         Entity entity = createEntity(stack, ProjectileTestLevel.get(level.registryAccess()), facing);
 
         if (entity != null) {
@@ -70,7 +67,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
                 pr.setOwner(owner);
 
                 pr.shoot(facing.x, facing.y, facing.z,
-                        scalePower , inaccuracy);
+                        scalePower, inaccuracy);
             }
 
             //  float radius = entity.getBbWidth() * 1.42f;
@@ -88,7 +85,8 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     // facing is likely not needed
     @Nullable
-    protected Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
+    @VisibleForTesting
+    public Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
 
         // fake player living in fake level
         Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, testLevel);
@@ -106,13 +104,12 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
 
         var eventResult = SuppPlatformStuff.fireItemUseEvent(fakePlayer, InteractionHand.MAIN_HAND);
-        if(!eventResult.getResult().consumesAction()) {
+        if (!eventResult.getResult().consumesAction()) {
             projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
         }
 
         return testLevel.projectile;
     }
-
 
 
 }
