@@ -39,6 +39,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -95,6 +96,11 @@ public class ServerEventsForge {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartedEvent event) {
+        ServerEvents.onServerStart(event.getServer());
     }
 
     @SubscribeEvent

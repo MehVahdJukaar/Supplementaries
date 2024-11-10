@@ -22,11 +22,13 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,7 +67,6 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
                 var either = CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json).getOrThrow();
                 Object o = either.mapBoth(i -> i, f -> f);
                 dataInteractions.add(o);
-                FaucetBlockTile.registerInteraction(o);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction {}", key);
             }
@@ -73,8 +74,13 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         if (!dataInteractions.isEmpty())
             Supplementaries.LOGGER.info("Loaded  {} custom faucet interactions", dataInteractions.size());
 
+    }
 
+    public void onLevelLoad(ServerLevel level) {
         FaucetBlockTile.clearBehaviors();
+
+        dataInteractions.forEach(FaucetBlockTile::registerInteraction);
+
         FaucetBlockTile.registerInteraction(new SoftFluidProviderInteraction());
         FaucetBlockTile.registerInteraction(new WaterCauldronInteraction());
         FaucetBlockTile.registerInteraction(new FullBucketCauldronInteraction(Blocks.LAVA_CAULDRON.defaultBlockState(), Items.LAVA_BUCKET.getDefaultInstance()));
@@ -93,7 +99,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         //if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
 
-        BlockTestLevel testLevel = BlockTestLevel.get(PlatHelper.getCurrentServer().overworld());
+        BlockTestLevel testLevel = BlockTestLevel.get(level);
         Player player = FakePlayerManager.getDefault(testLevel);
         InteractionHand hand = InteractionHand.MAIN_HAND;
         BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();

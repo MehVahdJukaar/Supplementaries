@@ -9,7 +9,9 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
@@ -31,6 +33,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -150,7 +153,11 @@ public class ServerEvents {
             EndermanSkullBlockTile.clearCache();
             ColoredMapHandler.clearIdCache();
         }
+    }
 
+    @EventCalled
+    public static void onServerStart(MinecraftServer server) {
+        FaucetBehaviorsManager.RELOAD_INSTANCE.onLevelLoad(server.overworld());
     }
 
     @EventCalled
@@ -249,6 +256,5 @@ public class ServerEvents {
         }
         return false;
     }
-
 
 }
