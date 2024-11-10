@@ -242,7 +242,8 @@ public class ModBlockProperties {
                 t = CHOCOLATE;
             } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
             else t = NONE;
-            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item.getDefaultInstance()).map(ItemStack::getItem).orElse(null));
+            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item.getDefaultInstance()).map(ItemStack::getItem)
+                    .orElse(Items.AIR));
         }
     }
 
