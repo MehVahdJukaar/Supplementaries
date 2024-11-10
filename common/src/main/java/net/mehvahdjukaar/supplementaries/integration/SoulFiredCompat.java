@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 import it.crystalnest.soul_fire_d.api.FireManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.Entity;
 
 public class SoulFiredCompat {

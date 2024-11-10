@@ -6,12 +6,14 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.client.tooltip.SelectableContainerTooltip;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -230,7 +232,6 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
 
-
     //gets connection to blocks diagonally above
     private RedstoneSide getConnectingSide(BlockGetter world, BlockPos pos, Direction dir) {
         return this.getConnectingSide(world, pos, dir, !world.getBlockState(pos.above()).isRedstoneConductor(world, pos));
@@ -430,7 +431,8 @@ public class GunpowderBlock extends LightUpBlock {
 
     @Deprecated(forRemoval = true)
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        GunpowderExplosion.explode((ServerLevel) world, pos);
+        if (world instanceof ServerLevel sl)
+            GunpowderExplosion.explode(sl, pos);
     }
 
     @Override
@@ -536,6 +538,7 @@ public class GunpowderBlock extends LightUpBlock {
     @Override
     public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
         world.setBlock(pos, state.setValue(BURNING, lit ? 1 : 0), 3);
+        SelectableContainerTooltip
     }
 
     //client

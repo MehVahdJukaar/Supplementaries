@@ -63,7 +63,6 @@ public class ModTextures {
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
     public static final ResourceLocation VARIABLE_SIZE_CONTAINER_TEXTURE = Supplementaries.res("textures/gui/variable_size_container_gui.png");
-    public static final ResourceLocation SLOT_TEXTURE = Supplementaries.res("textures/gui/slot.png");
     public static final ResourceLocation PULLEY_BLOCK_GUI_TEXTURE = Supplementaries.res("textures/gui/pulley_block_gui.png");
     public static final ResourceLocation PRESENT_GUI_TEXTURE = Supplementaries.res("textures/gui/present_gui.png");
     public static final ResourceLocation PRESENT_EMPTY_GUI_TEXTURE = Supplementaries.res("textures/gui/present_empty_gui.png");
@@ -71,9 +70,10 @@ public class ModTextures {
     public static final ResourceLocation CANNON_GUI_TEXTURE = Supplementaries.res("textures/gui/cannon_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
-    public static final ResourceLocation QUIVER_TOOLTIP = ResourceLocation.withDefaultNamespace("container/bundle/background");
 
-    // sprites
+    //slots
+    public static final ResourceLocation QUIVER_TOOLTIP_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/background");
+    public static final ResourceLocation QUIVER_TOOLTIP_SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/slot");
     public static final ResourceLocation BLACKBOARD_DYE_SPRITE = Supplementaries.res("blackboard/dye_button");
     public static final ResourceLocation BLACKBOARD_DYE_OUTLINE_SPRITE = Supplementaries.res("blackboard/dye_outline");
     public static final ResourceLocation BLACKBOARD_OUTLINE_SPRITE = Supplementaries.res("blackboard/outline");
@@ -107,6 +107,7 @@ public class ModTextures {
     public static final ResourceLocation CANNON_CHARGE_PROGRESS_SPRITE = Supplementaries.res("hud/cannon_charge_progress");
     public static final ResourceLocation SELECTABLE_ITEM_BAR = Supplementaries.res("hud/selectable_item_bar");
     public static final ResourceLocation SELECTABLE_ITEM_OVERLAY = Supplementaries.res("hud/selectable_item_overlay");
+    public static final ResourceLocation SLOT_SPRITE = Supplementaries.res("slot");
 
     public static final ResourceLocation BOOK_ENCHANTED_TEXTURES = Supplementaries.res("block/books/book_enchanted");
     public static final ResourceLocation BOOK_TOME_TEXTURES = Supplementaries.res("block/books/book_tome");

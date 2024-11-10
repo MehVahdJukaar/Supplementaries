@@ -1,13 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
+import net.mehvahdjukaar.supplementaries.common.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -84,4 +88,30 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
         return isSlotUnlocked(index);
     }
 
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        var content = componentInput.get(ModComponents.LUNCH_BASKET_CONTENT.get());
+        if (content != null) {
+            for (int i = 0; i < getContainerSize(); i++) {
+                this.setItem(i, content.getStackInSlot(i));
+            }
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        var content = LunchBaskedContent.empty(getContainerSize()).toMutable();
+        for (int i = 0; i < getContainerSize(); i++) {
+            content.setStackInSlot(i, this.getItem(i));
+        }
+        components.set(ModComponents.LUNCH_BASKET_CONTENT.get(), content.toImmutable());
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("Items");
+    }
 }

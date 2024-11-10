@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContaine
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -22,6 +23,7 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
         int y = this.topPos;
         graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0,
                 this.imageWidth, this.imageHeight);
+        this.renderSlots(graphics);
     }
 
 
@@ -45,16 +47,11 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
             dimx = Math.min(dims[0], size);
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
-                graphics.blit(ModTextures.SLOT_TEXTURE, k + xp + j * 18, l + yp + 18 * h, 0, 0, 18, 18, 18, 18);
+                graphics.blitSprite(ModTextures.SLOT_SPRITE, k + xp + j * 18, l + yp + 18 * h,
+                        18,18);
             }
             size -= dims[0];
         }
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderSlots(graphics);
     }
 
     @Override

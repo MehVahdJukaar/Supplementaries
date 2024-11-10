@@ -15,8 +15,8 @@
 - jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.
 
+- basked slots not matching container data
 - finish moonlight projectile stuff
-- candle skull broken
 - key inn trinkets not wok
 - wildflax loot table
 - jar fish crash
