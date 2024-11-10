@@ -46,7 +46,7 @@ dependencies {
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
 
-    modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
+    modCompileOnly("curse.maven:soul-fire-d-662413:5821523")
 
     modCompileOnly("curse.maven:immediatelyfast-686911:4937545")
     modCompileOnly("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")

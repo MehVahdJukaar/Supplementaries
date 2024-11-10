@@ -119,7 +119,7 @@ dependencies {
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
     modCompileOnly("curse.maven:curios-309927:5296876")
-    modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
+    modImplementation("curse.maven:soul-fire-d-662413:5821523")
     modCompileOnly("curse.maven:cobweb-968456:5441209")
     modCompileOnly("curse.maven:better-archeology-835687:5668732")
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
