@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +24,7 @@ public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
                 clientCurrentAmmo = ItemStack.EMPTY;
 
                 ItemStack findAmmo = player.getProjectile(cannon);
-                if (findAmmo.getItem() != net.minecraft.world.item.Items.ARROW) {
+                if (findAmmo.getItem() != Items.ARROW) {
                     clientCurrentAmmo = findAmmo;
                 }
             }

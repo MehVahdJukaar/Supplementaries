@@ -22,28 +22,27 @@ public abstract class ProjectileWeaponItemMixin {
             at = @At("HEAD"),
             cancellable = true)
     //checks everything except inventory. High priority ones. Other ones are done in PlayerProjectileMixin
-    private static void getProjectileInQuiver(LivingEntity shooter, Predicate<ItemStack> isAmmo, CallbackInfoReturnable<ItemStack> cir) {
+    private static void supp$getProjectileInQuiver(LivingEntity shooter, Predicate<ItemStack> isAmmo, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack stack = shooter.getItemInHand(InteractionHand.OFF_HAND);
         if (isAmmo.test(stack)) return; //off-hand always has priority
         ItemStack quiverStack = null;
         if (stack.getItem() instanceof QuiverItem) {
             quiverStack = stack;
         }
-        if(quiverStack == null){
-            if(shooter instanceof IQuiverEntity quiverEntity){ //client only
+        if (quiverStack == null) {
+            if (shooter instanceof IQuiverEntity quiverEntity) { //client only
                 quiverStack = quiverEntity.supplementaries$getQuiver();
-            }
-            else {
+            } else {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);
                 if (stack.getItem() instanceof QuiverItem) {
                     quiverStack = stack;
-                }else if(shooter instanceof ServerPlayer sp){
+                } else if (shooter instanceof ServerPlayer sp) {
                     //server side curio stuff
-                   quiverStack = CompatHandler.getQuiverFromModsSlots(sp).get(sp);
+                    quiverStack = CompatHandler.getQuiverFromModsSlots(sp).get(sp);
                 }
             }
         }
-        if(quiverStack != null){
+        if (quiverStack != null) {
             var data = QuiverItem.getQuiverData(quiverStack);
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
