@@ -47,6 +47,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.level.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -111,6 +112,11 @@ public class ServerEventsForge {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onServerStart(ServerStartedEvent event) {
+        ServerEvents.onServerStart(event.getServer());
     }
 
     @SubscribeEvent
