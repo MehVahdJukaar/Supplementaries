@@ -5,7 +5,7 @@ import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.utils.fake_level.ProjectileTestLevel;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.IEntityInterceptFakeLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +29,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         if (projectile.isEmpty()) {
             return IBallisticBehavior.LINE;
         }
-        Entity proj = createEntity(projectile, ProjectileTestLevel.get(level.registryAccess()), new Vec3(1, 0, 0));
+        Entity proj = createEntity(projectile, IEntityInterceptFakeLevel.get(level), new Vec3(1, 0, 0));
         if (proj != null) {
             double speed = proj.getDeltaMovement().length();
             if (speed == 0 && proj instanceof AbstractArrow) {
@@ -50,7 +50,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
                              Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
-        Entity entity = createEntity(stack, ProjectileTestLevel.get(level.registryAccess()), facing);
+        Entity entity = createEntity(stack, IEntityInterceptFakeLevel.get(level), facing);
 
         if (entity != null) {
 
@@ -86,10 +86,11 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
     // facing is likely not needed
     @Nullable
     @VisibleForTesting
-    public Entity createEntity(ItemStack projectile, ProjectileTestLevel testLevel, Vec3 facing) {
+    public Entity createEntity(ItemStack projectile, IEntityInterceptFakeLevel testLevel, Vec3 facing) {
 
+        Level fakeLevel = testLevel.cast();
         // fake player living in fake level
-        Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, testLevel);
+        Player fakePlayer = FakePlayerManager.get(FAKE_PLAYER, fakeLevel);
 
         fakePlayer.setXRot((float) MthUtils.getPitch(facing));
         fakePlayer.setYRot((float) MthUtils.getYaw(facing));
@@ -97,7 +98,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         testLevel.setup();
 
         if (projectile.getItem() instanceof ArrowItem ai) {
-            return ai.createArrow(testLevel, projectile, fakePlayer);
+            return ai.createArrow(fakeLevel, projectile, fakePlayer);
         }
         //create from item
 
@@ -105,10 +106,10 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
         var eventResult = SuppPlatformStuff.fireItemUseEvent(fakePlayer, InteractionHand.MAIN_HAND);
         if (!eventResult.getResult().consumesAction()) {
-            projectile.use(testLevel, fakePlayer, InteractionHand.MAIN_HAND);
+            projectile.use(fakeLevel, fakePlayer, InteractionHand.MAIN_HAND);
         }
 
-        return testLevel.projectile;
+        return testLevel.getIntercepted();
     }
 
 

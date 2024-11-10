@@ -98,7 +98,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         //if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
 
-        BlockTestLevel testLevel = BlockTestLevel.get(registryAccess);
+        BlockTestLevel testLevel = BlockTestLevel.get(PlatHelper.getCurrentServer().overworld());
         Player player = FakePlayerManager.getDefault(testLevel);
         InteractionHand hand = InteractionHand.MAIN_HAND;
         BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();
