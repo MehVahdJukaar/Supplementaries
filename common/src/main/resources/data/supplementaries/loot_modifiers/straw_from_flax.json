@@ -2,6 +2,16 @@
   "type": "moonlight:add_item",
   "fabric:load_conditions": [
     {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
+  "conditions": [
+    {
       "condition": "minecraft:match_tool",
       "predicate": {
         "tag": "farmersdelight:straw_harvesters"
@@ -20,10 +30,6 @@
         {
           "condition": "supplementaries:flag",
           "flag": "flax"
-        },
-        {
-          "modid": "farmersdelight",
-          "condition": "fabric:mod_loaded"
         }
       ]
     }

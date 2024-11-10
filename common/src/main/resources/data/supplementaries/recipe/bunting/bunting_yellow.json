@@ -19,7 +19,7 @@
     "id": "supplementaries:bunting",
     "count": 1,
     "components": {
-      "base_colo": "yellow"
+      "base_color": "yellow"
     }
   }
 }

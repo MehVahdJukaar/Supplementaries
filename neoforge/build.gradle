@@ -147,7 +147,7 @@ dependencies {
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
-    modCompileOnly("curse.maven:the-bumblezone-forge-362479:4103196")
+    modImplementation("curse.maven:the-bumblezone-forge-362479:5889009")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:5010279")
     modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
@@ -172,6 +172,8 @@ dependencies {
     modCompileOnly("curse.maven:cyanide-541676:4824162")
     modImplementation("curse.maven:embeddium-908741:5681729")
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-neoforge")
+    modImplementation("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
+    modImplementation("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
 
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")

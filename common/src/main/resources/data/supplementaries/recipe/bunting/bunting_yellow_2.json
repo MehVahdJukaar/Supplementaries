@@ -22,7 +22,7 @@
   "result": {
     "id": "supplementaries:bunting",
     "components": {
-      "base_colo": "yellow"
+      "base_color": "yellow"
     },
     "count": 6
   }
