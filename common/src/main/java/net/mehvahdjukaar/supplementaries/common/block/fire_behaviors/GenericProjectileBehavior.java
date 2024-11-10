@@ -111,7 +111,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         else if (projectile.getItem() instanceof ProjectileItem ti) {
             var config = ti.createDispenseConfig();
             //apply config
-            var p = ti.asProjectile(testLevel, Vec3.ZERO, projectile, Direction.UP);
+            var p = ti.asProjectile(fakeLevel, Vec3.ZERO, projectile, Direction.UP);
             float power = config.power();
             //hardcoded bs for potions since hand throw and dispenser throw are so different
             if (p instanceof ThrownPotion) {

@@ -10,6 +10,7 @@
 - hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
+- wild flax loot (copy from fd)
 - sign posts have incorrect sounds for weird wood types
 - jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.

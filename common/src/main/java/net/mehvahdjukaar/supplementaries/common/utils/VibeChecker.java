@@ -35,11 +35,7 @@ public class VibeChecker {
 
         if (checkedOnce) return;
         checkedOnce = true;
-        Level level = player.level();
-        testCannonStuff(player);
-
-        //check sheets class
-        if (PlatHelper.getPhysicalSide().isClient()) clientStuff();
+        //testCannonStuff(player);
     }
 
     private static void testCannonStuff(ServerPlayer pl) {
@@ -57,30 +53,6 @@ public class VibeChecker {
             Supplementaries.LOGGER.error("An error caused by other mods has occurred. Supplementaries might not work as intended. Check the log to find the culprit mod and report there.", e);
         }
 
-    }
-
-    private static void clientStuff() {
-        if (PlatHelper.isDev()) return;
-        for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet()) {
-            if (!Sheets.BANNER_MATERIALS.containsKey(v)) {
-                var a = new ArrayList<>(BuiltInRegistries.BANNER_PATTERN.registryKeySet());
-                a.removeAll(Sheets.BANNER_MATERIALS.keySet());
-                throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
-                        "Refusing to proceed further.\n" +
-                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
-                        "Check previous forge log lines to find the offending mod.");
-            }
-        }
-        for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
-            if (!Sheets.DECORATED_POT_MATERIALS.containsKey(v)) {
-                var a = new ArrayList<>(BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet());
-                a.removeAll(Sheets.DECORATED_POT_MATERIALS.keySet());
-                throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
-                        "Refusing to proceed further.\n" +
-                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
-                        "Check previous forge log lines to find the offending mod.");
-            }
-        }
     }
 
     //It's been proven that CFTS is primarely made up of code shamelessly stolen from frozen up

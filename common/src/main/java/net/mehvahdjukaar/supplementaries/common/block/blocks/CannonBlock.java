@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
@@ -291,7 +290,6 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        System.out.println("Event " + id + "_ " + level.isClientSide() + " " + level.getGameTime());
         if (id > 1) return false;
         if (!level.isClientSide) return true;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
@@ -300,7 +298,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             PoseStack poseStack = new PoseStack();
             poseStack.translate(pos.getX() + 0.5f, pos.getY() + 0.5f + 1 / 16f, pos.getZ() + 0.5f);
-            if(tile.isBig()){
+            if (tile.isBig()) {
                 poseStack.scale(3, 3, 3);
             }
 
@@ -331,7 +329,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power, boolean isBig) {
         level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, isBig? 3 : 1);
+                pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, isBig ? 3 : 1);
 
         RandomSource ran = level.random;
 
@@ -384,7 +382,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
             float vel = 0.05f;
-            if(isBig) vel /=1.5f;
+            if (isBig) vel /= 1.5f;
 
             Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, vel, 0));
             SimpleParticleType campfireCosySmoke = isBig ?

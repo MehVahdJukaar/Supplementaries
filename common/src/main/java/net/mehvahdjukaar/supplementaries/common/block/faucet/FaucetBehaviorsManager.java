@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
@@ -57,10 +58,9 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         RELOAD_INSTANCE.listeners.add(listener);
     }
 
+    //TODO: useloot tabke like thing here instead
     @Override
     public void parse(Map<ResourceLocation, JsonElement> map, RegistryAccess registryAccess) {
-        FaucetBlockTile.clearBehaviors();
-
         dataInteractions.clear();
         map.forEach((key, json) -> {
             try {
@@ -124,6 +124,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
             }
 
         }
+        testLevel.invalidate();
 
         listeners.forEach(Runnable::run);
     }

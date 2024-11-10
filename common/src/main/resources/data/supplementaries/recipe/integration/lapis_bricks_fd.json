@@ -12,7 +12,7 @@
     }
   ],
   "tool": {
-    "type": "farmersdelight:tool_action",
+    "type": "farmersdelight:item_ability",
     "action": "pickaxe_dig"
   },
   "fabric:load_conditions": [
