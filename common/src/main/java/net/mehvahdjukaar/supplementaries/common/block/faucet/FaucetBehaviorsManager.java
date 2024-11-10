@@ -130,6 +130,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
         }
 
+        testLevel.invalidate();
         listeners.forEach(Runnable::run);
     }
 

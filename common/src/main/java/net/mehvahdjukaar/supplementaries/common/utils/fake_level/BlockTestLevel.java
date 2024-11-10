@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fake_level;
 
-import net.mehvahdjukaar.moonlight.core.misc.fake_level.FakeLevelManager;
-import net.mehvahdjukaar.moonlight.api.misc.fake_level.FakeServerLevel;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevelManager;
+import net.mehvahdjukaar.moonlight.core.misc.FakeServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +28,10 @@ public class BlockTestLevel extends FakeServerLevel {
 
     public void setup() {
         blockState = null;
+    }
+
+    public void invalidate(){
+        FakeLevelManager.invalidate("faucet_test_level");
     }
 }
 

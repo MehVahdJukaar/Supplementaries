@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fake_level;
 
-import net.mehvahdjukaar.moonlight.api.misc.fake_level.FakeLevel;
-import net.mehvahdjukaar.moonlight.api.misc.fake_level.FakeLevelManager;
-import net.mehvahdjukaar.moonlight.api.misc.fake_level.FakeServerLevel;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevelManager;
+import net.mehvahdjukaar.moonlight.core.misc.FakeServerLevel;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
