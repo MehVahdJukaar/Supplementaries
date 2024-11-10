@@ -314,7 +314,7 @@
   "gui.supplementaries.amendments.suggestions": "Modを入手する",
   "gui.supplementaries.amendments.title": "警告：Amendmentsが導入されていません",
   "gui.supplementaries.incompatible_mods.title": "警告：互換性のないModが見つかりました",
-  "gui.supplementaries.incompatible_mods.message": "Supplementariesは、クラッシュの原因となる可能性がある以下のModを検出しました：\n\n%s\n\nこれらの問題は該当するMod側に起因するもので、Supplementaries側では修正できません。言い換えれば、これらの不具合は該当するMod側で修正されるべき問題です。\n該当するModを削除するか、突然クラッシュが発生する可能性があることを認識したうえでご利用ください。また、将来のバージョンではゲームが起動しなくなる可能性があります。ご注意ください。",
+  "gui.supplementaries.incompatible_mods.message": "Supplementariesは、クラッシュの原因となる可能性がある以下のModを検出しました：\n\n%s\n\nこれらの問題は該当するMod側に起因するもので、Supplementaries側では修正できません。言い換えれば、これらの不具合は該当するMod側で修正されるべき問題です。\n該当するModを削除するか、突然クラッシュが発生する可能性があることを認識したうえでご利用ください。問題が解決されたと思われる場合は、私達にご連絡ください。",
 
 
   
