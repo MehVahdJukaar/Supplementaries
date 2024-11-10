@@ -1,22 +1,26 @@
 package net.mehvahdjukaar.supplementaries.common.utils.fake_level;
 
 import net.mehvahdjukaar.moonlight.api.misc.FakeLevel;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevelManager;
+import net.mehvahdjukaar.moonlight.core.misc.FakeServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockTestLevel extends FakeLevel {
+public class BlockTestLevel extends FakeServerLevel {
 
     public BlockState blockState;
 
-    public static BlockTestLevel get(RegistryAccess ra) {
-        // always server sie even on client as projectiles entities wont get fire on client
-        return FakeLevel.get("faucet_test_level", false,ra, BlockTestLevel::new);
+    public BlockTestLevel(String name, ServerLevel original) {
+        super(name, original);
     }
 
-    public BlockTestLevel(boolean clientSide, String id, RegistryAccess registryAccess) {
-        super(clientSide, id, registryAccess);
+    public static BlockTestLevel get(ServerLevel level) {
+        // always server sie even on client as projectiles entities wont get fire on client
+        return FakeLevelManager.getServer("faucet_test_level", level, BlockTestLevel::new);
     }
+
 
     @Override
     public boolean setBlock(BlockPos pos, BlockState state, int flags, int recursionLeft) {
