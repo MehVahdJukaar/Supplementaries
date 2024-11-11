@@ -13,5 +13,6 @@ jobs:
           sparse-checkout-cone-mode: false
       - uses: Renato66/auto-label@v3.1.0
         with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
           ignore-comments: false
           configuration-file: .github/workflows/issue_label.json5
