@@ -1,4 +1,4 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- improved handling of cannon interactions. requires newest moonlight lib
-- daily incremental random fixes
+- fixed many visual things related to lunch boxes
+- fixed some tags

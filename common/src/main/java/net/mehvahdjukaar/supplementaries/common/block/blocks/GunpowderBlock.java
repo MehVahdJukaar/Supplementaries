@@ -538,7 +538,6 @@ public class GunpowderBlock extends LightUpBlock {
     @Override
     public void setLitUp(BlockState state, LevelAccessor world, BlockPos pos, boolean lit) {
         world.setBlock(pos, state.setValue(BURNING, lit ? 1 : 0), 3);
-        SelectableContainerTooltip
     }
 
     //client

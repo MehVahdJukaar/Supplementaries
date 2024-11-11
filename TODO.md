@@ -214,6 +214,7 @@ slidy double pulse
 
 # Amendments
 
+- cauldron dispenser behaviors
 - fireballs add
 - disepnser bucker cauldron interaction not wroking
 - fluid offer ignoring min amount
