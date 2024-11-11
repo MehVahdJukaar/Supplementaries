@@ -9,7 +9,7 @@
     "1.19.2": ["1.19.2-FORGE"],
     "1.19.2": ["1.19.2-FABRIC"],
     "server": ["server", "Server"],
-    "not related": ["not my issue", "report there", "isnt an EC issue"]
+    "not related": ["not my issue", "report there"]
   },
   labelsNotAllowed: [
     'duplicate',
