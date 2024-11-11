@@ -481,7 +481,6 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerItemDecorators(ClientHelper.ItemDecoratorEvent event) {
-        event.register(ModRegistry.SLINGSHOT_ITEM.get(), new SlingshotItemOverlayRenderer());
         if (ClientConfigs.Items.QUIVER_OVERLAY.get()) {
             event.register(ModRegistry.QUIVER_ITEM.get(), new SelectableItemOverlayRenderer());
         }
@@ -489,8 +488,10 @@ public class ClientRegistry {
             event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new SelectableItemOverlayRenderer());
         }
         if (ClientConfigs.Tweaks.PROJECTILE_WEAPON_OVERLAY.get()) {
+            event.register(ModRegistry.SLINGSHOT_ITEM.get(), new SlingshotItemOverlayRenderer());
+
             for (var i : BuiltInRegistries.ITEM) {
-                if (i instanceof ProjectileWeaponItem && i != ModRegistry.QUIVER_ITEM.get()) {
+                if (i instanceof ProjectileWeaponItem && i != ModRegistry.SLINGSHOT_ITEM.get()) {
                     event.register(i, new ProjectileWeaponOverlayRenderer());
                 }
             }

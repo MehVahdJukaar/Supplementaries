@@ -5,6 +5,7 @@
     {"id":"#c:ropes","required":true},
     {"id":"quark:rope","required":false},
     {"id":"xercamod:rope","required":false},
+    {"id":"twilightforest:rope","required":false},
     {"id":"druidcraft:rope","required":false},
     {"id":"inspirations:vine","required":false},
     {"id":"inspirations:rope","required":false},
