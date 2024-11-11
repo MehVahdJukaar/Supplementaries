@@ -41,6 +41,7 @@
     "MineshaftPiecesMixin",
     "ObserverBlockMixin",
     "PaintingItemMixin",
+    "PlayerMixin",
     "ProjectileWeaponItemMixin",
     "RedMerchantSpawnerMixin",
     "ServerGamePacketListenerMixin",
