@@ -365,6 +365,8 @@ public class CommonConfigs {
 
             builder.push("sugar_cube");
             SUGAR_CUBE_ENABLED = feature(builder);
+            SUGAR_CUBE_RAIN = builder.comment("Makes sugar cubes dissolve in rain")
+                    .define("dissolve_in_rain", true);
             SUGAR_BLOCK_HORSE_SPEED_DURATION = builder.comment("Duration in seconts of speed effect garanted to horses that eat a sugar cube")
                     .define("horse_speed_duration", 10, 0, 1000);
             builder.pop();
@@ -512,6 +514,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BASALT_ASH_ENABLED;
 
         public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
+        public static final Supplier<Boolean> SUGAR_CUBE_RAIN;
         public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
 
         public static final Supplier<Boolean> ITEM_SHELF_ENABLED;

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BumblezoneCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -38,6 +40,15 @@ public class SugarBlock extends ConcretePowderBlock {
             //     level.destroyBlock(pos, false);
         }
     }
+
+    @Override
+    public void handlePrecipitation(BlockState state, Level level, BlockPos pos, Biome.Precipitation precipitation) {
+        super.handlePrecipitation(state, level, pos, precipitation);
+        if (precipitation == Biome.Precipitation.RAIN && CommonConfigs.Building.SUGAR_CUBE_RAIN.get()) {
+            level.blockEvent(pos, state.getBlock(), 1, 0);
+        }
+    }
+
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
