@@ -11,13 +11,16 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
@@ -39,6 +42,7 @@ public class JEICompat implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get(), SpikesSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModRegistry.BUNTING.get(), BuntingSubtypeInterpreter.INSTANCE);
     }
 
     public  enum SpikesSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
@@ -56,6 +60,18 @@ public class JEICompat implements IModPlugin {
             }
 
             return stringBuilder.toString();
+        }
+    }
+
+    public  enum BuntingSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+        INSTANCE;
+
+        public String apply(ItemStack itemStack, UidContext uidContext) {
+
+            Optional<String> color = Optional.ofNullable(itemStack.getTag())
+                    .map(tag -> tag.getString("Color"));
+
+            return color.orElse("");
         }
     }
 
