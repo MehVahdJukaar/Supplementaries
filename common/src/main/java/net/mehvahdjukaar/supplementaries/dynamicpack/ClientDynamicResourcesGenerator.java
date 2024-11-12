@@ -23,12 +23,12 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -278,6 +278,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             lang.addEntry("block.suppsquared.metal_frame", "Galvanized Square Steel Frame");
             lang.addEntry("block.suppsquared.metal_brace", "Galvanized Square Steel Brace");
             lang.addEntry("block.suppsquared.metal_cross_brace", "Galvanized Square Steel Cross Brace");
+        }
+
+        String bambooSpikes = lang.getEntry("item.supplementaries.bamboo_spikes_tipped.effect");
+        if (bambooSpikes == null) return;
+        for (var p : BuiltInRegistries.POTION) {
+            String key = p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
+            String arrowName = lang.getEntry(p.getName("item.minecraft.tipped_arrow.effect."));
+            if(arrowName == null){
+                lang.addEntry(key, String.format(bambooSpikes, Utils.getID(p).toLanguageKey()));
+            }
+            else lang.addEntry(key, String.format(bambooSpikes, arrowName.replace("Arrow of ", "")));
         }
 
     }

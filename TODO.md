@@ -166,6 +166,10 @@
 - Tree chat gpt
 - tree splash text
 
+# labels
+- rewrite
+- waxing
+- no arrow break
 
 # Random Ideas
 

@@ -83,27 +83,14 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        return "item.supplementaries.bamboo_spikes_tipped";
-        //return PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed(super.getTranslationKey() + ".effect.");
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
         Potion p = PotionUtils.getPotion(stack);
-        Component arrowName = Component.translatable(p.getName("item.minecraft.tipped_arrow.effect."));
-        String s = arrowName.getString();
-        if (s.contains("Arrow of ")) {
-            return Component.translatable("item.supplementaries.bamboo_spikes_tipped_effect",
-                    s.replace("Arrow of ", ""));
-        }
-        return Component.translatable(this.getDescriptionId(stack));
+        return p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
     }
 
     @Override
     public ItemStack getDefaultInstance() {
         return makeSpikeItem(Potions.POISON);
     }
-
 
     public static ItemStack makeSpikeItem(Potion potion) {
         ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());
