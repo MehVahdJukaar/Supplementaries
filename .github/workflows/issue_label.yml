@@ -16,3 +16,4 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           ignore-comments: false
           configuration-file: .github/workflows/issue_label.json5
+          labels-synonyms: false
