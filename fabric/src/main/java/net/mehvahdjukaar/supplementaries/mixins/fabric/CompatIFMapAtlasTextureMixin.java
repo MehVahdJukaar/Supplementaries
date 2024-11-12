@@ -27,6 +27,7 @@ public class CompatIFMapAtlasTextureMixin {
         MoonlightClient.setMipMap(true);
         var t = original.call(width, height, useCalloc);
         MoonlightClient.setMipMap(false);
+
         return t;
     }
 

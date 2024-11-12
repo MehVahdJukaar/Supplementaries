@@ -48,8 +48,8 @@ dependencies {
 
     modCompileOnly("curse.maven:soul-fire-d-662413:5821523")
 
-    modCompileOnly("curse.maven:immediatelyfast-686911:4937545")
-    modCompileOnly("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
+    modCompileOnly("curse.maven:immediatelyfast-686911:5894662")
+    //modCompileOnly("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")

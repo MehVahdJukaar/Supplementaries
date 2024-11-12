@@ -11,6 +11,10 @@ public class CCCompat {
     }
 
     @ExpectPlatform
+    public static void init() {
+    }
+
+    @ExpectPlatform
     public static boolean isPrintedBook(Item item) {
         throw new AssertionError();
     }

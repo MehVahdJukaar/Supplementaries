@@ -17,6 +17,7 @@ import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.lang.ref.WeakReference;
 import java.util.function.Supplier;
 
 /**
@@ -25,7 +26,10 @@ import java.util.function.Supplier;
 @Mod(Supplementaries.MOD_ID)
 public class SupplementariesForge {
 
+    public static WeakReference<IEventBus> modBus;
+
     public SupplementariesForge(IEventBus bus) {
+        modBus = new WeakReference<>(bus);
         RegHelper.startRegisteringFor(bus);
         Supplementaries.commonInit();
 

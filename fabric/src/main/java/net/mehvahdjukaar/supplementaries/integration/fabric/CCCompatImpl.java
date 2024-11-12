@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.integration.fabric;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.PeripheralLookup;
+import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
+import net.mehvahdjukaar.moonlight.fabric.MoonlightFabric;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.chat.Component;
@@ -28,15 +30,19 @@ public class CCCompatImpl {
     }
 
     public static int getPages(ItemStack itemstack) {
-        return PrintoutItem.getPageCount(itemstack);
+        return PrintoutData.getOrEmpty(itemstack).pages();
     }
 
     public static String[] getText(ItemStack itemstack) {
-        return PrintoutItem.getText(itemstack);
+        return  PrintoutData.getOrEmpty(itemstack).lines()
+                .stream().map(PrintoutData.Line::text).toArray(String[]::new);
     }
 
     public static boolean isPrintedBook(Item item) {
         return item instanceof PrintoutItem;
+    }
+
+    public static void init() {
     }
 
     @SuppressWarnings({"ClassCanBeRecord"})

@@ -124,6 +124,7 @@ public class CompatHandler {
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (SOUL_FIRED) SoulFiredCompat.init();
+        if (COMPUTERCRAFT) CCCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

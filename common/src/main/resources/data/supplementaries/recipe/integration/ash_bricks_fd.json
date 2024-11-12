@@ -8,7 +8,9 @@
   "result": [
     {
       "count": 4,
-      "item": "supplementaries:ash_brick"
+      "item": [
+        "supplementaries:ash_brick"
+      ]
     }
   ],
   "tool": {

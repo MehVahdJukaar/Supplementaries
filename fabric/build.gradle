@@ -32,7 +32,7 @@ dependencies {
     if (isMyPc) {
         modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
     } else {
-        modImplementation("curse.maven:selene-499980:5882410")
+        modImplementation("curse.maven:selene-499980:5890786")
     }
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
@@ -63,7 +63,7 @@ dependencies {
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
-    modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
+    modImplementation("curse.maven:cc-tweaked-282001:5714511")
     modCompileOnly("curse.maven:jei-238222:4405345")
     modCompileOnly("curse.maven:amendments-896746:5791204")
     modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
@@ -81,7 +81,7 @@ dependencies {
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
 
-    modImplementation("curse.maven:immediatelyfast-686911:5861163")
+    modImplementation("curse.maven:immediatelyfast-686911:5894662")
     //modImplementation("curse.maven:spectrum-556967:5080474")
     modCompileOnly("curse.maven:create-328085:4835191")
 

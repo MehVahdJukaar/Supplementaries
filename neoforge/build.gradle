@@ -117,7 +117,7 @@ dependencies {
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
-    modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
+    modCompileOnly("curse.maven:cc-tweaked-282001:5714512")
     modCompileOnly("curse.maven:curios-309927:5296876")
     modCompileOnly("curse.maven:soul-fire-d-662413:5821523")
     modCompileOnly("curse.maven:cobweb-968456:5441209")

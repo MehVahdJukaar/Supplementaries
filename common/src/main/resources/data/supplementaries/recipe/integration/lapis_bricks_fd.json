@@ -2,7 +2,9 @@
   "type": "farmersdelight:cutting",
   "ingredients": [
     {
-      "item": "supplementaries:lapis_bricks"
+      "item": [
+        "supplementaries:lapis_bricks"
+      ]
     }
   ],
   "result": [

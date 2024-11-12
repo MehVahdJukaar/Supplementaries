@@ -1,39 +1,57 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
 
+import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.ForgeComputerCraftAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.shared.Capabilities;
+import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.neoforge.SupplementariesForge;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.datafix.fixes.ChunkPalettedStorageFix;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+
 public class CCCompatImpl {
-//TODO: add back
+
+    protected static BlockCapability<SpeakerPeripheral, Direction> CAP =
+            BlockCapability.createSided(Supplementaries.res("speaker_block"), SpeakerPeripheral.class);
+
+
+    public static void init() {
+        SupplementariesForge.modBus.get()
+                .addListener(CCCompatImpl::registerCap);
+    }
+
     public static void setup() {
-        /*
-        ForgeComputerCraftAPI.registerPeripheralProvider((level, blockPos, direction) -> {
-            var tile = level.getBlockState(blockPos);
-            if (tile instanceof SpeakerBlockTile) {
-                return tile.getCapability(Capabilities.CAPABILITY_PERIPHERAL, direction);
-            }
-            return LazyOptional.empty();
-        });*/
+        ForgeComputerCraftAPI.registerGenericCapability(CAP);
+    }
+
+    public static void registerCap(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(CAP, ModRegistry.SPEAKER_BLOCK_TILE.get(),
+                (tile, object2) -> new SpeakerPeripheral(tile));
     }
 
     public static int getPages(ItemStack itemstack) {
-        return PrintoutItem.getPageCount(itemstack);
+        return PrintoutData.getOrEmpty(itemstack).pages();
     }
 
     public static String[] getText(ItemStack itemstack) {
-        return PrintoutItem.getText(itemstack);
+        return PrintoutData.getOrEmpty(itemstack).lines()
+                .stream().map(PrintoutData.Line::text).toArray(String[]::new);
     }
 
     public static boolean isPrintedBook(Item item) {
