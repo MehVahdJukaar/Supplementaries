@@ -1,0 +1,21 @@
+{
+  labelsSynonyms: {
+    "1.21.1": ["1.21.1-NEOFORGE"],
+    "1.21.1": ["1.21.1-FABRIC"],
+    "1.21": ["1.21-NEOFORGE"],
+    "1.21": ["1.21-FABRIC"],
+    "1.20.1": ["1.20.1-FORGE"],
+    "1.20.1": ["1.20.1-FABRIC"],
+    "1.19.2": ["1.19.2-FORGE"],
+    "1.19.2": ["1.19.2-FABRIC"],
+    "server": ["server", "Server"],
+    "not related": ["not my issue", "report there"],
+    "duplicate": ["duplicate"]
+  },
+  labelsNotAllowed: [
+    'duplicate',
+    'help wanted',
+    'invalid'
+  ],
+  //defaultLabels: ['bug']
+}
