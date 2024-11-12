@@ -42,20 +42,10 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
     }
 
     @Override
-    public int getBarWidth(ItemStack stack) {
-        return super.getBarWidth(stack);
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        PotionContents p = getPotion(stack);
-        Component arrowName = Component.translatable(Potion.getName(p.potion(), "item.minecraft.tipped_arrow.effect."));
-        String s = arrowName.getString();
-        if (s.contains("Arrow of ")) {
-            return Component.translatable("item.supplementaries.bamboo_spikes_tipped_effect",
-                    s.replace("Arrow of ", ""));
-        }
-        return Component.translatable(this.getDescriptionId(stack));
+    public String getDescriptionId(ItemStack stack) {
+        Potion p = getPotion(stack);
+        return Potion.getName(p.potion(),
+                "item.supplementaries.bamboo_spikes_tipped.effect.");
     }
 
     public static boolean isPotionValid(PotionContents potion) {

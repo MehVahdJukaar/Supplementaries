@@ -359,7 +359,7 @@
   "item.supplementaries.ash": "Ash",
   "item.supplementaries.ash_brick": "Ash Brick",
   "item.supplementaries.bamboo_spikes_tipped": "Tipped Bamboo Spikes",
-  "item.supplementaries.bamboo_spikes_tipped_effect": "Bamboo Spikes of %s",
+  "item.supplementaries.bamboo_spikes_tipped.effect": "Bamboo Spikes of %s",
   "item.supplementaries.bomb": "Bomb",
   "item.supplementaries.bomb_blue": "Blue Bomb",
   "item.supplementaries.bomb_blue_projectile": "Blue Bomb",
