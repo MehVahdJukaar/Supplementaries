@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "id": "supplementaries:fine_wood",
+    "item": "supplementaries:fine_wood",
     "count": 8
   },
   "fabric:load_conditions": [
