@@ -274,6 +274,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     @Override
     public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack stack, boolean bl) {
         super.spawnAfterBreak(state, level, pos, stack, bl);
+        if (!state.getValue(TREASURE)) return;
         if (level.random.nextFloat() < CommonConfigs.Functional.URN_ENTITY_SPAWN_CHANCE.get() &&
                 level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) &&
                 !EnchantmentHelper.hasTag(stack, EnchantmentTags.PREVENTS_INFESTED_SPAWNS)) {
