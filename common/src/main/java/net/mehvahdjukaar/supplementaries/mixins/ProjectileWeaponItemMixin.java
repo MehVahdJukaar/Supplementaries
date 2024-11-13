@@ -30,7 +30,7 @@ public abstract class ProjectileWeaponItemMixin {
             quiverStack = stack;
         }
         if (quiverStack == null) {
-            if (shooter instanceof IQuiverEntity quiverEntity) { //client only
+            if (shooter.level().isClientSide && shooter instanceof IQuiverEntity quiverEntity) { //client only
                 quiverStack = quiverEntity.supplementaries$getQuiver();
             } else {
                 stack = shooter.getItemInHand(InteractionHand.MAIN_HAND);

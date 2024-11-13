@@ -28,6 +28,10 @@ public class RemapHandler {
         REMAP.put("supplementaries:lead_lantern", "oreganized:lead_lantern");
         REMAP.put("supplementaries:lead_door", "oreganized:lead_door");
         REMAP.put("supplementaries:lead_trapdoor", "oreganized:lead_trapdoor");
+        REMAP.put("supplementaries:cabin_siding", "supplementaries:fine_wood");
+        REMAP.put("supplementaries:cabin_siding_slab", "supplementaries:fine_wood_slab");
+        REMAP.put("supplementaries:cabin_siding_stairs", "supplementaries:fine_wood_stairs");
+
     }
 
     @SubscribeEvent

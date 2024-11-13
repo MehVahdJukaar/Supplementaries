@@ -130,7 +130,7 @@ dependencies {
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
-    modCompileOnly("curse.maven:curios-309927:5296876")
+    modImplementation("curse.maven:curios-309927:5843594")
     modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
     modCompileOnly("curse.maven:cobweb-968456:5441209")
     modCompileOnly("curse.maven:better-archeology-835687:5668732")
