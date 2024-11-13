@@ -3,7 +3,6 @@
 - fix urn loot table
 - soap recipe broken
 - Lumisene has no sound when bucketed.
-- Lunch Basket UI container slots are not highlighted when hovering over them. (prob wrong z level of slot)
 - Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
 
@@ -15,6 +14,8 @@
 - jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.
 
+- jade broken
+- quiver curio
 - basked slots not matching container data
 - finish moonlight projectile stuff
 - key inn trinkets not wok
@@ -106,7 +107,6 @@
 - sniffer egg directional
 - turn table oh by default
 -cannon spectator
-- barrier block light block
 - flute not working
 - play song command
 - amke canon face the way camera faces whe first manovering

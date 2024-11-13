@@ -43,7 +43,7 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        Potion p = getPotion(stack);
+        PotionContents p = getPotion(stack);
         return Potion.getName(p.potion(),
                 "item.supplementaries.bamboo_spikes_tipped.effect.");
     }
