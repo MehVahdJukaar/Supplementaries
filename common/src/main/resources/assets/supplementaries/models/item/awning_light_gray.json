@@ -1,6 +1,8 @@
 {
-  "parent": "item/generated",
+  "parent": "supplementaries:item/awning",
   "textures": {
-    "layer0": "supplementaries:block/awnings/awning_light_gray"
+    "1": "supplementaries:block/awnings/awning_light_gray",
+    "up": "supplementaries:block/awnings/awning_light_gray_side",
+    "particle": "supplementaries:block/awnings/awning_light_gray"
   }
 }

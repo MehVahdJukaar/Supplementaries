@@ -128,7 +128,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (!entity.isAlive() || entity instanceof Player) return false;
 
         String name = Utils.getID(entity.getType()).toString();
-        if (CommonConfigs.Functional.CAGE_ALL_MOBS.get() || CapturedMobHandler.isCommandMob(name)) {
+        if (CommonConfigs.Functional.CAGE_ALL_MOBS.get() || CapturedMobHandler.INSTANCE.isCommandMob(name)) {
             return true;
         }
 
@@ -140,7 +140,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
         // If people want to catch these, so be it. All hardcoded checks are below the global config
         if (ForgeHelper.isMultipartEntity(entity)) return false;
-        ICatchableMob cap = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
+        ICatchableMob cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(entity);
 
         // this calls can ItemCatch for default or let's full control for custom ones
         return cap.canBeCaughtWithItem(entity, this, player);

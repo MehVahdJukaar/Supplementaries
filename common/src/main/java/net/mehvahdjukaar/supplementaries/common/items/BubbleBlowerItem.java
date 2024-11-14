@@ -44,10 +44,11 @@ import java.util.List;
 
 public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
-    public static final int MAX_CHARGES = 250;
+    public final int maxCharges;
 
-    public BubbleBlowerItem(Properties properties) {
+    public BubbleBlowerItem(Properties properties, int maxCharges) {
         super(properties);
+        this.maxCharges = maxCharges;
     }
 
     @Override
@@ -106,7 +107,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                 if (!(player.getAbilities().instabuild)) {
                     int charges = this.getCharges(stack);
                     stack.set(ModComponents.CHARGES.get(),
-                            Math.clamp(charges - CommonConfigs.Tools.BUBBLE_BLOWER_COST.get(), 0, MAX_CHARGES));
+                            Math.clamp(charges - CommonConfigs.Tools.BUBBLE_BLOWER_COST.get(), 0, maxCharges));
                 }
 
                 return InteractionResultHolder.success(stack);
@@ -121,7 +122,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         int charges = this.getCharges(stack);
         if (charges != 0) {
             tooltipComponents.add(Component.translatable("message.supplementaries.bubble_blower_tooltip",
-                    charges, this.MAX_CHARGES));
+                    charges, this.maxCharges));
         }
     }
 
@@ -157,7 +158,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @Override
     public int getBarWidth(ItemStack stack) {
         int charges = getCharges(stack);
-        return Mth.clamp(Math.round(charges * 13.0F / (float) MAX_CHARGES), 0, 13);
+        return Mth.clamp(Math.round(charges * 13.0F / (float) maxCharges), 0, 13);
     }
 
     @ForgeOverride

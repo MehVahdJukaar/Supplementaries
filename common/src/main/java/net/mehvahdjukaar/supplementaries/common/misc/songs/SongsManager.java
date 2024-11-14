@@ -51,10 +51,9 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     //randomly selected currently playing songs
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
 
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    public static final SongsManager RELOAD_INSTANCE = new SongsManager();
+    public static final SongsManager INSTANCE = new SongsManager();
 
     public SongsManager() {
         super(GSON, "flute_songs");

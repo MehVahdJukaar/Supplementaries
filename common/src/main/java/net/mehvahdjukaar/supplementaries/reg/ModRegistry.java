@@ -9,10 +9,10 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
-import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
-import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
@@ -106,7 +106,8 @@ public class ModRegistry {
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
             new Item.Properties()
                     .component(ModComponents.CHARGES.get(), 0)
-                    .stacksTo(1)));
+                    .stacksTo(1),
+            250));
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()
@@ -246,13 +247,13 @@ public class ModRegistry {
 
     //fine wood
     public static final Supplier<Block> FINE_WOOD = regWithItem(FINE_WOOD_NAME, () -> new RotatedPillarBlock(
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 
     public static final Supplier<Block> FINE_WOOD_STAIRS = regWithItem(FINE_WOOD_NAME + "_stairs", () -> new ModStairBlock(
             FINE_WOOD, BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 
     public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
@@ -753,8 +754,8 @@ public class ModRegistry {
     //pancakes
     public static final Supplier<Item> PANCAKE_ITEM = regItem(PANCAKE_NAME,
             () -> new PancakeItem(new Item.Properties()
-            .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
-                    new EitherHolder<>(ModSounds.PANCAKE_MUSIC_JUKEBOX.getKey()), false))));
+                    .component(DataComponents.JUKEBOX_PLAYABLE, new JukeboxPlayable(
+                            new EitherHolder<>(ModSounds.PANCAKE_MUSIC_JUKEBOX.getKey()), false))));
 
     // cant be block item so we use extra placement stuff later
     public static final Supplier<Block> PANCAKE = regBlock(PANCAKE_NAME, () -> new PancakeBlock(

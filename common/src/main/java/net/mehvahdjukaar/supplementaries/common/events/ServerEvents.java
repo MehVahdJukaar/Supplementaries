@@ -157,12 +157,12 @@ public class ServerEvents {
 
     @EventCalled
     public static void onServerStart(MinecraftServer server) {
-        FaucetBehaviorsManager.RELOAD_INSTANCE.onLevelLoad(server.overworld());
+        FaucetBehaviorsManager.INSTANCE.onLevelLoad(server.overworld());
     }
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-        CapturedMobHandler.sendDataToClient(player);
+        CapturedMobHandler.INSTANCE.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
         MapLightHandler.sendDataToClient(player);

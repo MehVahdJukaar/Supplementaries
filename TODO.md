@@ -1,30 +1,27 @@
 # 1.21 bugs and stuff
 
 - fix urn loot table
-- soap recipe broken
 - Lumisene has no sound when bucketed.
-- Bubbleblower doesn't work (prob recipe or components)
 - Placeable books do not work, but still consumes the item as if it did.
 
 - hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
+- sign post recipes
 - wild flax loot (copy from fd)
 - sign posts have incorrect sounds for weird wood types
-- jar Causes a server disconnect when pick blocking when filled with anything.
 - jar Entities do not render correctly in the inventory icon.
 
+- trapped present desync fabric
+- bubble blower soap recipe deleting stasis
+- safe recipe broken
+- jar breaking particles
 - jade broken
-- quiver curio
-- basked slots not matching container data
 - finish moonlight projectile stuff
 - key inn trinkets not wok
 - wildflax loot table
-- jar fish crash
-- sus sand crash when broken (due to item)
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
-- check bubble blower statis enchantment
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
 - burn time data map (for forge). For fabric add a new class that assigns burn times
@@ -42,7 +39,6 @@
 - check all iOwner protected and openable container stuff (need multiplayer)
 - check all screens render backgrounds methods as that was changed
 - check bombprojectile item model
-- quiver color and default color
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement
@@ -51,7 +47,6 @@
 - glowing blackboard persistence
 - waxed too
 - standardize and make IWaxable IGlowable and IAntiquable
-- all quiver and lunch
 - all tipped and configs
 - urn broken extra particles
 - test all containers with loot table in spectator
@@ -138,11 +133,9 @@ slidy double pulse
 - anger nearby piglins
 - cannon camera glitchyness
 - safe recipe jei
-- no jar of dirt
 - rope not breaking when supporting each other
 - spring launcher super buggy
 - make no grabity ench work on bows
-- rename way signs
 - remaining fire ticks/ignite for seconds
 - rope arrow disp stats
 - check gunpowder explosion stuff

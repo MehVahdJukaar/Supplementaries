@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
@@ -12,7 +11,6 @@ import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
@@ -29,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,21 +38,22 @@ import java.util.Set;
 
 public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    public static final FaucetBehaviorsManager INSTANCE = new FaucetBehaviorsManager();
 
-    public static final FaucetBehaviorsManager RELOAD_INSTANCE = new FaucetBehaviorsManager();
+    private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
+            Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
+
 
     private final Set<Object> dataInteractions = new HashSet<>();
     private final Set<Runnable> listeners = new HashSet<>();
 
     public FaucetBehaviorsManager() {
-        super(GSON, "faucet_interactions");
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "faucet_interactions");
     }
 
-    private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC = Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
-
     public static void addRegisterFaucetInteraction(Runnable listener) {
-        RELOAD_INSTANCE.listeners.add(listener);
+        INSTANCE.listeners.add(listener);
     }
 
     //TODO: useloot tabke like thing here instead

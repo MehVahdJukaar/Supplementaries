@@ -1,5 +1,5 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 19,
+  "render_fluid": "moonlight:water","fish_index": 19,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:swamp_mucker"

@@ -52,7 +52,7 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
     @Override
     public void handle(Context context) {
         //client world
-        CapturedMobHandler.acceptClientData(mobSet, fish);
+        CapturedMobHandler.INSTANCE.acceptClientData(mobSet, fish);
         Supplementaries.LOGGER.info("Synced Captured Mobs settings");
     }
 

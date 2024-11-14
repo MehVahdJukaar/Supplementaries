@@ -21,7 +21,6 @@ import net.minecraft.world.item.Items;
 import java.util.*;
 
 public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public static final HourglassTimesManager INSTANCE = new HourglassTimesManager();
 
@@ -29,7 +28,8 @@ public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
     private final Set<HourglassTimeData> dusts = new HashSet<>();
 
     public HourglassTimesManager() {
-        super(GSON, "hourglass_dusts");
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "hourglass_dusts");
     }
 
     @Override

@@ -23,6 +23,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
+import java.util.List;
+
 public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
     public static final ServerDynamicResourcesGenerator INSTANCE = new ServerDynamicResourcesGenerator();
@@ -118,6 +121,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w, "way_sign_oak");
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     this.dynamicPack.addRecipe(newR);
+                    this.dynamicPack.markNotClearable(newR.id());
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
                 }

@@ -1,5 +1,5 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 29,
+  "render_fluid": "moonlight:water","fish_index": 29,
   "height_increment": 0.0,
   "owners": [
     "unnamedanimalmod:tomato_frog"

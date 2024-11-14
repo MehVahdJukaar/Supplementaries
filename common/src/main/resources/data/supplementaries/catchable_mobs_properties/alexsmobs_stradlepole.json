@@ -1,5 +1,5 @@
 {
-  "force_fluid": "minecraft:lava",
+  "render_fluid": "moonlight:lava",
   "fish_index": 0,
   "animation": "floating",
   "height_increment": 0.0,

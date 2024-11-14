@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,8 +40,8 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
     //force water check
     @Override
     public void onContainerWaterlogged(boolean waterlogged, float containerWidth, float containerHeight) {
-        var f = this.properties.forceFluidID.orElse(null);
-        if (!waterlogged && f != null && f.getPath().equals("water")) {
+        var f = this.properties.renderFluid.orElse(null);
+        if (!waterlogged && f != null && MLBuiltinSoftFluids.WATER.is(f)) {
            super.onContainerWaterlogged(true, containerWidth, containerHeight);
         } else super.onContainerWaterlogged(waterlogged, containerWidth, containerHeight);
     }

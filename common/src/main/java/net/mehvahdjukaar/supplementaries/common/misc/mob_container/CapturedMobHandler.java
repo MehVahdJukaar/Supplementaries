@@ -1,49 +1,46 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
+import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
+public class CapturedMobHandler extends RegistryAccessJsonReloadListener {
 
-    private static final Set<String> COMMAND_MOBS = new HashSet<>();
+    public static final CapturedMobHandler INSTANCE = new CapturedMobHandler();
 
-    private static final Map<EntityType<?>, DataDefinedCatchableMob> CUSTOM_MOB_PROPERTIES = new IdentityHashMap<>();
+    private final Set<String> commandMobs = new HashSet<>();
+    private final Map<EntityType<?>, DataDefinedCatchableMob> customMobProperties = new IdentityHashMap<>();
     private static DataDefinedCatchableMob moddedFishProperty;
 
-    protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-
-    public static final CapturedMobHandler RELOAD_INSTANCE = new CapturedMobHandler();
-
     private CapturedMobHandler() {
-        super(GSON, "catchable_mobs_properties");
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "catchable_mobs_properties");
     }
 
-
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-        CUSTOM_MOB_PROPERTIES.clear();
+    public void parse(Map<ResourceLocation, JsonElement> jsons, RegistryAccess registryAccess) {
+        customMobProperties.clear();
+
+        var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         var list = new ArrayList<DataDefinedCatchableMob>();
         jsons.forEach((key, json) -> {
-            var data = DataDefinedCatchableMob.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
+            var data = DataDefinedCatchableMob.CODEC.parse(ops, json).getOrThrow();
             if (key.getPath().equals("generic_fish")) {
                 moddedFishProperty = data;
             } else {
@@ -52,7 +49,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         });
         for (var c : list) {
             for (var o : c.getOwners()) {
-                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
+                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> customMobProperties.put(e, c));
             }
         }
         //somebody reported a weird bug with this
@@ -61,32 +58,31 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         }
     }
 
-
-    public static void sendDataToClient(ServerPlayer player) {
-        Set<DataDefinedCatchableMob> set = new HashSet<>(CUSTOM_MOB_PROPERTIES.values());
+    public void sendDataToClient(ServerPlayer player) {
+        Set<DataDefinedCatchableMob> set = new HashSet<>(customMobProperties.values());
         NetworkHelper.sendToClientPlayer(player,
                 new ClientBoundSyncCapturedMobsPacket(set, moddedFishProperty));
     }
 
-    public static void acceptClientData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {
+    public void acceptClientData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {
         if (defaultFish != null) {
             moddedFishProperty = defaultFish;
         }
-        CUSTOM_MOB_PROPERTIES.clear();
+        customMobProperties.clear();
         for (var c : list) {
             for (var o : c.getOwners()) {
-                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> CUSTOM_MOB_PROPERTIES.put(e, c));
+                BuiltInRegistries.ENTITY_TYPE.getOptional(o).ifPresent(e -> customMobProperties.put(e, c));
             }
         }
     }
 
-    public static ICatchableMob getDataCap(EntityType<?> type, boolean isFish) {
-        var c = CUSTOM_MOB_PROPERTIES.get(type);
+    public ICatchableMob getDataCap(EntityType<?> type, boolean isFish) {
+        var c = customMobProperties.get(type);
         if (c == null && isFish) return moddedFishProperty;
         return c;
     }
 
-    public static ICatchableMob getCatchableMobCapOrDefault(Entity entity) {
+    public ICatchableMob getCatchableMobCapOrDefault(Entity entity) {
         if (entity instanceof ICatchableMob cap) return cap;
         var forgeCap = SuppPlatformStuff.getForgeCap(entity, ICatchableMob.class);
         if (forgeCap != null) return forgeCap;
@@ -95,11 +91,11 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         return ICatchableMob.DEFAULT;
     }
 
-    public static boolean isCommandMob(String entity) {
-        return COMMAND_MOBS.contains(entity);
+    public boolean isCommandMob(String entity) {
+        return commandMobs.contains(entity);
     }
 
-    public static void addCommandMob(String name) {
-        COMMAND_MOBS.add(name);
+    public void addCommandMob(String name) {
+        commandMobs.add(name);
     }
 }

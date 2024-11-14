@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
@@ -38,6 +39,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
         this.imageHeight = 166;
 
         this.tile = (TrappedPresentBlockTile) menu.getContainer();
+        Preconditions.checkNotNull(this.tile);
     }
 
     @Override

@@ -32,7 +32,6 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.allay.Allay;
@@ -129,12 +128,12 @@ public class MobContainer {
         if (data != null && level != null && pos != null) {
             if (data instanceof MobData.Bucket bucketData) {
                 var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
-                this.mobProperties = CapturedMobHandler.getDataCap(type, true);
+                this.mobProperties = CapturedMobHandler.INSTANCE.getDataCap(type, true);
             } else if (data instanceof MobData.Entity entityData) {
                 Entity entity = createStaticMob(entityData, level, pos);
                 if (entity != null) {
                     //visual entity stored in this instance
-                    this.mobProperties = CapturedMobHandler.getCatchableMobCapOrDefault(entity);
+                    this.mobProperties = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(entity);
                     this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
                     this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
                             this.width, this.height);
@@ -216,8 +215,8 @@ public class MobContainer {
                 world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
                 var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
-                var cap = CapturedMobHandler.getDataCap(type, true);
-                var f = cap.shouldRenderWithFluid();
+                var cap = CapturedMobHandler.INSTANCE.getDataCap(type, true);
+                var f = cap.getForceFluid();
                 if (stack.isEmpty()) {
                     Supplementaries.LOGGER.error("Bucket error 3: name none, bucket {}", stack);
                 }
@@ -288,7 +287,7 @@ public class MobContainer {
 
     public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
         if (data == null || !this.isAquarium || this.mobProperties == null) return Optional.empty();
-        return this.mobProperties.shouldRenderWithFluid();
+        return this.mobProperties.getForceFluid();
     }
 
     //item stuff
@@ -300,13 +299,12 @@ public class MobContainer {
      * @param bucketStack optional filled bucket item
      * @return true if success
      */
-    @Nullable
     public boolean captureEntity(Entity mob, ItemStack bucketStack) {
         MobData newData;
         String name = mob.getName().getString();
-        var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
+        var cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(mob);
         if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
-            var f = cap.shouldRenderWithFluid();
+            var f = cap.getForceFluid();
             if (bucketStack.isEmpty()) {
                 Supplementaries.LOGGER.error("Bucket error 2: name {}, bucket {}", name, bucketStack);
             }
@@ -413,7 +411,8 @@ public class MobContainer {
     public static Pair<Float, Float> calculateMobDimensionsForContainer(
             Entity mob, float blockW, float blockH, boolean waterlogged) {
 
-        var cap = CapturedMobHandler.getCatchableMobCapOrDefault(mob);
+        @Nullable
+        var cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(mob);
         float babyScale = 1;
 
         if (mob instanceof LivingEntity livingEntity && livingEntity.isBaby()) {

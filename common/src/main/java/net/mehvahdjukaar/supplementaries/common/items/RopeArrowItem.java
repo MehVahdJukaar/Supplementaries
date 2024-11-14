@@ -67,7 +67,7 @@ public class RopeArrowItem extends ArrowItem {
     @Override
     public int getBarWidth(ItemStack stack) {
         int charges = getRopes(stack);
-        return Mth.clamp(Math.round(13.0F - maxCharges * 13.0F / (float) charges), 0, 13);
+        return Mth.clamp(Math.round(charges * 13.0F / (float) maxCharges), 0, 13);
     }
 
     @Override

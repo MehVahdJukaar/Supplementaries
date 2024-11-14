@@ -1,8 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -220,5 +225,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
         }
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+
+        public static final StreamCodec<FriendlyByteBuf, Type> STREAM_CODEC = Utils.enumStreamCodec(Type.class);
     }
 }

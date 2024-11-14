@@ -1,5 +1,5 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 14,
+  "render_fluid": "moonlight:water","fish_index": 14,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:high_finned_blue"

@@ -252,7 +252,7 @@ public class HatStandEntity extends LivingEntity {
                             return InteractionResult.SUCCESS;
                         }
                     } else {
-                        EquipmentSlot equipmentSlot = getEquipmentSlotForItem(itemStack);
+                        EquipmentSlot equipmentSlot = this.getEquipmentSlotForItem(itemStack);
                         if (CommonConfigs.Building.HAT_STAND_UNRESTRICTED.get()) {
                             equipmentSlot = EquipmentSlot.HEAD;
                         }
@@ -268,6 +268,11 @@ public class HatStandEntity extends LivingEntity {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean canUseSlot(EquipmentSlot slot) {
+        return slot == EquipmentSlot.HEAD;
     }
 
     private boolean swapItem(Player player, EquipmentSlot slot, ItemStack stack, InteractionHand hand) {
