@@ -206,16 +206,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-                Containers.dropContents(world, pos, tile);
-                world.updateNeighbourForOutputSignal(pos, this);
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
-        }
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
-
 
     @Override
     public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {

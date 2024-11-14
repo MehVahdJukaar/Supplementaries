@@ -133,13 +133,9 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {
-                Containers.dropContents(world, pos, tile);
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
-        }
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

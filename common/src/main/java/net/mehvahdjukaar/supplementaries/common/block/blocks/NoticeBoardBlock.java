@@ -97,13 +97,8 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            if (level.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-                Containers.dropContents(level, pos, tile);
-                level.updateNeighbourForOutputSignal(pos, this);
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
-        }
+        Containers.dropContentsOnDestroy(state, newState, level, pos);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

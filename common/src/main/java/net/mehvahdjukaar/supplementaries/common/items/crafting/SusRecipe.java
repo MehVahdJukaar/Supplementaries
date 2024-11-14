@@ -7,13 +7,19 @@ import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagType;
+import net.minecraft.nbt.TagTypes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BrushableBlockEntity;
+
+import java.util.List;
 
 public class SusRecipe extends CustomRecipe {
     private final Ingredient ingredient;
@@ -58,12 +64,10 @@ public class SusRecipe extends CustomRecipe {
                 something = stack;
             }
         }
-        ItemStack result = this.result.copy();
+        ItemStack result = this.result.copyWithCount(1);
         result.applyComponents(gravel.getComponentsPatch());
 
-        CompoundTag tag = new CompoundTag();
-        tag.put("item", something.saveOptional(provider));
-        result.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
+        result.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(something)));
 
         return result;
     }

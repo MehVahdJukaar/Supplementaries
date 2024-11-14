@@ -39,7 +39,7 @@ public class GravelBricksBlock extends Block {
         && hasEnergyToBreak(entity)) {
             level.destroyBlock(pos, false, entity);
             if (level.getBlockEntity(pos) instanceof Container tile) {
-                Containers.dropContents(level, pos, tile);
+               // Containers.dropContents(level, pos, tile);
             }
         }
     }
@@ -52,7 +52,7 @@ public class GravelBricksBlock extends Block {
           if (entity.yo <entity.getY() && hasEnergyToBreak(entity)) {
               level.destroyBlock(pos, false, entity);
               if (level.getBlockEntity(pos) instanceof Container tile) {
-                  Containers.dropContents(level, pos, tile);
+                //  Containers.dropContents(level, pos, tile);
               }
           }
       }

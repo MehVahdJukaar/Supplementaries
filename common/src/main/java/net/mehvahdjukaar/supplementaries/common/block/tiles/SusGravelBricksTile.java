@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -12,10 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
 
@@ -28,7 +27,7 @@ public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if(!this.items.get(0).isEmpty()){
+        if (!this.items.get(0).isEmpty()) {
             tag.put("item", this.items.get(0).save(registries));
         }
     }
@@ -39,6 +38,12 @@ public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
         if (tag.contains("item", 10)) {
             this.items.set(0, ItemStack.parseOptional(registries, tag.getCompound("item")));
         }
+    }
+
+    @Override
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove("item");
     }
 
     @Override
