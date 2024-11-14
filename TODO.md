@@ -12,6 +12,8 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+
+- sherds_tooltip config not woring
 - trapped present desync fabric
 - bubble blower soap recipe deleting stasis
 - safe recipe broken
