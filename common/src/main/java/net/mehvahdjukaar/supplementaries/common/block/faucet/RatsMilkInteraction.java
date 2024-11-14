@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -15,7 +15,8 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.getBlock() == CompatObjects.MILK_CAULDRON.get()) {
-            return FluidOffer.of(BuiltInSoftFluids.MILK, SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
+            return FluidOffer.of(MLBuiltinSoftFluids.MILK.getHolder(level),
+                    SoftFluid.BUCKET_COUNT, SoftFluid.BUCKET_COUNT);
         }
         return null;
     }
@@ -27,7 +28,7 @@ public class RatsMilkInteraction implements FaucetTarget.BlState, FaucetSource.B
 
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
-        if (state.is(Blocks.CAULDRON) && offer.fluid().is(BuiltInSoftFluids.MILK)
+        if (state.is(Blocks.CAULDRON) && offer.fluid().is(MLBuiltinSoftFluids.MILK)
                 && offer.fluid().getCount() >= SoftFluid.BUCKET_COUNT) {
             var b = CompatObjects.MILK_CAULDRON.get();
             if (b != null) {

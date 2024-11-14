@@ -37,8 +37,8 @@ public class BombExplosion {
                 ModSounds.BOMB_EXPLOSION.getHolder());
     }
 
-    private static @NotNull DamageSource getBombDamageSource(@Nullable Entity source) {
-        return ModDamageSources.bombExplosion(source, getIndirectSourceEntityInternal(source));
+    private static @NotNull DamageSource getBombDamageSource(Entity source) {
+        return ModDamageSources.bombExplosion(source.level(), source, getIndirectSourceEntityInternal(source));
     }
 
     private static class BombExplosionDamageCalculator extends ExplosionDamageCalculator {

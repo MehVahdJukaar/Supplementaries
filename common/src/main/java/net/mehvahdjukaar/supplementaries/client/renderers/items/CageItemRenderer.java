@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CageBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.components.MobContainerView;
+import net.mehvahdjukaar.supplementaries.common.items.components.MobContainerView;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

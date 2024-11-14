@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
-import net.mehvahdjukaar.supplementaries.common.components.SafeOwner;
+import net.mehvahdjukaar.supplementaries.common.items.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.inventories.SafeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;

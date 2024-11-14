@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -12,7 +12,7 @@ class MudInteraction implements FaucetTarget.BlState {
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.DIRT)) {
-            if (offer.fluid().is(BuiltInSoftFluids.WATER)) {
+            if (offer.fluid().is(MLBuiltinSoftFluids.WATER)) {
                 level.setBlock(pos, Blocks.MUD.defaultBlockState(), 3);
                 return offer.minAmount();
             }

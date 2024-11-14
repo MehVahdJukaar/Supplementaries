@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -20,7 +20,7 @@ public class ModEnchantments {
     }
 
     //enchantment
-    public static final Supplier<Enchantment> STASIS_ENCHANTMENT = DynamicHolder.of(
+    public static final HolderReference<Enchantment> STASIS_ENCHANTMENT = HolderReference.of(
             res("stasis"), Registries.ENCHANTMENT);
 
 

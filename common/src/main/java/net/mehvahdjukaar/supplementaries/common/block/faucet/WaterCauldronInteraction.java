@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,8 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.WATER_CAULDRON)) {
-            return FluidOffer.of(BuiltInSoftFluids.WATER, source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(MLBuiltinSoftFluids.WATER.getHolder(level),
+                    source.getValue(LayeredCauldronBlock.LEVEL));
         }
         return null;
     }
@@ -32,7 +33,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.CAULDRON)) {
-            if (offer.fluid().is(BuiltInSoftFluids.WATER)) {
+            if (offer.fluid().is(MLBuiltinSoftFluids.WATER)) {
                 int minAmount = offer.minAmount();
                 int am = Math.min(minAmount, 3);
                 level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState()
@@ -42,7 +43,7 @@ class WaterCauldronInteraction implements FaucetTarget.BlState, FaucetSource.BlS
         }
         if (state.is(Blocks.WATER_CAULDRON)) {
             SoftFluidStack fluid = offer.fluid();
-            if (fluid.is(BuiltInSoftFluids.WATER) &&
+            if (fluid.is(MLBuiltinSoftFluids.WATER) &&
                     state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
                 int amount = fluid.getCount();
 

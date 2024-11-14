@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
+import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

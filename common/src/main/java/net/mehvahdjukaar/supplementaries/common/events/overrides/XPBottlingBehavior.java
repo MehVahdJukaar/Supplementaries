@@ -66,7 +66,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                 }
 
                 if (returnStack != null) {
-                    player.hurt(ModDamageSources.bottling(), CommonConfigs.Tweaks.BOTTLING_COST.get());
+                    player.hurt(ModDamageSources.bottling(world), CommonConfigs.Tweaks.BOTTLING_COST.get());
                     Utils.swapItem(player, hand, returnStack);
 
                     if (!player.isCreative())

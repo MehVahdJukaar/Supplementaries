@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(BlockStateProperties.LEVEL_HONEY) == 5) {
-            return FluidOffer.of(BuiltInSoftFluids.HONEY);
+            return FluidOffer.of(MLBuiltinSoftFluids.HONEY.getHolder(level));
         }
         return null;
     }
@@ -28,7 +28,7 @@ class BeehiveInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.hasProperty(BlockStateProperties.LEVEL_HONEY)) {
             SoftFluidStack fluid = offer.fluid();
-            if (fluid.is(BuiltInSoftFluids.HONEY) && fluid.getCount() == 1 &&
+            if (fluid.is(MLBuiltinSoftFluids.HONEY) && fluid.getCount() == 1 &&
                     state.getValue(BlockStateProperties.LEVEL_HONEY) == 0) {
                 level.setBlock(pos, state.setValue(BlockStateProperties.LEVEL_HONEY, 5), 3);
                 return offer.minAmount();

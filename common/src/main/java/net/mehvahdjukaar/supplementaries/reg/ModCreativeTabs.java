@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
@@ -11,7 +11,7 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -752,7 +752,7 @@ public class ModCreativeTabs {
             for (var h : SoftFluidRegistry.getHolders()) {
                 var s = h.value();
                 if (!s.isEnabled()) continue;
-                if (h.is(BuiltInSoftFluids.POTION) || h.is(BuiltInSoftFluids.EMPTY)) continue;
+                if (MLBuiltinSoftFluids.POTION.is(h) || MLBuiltinSoftFluids.EMPTY.is(h)) continue;
                 fluidHolder.clear();
                 fluidHolder.setFluid(SoftFluidStack.of(h, 100));
                 fluidHolder.capCapacity();
@@ -760,7 +760,7 @@ public class ModCreativeTabs {
             }
 
             for (var potion : BuiltInRegistries.POTION.holders().toList()) {
-                SoftFluidStack fluidStack = SoftFluidStack.of(BuiltInSoftFluids.POTION, 100);
+                SoftFluidStack fluidStack = SoftFluidStack.of(MLBuiltinSoftFluids.POTION.getHolderUnsafe(), 100);
                 fluidStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
                 fluidHolder.setFluid(fluidStack);
                 fluidHolder.capCapacity();

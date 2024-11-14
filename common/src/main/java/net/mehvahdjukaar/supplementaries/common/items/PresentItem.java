@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
-import net.mehvahdjukaar.supplementaries.common.components.PresentAddress;
+import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;

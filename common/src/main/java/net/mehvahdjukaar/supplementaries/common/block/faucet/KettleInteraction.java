@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 /*
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.integration.FarmersRespriteCompat;
 import net.minecraft.core.BlockPos;
@@ -16,7 +16,7 @@ class KettleInteraction implements FaucetTarget.BlState, FaucetSource.BlState {
             var p = FarmersRespriteCompat.getWaterLevel();
             int waterLevel = state.getValue(p);
             if (waterLevel > 0) {
-                return FluidOffer.of(BuiltInSoftFluids.WATER.getHolder(), waterLevel);
+                return FluidOffer.of(MLBuiltinSoftFluids.WATER.getHolder(), waterLevel);
             }
         }
         return null;

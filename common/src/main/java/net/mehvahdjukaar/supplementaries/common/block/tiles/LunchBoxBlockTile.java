@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
-import net.mehvahdjukaar.supplementaries.common.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;

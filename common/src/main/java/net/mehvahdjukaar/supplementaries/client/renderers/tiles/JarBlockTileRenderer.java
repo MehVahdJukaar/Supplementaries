@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
@@ -95,7 +95,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
             var fluid = tile.mobContainer.shouldRenderWithFluid();
             if (fluid != null && fluid.isPresent()) {
-                if (fluid.get().is(BuiltInSoftFluids.WATER.getID())) {
+                if (fluid.get().is(MLBuiltinSoftFluids.WATER.getID())) {
                     //sand
                     poseStack.pushPose();
                     Vector3f dimensions = JarBakedModel.getJarLiquidDimensions();

@@ -17,10 +17,11 @@ public class CompatIFMapAtlasTextureMixin {
 
     @WrapOperation(
             method = "<init>",
+            remap = true,
             at = {@At(
+                    remap = true,
                     value = "NEW",
-                    target = "(IIZ)Lnet/minecraft/client/renderer/texture/DynamicTexture;",
-                    remap = false
+                    target = "(IIZ)Lnet/minecraft/client/renderer/texture/DynamicTexture;"
             )}
     )
     private DynamicTexture forceMipMapOn(int width, int height, boolean useCalloc, Operation<DynamicTexture> original) {

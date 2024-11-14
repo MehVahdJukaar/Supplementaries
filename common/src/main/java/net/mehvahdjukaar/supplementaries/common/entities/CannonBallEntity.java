@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
-import net.mehvahdjukaar.supplementaries.common.components.CannonballWhitelist;
+import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonballExplosionPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -299,7 +299,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             float dmgMult = 3.5f; //TODO: config
             float amount = (float) lostEnergy * dmgMult;
             float oldHealth = le.getHealth();
-            if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), amount)) {
+            if (le.hurt(ModDamageSources.cannonBallExplosion(level(), this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);
             }
             if (!level().isClientSide && le instanceof Creeper && oldHealth >= le.getMaxHealth()) {

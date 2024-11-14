@@ -21,7 +21,7 @@ class SappyLogInteraction implements FaucetSource.BlState {
         Block backBlock = state.getBlock();
 
         if (backBlock == CompatObjects.SAPPY_MAPLE_LOG.get() || backBlock == CompatObjects.SAPPY_MAPLE_WOOD.get()) {
-            return FluidOffer.of(ModSoftFluids.SAP.getHolder());
+            return FluidOffer.of(ModSoftFluids.SAP.getHolder(level));
         }
         return null;
     }

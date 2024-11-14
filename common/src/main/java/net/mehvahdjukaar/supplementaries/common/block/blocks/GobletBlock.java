@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -115,7 +115,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
         if (0.05 > random.nextFloat()) {
             if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
                 SoftFluidTank tank = tile.getSoftFluidTank();
-                if (tank.getFluid().is(BuiltInSoftFluids.POTION)) {
+                if (tank.getFluid().is(MLBuiltinSoftFluids.POTION)) {
                     int color = tank.getCachedStillColor(world, pos);
 
                     world.addParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, color),

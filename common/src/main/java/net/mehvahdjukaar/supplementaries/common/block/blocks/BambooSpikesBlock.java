@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
@@ -95,7 +95,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             }
             return ModDamageSources.spikePlayer(fakePlayer);
         }
-        return ModDamageSources.spike();
+        return ModDamageSources.spike(level);
     }
 
     @Override
@@ -226,7 +226,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
-        if (fluid.is(BuiltInSoftFluids.POTION) && PotionBottleType.getOrDefault(fluid) == PotionBottleType.LINGERING) {
+        if (fluid.is(MLBuiltinSoftFluids.POTION) && PotionBottleType.getOrDefault(fluid) == PotionBottleType.LINGERING) {
             var content = getPotion(fluid);
             return tryAddingPotion(state, world, pos, content, null);
         }

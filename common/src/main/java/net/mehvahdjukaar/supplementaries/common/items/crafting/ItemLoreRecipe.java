@@ -51,7 +51,8 @@ public class ItemLoreRecipe extends CustomRecipe {
                 item = stack;
             }
         }
-        return nameTag != null && item != null && (!isSoap || item.has(DataComponents.LORE));
+        return nameTag != null && item != null &&
+                (!isSoap || !item.getOrDefault(DataComponents.LORE, ItemLore.EMPTY ).lines().isEmpty());
     }
 
     @Override

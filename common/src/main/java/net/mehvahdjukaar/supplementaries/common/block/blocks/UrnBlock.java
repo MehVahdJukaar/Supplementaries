@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
@@ -220,7 +220,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         } else {
             float oldLuck = builder.luck;
             ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
-            int f = stack == null ? 0 : getFortuneLevel(stack);
+            int f = stack == null ? 0 : getFortuneLevel(stack, builder.getLevel());
             builder.withLuck(oldLuck + 0.25f * f);
             var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
             ServerLevel serverlevel = lootContext.getLevel();
@@ -236,14 +236,14 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         }
     }
 
-    private static int getFortuneLevel(ItemStack stack) {
-        var holder = DynamicHolder.of(Enchantments.FORTUNE);
-        return EnchantmentHelper.getItemEnchantmentLevel(holder, stack);
+    private static int getFortuneLevel(ItemStack stack, Level level) {
+        var holder = HolderReference.of(Enchantments.FORTUNE);
+        return EnchantmentHelper.getItemEnchantmentLevel(holder.getHolder(level), stack);
     }
 
     @Override
     public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
-        if (pLevel.isClientSide && getFortuneLevel(pPlayer.getUseItem()) == 0) {
+        if (pLevel.isClientSide && getFortuneLevel(pPlayer.getUseItem(), pPlayer.level()) == 0) {
             spawnExtraBrokenParticles(pState, pPos, pLevel);
         }
         return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);

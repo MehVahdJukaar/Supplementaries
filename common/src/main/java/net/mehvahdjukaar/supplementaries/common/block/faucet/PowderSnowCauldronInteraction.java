@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,8 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(Blocks.POWDER_SNOW_CAULDRON)) {
-            return FluidOffer.of(BuiltInSoftFluids.POWDERED_SNOW, source.getValue(LayeredCauldronBlock.LEVEL));
+            return FluidOffer.of(MLBuiltinSoftFluids.POWDERED_SNOW.getHolder(level),
+                    source.getValue(LayeredCauldronBlock.LEVEL));
         }
         return null;
     }
@@ -32,7 +33,7 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer fluidOffer) {
         if (state.is(Blocks.CAULDRON)) {
-            if (fluidOffer.fluid().is(BuiltInSoftFluids.POWDERED_SNOW)) {
+            if (fluidOffer.fluid().is(MLBuiltinSoftFluids.POWDERED_SNOW)) {
 
                 int minAmount = fluidOffer.minAmount();
                 int am = Math.min(minAmount, 3);
@@ -44,7 +45,7 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
         if (state.is(Blocks.POWDER_SNOW_CAULDRON)) {
             SoftFluidStack fluid = fluidOffer.fluid();
             int minAmount = fluidOffer.minAmount();
-            if (fluid.is(BuiltInSoftFluids.POWDERED_SNOW) &&
+            if (fluid.is(MLBuiltinSoftFluids.POWDERED_SNOW) &&
                     state.getValue(LayeredCauldronBlock.LEVEL) < 3) {
                 int space = 3 - state.getValue(LayeredCauldronBlock.LEVEL);
                 int amount = fluid.getCount();
@@ -53,7 +54,7 @@ class PowderSnowCauldronInteraction implements FaucetTarget.BlState, FaucetSourc
                 level.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL,
                         state.getValue(LayeredCauldronBlock.LEVEL) + am));
                 return Math.max(minAmount, am);
-            } else if (fluid.is(BuiltInSoftFluids.WATER)) {
+            } else if (fluid.is(MLBuiltinSoftFluids.WATER)) {
                 level.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.withPropertiesOf(state));
                 return minAmount;
             }

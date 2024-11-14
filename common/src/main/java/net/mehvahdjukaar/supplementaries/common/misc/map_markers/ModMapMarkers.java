@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapMarker;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
@@ -40,8 +40,8 @@ public class ModMapMarkers {
     //builtin code defined ones
 
     //with markers
-    public static final DynamicHolder<MLMapDecorationType<?, ?>> DEATH_MARKER =
-            DynamicHolder.of(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
+    public static final HolderReference<MLMapDecorationType<?, ?>> DEATH_MARKER =
+            HolderReference.of(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
 
     public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
@@ -76,7 +76,8 @@ public class ModMapMarkers {
         var v = player.getLastDeathLocation();
         if (v.isPresent() && data.dimension.equals(v.get().dimension())) {
             if (CommonConfigs.Tweaks.DEATH_MARKER.get().isOn(player)) {
-                MLMapMarker<?> marker = new SimpleMapMarker(DEATH_MARKER, v.get().pos(), 0f,
+                MLMapMarker<?> marker = new SimpleMapMarker(DEATH_MARKER.getHolder(player),
+                        v.get().pos(), 0f,
                         Optional.of(Component.translatable("message.supplementaries.death_marker")));
                 return Set.of(marker);
             }

@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
+import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -13,7 +16,6 @@ import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -24,7 +26,10 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -151,14 +156,30 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        int charges = stack.getOrDefault(ModComponents.CHARGES.get(), 0);
-        return Mth.clamp(Math.round(13.0F - MAX_CHARGES * 13.0F / (float) charges), 0, 13);
+        int charges = getCharges(stack);
+        return Mth.clamp(Math.round(charges * 13.0F / (float) MAX_CHARGES), 0, 13);
     }
 
     @ForgeOverride
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return false;
     }
+
+    @FabricOverride
+    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
+        int oldCharges = getCharges(oldStack);
+        int newCharges = getCharges(newStack);
+        return oldCharges == newCharges;
+    }
+
+    @ForgeOverride
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        int oldCharges = getCharges(oldStack);
+        int newCharges = getCharges(newStack);
+        if (oldCharges != newCharges) return false;
+        return !oldStack.equals(newStack);
+    }
+
 
     @SuppressWarnings("UnsafePlatformOnlyCall")
     @Override

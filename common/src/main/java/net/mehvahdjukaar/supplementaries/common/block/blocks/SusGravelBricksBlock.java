@@ -29,7 +29,7 @@ public class SusGravelBricksBlock extends GravelBricksBlock implements EntityBlo
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof Container c) {
-                Containers.dropContents(level, pos, c);
+                //Containers.dropContents(level, pos, c);
                 level.updateNeighbourForOutputSignal(pos, this);
             }
 

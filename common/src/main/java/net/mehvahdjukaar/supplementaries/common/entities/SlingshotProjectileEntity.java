@@ -169,7 +169,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             double baseDamage = CommonConfigs.Tools.SLINGSHOT_DAMAGEABLE_DAMAGE.get();
             // max damage same as arrows
             int damage = Mth.ceil(Mth.clamp((double) speed * baseDamage, 0.0, 2.147483647E9));
-            entityRayTraceResult.getEntity().hurt(ModDamageSources.slingshot(this, this.getOwner()), damage);
+            entityRayTraceResult.getEntity().hurt(ModDamageSources.slingshot(
+                    level(), this, this.getOwner()), damage);
 
             this.kill();
         }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
-import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

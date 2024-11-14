@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -313,7 +313,7 @@ public class SpecialRecipeDisplays {
             ItemStack fullFlag = new ItemStack(ModRegistry.FLAGS.get(color).get());
 
             BannerPatternLayers patterns = new BannerPatternLayers(
-                    List.of(new BannerPatternLayers.Layer(DynamicHolder.of(BannerPatterns.BASE),
+                    List.of(new BannerPatternLayers.Layer(HolderReference.of(BannerPatterns.BASE).getHolderUnsafe(),
                             color == DyeColor.WHITE ? DyeColor.BLACK : DyeColor.WHITE))
             );
 

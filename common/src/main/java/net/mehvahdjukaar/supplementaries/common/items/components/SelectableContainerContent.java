@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.components;
+package net.mehvahdjukaar.supplementaries.common.items.components;
 
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 
 import com.google.common.base.Stopwatch;
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
@@ -130,8 +130,8 @@ public class ModSetup {
             WaySignStructure.recomputeValidStructureCache(registryAccess);
 
             try {
-                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.EMPTY.getID());
-                SoftFluidRegistry.getRegistry(registryAccess).get(BuiltInSoftFluids.WATER.getID());
+                SoftFluidRegistry.getRegistry(registryAccess).get(MLBuiltinSoftFluids.EMPTY.getID());
+                SoftFluidRegistry.getRegistry(registryAccess).get(MLBuiltinSoftFluids.WATER.getID());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }

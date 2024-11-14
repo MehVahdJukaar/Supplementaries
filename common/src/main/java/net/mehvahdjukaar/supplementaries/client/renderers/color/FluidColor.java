@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.supplementaries.common.components.SoftFluidTankView;
+import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;

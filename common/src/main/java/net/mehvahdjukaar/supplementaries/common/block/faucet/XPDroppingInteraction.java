@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
+import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ class XPDroppingInteraction implements FaucetTarget.BlState {
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.isAir()) {
-            if (offer.fluid().is(BuiltInSoftFluids.XP)) {
+            if (offer.fluid().is(MLBuiltinSoftFluids.XP)) {
                 int minAmount = offer.minAmount();
                 this.dropXP(level, pos, minAmount);
                 return minAmount;

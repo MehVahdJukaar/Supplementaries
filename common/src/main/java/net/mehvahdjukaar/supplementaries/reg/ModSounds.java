@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -106,9 +106,9 @@ public class ModSounds {
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
 
 
-    public static final DynamicHolder<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("pancake"),
+    public static final HolderReference<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = HolderReference.of(Supplementaries.res("pancake"),
             Registries.JUKEBOX_SONG);
-    public static final DynamicHolder<JukeboxSong> PIRATE_MUSIC_JUKEBOX = DynamicHolder.of(Supplementaries.res("heave_ho"),
+    public static final HolderReference<JukeboxSong> PIRATE_MUSIC_JUKEBOX = HolderReference.of(Supplementaries.res("heave_ho"),
             Registries.JUKEBOX_SONG);
 
     public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,

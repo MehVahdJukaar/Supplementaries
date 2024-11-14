@@ -3,11 +3,8 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.components.*;
-import net.minecraft.core.Registry;
+import net.mehvahdjukaar.supplementaries.common.items.components.*;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +13,6 @@ import net.minecraft.util.Unit;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public class ModComponents {
 

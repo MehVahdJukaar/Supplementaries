@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.components;
+package net.mehvahdjukaar.supplementaries.common.items.components;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
