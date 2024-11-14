@@ -130,8 +130,8 @@ public class ModSetup {
             WaySignStructure.recomputeValidStructureCache(registryAccess);
 
             try {
-                SoftFluidRegistry.getRegistry(registryAccess).get(MLBuiltinSoftFluids.EMPTY.getID());
-                SoftFluidRegistry.getRegistry(registryAccess).get(MLBuiltinSoftFluids.WATER.getID());
+                SoftFluidRegistry.get(registryAccess).get(MLBuiltinSoftFluids.EMPTY.getID());
+                SoftFluidRegistry.get(registryAccess).get(MLBuiltinSoftFluids.WATER.getID());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }
