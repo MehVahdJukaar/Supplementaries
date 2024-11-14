@@ -32,8 +32,6 @@ body:
       options:
         - 1.21.1-NEOFORGE
         - 1.21.1-FABRIC
-        - 1.21-NEOFORGE
-        - 1.21-FABRIC
         - 1.20.1-FORGE
         - 1.20.1-FABRIC
         - 1.19.2-FORGE
