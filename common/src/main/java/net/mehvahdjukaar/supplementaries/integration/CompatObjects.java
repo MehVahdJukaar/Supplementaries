@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -93,7 +94,7 @@ public class CompatObjects {
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
     private static <T> Supplier<@Nullable T> make(String name, ResourceKey<Registry<T>> registry) {
-        return Suppliers.memoize(() -> Utils.hackyGetRegistry(registry)
+        return (Supplier<T>) Suppliers.memoize(() -> BuiltInRegistries.REGISTRY.get((ResourceKey) registry)
                 .get(ResourceKey.create(registry,
                         ResourceLocation.tryParse(name))));
     }

@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedCont
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
+import net.mehvahdjukaar.supplementaries.common.items.loot.SetChargesFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -66,7 +67,8 @@ public class ModRegistry {
             () -> new LootItemFunctionType<>(RandomEnchantFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
     public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
             () -> new LootItemFunctionType<>(RandomArrowFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
-
+    public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES = RegHelper.register(res("set_charges"),
+            () -> new LootItemFunctionType<>(SetChargesFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
 
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(

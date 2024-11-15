@@ -15,6 +15,9 @@ static def listGameVersions(String string1, String string2) {
     // Extract the base version and the starting and ending patch numbers
     String baseVersion = string1
     int startPatch = 0
+    if(string1.split('\\.').length > 2) {
+        startPatch = Integer.parseInt(string1.split('\\.')[2])
+    }
     int endPatch = Integer.parseInt(string2.split('\\.')[2])
 
     // Initialize an array to hold the generated versions

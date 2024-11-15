@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.frozenblock.lib.item.api.ItemBlockStateTagUtils;
+import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;

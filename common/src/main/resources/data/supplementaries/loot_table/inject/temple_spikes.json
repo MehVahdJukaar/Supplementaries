@@ -30,9 +30,10 @@
             },
             {
               "function": "supplementaries:set_charges",
-              "damage": {
-                "min": 0.2,
-                "max": 0.9
+              "charges": {
+                "type": "uniform",
+                "min_inclusive": 20,
+                "max_inclusive": 200
               }
             }
           ]
