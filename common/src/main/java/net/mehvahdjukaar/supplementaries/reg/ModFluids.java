@@ -81,7 +81,6 @@ public class ModFluids {
                                 .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
                                 .build())
                 ));
-        //TODO: add back flammable effect
     }
 
     @ExpectPlatform

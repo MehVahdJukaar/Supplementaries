@@ -1,5 +1,6 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- fixed player placed urns being able to spawning mobs
-- fixed quiver not working in curio
-- fixed fine wood recipes not working
+- changed awning models
+- fixed some missing lang lines
+- fixed lumisene bottle not giving flammable
+- added jeed files for lumisene bucket
