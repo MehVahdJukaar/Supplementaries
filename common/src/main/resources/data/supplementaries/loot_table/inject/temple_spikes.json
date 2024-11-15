@@ -1,44 +1,39 @@
 {
-  "pools": [
-    {
-      "rolls": 1,
-      "conditions": [
+    "pools": [
         {
-          "condition": "random_chance",
-          "chance": 0.38
-        }
-      ],
-      "entries": [
-        {
-          "type": "item",
-          "weight": 4,
-          "name": "supplementaries:bamboo_spikes"
-        },
-        {
-          "type": "item",
-          "weight": 3,
-          "name": "supplementaries:bamboo_spikes_tipped",
-          "functions": [
-            {
-              "function": "set_components",
-              "components": [
+            "rolls": 1,
+            "conditions": [
                 {
-                  "type": "minecraft:potion_content",
-                  "potion": "minecraft:poison"
+                    "condition": "random_chance",
+                    "chance": 0.38
                 }
-              ]
-            },
-            {
-              "function": "supplementaries:set_charges",
-              "charges": {
-                "type": "uniform",
-                "min_inclusive": 20,
-                "max_inclusive": 200
-              }
-            }
-          ]
+            ],
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 4,
+                    "name": "supplementaries:bamboo_spikes"
+                },
+                {
+                    "type": "item",
+                    "weight": 3,
+                    "name": "supplementaries:bamboo_spikes_tipped",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_potion",
+                            "id": "minecraft:poison"
+                        },
+                        {
+                            "function": "supplementaries:set_charges",
+                            "charges": {
+                                "type": "minecraft:uniform",
+                                "min": 3,
+                                "max": 14
+                            }
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
