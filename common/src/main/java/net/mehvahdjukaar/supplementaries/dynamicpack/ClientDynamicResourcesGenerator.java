@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 
 
 public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
@@ -285,10 +286,11 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         for (var p : BuiltInRegistries.POTION) {
             String key = p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
             String arrowName = lang.getEntry(p.getName("item.minecraft.tipped_arrow.effect."));
-            if(arrowName == null){
-                lang.addEntry(key, String.format(bambooSpikes, Utils.getID(p).toLanguageKey()));
-            }
-            else lang.addEntry(key, String.format(bambooSpikes, arrowName.replace("Arrow of ", "")));
+            if (arrowName == null) {
+                lang.addEntry(key, String.format(bambooSpikes, LangBuilder.getReadableName(Utils.getID(p).getPath())));
+            } else lang.addEntry(key, String.format(bambooSpikes,
+                    LangBuilder.getReadableName(arrowName.toLowerCase(Locale.ROOT)
+                            .replace("arrow of ", ""))));
         }
 
     }
