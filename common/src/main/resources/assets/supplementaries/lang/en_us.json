@@ -257,10 +257,10 @@
   "effect.supplementaries.flammable": "Flammable",
   "effect.supplementaries.flammable.description": "Increases on fire duration and spreads fire as you walk",
 
-  "enchantment.supplementaries.soul_fire_aspect": "Lumisene Fire Aspect",
-  "enchantment.supplementaries.soul_flame": "Lumisene Flame",
-  "enchantment.supplementaries.soul_fire_aspect.desc": "Causes additional lumisene fire damage when used to attack a mob.",
-  "enchantment.supplementaries.soul_flame.desc": "Arrows fired from the bow will deal additional lumisene fire damage.",
+  "enchantment.supplementaries.lumisene_fire_aspect": "Lumisene Fire Aspect",
+  "enchantment.supplementaries.lumisene_flame": "Lumisene Flame",
+  "enchantment.supplementaries.lumisene_fire_aspect.desc": "Causes additional lumisene fire damage when used to attack a mob.",
+  "enchantment.supplementaries.lumisene_flame.desc": "Arrows fired from the bow will deal additional lumisene fire damage.",
 
   "enchantment.supplementaries.stasis": "Stasis",
   "enchantment.supplementaries.stasis.desc": "Allows Slingshots projectiles to ignore gravity",

@@ -78,7 +78,7 @@ public class ModFluids {
                         .food(new FoodProperties.Builder()
                                 .nutrition(0).saturationMod(0).alwaysEat()
                                 .effect(new MobEffectInstance(MobEffects.GLOWING, CommonConfigs.Functional.GLOWING_DURATION.get(), 0), 1)
-                               // .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
+                                .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
                                 .build())
                 ));
         //TODO: add back flammable effect
