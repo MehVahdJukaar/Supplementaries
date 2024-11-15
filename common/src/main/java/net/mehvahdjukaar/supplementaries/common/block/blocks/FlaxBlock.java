@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.block.IBeeGrowable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -157,7 +158,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
         if (state.getValue(HALF) == DoubleBlockHalf.UPPER) return; //only bottom one handles ticking
         if (level.getRawBrightness(pos, 0) >= 9) {
             if (this.isValidBonemealTarget(level, pos, state)) {
-                float f = getGrowthSpeed(this, level, pos);
+                float f = SuppPlatformStuff.getGrowthSpeed(state, level, pos);
                 if (ForgeHelper.fireOnCropsGrowPre(level, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                     this.growCropBy(level, pos, state, 1);
                     ForgeHelper.fireOnCropsGrowPost(level, pos, state);

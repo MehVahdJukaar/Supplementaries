@@ -440,6 +440,7 @@
   "message.supplementaries.fluid_tooltip": "%s: %d mBtl",
   "message.supplementaries.globe": "Sold by the Wandering Trader",
   "message.supplementaries.hourglass": "Accepts any dust, sand or powder",
+  "message.supplementaries.bunting": "Can be placed on ropes",
   "message.supplementaries.jar": "Can store bowls, bottles, buckets, cookies and small mobs",
   "message.supplementaries.key.lockable": "Key Lockable",
   "message.supplementaries.lock_block.locked": "This block is locked",

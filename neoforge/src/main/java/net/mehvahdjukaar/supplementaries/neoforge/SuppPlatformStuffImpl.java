@@ -227,4 +227,14 @@ public class SuppPlatformStuffImpl {
         SlotReference.REGISTRY.register("cap_slot", CapSlotReference.CODEC);
     }
 
+    public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+        return CropAccessor.callGetGrowthSpeed(state, level, pos);
+    }
+
+
+    private static class CropAccessor {
+        public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+            return getGrowthSpeed(state, level, pos);
+        }
+    }
 }

@@ -28,6 +28,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -150,4 +151,14 @@ public class SuppPlatformStuffImpl {
         dc.emptyContents(player, level, hit.getBlockPos(), hit);
     }
 
+    public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+        return CropAccessor.callGetGrowthSpeed(state, level, pos);
+    }
+
+
+    private static class CropAccessor {
+        public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+            return getGrowthSpeed(state, level, pos);
+        }
+    }
 }

@@ -15,6 +15,7 @@ import net.neoforged.neoforge.server.command.EnumArgument;
 
 public class RecordSongCommandImpl {
 
+
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext dispatcher) {
         return Commands.literal("record")
                 .requires(cs -> cs.hasPermission(2))

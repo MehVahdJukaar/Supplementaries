@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.map.MapHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -17,9 +16,10 @@ public class CauldronBehaviorsManager {
         }
         CauldronInteraction.WATER.map().put(ModRegistry.QUIVER_ITEM.get(), CauldronInteraction.DYED_ITEM);
 
-        CompatObjects.ATLAS.asOptionalValue()
-                .ifPresent(item -> CauldronInteraction.WATER.map().put(item, MAP_INTERACTION));
-
+        var a = CompatObjects.ATLAS.get();
+        if (a != null) {
+            CauldronInteraction.WATER.map().put(a, MAP_INTERACTION);
+        }
         CauldronInteraction.WATER.map().put(Items.FILLED_MAP, MAP_INTERACTION);
     }
 
