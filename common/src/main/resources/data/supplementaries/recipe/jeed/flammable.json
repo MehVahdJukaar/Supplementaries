@@ -1,0 +1,15 @@
+{
+  "global_conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "jeed"
+    }
+  ],
+  "type": "jeed:effect_provider",
+  "providers": [
+    {
+      "item": "supplementaries:lumisene_bucket"
+    }
+  ],
+  "effect": "supplementaries:flammable"
+}
