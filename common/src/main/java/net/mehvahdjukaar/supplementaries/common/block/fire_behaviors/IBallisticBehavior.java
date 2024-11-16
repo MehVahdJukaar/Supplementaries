@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +18,12 @@ public interface IBallisticBehavior extends IFireItemBehavior {
     Data calculateData(ItemStack stack, Level level);
 
     record Data(float drag, float gravity, float initialSpeed) {
+
+        public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.FLOAT.fieldOf("drag").forGetter(Data::drag),
+                Codec.FLOAT.fieldOf("gravity").forGetter(Data::gravity),
+                Codec.FLOAT.fieldOf("initialSpeed").forGetter(Data::initialSpeed)
+        ).apply(instance, Data::new));
     }
 
     // dont override this
