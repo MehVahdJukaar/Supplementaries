@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "mixins": [
+    "CreeperMixin",
+    "CompatCreeperArclightMixin",
     "AbstractArrowMixin",
     "AbstractHorseMixin",
     "AbstractProjectileBehaviorAccessor",

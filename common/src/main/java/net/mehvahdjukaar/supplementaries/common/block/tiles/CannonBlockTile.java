@@ -7,10 +7,8 @@ import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
-import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
@@ -21,6 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -89,7 +88,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (breakWhitelist != null) {
             saveBreakWhitelist(breakWhitelist, tag);
         }
-        tag.put("trajectory", IBallisticBehavior.Data.CODEC.encodeStart(NbtOps.INSTANCE, trajectoryData).getOrThrow());
+        tag.put("trajectory", IBallisticBehavior.Data.CODEC.encodeStart(NbtOps.INSTANCE, trajectoryData)
+                .getOrThrow(false, Supplementaries.LOGGER::error));
     }
 
     public static void saveBreakWhitelist(Set<Block> breakWhitelist, CompoundTag tag) {
@@ -114,7 +114,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.breakWhitelist = readBreakWhitelist(tag);
         if(tag.contains("trajectory")){
             this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
-                    .getOrThrow();
+                    .getOrThrow(false, Supplementaries.LOGGER::error);
         }
     }
 
