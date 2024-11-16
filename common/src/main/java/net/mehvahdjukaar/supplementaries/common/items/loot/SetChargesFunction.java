@@ -30,7 +30,7 @@ public class SetChargesFunction extends LootItemConditionalFunction {
 
     @Override
     public LootItemFunctionType<SetChargesFunction> getType() {
-        return ModRegistry.SET_CHARGE_FUNCTION.get();
+        return ModRegistry.SET_CHARGES_FUNCTION.get();
     }
 
     /**

@@ -67,7 +67,7 @@ public class ModRegistry {
             () -> new LootItemFunctionType<>(RandomEnchantFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
     public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
             () -> new LootItemFunctionType<>(RandomArrowFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES = RegHelper.register(res("set_charges"),
+    public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.register(res("set_charges"),
             () -> new LootItemFunctionType<>(SetChargesFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
 
     //effects

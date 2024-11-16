@@ -1,14 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -94,6 +95,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (isBig) {
             tag.putBoolean("big", true);
         }
+        tag.put("trajectory", IBallisticBehavior.Data.CODEC.encodeStart(NbtOps.INSTANCE, trajectoryData).getOrThrow());
     }
 
     public static void saveBreakWhitelist(Set<Block> breakWhitelist, CompoundTag tag, HolderLookup.Provider registries) {
@@ -117,6 +119,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (tag.contains("big")) {
             this.isBig = true;
         }
+        if(tag.contains("trajectory")){
+            this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
+                    .getOrThrow();
+        }
     }
 
     @Nullable
@@ -132,7 +138,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Override
     public void setChanged() {
         super.setChanged();
-        //this.trajectoryData = null;
+        //recomputes it
+        recomputeTrajectoryData();
     }
 
     private void computeTrajectoryData() {
@@ -199,11 +206,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     public IBallisticBehavior.Data getTrajectoryData() {
+        return trajectoryData;
+    }
+
+    private void recomputeTrajectoryData() {
+        if (level.isClientSide) return;
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }
-
-        return trajectoryData;
     }
 
     public byte getPowerLevel() {
