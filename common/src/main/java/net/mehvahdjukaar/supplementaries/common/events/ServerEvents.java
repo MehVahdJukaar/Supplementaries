@@ -26,6 +26,7 @@ import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.IEntityInterceptFakeLevel;
 import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -158,6 +159,9 @@ public class ServerEvents {
     @EventCalled
     public static void onServerStart(MinecraftServer server) {
         FaucetBehaviorsManager.INSTANCE.onLevelLoad(server.overworld());
+        //compute cache so it doesnt lag later.. because aparelty thats a thing.
+        //TODO: figure out why starting this lags
+        IEntityInterceptFakeLevel.get(server.overworld());
     }
 
     @EventCalled

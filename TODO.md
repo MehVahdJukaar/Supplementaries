@@ -1,20 +1,15 @@
 # 1.21 bugs and stuff
 
-- fix urn loot table
 - Lumisene has no sound when bucketed.
 - Placeable books do not work, but still consumes the item as if it did.
 
-- hat stand Cannot be equipped with items.
 - hat standDispensing equippable onto them will delete the item.
 
-- sign post recipes
-- wild flax loot (copy from fd)
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- stupid neoforge not figing events on interfaces
 - villagers gold doors
-- sugar cube crash
-- basket not comsuming pots
 - ash not obtainable
 - sherds_tooltip config not woring
 - trapped present desync fabric
@@ -24,7 +19,6 @@
 - jade broken
 - finish moonlight projectile stuff
 - key inn trinkets not wok
-- wildflax loot table
 - check all forge override to see if they are still overriding stuff
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - book pile completely broken. rethink
