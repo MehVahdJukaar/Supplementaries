@@ -2,15 +2,13 @@
   "type": "farmersdelight:cutting",
   "ingredients": [
     {
-      "item": [
-        "supplementaries:lapis_bricks"
-      ]
+      "item": "supplementaries:lapis_bricks"
     }
   ],
   "result": [
     {
       "count": 4,
-      "item": "minecraft:lapis_lazuli"
+      "id": "minecraft:lapis_lazuli"
     }
   ],
   "tool": {

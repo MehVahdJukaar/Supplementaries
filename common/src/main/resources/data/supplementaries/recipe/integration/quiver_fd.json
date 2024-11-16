@@ -6,7 +6,8 @@
     }
   ],
   "tool": {
-    "tag": "c:shears"
+    "type": "farmersdelight:item_ability",
+    "action": "shears_dig"
   },
   "result": [
     {

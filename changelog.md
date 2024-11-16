@@ -1,5 +1,9 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- fixed jars with fishes not rendering correctly
-- awnings models is now 3d
-- fixed hat stands not accepting items
+- fixed urn loot tables
+- fixed wild flax loot table (btw wild flax was never the only way to find flax)
+- added buntings and spikes jei subtype interpreters
+- fixed jeed recipe
+- fixed some fd compat recipes and tags
+- tagged planter as dirt on fabric so it works there, crappily (use forge for the love of god)
+- lumisene wont emit particles when it has blocks above

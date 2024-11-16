@@ -1,10 +1,15 @@
 {
-  "global_conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "jeed"
+      "modid": "jeed",
+      "condition": "fabric:mod_loaded"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lumisene"
     }
   ],
+
   "type": "jeed:effect_provider",
   "providers": [
     {
