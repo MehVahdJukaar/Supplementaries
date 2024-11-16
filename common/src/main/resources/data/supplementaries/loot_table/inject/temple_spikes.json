@@ -27,8 +27,8 @@
                             "function": "supplementaries:set_charges",
                             "charges": {
                                 "type": "minecraft:uniform",
-                                "min": 3,
-                                "max": 14
+                                "min_inclusive": 20,
+                                "max_inclusive": 200
                             }
                         }
                     ]
