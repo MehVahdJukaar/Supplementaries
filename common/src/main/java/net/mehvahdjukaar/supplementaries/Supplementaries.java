@@ -55,7 +55,10 @@ public class Supplementaries {
 
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
-        MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
+        MoonlightEventsHelper.addListener(e -> {
+                    ServerEvents.onFireConsume(e);
+                }
+                , IFireConsumeBlockEvent.class);
 
         ModSetup.init();
         ModNetwork.init();
