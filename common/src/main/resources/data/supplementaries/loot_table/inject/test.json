@@ -1,23 +1,23 @@
 {
-  "type": "minecraft:chest",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
+    "type": "minecraft:chest",
+    "pools": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:map",
-          "functions": [
-            {
-              "function": "minecraft:exploration_map",
-              "destination": "minecraft:village",
-              "custom_decoration": "supplementaries:igloo",
-              "zoom": 2,
-              "skip_existing_chunks": true
-            }
-          ]
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:map",
+                    "functions": [
+                        {
+                            "function": "minecraft:exploration_map",
+                            "destination": "minecraft:village",
+                            "decoration": "minecraft:red_x",
+                            "zoom": 2,
+                            "skip_existing_chunks": true
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
