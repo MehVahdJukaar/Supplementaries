@@ -1,0 +1,16 @@
+{
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "package": "net.mehvahdjukaar.supplementaries.mixins",
+  "required": true,
+  "plugin": "net.mehvahdjukaar.supplementaries.ArclightMixinPlugin",
+
+  "mixins": [
+    "CreeperMixin",
+    "CreeperArclightMixin"
+  ],
+
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
