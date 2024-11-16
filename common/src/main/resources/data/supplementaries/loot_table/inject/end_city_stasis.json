@@ -1,26 +1,26 @@
 {
-  "pools": [
-    {
-      "rolls": 1,
-      "conditions": [
+    "pools": [
         {
-          "condition": "random_chance",
-          "chance": 0.25
+            "rolls": 1,
+            "conditions": [
+                {
+                    "condition": "random_chance",
+                    "chance": 0.25
+                }
+            ],
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 1,
+                    "name": "minecraft:book",
+                    "functions": [
+                        {
+                            "function": "minecraft:enchant_randomly",
+                            "options": "supplementaries:stasis"
+                        }
+                    ]
+                }
+            ]
         }
-      ],
-      "entries": [
-        {
-          "type": "item",
-          "weight": 1,
-          "name": "minecraft:enchanted_book",
-          "functions": [
-            {
-              "function": "set_components",
-              "tag": "{StoredEnchantments:[{lvl:1s,id:\"supplementaries:stasis\"}]}"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+    ]
 }
