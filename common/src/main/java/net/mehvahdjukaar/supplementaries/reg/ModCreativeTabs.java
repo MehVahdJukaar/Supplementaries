@@ -11,9 +11,10 @@ import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.items.BubbleBlowerItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -551,8 +552,11 @@ public class ModCreativeTabs {
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.BUBBLE_BLOWER_NAME,
-                ModRegistry.BUBBLE_BLOWER);
-
+                () -> {
+                    var item = ModRegistry.BUBBLE_BLOWER.get().getDefaultInstance();
+                    item.set(ModComponents.CHARGES.get(), ((BubbleBlowerItem) item.getItem()).maxCharges);
+                    return item;
+                });
 
         after(e, i -> i.getItem() instanceof DyeItem, CreativeModeTabs.INGREDIENTS,
                 ModConstants.SOAP_NAME,

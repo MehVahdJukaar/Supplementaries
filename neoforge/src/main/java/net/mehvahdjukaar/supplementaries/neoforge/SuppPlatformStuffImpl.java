@@ -33,10 +33,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -232,9 +229,13 @@ public class SuppPlatformStuffImpl {
     }
 
 
-    private static class CropAccessor {
+    private static abstract class CropAccessor extends CropBlock {
+        public CropAccessor(Properties properties) {
+            super(properties);
+        }
+
         public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
-            return getGrowthSpeed(state, level, pos);
+            return CropBlock.getGrowthSpeed(state, level, pos);
         }
     }
 }

@@ -156,9 +156,13 @@ public class SuppPlatformStuffImpl {
     }
 
 
-    private static class CropAccessor {
+    private static abstract class CropAccessor extends CropBlock {
+        public CropAccessor(Properties properties) {
+            super(properties);
+        }
+
         public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
-            return getGrowthSpeed(state, level, pos);
+            return getGrowthSpeed(state.getBlock(), level, pos);
         }
     }
 }

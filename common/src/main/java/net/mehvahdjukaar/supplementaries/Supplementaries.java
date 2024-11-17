@@ -57,8 +57,7 @@ public class Supplementaries {
 
         MoonlightEventsHelper.addListener(e -> {
                     ServerEvents.onFireConsume(e);
-                }
-                , IFireConsumeBlockEvent.class);
+                }, IFireConsumeBlockEvent.class);
 
         ModSetup.init();
         ModNetwork.init();

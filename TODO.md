@@ -8,6 +8,8 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- planter sounds
+- soap recipe is broken.
 - stupid neoforge not figing events on interfaces (its ml not claling event with correct blockstate)
 - villagers gold doors
 - ash not obtainable
