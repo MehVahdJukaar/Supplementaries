@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {"id":"supplementaries:bamboo_spikes","required":true},
-    {"id":"supplementaries:bamboo_spikes_tipped","required":true}
-  ]
-}
