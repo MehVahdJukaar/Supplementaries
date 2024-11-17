@@ -16,12 +16,16 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -36,9 +40,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
+public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
-    public static final FaucetBehaviorsManager INSTANCE = new FaucetBehaviorsManager();
+    public static FaucetBehaviorsManager INSTANCE;
 
     private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
@@ -46,19 +50,22 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
     private final Set<Object> dataInteractions = new HashSet<>();
     private final Set<Runnable> listeners = new HashSet<>();
+    private final HolderLookup.Provider registryAccess;
 
-    public FaucetBehaviorsManager() {
+    public FaucetBehaviorsManager(HolderLookup.Provider ra) {
         super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
                 "faucet_interactions");
+        this.registryAccess = ra;
+
+        INSTANCE = this;
     }
 
     public static void addRegisterFaucetInteraction(Runnable listener) {
         INSTANCE.listeners.add(listener);
     }
 
-    //TODO: useloot tabke like thing here instead
     @Override
-    public void parse(Map<ResourceLocation, JsonElement> map, RegistryAccess registryAccess) {
+    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         dataInteractions.clear();
         map.forEach((key, json) -> {
             try {

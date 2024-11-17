@@ -1,0 +1,56 @@
+{
+  "moonlight_parse_on_fabric": true,
+  "values": {
+    "#supplementaries:item_shelves": {
+      "burn_time": 100
+    },
+    "#supplementaries:bamboo_spikes": {
+      "burn_time": 100
+    },
+    "supplementaries:rope": {
+      "burn_time": 50
+    },
+    "supplementaries:wicker_fence": {
+      "burn_time": 67
+    },
+    "supplementaries:doormat": {
+      "burn_time": 67
+    },
+    "#supplementaries:awnings": {
+      "burn_time": 67
+    },
+    "#supplementaries:buntings": {
+      "burn_time": 25
+    },
+    "#supplementaries:flags": {
+      "burn_time": 300
+    },
+    "minecraft:paper": {
+      "burn_time": 25
+    },
+    "#supplementaries:presents": {
+      "burn_time": 100
+    },
+    "#supplementaries:trapped_presents": {
+      "burn_time": 100
+    },
+    "#supplementaries:timber_frames": {
+      "burn_time": 200
+    },
+    "supplementaries:flower_box": {
+      "burn_time": 200
+    },
+    "supplementaries:notice_board": {
+      "burn_time": 300
+    },
+    "supplementaries:pulley_block": {
+      "burn_time": 300
+    },
+    "supplementaries:speaker_block": {
+      "burn_time": 300
+    },
+    "supplementaries:clock_block": {
+      "burn_time": 300
+    }
+  }
+}

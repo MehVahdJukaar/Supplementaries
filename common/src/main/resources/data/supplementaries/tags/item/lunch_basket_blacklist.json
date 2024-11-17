@@ -2,6 +2,6 @@
   "replace": false,
   "values": [
     {"id":"supplementaries:lunch_basket","required":true},
-    {"id":"potionbundles:potion_bundle","required":true}
+    {"id":"potionbundles:potion_bundle","required":false}
   ]
 }

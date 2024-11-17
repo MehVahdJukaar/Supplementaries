@@ -11,35 +11,44 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 import java.util.*;
 
-public class HourglassTimesManager extends RegistryAccessJsonReloadListener {
+//make a data map?
+public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
 
-    public static final HourglassTimesManager INSTANCE = new HourglassTimesManager();
+    public static HourglassTimesManager INSTANCE;
 
     private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
     private final Set<HourglassTimeData> dusts = new HashSet<>();
+    private final HolderLookup.Provider registryAccess;
 
-    public HourglassTimesManager() {
+    public HourglassTimesManager(HolderLookup.Provider registryAccess) {
         super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
                 "hourglass_dusts");
+        this.registryAccess = registryAccess;
+
+        INSTANCE = this;
     }
 
     @Override
-    public void parse(Map<ResourceLocation, JsonElement> jsonMap, RegistryAccess access) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsonMap, ResourceManager resourceManager, ProfilerFiller profiler) {
         dusts.clear();
         dustsMap.clear();
         List<HourglassTimeData> list = new ArrayList<>();
         jsonMap.forEach((key, json) -> {
             try {
-                var result = HourglassTimeData.CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, access), json);
+                var result = HourglassTimeData.CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json);
                 HourglassTimeData data = result.getOrThrow();
                 list.add(data);
             } catch (Exception e) {

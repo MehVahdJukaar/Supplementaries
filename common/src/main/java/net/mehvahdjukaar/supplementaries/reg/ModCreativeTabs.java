@@ -645,8 +645,13 @@ public class ModCreativeTabs {
     private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred,
                               ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
-            ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-            event.addAfter(tab, targetPred, entries);
+            if (items[0].get() instanceof ItemStack) {
+                ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
+                event.addAfter(tab, targetPred, entries);
+            } else {
+                ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
+                event.addAfter(tab, targetPred, entries);
+            }
         }
     }
 
@@ -658,8 +663,13 @@ public class ModCreativeTabs {
     private static void before(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred,
                                ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
-            ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
-            event.addBefore(tab, targetPred, entries);
+            if (items[0].get() instanceof ItemStack) {
+                ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
+                event.addBefore(tab, targetPred, entries);
+            } else {
+                ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
+                event.addBefore(tab, targetPred, entries);
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,7 +79,17 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     public static boolean canFall(BlockPos pos, LevelAccessor world) {
         return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
                 pos.getY() >= world.getMinBuildHeight() &&
-                !IRopeConnection.isSupportingCeiling(pos.above(), world);
+                !IRopeConnection.isSupportingCeiling(pos.above(), world) &&
+                !hasHoneyAround(pos, world);
+    }
+
+    private static boolean hasHoneyAround(BlockPos pos, LevelAccessor world) {
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (world.getBlockState(pos.relative(dir)).is(Blocks.HONEY_BLOCK)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

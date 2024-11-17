@@ -85,10 +85,10 @@ public class Supplementaries {
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
-        PlatHelper.addServerReloadListener(SongsManager.INSTANCE, res("flute_songs"));
-        PlatHelper.addServerReloadListener(HourglassTimesManager.INSTANCE, res("hourglass_data"));
-        PlatHelper.addServerReloadListener(FaucetBehaviorsManager.INSTANCE, res("faucet_interactions"));
-        PlatHelper.addServerReloadListener(CapturedMobHandler.INSTANCE, res("catchable_mobs_properties"));
+        PlatHelper.addServerReloadListener(SongsManager::new, res("flute_songs"));
+        PlatHelper.addServerReloadListener(HourglassTimesManager::new, res("hourglass_data"));
+        PlatHelper.addServerReloadListener(FaucetBehaviorsManager::new, res("faucet_interactions"));
+        PlatHelper.addServerReloadListener(CapturedMobHandler::new, res("catchable_mobs_properties"));
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();

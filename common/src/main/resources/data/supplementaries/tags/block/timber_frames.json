@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:timber_frame","required":true},
+    {"id":"supplementaries:timber_brace","required":true},
+    {"id":"supplementaries:timber_cross_brace","required":true}
+  ]
+}

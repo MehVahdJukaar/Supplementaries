@@ -64,7 +64,7 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
-    modCompileOnly("curse.maven:jei-238222:4405345")
+    modImplementation("curse.maven:jei-238222:5846878")
     modCompileOnly("curse.maven:amendments-896746:5791204")
     modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
     modCompileOnly("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")

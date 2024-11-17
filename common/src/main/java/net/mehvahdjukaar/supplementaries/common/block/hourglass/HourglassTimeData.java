@@ -39,18 +39,14 @@ public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, 
     ).apply(instance, HourglassTimeData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HourglassTimeData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderRegistry(Registries.ITEM).apply(ByteBufCodecs.list()), h -> h.dusts.stream().toList(),
+            ByteBufCodecs.holderSet(Registries.ITEM), h -> h.dusts,
             ByteBufCodecs.INT, HourglassTimeData::duration,
             ByteBufCodecs.INT, HourglassTimeData::light,
             ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), HourglassTimeData::texture,
             ByteBufCodecs.INT, HourglassTimeData::ordering,
-            HourglassTimeData::fromNetwork
+            HourglassTimeData::new
     );
 
-    private static HourglassTimeData fromNetwork(List<Holder<Item>> items, Integer integer, Integer integer1, Optional<ResourceLocation> resourceLocation, Integer integer2) {
-        return new HourglassTimeData(HolderSet.direct(items),
-                integer, integer1, resourceLocation, integer2);
-    }
 
     @Environment(EnvType.CLIENT)
     public ResourceLocation computeTexture(ItemStack i, Level world) {

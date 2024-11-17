@@ -3,38 +3,45 @@ package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CapturedMobHandler extends RegistryAccessJsonReloadListener {
+public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
-    public static final CapturedMobHandler INSTANCE = new CapturedMobHandler();
+    public static CapturedMobHandler INSTANCE;
 
     private final Set<String> commandMobs = new HashSet<>();
     private final Map<EntityType<?>, DataDefinedCatchableMob> customMobProperties = new IdentityHashMap<>();
     private static DataDefinedCatchableMob moddedFishProperty;
+    private final HolderLookup.Provider registryAccess;
 
-    private CapturedMobHandler() {
+    public CapturedMobHandler(HolderLookup.Provider ra) {
         super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
                 "catchable_mobs_properties");
+        this.registryAccess = ra;
+
+        INSTANCE = this;
     }
 
     @Override
-    public void parse(Map<ResourceLocation, JsonElement> jsons, RegistryAccess registryAccess) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         customMobProperties.clear();
 
         var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
