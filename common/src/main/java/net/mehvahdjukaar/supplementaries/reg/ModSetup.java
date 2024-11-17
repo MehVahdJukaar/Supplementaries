@@ -43,7 +43,6 @@ public class ModSetup {
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
             FlowerPotHandler::setup,
-            ModSetup::registerCompostables,
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
@@ -88,6 +87,7 @@ public class ModSetup {
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors", e);
     }
 
+    //TODO: make automatic
     private static void registerFabricFlammable() {
         RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(), 60, 100);
         RegHelper.registerBlockFlammability(ModRegistry.BUNTING_BLOCK.get(), 60, 100);
@@ -97,13 +97,6 @@ public class ModSetup {
         ModRegistry.TIMBER_FRAME.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_FRAME.get());
         ModRegistry.TIMBER_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_BRACE.get());
         ModRegistry.TIMBER_CROSS_BRACE.get().registerFilledBlock(ModRegistry.DAUB.get(), ModRegistry.DAUB_CROSS_BRACE.get());
-    }
-
-    private static void registerCompostables() {
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_SEEDS_ITEM.get(), 0.3F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_ITEM.get(), 0.65F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_WILD.get().asItem(), 0.65F);
-        ComposterBlock.COMPOSTABLES.put(ModRegistry.FLAX_BLOCK.get().asItem(), 1);
     }
 
     @EventCalled

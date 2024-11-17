@@ -109,7 +109,6 @@ public class FramedSignPost {
     }
 
     public static boolean handleInteraction(SignPostBlockTile tile, Player player, InteractionHand handIn, ItemStack itemstack, Level level, BlockPos pos) {
-        Tags.Items.SEEDS
         return false;
     }
 }
