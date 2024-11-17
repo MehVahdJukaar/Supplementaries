@@ -89,7 +89,7 @@ public class VibeChecker {
                 a.removeAll(Sheets.BANNER_MATERIALS.keySet());
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
-                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
+                        "Missing entries: " + a + " (mods listed here are NOT the cause of this, merely the ones that got broken because of it)\n" +
                         "Check previous forge log lines to find the offending mod.");
             }
         }
@@ -99,7 +99,7 @@ public class VibeChecker {
                 a.removeAll(Sheets.DECORATED_POT_MATERIALS.keySet());
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
-                        "Missing entries: " + a + " (unrelated to the mod that caused this)\n" +
+                        "Missing entries: " + a + " (mods listed here are NOT the cause of this, merely the ones that got broken because of it)\n" +
                         "Check previous forge log lines to find the offending mod.");
             }
         }
