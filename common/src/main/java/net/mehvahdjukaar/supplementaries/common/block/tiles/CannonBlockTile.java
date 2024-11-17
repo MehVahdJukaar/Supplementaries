@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPac
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -309,7 +310,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (index == 0) return stack.is(Items.GUNPOWDER);
-        return true;
+        return stack.is(ModTags.CANNON_BLACKLIST);
     }
 
     @Override
