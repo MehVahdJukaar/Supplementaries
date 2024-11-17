@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -60,7 +61,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
-
+        //generateTagTranslations();
 
         //need this here for reasons I forgot
         GlobeManager.refreshColorsAndTextures(manager);
@@ -221,6 +222,19 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         }
     }
 
+    private static void generateTagTranslations() {
+        JsonObject jo = new JsonObject();
+        for (var e : ServerDynamicResourcesGenerator.R.entrySet()) {
+            ResourceLocation id = e.getKey();
+            if (id.getNamespace().equals("supplementaries")) {
+                String path = id.getPath();
+                path = path.replace("tags/", "").replace(".json", "");
+                String tr = path.substring(path.lastIndexOf("/") + 1);
+                jo.addProperty("supplementaries:" + path, LangBuilder.getReadableName(tr));
+            }
+        }
+    }
+
 
     /**
      * helper method.
@@ -259,6 +273,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                     LangBuilder.getReadableName(arrowName.toLowerCase(Locale.ROOT)
                             .replace("arrow of ", ""))));
         }
+
 
     }
 

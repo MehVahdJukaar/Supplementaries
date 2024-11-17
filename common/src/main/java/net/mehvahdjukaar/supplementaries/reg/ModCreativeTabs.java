@@ -48,13 +48,13 @@ public class ModCreativeTabs {
     //my dude you are doing conditional registration here
     public static final RegSupplier<CreativeModeTab> MOD_TAB = !CommonConfigs.General.CREATIVE_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
-                    (c) -> c.title(Component.translatable("itemGroup.supplementaries"))
+                    (c) -> c.title(Component.translatable("tab.supplementaries.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
 
     public static final RegSupplier<CreativeModeTab> JAR_TAB = !CommonConfigs.General.JAR_TAB.get() ? null :
             RegHelper.registerCreativeModeTab(Supplementaries.res("jars"),
                     (c) -> SuppPlatformStuff.searchBar(c)
-                            .title(Component.translatable("itemGroup.jars"))
+                            .title(Component.translatable("tab.supplementaries.jars"))
                             .icon(() -> ModRegistry.JAR_ITEM.get().getDefaultInstance()));
 
     public static void init() {

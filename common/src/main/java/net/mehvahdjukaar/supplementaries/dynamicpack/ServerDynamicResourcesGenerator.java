@@ -16,15 +16,15 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
@@ -45,8 +45,13 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         return true;
     }
 
+    public static final Map<ResourceLocation, Resource> R = new HashMap<>();
+
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
+
+        //R.putAll(manager.listResources("tags", r->true);
+
         //sing posts
         {
             SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));

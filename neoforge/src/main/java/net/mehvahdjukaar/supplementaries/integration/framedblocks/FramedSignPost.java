@@ -95,6 +95,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.Tags;
 
 public class FramedSignPost {
     public static BlockState framedFence = Blocks.OAK_FENCE.defaultBlockState();
@@ -108,6 +109,7 @@ public class FramedSignPost {
     }
 
     public static boolean handleInteraction(SignPostBlockTile tile, Player player, InteractionHand handIn, ItemStack itemstack, Level level, BlockPos pos) {
+        Tags.Items.SEEDS
         return false;
     }
 }

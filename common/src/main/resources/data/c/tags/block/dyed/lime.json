@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:flag_lime",
+    "supplementaries:present_lime",
+    "supplementaries:trapped_present_lime",
+    "supplementaries:candle_holder_lime",
+    "supplementaries:awning_lime"
+  ]
+}

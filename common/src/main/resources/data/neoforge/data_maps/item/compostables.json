@@ -1,0 +1,21 @@
+{
+  "moonlight_parse_on_fabric": true,
+  "values": {
+    "supplementaries:flax_seeds": {
+      "chance": 0.3,
+      "can_villager_compost": true
+    },
+    "supplementaries:flax": {
+      "chance": 0.65,
+      "can_villager_compost": true
+    },
+    "supplementaries:wild_flax": {
+      "chance": 0.65,
+      "can_villager_compost": true
+    },
+    "supplementaries:flax_block": {
+      "chance": 0.85,
+      "can_villager_compost": true
+    }
+  }
+}

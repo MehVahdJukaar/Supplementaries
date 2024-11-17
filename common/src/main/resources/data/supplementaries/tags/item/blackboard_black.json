@@ -10,6 +10,10 @@
       "required": false
     },
     {
+      "id": "#minecraft:coals",
+      "required": false
+    },
+    {
       "id": "#c:dyes/black",
       "required": false
     },

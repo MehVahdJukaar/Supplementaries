@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:flag_blue",
+    "supplementaries:present_blue",
+    "supplementaries:trapped_present_blue",
+    "supplementaries:candle_holder_blue",
+    "supplementaries:awning_blue"
+  ]
+}
