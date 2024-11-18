@@ -1,6 +1,6 @@
 {
   "type": "moonlight:add_item",
-  "fabric:load_conditions": [
+  "conditions": [
     {
       "condition": "moonlight:iconditions",
       "values": [

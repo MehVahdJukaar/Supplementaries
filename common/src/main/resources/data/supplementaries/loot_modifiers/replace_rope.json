@@ -1,6 +1,6 @@
 {
   "type": "supplementaries:replace_rope",
-  "fabric:load_conditions": [
+  "conditions": [
     {
       "condition": "moonlight:iconditions",
       "values": [
