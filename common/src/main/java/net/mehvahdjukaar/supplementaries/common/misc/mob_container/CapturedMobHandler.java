@@ -8,8 +8,11 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
+import net.mehvahdjukaar.supplementaries.common.utils.SidedInstance;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +22,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -26,10 +30,10 @@ import java.util.*;
 public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
     // one per level. We must do this to keep the datapack stuff separated per logical side
-    private static final WeakHashMap<HolderLookup.Provider, CapturedMobHandler> INSTANCES = new WeakHashMap<>();
+    private static final SidedInstance<CapturedMobHandler> INSTANCES = SidedInstance.of(CapturedMobHandler::new);
 
     public static CapturedMobHandler getInstance(HolderLookup.Provider ra) {
-        return INSTANCES.computeIfAbsent(ra, CapturedMobHandler::new);
+        return INSTANCES.get(ra);
     }
 
     public static CapturedMobHandler getInstance(Level level) {
@@ -46,7 +50,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
                 "catchable_mobs_properties");
         this.registryAccess = ra;
 
-        INSTANCES.put(ra, this);
+        INSTANCES.set(ra, this);
     }
 
     @Override

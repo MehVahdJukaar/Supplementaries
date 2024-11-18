@@ -9,9 +9,11 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.utils.SidedInstance;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
@@ -29,10 +31,10 @@ import java.util.*;
 //make a data map?
 public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
 
-    public static final WeakHashMap<HolderLookup.Provider, HourglassTimesManager> INSTANCES = new WeakHashMap<>();
+    private static final SidedInstance<HourglassTimesManager> INSTANCES = SidedInstance.of(HourglassTimesManager::new);
 
     public static HourglassTimesManager getInstance(HolderLookup.Provider ra) {
-        return INSTANCES.computeIfAbsent(ra, HourglassTimesManager::new);
+        return INSTANCES.get(ra);
     }
 
     public static HourglassTimesManager getInstance(Level level) {
@@ -48,7 +50,7 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
                 "hourglass_dusts");
         this.registryAccess = registryAccess;
 
-        INSTANCES.put(registryAccess, this);
+        INSTANCES.set(registryAccess, this);
     }
 
     @Override

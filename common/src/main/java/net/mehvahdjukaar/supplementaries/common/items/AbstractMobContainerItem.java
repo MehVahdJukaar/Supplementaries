@@ -140,7 +140,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
 
         // If people want to catch these, so be it. All hardcoded checks are below the global config
         if (ForgeHelper.isMultipartEntity(entity)) return false;
-        ICatchableMob cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(entity);
+        ICatchableMob cap = CapturedMobHandler.getInstance(entity.level()).getCatchableMobCapOrDefault(entity);
 
         // this calls can ItemCatch for default or let's full control for custom ones
         return cap.canBeCaughtWithItem(entity, this, player);

@@ -8,6 +8,7 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- cage puch fabric
 - cannon vall dragon
 - fire burn times
 - flammable shit

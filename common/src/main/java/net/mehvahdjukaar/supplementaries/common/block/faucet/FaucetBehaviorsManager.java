@@ -12,6 +12,8 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.SidedInstance;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -46,10 +48,10 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
     private static final Set<Runnable> SERVER_LISTENERS = new HashSet<>();
-    private static final WeakHashMap<HolderLookup.Provider, FaucetBehaviorsManager> INSTANCES = new WeakHashMap<>();
+    private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
 
     public static FaucetBehaviorsManager getInstance(HolderLookup.Provider ra) {
-        return INSTANCES.computeIfAbsent(ra, FaucetBehaviorsManager::new);
+        return INSTANCES.get(ra);
     }
 
     public static FaucetBehaviorsManager getInstance(Level level) {
@@ -68,7 +70,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
                 "faucet_interactions");
         this.registryAccess = ra;
 
-        INSTANCES.put(ra, this);
+        INSTANCES.set(ra, this);
     }
 
     @Override

@@ -216,7 +216,7 @@ public class MobContainer {
                 world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 returnStack = new ItemStack(Items.BUCKET);
                 var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
-                var cap = CapturedMobHandler.INSTANCE.getDataCap(type, true);
+                var cap = CapturedMobHandler.getInstance(world).getDataCap(type, true);
                 var f = cap.getForceFluid();
                 if (stack.isEmpty()) {
                     Supplementaries.LOGGER.error("Bucket error 3: name none, bucket {}", stack);
@@ -413,7 +413,7 @@ public class MobContainer {
             Entity mob, float blockW, float blockH, boolean waterlogged) {
 
         @Nullable
-        var cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(mob);
+        var cap = CapturedMobHandler.getInstance(mob.level()).getCatchableMobCapOrDefault(mob);
         float babyScale = 1;
 
         if (mob instanceof LivingEntity livingEntity && livingEntity.isBaby()) {
