@@ -1,8 +1,3 @@
 CHECK 3.0.0 PATCH NOTES!!
 
-- slidy block won't fall when next to honey
-- added some missing c tags
-- added item burn times
-- added composting times
-- translated all supplementaries added tags
-- reordered lang file
+- fixed a long standing issue where synced reload listeners didnt have a unique instance for each logical side

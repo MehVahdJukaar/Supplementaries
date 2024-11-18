@@ -128,12 +128,13 @@ public class MobContainer {
         if (data != null && level != null && pos != null) {
             if (data instanceof MobData.Bucket bucketData) {
                 var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
-                this.mobProperties = CapturedMobHandler.INSTANCE.getDataCap(type, true);
+                this.mobProperties = CapturedMobHandler.getInstance(level.registryAccess())
+                        .getDataCap(type, true);
             } else if (data instanceof MobData.Entity entityData) {
                 Entity entity = createStaticMob(entityData, level, pos);
                 if (entity != null) {
                     //visual entity stored in this instance
-                    this.mobProperties = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(entity);
+                    this.mobProperties = CapturedMobHandler.getInstance(level).getCatchableMobCapOrDefault(entity);
                     this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
                     this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
                             this.width, this.height);
@@ -302,7 +303,7 @@ public class MobContainer {
     public boolean captureEntity(Entity mob, ItemStack bucketStack) {
         MobData newData;
         String name = mob.getName().getString();
-        var cap = CapturedMobHandler.INSTANCE.getCatchableMobCapOrDefault(mob);
+        var cap = CapturedMobHandler.getInstance(mob.level()).getCatchableMobCapOrDefault(mob);
         if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
             var f = cap.getForceFluid();
             if (bucketStack.isEmpty()) {

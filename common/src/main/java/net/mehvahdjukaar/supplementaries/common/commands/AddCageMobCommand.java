@@ -28,7 +28,7 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Holder.Reference<EntityType<?>> id = ResourceArgument.getSummonableEntityType(context, "entity");
 
-        CapturedMobHandler.INSTANCE.addCommandMob(id.key().location().toString());
+        CapturedMobHandler.getInstance(context.getSource().getLevel()).addCommandMob(id.key().location().toString());
         return 0;
     }
 }

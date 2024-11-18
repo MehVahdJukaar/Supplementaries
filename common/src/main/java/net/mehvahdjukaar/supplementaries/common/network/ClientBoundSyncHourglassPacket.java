@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -42,7 +43,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
     @Override
     public void handle(Context context) {
         //client world
-        HourglassTimesManager.INSTANCE.setData(this.hourglass);
+        HourglassTimesManager.getInstance(Minecraft.getInstance().level).setData(this.hourglass);
         Supplementaries.LOGGER.info("Synced Hourglass data");
     }
 

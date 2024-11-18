@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.minecraft.core.HolderLookup;
@@ -21,13 +22,22 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
 //make a data map?
 public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
 
-    public static HourglassTimesManager INSTANCE;
+    public static final WeakHashMap<HolderLookup.Provider, HourglassTimesManager> INSTANCES = new WeakHashMap<>();
+
+    public static HourglassTimesManager getInstance(HolderLookup.Provider ra) {
+        return INSTANCES.computeIfAbsent(ra, HourglassTimesManager::new);
+    }
+
+    public static HourglassTimesManager getInstance(Level level) {
+        return getInstance(level.registryAccess());
+    }
 
     private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
     private final Set<HourglassTimeData> dusts = new HashSet<>();
@@ -38,7 +48,7 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
                 "hourglass_dusts");
         this.registryAccess = registryAccess;
 
-        INSTANCE = this;
+        INSTANCES.put(registryAccess, this);
     }
 
     @Override
@@ -73,12 +83,13 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-    public static HourglassTimeData getData(Item item) {
-        return INSTANCE.dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
+    public HourglassTimeData getData(Item item) {
+        return dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
     }
 
     public static void sendDataToClient(ServerPlayer player) {
-        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(INSTANCE.dusts));
+        HourglassTimesManager instance = getInstance(player.level());
+        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(instance.dusts));
     }
 
 }

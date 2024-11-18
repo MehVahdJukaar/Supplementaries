@@ -7,7 +7,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -17,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
@@ -31,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,17 +38,29 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
-
-    public static FaucetBehaviorsManager INSTANCE;
 
     private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
+    private static final Set<Runnable> SERVER_LISTENERS = new HashSet<>();
+    private static final WeakHashMap<HolderLookup.Provider, FaucetBehaviorsManager> INSTANCES = new WeakHashMap<>();
+
+    public static FaucetBehaviorsManager getInstance(HolderLookup.Provider ra) {
+        return INSTANCES.computeIfAbsent(ra, FaucetBehaviorsManager::new);
+    }
+
+    public static FaucetBehaviorsManager getInstance(Level level) {
+        return getInstance(level.registryAccess());
+    }
+
+    public static void addRegisterFaucetInteraction(Runnable listener) {
+        SERVER_LISTENERS.add(listener);
+    }
 
     private final Set<Object> dataInteractions = new HashSet<>();
-    private final Set<Runnable> listeners = new HashSet<>();
     private final HolderLookup.Provider registryAccess;
 
     public FaucetBehaviorsManager(HolderLookup.Provider ra) {
@@ -57,11 +68,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
                 "faucet_interactions");
         this.registryAccess = ra;
 
-        INSTANCE = this;
-    }
-
-    public static void addRegisterFaucetInteraction(Runnable listener) {
-        INSTANCE.listeners.add(listener);
+        INSTANCES.put(ra, this);
     }
 
     @Override
@@ -81,10 +88,11 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     }
 
-    public void onLevelLoad(ServerLevel level) {
+    public static void onLevelLoad(ServerLevel level) {
+        var instance = getInstance(level);
         FaucetBlockTile.clearBehaviors();
 
-        dataInteractions.forEach(FaucetBlockTile::registerInteraction);
+        instance.dataInteractions.forEach(FaucetBlockTile::registerInteraction);
 
         FaucetBlockTile.registerInteraction(new SoftFluidProviderInteraction());
         FaucetBlockTile.registerInteraction(new WaterCauldronInteraction());
@@ -131,7 +139,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         }
         testLevel.invalidate();
 
-        listeners.forEach(Runnable::run);
+        SERVER_LISTENERS.forEach(Runnable::run);
     }
 
 

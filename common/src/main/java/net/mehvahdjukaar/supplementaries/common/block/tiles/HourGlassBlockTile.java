@@ -35,7 +35,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     public void updateTileOnInventoryChanged() {
-        this.sandData = HourglassTimesManager.getData(this.getDisplayedItem().getItem());
+        this.sandData = HourglassTimesManager.getInstance(level).getData(this.getDisplayedItem().getItem());
         int p = this.getDirection() == Direction.DOWN ? 1 : 0;
         int l = this.sandData.light();
         if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
@@ -93,7 +93,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         this.progress = tag.getFloat("Progress");
         this.prevProgress = tag.getFloat("PrevProgress");
         this.cachedTexture = null;
-        this.sandData = HourglassTimesManager.getData(this.getDisplayedItem().getItem());
+        this.sandData = HourglassTimesManager.getInstance(level).getData(this.getDisplayedItem().getItem());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && !HourglassTimesManager.getData(stack.getItem()).isEmpty();
+        return this.isEmpty() && !HourglassTimesManager.getInstance(level).getData(stack.getItem()).isEmpty();
     }
 
     @Override

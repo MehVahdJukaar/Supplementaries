@@ -128,7 +128,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (!entity.isAlive() || entity instanceof Player) return false;
 
         String name = Utils.getID(entity.getType()).toString();
-        if (CommonConfigs.Functional.CAGE_ALL_MOBS.get() || CapturedMobHandler.INSTANCE.isCommandMob(name)) {
+        if (CommonConfigs.Functional.CAGE_ALL_MOBS.get() || CapturedMobHandler.getInstance(entity.level()).isCommandMob(name)) {
             return true;
         }
 

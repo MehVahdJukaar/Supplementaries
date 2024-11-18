@@ -48,7 +48,7 @@ public class HourglassBehavior implements MovementBehaviour {
         NonNullList<ItemStack> l = NonNullList.create();
         ContainerHelper.loadAllItems(com, l, context.world.registryAccess());
         if (l.isEmpty()) return;
-        this.sandData = HourglassTimesManager.getData(l.get(0).getItem());
+        this.sandData = HourglassTimesManager.getInstance(context.world).getData(l.get(0).getItem());
         if (prevSandData != sandData && context.world.isClientSide) {
             this.cachedTexture = sandData.computeTexture(l.get(0), context.world);
         }

@@ -158,7 +158,7 @@ public class ServerEvents {
 
     @EventCalled
     public static void onServerStart(MinecraftServer server) {
-        FaucetBehaviorsManager.INSTANCE.onLevelLoad(server.overworld());
+        FaucetBehaviorsManager.onLevelLoad(server.overworld());
         //compute cache so it doesnt lag later.. because aparelty thats a thing.
         //TODO: figure out why starting this lags
         IEntityInterceptFakeLevel.get(server.overworld());
@@ -166,7 +166,7 @@ public class ServerEvents {
 
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
-        CapturedMobHandler.INSTANCE.sendDataToClient(player);
+        CapturedMobHandler.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
         MapLightHandler.sendDataToClient(player);

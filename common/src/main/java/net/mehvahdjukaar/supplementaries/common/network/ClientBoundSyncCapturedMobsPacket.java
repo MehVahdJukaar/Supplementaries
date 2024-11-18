@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCatchableMob;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +53,8 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
     @Override
     public void handle(Context context) {
         //client world
-        CapturedMobHandler.INSTANCE.acceptClientData(mobSet, fish);
+        CapturedMobHandler.getInstance(Minecraft.getInstance().level)
+                .acceptData(mobSet, fish);
         Supplementaries.LOGGER.info("Synced Captured Mobs settings");
     }
 
