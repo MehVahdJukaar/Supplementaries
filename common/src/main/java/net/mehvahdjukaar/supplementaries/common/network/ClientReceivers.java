@@ -8,14 +8,19 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.*;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
+import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -37,7 +42,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -267,6 +271,20 @@ public class ClientReceivers {
                 // dont you ask me why this is here. it makes the animation smooth. no clue why needed
                 //be.addOffset(-(float) (double) CommonConfigs.Building.SLIDY_BLOCK_SPEED.get());
             }
+        });
+    }
+
+    public static void handleSyncHourglassData(ClientBoundSyncHourglassPacket clientBoundSyncHourglassPacket) {
+        withLevelDo(l -> {
+            HourglassTimesManager.getInstance(l).setData(clientBoundSyncHourglassPacket.hourglass);
+            Supplementaries.LOGGER.info("Synced Hourglass data");
+        });
+    }
+
+    public static void handleSyncCapturedMobs(ClientBoundSyncCapturedMobsPacket clientBoundSyncCapturedMobsPacket) {
+        withLevelDo(l -> {
+            CapturedMobHandler.getInstance(l).acceptData(clientBoundSyncCapturedMobsPacket.mobSet, clientBoundSyncCapturedMobsPacket.fish);
+            Supplementaries.LOGGER.info("Synced Captured Mobs settings");
         });
     }
 

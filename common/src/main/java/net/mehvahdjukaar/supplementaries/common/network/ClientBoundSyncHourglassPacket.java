@@ -42,9 +42,7 @@ public class ClientBoundSyncHourglassPacket implements Message {
 
     @Override
     public void handle(Context context) {
-        //client world
-        HourglassTimesManager.getInstance(Minecraft.getInstance().level).setData(this.hourglass);
-        Supplementaries.LOGGER.info("Synced Hourglass data");
+        ClientReceivers.handleSyncHourglassData(this);
     }
 
 

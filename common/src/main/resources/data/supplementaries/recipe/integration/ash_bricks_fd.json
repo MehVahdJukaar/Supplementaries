@@ -7,15 +7,16 @@
   ],
   "result": [
     {
-      "count": 4,
-      "item": "supplementaries:ash_brick"
+      "item": {
+        "count": 4,
+        "id": "supplementaries:ash_brick"
+      }
     }
   ],
   "tool": {
     "type": "farmersdelight:item_ability",
     "action": "pickaxe_dig"
   },
-
   "fabric:load_conditions": [
     {
       "modid": "farmersdelight",

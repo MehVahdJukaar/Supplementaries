@@ -52,10 +52,7 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
 
     @Override
     public void handle(Context context) {
-        //client world
-        CapturedMobHandler.getInstance(Minecraft.getInstance().level)
-                .acceptData(mobSet, fish);
-        Supplementaries.LOGGER.info("Synced Captured Mobs settings");
+        ClientReceivers.handleSyncCapturedMobs(this);
     }
 
     @Override
