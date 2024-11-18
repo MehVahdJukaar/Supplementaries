@@ -257,10 +257,10 @@
   "effect.supplementaries.flammable": "引火",
   "effect.supplementaries.flammable.description": "炎上の持続時間が増加し、歩いた地点に炎を残すようになります。",
 
-  "enchantment.supplementaries.soul_fire_aspect": "輝油火属性",
-  "enchantment.supplementaries.soul_flame": "輝油フレイム",
-  "enchantment.supplementaries.soul_fire_aspect.desc": "攻撃時に相手を輝油炎上させます。",
-  "enchantment.supplementaries.soul_flame.desc": "発射した矢が輝油炎上ダメージを与えるようになります。",
+  "enchantment.supplementaries.lumisene_fire_aspect": "輝油火属性",
+  "enchantment.supplementaries.lumisene_flame": "輝油フレイム",
+  "enchantment.supplementaries.lumisene_fire_aspect.desc": "攻撃時に相手を輝油炎上させます。",
+  "enchantment.supplementaries.lumisene_flame.desc": "発射した矢が輝油炎上ダメージを与えるようになります。",
 
   "enchantment.supplementaries.stasis": "均衡",
   "enchantment.supplementaries.stasis.desc": "パチンコで撃ったブロックが重力を無視できるようになります",
@@ -314,8 +314,7 @@
   "gui.supplementaries.amendments.suggestions": "Modを入手する",
   "gui.supplementaries.amendments.title": "警告：Amendmentsが導入されていません",
   "gui.supplementaries.incompatible_mods.title": "警告：互換性のないModが見つかりました",
-  "gui.supplementaries.incompatible_mods.message": "Supplementariesは、クラッシュの原因となる可能性がある以下のModを検出しました：\n\n%s\n\nこれらの問題は該当するMod側に起因するもので、Supplementaries側では修正できません。言い換えれば、これらの不具合は該当するMod側で修正されるべき問題です。\n該当するModを削除するか、突然クラッシュが発生する可能性があることを認識したうえでご利用ください。また、将来のバージョンではゲームが起動しなくなる可能性があります。ご注意ください。",
-
+  "gui.supplementaries.incompatible_mods.message": "Supplementariesは、クラッシュの原因となる可能性がある以下のModを検出しました：\n\n%s\n\nこれらの問題は該当するMod側に起因するもので、Supplementaries側では修正できません。言い換えれば、これらの不具合は該当するMod側で修正されるべき問題です。\n該当するModを削除するか、突然クラッシュが発生する可能性があることを認識したうえでご利用ください。問題が解決されたと思われる場合は、私達にご連絡ください。",
 
 
   "gui.supplementaries.blackboard.clear": "削除",
@@ -329,9 +328,9 @@
   "gui.supplementaries.optifine.message": "続行する前に、Optifineは多くの不具合、クラッシュの原因となることで知られています。\n\nOptifineはMod環境に適しておらず、Forgeでさえ競合するおそれがあります。\n\nさらにパフォーマンスの観点ではModern Fix、Embeddium、シェーダーはOculusなど、はるかに優れた代替手段が存在します。\n\nMod環境やバニラに関わらず、代わりに以下のModを使用することを強くお勧めします。",
   "gui.supplementaries.optifine.suggestions": "推奨するMod一覧",
   "gui.supplementaries.optifine.title": "警告：OPTIFINEを検知しました",
-  "gui.supplementaries.orange_trader.get": "渡すもの：",
-  "gui.supplementaries.orange_trader.receive": "貰うもの：",
-  "gui.supplementaries.orange_trader.trade": "取引の提案",
+  "gui.supplementaries.orange_trader.get": "要求：",
+  "gui.supplementaries.orange_trader.receive": "販売：",
+  "gui.supplementaries.orange_trader.trade": "取引オファー",
   "gui.supplementaries.pedestal": "台座",
   "gui.supplementaries.present": "プレゼント",
   "gui.supplementaries.present.pack": "梱包",
@@ -350,7 +349,7 @@
   "gui.supplementaries.speaker_block.edit": "スピーカーブロックの編集",
   "gui.supplementaries.speaker_block.narrator_message": "音声読み上げメッセージ",
   "gui.supplementaries.speaker_block.title_message": "タイトルメッセージ",
-  "gui.supplementaries.speaker_block.volume" : "音量：",
+  "gui.supplementaries.speaker_block.volume": "音量：",
   "gui.supplementaries.trapped_present": "トラッププレゼント",
   "gui.supplementaries.welcome_screen.turn_off": "二度と表示しない",
 
@@ -359,7 +358,7 @@
   "item.supplementaries.ash": "灰",
   "item.supplementaries.ash_brick": "灰レンガ",
   "item.supplementaries.bamboo_spikes_tipped": "効能付きの竹スパイク",
-  "item.supplementaries.bamboo_spikes_tipped_effect": "%sの竹スパイク",
+  "item.supplementaries.bamboo_spikes_tipped.effect": "%sの竹スパイク",
   "item.supplementaries.bomb": "爆弾",
   "item.supplementaries.bomb_blue": "青い爆弾",
   "item.supplementaries.bomb_blue_projectile": "青い爆弾",
@@ -543,7 +542,7 @@
   "trinkets.slot.legs.quiver": "矢筒",
 
   "leaves_type.twilightforest.dark": "ダークウッド",
-  "leaves_type.ulterlands.souldrained": "石化した",
+  "leaves_type.ulterlands.souldrained": "Petrified",
 
   "block_type.supplementaries.hanging_sign": "吊り看板",
   "block_type.supplementaries.sign_post": "道標",
