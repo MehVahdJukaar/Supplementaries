@@ -32,8 +32,7 @@ public abstract class BlockBehaviourPlanterMixin {
     public Vec3 supp$modifyPlanterOffset(Vec3 original, @Local(argsOnly = true) BlockGetter level, @Local(argsOnly = true) BlockPos pos) {
         //null check for world since some mods like to throw a null world here...
         // be sure you aren't checking other chunks
-        if (level != null && !original.equals(Vec3.ZERO)) {
-
+        if (level != null && !original.equals(Vec3.ZERO) && !this.is(ModTags.PLANTER_OFFSET_BLACKLIST)) {
             if (level instanceof LevelReader l && (!l.isClientSide() || !l.hasChunkAt(pos.below(2)))) {
                 return original;
             }

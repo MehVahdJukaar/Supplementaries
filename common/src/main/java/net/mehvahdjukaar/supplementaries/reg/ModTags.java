@@ -49,6 +49,7 @@ public class ModTags {
     public static final TagKey<Block> FAST_FALL_ROPES = blockTag("fast_fall_climbable");
     public static final TagKey<Block> BOUNCY_BLOCKS = blockTag("bouncy_blocks");
     public static final TagKey<Block> TURN_TABLE_CANT_SHUFFLE = blockTag("turn_table_cant_shuffle");
+    public static final TagKey<Block> PLANTER_OFFSET_BLACKLIST = blockTag("ignores_planter_offset");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
