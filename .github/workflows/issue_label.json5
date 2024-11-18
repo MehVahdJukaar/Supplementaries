@@ -9,7 +9,7 @@
     "server": ["server", "Server"],
     "not related": ["not my issue", "report there"],
     "duplicate": ["duplicate"],
-    "conflict": ["conflict", "conflicted"]
+    "conflict": ["conflicted with", "is a conflict"]
   },
   labelsNotAllowed: [
     'duplicate',
