@@ -580,6 +580,7 @@
   "tag.block.supplementaries.walls": "Wall Shape",
   "tag.block.supplementaries.water_holder": "Water Holder From Rope",
   "tag.block.supplementaries.wattle_and_daubs": "Wattle And Daubs",
+  "tag.block.supplementaries.ignores_planter_offset": "Ignores Planter Offset",
 
   "tag.enchantment.supplementaries.slingshot_exclusive_set": "Slingshot Exclusive Set",
 

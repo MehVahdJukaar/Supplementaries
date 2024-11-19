@@ -8,16 +8,15 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- cage renderer
+- cage item rendered
+- cage bath tick
+- cage capture bugged?
 - cage puch fabric
-- cannon vall dragon
+- cannon ball dragon
 - fire burn times
-- flammable shit
 - wicker fence straw
-- planter sounds
-- soap recipe is broken.
-- stupid neoforge not figing events on interfaces (its ml not claling event with correct blockstate)
 - villagers gold doors
-- ash not obtainable
 - sherds_tooltip config not woring
 - trapped present desync fabric
 - bubble blower soap recipe deleting stasis
