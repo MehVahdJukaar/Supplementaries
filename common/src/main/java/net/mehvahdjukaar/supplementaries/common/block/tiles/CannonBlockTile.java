@@ -307,7 +307,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (index == 0) return stack.is(Items.GUNPOWDER);
-        return stack.is(ModTags.CANNON_BLACKLIST);
+        return !stack.is(ModTags.CANNON_BLACKLIST);
     }
 
     @Override
