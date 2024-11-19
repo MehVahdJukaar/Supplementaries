@@ -8,7 +8,8 @@
     "1.19.2": ["1.19.2-FABRIC"],
     "server": ["server", "Server"],
     "not related": ["not my issue", "report there"],
-    "duplicate": ["duplicate"]
+    "duplicate": ["duplicate"],
+    "conflict": ["conflicted with", "is a conflict"]
   },
   labelsNotAllowed: [
     'duplicate',
