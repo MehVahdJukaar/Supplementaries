@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -89,8 +91,13 @@ public class CompatObjects {
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
-    private static <T> Supplier<@Nullable T> make(String name, ResourceKey<Registry<T>> registry) {
+    private static <T> Supplier<@Nullable T> makeOld(String name, ResourceKey<Registry<T>> registry) {
         return DynamicHolder.optional(ResourceLocation.tryParse(name), registry);
+    }
+
+    private static <T> Supplier<@Nullable T> make(String name, ResourceKey<Registry<T>> registry) {
+        return (Supplier<T>) Suppliers.memoize(()-> BuiltInRegistries.REGISTRY.get(registry.location())
+                .getOptional(ResourceLocation.tryParse(name)).orElse(null));
     }
 
 }
