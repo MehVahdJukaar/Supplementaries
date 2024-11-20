@@ -100,6 +100,9 @@ public class ModTags {
     public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
     public static final TagKey<Potion> TIPPED_SPIKES_POTION_BLACKLIST = potionTag("tipped_spikes_blacklist");
 
+    //enchants
+    public static final TagKey<Enchantment> PREVENTS_BUBBLE_POP = enchTag("prevents_bubble_pop");
+
 
     //biomes
     public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");

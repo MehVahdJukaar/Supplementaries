@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import net.minecraft.core.Holder;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.world.level.block.entity.BannerPatterns;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.network.chat.ChatType;
 
-import java.util.WeakHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 // so hear me out, datapack registry entries are one per logical side
@@ -18,7 +17,11 @@ import java.util.function.Function;
 // so we use a dummy object from one of the registries datapack registires...
 public class SidedInstance<T> {
 
-    private final WeakHashMap<Holder.Reference<BannerPattern>, T> instances = new WeakHashMap<>();
+    //hack so we can have essentially an identity map
+    private final Cache<ChatType, T> instances = CacheBuilder.newBuilder()
+            .weakKeys()
+            .build();
+
     private final Function<HolderLookup.Provider, T> factory;
 
     private SidedInstance(Function<HolderLookup.Provider, T> factory) {
@@ -30,15 +33,20 @@ public class SidedInstance<T> {
     }
 
     public T get(HolderLookup.Provider ra) {
-        return instances.computeIfAbsent(getDummyKey(ra),
-                k -> this.factory.apply(ra));
+        try {
+            return instances.get(getDummyKey(ra),
+                    () -> this.factory.apply(ra));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void set(HolderLookup.Provider ra, T instance) {
         instances.put(getDummyKey(ra), instance);
     }
 
-    private static Holder.@NotNull Reference<BannerPattern> getDummyKey(HolderLookup.Provider ra) {
-        return ra.lookupOrThrow(Registries.BANNER_PATTERN).getOrThrow(BannerPatterns.BASE);
+    private ChatType getDummyKey(HolderLookup.Provider ra) {
+        return ra.lookupOrThrow(Registries.CHAT_TYPE)
+                .getOrThrow(ChatType.CHAT).value();
     }
 }

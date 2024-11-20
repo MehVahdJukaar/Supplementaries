@@ -7,12 +7,14 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -125,14 +127,10 @@ public class BubbleBlock extends Block implements EntityBlock {
         }
     }
 
-    private static final HolderReference<Enchantment> FEATHER_FALLING = HolderReference.of(Enchantments.FEATHER_FALLING);
-
     protected boolean canPopBubble(Entity entity) {
         if (!CommonConfigs.Tools.BUBBLE_BREAK.get()) return false;
         if (entity instanceof LivingEntity le) {
-            return !CommonConfigs.Tools.BUBBLE_FEATHER_FALLING.get() ||
-                    EnchantmentHelper.getEnchantmentLevel(FEATHER_FALLING
-                            .getHolder(le.level().registryAccess()), le) == 0;
+            return !EnchantmentHelper.hasTag(le.getItemBySlot(EquipmentSlot.FEET), ModTags.PREVENTS_BUBBLE_POP);
         }
         return true;
     }

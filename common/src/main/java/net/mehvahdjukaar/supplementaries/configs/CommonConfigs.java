@@ -909,8 +909,6 @@ public class CommonConfigs {
                     .define("lifetime", 20 * 60, 1, 10000);
             BUBBLE_BREAK = builder.comment("Can bubble break when touched on?")
                     .define("break_when_touched", true);
-            BUBBLE_FEATHER_FALLING = builder.comment("If true feather falling prevents breaking bubbles when stepping on them")
-                    .define("feather_falling_prevents_breaking", true);
             builder.pop();
 
             builder.pop();
@@ -1002,7 +1000,6 @@ public class CommonConfigs {
         public static final Supplier<Integer> BUBBLE_BLOWER_COST;
         public static final Supplier<Integer> BUBBLE_LIFETIME;
         public static final Supplier<Boolean> BUBBLE_BREAK;
-        public static final Supplier<Boolean> BUBBLE_FEATHER_FALLING;
 
         public static final Supplier<Boolean> QUIVER_ENABLED;
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;

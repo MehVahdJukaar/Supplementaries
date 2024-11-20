@@ -44,6 +44,8 @@ public class ClientBoundSyncCapturedMobsPacket implements Message {
         for (var entry : this.mobSet) {
             DataDefinedCatchableMob.STREAM_CODEC.encode(buf, entry);
         }
+        //47121:water, server
+        //47081:water, client
         if (fish != null) {
             buf.writeBoolean(true);
             DataDefinedCatchableMob.STREAM_CODEC.encode(buf, fish);
