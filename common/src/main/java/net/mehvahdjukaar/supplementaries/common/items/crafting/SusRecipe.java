@@ -56,9 +56,9 @@ public class SusRecipe extends CustomRecipe {
                 something = stack;
             }
         }
-        ItemStack result = this.result.copy();
+        ItemStack result = this.result.copyWithCount(1);
         result.getOrCreateTagElement("BlockEntityTag")
-                .put("item", something.save(new CompoundTag()));
+                .put("item", something.copyWithCount(1).save(new CompoundTag()));
 
         return result;
     }
