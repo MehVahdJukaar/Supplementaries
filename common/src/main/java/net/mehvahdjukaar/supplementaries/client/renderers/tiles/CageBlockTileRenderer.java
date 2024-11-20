@@ -9,9 +9,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 
@@ -27,8 +29,8 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
         return 80;
     }
 
-    public void renderMob(MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
-        Entity mob = mobHolder.getDisplayedMob();
+    public void renderMob(Level level, BlockPos pos, MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
+        Entity mob = mobHolder.getDisplayedMob(level, pos);
         if (mob != null && mobHolder.getData() instanceof MobContainer.MobData.Entity entityData) {
             matrixStack.pushPose();
 
@@ -70,7 +72,8 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
     @Override
     public void render(T tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
-        this.renderMob(tile.getMobContainer(), partialTicks, matrixStackIn, bufferIn, combinedLightIn, tile.getDirection());
+        this.renderMob(tile.getLevel(), tile.getBlockPos(), tile.getMobContainer(),
+                partialTicks, matrixStackIn, bufferIn, combinedLightIn, tile.getDirection());
 
     }
 }

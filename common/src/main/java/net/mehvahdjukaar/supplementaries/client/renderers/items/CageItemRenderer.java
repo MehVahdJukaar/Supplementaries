@@ -47,7 +47,7 @@ public class CageItemRenderer extends ItemStackRenderer {
                         poseStack, buffer, light, overlay);
             }
             int fishTexture = mobContent.getFishTexture();
-            if (fishTexture >= 0) {
+            if (fishTexture > 0) {
                 poseStack.pushPose();
                 poseStack.translate(0.5, 0.3125, 0.5);
                 poseStack.mulPose(RotHlpr.YN45);
@@ -55,7 +55,9 @@ public class CageItemRenderer extends ItemStackRenderer {
                 VertexModels.renderFish(buffer, poseStack, 0, 0, fishTexture, light);
                 poseStack.popPose();
             }
-            Entity e = mobContent.getVisualEntity();
+            var level = Minecraft.getInstance().level;
+            if (level == null) return;
+            Entity e = mobContent.getVisualEntity(level);
             if (e != null) {
                 float s = mobContent.getRenderScale();
                 poseStack.pushPose();

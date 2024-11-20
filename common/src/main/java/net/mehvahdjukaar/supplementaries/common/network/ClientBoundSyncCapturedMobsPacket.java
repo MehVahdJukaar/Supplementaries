@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCa
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;

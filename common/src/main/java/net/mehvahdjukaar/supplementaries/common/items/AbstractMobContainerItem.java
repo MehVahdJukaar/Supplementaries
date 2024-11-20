@@ -161,7 +161,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      * @return new full item stack if it was successful, same otherwise
      */
     public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucketStack) {
-        ItemStack returnStack = currentStack.copy();
+        ItemStack returnStack = currentStack.copyWithCount(1);
         MobContainer mobContainer = new MobContainer(this.getMobContainerWidth(), this.getMobContainerHeight(), this.isAquarium);
         boolean success = mobContainer.captureEntity(entity, bucketStack);
         if (success) {

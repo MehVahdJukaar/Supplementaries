@@ -416,9 +416,10 @@ public class ClientReceivers {
         for (int x = pos.getX() - r; x < pos.getX() + r; x++) {
             for (int y = pos.getY() - r; y < pos.getY() + r; y++) {
                 for (int z = pos.getZ() - r; z < pos.getZ() + r; z++) {
-                    if (level.getBlockEntity(mut.set(x, y, z)) instanceof IMobContainerProvider te) {
+                    BlockPos.MutableBlockPos ppp = mut.set(x, y, z);
+                    if (level.getBlockEntity(ppp) instanceof IMobContainerProvider te) {
                         MobContainer container = te.getMobContainer();
-                        Entity e = container.getDisplayedMob();
+                        Entity e = container.getDisplayedMob(level, ppp.immutable());
                         if (p == null && e instanceof LivingEntity le) {
                             le.setRecordPlayingNearby(pos, isPartying);
                         } else if (p != null && e instanceof IFluteParrot fp && isPartying) {

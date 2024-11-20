@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,11 +77,11 @@ public class MobContainerView implements TooltipProvider {
         mobContainer.setData(this.inner.getData());
     }
 
-    public Entity getVisualEntity() {
+    public Entity getVisualEntity(Level level) {
         //TODO: cache
         //   Entity e = CapturedMobCache.getOrCreateCachedMob(id, cmp2);
         //
-        return inner.getDisplayedMob();
+        return inner.getDisplayedMob(level, null);
     }
 
     public float getRenderScale() {

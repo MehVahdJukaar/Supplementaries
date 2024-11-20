@@ -52,6 +52,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+//still a mess.
 //TODO: finish
 //I swear I changed this stuff from the ground up at least 5 times, and it just keeps getting messier somehow. It just needs to do so much...
 public class MobContainer {
@@ -123,22 +124,24 @@ public class MobContainer {
 
     //----init----
 
-    private void initializeEntity(Level level, BlockPos pos) {
+    private void initializeEntity(Level level, @Nullable BlockPos pos) {
         this.needsInitialization = false;
-        if (data != null && level != null && pos != null) {
+        if (data != null) {
             if (data instanceof MobData.Bucket bucketData) {
                 var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
                 this.mobProperties = CapturedMobHandler.getInstance(level.registryAccess())
                         .getDataCap(type, true);
             } else if (data instanceof MobData.Entity entityData) {
-                Entity entity = createStaticMob(entityData, level, pos);
+                Entity entity = createStaticMob(entityData, level, pos == null ? BlockPos.ZERO : pos);
                 if (entity != null) {
                     //visual entity stored in this instance
                     this.mobProperties = CapturedMobHandler.getInstance(level).getCatchableMobCapOrDefault(entity);
                     this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
-                    this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
-                            this.width, this.height);
-                    this.updateLightLevel(level, pos);
+                    if (pos != null) {
+                        this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
+                                this.width, this.height);
+                        if (!level.isClientSide) this.updateLightLevel(level, pos);
+                    }
                 }
             }
         }
@@ -279,7 +282,8 @@ public class MobContainer {
     }
 
     @Nullable
-    public Entity getDisplayedMob() {
+    public Entity getDisplayedMob(Level level, @Nullable BlockPos pos) {
+        if (this.needsInitialization) this.initializeEntity(level, pos);
         if (this.mobInstance != null) {
             return this.mobInstance.getEntityForRenderer();
         }

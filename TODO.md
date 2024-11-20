@@ -8,10 +8,8 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
-- cage renderer
-- cage item rendered
+- amendments cauldron texture
 - cage bath tick
-- cage capture bugged?
 - cage puch fabric
 - cannon ball dragon
 - fire burn times
