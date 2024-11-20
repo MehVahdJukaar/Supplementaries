@@ -13,7 +13,7 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "tag": "c:shears"
+                    "tag": "c:tools/shear"
                   }
                 }
               ],

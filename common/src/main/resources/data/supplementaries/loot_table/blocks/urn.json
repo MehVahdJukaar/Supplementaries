@@ -4,25 +4,27 @@
     {
       "rolls": 1.0,
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "predicates": {
+              "minecraft:enchantments": [
+                {
+                  "enchantments": "minecraft:silk_touch",
+                  "levels": {
+                    "min": 1
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:urn",
-          "conditions": [
-            {
-              "condition": "minecraft:match_tool",
-              "predicate": {
-                "enchantments": [
-                  {
-                    "enchantment": "minecraft:silk_touch",
-                    "levels": {
-                      "min": 1
-                    }
-                  }
-                ]
-              }
-            }
-          ]
+          "name": "supplementaries:urn"
         }
       ]
     },
@@ -32,16 +34,16 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "value": "supplementaries:blocks/urn_loot/urn_loot",
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "supplementaries:urn",
-              "properties": {
-                "treasure": "true"
-              }
-            }
-          ]
+          "value": "supplementaries:blocks/urn_loot/urn_loot"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "supplementaries:urn",
+          "properties": {
+            "treasure": "true"
+          }
         }
       ]
     }
