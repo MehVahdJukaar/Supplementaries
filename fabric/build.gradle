@@ -28,6 +28,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
+
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
@@ -40,6 +41,8 @@ dependencies {
     //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
     modRuntimeOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
+    modImplementation("curse.maven:valkyrien-skies-258371:5212231")
+    modImplementation("curse.maven:fabric-language-kotlin-308769:4718458")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
 
 

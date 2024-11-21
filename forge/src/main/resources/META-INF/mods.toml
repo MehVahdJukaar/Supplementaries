@@ -60,4 +60,6 @@ issueTrackerURL = "${mod_github}/issues"
 ["lithium:options"]
     mixin.block.moving_block_shapes = false
 
+["canary:options"]
+    mixin.block.moving_block_shapes = false
 
