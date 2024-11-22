@@ -1,0 +1,30 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "supplementaries:ash_bricks"
+    }
+  ],
+  "result": [
+    {
+      "item": {
+        "count": 4,
+        "id": "supplementaries:ash_brick"
+      }
+    }
+  ],
+  "tool": {
+    "fabric:type": "farmersdelight:item_ability",
+    "action": "pickaxe_dig"
+  },
+  "fabric:load_conditions": [
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ]
+}
