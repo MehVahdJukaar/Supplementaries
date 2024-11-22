@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
+import com.google.common.base.Suppliers;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -52,6 +53,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
@@ -133,7 +135,7 @@ public class ClientEvents {
 
             String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
 
-            if (rendererShader != null && !MY_SHADERS.contains(rendererShader)) {
+            if (rendererShader != null && !MY_SHADERS.get().contains(rendererShader)) {
                 return;
             }
 
@@ -156,7 +158,7 @@ public class ClientEvents {
             Item item = stack.getItem();
             String newShader;
             if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                newShader = EFFECTS_PER_ITEM.get(item);
+                newShader = EFFECTS_PER_ITEM.get().get(item);
             } else newShader = null;
 
             if (newShader == null && shouldHaveGoatedEffect(p, item)) {
@@ -177,7 +179,7 @@ public class ClientEvents {
         return CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get() && p.getHealth() < 5;
     }
 
-    private static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {
+    private static final Supplier<Map<Item, String>> EFFECTS_PER_ITEM = Suppliers.memoize(() -> {
         var map = new Object2ObjectOpenHashMap<Item, String>();
         map.put(Items.CREEPER_HEAD, "minecraft:shaders/post/creeper.json");
         map.put(Items.SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
@@ -190,8 +192,8 @@ public class ClientEvents {
         return map;
     });
 
-    private static final Set<String> MY_SHADERS = EFFECTS_PER_ITEM.values().stream()
-            .collect(Collectors.toUnmodifiableSet());
+    private static final Supplier<Set<String>> MY_SHADERS = Suppliers.memoize(()-> EFFECTS_PER_ITEM.get().values().stream()
+            .collect(Collectors.toUnmodifiableSet()));
 
     private static boolean isOnRope;
 
