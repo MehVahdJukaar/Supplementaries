@@ -51,11 +51,11 @@ public class TrinketsCompat {
         return SlotReference.EMPTY;
     }
 
-    public record Trinket(String name, String group, int id) implements SlotReference {
+    public record Trinket(String slotName, String groupKey, int id) implements SlotReference {
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Trinket> CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, Trinket::name,
-                ByteBufCodecs.STRING_UTF8, Trinket::group,
+                ByteBufCodecs.STRING_UTF8, Trinket::slotName,
+                ByteBufCodecs.STRING_UTF8, Trinket::groupKey,
                 ByteBufCodecs.INT, Trinket::id,
                 Trinket::new
         );
@@ -71,9 +71,9 @@ public class TrinketsCompat {
         public ItemStack get(LivingEntity player) {
             TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
             if (trinket != null) {
-                var i = trinket.getInventory().get(group);
+                var i = trinket.getInventory().get(groupKey);
                 if (i != null) {
-                    var inv = i.get(name);
+                    TrinketInventory inv = i.get(slotName);
                     if (inv != null) {
                         return inv.getItem(id);
                     }
