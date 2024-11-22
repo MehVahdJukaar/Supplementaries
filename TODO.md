@@ -8,6 +8,7 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- recipe conditions not working for negated ones
 - amendments cauldron texture
 - cage bath tick
 - cage puch fabric

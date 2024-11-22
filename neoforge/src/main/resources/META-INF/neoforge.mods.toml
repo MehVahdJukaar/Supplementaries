@@ -34,7 +34,7 @@ issueTrackerURL = "${mod_github}/issues"
     type = "required"
     versionRange = "[${minecraft_min_version},${minecraft_max_version})"
     ordering = "NONE"
-    side = "CLIENT"
+    side = "BOTH"
 
 [[dependencies.${mod_id}]]
     modId = "moonlight"
