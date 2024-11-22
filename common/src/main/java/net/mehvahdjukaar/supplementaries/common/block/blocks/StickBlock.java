@@ -59,27 +59,9 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     public static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
             Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
 
-    private final int fireSpread;
-
-    public StickBlock(Properties properties, int fireSpread) {
+    public StickBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
-        this.fireSpread = fireSpread;
-    }
-
-    public StickBlock(Properties properties) {
-        this(properties, 60);
-    }
-
-
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
-    }
-
-    @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : fireSpread;
     }
 
     @Override

@@ -34,6 +34,12 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
     }
 
     @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
         if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
         graphics.blit(ModTextures.NOTICE_BOARD_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0,

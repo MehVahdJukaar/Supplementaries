@@ -162,6 +162,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(graphics, mouseX, mouseY);
         if (this.packed) {
             int k = this.leftPos;
             int l = this.topPos;

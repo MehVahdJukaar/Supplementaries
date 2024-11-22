@@ -49,17 +49,6 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
             RegHelper.registerBlockFlammability(this,60,60);
     }
 
-    //TODO: 1.21 use new data map for flammable shit
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
-    }
-
-    @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 60;
-    }
-
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return level.getBlockEntity(pos) instanceof FlagBlockTile tile ?

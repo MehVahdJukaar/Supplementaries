@@ -351,14 +351,11 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     }
 
-    //TODO: add fire spread speed
-
     @ForgeOverride
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return isLitUp(state, level, pos) ? 0 : 60;
         //high chance to have fire. Cant burn however
     }
-
 
     // Mimics what FireBlock .tick does
     private static void burnStuffAroundLikeFire(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, int age) {

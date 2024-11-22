@@ -8,12 +8,13 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- bamboo spikes wrong drop (poison)
+- flax still not fucking dropping its seed
 - recipe conditions not working for negated ones
 - amendments cauldron texture
 - cage bath tick
 - cage puch fabric
 - cannon ball dragon
-- fire burn times
 - wicker fence straw
 - villagers gold doors
 - sherds_tooltip config not woring
@@ -28,7 +29,6 @@
 - check slingshot enchantments 6(stasis, loyalty, multi shot)
 - book pile completely broken. rethink
 - fix and re assing all isPathfindables
-- burn time data map (for forge). For fabric add a new class that assigns burn times
 - check if the all tile entities that have them keep their custom names when placed from items
 - check bellows block place power
 - test all map markers & with names

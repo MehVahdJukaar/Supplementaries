@@ -216,16 +216,6 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
         }
     }
 
-    @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 10;
-    }
-
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return state.getValue(BlockStateProperties.WATERLOGGED) ? 0 : 100; //chance to get consumed
-    }
-
     private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
         if (it > 64) return false;
         BlockState state = world.getBlockState(pos);

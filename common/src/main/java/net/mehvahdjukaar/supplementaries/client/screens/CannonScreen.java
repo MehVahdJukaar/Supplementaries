@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.HopperScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -56,6 +57,11 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.menu.addSlotListener(this);
     }
 
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
 
     private void onManeuverPressed(Button button) {
         CannonController.startControlling(tile);

@@ -115,12 +115,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        if (this.primed) {
-            int k = this.leftPos;
-            int l = this.topPos;
-            Slot slot = this.menu.getSlot(0);
-            graphics.blit(ModTextures.TRAPPED_PRESENT_GUI_TEXTURE, k + slot.x, l + slot.y, 400, 12, 232, 16, 16, 256, 256);
-        }
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override

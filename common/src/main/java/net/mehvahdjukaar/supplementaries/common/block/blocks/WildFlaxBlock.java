@@ -49,16 +49,6 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock {
         return false;
     }
 
-    @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 60;
-    }
-
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 100;
-    }
-
     @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return true;

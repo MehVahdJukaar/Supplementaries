@@ -3,9 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Stopwatch;
 import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -21,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.crafting.FireworkStarRecipe;
-import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class ModSetup {
     private static int setupStage = 0;
     private static boolean firstTagLoad = false;
 
-    public static void init(){
+    public static void init() {
         PlatHelper.addCommonSetup(ModSetup::setup);
         PlatHelper.addCommonSetup(ModSetup::asyncSetup);
         PlatHelper.addReloadableCommonSetup(ModSetup::tagDependantSetup);
@@ -43,7 +40,7 @@ public class ModSetup {
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
             FlowerPotHandler::setup,
-            ModSetup::registerFabricFlammable,
+            ModSetup::registerFlammables,
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
             FireBehaviorsManager::registerBehaviors,
@@ -87,10 +84,21 @@ public class ModSetup {
                 " Refusing to continue loading with a broken modstate. Next step: crashing this game, no survivors", e);
     }
 
-    //TODO: make automatic
-    private static void registerFabricFlammable() {
+    private static void registerFlammables() {
+        //tile entities are not meant to be flammable
         RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(), 60, 100);
-        RegHelper.registerBlockFlammability(ModRegistry.BUNTING_BLOCK.get(), 60, 100);
+        RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD_SLAB.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD_STAIRS.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_FRAME.get(), 60, 60);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_BRACE.get(), 60, 60);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_CROSS_BRACE.get(), 60, 60);
+        RegHelper.registerBlockFlammability(ModRegistry.STICK_BLOCK.get(), 60, 100);
+        RegHelper.registerBlockFlammability(ModRegistry.FLAX_BLOCK.get(), 60, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.FLAX_WILD.get(), 60, 100);
+        RegHelper.registerBlockFlammability(ModRegistry.FEATHER_BLOCK.get(), 30, 60);
+        RegHelper.registerBlockFlammability(ModRegistry.GUNPOWDER_BLOCK.get(), 200, 0);
+        RegHelper.registerBlockFlammability(ModFluids.LUMISENE_BLOCK.get(), 200, 0);
     }
 
     private static void registerFrameBlocks() {

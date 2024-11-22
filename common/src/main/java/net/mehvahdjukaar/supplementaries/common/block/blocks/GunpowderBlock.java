@@ -517,16 +517,6 @@ public class GunpowderBlock extends LightUpBlock {
 
 
     @ForgeOverride
-    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 60;
-    }
-
-    @ForgeOverride
-    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        return 300;
-    }
-
-    @ForgeOverride
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 
