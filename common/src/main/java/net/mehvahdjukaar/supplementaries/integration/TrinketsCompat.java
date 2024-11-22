@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-//this is actually for trinkets
 public class TrinketsCompat {
 
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
@@ -47,12 +47,12 @@ public class TrinketsCompat {
         return SlotReference.EMPTY;
     }
 
-    public record Trinket(String name1, String name2, int id) implements SlotReference {
+    public record Trinket(String name, String group, int id) implements SlotReference {
 
         public static final Codec<Trinket> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        Codec.STRING.fieldOf("name1").forGetter(Trinket::name1),
-                        Codec.STRING.fieldOf("name2").forGetter(Trinket::name2),
+                        Codec.STRING.fieldOf("name").forGetter(Trinket::name),
+                        Codec.STRING.fieldOf("group").forGetter(Trinket::group),
                         Codec.INT.fieldOf("id").forGetter(Trinket::id)
                 ).apply(instance, Trinket::new)
         );
@@ -60,25 +60,17 @@ public class TrinketsCompat {
         public static Trinket of(dev.emi.trinkets.api.SlotReference ref, TrinketComponent comp) {
             int id = ref.index();
             TrinketInventory inv = ref.inventory();
-            for (var g : comp.getInventory().entrySet()) {
-                String first = g.getKey();
-                for (var s : g.getValue().entrySet()) {
-                    String second = s.getKey();
-                    if (s.getValue() == inv) {
-                        return new Trinket(first, second, id);
-                    }
-                }
-            }
-            throw new IllegalStateException("Trinket inventory not found. How?");
+            SlotType slotType = inv.getSlotType();
+            return new Trinket(slotType.getName(), slotType.getGroup(), id);
         }
 
         @Override
         public ItemStack get(LivingEntity player) {
             TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
             if (trinket != null) {
-                var i = trinket.getInventory().get(name1);
+                var i = trinket.getInventory().get(group);
                 if (i != null) {
-                    var inv = i.get(name2);
+                    var inv = i.get(name);
                     if (inv != null) {
                         return inv.getItem(id);
                     }
