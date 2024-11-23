@@ -267,6 +267,23 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
+    private static List<CraftingRecipe> createSafeRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "safe";
+
+        ItemStack safe = new ItemStack(ModRegistry.SAFE.get());
+
+        Ingredient base = Ingredient.of(ModTags.SHULKER_BOXES);
+        Ingredient ingot = Ingredient.of(Items.NETHERITE_INGOT);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, ingot);
+
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "safe_crafting");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, safe, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
 
     private static List<CraftingRecipe> createTippedBambooSpikesRecipes() {
         List<CraftingRecipe> recipes = new ArrayList<>();
@@ -409,6 +426,9 @@ public class SpecialRecipeDisplays {
             if (CommonConfigs.Building.FLAG_ENABLED.get()) {
                 registry.accept(createFlagFromBanner());
             }
+            if(CommonConfigs.Functional.SAFE_ENABLED.get()){
+                registry.accept(createSafeRecipe());
+            }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.accept(createAntiqueMapRecipe());
                 registry.accept(createAntiqueBookRecipe());
@@ -444,5 +464,5 @@ public class SpecialRecipeDisplays {
                 registry.accept(createBubbleBlowerChargeRecipe());
             }
         }
-    }
+     }
 }
