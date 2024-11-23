@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Invento
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
@@ -29,11 +30,13 @@ public class SafeItem extends BlockItem {
 
     @Override
     public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack incoming, Slot slot, ClickAction action, Player player, SlotAccess accessor) {
+        if (!CompatHandler.QUARK || !QuarkCompat.isShulkerDropInOn()) return false;
         return ItemsUtil.tryInteractingWithContainerItem(stack, incoming, slot, action, player, true);
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+        if (!CompatHandler.QUARK || !QuarkCompat.isShulkerDropInOn()) return false;
         return ItemsUtil.tryInteractingWithContainerItem(stack, slot.getItem(), slot, action, player, false);
     }
 
