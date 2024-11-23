@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -140,5 +141,15 @@ public class FodderBlock extends WaterBlock {
             return InteractionResult.sidedSuccess(world.isClientSide);
         }
         return InteractionResult.PASS;
+    }
+
+    @ForgeOverride
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 60;
+    }
+
+    @ForgeOverride
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 30;
     }
 }

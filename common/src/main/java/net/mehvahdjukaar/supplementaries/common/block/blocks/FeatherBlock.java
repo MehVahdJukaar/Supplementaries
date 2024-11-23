@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.*;
 
@@ -129,5 +131,14 @@ public class FeatherBlock extends Block {
         }
     }
 
+    @ForgeOverride
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 60;
+    }
+
+    @ForgeOverride
+    public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+        return 30;
+    }
 
 }
