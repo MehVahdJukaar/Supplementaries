@@ -839,7 +839,7 @@ public class ModRegistry {
                     .pushReaction(PushReaction.DESTROY)
                     .mapColor(MapColor.NONE)
                     .strength(0.25F, 0F)
-                    .sound(SoundType.WOOD), 60));
+                    .sound(SoundType.WOOD)));
 
     //blaze rod
     //TODO: blaze sound

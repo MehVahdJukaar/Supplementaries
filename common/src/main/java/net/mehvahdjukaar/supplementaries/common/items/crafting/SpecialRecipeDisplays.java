@@ -4,9 +4,9 @@ import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -274,8 +274,8 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<CraftingRecipe> createSafeRecipe() {
-        List<CraftingRecipe> recipes = new ArrayList<>();
+    private static List<RecipeHolder<? extends CraftingRecipe>> createSafeRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "safe";
 
         ItemStack safe = new ItemStack(ModRegistry.SAFE.get());
@@ -284,9 +284,8 @@ public class SpecialRecipeDisplays {
         Ingredient ingot = Ingredient.of(Items.NETHERITE_INGOT);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, ingot);
 
-        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "safe_crafting");
-        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, safe, inputs);
-        recipes.add(recipe);
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, safe, inputs);
+        recipes.add(new RecipeHolder<>(Supplementaries.res("safe_display"), recipe));
 
         return recipes;
     }
@@ -430,7 +429,7 @@ public class SpecialRecipeDisplays {
             if (CommonConfigs.Building.FLAG_ENABLED.get()) {
                 registry.accept(createFlagFromBanner());
             }
-            if(CommonConfigs.Functional.SAFE_ENABLED.get()){
+            if (CommonConfigs.Functional.SAFE_ENABLED.get()) {
                 registry.accept(createSafeRecipe());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
@@ -468,5 +467,5 @@ public class SpecialRecipeDisplays {
                 registry.accept(createBubbleBlowerChargeRecipe());
             }
         }
-     }
+    }
 }

@@ -8,6 +8,7 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- goblet dont consume liquid
 - presents dont save their messages stuff for some reason
 - ominous bottles as fluids
 - wind rod held like blaze rod
