@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +43,16 @@ public class FodderBlock extends WaterBlock {
     public FodderBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 8).setValue(WATERLOGGED, false));
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return state.getValue(LAYERS) * 2 - 1;
     }
 
     @Override
@@ -127,7 +136,7 @@ public class FodderBlock extends WaterBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.getItem() instanceof HoeItem && Utils.mayPerformBlockAction( player, pos, stack)) {
+        if (stack.getItem() instanceof HoeItem && Utils.mayPerformBlockAction(player, pos, stack)) {
             level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.PLAYERS, 1.0F, 1.0F);
             if (!level.isClientSide) {
 
