@@ -580,8 +580,10 @@
   "tag.block.supplementaries.walls": "墙形",
   "tag.block.supplementaries.water_holder": "绳索悬挂时可装水",
   "tag.block.supplementaries.wattle_and_daubs": "粗灰泥篱笆",
+  "tag.block.supplementaries.ignores_planter_offset": "忽略种植盆偏移",
 
   "tag.enchantment.supplementaries.slingshot_exclusive_set": "弹弓互不兼容魔咒",
+  "tag.enchantment.supplementaries.prevents_bubble_pop": "阻止肥皂泡破裂",
 
   "tag.entity_type.supplementaries.ash_blacklist": "不可烧成灰烬",
   "tag.entity_type.supplementaries.cage_baby_catchable": "笼子可捕捉幼年形态",
