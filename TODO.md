@@ -8,6 +8,11 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
+- presents dont save their messages stuff for some reason
+- ominous bottles as fluids
+- wind rod held like blaze rod
+- wind rod particles
+- tag loadedrecipe conditio not working
 - bamboo spikes wrong drop (poison)
 - flax still not fucking dropping its seed
 - recipe conditions not working for negated ones

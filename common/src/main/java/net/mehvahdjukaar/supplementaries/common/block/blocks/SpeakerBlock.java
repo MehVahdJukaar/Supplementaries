@@ -3,29 +3,26 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -40,6 +37,8 @@ public class SpeakerBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty ANTIQUE = ModBlockProperties.ANTIQUE;
+
+    private static final int POWERED_TICKS = 40;
 
     public SpeakerBlock(Properties properties) {
         super(properties);
@@ -79,9 +78,26 @@ public class SpeakerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
-        super.neighborChanged(state, world, pos, neighborBlock, fromPos, moving);
-        this.updatePower(state, world, pos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
+        super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
+        if (!level.isClientSide) {
+            boolean hasPower = state.getValue(POWERED);
+            if (hasPower != level.hasNeighborSignal(pos)) {
+                if (hasPower) {
+                    level.scheduleTick(pos, this, POWERED_TICKS);
+                } else {
+                    //turn on immediately
+                    this.updatePower(state, level, pos);
+                }
+            }
+        }
+    }
+
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        //turn off
+        this.updatePower(state, level, pos);
     }
 
     public void updatePower(BlockState state, Level world, BlockPos pos) {
@@ -89,7 +105,8 @@ public class SpeakerBlock extends Block implements EntityBlock {
             boolean pow = world.hasNeighborSignal(pos);
             // state changed
             if (pow != state.getValue(POWERED)) {
-                world.setBlock(pos, state.setValue(POWERED, pow), 3);
+                //known shape
+                world.setBlock(pos, state.setValue(POWERED, pow), 2);
                 // can I emit sound?
                 Direction facing = state.getValue(FACING);
                 if (pow && world.isEmptyBlock(pos.relative(facing))) {
