@@ -32,6 +32,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -43,8 +44,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     public ClientDynamicResourcesGenerator() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.addNamespaces("minecraft");
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
+    }
+
+    @Override
+    public Collection<String> additionalNamespaces() {
+        return List.of("minecraft");
     }
 
     @Override
