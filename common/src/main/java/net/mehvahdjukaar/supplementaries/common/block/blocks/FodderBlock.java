@@ -53,6 +53,16 @@ public class FodderBlock extends WaterBlock {
     }
 
     @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return state.getValue(LAYERS) * 2 - 1;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
         return SHAPE_BY_LAYER[state.getValue(LAYERS) - 1];
     }
