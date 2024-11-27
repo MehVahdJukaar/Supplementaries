@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.StatueEntityModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -119,6 +120,16 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                         combinedLightIn, combinedOverlayIn, poseStack, bufferIn, tile.getLevel(), 0);
                 poseStack.popPose();
             }
+        } else if (MiscUtils.FESTIVITY.isChristmas() || MiscUtils.FESTIVITY.isBirthday() ||
+                MiscUtils.FESTIVITY.isAprilsFool()) {
+            poseStack.pushPose();
+            poseStack.scale(-0.625f, -0.625f, 0.625f);
+
+            poseStack.translate(0, 0.1875, 0);
+            itemRenderer.renderStatic(ModRegistry.CONFETTI_POPPER.get().getDefaultInstance(),
+                    ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn,
+                    poseStack, bufferIn, tile.getLevel(), 0);
+            poseStack.popPose();
         } else {
             this.model.head.visible = true;
             this.model.hat.visible = true;
