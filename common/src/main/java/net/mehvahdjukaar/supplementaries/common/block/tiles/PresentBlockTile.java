@@ -156,8 +156,10 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PresentContainerMenu(id, player, this);
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        //thanks mojank
+        if (inv.player.isSpectator()) return null;
+        return new PresentContainerMenu(id, inv, this);
     }
 
     @Nullable
