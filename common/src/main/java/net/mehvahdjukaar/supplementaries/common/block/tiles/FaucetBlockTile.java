@@ -82,11 +82,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        return AABB.encapsulatingFullBlocks(getBlockPos().offset(0, -1, 0), getBlockPos().offset(1, 1, 1));
-    }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
         if (tile.transferCooldown > 0) {
             tile.transferCooldown--;

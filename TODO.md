@@ -8,7 +8,7 @@
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
 
-- blocks render shape broken
+- amendments ender drago bounding box
 - goblet dont consume liquid
 - presents dont save their messages stuff for some reason
 - ominous bottles as fluids

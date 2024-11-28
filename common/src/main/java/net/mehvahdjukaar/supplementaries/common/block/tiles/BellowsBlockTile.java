@@ -66,11 +66,6 @@ public class BellowsBlockTile extends BlockEntity {
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition);
-    }
-
     private AABB getProgressDeltaAabb(Direction dir) {
         var bb = new AABB(BlockPos.ZERO);
         float max = Math.max(height, prevHeight);

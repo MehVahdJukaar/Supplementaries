@@ -80,11 +80,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
                 .with(FLOWER_2, flowerStates[2]);
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).move(0, 0.25, 0);
-    }
-
     @Override
     public void updateClientVisualsOnLoad() {
 

@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 
 public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBlockTile> {
@@ -55,6 +57,11 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         this.center = model.getChild("center");
         this.leather = model.getChild("leather");
         this.top = model.getChild("top");
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BellowsBlockTile tile) {
+        return new AABB(tile.getBlockPos());
     }
 
     @Override

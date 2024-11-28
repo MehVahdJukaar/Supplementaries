@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -19,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +35,11 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         MODEL = context.bakeLayer(ClientRegistry.BUNTING_MODEL);
         FLAG = MODEL.getChild("flag");
         BOX = MODEL.getChild("box");
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BuntingBlockTile tile) {
+        return new AABB(tile.getBlockPos());
     }
 
     @Override

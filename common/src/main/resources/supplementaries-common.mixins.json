@@ -17,6 +17,7 @@
     "CartographyTableMixin",
     "CatSitOnBlockGoalMixin",
     "ComparatorBlockMixin",
+    "CompatCreeperArclightMixin",
     "CreeperMixin",
     "EndermanMixin",
     "EntityMixin",

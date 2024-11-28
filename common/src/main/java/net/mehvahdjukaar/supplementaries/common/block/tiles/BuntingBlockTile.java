@@ -50,10 +50,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         return buntings;
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        return new AABB(worldPosition);
-    }
 
     @Override
     public void updateClientVisualsOnLoad() {

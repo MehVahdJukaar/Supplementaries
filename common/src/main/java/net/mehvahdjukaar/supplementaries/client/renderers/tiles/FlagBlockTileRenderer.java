@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -20,10 +21,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 
 import java.util.List;
@@ -37,6 +40,13 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
         this.flag = modelpart.getChild("flag");
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(FlagBlockTile tile) {
+        Direction dir = tile.getDirection();
+        return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(
+                dir.getStepX() * 1.35f, 0, dir.getStepZ() * 1.35f).move(tile.getBlockPos());
     }
 
     @Override
