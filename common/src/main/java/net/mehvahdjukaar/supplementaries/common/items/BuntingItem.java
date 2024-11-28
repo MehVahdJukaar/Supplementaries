@@ -1,17 +1,25 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BuntingItem extends Item {
     public BuntingItem(Properties properties) {
@@ -21,6 +29,13 @@ public class BuntingItem extends Item {
     @Override
     public ItemStack getDefaultInstance() {
         return getColored(DyeColor.WHITE);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        if (!MiscUtils.showsHints(worldIn, flagIn)) return;
+        tooltip.add((Component.translatable("message.supplementaries.bunting")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Override
