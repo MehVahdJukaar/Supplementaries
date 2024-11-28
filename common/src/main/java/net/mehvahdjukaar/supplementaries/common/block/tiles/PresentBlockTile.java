@@ -10,6 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -153,6 +156,17 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         if (!this.recipient.isEmpty()) tag.putString("Recipient", this.recipient);
         if (!this.sender.isEmpty()) tag.putString("Sender", this.sender);
         if (!this.description.isEmpty()) tag.putString("Description", this.description);
+    }
+
+    //sync stuff to client. Needed for pick block
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
