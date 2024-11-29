@@ -28,7 +28,7 @@ dependencies {
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-common:1.19.2-0.1.14")
-    modCompileOnly("curse.maven:jei-238222:5734274")
+    modCompileOnly("curse.maven:jei-238222:5846878")
     //modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
     modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")

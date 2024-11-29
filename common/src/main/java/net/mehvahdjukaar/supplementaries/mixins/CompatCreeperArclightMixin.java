@@ -50,7 +50,7 @@ public abstract class CompatCreeperArclightMixin extends Monster implements IPar
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFZLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"))
     public boolean supp$checkPartyCreeper(Level instance, Entity source, double x, double y, double z, float radius, boolean fire, Level.ExplosionInteraction explosionInteraction) {
         if (supplementaries$festive) {
-            ClientBoundParticlePacket packet = new ClientBoundParticlePacket(new Vec3(x, y + this.getBbHeight() / 2, z), ClientBoundParticlePacket.Type.CONFETTI_EXPLOSION,
+            ClientBoundParticlePacket packet = new ClientBoundParticlePacket(new Vec3(x, y + this.getBbHeight() / 2, z), ClientBoundParticlePacket.Kind.CONFETTI_EXPLOSION,
                     (int) radius, null);
 
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this, packet);
