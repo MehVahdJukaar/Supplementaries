@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,14 +19,17 @@ public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
     private ItemStack clientCurrentAmmo = ItemStack.EMPTY;
 
     //unneded optimization
-    public ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
+    public ItemStack getAmmoForPreview(ItemStack weapon, @Nullable Level world, Player player) {
         if (world != null) {
             if (world.getGameTime() % 10 == 0) {
                 clientCurrentAmmo = ItemStack.EMPTY;
 
-                ItemStack findAmmo = player.getProjectile(cannon);
-                if (findAmmo.getItem() != Items.ARROW) {
-                    clientCurrentAmmo = findAmmo;
+                ItemStack foundAmmo = player.getProjectile(weapon);
+                if (foundAmmo == null) {
+                    Supplementaries.LOGGER.error("Item {} returned null ammo! This is a bug of the mod that added it", weapon.getItem());
+                }
+                if (foundAmmo.getItem() != Items.ARROW) {
+                    clientCurrentAmmo = foundAmmo;
                 }
             }
         }
