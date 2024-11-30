@@ -64,9 +64,9 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, BlockGetter context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (!MiscUtils.showsHints(tooltipFlag) || CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) return;
+        if (!MiscUtils.showsHints(context,tooltipFlag) || CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) return;
         tooltipComponents.add((Component.translatable("message.supplementaries.flower_box")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
