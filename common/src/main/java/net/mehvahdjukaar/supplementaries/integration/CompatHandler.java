@@ -113,6 +113,7 @@ public class CompatHandler {
     public static void setup() {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
+        if (SOUL_FIRED) SoulFiredCompat.setup();
     }
 
     public static void initOptionalRegistries() {
@@ -123,7 +124,6 @@ public class CompatHandler {
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
-        if (SOUL_FIRED) SoulFiredCompat.init();
         if (COMPUTERCRAFT) CCCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
