@@ -246,7 +246,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {
         if (level.isClientSide && state.getValue(TREASURE)) {
             level.addDestroyBlockEffect(pos, state);
-            if (level.random.nextInt(20) == 0) {
+            if (level.random.nextInt(20) == 0) { //TODO: server sync
                 double x = pos.getX() + 0.5;
                 double y = pos.getY() + 0.3125;
                 double z = pos.getZ() + 0.5;

@@ -443,7 +443,7 @@ public class ClientRegistry {
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WAY_SIGN_MODELS.get().values().forEach(event::register);
-        PlaceableBookManager.getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
+       // PlaceableBookManager.INSTANCES..getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);

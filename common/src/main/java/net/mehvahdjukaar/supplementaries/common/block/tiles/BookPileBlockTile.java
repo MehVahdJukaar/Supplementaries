@@ -65,16 +65,16 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
     private static final RandomSource rand = RandomSource.create();
 
-    private void displayRandomColoredBooks(int i) {
+    private void displayRandomColoredBooks(int i, HolderLookup.Provider provider) {
         for (int j = 0; j < i; j++) {
             Item it;
             int r = rand.nextInt(10);
             if (r < 2) it = Items.ENCHANTED_BOOK;
             else if (r < 3) it = Items.WRITABLE_BOOK;
             else it = Items.BOOK;
-            ArrayList<BookType> col = PlaceableBookManager.getByItem(it.getDefaultInstance());
+            ArrayList<BookType> col = PlaceableBookManager.INSTANCES.get(provider).getByItem(it.getDefaultInstance());
             booksVisuals.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
-                    col, null));
+                    col, null, level.registryAccess()));
         }
     }
 
@@ -147,18 +147,18 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         this.booksVisuals.clear();
         List<BookType> colors = new ArrayList<>();
         for (var v : ClientConfigs.Tweaks.BOOK_COLORS.get()) {
-            BookType byName = PlaceableBookManager.getByName(v);
+            BookType byName = PlaceableBookManager.INSTANCES.get(level.registryAccess()).getByName(v);
             if (!colors.contains(byName)) colors.add(byName);
         }
         for (int index = 0; index < 4; index++) {
             ItemStack stack = this.getItem(index);
             if (stack.isEmpty()) break;
             BookType last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
-            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index, colors, last));
+            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index, colors, last, level.registryAccess()));
         }
 
         if (booksVisuals.isEmpty()) {
-            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS));
+            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS), this.level.registryAccess());
         }
     }
 
@@ -177,7 +177,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         private final BookType type;
         private final ItemStack stack;
 
-        public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors, @Nullable BookType lastColor) {
+        public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors, @Nullable BookType lastColor, HolderLookup.Provider provider) {
+            PlaceableBookManager bookReg = PlaceableBookManager.INSTANCES.get(provider);
             this.stack = bookStack;
             Random rand = new Random(pos.below(2).asLong());
             for (int j = 0; j < index; j++) rand.nextInt();
@@ -188,7 +189,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 if (lastColor == null) {
                     if(colors.isEmpty()){
                         Supplementaries.error();
-                        this.type = PlaceableBookManager.getByName("brown");
+                        this.type = bookReg.getByName("brown");
                         return;
                     }
                     this.type = colors.get(rand.nextInt(colors.size()));
@@ -203,10 +204,10 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 }
                 colors.remove(this.type);
             } else {
-                var possibleTypes = PlaceableBookManager.getByItem(bookStack);
+                var possibleTypes = bookReg.getByItem(bookStack);
                 if(possibleTypes.isEmpty()){
                     Supplementaries.error();
-                    this.type = PlaceableBookManager.getByName("brown");
+                    this.type = bookReg.getByName("brown");
                     return;
                 }
                 this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));

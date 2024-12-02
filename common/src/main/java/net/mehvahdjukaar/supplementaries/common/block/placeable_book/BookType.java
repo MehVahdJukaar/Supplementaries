@@ -1,36 +1,46 @@
 package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
 import com.mojang.serialization.Codec;
-import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSVColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 
-public final class BookType {
+public record BookType(String texture, float hue, float hueShift, boolean hasGlint, ItemPredicate predicate) {
 
-    public static final Codec<BookType> CODEC = Codec.stringResolver(BookType::name, PlaceableBookManager::getByName);
+    public static final Codec<BookType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.fieldOf("texture").forGetter(BookType::name),
+            Codec.FLOAT.fieldOf("color").forGetter(BookType::hue),
+            Codec.FLOAT.fieldOf("angle").forGetter(BookType::hueShift),
+            Codec.BOOL.fieldOf("hasGlint").forGetter(BookType::hasGlint),
+            ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
+    ).apply(instance, BookType::new));
 
-    private final String name;
-    private final float hue;
-    private final float hueShift;
-    private final boolean hasGlint;
-
-    public BookType(String name, int rgb, float angle, boolean hasGlint) {
+    public BookType create(String texture, int rgb, float angle, boolean hasGlint, ItemPredicate predicate) {
         var col = new RGBColor(rgb).asHSV();
         float hueShift;
         if (angle < 0) hueShift = getLegacyAllowedHueShift(col.asHSL());
         else hueShift = Math.max(1, angle);
-        this.name = name;
-        this.hue = col.hue();
-        this.hueShift = hueShift;
-        this.hasGlint = hasGlint;
+
+        return new BookType(texture, col.hue(), hueShift, hasGlint, predicate);
+    }
+
+    public BookType(DyeColor color, float angle, boolean enchanted) {
+        this(color.getName(), color.getTextureDiffuseColor(), angle, enchanted, null);
+    }
+
+    public BookType(DyeColor color) {
+        this(color, -1, false);
+    }
+
+    public BookType(String name, int rgb, boolean enchanted) {
+        this(name, rgb, -1, enchanted, null);
     }
 
     //this could be redone
@@ -43,7 +53,7 @@ public final class BookType {
     }
 
     // if it ain't broke, don't fix it?
-    private  static float getLegacyAllowedHueShift(HSLColor color) {
+    private static float getLegacyAllowedHueShift(HSLColor color) {
         float l = color.lightness();
         float s = ColorHelper.normalizeHSLSaturation(color.saturation(), l);
         float minAngle = 90 / 360f;
@@ -54,25 +64,13 @@ public final class BookType {
         return minAngle + (1 - distSq) * addAngle;
     }
 
-    public BookType(DyeColor color, float angle, boolean enchanted) {
-        this(color.getName(), color.getTextureDiffuseColor(), angle, enchanted);
-    }
-
-    public BookType(DyeColor color) {
-        this(color, -1, false);
-    }
-
-    public BookType(String name, int rgb, boolean enchanted) {
-        this(name, rgb, -1, enchanted);
-    }
-
     public boolean looksGoodNextTo(BookType other) {
         float diff = Math.abs(Mth.degreesDifference(this.hue * 360, other.hue * 360) / 360);
         return diff < (other.hueShift + this.hueShift) / 2f;
     }
 
     public String name() {
-        return name;
+        return texture;
     }
 
     public float hue() {

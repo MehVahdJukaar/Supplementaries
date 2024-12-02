@@ -5,14 +5,11 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -83,13 +80,28 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
         }
     }
 
+    @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
+            var sign = tile.getSignUp();
+            if (sign.active()) {
+                return sign.getItem();
+            }
+            var sign2 = tile.getSignDown();
+            if (sign2.active()) {
+                return sign2.getItem();
+            }
+        }
+        return super.getCloneItemStack(level, pos, state);
+    }
+
     @ForgeOverride
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             var sign = tile.getClickedSign(target.getLocation());
             if (sign.active()) {
                 return sign.getItem();
-            } else return new ItemStack(tile.getHeldBlock().getBlock());
+            }
         }
         return new ItemStack(this);
     }

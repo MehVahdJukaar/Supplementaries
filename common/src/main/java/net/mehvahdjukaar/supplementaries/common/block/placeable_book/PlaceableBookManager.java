@@ -2,9 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,34 +21,45 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class PlaceableBookManager {
+public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
-    private static final Map<String, BookType> BY_NAME = new HashMap<>();
-    private static final Multimap<Item, BookType> BY_ITEM = HashMultimap.create();
+    public static final SidedInstance<PlaceableBookManager> INSTANCES = SidedInstance.of(PlaceableBookManager::new);
 
-    public static void register(BookType type, @Nullable Item item) {
+    private final Map<String, BookType> byName = new HashMap<>();
+    private final Multimap<Item, BookType> byItem = HashMultimap.create();
+    private final HolderLookup.Provider registryAccess;
+
+    public PlaceableBookManager(HolderLookup.Provider registryAccess) {
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "placeable_books");
+        this.registryAccess = registryAccess;
+
+        INSTANCES.set(registryAccess, this);
+    }
+
+    public void register(BookType type, @Nullable Item item) {
         if (item != null) {
-            BY_ITEM.put(item, type);
-            BY_NAME.put(type.name(), type);
+            byItem.put(item, type);
+            byName.put(type.name(), type);
         }
     }
 
-    public static void registerDefault(DyeColor color) {
+    public void registerDefault(DyeColor color) {
         register(new BookType(color), Items.BOOK);
     }
 
 
-    public static void registerDefault(DyeColor color, int angle) {
+    public void registerDefault(DyeColor color, int angle) {
         register(new BookType(color, angle, false), Items.BOOK);
     }
 
-    public static void registerDefault(String name, int color) {
+    public void registerDefault(String name, int color) {
         register(new BookType(name, color, false), Items.BOOK);
     }
 
 
     //TODO: make data
-    public static void setup() {
+    public void setup() {
         registerDefault(DyeColor.BROWN, 1);
         registerDefault(DyeColor.WHITE, 1);
         registerDefault(DyeColor.BLACK, 1);
@@ -57,30 +76,30 @@ public class PlaceableBookManager {
         registerDefault(DyeColor.MAGENTA);
         registerDefault(DyeColor.PINK);
         registerDefault(DyeColor.RED);
-        register(new BookType("enchanted", 0, 1, true), Items.ENCHANTED_BOOK);
-        register(new BookType("and_quill", 0, 1, false), Items.WRITABLE_BOOK);
-        register(new BookType("written", 0, 1, false), Items.WRITTEN_BOOK);
-        register(new BookType("tattered", 0, 1, false), null);
-        register(new BookType("tome", 0, 1, true), CompatObjects.TOME.get());
-        register(new BookType("gene", 0, 1, false), CompatObjects.GENE_BOOK.get());
+        register(new BookType("enchanted", 0, 1, true, null), Items.ENCHANTED_BOOK);
+        register(new BookType("and_quill", 0, 1, false, null), Items.WRITABLE_BOOK);
+        register(new BookType("written", 0, 1, false, null), Items.WRITTEN_BOOK);
+        register(new BookType("tattered", 0, 1, false, null), null);
+        register(new BookType("tome", 0, 1, true, null), CompatObjects.TOME.get());
+        register(new BookType("gene", 0, 1, false, null), CompatObjects.GENE_BOOK.get());
     }
 
-    public static BookType rand(Random r) {
+    public BookType rand(Random r) {
         ArrayList<BookType> all = getAll();
         return all.get(r.nextInt(all.size()));
     }
 
-    public static ArrayList<BookType> getAll() {
-        return new ArrayList<>(BY_ITEM.values());
+    public ArrayList<BookType> getAll() {
+        return new ArrayList<>(byItem.values());
     }
 
-    public static BookType getByName(String name) {
-        var b = BY_NAME.get(name);
-        if (b == null) return BY_NAME.get("brown");
+    public BookType getByName(String name) {
+        var b = byName.get(name);
+        if (b == null) return byName.get("brown");
         return b;
     }
 
-    public static ArrayList<BookType> getByItem(ItemStack stack) {
+    public ArrayList<BookType> getByItem(ItemStack stack) {
         if (AntiqueInkItem.hasAntiqueInk(stack)) {
             return new ArrayList<>(List.of(getByName("tattered")));
         }
@@ -89,6 +108,11 @@ public class PlaceableBookManager {
             String colName = Utils.getID(item).getPath().replace("_book", "");
             return new ArrayList<>(List.of(getByName(colName)));
         }
-        return new ArrayList<>(BY_ITEM.get(item));
+        return new ArrayList<>(byItem.get(item));
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
+
     }
 }

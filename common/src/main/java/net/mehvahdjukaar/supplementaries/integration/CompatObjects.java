@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalHolder;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;

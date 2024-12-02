@@ -52,7 +52,7 @@ public class ModSetup {
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
-        PlaceableBookManager.setup();
+      //  PlaceableBookManager.setup();
     }
 
     @EventCalled
