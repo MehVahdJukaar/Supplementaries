@@ -92,8 +92,7 @@ public class ClientRegistry {
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation GLITTER_SHADER = Supplementaries.res("shaders/post/glitter.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
-    public static final ResourceLocation VANILLA_DESATURATE_SHADER = Supplementaries.res("shaders/post/desaturate.json");
-    public static final ResourceLocation GLITTER_SHADE = Supplementaries.res("shaders/post/glitter.json");
+    public static final ResourceLocation DESATURATE_SHADER = Supplementaries.res("shaders/post/desaturate.json");
     // core shaders
     public static final CoreShaderContainer ENTITY_OFFSET_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntityCutoutShader);
     public static final CoreShaderContainer NOISE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
