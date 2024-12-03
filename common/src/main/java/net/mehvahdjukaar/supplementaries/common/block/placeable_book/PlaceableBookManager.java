@@ -40,10 +40,10 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
     public void register(BookType type, @Nullable Item item) {
         if (item != null) {
             byItem.put(item, type);
-            byName.put(type.name(), type);
+            byName.put(type.texture(), type);
         }
     }
-
+/*
     public void registerDefault(DyeColor color) {
         register(new BookType(color), Items.BOOK);
     }
@@ -83,6 +83,7 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         register(new BookType("tome", 0, 1, true, null), CompatObjects.TOME.get());
         register(new BookType("gene", 0, 1, false, null), CompatObjects.GENE_BOOK.get());
     }
+*/
 
     public BookType rand(Random r) {
         ArrayList<BookType> all = getAll();

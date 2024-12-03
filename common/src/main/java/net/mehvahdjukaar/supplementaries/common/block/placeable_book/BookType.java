@@ -12,16 +12,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 
-public record BookType(String texture, float hue, float hueShift, boolean hasGlint, ItemPredicate predicate) {
+public record BookType(String texture, float hue, float hueShift, boolean hasGlint,
+                       float enchantPower, boolean isVertical,
+                       ItemPredicate predicate) {
 
     public static final Codec<BookType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("texture").forGetter(BookType::name),
+            Codec.STRING.fieldOf("texture").forGetter(BookType::texture),
             Codec.FLOAT.fieldOf("color").forGetter(BookType::hue),
             Codec.FLOAT.fieldOf("angle").forGetter(BookType::hueShift),
-            Codec.BOOL.fieldOf("hasGlint").forGetter(BookType::hasGlint),
+            Codec.BOOL.optionalFieldOf("hasGlint", false).forGetter(BookType::hasGlint),
+            Codec.FLOAT.optionalFieldOf("enchantPower", 0f).forGetter(BookType::enchantPower),
+            Codec.BOOL.optionalFieldOf("isVertical", false).forGetter(BookType::isVertical),
             ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
     ).apply(instance, BookType::new));
 
+    /*
     public BookType create(String texture, int rgb, float angle, boolean hasGlint, ItemPredicate predicate) {
         var col = new RGBColor(rgb).asHSV();
         float hueShift;
@@ -42,6 +47,7 @@ public record BookType(String texture, float hue, float hueShift, boolean hasGli
     public BookType(String name, int rgb, boolean enchanted) {
         this(name, rgb, -1, enchanted, null);
     }
+*/
 
     //this could be redone
     //I think it allows darker non-saturated colors to have higher hue shift
@@ -69,19 +75,4 @@ public record BookType(String texture, float hue, float hueShift, boolean hasGli
         return diff < (other.hueShift + this.hueShift) / 2f;
     }
 
-    public String name() {
-        return texture;
-    }
-
-    public float hue() {
-        return hue;
-    }
-
-    public float hueShift() {
-        return hueShift;
-    }
-
-    public boolean hasGlint() {
-        return hasGlint;
-    }
 }

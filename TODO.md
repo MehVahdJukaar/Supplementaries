@@ -7,9 +7,11 @@
 
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
-
+  (1.20) bubble recipe
+- snowy spirit step height config
 - some bug with ominous fluid
-- amendments ender drago bounding box
+
+- amendments ender dragon head bounding box
 - goblet dont consume liquid
 - presents dont save their messages stuff for some reason
 - ominous bottles as fluids

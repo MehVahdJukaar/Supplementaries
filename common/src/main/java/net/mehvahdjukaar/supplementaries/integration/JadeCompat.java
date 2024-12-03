@@ -5,10 +5,11 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlock
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import org.jetbrains.annotations.Nullable;
 import snownee.jade.addon.universal.ItemStorageProvider;
 import snownee.jade.api.*;
 import snownee.jade.api.config.IPluginConfig;
@@ -35,7 +36,7 @@ public class JadeCompat implements IWailaPlugin {
     }
 
     public record HideItemsProvider<T extends BaseContainerBlockEntity>(ResourceLocation id) implements
-            IServerExtensionProvider<T, ItemStack>, IClientExtensionProvider<ItemStack, ItemView> {
+            IServerExtensionProvider<ItemStack>, IClientExtensionProvider<ItemStack, ItemView> {
 
         @Override
         public ResourceLocation getUid() {
@@ -43,10 +44,13 @@ public class JadeCompat implements IWailaPlugin {
         }
 
         @Override
-        public List<ViewGroup<ItemStack>> getGroups(ServerPlayer player, ServerLevel world, T blockEntity, boolean showDetails) {
-            if (blockEntity instanceof SafeBlockTile || blockEntity instanceof AbstractPresentBlockTile) {
-                if (blockEntity.canOpen(player)) {
-                   return ItemStorageProvider.INSTANCE.getGroups(player, world, blockEntity, showDetails);
+        public @Nullable List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor) {
+            var te = accessor.getTarget();
+            if (te instanceof SafeBlockTile || te instanceof AbstractPresentBlockTile) {
+                Player player = accessor.getPlayer();
+                RandomizableContainerBlockEntity tile = (RandomizableContainerBlockEntity) te;
+                if (tile.canOpen(player)) {
+                    return ItemStorageProvider.Extension.INSTANCE.getGroups(accessor);
                 }
             }
             return List.of();
@@ -56,6 +60,8 @@ public class JadeCompat implements IWailaPlugin {
         public List<ClientViewGroup<ItemView>> getClientGroups(Accessor<?> accessor, List<ViewGroup<ItemStack>> groups) {
             return ClientViewGroup.map(groups, ItemView::new, null);
         }
+
+
     }
 
     public record HatStandProvider(ResourceLocation id) implements IEntityComponentProvider {

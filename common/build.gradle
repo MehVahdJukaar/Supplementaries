@@ -37,8 +37,8 @@ dependencies {
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
-    modCompileOnly("curse.maven:jade-324717:4801177")
-    modCompileOnly("curse.maven:emi-580555:5704405")
+    modCompileOnly("curse.maven:jade-324717:5884237")
+    modCompileOnly("curse.maven:emi-580555:5872513")
     modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("curse.maven:zeta-968868:5597406")
