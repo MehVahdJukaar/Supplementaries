@@ -14,7 +14,8 @@
   labelsNotAllowed: [
     'duplicate',
     'help wanted',
-    'invalid'
+    'invalid',
+    'details'
   ],
   //defaultLabels: ['bug']
 }
