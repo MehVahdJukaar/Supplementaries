@@ -5,15 +5,18 @@
 
 - hat standDispensing equippable onto them will delete the item.
 
+- crash when removing book from lectern
+- polytone season compat
+- polytone game time variable not working
+- hourglass they do not accept sand and red sand
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
   (1.20) bubble recipe
 - snowy spirit step height config
 - some bug with ominous fluid
-
+- safe speaker block name thing
 - amendments ender dragon head bounding box
 - goblet dont consume liquid
-- presents dont save their messages stuff for some reason
 - ominous bottles as fluids
 - wind rod held like blaze rod
 - wind rod particles
@@ -22,7 +25,7 @@
 - flax still not fucking dropping its seed
 - recipe conditions not working for negated ones
 - amendments cauldron texture
-- cage bath tick
+- cage bat tick
 - cage puch fabric
 - cannon ball dragon
 - wicker fence straw
@@ -167,7 +170,6 @@ slidy double pulse
 - cant eat pancake 
 -trapped prsents not updating inventory whenshot
 - blaze powder texture broken hourglass
-- glowstone dust in hourglass
 - slidy block connection down ropes
 - slimeall and bricks projectile angle from disp minecart
 - cannon target infinite reach

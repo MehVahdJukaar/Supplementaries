@@ -16,6 +16,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -132,6 +134,21 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOwnerPro
         tag.putDouble("Volume", this.volume);
         this.saveOwner(tag);
     }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        super.applyImplicitComponents(componentInput);
+        var name = componentInput.get(DataComponents.CUSTOM_NAME);
+        if  (name != null) {
+            this.customName = name;
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+    }
+
     public void sendMessage() {
         BlockState state = this.getBlockState();
 

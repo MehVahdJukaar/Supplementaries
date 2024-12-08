@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

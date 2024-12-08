@@ -67,17 +67,6 @@ public class SpeakerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        this.updatePower(state, worldIn, pos);
-        if (worldIn.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
-            if (stack.has(DataComponents.CUSTOM_NAME)) {
-                //TODO: check if its needed
-                tile.setCustomName(stack.getHoverName());
-            }
-        }
-    }
-
-    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean moving) {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
         if (!level.isClientSide) {
