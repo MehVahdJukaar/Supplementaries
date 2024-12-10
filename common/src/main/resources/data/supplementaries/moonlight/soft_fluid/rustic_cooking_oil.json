@@ -1,0 +1,19 @@
+{
+    "color": "FFFC5B",
+    "containers": [
+        {
+            "filled": [
+                "rusticdelight:cooking_oil"
+            ],
+            "empty": "minecraft:glass_bottle",
+            "capacity": "BOTTLE"
+        }
+    ],
+    "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
+    "food": {
+        "divider": "BOTTLE",
+        "item": "rusticdelight:cooking_oil"
+    },
+    "from_mod": "rusticdelight",
+    "still_texture": "moonlight:block/soft_fluids/soup_liquid"
+}
