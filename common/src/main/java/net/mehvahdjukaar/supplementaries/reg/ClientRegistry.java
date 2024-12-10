@@ -31,7 +31,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
@@ -471,7 +470,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
-        event.register(Supplementaries.res("book_pile"), BookPileModel::new);
+        event.register(Supplementaries.res("book_pile"), new BookPileModelLoader());
         event.register(Supplementaries.res("bunting"), BuntingsBakedModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }

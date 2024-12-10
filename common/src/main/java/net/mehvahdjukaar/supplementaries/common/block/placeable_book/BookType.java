@@ -2,29 +2,36 @@ package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSVColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.DyeColor;
 
-public record BookType(String texture, float hue, float hueShift, boolean hasGlint,
-                       float enchantPower, boolean isVertical,
+import java.util.Optional;
+
+public record BookType(ResourceLocation texture, HSVColor color, float hueShift, boolean hasGlint,
+                       float enchantPower, boolean isVertical, float chance,
                        ItemPredicate predicate) {
 
     public static final Codec<BookType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.STRING.fieldOf("texture").forGetter(BookType::texture),
-            Codec.FLOAT.fieldOf("color").forGetter(BookType::hue),
-            Codec.FLOAT.fieldOf("angle").forGetter(BookType::hueShift),
+            ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
+                    .fieldOf("color").forGetter(BookType::color),
+            Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
             Codec.BOOL.optionalFieldOf("hasGlint", false).forGetter(BookType::hasGlint),
             Codec.FLOAT.optionalFieldOf("enchantPower", 0f).forGetter(BookType::enchantPower),
             Codec.BOOL.optionalFieldOf("isVertical", false).forGetter(BookType::isVertical),
+            Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
             ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
-    ).apply(instance, BookType::new));
+    ).apply(instance, BookType::create));
+
+    private static BookType create(HSVColor color, Optional<Float> hueAngle, Boolean aBoolean, Float aFloat1, Boolean aBoolean1, Float aFloat2, ItemPredicate itemPredicate) {
+        float hueShift = hueAngle.orElseGet(() -> getAllowedHueShift(color));
+        return new BookType(ResourceLocation.withDefaultNamespace("aa"), color, hueShift, aBoolean, aFloat1, aBoolean1, aFloat2, itemPredicate);
+    }
 
     /*
     public BookType create(String texture, int rgb, float angle, boolean hasGlint, ItemPredicate predicate) {
@@ -33,7 +40,7 @@ public record BookType(String texture, float hue, float hueShift, boolean hasGli
         if (angle < 0) hueShift = getLegacyAllowedHueShift(col.asHSL());
         else hueShift = Math.max(1, angle);
 
-        return new BookType(texture, col.hue(), hueShift, hasGlint, predicate);
+        return new BookType(texture, col.color(), hueShift, hasGlint, predicate);
     }
 
     public BookType(DyeColor color, float angle, boolean enchanted) {
@@ -50,7 +57,7 @@ public record BookType(String texture, float hue, float hueShift, boolean hasGli
 */
 
     //this could be redone
-    //I think it allows darker non-saturated colors to have higher hue shift
+    //I think it allows darker non-saturated colors to have higher color shift
     private static float getAllowedHueShift(HSVColor color) {
         float v = color.value();
         float minAngle = 70 / 360f;
@@ -71,7 +78,7 @@ public record BookType(String texture, float hue, float hueShift, boolean hasGli
     }
 
     public boolean looksGoodNextTo(BookType other) {
-        float diff = Math.abs(Mth.degreesDifference(this.hue * 360, other.hue * 360) / 360);
+        float diff = Math.abs(Mth.degreesDifference(this.color.hue() * 360, other.color.hue() * 360) / 360);
         return diff < (other.hueShift + this.hueShift) / 2f;
     }
 

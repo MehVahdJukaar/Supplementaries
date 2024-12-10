@@ -31,7 +31,7 @@ float hueDistance(vec3 color, vec3 target) {
     vec3 hsvColor = RGBtoHCV(color);
     vec3 hsvTarget = RGBtoHCV(target);
 
-    // Calculate hue distance with circular wrapping
+    // Calculate color distance with circular wrapping
     float hueDist = abs(hsvColor.x - hsvTarget.x);
     hueDist = min(hueDist, 1.0 - hueDist);// Wrap around
 

@@ -1155,8 +1155,8 @@ public class CommonConfigs {
             builder.push("placeable_books");
             WRITTEN_BOOKS = builder.comment("Allows written books to be placed down. Requires shift clicking")
                     .define("written_books", true);
-            PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
-                    .define("enabled", true);
+            PLACEABLE_BOOKS = ()->false;// builder.comment("Allow books and enchanted books to be placed on the ground")
+                   // .define("enabled", true);
             BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("book_power", 1d, 0, 5);
             ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")

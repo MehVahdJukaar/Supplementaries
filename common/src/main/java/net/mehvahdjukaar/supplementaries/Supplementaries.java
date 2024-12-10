@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -91,6 +92,7 @@ public class Supplementaries {
         PlatHelper.addServerReloadListener(HourglassTimesManager::new, res("hourglass_data"));
         PlatHelper.addServerReloadListener(FaucetBehaviorsManager::new, res("faucet_interactions"));
         PlatHelper.addServerReloadListener(CapturedMobHandler::new, res("catchable_mobs_properties"));
+        PlatHelper.addServerReloadListener(PlaceableBookManager::new, res("placeable_books"));
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();

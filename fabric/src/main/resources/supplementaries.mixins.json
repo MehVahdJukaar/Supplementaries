@@ -22,6 +22,7 @@
     "CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "FireBlockAccessor",
+    "MobMixin",
     "RedstoneWireBlockMixin"
   ],
   "injectors": {

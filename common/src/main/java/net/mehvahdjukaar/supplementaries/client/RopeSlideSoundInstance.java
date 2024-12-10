@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import net.mehvahdjukaar.supplementaries.common.entities.RedMerchantEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -32,7 +33,6 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
             if (player.onClimbable()) {
                 BlockState b = player.getBlockStateOn();
                 if (b.is(ModTags.FAST_FALL_ROPES)) {
-
                     this.x = this.player.getX();
                     this.y = this.player.getY();
                     this.z = this.player.getZ();

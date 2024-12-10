@@ -1,14 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
+import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -16,7 +18,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -25,8 +26,7 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
     public static final SidedInstance<PlaceableBookManager> INSTANCES = SidedInstance.of(PlaceableBookManager::new);
 
-    private final Map<String, BookType> byName = new HashMap<>();
-    private final Multimap<Item, BookType> byItem = HashMultimap.create();
+    private final MapRegistry<BookType> books = new MapRegistry<>("placeable_books");
     private final HolderLookup.Provider registryAccess;
 
     public PlaceableBookManager(HolderLookup.Provider registryAccess) {
@@ -37,27 +37,17 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         INSTANCES.set(registryAccess, this);
     }
 
-    public void register(BookType type, @Nullable Item item) {
-        if (item != null) {
-            byItem.put(item, type);
-            byName.put(type.texture(), type);
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
+        books.clear();
+        DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        for (var entry : object.entrySet()) {
+            BookType type = BookType.CODEC.decode(ops, entry.getValue()).getOrThrow()
+                    .getFirst();
+            books.register(entry.getKey(), type);
         }
     }
 /*
-    public void registerDefault(DyeColor color) {
-        register(new BookType(color), Items.BOOK);
-    }
-
-
-    public void registerDefault(DyeColor color, int angle) {
-        register(new BookType(color, angle, false), Items.BOOK);
-    }
-
-    public void registerDefault(String name, int color) {
-        register(new BookType(name, color, false), Items.BOOK);
-    }
-
-
     //TODO: make data
     public void setup() {
         registerDefault(DyeColor.BROWN, 1);
@@ -86,18 +76,15 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 */
 
     public BookType rand(Random r) {
-        ArrayList<BookType> all = getAll();
-        return all.get(r.nextInt(all.size()));
+        return null;
     }
 
-    public ArrayList<BookType> getAll() {
-        return new ArrayList<>(byItem.values());
+    public Collection<BookType> getAll() {
+        return books.getValues();
     }
 
     public BookType getByName(String name) {
-        var b = byName.get(name);
-        if (b == null) return byName.get("brown");
-        return b;
+        return null;
     }
 
     public ArrayList<BookType> getByItem(ItemStack stack) {
@@ -109,11 +96,8 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
             String colName = Utils.getID(item).getPath().replace("_book", "");
             return new ArrayList<>(List.of(getByName(colName)));
         }
-        return new ArrayList<>(byItem.get(item));
+        return null;
     }
 
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
 
-    }
 }

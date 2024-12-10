@@ -5,6 +5,7 @@
 
 - hat standDispensing equippable onto them will delete the item.
 
+- amendments 1.20 rope and bell not connecting
 - crash when removing book from lectern
 - polytone season compat
 - polytone game time variable not working
