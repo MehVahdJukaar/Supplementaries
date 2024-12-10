@@ -108,8 +108,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 }
             } else {
                 //shifts books. Assumes at most one has been removed
-             //   consolidateBookPile();
-              //  this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+                //   consolidateBookPile();
+                //  this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
             }
         }
         this.enchantPower = 0;
@@ -145,6 +145,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public void updateClientVisualsOnLoad() {
         this.booksVisuals.clear();
+        if(true)return;
         List<BookType> colors = new ArrayList<>();
         for (var v : ClientConfigs.Tweaks.BOOK_COLORS.get()) {
             BookType byName = PlaceableBookManager.INSTANCES.get(level.registryAccess()).getByName(v);
@@ -187,7 +188,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
             if (item instanceof BookItem) {
                 if (lastColor == null) {
-                    if(colors.isEmpty()){
+                    if (colors.isEmpty()) {
                         Supplementaries.error();
                         this.type = bookReg.getByName("brown");
                         return;
@@ -195,7 +196,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                     this.type = colors.get(rand.nextInt(colors.size()));
                 } else {
                     List<BookType> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).toList();
-                    if(c.isEmpty()) {
+                    if (c.isEmpty()) {
                         Supplementaries.error();
                         this.type = lastColor;
                     } else {
@@ -205,7 +206,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 colors.remove(this.type);
             } else {
                 var possibleTypes = bookReg.getByItem(bookStack);
-                if(possibleTypes.isEmpty()){
+                if (possibleTypes.isEmpty()) {
                     Supplementaries.error();
                     this.type = bookReg.getByName("brown");
                     return;
