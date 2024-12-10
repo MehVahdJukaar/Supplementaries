@@ -16,10 +16,13 @@ public abstract class WrittenBookAccessMixin implements IAntiquable {
     @Unique
     private boolean supplementaries$antiqueInk;
 
+    @SuppressWarnings("ConstantConditions")
     @ModifyReturnValue(method = "fromItem", at = @At("RETURN"))
     private static BookViewScreen.BookAccess supp$checkAntiqueInk(BookViewScreen.BookAccess original,
-                                                                  @Local(argsOnly = true) ItemStack stack){
-        ((IAntiquable)(Object) original).supplementaries$setAntique(AntiqueInkItem.hasAntiqueInk(stack));
+                                                                  @Local(argsOnly = true) ItemStack stack) {
+        if (original != null) {
+            ((IAntiquable) (Object) original).supplementaries$setAntique(AntiqueInkItem.hasAntiqueInk(stack));
+        }
         return original;
     }
 
