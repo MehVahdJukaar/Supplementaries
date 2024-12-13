@@ -61,7 +61,7 @@ body:
   - type: textarea
     id: issue-details
     attributes:
-      label: "Issue Detail"
+      label: "Describe Issue"
       description: "A clear and concise description of what the bug is."
       placeholder: "TIP: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs. \nTIP: If applicable, add screenshots to help explain your problem."
     validations:
