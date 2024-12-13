@@ -13,25 +13,29 @@ import net.minecraft.util.Mth;
 
 import java.util.Optional;
 
-public record BookType(ResourceLocation texture, HSVColor color, float hueShift, boolean hasGlint,
+public record BookType(ResourceLocation id, HSVColor color, float hueShift, boolean hasGlint,
                        float enchantPower, boolean isVertical, float chance,
                        ItemPredicate predicate) {
 
-    public static final Codec<BookType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
-                    .fieldOf("color").forGetter(BookType::color),
-            Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
-            Codec.BOOL.optionalFieldOf("hasGlint", false).forGetter(BookType::hasGlint),
-            Codec.FLOAT.optionalFieldOf("enchantPower", 0f).forGetter(BookType::enchantPower),
-            Codec.BOOL.optionalFieldOf("isVertical", false).forGetter(BookType::isVertical),
-            Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
-            ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
-    ).apply(instance, BookType::create));
+    public static Codec<BookType> makeNamedCodec(ResourceLocation myId) {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                        ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
+                                .fieldOf("color").forGetter(BookType::color),
+                        Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
+                        Codec.BOOL.optionalFieldOf("hasGlint", false).forGetter(BookType::hasGlint),
+                        Codec.FLOAT.optionalFieldOf("enchantPower", 0f).forGetter(BookType::enchantPower),
+                        Codec.BOOL.optionalFieldOf("isVertical", false).forGetter(BookType::isVertical),
+                        Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
+                        ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
+                ).apply(instance, (color, hueAngle, hasGlint, enchPower, isVertical, chance, itemPredicate) -> {
+                    float hueShift = hueAngle.orElseGet(() -> getAllowedHueShift(color));
+                    return new BookType(myId, color,
+                            hueShift, hasGlint, enchPower, isVertical, chance, itemPredicate);
 
-    private static BookType create(HSVColor color, Optional<Float> hueAngle, Boolean aBoolean, Float aFloat1, Boolean aBoolean1, Float aFloat2, ItemPredicate itemPredicate) {
-        float hueShift = hueAngle.orElseGet(() -> getAllowedHueShift(color));
-        return new BookType(ResourceLocation.withDefaultNamespace("aa"), color, hueShift, aBoolean, aFloat1, aBoolean1, aFloat2, itemPredicate);
+                })
+        );
     }
+
 
     /*
     public BookType create(String texture, int rgb, float angle, boolean hasGlint, ItemPredicate predicate) {

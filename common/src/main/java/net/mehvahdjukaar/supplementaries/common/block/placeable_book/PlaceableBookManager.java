@@ -8,17 +8,15 @@ import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.*;
 
@@ -42,11 +40,28 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         books.clear();
         DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         for (var entry : object.entrySet()) {
-            BookType type = BookType.CODEC.decode(ops, entry.getValue()).getOrThrow()
-                    .getFirst();
+            ResourceLocation id = entry.getKey();
+            BookType type = BookType.makeNamedCodec(id)
+                    .decode(ops, entry.getValue())
+                    .getOrThrow().getFirst();
             books.register(entry.getKey(), type);
         }
     }
+
+    public List<BookType> getForItem(ItemStack stack, boolean vertical) {
+        List<BookType> results = new ArrayList<>();
+        for (var entry : books.getValues()) {
+            if (entry.predicate().test(stack) && entry.isVertical() == vertical) {
+                results.add(entry);
+            }
+        }
+        return results;
+    }
+
+    public BookType getByName(ResourceLocation id) {
+        return books.getValue(id);
+    }
+
 /*
     //TODO: make data
     public void setup() {
@@ -74,30 +89,5 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         register(new BookType("gene", 0, 1, false, null), CompatObjects.GENE_BOOK.get());
     }
 */
-
-    public BookType rand(Random r) {
-        return null;
-    }
-
-    public Collection<BookType> getAll() {
-        return books.getValues();
-    }
-
-    public BookType getByName(String name) {
-        return null;
-    }
-
-    public ArrayList<BookType> getByItem(ItemStack stack) {
-        if (AntiqueInkItem.hasAntiqueInk(stack)) {
-            return new ArrayList<>(List.of(getByName("tattered")));
-        }
-        Item item = stack.getItem();
-        if (Utils.getID(item).getNamespace().equals("inspirations")) {
-            String colName = Utils.getID(item).getPath().replace("_book", "");
-            return new ArrayList<>(List.of(getByName(colName)));
-        }
-        return null;
-    }
-
 
 }

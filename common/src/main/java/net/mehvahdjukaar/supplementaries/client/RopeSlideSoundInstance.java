@@ -29,13 +29,14 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
+        this.x = this.player.getX();
+        this.y = this.player.getY();
+        this.z = this.player.getZ();
         if (!this.player.isRemoved()) {
             if (player.onClimbable()) {
                 BlockState b = player.getBlockStateOn();
                 if (b.is(ModTags.FAST_FALL_ROPES)) {
-                    this.x = this.player.getX();
-                    this.y = this.player.getY();
-                    this.z = this.player.getZ();
+
 
                     float downwardSpeed = -(float) player.getDeltaMovement().y;
                     float minPitch = 0.7f;
@@ -69,7 +70,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public boolean canPlaySound() {
-        return !this.player.isSilent();
+        return !this.player.isSilent() && player.onClimbable();
     }
 
 }
