@@ -1,16 +1,17 @@
 # Supplementaries Team License
-Version 1.1, July 2024
+Version 1.2, December 2024
 
 Copyright (c) 2024 Supplementaries Team.  All Rights Reserved.
 
-This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this software and/or its associated files.
+This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this Software and/or its associated files.
 
-By using the software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
+By using the Software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
 
 ## 0. Summary
-This license allows nearly all uses for personal purposes, including modification and private sharing from official sources. 
-The license protects authors' rights while maintaining some open-source qualities, such as accepting contributions and allowing code integration in non-competing projects. 
-Public use is permitted with proper credit to the authors. Public redistribution and commercial use are prohibited.
+This license allows nearly all uses for personal purposes, including modification and private sharing from official sources.
+The license protects authors' rights while maintaining some open-source qualities, such as accepting contributions and allowing code integration in non-competing projects.
+Public use is permitted with proper credit to the authors.
+Public redistribution and commercial use are prohibited. 
 
 ## 1. Definitions
 
@@ -19,7 +20,9 @@ For the purposes of this Agreement, the following definitions apply:
 
 - **Our Sources** refers to copies of the Software or its associated files obtained directly from the owners. This includes files available on the owners' official CurseForge or Modrinth project pages.
 
-- **Compete** refers to any project or software offering similar functionality, features, or services as the Software and targeting the same or a similar user base. This includes, but is not limited to, software that directly substitutes or mirrors one or more functionalities of the Software
+- **Compete** refers to any project or software offering similar functionality, features, or services as the Software and targeting the same or a similar user base. This includes, but is not limited to, software that directly substitutes or mirrors one or more functionalities of the Software.
+
+- **Assets** refers to any non-code components of the Software, including but not limited to textures, models, sounds, icons, and other visual or auditory elements.
 
 ## 2. Grant of License
 
@@ -34,6 +37,7 @@ The Software may be copied for private use or to contribute to its development.
 The Licensee may incorporate part of this Software code into their own projects provided that:
 - Appropriate credit is given to the original authors of the Software.
 - The Licensee's project does not "Compete" with the Software.
+- "Assets" are exempt from this clause and require explicit premission
 
 ### 2.3. Modification
 The Software may be modified for private use or to contribute to its development.
@@ -45,7 +49,7 @@ Public distribution or publication of the Software, in whole or in part, is stri
 The Licensee is permitted to share the Software privately with a limited number of individuals, such as friends or family members, provided that:
 
 - The sharing is done without any form of commercial gain or compensation.
-- The Software is not made publicly available or accessible to the general public.
+- The Software, in whole or in part, is not made publicly available or accessible to the general public.
 - The recipients of the Software agree to abide by the terms and conditions of this Agreement.
 
 ### 2.5. Sub-Licensing
