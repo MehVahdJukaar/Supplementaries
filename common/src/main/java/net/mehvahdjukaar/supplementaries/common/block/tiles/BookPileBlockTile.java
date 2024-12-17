@@ -72,7 +72,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             if (r < 2) it = Items.ENCHANTED_BOOK;
             else if (r < 3) it = Items.WRITABLE_BOOK;
             else it = Items.BOOK;
-            ArrayList<BookType> col = PlaceableBookManager.INSTANCES.get(provider).getForItem(it.getDefaultInstance(), true);
+            List<BookType> col = PlaceableBookManager.INSTANCES.get(provider).getForItem(it.getDefaultInstance(), this.horizontal);
             booksVisuals.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
                     col, null, level.registryAccess()));
         }

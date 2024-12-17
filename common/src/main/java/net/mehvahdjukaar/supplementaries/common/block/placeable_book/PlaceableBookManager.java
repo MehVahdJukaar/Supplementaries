@@ -6,17 +6,13 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.*;
 
@@ -48,10 +44,10 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-    public List<BookType> getForItem(ItemStack stack, boolean vertical) {
+    public List<BookType> getForItem(ItemStack stack, boolean horizontal) {
         List<BookType> results = new ArrayList<>();
         for (var entry : books.getValues()) {
-            if (entry.predicate().test(stack) && entry.isVertical() == vertical) {
+            if (entry.predicate().test(stack) && entry.isHorizontal() == horizontal) {
                 results.add(entry);
             }
         }
