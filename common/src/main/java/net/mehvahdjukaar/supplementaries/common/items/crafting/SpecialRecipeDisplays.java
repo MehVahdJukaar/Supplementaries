@@ -230,11 +230,11 @@ public class SpecialRecipeDisplays {
 
         String group = "sus_crafting";
         List<Block> blocks = new ArrayList<>();
-        if(CommonConfigs.Tweaks.SUS_RECIPES.get()){
+        if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
             blocks.add(Blocks.SAND);
             blocks.add(Blocks.GRAVEL);
         }
-        if(CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()){
+        if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
             blocks.add(ModRegistry.GRAVEL_BRICKS.get());
         }
 
@@ -426,7 +426,7 @@ public class SpecialRecipeDisplays {
             if (CommonConfigs.Building.FLAG_ENABLED.get()) {
                 registry.accept(createFlagFromBanner());
             }
-            if(CommonConfigs.Functional.SAFE_ENABLED.get()){
+            if (CommonConfigs.Functional.SAFE_ENABLED.get()) {
                 registry.accept(createSafeRecipe());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
@@ -464,5 +464,5 @@ public class SpecialRecipeDisplays {
                 registry.accept(createBubbleBlowerChargeRecipe());
             }
         }
-     }
+    }
 }
