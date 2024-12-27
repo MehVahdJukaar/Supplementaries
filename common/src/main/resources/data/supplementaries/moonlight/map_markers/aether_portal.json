@@ -1,3 +1,6 @@
 {
-  "custom_type": "supplementaries:aether_portal"
+  "target_block": {
+    "block": "aether:aether_portal",
+    "predicate_type": "minecraft:block_match"
+  }
 }
