@@ -29,6 +29,8 @@ public class ModMapMarkers {
             Supplementaries.res("flag"), FlagMarker::new, FlagMarker::getFromWorld, ColoredDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, NetherPortalMarker> NETHER_PORTAL_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
             Supplementaries.res("nether_portal"), NetherPortalMarker::new, NetherPortalMarker::getFromWorld, CustomMapDecoration::new);
+    public static final CustomDecorationType<CustomMapDecoration, AetherPortalMarker> AETHER_PORTAL_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
+            Supplementaries.res("aether_portal"), AetherPortalMarker::new, AetherPortalMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<CustomMapDecoration, BeaconMarker> BEACON_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
             Supplementaries.res("beacon"), BeaconMarker::new, BeaconMarker::getFromWorld, CustomMapDecoration::new);
     public static final CustomDecorationType<ColoredDecoration, CeilingBannerMarker> BANNER_DECORATION_TYPE = CustomDecorationType.withWorldMarker(
