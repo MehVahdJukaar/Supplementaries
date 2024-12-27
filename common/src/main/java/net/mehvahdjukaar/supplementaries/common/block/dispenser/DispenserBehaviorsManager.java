@@ -50,6 +50,9 @@ public class DispenserBehaviorsManager {
             event.register(new EmptyContainerItemBehavior(ModRegistry.LUNCH_BASKET_ITEM.get()));
             event.register(new EmptyContainerItemBehavior(ModRegistry.QUIVER_ITEM.get()));
         }
+        if(CommonConfigs.Building.HAT_STAND_ENABLED.get()){
+            event.register(new PlaceHatStandBehavior(ModRegistry.HAT_STAND.get()));
+        }
 
         if (CommonConfigs.Tweaks.ENDER_PEAR_DISPENSERS.get()) {
             event.register(new ThrowableEnderPearlBehavior());
