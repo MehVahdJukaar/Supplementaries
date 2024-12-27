@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.ModSlider;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;

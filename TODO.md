@@ -3,13 +3,9 @@
 - Lumisene has no sound when bucketed.
 - Placeable books do not work, but still consumes the item as if it did.
 
-- hat standDispensing equippable onto them will delete the item.
-
 - amendments 1.20 rope and bell not connecting
-- crash when removing book from lectern
 - polytone season compat
 - polytone game time variable not working
-- hourglass they do not accept sand and red sand
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
   (1.20) bubble recipe
@@ -22,8 +18,6 @@
 - wind rod held like blaze rod
 - wind rod particles
 - tag loadedrecipe conditio not working
-- bamboo spikes wrong drop (poison)
-- flax still not fucking dropping its seed
 - recipe conditions not working for negated ones
 - amendments cauldron texture
 - cage bat tick
@@ -34,7 +28,6 @@
 - sherds_tooltip config not woring
 - trapped present desync fabric
 - bubble blower soap recipe deleting stasis
-- safe recipe broken
 - jar breaking particles
 - jade broken
 - finish moonlight projectile stuff
@@ -60,7 +53,6 @@
 - cage catching sound
 - check ALL new enchantment components stuff everywhere
 - stick flag movement
-- filled present state for placement
 - bomb block interaction
 - glowing blackboard persistence
 - waxed too
@@ -71,16 +63,12 @@
 - all jar tooltips
 - minecart and other entities spawned with cusutom name
 - re check all forge item extension usage
-- test quiver actually consuming arrows
 - boakcboard and text holder new interaction (redo). also their tooltips
 - all disepnser behavior. bamboo spikes one too
 - test soap interaction on servers
-- bubble blower chages and tooltip
 - antique ink on written books
-- panitng tooltips
 - buble blower, tipped spikes and rope arrow bars
 - check max banner pattern size in flag to banner recipe
-- test all special recipes
 - key enchantability
 - check all ehcnamtnemtn stuff (anvil, repair, book, treasure, ench table)
 - disoenser minecart dispense ebahvior

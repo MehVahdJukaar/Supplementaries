@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -53,7 +55,8 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         return INSTANCES.get(ra);
     }
 
-    public static FaucetBehaviorsManager getInstance(Level level) {
+    public static FaucetBehaviorsManager getInstance(@NotNull Level level) {
+        Preconditions.checkNotNull(level);
         return getInstance(level.registryAccess());
     }
 
@@ -90,7 +93,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static void onLevelLoad(ServerLevel level) {
-        var instance = getInstance(level);
+        var instance = getInstance(level.registryAccess());
         FaucetBlockTile.clearBehaviors();
 
         instance.dataInteractions.forEach(FaucetBlockTile::registerInteraction);

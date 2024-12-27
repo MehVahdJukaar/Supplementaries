@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
@@ -20,6 +21,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -33,7 +35,8 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         return INSTANCES.get(ra);
     }
 
-    public static CapturedMobHandler getInstance(Level level) {
+    public static CapturedMobHandler getInstance(@NotNull Level level) {
+        Preconditions.checkNotNull(level);
         return getInstance(level.registryAccess());
     }
 

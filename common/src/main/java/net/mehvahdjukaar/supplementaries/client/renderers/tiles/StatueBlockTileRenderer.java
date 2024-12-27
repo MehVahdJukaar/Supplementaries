@@ -123,11 +123,12 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         } else if (MiscUtils.FESTIVITY.isChristmas() || MiscUtils.FESTIVITY.isBirthday() ||
                 MiscUtils.FESTIVITY.isAprilsFool()) {
             poseStack.pushPose();
-            poseStack.scale(-0.625f, -0.625f, 0.625f);
+            float scale = 0.5f;
+            poseStack.translate(0, -1/16f, 0);
+            poseStack.scale(-scale, -scale, scale);
 
-            poseStack.translate(0, 0.1875, 0);
             itemRenderer.renderStatic(ModRegistry.CONFETTI_POPPER.get().getDefaultInstance(),
-                    ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn,
+                    ItemDisplayContext.HEAD, combinedLightIn, combinedOverlayIn,
                     poseStack, bufferIn, tile.getLevel(), 0);
             poseStack.popPose();
         } else {

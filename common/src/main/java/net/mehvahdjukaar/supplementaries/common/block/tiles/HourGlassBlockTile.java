@@ -35,7 +35,8 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     public void updateTileOnInventoryChanged() {
-        this.sandData = HourglassTimesManager.getInstance(level).getData(this.getDisplayedItem().getItem());
+        this.sandData = HourglassTimesManager.getInstance(level.registryAccess())
+                .getData(this.getDisplayedItem().getItem());
         int p = this.getDirection() == Direction.DOWN ? 1 : 0;
         int l = this.sandData.light();
         if (l != this.getBlockState().getValue(HourGlassBlock.LIGHT_LEVEL)) {
@@ -45,6 +46,14 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         }
         this.prevProgress = p;
         this.progress = p;
+    }
+
+    @Override
+    public void updateClientVisualsOnLoad() {
+        super.updateClientVisualsOnLoad();
+        this.sandData = HourglassTimesManager.getInstance(level.registryAccess())
+                .getData(this.getDisplayedItem().getItem());
+        this.cachedTexture = null;
     }
 
     public HourglassTimeData getSandData() {
@@ -89,11 +98,11 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
         this.progress = tag.getFloat("Progress");
         this.prevProgress = tag.getFloat("PrevProgress");
         this.cachedTexture = null;
-        this.sandData = HourglassTimesManager.getInstance(level).getData(this.getDisplayedItem().getItem());
+        this.sandData = HourglassTimeData.EMPTY;
+        super.loadAdditional(tag, registries);
     }
 
     @Override
@@ -110,7 +119,8 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && !HourglassTimesManager.getInstance(level).getData(stack.getItem()).isEmpty();
+        return this.isEmpty() && !HourglassTimesManager.getInstance(level)
+                .getData(stack.getItem()).isEmpty();
     }
 
     @Override

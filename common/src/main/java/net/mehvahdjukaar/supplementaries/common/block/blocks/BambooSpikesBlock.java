@@ -19,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -272,10 +273,9 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     }
 
     public ItemStack getSpikeItem(@Nullable BlockEntity te) {
-        ItemStack stack = new ItemStack(this);
         if (te instanceof BambooSpikesBlockTile tile) {
             return BlockUtil.saveTileToItem(tile);
         }
-        return stack;
+        return ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance();
     }
 }

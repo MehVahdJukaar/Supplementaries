@@ -78,7 +78,7 @@ public class ModTags {
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
     public static final TagKey<Item> LUNCH_BASKET_BLACKLIST = itemTag("lunch_basket_blacklist");
 
-    public static final TagKey<Item> SHULKER_BOXES = CitemTag("shulker_boxes");
+    public static final TagKey<Item> SHULKER_BOXES = cItemTag("shulker_boxes");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
@@ -113,22 +113,29 @@ public class ModTags {
     private static TagKey<Structure> MCstructureTag(String name) {
         return TagKey.create(Registries.STRUCTURE, ResourceLocation.withDefaultNamespace(name));
     }
+
     private static TagKey<Structure> structureTag(String name) {
         return TagKey.create(Registries.STRUCTURE, Supplementaries.res(name));
     }
+
     private static TagKey<Potion> potionTag(String name) {
         return TagKey.create(Registries.POTION, Supplementaries.res(name));
     }
+
     private static TagKey<Item> itemTag(String name) {
         return TagKey.create(Registries.ITEM, Supplementaries.res(name));
     }
 
-    private static TagKey<Item> CitemTag(String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace(name));
+    private static TagKey<Item> cItemTag(String name) {
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
     private static TagKey<Block> blockTag(String name) {
         return TagKey.create(Registries.BLOCK, Supplementaries.res(name));
+    }
+
+    private static TagKey<Block> cBlockTag(String name) {
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
     private static TagKey<EntityType<?>> entityTag(String name) {
