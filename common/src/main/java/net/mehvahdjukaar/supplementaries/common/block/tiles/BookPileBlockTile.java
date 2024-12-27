@@ -24,6 +24,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -74,7 +75,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             else it = Items.BOOK;
             List<BookType> col = PlaceableBookManager.INSTANCES.get(provider).getForItem(it.getDefaultInstance(), this.horizontal);
             booksVisuals.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
-                    col, null, level.registryAccess()));
+                    col, null, level.registryAccess(), this.horizontal));
         }
     }
 
@@ -148,14 +149,16 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         if(true)return;
         List<BookType> colors = new ArrayList<>();
         for (var v : ClientConfigs.Tweaks.BOOK_COLORS.get()) {
-            BookType byName = PlaceableBookManager.INSTANCES.get(level.registryAccess()).getByName(v);
+            BookType byName = PlaceableBookManager.INSTANCES.get(level.registryAccess())
+                    .getByName(ResourceLocation.parse(v));
             if (!colors.contains(byName)) colors.add(byName);
         }
         for (int index = 0; index < 4; index++) {
             ItemStack stack = this.getItem(index);
             if (stack.isEmpty()) break;
             BookType last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
-            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index, colors, last, level.registryAccess()));
+            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index,
+                    colors, last, level.registryAccess(), this.horizontal));
         }
 
         if (booksVisuals.isEmpty()) {
@@ -178,7 +181,9 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         private final BookType type;
         private final ItemStack stack;
 
-        public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors, @Nullable BookType lastColor, HolderLookup.Provider provider) {
+        public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors,
+                          @Nullable BookType lastColor, HolderLookup.Provider provider,
+                          boolean isHorizontal) {
             PlaceableBookManager bookReg = PlaceableBookManager.INSTANCES.get(provider);
             this.stack = bookStack;
             Random rand = new Random(pos.below(2).asLong());
@@ -190,7 +195,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 if (lastColor == null) {
                     if (colors.isEmpty()) {
                         Supplementaries.error();
-                        this.type = bookReg.getByName("brown");
+                        this.type = bookReg.getByName(ResourceLocation.parse("brown"));
                         return;
                     }
                     this.type = colors.get(rand.nextInt(colors.size()));
@@ -205,10 +210,10 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 }
                 colors.remove(this.type);
             } else {
-                var possibleTypes = bookReg.getByItem(bookStack);
+                var possibleTypes = bookReg.getForItem(bookStack, isHorizontal);
                 if (possibleTypes.isEmpty()) {
                     Supplementaries.error();
-                    this.type = bookReg.getByName("brown");
+                    this.type = bookReg.getByName(ResourceLocation.parse("brown"));
                     return;
                 }
                 this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
