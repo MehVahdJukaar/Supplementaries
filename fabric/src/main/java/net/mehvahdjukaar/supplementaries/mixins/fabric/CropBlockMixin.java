@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
+import net.mehvahdjukaar.moonlight.api.resources.recipe.fabric.ResourceConditionsBridge;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;

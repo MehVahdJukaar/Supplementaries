@@ -19,7 +19,7 @@
     "#supplementaries:awnings": {
       "burn_time": 67
     },
-    "#supplementaries:buntings": {
+    "supplementaries:bunting": {
       "burn_time": 25
     },
     "#supplementaries:flags": {
