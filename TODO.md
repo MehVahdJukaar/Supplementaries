@@ -4,7 +4,6 @@
 - Placeable books do not work, but still consumes the item as if it did.
 - check rope sound
 - sound event from bell ring with rope
-- amendments 1.20 rope and bell not connecting
 - polytone season compat
 - polytone game time variable not working
 - sign posts have incorrect sounds for weird wood types
@@ -13,13 +12,12 @@
 - snowy spirit step height config
 - some bug with ominous fluid
 - safe speaker block name thing
-- amendments ender dragon head bounding box
+- amendments ender dragon head bounding box (1.21)
 - goblet dont consume liquid
 - ominous bottles as fluids
 - wind rod held like blaze rod
 - wind rod particles
 - recipe conditions not working for negated ones?
-- amendments cauldron texture
 - cage bat tick
 - cage puch fabric
 - cannon ball dragon
@@ -221,7 +219,6 @@ slidy double pulse
 - finish 1.21 (fire damage, event..)
 - cauldron bottle conversion from dispensers
 - wall lantern quad order inverted . visible when embeddum is on
-- rope bell doesnt work
 - make bell connectto the side
 - hanging signs dont work with antique ink
 - water cauldron update bubbling state automatically
