@@ -2,7 +2,8 @@
 
 - Lumisene has no sound when bucketed.
 - Placeable books do not work, but still consumes the item as if it did.
-
+- check rope sound
+- sound event from bell ring with rope
 - amendments 1.20 rope and bell not connecting
 - polytone season compat
 - polytone game time variable not working
@@ -17,8 +18,7 @@
 - ominous bottles as fluids
 - wind rod held like blaze rod
 - wind rod particles
-- tag loadedrecipe conditio not working
-- recipe conditions not working for negated ones
+- recipe conditions not working for negated ones?
 - amendments cauldron texture
 - cage bat tick
 - cage puch fabric

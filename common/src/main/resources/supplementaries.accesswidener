@@ -13,6 +13,8 @@ accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
+
 # camera
 accessible method net/minecraft/client/Camera getMaxZoom (F)F
 accessible method net/minecraft/client/Camera move (FFF)V
