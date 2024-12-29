@@ -89,9 +89,9 @@
 
 # Snowy Spirit
 
-- snowy spirit eat code server side with entity event for particles
+- snowy spirit eat cookies server side with entity event for particles
 - gingy spin attack animationa and hostiles in witch hut
-- new ginger tegure and sound
+- new ginger block and sound
 - gumdrop entities
 - finish gingerbead golem
 - gingerbread entities sounds
