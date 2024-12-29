@@ -279,7 +279,7 @@
   "entity.supplementaries.slingshot_projectile": "弹弓弹射物",
   "entity.supplementaries.throwable_brick": "砖弹射物",
 
-  "filled_map.adventure": "冒险家地图",
+  "filled_map.adventure": "冒险者地图",
   "filled_map.antique": "褪色地图",
   "filled_map.antique.tooltip": "褪色",
   "filled_map.bastion_remnant": "堡垒遗迹探险家地图",
@@ -311,7 +311,7 @@
   "globe.supplementaries.moon": "月球",
   "globe.supplementaries.sun": "太阳",
 
-  "gui.supplementaries.amendments.message": "2.8.0版本中Supplementaries的部分微调（Tweaks）特性已移动至独立模组Amendments。\n\n这两个模组可以分离独立运作，但若要保留之前已有的方块，则必须安装Amendments。\n\n涉及移动的特性如下：壁挂灯笼、头颅烛台、吊顶花盆、吊顶旗帜、头颅堆。\n\n需注意未安装新模组的情况下继续，已有的上述方块均会消失。",
+  "gui.supplementaries.amendments.message": "2.8.0版本中Supplementaries的部分微调（Tweaks）特性已移动至独立模组Amendments。\n\n这两个模组可以分离独立运作，但若要保留之前已有的方块，则必须安装Amendments。\n\n涉及移动的特性如下：壁挂灯笼、头颅烛台、悬挂式花盆、吊顶旗帜、头颅堆。\n\n需注意未安装新模组的情况下继续，已有的上述方块均会消失。",
   "gui.supplementaries.amendments.suggestions": "你可以在此处获取该模组",
   "gui.supplementaries.amendments.title": "警告：未安装Amendments",
   "gui.supplementaries.blackboard.clear": "擦除",
