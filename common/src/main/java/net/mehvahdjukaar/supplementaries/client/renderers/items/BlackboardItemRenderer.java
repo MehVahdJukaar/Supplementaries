@@ -34,7 +34,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         blockRenderer.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(ItemBlockRenderTypes.getRenderType(STATE, false)),
                 STATE, model, 1, 1, 1, combinedLightIn, combinedOverlayIn);
 
-        BlackboardData data = stack.getOrDefault(ModComponents.BLACKBOARD.get(), BlackboardData.DEFAULT);
+        BlackboardData data = stack.getOrDefault(ModComponents.BLACKBOARD.get(), BlackboardData.EMPTY);
 
         var blackboard = BlackboardTextureManager.getInstance(data);
         VertexConsumer builder = bufferIn.getBuffer(blackboard.getRenderType());

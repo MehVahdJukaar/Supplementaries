@@ -13,6 +13,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.LongStream;
 
@@ -56,7 +57,7 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
             BlackboardData::new
     );
 
-    public static final BlackboardData DEFAULT = new BlackboardData(new long[16], false, false);
+    public static final BlackboardData EMPTY = new BlackboardData(new long[16], false, false);
 
     private final long[] values;
 
@@ -79,23 +80,15 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
 
 
     @Override
-    public boolean equals(Object another) {
-        if (another == this) {
-            return true;
-        }
-        if (another == null) {
-            return false;
-        }
-        if (another.getClass() != this.getClass()) {
-            return false;
-        }
-        BlackboardData key = (BlackboardData) another;
-        return Arrays.equals(this.values, key.values) && glow == key.glow;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BlackboardData that)) return false;
+        return glow == that.glow && waxed == that.waxed && Objects.deepEquals(values, that.values);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(this.values);
+        return Objects.hash(Arrays.hashCode(values), glow, waxed);
     }
 
     @Override

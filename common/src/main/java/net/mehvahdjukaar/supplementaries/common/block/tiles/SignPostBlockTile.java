@@ -25,6 +25,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -48,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected, IScreenProvider {
+public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IScreenProvider {
 
     public static final ModelDataKey<Boolean> FRAMED_KEY = ModBlockProperties.FRAMED;
     public static final ModelDataKey<Float> RENDER_OFFSET_KEY = ModBlockProperties.RENDER_OFFSET;
@@ -58,7 +59,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
     private boolean isWaxed = false;
-    private UUID owner = null;
     private float zRenderOffset = 0;
 
     //is holding a framed fence (for framed blocks mod compat)
@@ -115,7 +115,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         this.framed = tag.getBoolean("Framed");
         this.signUp.load(tag.getCompound("SignUp"), registries, this.worldPosition);
         this.signDown.load(tag.getCompound("SignDown"), registries, this.worldPosition);
-        this.loadOwner(tag);
         if (tag.contains("Waxed")) {
             this.isWaxed = tag.getBoolean("Waxed");
         }
@@ -147,19 +146,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         tag.putBoolean("Framed", this.framed);
         tag.put("SignUp", this.signUp.save(registries));
         tag.put("SignDown", this.signDown.save(registries));
-        this.saveOwner(tag);
         if (isWaxed) tag.putBoolean("Waxed", isWaxed);
-    }
-
-    @Nullable
-    @Override
-    public UUID getOwner() {
-        return owner;
-    }
-
-    @Override
-    public void setOwner(UUID owner) {
-        this.owner = owner;
     }
 
     public boolean rotateSign(boolean up, float angle, boolean constrainAngle) {
@@ -217,7 +204,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             this.active = compound.getBoolean("Active");
             this.left = compound.getBoolean("Left");
             this.yaw = compound.getFloat("Yaw");
-            this.woodType = WoodTypeRegistry.fromNBT(compound.getString("WoodType"));
+            this.woodType = WoodTypeRegistry.INSTANCE.get(ResourceLocation.parse(compound.getString("WoodType")));
             this.text.load(compound, registries, pos);
 
         }

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
@@ -33,19 +32,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
+public class BlackboardBlockTile extends BlockEntity implements
         IOnePlayerInteractable, IScreenProvider, IWaxable, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlackboardData> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
-    private UUID owner = null;
     @Nullable
     private UUID playerWhoMayEdit = null;
 
-    // TODO: these 2 store the same content. merge them
-    private boolean waxed = false;
-    private byte[][] pixels = new byte[16][16];
-    private BlackboardData textureKey = null;
+    private BlackboardData data = null;
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
@@ -58,12 +53,12 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public BlackboardData getTextureKey() {
-        if (textureKey == null) refreshTextureKey();
-        return textureKey;
+        if (data == null) refreshTextureKey();
+        return data;
     }
 
     public void refreshTextureKey() {
-        this.textureKey = BlackboardData.pack(this.pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), this.waxed);
+        this.data = BlackboardData.pack(this.pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), this.waxed);
     }
 
     @Override
@@ -83,10 +78,10 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.loadOwner(tag);
 
-        //TODO:use explicit component here instead
-        this.waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
+        this.data =
+                //TODO:use explicit component here instead
+                this.waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
         this.pixels = new byte[16][16];
         if (tag.contains("Pixels")) {
             this.pixels = BlackboardData.unpackPixels(tag.getLongArray("Pixels"));
@@ -96,8 +91,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        this.saveOwner(tag);
-
         if (this.waxed) tag.putBoolean("Waxed", true);
         tag.putLongArray("Pixels", BlackboardData.packPixels(pixels));
     }
@@ -105,7 +98,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        if(!this.isEmpty()) {
+        if (!this.isEmpty()) {
             components.set(ModComponents.BLACKBOARD.get(), getTextureKey());
         }
     }
@@ -113,20 +106,14 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
-        var data = componentInput.get(ModComponents.BLACKBOARD.get());
-        if(data != null){
-            this.waxed = data.waxed();
-            this.pixels = data.unpackPixels();
-        }else{
-            this.clearPixels();
-        }
+        this.data = componentInput.getOrDefault(ModComponents.BLACKBOARD.get(), BlackboardData.EMPTY);
+        this.components().
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
-        tag.remove("Waxed");
-        tag.remove("Pixels");
+        tag.remove("data");
     }
 
     public void clearPixels() {
@@ -174,17 +161,6 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     public Direction getDirection() {
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
-    }
-
-    @Nullable
-    @Override
-    public UUID getOwner() {
-        return owner;
-    }
-
-    @Override
-    public void setOwner(UUID owner) {
-        this.owner = owner;
     }
 
     @Override
