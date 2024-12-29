@@ -26,7 +26,7 @@ subprojects {
             it.officialMojangMappings {
                 setNameSyntheticMembers(false)
             }
-            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
+            //it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
         }
 
     }
