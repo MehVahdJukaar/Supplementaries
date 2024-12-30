@@ -55,7 +55,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
         }
         if (CommonConfigs.Building.DOUBLE_IRON_GATE.get() && facing.getAxis().isVertical() &&
-                facingState.is(this) && !stateIn.getValue(POWERED)) {
+                facingState.getBlock() instanceof IronGateBlock && !stateIn.getValue(POWERED)) {
             boolean open = facingState.getValue(OPEN);
             if (open != stateIn.getValue(OPEN) && stateIn.getValue(FACING) == facingState.getValue(FACING)) {
                 stateIn = stateIn.setValue(OPEN, open);
@@ -118,7 +118,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
     }
 
     private boolean canConnectUp(BlockState state, LevelAccessor world, BlockPos pos) {
-        return state.isFaceSturdy(world, pos, Direction.DOWN) || state.is(this) || state.getBlock() instanceof IronBarsBlock;
+        return state.isFaceSturdy(world, pos, Direction.DOWN) || state.getBlock() instanceof IronGateBlock || state.getBlock() instanceof IronBarsBlock;
     }
 
     @Override
@@ -132,11 +132,11 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             if (CommonConfigs.Building.DOUBLE_IRON_GATE.get()) {
                 BlockPos up = pos.above();
                 BlockState stateUp = level.getBlockState(up);
-                if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
+                if (stateUp.getBlock() instanceof IronGateBlock && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
                     openGate(stateUp, level, up, dir);
                 BlockPos down = pos.below();
                 BlockState stateDown = level.getBlockState(down);
-                if (stateDown.is(this) && stateDown.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
+                if (stateDown.getBlock() instanceof IronGateBlock && stateDown.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
                     openGate(stateDown, level, down, dir);
             }
 

@@ -110,6 +110,10 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         return glow;
     }
 
+    public long[] packedPixels() {
+        return values;
+    }
+
     public static long[] packPixels(byte[][] pixels) {
         long[] packed = new long[pixels.length];
         for (int i = 0; i < pixels.length; i++) {
@@ -191,5 +195,30 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
 
     public boolean isEmpty() {
         return false;
+    }
+
+    public BlackboardData makeCleared() {
+        return new BlackboardData(new long[16], this.glow, this.waxed);
+    }
+
+    public BlackboardData withPixel(int x, int y, byte b) {
+        long[] newValues = Arrays.copyOf(values, values.length);
+        long l = values[x];
+        l = l & ~(15L << y * 4);
+        l = l | ((long) (b & 15) << y * 4);
+        newValues[x] = l;
+        return new BlackboardData(newValues, this.glow, this.waxed);
+    }
+
+    public byte getPixel(int xx, int yy) {
+        return (byte) ((values[xx] >> yy * 4) & 15);
+    }
+
+    public BlackboardData withWaxed(boolean b) {
+        return new BlackboardData(values, this.glow, b);
+    }
+
+    public BlackboardData withGlow(boolean b) {
+        return new BlackboardData(values, b, this.waxed);
     }
 }

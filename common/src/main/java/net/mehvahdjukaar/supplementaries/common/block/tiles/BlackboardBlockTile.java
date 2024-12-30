@@ -40,7 +40,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     @Nullable
     private UUID playerWhoMayEdit = null;
 
-    private BlackboardData data = null;
+    private BlackboardData data = BlackboardData.EMPTY;
 
     public BlackboardBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.BLACKBOARD_TILE.get(), pos, state);
@@ -49,22 +49,7 @@ public class BlackboardBlockTile extends BlockEntity implements
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
-        builder.with(BLACKBOARD_KEY, getTextureKey());
-    }
-
-    public BlackboardData getTextureKey() {
-        if (data == null) refreshTextureKey();
-        return data;
-    }
-
-    public void refreshTextureKey() {
-        this.data = BlackboardData.pack(this.pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), this.waxed);
-    }
-
-    @Override
-    public void afterDataPacket(ExtraModelData oldData) {
-        refreshTextureKey();
-        IExtraModelDataProvider.super.afterDataPacket(oldData);
+        builder.with(BLACKBOARD_KEY, data);
     }
 
     //I need this for when it's changed manually
@@ -79,74 +64,66 @@ public class BlackboardBlockTile extends BlockEntity implements
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
 
-        this.data =
-                //TODO:use explicit component here instead
-                this.waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
-        this.pixels = new byte[16][16];
+        boolean waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
+        byte[][] pixels = new byte[16][16];
         if (tag.contains("Pixels")) {
-            this.pixels = BlackboardData.unpackPixels(tag.getLongArray("Pixels"));
+            pixels = BlackboardData.unpackPixels(tag.getLongArray("Pixels"));
         }
+        this.data = BlackboardData.pack(pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), waxed);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (this.waxed) tag.putBoolean("Waxed", true);
-        tag.putLongArray("Pixels", BlackboardData.packPixels(pixels));
+        if (data.waxed()) tag.putBoolean("Waxed", true);
+        tag.putLongArray("Pixels", data.packedPixels());
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        if (!this.isEmpty()) {
-            components.set(ModComponents.BLACKBOARD.get(), getTextureKey());
+        if(!this.isEmpty()) {
+            components.set(ModComponents.BLACKBOARD.get(), data);
         }
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
-        this.data = componentInput.getOrDefault(ModComponents.BLACKBOARD.get(), BlackboardData.EMPTY);
-        this.components().
+        var data = componentInput.get(ModComponents.BLACKBOARD.get());
+        if(data != null){
+            this.data = BlackboardData.of(data.packedPixels(), data.waxed(), this.getBlockState()
+                    .getValue(BlackboardBlock.GLOWING));
+        }else{
+            this.clearPixels();
+        }
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
-        tag.remove("data");
+        tag.remove("Waxed");
+        tag.remove("Pixels");
     }
 
     public void clearPixels() {
-        for (int x = 0; x < pixels.length; x++) {
-            for (int y = 0; y < pixels[x].length; y++) {
-                this.pixels[x][y] = 0;
-            }
-        }
+        this.data = this.data.makeCleared();
     }
 
     public boolean isEmpty() {
-        boolean flag = false;
-        for (byte[] pixel : pixels) {
-            for (byte b : pixel) {
-                if (b != 0) {
-                    flag = true;
-                    break;
-                }
-            }
-        }
-        return !flag;
+        return data.isEmpty();
     }
 
     public void setPixel(int x, int y, byte b) {
-        this.pixels[x][y] = b;
+        this.data = this.data.withPixel(x, y, b);
     }
 
     public byte getPixel(int xx, int yy) {
-        return this.pixels[xx][yy];
+        return this.data.getPixel(xx, yy);
     }
 
     public void setPixels(byte[][] pixels) {
-        this.pixels = pixels;
+        this.data = BlackboardData.pack(pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), this.data.waxed());
     }
 
     @Override
@@ -170,12 +147,12 @@ public class BlackboardBlockTile extends BlockEntity implements
 
     @Override
     public void setWaxed(boolean b) {
-        this.waxed = b;
+        this.data = this.data.withWaxed(b);
     }
 
     @Override
     public boolean isWaxed() {
-        return this.waxed;
+        return this.data.waxed();
     }
 
     @Override
@@ -193,7 +170,7 @@ public class BlackboardBlockTile extends BlockEntity implements
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }
-        if (!Arrays.deepEquals(pixels, this.pixels)) {
+        if (!Arrays.deepEquals(pixels, data.unpackPixels())) {
             level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
                     SoundSource.BLOCKS, 1, 1);
 
