@@ -6,10 +6,10 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.common.block.IGlowable;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -20,6 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -29,11 +30,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class BlackboardBlockTile extends BlockEntity implements
-        IOnePlayerInteractable, IScreenProvider, IWaxable, IExtraModelDataProvider {
+        IOnePlayerInteractable, IScreenProvider, IWaxable, IGlowable, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlackboardData> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
@@ -63,26 +63,31 @@ public class BlackboardBlockTile extends BlockEntity implements
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-
-        boolean waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
-        byte[][] pixels = new byte[16][16];
-        if (tag.contains("Pixels")) {
-            pixels = BlackboardData.unpackPixels(tag.getLongArray("Pixels"));
+        //old logic
+        if (tag.contains("Waxed") || tag.contains("Pixels")) {
+            boolean waxed = tag.contains("Waxed") && tag.getBoolean("Waxed");
+            byte[][] pixels = new byte[16][16];
+            if (tag.contains("Pixels")) {
+                pixels = BlackboardData.unpackPixels(tag.getLongArray("Pixels"));
+            }
+            this.data = new BlackboardData(pixels, false, waxed);
+        } else if (tag.contains("values")) {
+            this.data = BlackboardData.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
         }
-        this.data = BlackboardData.pack(pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), waxed);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (data.waxed()) tag.putBoolean("Waxed", true);
-        tag.putLongArray("Pixels", data.packedPixels());
+        if (!this.data.equals(BlackboardData.EMPTY)) {
+            tag.merge((CompoundTag) BlackboardData.CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow());
+        }
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        if(!this.isEmpty()) {
+        if (!this.isEmpty()) {
             components.set(ModComponents.BLACKBOARD.get(), data);
         }
     }
@@ -91,10 +96,9 @@ public class BlackboardBlockTile extends BlockEntity implements
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         var data = componentInput.get(ModComponents.BLACKBOARD.get());
-        if(data != null){
-            this.data = BlackboardData.of(data.packedPixels(), data.waxed(), this.getBlockState()
-                    .getValue(BlackboardBlock.GLOWING));
-        }else{
+        if (data != null) {
+            this.data = data;
+        } else {
             this.clearPixels();
         }
     }
@@ -102,8 +106,10 @@ public class BlackboardBlockTile extends BlockEntity implements
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
-        tag.remove("Waxed");
-        tag.remove("Pixels");
+        //same as in the components itself
+        tag.remove("values");
+        tag.remove("glow");
+        tag.remove("waxed");
     }
 
     public void clearPixels() {
@@ -123,7 +129,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     public void setPixels(byte[][] pixels) {
-        this.data = BlackboardData.pack(pixels, this.getBlockState().getValue(BlackboardBlock.GLOWING), this.data.waxed());
+        this.data = this.data.withPixels(pixels);
     }
 
     @Override
@@ -152,7 +158,17 @@ public class BlackboardBlockTile extends BlockEntity implements
 
     @Override
     public boolean isWaxed() {
-        return this.data.waxed();
+        return this.data.isWaxed();
+    }
+
+    @Override
+    public void setGlowing(boolean b) {
+        this.data = this.data.withGlow(b);
+    }
+
+    @Override
+    public boolean isGlowing() {
+        return this.data.isGlow();
     }
 
     @Override
@@ -170,7 +186,7 @@ public class BlackboardBlockTile extends BlockEntity implements
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }
-        if (!Arrays.deepEquals(pixels, data.unpackPixels())) {
+        if (!data.hasSamePixels(pixels)) {
             level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
                     SoundSource.BLOCKS, 1, 1);
 
@@ -181,4 +197,5 @@ public class BlackboardBlockTile extends BlockEntity implements
         return false;
 
     }
+
 }

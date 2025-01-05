@@ -47,7 +47,7 @@ public class BlackboardTextureManager {
     public static BlackboardVisuals getInstance(BlackboardData key) {
         BlackboardVisuals textureInstance = TEXTURE_CACHE.getIfPresent(key);
         if (textureInstance == null) {
-            textureInstance = new BlackboardVisuals(key.unpackPixels(), key.isGlow());
+            textureInstance = new BlackboardVisuals(key.getPixelsUnsafe(), key.isGlow());
             TEXTURE_CACHE.put(key, textureInstance);
         }
         return textureInstance;

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -20,75 +22,88 @@ import java.util.stream.LongStream;
 public class BlackboardData implements TooltipComponent, TooltipProvider {
 
     private static final Component WAXED_TOOLTIP = Component.translatable("message.supplementaries.blackboard").withStyle(ChatFormatting.GRAY);
+    private static final int SIZE = 16;
 
+
+    private static Codec<byte[][]> byteMatrix(int size) {
+        return Codec.BYTE_BUFFER.xmap(buffer -> {
+            byte[][] matrix = new byte[size][size];
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    matrix[i][j] = buffer.get();
+                }
+            }
+            return matrix;
+        }, bytes -> {
+            ByteBuffer buffer = ByteBuffer.allocate(size * size * 4);
+            for (byte[] row : bytes) {
+                buffer.put(row);
+            }
+            return buffer;
+        });
+    }
+
+    private static final Codec<byte[][]> MATRIX_CODEC_OR_LEGACY = Codec.withAlternative(
+            byteMatrix(SIZE),
+            Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
+                    .xmap(BlackboardData::unpackPixels, BlackboardData::packPixels)
+    );
 
     public static final Codec<BlackboardData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG_STREAM.fieldOf("values")
-                    .xmap(LongStream::toArray, Arrays::stream)
-                    .forGetter(v -> v.values),
+            MATRIX_CODEC_OR_LEGACY.fieldOf("values").forGetter(v -> v.pixels),
             Codec.BOOL.fieldOf("glow").forGetter(v -> v.glow),
             Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
     ).apply(instance, BlackboardData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, long[]> LONG_ARRAY = new StreamCodec<>() {
-        @Override
-        public long[] decode(RegistryFriendlyByteBuf buffer) {
-            int size = buffer.readByte();
-            long[] values = new long[size];
-            for (int i = 0; i < size; i++) {
-                values[i] = buffer.readLong();
-            }
-            return values;
-        }
 
-        @Override
-        public void encode(RegistryFriendlyByteBuf buffer, long[] value) {
-            buffer.writeByte(value.length);
-            for (long l : value) {
-                buffer.writeLong(l);
+    private static StreamCodec<ByteBuf, byte[][]> byteMatrixStream(int size) {
+        return ByteBufCodecs.BYTE_ARRAY.map(buffer -> {
+            byte[][] matrix = new byte[size][size];
+            for (int i = 0; i < size; i++) {
+                System.arraycopy(buffer, i * size, matrix[i], 0, size);
             }
-        }
-    };
+            return matrix;
+        }, bytes -> {
+            var flattened = new byte[size * size];
+            for (int i = 0; i < size; i++) {
+                System.arraycopy(bytes[i], 0, flattened, i * size, size);
+            }
+            return flattened;
+        });
+    }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlackboardData> STREAM_CODEC = StreamCodec.composite(
-            LONG_ARRAY, data -> data.values,
+            byteMatrixStream(SIZE), data -> data.pixels,
             ByteBufCodecs.BOOL, data -> data.glow,
             ByteBufCodecs.BOOL, data -> data.waxed,
             BlackboardData::new
     );
 
-    public static final BlackboardData EMPTY = new BlackboardData(new long[16], false, false);
+    public static final BlackboardData EMPTY = new BlackboardData(new byte[SIZE][SIZE], false, false);
 
-    private final long[] values;
-
+    private final byte[][] pixels;
     private final boolean glow;
     private final boolean waxed;
 
-    BlackboardData(long[] packed, boolean glowing, boolean waxed) {
-        this.values = packed;
+    private final int cachedHashCode;
+
+    public BlackboardData(byte[][] pixels, boolean glowing, boolean waxed) {
+        this.pixels = pixels;
         this.glow = glowing;
         this.waxed = waxed;
+        this.cachedHashCode = Objects.hash(Arrays.deepHashCode(pixels), glow, waxed);
     }
-
-    public static BlackboardData pack(byte[][] pixels, boolean glowing, boolean waxed){
-        return new BlackboardData(packPixels(pixels), glowing, waxed);
-    }
-
-    public static BlackboardData of(long[] packPixels, boolean glowing, boolean waxed) {
-        return new BlackboardData(packPixels, glowing, waxed);
-    }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BlackboardData that)) return false;
-        return glow == that.glow && waxed == that.waxed && Objects.deepEquals(values, that.values);
+        return glow == that.glow && waxed == that.waxed && Objects.deepEquals(pixels, that.pixels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(values), glow, waxed);
+        return cachedHashCode;
     }
 
     @Override
@@ -98,11 +113,7 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         }
     }
 
-    public byte[][] unpackPixels() {
-        return unpackPixels(values);
-    }
-
-    public boolean waxed() {
+    public boolean isWaxed() {
         return waxed;
     }
 
@@ -110,9 +121,54 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         return glow;
     }
 
-    public long[] packedPixels() {
-        return values;
+    public boolean hasSamePixels(byte[][] pixels) {
+        return Arrays.deepEquals(this.pixels, pixels);
     }
+
+    public boolean isEmpty() {
+        for (byte[] row : pixels) {
+            for (byte value : row) {
+                if (value != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public byte getPixel(int xx, int yy) {
+        return pixels[xx][yy];
+    }
+
+    public byte[][] getPixelsUnsafe() {
+        return pixels;
+    }
+
+    public BlackboardData makeCleared() {
+        return new BlackboardData(new byte[SIZE][SIZE], this.glow, this.waxed);
+    }
+
+    public BlackboardData withPixel(int x, int y, byte b) {
+        byte[][] newPixels = new byte[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            System.arraycopy(pixels[i], 0, newPixels[i], 0, SIZE);
+        }
+        newPixels[x][y] = b;
+        return new BlackboardData(newPixels, this.glow, this.waxed);
+    }
+
+    public BlackboardData withWaxed(boolean b) {
+        return new BlackboardData(pixels, this.glow, b);
+    }
+
+    public BlackboardData withGlow(boolean b) {
+        return new BlackboardData(pixels, b, this.waxed);
+    }
+
+    public BlackboardData withPixels(byte[][] pixels) {
+        return new BlackboardData(pixels, this.glow, this.waxed);
+    }
+
 
     public static long[] packPixels(byte[][] pixels) {
         long[] packed = new long[pixels.length];
@@ -125,7 +181,6 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         }
         return packed;
     }
-
 
     public static byte[][] unpackPixels(long[] packed) {
         byte[][] bytes = new byte[16][16];
@@ -193,32 +248,4 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         return builder.toString();
     }
 
-    public boolean isEmpty() {
-        return false;
-    }
-
-    public BlackboardData makeCleared() {
-        return new BlackboardData(new long[16], this.glow, this.waxed);
-    }
-
-    public BlackboardData withPixel(int x, int y, byte b) {
-        long[] newValues = Arrays.copyOf(values, values.length);
-        long l = values[x];
-        l = l & ~(15L << y * 4);
-        l = l | ((long) (b & 15) << y * 4);
-        newValues[x] = l;
-        return new BlackboardData(newValues, this.glow, this.waxed);
-    }
-
-    public byte getPixel(int xx, int yy) {
-        return (byte) ((values[xx] >> yy * 4) & 15);
-    }
-
-    public BlackboardData withWaxed(boolean b) {
-        return new BlackboardData(values, this.glow, b);
-    }
-
-    public BlackboardData withGlow(boolean b) {
-        return new BlackboardData(values, b, this.waxed);
-    }
 }

@@ -243,11 +243,12 @@ public class SpecialRecipeDisplays {
             blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
         }
 
+        ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
+        content.set(DataComponents.ITEM_NAME, Component.literal("Precious Item"));
         for (var e : blocks.entrySet()) {
             ItemStack output = new ItemStack(e.getValue());
             ItemStack input = new ItemStack(e.getKey());
-            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input),
-                    Ingredient.of(Items.GOLD_INGOT));
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(content));
             ResourceLocation id = Supplementaries.res(Utils.getID(output.getItem()).getPath());
             ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(new RecipeHolder<>(id, recipe));

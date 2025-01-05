@@ -58,7 +58,7 @@ public class BlackboardDisplayTarget extends DisplayTarget {
     private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
         var beData = stack.get(ModComponents.BLACKBOARD.get());
         if (beData != null) {
-            tile.setPixels(beData.unpackPixels());
+            tile.setPixels(beData.getPixelsUnsafe());
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
             reserve(line, te, context);
             return true;

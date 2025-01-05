@@ -115,7 +115,7 @@ public class ClientReceivers {
                 case GLOW_ON -> {
                     ParticleUtil.spawnParticleOnBlockShape(l, BlockPos.containing(message.pos),
                             ParticleTypes.GLOW,
-                            UniformInt.of(3, 5), 0.01f);
+                            UniformInt.of(3, 5), 0);
                 }
                 case BUBBLE_CLEAN_ENTITY -> {
                     if (message.extraData != null) {

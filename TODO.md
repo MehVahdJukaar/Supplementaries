@@ -1,5 +1,7 @@
 # 1.21 bugs and stuff
 
+ - make recipes configurable
+- safe rename add name bug
 - Lumisene has no sound when bucketed.
 - Placeable books do not work, but still consumes the item as if it did.
 - check rope sound

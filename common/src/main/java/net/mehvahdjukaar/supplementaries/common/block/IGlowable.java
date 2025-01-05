@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+//TODO: use more
 public interface IGlowable {
 
 
@@ -26,12 +27,11 @@ public interface IGlowable {
     //TODO: move to static utility classmaybe?
     //callable on both sides
     default ItemInteractionResult tryGlowing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
-        if (isGlowing()) {
-            level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
-            return ItemInteractionResult.FAIL;
-        }
         if (stack.is(Items.GLOW_INK_SAC)) {
-
+            if (isGlowing()) {
+                level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
+                return ItemInteractionResult.FAIL;
+            }
             level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS);
 
             stack.consume(1, player);

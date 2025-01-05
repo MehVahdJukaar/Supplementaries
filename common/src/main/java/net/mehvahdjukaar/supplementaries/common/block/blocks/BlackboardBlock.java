@@ -4,30 +4,23 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ISimpleBrushable;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BrushItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -40,7 +33,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -58,18 +50,16 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty GLOWING = ModBlockProperties.GLOWING;
-
 
     public BlackboardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, false).setValue(GLOWING, false));
+                .setValue(WATERLOGGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED, GLOWING);
+        builder.add(FACING, WATERLOGGED);
     }
 
     @Override
@@ -138,41 +128,20 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
                                               InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(player)) {
-            ItemInteractionResult result = te.tryWaxing(level, pos, player, hand, stack);
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
 
             if (stack.getItem() instanceof BrushItem) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
-            if (result.consumesAction()) {
+            ItemInteractionResult waxingRes = te.tryWaxing(level, pos, player, hand, stack);
+            if (waxingRes == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+                waxingRes = te.tryGlowing(level, pos, player, hand, stack);
+            }
+
+            if (waxingRes.consumesAction()) {
                 level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
                 te.setChanged(); //this also sends block update in tile
             }
-            if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return result;
-
-            boolean glowChanged = false;
-            if (stack.is(Items.GLOW_INK_SAC) && !state.getValue(GLOWING)) {
-                level.playSound(null, pos, SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.setBlockAndUpdate(pos, state.setValue(GLOWING, true));
-
-                glowChanged = true;
-
-            } else if (stack.is(Items.INK_SAC) && state.getValue(GLOWING)) {
-                level.playSound(null, pos, SoundEvents.INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
-
-                glowChanged = true;
-            }
-            if (glowChanged) {
-                level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, level.getBlockState(pos)));
-
-                stack.consume(1, player);
-                //server
-                if (player instanceof ServerPlayer serverPlayer) {
-                    CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, pos, stack);
-                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
-                }
-                return ItemInteractionResult.CONSUME;
-            }
+            if (waxingRes != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return waxingRes;
 
             UseMode config = CommonConfigs.Building.BLACKBOARD_MODE.get();
 
@@ -237,14 +206,17 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
-            if (state.getValue(GLOWING)) {
-                level.setBlockAndUpdate(pos, state.setValue(GLOWING, false));
-            }
             if (te.isWaxed()) {
                 te.setWaxed(false);
                 te.setChanged();
                 return true;
-            } else if (!te.isEmpty()) {
+            }
+            if (te.isGlowing()) {
+                te.setGlowing(false);
+                te.setChanged();
+                return true;
+            }
+            if (!te.isEmpty()) {
                 te.clearPixels();
                 te.setChanged();
                 return true;
@@ -256,8 +228,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public boolean brush(BlockState state, BlockPos pos, Level level, ItemStack stack, Player livingEntity, HumanoidArm arm, BlockHitResult hit, Vec3 particlesDir) {
 
-        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && te.isAccessibleBy(livingEntity) &&
-                !te.isWaxed() && !te.isEmpty()) {
+        if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te && !te.isWaxed() && !te.isEmpty()) {
             te.clearPixels();
             te.setChanged();
             level.playSound(livingEntity, pos, SoundEvents.BRUSH_GENERIC, SoundSource.BLOCKS);

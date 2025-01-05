@@ -24,12 +24,11 @@ public interface IWaxable {
 
     //callable on both sides
     default ItemInteractionResult tryWaxing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
-        if (isWaxed()) {
-            level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
-            return ItemInteractionResult.FAIL;
-        }
         if (stack.getItem() instanceof HoneycombItem) {
-
+            if (isWaxed()) {
+                level.playSound(null, pos, SoundEvents.WAXED_SIGN_INTERACT_FAIL, SoundSource.BLOCKS);
+                return ItemInteractionResult.FAIL;
+            }
             level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS);
 
             stack.consume(1, player);
