@@ -44,6 +44,28 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
     private static final Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> MODEL_CACHE = new HashMap<>();
 
+    public static Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> getModelCache() {
+        if (MODEL_CACHE.isEmpty()) {
+            List<ResourceLocation> resourceLocations = new ArrayList<>(ClientConfigs.Items.DEPTH_METER_DIMENSIONS.get());
+            resourceLocations.add(Level.OVERWORLD.location());
+            for (var d : resourceLocations) {
+                ResourceKey<Level> res = ResourceKey.create(Registries.DIMENSION, d);
+                TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(
+                        Supplementaries.res("item/altimeter/" + d.toString().replace(":", "_"))
+                );
+                if (sprite != null) {
+                    MODEL_CACHE.put(res, Pair.of(sprite, new Int2ObjectOpenHashMap<>()));
+                }
+            }
+        }
+        return MODEL_CACHE;
+    }
+
+    public static void onReload() {
+        MODEL_CACHE.clear();
+    }
+
+
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         poseStack.pushPose();
@@ -53,8 +75,9 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         ClientLevel level = Minecraft.getInstance().level;
         ResourceKey<Level> dimension = level == null ? Level.OVERWORLD : level.dimension();
 
+        var cache = getModelCache();
 
-        var pair = MODEL_CACHE.getOrDefault(dimension, MODEL_CACHE.get(Level.OVERWORLD));
+        var pair = cache.getOrDefault(dimension, cache.get(Level.OVERWORLD));
         if (pair == null) {
             Supplementaries.error();
             return;
@@ -85,20 +108,6 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
     }
 
 
-    public static void onReload() {
-        MODEL_CACHE.clear();
-        List<ResourceLocation> resourceLocations = new ArrayList<>(ClientConfigs.Items.DEPTH_METER_DIMENSIONS.get());
-        resourceLocations.add(Level.OVERWORLD.location());
-        for (var d : resourceLocations) {
-            ResourceKey<Level> res = ResourceKey.create(Registries.DIMENSION, d);
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(
-                    Supplementaries.res("item/altimeter/" + d.toString().replace(":", "_"))
-            );
-            if (sprite != null) {
-                MODEL_CACHE.put(res, Pair.of(sprite, new Int2ObjectOpenHashMap<>()));
-            }
-        }
-    }
 
     private static class AltimeterModel implements BakedModel {
 
