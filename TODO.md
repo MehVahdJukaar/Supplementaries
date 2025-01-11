@@ -1,5 +1,6 @@
 # 1.21 bugs and stuff
 
+- sawmill rs log spam
  - make recipes configurable
 - safe rename add name bug
 - Lumisene has no sound when bucketed.
