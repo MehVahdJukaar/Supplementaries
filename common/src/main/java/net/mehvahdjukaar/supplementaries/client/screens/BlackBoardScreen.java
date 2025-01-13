@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.DyeColor;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -169,10 +170,11 @@ public class BlackBoardScreen extends Screen {
                 .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
         if (CommonConfigs.Building.BLACKBOARD_COLOR.get() || PlatHelper.isDev()) {
-            for (byte b = 0; b < 16; b++) {
-                int ox = b % 2;
-                int oy = b / 2;
-                this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 78 + ox * 10 + ox * 2,
+            for (byte b = 0; b < DyeColor.values().length; b++) {
+                int ox = b / 8;
+                int oy = b % 8;
+                this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 64 +
+                        -ox * 10 - ox * 2,
                         67 + oy * 10 + oy * 2, b));
             }
         }

@@ -77,9 +77,6 @@ public class ClientEventsFabric {
             e.register(new SlimedLayer<>(r));
         });
 
-        //hack. good enough
-        ClientLoginConnectionEvents.INIT.register((handler, client) -> AltimeterItemRenderer.onReload());
-
     }
 
     private static boolean wasJumpDown = true;

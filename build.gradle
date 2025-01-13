@@ -201,6 +201,14 @@ allprojects {
         maven {
             url = "https://maven.blamejared.com/"
         }
+        maven { // Reach Entity Attributes
+            url = "https://maven.jamieswhiteshirt.com/libs-release"
+            content { includeGroup("com.jamieswhiteshirt") }
+        }
+        maven { url = "https://maven.tterrag.com/" } // Flywheel
+        maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
+        maven { url = "https://mvn.devos.one/releases/" }
+
     }
 
     tasks.withType(JavaCompile) {

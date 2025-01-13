@@ -96,15 +96,6 @@ public class SupplementariesForgeClient {
         } catch (Exception e) {
             Supplementaries.LOGGER.error("Failed to add slimed layer to entities:   ", e);
         }
-
-    }
-
-
-    @SubscribeEvent
-    public static void onPackReload(TextureAtlasStitchedEvent event) {
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-            AltimeterItemRenderer.onReload();
-        }
     }
 
     @SubscribeEvent

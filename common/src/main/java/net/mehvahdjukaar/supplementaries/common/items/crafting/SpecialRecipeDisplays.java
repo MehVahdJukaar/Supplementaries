@@ -31,9 +31,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
@@ -236,19 +234,21 @@ public class SpecialRecipeDisplays {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
 
         String group = "sus_crafting";
-        List<Block> blocks = new ArrayList<>();
+        Map<Block,Block> blocks = new HashMap<>();
         if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
-            blocks.add(Blocks.SAND);
-            blocks.add(Blocks.GRAVEL);
+            blocks.put(Blocks.SAND, Blocks.SUSPICIOUS_SAND);
+            blocks.put(Blocks.GRAVEL, Blocks.SUSPICIOUS_GRAVEL);
         }
         if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
-            blocks.add(ModRegistry.GRAVEL_BRICKS.get());
+            blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
         }
 
-        for (Block block : blocks) {
-            ItemStack output = new ItemStack(Items.SLIME_BALL);
-            ItemStack input = new ItemStack(block);
-            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(Items.NAME_TAG));
+        ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
+        content.set(DataComponents.ITEM_NAME, Component.literal("Precious Item"));
+        for (var e : blocks.entrySet()) {
+            ItemStack output = new ItemStack(e.getValue());
+            ItemStack input = new ItemStack(e.getKey());
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(content));
             ResourceLocation id = Supplementaries.res(Utils.getID(output.getItem()).getPath());
             ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(new RecipeHolder<>(id, recipe));
@@ -384,7 +384,7 @@ public class SpecialRecipeDisplays {
                 {0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}};
-        blackboard.set(ModComponents.BLACKBOARD.get(), BlackboardData.pack(pixels, false, false));
+        blackboard.set(ModComponents.BLACKBOARD.get(), new BlackboardData(pixels, false, false));
         return blackboard;
     }
 
@@ -409,7 +409,7 @@ public class SpecialRecipeDisplays {
                 {0, 0, 1, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0},
                 {0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0},
                 {0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0}};
-        blackboard.set(ModComponents.BLACKBOARD.get(), BlackboardData.pack(pixels, false, false));
+        blackboard.set(ModComponents.BLACKBOARD.get(), new BlackboardData(pixels, false, false));
         return blackboard;
     }
 
