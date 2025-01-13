@@ -4,8 +4,8 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
@@ -23,13 +23,14 @@ public class PlaceHatStandBehavior extends DispenserHelper.AdditionalDispenserBe
 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource blockSource, ItemStack itemStack) {
-        Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-        BlockPos blockPos = blockSource.pos().relative(direction);
-        ServerLevel serverLevel = blockSource.level();
+        Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
+        BlockPos blockPos = blockSource.getPos().relative(direction);
+        ServerLevel serverLevel = blockSource.getLevel();
         Consumer<HatStandEntity> consumer = EntityType.appendDefaultStackConfig((armorStandx) -> {
             armorStandx.setYRot(direction.toYRot());
         }, serverLevel, itemStack, null);
-        HatStandEntity armorStand = ModEntities.HAT_STAND.get().spawn(serverLevel, consumer, blockPos, MobSpawnType.DISPENSER, false, false);
+        HatStandEntity armorStand = ModEntities.HAT_STAND.get().spawn(serverLevel, itemStack.getTag(),
+                consumer, blockPos, MobSpawnType.DISPENSER, false, false);
         if (armorStand != null) {
             itemStack.shrink(1);
         }
