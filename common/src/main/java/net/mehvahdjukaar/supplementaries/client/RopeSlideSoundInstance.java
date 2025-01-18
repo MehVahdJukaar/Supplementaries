@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client;
 
+import net.mehvahdjukaar.moonlight.api.set.BlockTypeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
@@ -78,7 +79,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     // why is this needed? because we want a silent sound that gets
     // activated on will BUT if we set volume to 0 that wont be enough as the game will still play it
     @Override
-    protected void stop() {
+    public void stop() {
         //insert moe bar meme
        // this.soundManager.queueTickingSound(this);
         this.stopToggle = true;

@@ -15,6 +15,7 @@ accessible method net/minecraft/world/item/BundleItem add (Lnet/minecraft/world/
 #dispenser minecart
 accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
+extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
 accessible class net/minecraft/client/gui/MapRenderer$MapInstance
 
 accessible field net/minecraft/world/level/block/AbstractCauldronBlock interactions Ljava/util/Map;
