@@ -486,7 +486,7 @@ public class ModCreativeTabs {
 
         after(e, Items.PUMPKIN_PIE, CreativeModeTabs.FOOD_AND_DRINKS,
                 ModConstants.PANCAKE_NAME,
-                ModRegistry.PANCAKE);
+                ModRegistry.PANCAKE_ITEM);
 
         after(e, Items.NETHER_BRICK, CreativeModeTabs.INGREDIENTS,
                 ModConstants.ASH_BRICKS_NAME,
