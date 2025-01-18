@@ -53,7 +53,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof GobletBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof GobletBlockTile tile) {
             // make te do the work
             if (tile.getSoftFluidTank().interactWithPlayer(player, hand, level, pos)) {
                 if (!level.isClientSide()) tile.setChanged();
@@ -65,7 +65,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof GobletBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof GobletBlockTile tile) {
             if (!player.isShiftKeyDown()) {
                 //from drink
                 if (CommonConfigs.Building.GOBLET_DRINK.get()) {

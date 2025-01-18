@@ -61,7 +61,7 @@ public class SafeRecipe extends CustomRecipe {
                 break;
             }
         }
-        return shulker.transmuteCopy(ModRegistry.SACK_ITEM.get(), 1);
+        return shulker.transmuteCopy(ModRegistry.SAFE_ITEM.get(), 1);
     }
 
     @Override

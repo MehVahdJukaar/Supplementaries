@@ -110,7 +110,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile && tile.isAccessibleBy(player)) {
+        if (level.getBlockEntity(pos) instanceof SpeakerBlockTile tile) {
             //ink
             if (!state.getValue(ANTIQUE) && Utils.mayPerformBlockAction(player, pos, stack)) {
                 if (stack.is(ModRegistry.ANTIQUE_INK.get())) {

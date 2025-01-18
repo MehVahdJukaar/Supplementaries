@@ -527,7 +527,7 @@ public class ModCreativeTabs {
 
         before(e, Items.FISHING_ROD, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUNCH_BASKET_NAME,
-                ModRegistry.LUNCH_BASKET);
+                ModRegistry.LUNCH_BASKET_ITEM);
 
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,
