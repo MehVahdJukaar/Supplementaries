@@ -47,7 +47,6 @@ public class FlowerPotHandler {
 
 
     //flower box stuff
-
     private static final Map<Item, ResourceLocation> SPECIAL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
     private static final Map<Item, ResourceLocation> SPECIAL_TALL_FLOWER_BOX_FLOWERS = new IdentityHashMap<>();
 
