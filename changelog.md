@@ -1,1 +1,2 @@
-fixed an issue with creative tabs from latest update
+updated waystone compat
+fixed safe recipe

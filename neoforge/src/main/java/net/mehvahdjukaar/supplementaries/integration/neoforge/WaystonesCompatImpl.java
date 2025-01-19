@@ -10,10 +10,7 @@ public class WaystonesCompatImpl {
         return blockEntity instanceof WaystoneBlockEntityBase;
     }
 
-    @Nullable
     public static Component getName(BlockEntity te) {
-        var s = ((WaystoneBlockEntityBase) te).getWaystone().getName();
-        if (s.isEmpty()) return null;
-        return Component.literal(s);
+        return ((WaystoneBlockEntityBase) te).getWaystone().getName();
     }
 }

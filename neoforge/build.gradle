@@ -131,7 +131,7 @@ dependencies {
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
     modCompileOnly("curse.maven:haunted-harvest-541753:4647081")
-    modCompileOnly("curse.maven:waystones-245755:4749833")
+    modCompileOnly("curse.maven:waystones-245755:5841748")
     modCompileOnly("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
