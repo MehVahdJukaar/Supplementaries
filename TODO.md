@@ -1,6 +1,6 @@
 # 1.21 bugs and stuff
 
-- sawmill rs log spam
+- seagulls steal from lunch basket 
  - make recipes configurable
 - safe rename add name bug
 - Lumisene has no sound when bucketed.

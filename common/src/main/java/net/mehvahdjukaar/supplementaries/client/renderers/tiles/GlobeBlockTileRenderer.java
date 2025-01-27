@@ -151,7 +151,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
             }
         } else {
-            builder = buffer.getBuffer(RenderType.entityCutout(texture));
+            builder = buffer.getBuffer(RenderType.entityTranslucentCull(texture));
         }
 
         model.render(poseStack, builder, light, overlay, -1);
