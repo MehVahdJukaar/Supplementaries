@@ -1,0 +1,58 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:blackboard"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:blackboard"
+      }
+    },
+    "has_blackstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:blackstone"
+            ]
+          }
+        ]
+      }
+    },
+    "supplementaries:blackboard_white": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "supplementaries:blackboard_white"
+          }
+        ]
+      }
+    },
+    "minecraft:wooden_slabs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:wooden_slabs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_blackstone",
+      "minecraft:wooden_slabs",
+      "has_the_recipe",
+      "has_blackstone",
+      "supplementaries:blackboard_white",
+      "minecraft:wooden_slabs"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

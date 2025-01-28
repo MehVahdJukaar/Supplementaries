@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "bastion": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "supplementaries:way_sign"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.adventure.way_sign.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "supplementaries:sign_post_oak"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.adventure.way_sign.title"
+    }
+  },
+  "requirements": [
+    [
+      "bastion"
+    ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "way_sign"
+    }
+  ]
+}

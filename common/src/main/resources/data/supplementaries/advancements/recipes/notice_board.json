@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:notice_board"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:notice_board"
+      }
+    },
+    "has_paper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:paper"
+            ]
+          }
+        ]
+      }
+    },
+    "minecraft:planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_paper",
+      "has_the_recipe",
+      "has_paper",
+      "minecraft:planks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

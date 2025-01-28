@@ -1,0 +1,46 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:boat_jar"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:boat_jar"
+      }
+    },
+    "has_jar": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:jar"
+            ]
+          }
+        ]
+      }
+    },
+    "minecraft:boats": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:boats"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_jar",
+      "has_the_recipe",
+      "has_jar",
+      "minecraft:boats"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

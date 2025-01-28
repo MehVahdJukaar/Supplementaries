@@ -1,0 +1,60 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:lock_block"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:lock_block"
+      }
+    },
+    "has_iron_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_ingot"
+            ]
+          }
+        ]
+      }
+    },
+    "has_redstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:redstone"
+            ]
+          }
+        ]
+      }
+    },
+    "minecraft:planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_ingot",
+      "minecraft:planks",
+      "has_the_recipe",
+      "has_iron_ingot",
+      "has_redstone",
+      "minecraft:planks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

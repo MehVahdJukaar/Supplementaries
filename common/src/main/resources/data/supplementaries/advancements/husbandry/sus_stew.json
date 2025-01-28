@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:husbandry/plant_seed",
+  "display": {
+    "icon": {
+      "item": "minecraft:suspicious_stew"
+    },
+    "title": {
+      "translate": "advancements.husbandry.sus_stew.title"
+    },
+    "description": {
+      "translate": "advancements.husbandry.sus_stew.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "stew": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:suspicious_stew"
+          ]
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "stew"
+    ]
+  ]
+}

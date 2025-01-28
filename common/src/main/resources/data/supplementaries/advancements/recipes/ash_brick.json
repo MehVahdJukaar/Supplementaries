@@ -1,0 +1,33 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:ash_brick"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:ash_brick"
+      }
+    },
+    "forge:ash": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ash"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "forge:ash",
+      "has_the_recipe",
+      "forge:ash"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

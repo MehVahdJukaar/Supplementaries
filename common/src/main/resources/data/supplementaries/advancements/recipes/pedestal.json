@@ -1,0 +1,62 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:pedestal"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:pedestal"
+      }
+    },
+    "has_stone_brick_slab": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stone_brick_slab"
+            ]
+          }
+        ]
+      }
+    },
+    "has_stone_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stone_bricks"
+            ]
+          }
+        ]
+      }
+    },
+    "has_chiseled_stone_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:chiseled_stone_bricks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stone_brick_slab",
+      "has_chiseled_stone_bricks",
+      "has_the_recipe",
+      "has_stone_brick_slab",
+      "has_stone_bricks",
+      "has_chiseled_stone_bricks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

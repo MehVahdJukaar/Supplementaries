@@ -1,0 +1,75 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:spring_launcher"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:spring_launcher"
+      }
+    },
+    "has_slime_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:slime_block"
+            ]
+          }
+        ]
+      }
+    },
+    "has_gunpowder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:gunpowder"
+            ]
+          }
+        ]
+      }
+    },
+    "has_sticky_piston": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:sticky_piston"
+            ]
+          }
+        ]
+      }
+    },
+    "has_iron_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_ingot"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_slime_block",
+      "has_sticky_piston",
+      "has_the_recipe",
+      "has_slime_block",
+      "has_gunpowder",
+      "has_sticky_piston",
+      "has_iron_ingot"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

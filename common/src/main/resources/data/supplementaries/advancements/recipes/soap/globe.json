@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:soap/globe"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:soap/globe"
+      }
+    },
+    "has_globe_sepia": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:globe_sepia"
+            ]
+          }
+        ]
+      }
+    },
+    "has_soap": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:soap"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_globe_sepia",
+      "has_the_recipe",
+      "has_globe_sepia",
+      "has_soap"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:redstone_illuminator"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:redstone_illuminator"
+      }
+    },
+    "has_sea_lantern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:sea_lantern"
+            ]
+          }
+        ]
+      }
+    },
+    "has_redstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:redstone"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sea_lantern",
+      "has_the_recipe",
+      "has_sea_lantern",
+      "has_redstone"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

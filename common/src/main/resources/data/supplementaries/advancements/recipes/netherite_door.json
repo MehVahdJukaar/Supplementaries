@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:netherite_door"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:netherite_door"
+      }
+    },
+    "has_netherite_scrap": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:netherite_scrap"
+            ]
+          }
+        ]
+      }
+    },
+    "has_gold_door": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "supplementaries:gold_door"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_netherite_scrap",
+      "has_the_recipe",
+      "has_netherite_scrap",
+      "has_gold_door"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:sign_post_acacia"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:sign_post_acacia"
+      }
+    },
+    "has_acacia_sign": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:acacia_sign"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_acacia_sign",
+      "has_the_recipe",
+      "has_acacia_sign"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:bubble_blower"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:bubble_blower"
+      }
+    },
+    "has_iron_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_ingot"
+            ]
+          }
+        ]
+      }
+    },
+    "has_iron_nugget": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_nugget"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_ingot",
+      "has_the_recipe",
+      "has_iron_ingot",
+      "has_iron_nugget"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

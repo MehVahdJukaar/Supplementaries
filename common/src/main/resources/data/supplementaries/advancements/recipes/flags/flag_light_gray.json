@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:flags/flag_light_gray"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:flags/flag_light_gray"
+      }
+    },
+    "has_light_gray_wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:light_gray_wool"
+            ]
+          }
+        ]
+      }
+    },
+    "has_stick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:stick"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_light_gray_wool",
+      "has_the_recipe",
+      "has_light_gray_wool",
+      "has_stick"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

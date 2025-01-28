@@ -1,0 +1,48 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:blackstone_lamp"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:blackstone_lamp"
+      }
+    },
+    "has_shroomlight": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:shroomlight"
+            ]
+          }
+        ]
+      }
+    },
+    "has_blackstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:blackstone"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_shroomlight",
+      "has_the_recipe",
+      "has_shroomlight",
+      "has_blackstone"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

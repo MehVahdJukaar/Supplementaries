@@ -1,0 +1,35 @@
+{
+  "rewards": {
+    "recipes": [
+      "supplementaries:blackstone_tile"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "supplementaries:blackstone_tile"
+      }
+    },
+    "has_polished_blackstone_bricks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:polished_blackstone_bricks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_polished_blackstone_bricks",
+      "has_the_recipe",
+      "has_polished_blackstone_bricks"
+    ]
+  ],
+  "sends_telemetry_event": false
+}
