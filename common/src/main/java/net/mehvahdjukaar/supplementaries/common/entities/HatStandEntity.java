@@ -595,7 +595,7 @@ public class HatStandEntity extends LivingEntity {
         if (block instanceof AbstractCauldronBlock || block instanceof ComposterBlock) {
             //skibidi tall
             setSkibidi(true, true, target);
-        } else if (block instanceof HopperBlock) {
+        } else if (block instanceof HopperBlock || block instanceof DecoratedPotBlock) {
             setSkibidi(true, false, target);
         }
     }

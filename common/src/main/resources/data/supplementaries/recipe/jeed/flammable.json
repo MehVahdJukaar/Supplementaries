@@ -9,12 +9,14 @@
       "flag": "lumisene"
     }
   ],
-
   "type": "jeed:effect_provider",
   "providers": [
     {
       "item": "supplementaries:lumisene_bucket"
     }
+  ],
+  "fluid_providers": [
+    "supplementaries:lumisene"
   ],
   "effect": "supplementaries:flammable"
 }
