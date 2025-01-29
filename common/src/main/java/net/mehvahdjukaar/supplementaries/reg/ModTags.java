@@ -14,6 +14,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.Arrays;
@@ -79,6 +80,8 @@ public class ModTags {
 
     public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
 
+    public static final TagKey<BannerPattern> PATTERN_ITEM_DRAGON = bannerTag("pattern_item/dragon");
+
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
     public static final TagKey<EntityType<?>> JAR_BABY_CATCHABLE = entityTag("jar_baby_catchable");
@@ -142,6 +145,10 @@ public class ModTags {
 
     private static TagKey<Biome> biomeTag(String name) {
         return TagKey.create(Registries.BIOME, Supplementaries.res(name));
+    }
+
+    private static TagKey<BannerPattern> bannerTag(String name) {
+        return TagKey.create(Registries.BANNER_PATTERN, Supplementaries.res(name));
     }
 
 }

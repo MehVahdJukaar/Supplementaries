@@ -159,6 +159,9 @@ public class ModRegistry {
             LUNCH_BASKET_NAME, () -> PlatHelper.newBlockEntityType(
                     LunchBoxBlockTile::new, LUNCH_BASKET.get()));
 
+    public static final Supplier<Item> DRAGON_PATTERN = regItem(DRAGON_PATTERN_NAME,
+            () -> new BannerPatternItem(ModTags.PATTERN_ITEM_DRAGON, (new Item.Properties())
+                    .stacksTo(1).rarity(Rarity.RARE)));
 
     //speedometer
     //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));

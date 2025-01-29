@@ -518,6 +518,10 @@ public class ModCreativeTabs {
                 ModConstants.LUNCH_BASKET_NAME,
                 ModRegistry.LUNCH_BASKET);
 
+        after(e, Items.GUSTER_BANNER_PATTERN, CreativeModeTabs.INGREDIENTS,
+                ModConstants.DRAGON_PATTERN_NAME,
+                ModRegistry.DRAGON_PATTERN);
+
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,
                 ModRegistry.WRENCH);

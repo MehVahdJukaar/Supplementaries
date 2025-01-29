@@ -8,8 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -468,6 +466,12 @@ public class CommonConfigs {
                     .define("simple_mode", true);
             builder.pop();
 
+            builder.push("netherite_doors");
+            NETHERITE_DOOR_ENABLED = builder.define("door", true);
+            NETHERITE_TRAPDOOR_ENABLED = builder.define("trapdoor", true);
+            NETHERITE_DOOR_UNBREAKABLE = builder.comment("Makes netherite doors and trapdoors unbreakable")
+                    .define("unbreakable", false);
+            builder.pop();
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
@@ -1061,6 +1065,10 @@ public class CommonConfigs {
 
             builder.comment("Vanilla tweaks").push("tweaks");
 
+            builder.push(ModConstants.DRAGON_PATTERN_NAME);
+            DRAGON_PATTERN = feature(builder.comment("Adds dragon banner pattern made from dragon head"));
+            builder.pop();
+
             builder.push("shulker_helmet");
             SHULKER_HELMET_ENABLED = feature(builder.comment("Allows wearing shulker shells"));
             builder.pop();
@@ -1148,10 +1156,10 @@ public class CommonConfigs {
 
             builder.push("placeable_books");
             WRITTEN_BOOKS = builder.comment("Allows written books to be placed down. Requires shift clicking")
-                    .define("written_books", true);
+             .define("written_books", true);
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
-            BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO :  builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+            BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("book_power", 1d, 0, 5);
             ENCHANTED_BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("enchanted_book_power", 1.334d, 0, 5);
@@ -1212,6 +1220,7 @@ public class CommonConfigs {
 
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
+        public static final Supplier<Boolean> DRAGON_PATTERN;
         public static final Supplier<Boolean> APPLE_DISENCHANT;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
