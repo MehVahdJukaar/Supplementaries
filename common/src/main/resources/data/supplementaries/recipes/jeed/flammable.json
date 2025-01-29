@@ -11,5 +11,8 @@
       "item": "supplementaries:lumisene_bucket"
     }
   ],
+  "fluid_providers": [
+    "supplementaries:lumisene"
+  ],
   "effect": "supplementaries:flammable"
 }
