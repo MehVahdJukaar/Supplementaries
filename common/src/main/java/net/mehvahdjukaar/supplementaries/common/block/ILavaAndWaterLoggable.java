@@ -45,18 +45,7 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
         return false;
     }
 
-    default Fluid takeLiquid(LevelAccessor world, BlockPos pos, BlockState state) {
-        if (state.getValue(ModBlockProperties.LAVALOGGED)) {
-            world.setBlock(pos, state.setValue(ModBlockProperties.LAVALOGGED, Boolean.FALSE), 3);
-            return Fluids.LAVA;
-        } else if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-            world.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
-            return Fluids.WATER;
-        }
 
-        return Fluids.EMPTY;
-
-    }
 
     default ItemStack pickupBlock(@Nullable Player player,LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         if (pState.getValue(BlockStateProperties.WATERLOGGED)) {

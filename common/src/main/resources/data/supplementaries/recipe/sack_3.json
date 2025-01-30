@@ -8,11 +8,8 @@
       }
     },
     {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "fabric:mod_loaded",
-        "modid": "farmersdelight"
-      }
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
     },
     {
       "condition": "supplementaries:flag",
@@ -27,14 +24,14 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:wheat"
+      "item": "farmersdelight:canvas"
     },
     "2": {
-      "tag": "c:strings"
+      "item": "minecraft:string"
     }
   },
   "result": {
-    "id": "supplementaries:sack",
+    "item": "supplementaries:sack",
     "count": 1
   }
 }

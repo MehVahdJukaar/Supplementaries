@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -45,6 +47,7 @@ public class CommonConfigs {
 
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Supplier<Boolean> FALSE = () -> false;
+    private static final Supplier<Double> ZERO = () -> 0d;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.MOD_ID, ConfigType.COMMON_SYNCED);
@@ -386,8 +389,8 @@ public class CommonConfigs {
 
             builder.push("pedestal");
             PEDESTAL_ENABLED = feature(builder);
-            CRYSTAL_ENCHANTING = builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
-                    .define("crystal_enchanting", 3, 0, 100);
+            CRYSTAL_ENCHANTING = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
+                    .define("crystal_enchanting", 3, 0d, 100);
             builder.pop();
 
             builder.push("ash");
@@ -400,11 +403,6 @@ public class CommonConfigs {
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
-            //TODO REMOVE
-            ///BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-            //       .define("attempts_per_patch", 36, 1, 1000);
-            //BASALT_ASH_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-            //        .define("spawn_attempts", 15, 0, 100);
             builder.pop();
 
             builder.push("flag");
@@ -545,7 +543,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> GLOBE_SEPIA;
 
         public static final Supplier<Boolean> PEDESTAL_ENABLED;
-        public static final Supplier<Integer> CRYSTAL_ENCHANTING;
+        public static final Supplier<Double> CRYSTAL_ENCHANTING;
 
         public static final Supplier<Boolean> TIMBER_FRAME_ENABLED;
         public static final Supplier<Boolean> REPLACE_DAUB;
@@ -1157,9 +1155,9 @@ public class CommonConfigs {
                    // .define("written_books", true);
             PLACEABLE_BOOKS = ()->false;// builder.comment("Allow books and enchanted books to be placed on the ground")
                    // .define("enabled", true);
-            BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+            BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO :  builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("book_power", 1d, 0, 5);
-            ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+            ENCHANTED_BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("enchanted_book_power", 1.334d, 0, 5);
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);

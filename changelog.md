@@ -1,2 +1,5 @@
-updated waystone compat
-fixed safe recipe
+- fixed faucet brewing stand iteraction
+- updated integration with buzzier bees
+- improved gunpowder connections
+- fixed faucet emptying fluidlogged blocks incorrectly
+- fixed faucet stopping working after datapack reload

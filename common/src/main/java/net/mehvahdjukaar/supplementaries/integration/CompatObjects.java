@@ -45,24 +45,13 @@ public class CompatObjects {
     public static final Supplier<Block> TOMATO_CROP = make("farmersdelight:tomatoes", Registries.BLOCK);
 
 
-    public static final Supplier<ParticleType<?>> ENDER_FLAME = make("endergetic:ender_flame", Registries.PARTICLE_TYPE);
-
+    public static final Supplier<ParticleType<?>> ENDER_FLAME = make("endergetic:ender_fire_flame", Registries.PARTICLE_TYPE);
     public static final Supplier<ParticleType<?>> GLOW_FLAME = make("infernalexp:glowstone_sparkle", Registries.PARTICLE_TYPE);
-
     public static final Supplier<ParticleType<?>> NETHER_BRASS_FLAME = make("architects_palette:green_flame", Registries.PARTICLE_TYPE);
-
 
     public static final Supplier<ParticleType<?>> SMALL_SOUL_FLAME = make("buzzier_bees:small_soul_fire_flame", Registries.PARTICLE_TYPE);
     public static final Supplier<ParticleType<?>> SMALL_CUPRIC_FLAME = make("caverns_and_chasms:small_cupric_fire_flame", Registries.PARTICLE_TYPE);
     public static final Supplier<ParticleType<?>> SMALL_END_FLAME = make("endergetic:small_ender_fire_flame", Registries.PARTICLE_TYPE);
-
-    public static final Supplier<Item> SOUL_CANDLE_ITEM = make("buzzier_bees:soul_candle", Registries.ITEM);
-
-    public static final Supplier<Block> SOUL_CANDLE = make("buzzier_bees:soul_candle", Registries.BLOCK);
-
-    public static final Supplier<Item> SPECTACLE_CANDLE_ITEM = make("cave_enhancements:spectacle_candle", Registries.ITEM);
-
-    public static final Supplier<Block> SPECTACLE_CANDLE = make("cave_enhancements:spectacle_candle", Registries.BLOCK);
 
     public static final Supplier<Block> SUGAR_WATER = make("the_bumblezone:sugar_water_block", Registries.BLOCK);
 

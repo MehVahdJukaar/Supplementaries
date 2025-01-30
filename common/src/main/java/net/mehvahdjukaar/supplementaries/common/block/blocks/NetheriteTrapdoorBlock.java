@@ -143,11 +143,6 @@ public class NetheriteTrapdoorBlock extends TrapDoorBlock implements ILavaAndWat
     }
 
     @Override
-    public Fluid takeLiquid(LevelAccessor p_204508_1_, BlockPos p_204508_2_, BlockState p_204508_3_) {
-        return ILavaAndWaterLoggable.super.takeLiquid(p_204508_1_, p_204508_2_, p_204508_3_);
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (!MiscUtils.showsHints(tooltipFlag)) return;

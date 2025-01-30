@@ -3,6 +3,7 @@
   "values": [
     {"id":"#decorative_blocks:braziers","required":false},
     {"id":"#caverns_and_chasms:braziers","required":false},
+    {"id":"alexcaves:nuclear_bomb","required":false},
     {"id":"bbb:brazier","required":false},
     {"id":"bbb:soul_brazier","required":false},
     {"id":"#bbb:braziers","required":false},

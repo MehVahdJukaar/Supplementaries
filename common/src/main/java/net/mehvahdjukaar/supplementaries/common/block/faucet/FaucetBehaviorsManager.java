@@ -31,7 +31,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -92,7 +91,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     }
 
-    public static void onLevelLoad(ServerLevel level) {
+    public static void onReloadWithLevel(ServerLevel level) {
         var instance = getInstance(level.registryAccess());
         FaucetBlockTile.clearBehaviors();
 
