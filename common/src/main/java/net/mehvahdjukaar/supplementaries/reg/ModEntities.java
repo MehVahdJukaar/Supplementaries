@@ -96,7 +96,7 @@ public class ModEntities {
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(6)
-                    .updateInterval(20));
+                    .updateInterval(1)); //STOP GETTING IT OUT OF SYNC!
 
     //firefly
 

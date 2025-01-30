@@ -23,10 +23,10 @@ public class BuzzierBeesCompat {
     public static void registerCandle(ResourceLocation id) {
         addCandle(id, "_soul", CompatObjects.SMALL_SOUL_FLAME);
 
-        if(CompatHandler.ENDERGETIC){
+        if (CompatHandler.ENDERGETIC) {
             addCandle(id, "_ender", CompatObjects.SMALL_END_FLAME);
         }
-        if(CompatHandler.CAVERNS_AND_CHASMS){
+        if (CompatHandler.CAVERNS_AND_CHASMS) {
             addCandle(id, "_cupric", CompatObjects.SMALL_CUPRIC_FLAME);
         }
     }

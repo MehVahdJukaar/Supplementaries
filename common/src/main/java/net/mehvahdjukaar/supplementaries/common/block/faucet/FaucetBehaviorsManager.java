@@ -12,7 +12,6 @@ import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,8 +58,6 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
     @Override
     public void parse(Map<ResourceLocation, JsonElement> map, RegistryAccess registryAccess) {
-        FaucetBlockTile.clearBehaviors();
-
         dataInteractions.clear();
         map.forEach((key, json) -> {
             try {
@@ -81,7 +77,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
     }
 
-    public void onLevelLoad(ServerLevel level) {
+    public void onReloadWithLevel(ServerLevel level) {
         FaucetBlockTile.clearBehaviors();
 
         dataInteractions.forEach(FaucetBlockTile::registerInteraction);

@@ -255,15 +255,17 @@ public class GunpowderBlock extends LightUpBlock {
     // same as can connect but just applies to blocks over and up from it
     protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
-                b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
+        return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
+                b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof AbstractCandleBlock;
     }
 
     @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return state.is(ModTags.LIGHTS_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
-                b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
+        return state.is(ModTags.LIGHTS_GUNPOWDER) || state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
+                b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof AbstractCandleBlock;
     }
 
     @Override

@@ -8,11 +8,8 @@
       }
     },
     {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:mod_loaded",
-        "modid": "farmersdelight"
-      }
+      "type": "forge:mod_loaded",
+      "modid": "farmersdelight"
     },
     {
       "type": "supplementaries:flag",
@@ -27,7 +24,7 @@
   ],
   "key": {
     "1": {
-      "item": "minecraft:wheat"
+      "item": "farmersdelight:canvas"
     },
     "2": {
       "item": "minecraft:string"

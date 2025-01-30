@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
@@ -34,7 +36,10 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
                 //simulate draining
                 var opt = SoftFluidStack.fromItem(stack);
                 if (opt != null) {
-                    brewingStand.setItem(i, stack.getItem().getCraftingRemainingItem().getDefaultInstance());
+                    ItemStack remainder = (stack.getItem().hasCraftingRemainingItem() ?
+                            Items.GLASS_BOTTLE.getDefaultInstance() :
+                            ForgeHelper.getCraftingRemainingItem(stack).get());
+                    brewingStand.setItem(i, remainder);
                     tile.setChanged();
                     return;
                 }

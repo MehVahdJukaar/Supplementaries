@@ -5,8 +5,11 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
@@ -21,8 +24,12 @@ class LiquidBlockInteraction implements FaucetSource.Fluid {
 
     @Override
     public void drain(Level level, BlockPos pos, Direction dir, FluidState source, int amount) {
+        BlockState state = level.getBlockState(pos);
         if (source.getType() != Fluids.WATER) {
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            //bad
+            if (state.getBlock() instanceof BucketPickup bp) {
+                ItemStack bucket = bp.pickupBlock(level, pos, state);
+            } else level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
     }
 }
