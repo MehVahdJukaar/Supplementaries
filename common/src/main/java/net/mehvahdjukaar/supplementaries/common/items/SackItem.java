@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.nbt.CompoundTag;
@@ -61,7 +62,9 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
+        boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(stack);
+        if (!quarkTooltips && !sbtTooltips) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
