@@ -81,6 +81,7 @@ public class CompatHandler {
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
     public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
     public static final boolean OPTIFINE;
+    public static final boolean SHULKER_BOX_TOOLTIP = isLoaded("shulkerboxtooltip");
 
     static {
         boolean of = false;

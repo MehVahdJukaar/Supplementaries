@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.component.DataComponents;
@@ -60,7 +61,9 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (!CompatHandler.QUARK || !QuarkClientCompat.canRenderQuarkTooltip()) {
+        boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(stack);
+        if (!quarkTooltips && !sbtTooltips) {
             ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
         }
     }
@@ -94,7 +97,9 @@ public class SackItem extends BlockItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
+        boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(pStack);
+        if (quarkTooltips && !sbtTooltips) {
             if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
                 var container = pStack.get(DataComponents.CONTAINER);
                 return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));

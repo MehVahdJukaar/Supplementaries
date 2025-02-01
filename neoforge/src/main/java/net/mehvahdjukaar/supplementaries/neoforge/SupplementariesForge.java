@@ -6,6 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ServerEventsForge;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -55,6 +57,12 @@ public class SupplementariesForge {
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent event) {
         VillagerScareStuff.setup();
+
+        event.enqueueWork(() -> {
+            if (CompatHandler.SHULKER_BOX_TOOLTIP) {
+                ShulkerBoxTooltipCompat.registerPlugin();
+            }
+        });
     }
 
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");

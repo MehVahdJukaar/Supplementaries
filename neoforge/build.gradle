@@ -177,6 +177,7 @@ dependencies {
 
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")
+    modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}") { transitive false }
 
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
