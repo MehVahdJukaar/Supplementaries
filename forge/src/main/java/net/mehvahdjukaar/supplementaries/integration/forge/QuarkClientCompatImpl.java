@@ -7,7 +7,9 @@ import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryTooltip;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -50,7 +52,9 @@ public class QuarkClientCompatImpl {
 
     public static void onItemTooltipEvent(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
-        if (QuarkClientCompat.canRenderQuarkTooltip()) {
+        boolean quarkTooltip = QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltip = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(stack);
+        if (quarkTooltip && !sbtTooltip) {
             Item item = stack.getItem();
             if (item instanceof SafeItem || item instanceof SackItem) {
                 CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", false);

@@ -62,9 +62,9 @@ public class SackItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
-        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(stack);
-        if (!quarkTooltips && !sbtTooltips) {
+        boolean quarkTooltip = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltip = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(stack);
+        if (!quarkTooltip && !sbtTooltip) {
             CompoundTag tag = stack.getTagElement("BlockEntityTag");
             if (tag != null) {
                 ItemsUtil.addShulkerLikeTooltips(tag, tooltip);
@@ -100,7 +100,9 @@ public class SackItem extends BlockItem {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip()) {
+        boolean quarkTooltip = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
+        boolean sbtTooltip = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(pStack);
+        if (quarkTooltip && !sbtTooltip) {
             CompoundTag cmp = pStack.getTagElement("BlockEntityTag");
             if (cmp != null && !cmp.contains("LootTable")) {
                 return Optional.of(new InventoryTooltip(cmp, this, CommonConfigs.Functional.SACK_SLOTS.get()));
