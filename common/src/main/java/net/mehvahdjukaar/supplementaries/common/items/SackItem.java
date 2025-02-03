@@ -62,7 +62,7 @@ public class SackItem extends BlockItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
-        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(stack);
+        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(stack);
         if (!quarkTooltips && !sbtTooltips) {
             ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
         }
@@ -98,7 +98,7 @@ public class SackItem extends BlockItem {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         boolean quarkTooltips = CompatHandler.QUARK && QuarkClientCompat.canRenderQuarkTooltip();
-        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.isPreviewAvailable(pStack);
+        boolean sbtTooltips = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(pStack);
         if (quarkTooltips && !sbtTooltips) {
             if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
                 var container = pStack.get(DataComponents.CONTAINER);
