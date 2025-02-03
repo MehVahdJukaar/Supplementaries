@@ -113,7 +113,7 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
             for (int j = 0; j < dimx; ++j) {
                 int slotX = xp + x + j * 18;
                 int slotY = 7 + y + 18 * h;
-                graphics.blit(ModTextures.SLOT_TEXTURE, slotX, slotY, 0, 0, 18, 18, 18, 18);
+                graphics.blitSprite(ModTextures.SLOT_SPRITE, slotX, slotY, 18, 18);
 
                 if (slot < this.items.size()) {
                     ItemStack stack = this.items.get(slot);
