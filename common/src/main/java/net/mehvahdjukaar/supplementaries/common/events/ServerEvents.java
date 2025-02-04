@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -46,6 +47,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -233,6 +235,7 @@ public class ServerEvents {
     public static boolean onArrowPickup(AbstractArrow arrow, Player player, Supplier<ItemStack> pickup) {
         if (CommonConfigs.Tools.QUIVER_PICKUP.get()) {
             ItemStack stack = pickup.get();
+            Preconditions.checkNotNull(stack, "Arrow pickup item was null! This is an issue from the mod that added this entity "+ arrow);
             return takeArrow(arrow, player, stack);
         }
         return false;

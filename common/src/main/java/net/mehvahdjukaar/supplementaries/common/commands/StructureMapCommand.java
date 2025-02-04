@@ -46,8 +46,10 @@ public class StructureMapCommand {
         HolderSet<Structure> holderSet = getHolders(structure, registry).orElseThrow(() -> ERROR_STRUCTURE_INVALID.create(structure.asPrintable()));
         var p = source.getPlayer();
         if (p != null) {
-            var item = AdventurerMapsHandler.createMapOrQuill(level, p.getOnPos(), holderSet,  150, true,zoom, null, null, 0);
-            p.addItem(item);
+            var item = AdventurerMapsHandler.createMapOrQuill(level, p.getOnPos(), holderSet, 150, true, zoom, null, null, 0);
+            if (!item.isEmpty()) {
+                p.addItem(item);
+            }
         }
         return 0;
     }
