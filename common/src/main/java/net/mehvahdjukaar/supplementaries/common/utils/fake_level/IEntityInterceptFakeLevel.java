@@ -29,7 +29,7 @@ public interface IEntityInterceptFakeLevel {
         public Entity projectile = null;
 
         public ClientSide(String name, RegistryAccess ra) {
-            super(name, ra);
+            super(true, name, ra);
         }
 
         public void setup() {

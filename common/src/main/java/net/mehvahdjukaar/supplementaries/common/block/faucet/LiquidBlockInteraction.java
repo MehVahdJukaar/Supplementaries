@@ -30,7 +30,7 @@ class LiquidBlockInteraction implements FaucetSource.Fluid {
         if (source.getType() != Fluids.WATER) {
             //bad
             if (state.getBlock() instanceof BucketPickup bp) {
-                ItemStack bucket = bp.pickupBlock(level, pos, state);
+                ItemStack bucket = bp.pickupBlock(null, level, pos, state);
             } else level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
     }

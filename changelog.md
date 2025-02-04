@@ -1,5 +1,7 @@
+- added dragon banner pattern
 - fixed faucet brewing stand iteraction
 - updated integration with buzzier bees
 - improved gunpowder connections
 - fixed faucet emptying fluidlogged blocks incorrectly
 - fixed faucet stopping working after datapack reload
+- fixed failed map trades not returning a null merchant offer

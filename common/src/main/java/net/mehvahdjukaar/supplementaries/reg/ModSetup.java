@@ -9,8 +9,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -135,6 +135,10 @@ public class ModSetup {
                 SoftFluidRegistry.get(registryAccess).get(MLBuiltinSoftFluids.WATER.getID());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
+            }
+            var server = PlatHelper.getCurrentServer();
+            if (server != null) {
+                FaucetBehaviorsManager.reloadWithLevel(server.overworld());
             }
         }
     }

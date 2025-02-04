@@ -44,7 +44,7 @@ public class FaucetBakedModel implements CustomBakedModel {
             ResourceKey<SoftFluid> fluidKey = data.get(ModBlockProperties.FLUID);
             Level level = Minecraft.getInstance().level;
             if (fluidKey != null && level != null) {
-                SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
+                SoftFluid fluid = SoftFluidRegistry.get(level.registryAccess()).get(fluidKey);
                 if(fluid != null) {
                     List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
                     if (!liquidQuads.isEmpty()) {

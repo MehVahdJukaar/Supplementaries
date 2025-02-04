@@ -31,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +41,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
@@ -59,7 +59,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    public static void addRegisterFaucetInteraction(Runnable listener) {
+    synchronized public static void addRegisterFaucetInteraction(Runnable listener) {
         SERVER_LISTENERS.add(listener);
     }
 
@@ -91,7 +91,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     }
 
-    public static void onReloadWithLevel(ServerLevel level) {
+    public static void reloadWithLevel(ServerLevel level) {
         var instance = getInstance(level.registryAccess());
         FaucetBlockTile.clearBehaviors();
 
