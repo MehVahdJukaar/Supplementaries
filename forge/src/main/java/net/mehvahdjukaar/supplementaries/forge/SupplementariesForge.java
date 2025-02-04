@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
@@ -9,6 +8,8 @@ import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ServerEventsForge;
 import net.mehvahdjukaar.supplementaries.common.items.forge.ShulkerShellItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
-import vectorwing.farmersdelight.FarmersDelight;
 
 import java.util.function.Supplier;
 
@@ -64,6 +64,11 @@ public class SupplementariesForge {
         ModSetup.asyncSetup();
         VillagerScareStuff.setup();
 
+        event.enqueueWork(() -> {
+            if (CompatHandler.SHULKER_BOX_TOOLTIP) {
+                ShulkerBoxTooltipCompat.registerPlugin();
+            }
+        });
     }
 
     @SubscribeEvent

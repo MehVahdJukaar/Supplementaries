@@ -35,6 +35,9 @@
     ],
     "jade": [
       "net.mehvahdjukaar.supplementaries.integration.JadeCompat"
+    ],
+    "shulkerboxtooltip": [
+      "net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat"
     ]
   },
   "mixins": [
