@@ -28,9 +28,9 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -159,9 +159,14 @@ public class ModRegistry {
             LUNCH_BASKET_NAME, () -> PlatHelper.newBlockEntityType(
                     LunchBoxBlockTile::new, LUNCH_BASKET.get()));
 
-    public static final Supplier<Item> DRAGON_PATTERN = regItem(DRAGON_PATTERN_NAME,
+    public static final Supplier<BannerPattern> DRAGON_PATTER = RegHelper.register(
+            res("dragon"), () -> new BannerPattern("supplementaries:dragon"), Registries.BANNER_PATTERN
+    );
+
+    public static final Supplier<Item> DRAGON_PATTERN_ITEM = regItem(DRAGON_PATTERN_NAME,
             () -> new BannerPatternItem(ModTags.PATTERN_ITEM_DRAGON, (new Item.Properties())
                     .stacksTo(1).rarity(Rarity.RARE)));
+
 
     //speedometer
     //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));
@@ -253,7 +258,7 @@ public class ModRegistry {
                     BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
             300);
     public static final Supplier<Block> FINE_WOOD_STAIRS = regWithItem(FINE_WOOD_NAME + "_stairs", () -> new ModStairBlock(
-            FINE_WOOD, BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+                    FINE_WOOD, BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
             300);
     public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
                     BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),

@@ -1,0 +1,22 @@
+{
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dragon_banner_pattern"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "minecraft:dragon_head"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "supplementaries:dragon_banner_pattern"
+  }
+}
