@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,6 +16,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.state.BlockState;
+
+import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer.renderBanner;
 
 
 public class FlagItemRenderer extends ItemStackRenderer {
@@ -27,12 +30,19 @@ public class FlagItemRenderer extends ItemStackRenderer {
         BannerPatternLayers patterns = stack.get(DataComponents.BANNER_PATTERNS);
         if (patterns != null) {
             matrixStackIn.pushPose();
+            DyeColor color = ((FlagItem) stack.getItem()).getColor();
+
+            if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
+                renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+                return;
+            }
+
             matrixStackIn.translate(-0.71875, 0, 0);
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
             matrixStackIn.mulPose(RotHlpr.Y90);
             FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn,
-                    ((FlagItem) stack.getItem()).getColor());
+                    color);
 
             matrixStackIn.popPose();
         }
