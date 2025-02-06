@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
+import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer.renderBanner;
+
 
 public class FlagItemRenderer extends ItemStackRenderer {
 
@@ -33,12 +36,22 @@ public class FlagItemRenderer extends ItemStackRenderer {
         matrixStackIn.pushPose();
         matrixStackIn.translate(-0.71875, 0, 0);
 
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-        CompoundTag com = stack.getTagElement("BlockEntityTag");
+     CompoundTag com = stack.getTagElement("BlockEntityTag");
         ListTag listnbt = null;
         if (com != null && com.contains("Patterns")) {
             listnbt = com.getList("Patterns", 10);
         }
+        List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
+
+        matrixStackIn.pushPose();
+        DyeColor color = ((FlagItem) stack.getItem()).getColor();
+
+        if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
+            renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+            return;
+        }
+
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
         List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
         matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
         matrixStackIn.mulPose(RotHlpr.Y90);

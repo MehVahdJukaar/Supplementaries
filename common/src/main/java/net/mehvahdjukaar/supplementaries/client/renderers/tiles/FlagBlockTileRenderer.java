@@ -31,11 +31,11 @@ import java.util.List;
 
 public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
-    private final ModelPart flag;
+    private static ModelPart flag;
 
     public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
-        this.flag = modelpart.getChild("flag");
+        flag = modelpart.getChild("flag");
     }
 
     @Override
@@ -43,16 +43,16 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
+    public static void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
-        this.flag.xRot = (float) (0.5 * Math.PI);
-        this.flag.yRot = (float) (1 * Math.PI);
-        this.flag.zRot = (float) (0.5 * Math.PI);
-        this.flag.y = -12;
-        this.flag.x = 1.5f;
-        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
+        flag.xRot = (float) (0.5 * Math.PI);
+        flag.yRot = (float) (1 * Math.PI);
+        flag.zRot = (float) (0.5 * Math.PI);
+        flag.y = -12;
+        flag.x = 1.5f;
+        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, flag, ModelBakery.BANNER_BASE, true, list);
         matrixStack.popPose();
     }
 

@@ -340,7 +340,6 @@
     "subtitle": "subtitles.block.generic.hit"
   },
   "block.rope.slide": {
-    "subtitle": "subtitles.supplementaries.rope.slide",
     "sounds": [
       "supplementaries:block/rope_slide"
     ]
