@@ -22,6 +22,7 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class VibeChecker {
 
@@ -82,7 +83,6 @@ public class VibeChecker {
     }
 
     private static void clientStuff() {
-        if (PlatHelper.isDev()) return;
         for (var v : BuiltInRegistries.BANNER_PATTERN.registryKeySet()) {
             if (!Sheets.BANNER_MATERIALS.containsKey(v)) {
                 var a = new ArrayList<>(BuiltInRegistries.BANNER_PATTERN.registryKeySet());
@@ -90,7 +90,7 @@ public class VibeChecker {
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
                         "Missing entries: " + a + " (mods listed here are NOT the cause of this, merely the ones that got broken because of it)\n" +
-                        "Check previous forge log lines to find the offending mod.");
+                        "Check previous forge log lines to find the offending mod. "+ Arrays.toString(stackTraceElements));
             }
         }
         for (var v : BuiltInRegistries.DECORATED_POT_PATTERNS.registryKeySet()) {
@@ -100,7 +100,7 @@ public class VibeChecker {
                 throw new BadModError("Some OTHER mod loaded the Sheets class to early, causing modded banner patterns and sherds textures to not include modded ones.\n" +
                         "Refusing to proceed further.\n" +
                         "Missing entries: " + a + " (mods listed here are NOT the cause of this, merely the ones that got broken because of it)\n" +
-                        "Check previous forge log lines to find the offending mod.");
+                        "Check previous forge log lines to find the offending mod. "+ Arrays.toString(stackTraceElements));
             }
         }
     }
@@ -112,6 +112,12 @@ public class VibeChecker {
         if (PlatHelper.isModLoaded(s)) {
             Supplementaries.LOGGER.error("[!!!] The mod {} contains stolen assets and code from Frozen Up which is ARR.", s);
         }
+    }
+
+    private static StackTraceElement[] stackTraceElements;
+
+    public static void setSusStackTrace(StackTraceElement[] s) {
+        stackTraceElements = s;
     }
 
 

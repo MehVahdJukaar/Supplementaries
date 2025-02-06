@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -186,6 +187,17 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
             }
         }
         return Optional.empty();
+    }
+
+    //TODO: aaa
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return super.rotate(state, rotation);
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return super.mirror(state, mirror);
     }
 
     @Override

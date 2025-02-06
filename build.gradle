@@ -182,7 +182,9 @@ allprojects {
         maven {
             url = "https://maven.blamejared.com/"
         }
-
+        maven{
+            url = "https://mvn.devos.one/snapshots/"
+        }
         maven { url "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
     }
 

@@ -1,2 +1,2 @@
-- backported some fixes
-- added dragon banner pattern
+- fixed rope slide always playing subtitle
+- fixed flag banner config not affecting the item

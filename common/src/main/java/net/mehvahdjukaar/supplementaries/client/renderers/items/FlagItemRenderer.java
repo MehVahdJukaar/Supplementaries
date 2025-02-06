@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
@@ -36,27 +37,25 @@ public class FlagItemRenderer extends ItemStackRenderer {
         matrixStackIn.pushPose();
         matrixStackIn.translate(-0.71875, 0, 0);
 
-     CompoundTag com = stack.getTagElement("BlockEntityTag");
+        CompoundTag com = stack.getTagElement("BlockEntityTag");
         ListTag listnbt = null;
         if (com != null && com.contains("Patterns")) {
             listnbt = com.getList("Patterns", 10);
         }
-        List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
-
-        matrixStackIn.pushPose();
         DyeColor color = ((FlagItem) stack.getItem()).getColor();
+        List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(color, listnbt);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+
+        matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
 
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-            renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
-            return;
+            matrixStackIn.mulPose(Axis.YP.rotationDegrees(100));
+            renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns);
+
+        }else {
+            matrixStackIn.mulPose(RotHlpr.Y90);
+            FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);
         }
-
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-        List<Pair<Holder<BannerPattern>, DyeColor>> patterns = BannerBlockEntity.createPatterns(((FlagItem) stack.getItem()).getColor(), listnbt);
-        matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
-        matrixStackIn.mulPose(RotHlpr.Y90);
-        FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);
-
         matrixStackIn.popPose();
 
     }
