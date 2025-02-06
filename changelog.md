@@ -1,5 +1,2 @@
-- fixed faucet brewing stand iteraction
-- updated integration with buzzier bees
-- improved gunpowder connections
-- fixed faucet emptying fluidlogged blocks incorrectly
-- fixed faucet stopping working after datapack reload
+- backported some fixes
+- added dragon banner pattern
