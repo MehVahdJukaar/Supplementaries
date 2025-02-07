@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContaine
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
         }
         RenderSystem.enableDepthTest();
         this.renderBackground(x, y, graphics);
-        this.renderSlots(x, y, graphics, font);
+        this.renderSlots(x, y, graphics, font, mouseX, mouseY);
         this.renderInnerTooltip(x, y, graphics, font, mouseX, mouseY);
     }
 
@@ -103,7 +104,7 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
             7, 7);
     }
 
-    private void renderSlots(int x, int y, GuiGraphics graphics, Font font) {
+    private void renderSlots(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
         int dimx;
         int slot = 0;
         int size = this.unlockedSlots.get();
@@ -114,6 +115,10 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
                 int slotX = xp + x + j * 18;
                 int slotY = 7 + y + 18 * h;
                 graphics.blitSprite(ModTextures.SLOT_SPRITE, slotX, slotY, 18, 18);
+
+                if (mouseX >= slotX && mouseX < slotX + 18 && mouseY >= slotY && mouseY < slotY + 18) {
+                    AbstractContainerScreen.renderSlotHighlight(graphics, slotX + 1, slotY + 1, 0);
+                }
 
                 if (slot < this.items.size()) {
                     ItemStack stack = this.items.get(slot);
