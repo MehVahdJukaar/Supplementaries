@@ -36,8 +36,8 @@ public final class SafeOwner implements TooltipProvider {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SafeOwner> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), s -> Optional.ofNullable(s.owner),
-            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), s -> Optional.ofNullable(s.password),
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), s -> Optional.ofNullable(s.ownerName),
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), s -> Optional.ofNullable(s.password),
             SafeOwner::new
     );
 
