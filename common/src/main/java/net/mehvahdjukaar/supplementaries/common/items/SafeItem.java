@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.component.DataComponents;
+import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -43,7 +43,9 @@ public class SafeItem extends BlockItem {
     @Override
     @SuppressWarnings("ConstantConditions")
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
-        if (CompatHandler.QUARK && QuarkClientCompat.canRenderBlackboardTooltip()) {
+        boolean quarkTooltip = CompatHandler.QUARK && QuarkClientCompat.canRenderBlackboardTooltip();
+        boolean sbtTooltip = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(pStack);
+        if (quarkTooltip && !sbtTooltip) {
             var container = pStack.get(DataComponents.CONTAINER);
             if (container != null && !pStack.has(DataComponents.CONTAINER_LOOT)) {
                 return Optional.of(new InventoryViewTooltip(container, 27));

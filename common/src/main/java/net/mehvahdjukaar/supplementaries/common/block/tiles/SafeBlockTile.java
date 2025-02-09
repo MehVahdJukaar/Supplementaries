@@ -123,7 +123,9 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
             }
         } else {
             KeyStatus status = getKeyInInventoryStatus(player);
-            status.sendMessage(player, feedbackMessage ? "safe" : null);
+            if (feedbackMessage) {
+                status.sendMessage(player, feedbackMessage ? "safe" : null);
+            }
             return status.isCorrect();
         }
         return true;
