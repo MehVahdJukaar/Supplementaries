@@ -12,6 +12,7 @@
     "conflict": ["conflicted with", "is a conflict"]
   },
   labelsNotAllowed: [
+    'done',
     'duplicate',
     'help wanted',
     'invalid',
