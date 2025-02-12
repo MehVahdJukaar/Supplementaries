@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 
 public class FlowerPotHandlerImpl {
 
-    public static void setup() {
+    public static void registerFlowerPots() {
     }
 
     public static boolean isEmptyPot(Block b) {

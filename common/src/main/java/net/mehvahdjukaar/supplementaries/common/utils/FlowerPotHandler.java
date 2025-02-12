@@ -46,10 +46,14 @@ public class FlowerPotHandler {
 
     //move to forge
     @ExpectPlatform
-    public static void setup() {
+    public static void registerFlowerPots() {
         throw new AssertionError();
     }
 
+    public static void setup(){
+        registerFlowerPots();
+        registerBuiltin();
+    }
 
     //flower box stuff
 
@@ -93,7 +97,7 @@ public class FlowerPotHandler {
     public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
 
     //static registerBus for client and server sync
-    static {
+    private static void registerBuiltin() {
         List<String> toAdd = new ArrayList<>();
         toAdd.add(Utils.getID(Items.CACTUS).toString());
         toAdd.add(Utils.getID(Items.FLOWERING_AZALEA).toString());

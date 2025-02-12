@@ -1,5 +1,6 @@
 # 1.21 bugs and stuff
 
+- burnable stuff on fabric
 - seagulls steal from lunch basket 
  - make recipes configurable
 - safe rename add name bug

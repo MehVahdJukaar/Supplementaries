@@ -22,6 +22,7 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -128,20 +129,21 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                                  PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
         BakedModel model;
         //for special flowers
-        ModelResourceLocation res = ModMaterials.TO_STANDALONE_MODEL.apply(
-                FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true));
+        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true);
         if (res != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants
                 return;
             }
-            model = ClientHelper.getModel(blockModelShaper.getModelManager(), res);
+            ModelResourceLocation modelRes = ModMaterials.TO_STANDALONE_MODEL.apply(res);
+
+            model = ClientHelper.getModel(blockModelShaper.getModelManager(), modelRes);
         } else {
             model = blockModelShaper.getBlockModel(state);
         }
 
         List<BakedQuad> mimicQuads = model.getQuads(state, side, rand);
-        if(mimicQuads.isEmpty())return;
+        if (mimicQuads.isEmpty()) return;
 
         poseStack.pushPose();
         if (res == null) {

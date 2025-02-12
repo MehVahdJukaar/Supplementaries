@@ -30,7 +30,7 @@ public class FlowerPotHandlerImpl {
     }
 
     //move to forge
-    public static void setup() {
+    public static void registerFlowerPots() {
         //registers pots
         ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(Utils.getID(ModRegistry.FLAX_ITEM.get()), ModRegistry.FLAX_POT);
 
