@@ -1,2 +1,1 @@
-- fixed rope slide always playing subtitle
-- fixed flag banner config not affecting the item
+- marked particular as incompatible as I've gotten countless reports for a crash caused by a bug of theirs thats never been fixed

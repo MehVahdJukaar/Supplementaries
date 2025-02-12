@@ -54,6 +54,9 @@
     "embeddium": "*",
     "amendments": "*"
   },
+  "breaks": {
+    "particular": "<=1.1.1"
+  },
   "custom": {
     "lithium:options": {
       "mixin.block.moving_block_shapes": false
