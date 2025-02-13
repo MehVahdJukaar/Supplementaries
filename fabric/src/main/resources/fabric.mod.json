@@ -50,6 +50,7 @@
     "minecraft": ">=${minecraft_min_version} <${minecraft_max_version}",
     "moonlight": ">=${moonlight_version_range}"
   },
+  "these are below are due to crashes they have and which have never been solved": {},
   "breaks": {
     "particular": "<=1.1.1",
     "psychedelicraft": "<=1.7.5+1.21"
