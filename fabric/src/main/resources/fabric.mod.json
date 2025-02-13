@@ -54,8 +54,10 @@
     "embeddium": "*",
     "amendments": "*"
   },
+  "these are below are due to crashes they have and which have never been solved": {},
   "breaks": {
-    "particular": "<=1.1.1"
+    "particular": "<=1.1.1",
+    "psychedelicraft": "<=1.7.5+1.21"
   },
   "custom": {
     "lithium:options": {
