@@ -432,7 +432,7 @@ public class ColoredMapHandler {
 
         @Override
         public boolean persistOnCopyOrLock() {
-            return false;
+            return true;
         }
 
         @Override

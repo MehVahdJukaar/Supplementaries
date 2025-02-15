@@ -32,13 +32,13 @@ public abstract class CartographyTableScreenMixin extends AbstractContainerScree
 
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    public void supp$renderBetterSlots(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
+    public void supp$animateSlots(GuiGraphics graphics, float ticks, int mouseX, int mouseY, CallbackInfo ci) {
         this.supplementaries$mapSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
         this.supplementaries$ingredientsSlotIcon.render(this.menu, graphics, ticks, this.leftPos, this.topPos);
     }
 
     @ModifyVariable(method = "renderBg", at = @At(value = "STORE"), ordinal = 1)
-    public ItemStack supp$antiqueInkHack(ItemStack stack) {
+    public ItemStack supp$setAntiqueInk(ItemStack stack) {
         if (this.menu.getSlot(1).getItem().is(ModRegistry.ANTIQUE_INK.get())) {
             ItemStack output = this.menu.getSlot(2).getItem();
             if (output.is(Items.FILLED_MAP)) {
