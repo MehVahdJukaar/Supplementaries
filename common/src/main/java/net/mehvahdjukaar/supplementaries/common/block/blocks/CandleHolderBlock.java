@@ -86,7 +86,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectArrayMap<>();
             int2ObjectMap.put(1, List.of(new Vec3(0.5, 0.9375, 0.1875)));
             int2ObjectMap.put(2, List.of(new Vec3(0.3125, 0.9375, 0.1875), new Vec3(0.6875, 0.9375, 0.1875)));
-            int2ObjectMap.put(3, List.of(new Vec3(0.8125, 0.9375, 0.1875), new Vec3(0.1875, 0.9375, 0.1875), new Vec3(0.5, 0.9375, 0.25)));
+            int2ObjectMap.put(3, List.of(new Vec3(0.8125, 0.9375, 0.1875), new Vec3(0.1875, 0.9375, 0.1875), new Vec3(0.5, 0.9375, 0.25+1/16f)));
             int2ObjectMap.put(4, List.of(new Vec3(0.1875, 1, 0.1875), new Vec3(0.8125, 1, 0.1875), new Vec3(0.3125, 0.875, 0.3125), new Vec3(0.6875, 0.875, 0.3125)));
             temp.put(AttachFace.WALL, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
