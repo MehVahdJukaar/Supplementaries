@@ -135,7 +135,7 @@ public class MiscUtils {
         boolean first = te.canPlaceItemThroughFace(0, stack, null);
         te.setLevel(null);
         //also check if its container item. Shulker is super inconsistent here. block checks instanceof, gui checks canfitinsidecontainer
-        return first || !stack.getItem().canFitInsideContainerItems();
+        return first && stack.getItem().canFitInsideContainerItems();
     }
 
     //cylinder distance
