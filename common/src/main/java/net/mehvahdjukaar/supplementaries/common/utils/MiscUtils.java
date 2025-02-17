@@ -132,9 +132,10 @@ public class MiscUtils {
     public static boolean isAllowedInShulker(ItemStack stack, Level level) {
         var te = SHULKER_TILE.get();
         te.setLevel(level);
-        var r = te.canPlaceItemThroughFace(0, stack, null);
+        boolean first = te.canPlaceItemThroughFace(0, stack, null);
         te.setLevel(null);
-        return r;
+        //also check if its container item. Shulker is super inconsistent here. block checks instanceof, gui checks canfitinsidecontainer
+        return first || !stack.getItem().canFitInsideContainerItems();
     }
 
     //cylinder distance
