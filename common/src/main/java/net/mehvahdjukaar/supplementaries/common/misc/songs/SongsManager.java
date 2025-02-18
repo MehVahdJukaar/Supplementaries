@@ -70,7 +70,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
                 temp.add(song);
                 SongsManager.addSong(song);
             } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key);
+                Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key, e);
             }
         });
         if (!temp.isEmpty()) Supplementaries.LOGGER.info("Loaded {} flute songs", temp.size());

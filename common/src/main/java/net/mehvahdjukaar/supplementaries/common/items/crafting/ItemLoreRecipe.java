@@ -1,48 +1,47 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 public class ItemLoreRecipe extends CustomRecipe {
-    public ItemLoreRecipe(CraftingBookCategory category) {
+
+    private final boolean setLore;
+    private final Ingredient requiredIngredient;
+
+    public ItemLoreRecipe(CraftingBookCategory category, Ingredient ingredient, boolean setLore) {
         super(category);
+        this.requiredIngredient = ingredient;
+        this.setLore = setLore;
     }
 
     @Override
     public boolean matches(CraftingInput inv, Level level) {
         ItemStack nameTag = null;
         ItemStack item = null;
-        boolean isSoap = false;
 
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == Items.NAME_TAG && stack.has(DataComponents.CUSTOM_NAME)) {
+            if (requiredIngredient.test(stack) && (!setLore || stack.has(DataComponents.CUSTOM_NAME))) {
                 if (nameTag != null) {
                     return false;
                 }
-                nameTag = stack;
-            } else if (stack.is(ModRegistry.SOAP.get())) {
-                if (nameTag != null) {
-                    return false;
-                }
-                isSoap = true;
                 nameTag = stack;
             } else if (!stack.isEmpty()) {
                 if (item != null) {
@@ -52,27 +51,24 @@ public class ItemLoreRecipe extends CustomRecipe {
             }
         }
         return nameTag != null && item != null &&
-                (!isSoap || !item.getOrDefault(DataComponents.LORE, ItemLore.EMPTY ).lines().isEmpty());
+                (setLore || !item.getOrDefault(DataComponents.LORE, ItemLore.EMPTY).lines().isEmpty());
     }
 
     @Override
     public ItemStack assemble(CraftingInput inv, HolderLookup.Provider provider) {
         ItemStack itemstack = ItemStack.EMPTY;
         ItemStack nameTag = ItemStack.EMPTY;
-        ItemStack soap = ItemStack.EMPTY;
         for (int i = 0; i < inv.size(); ++i) {
-            var s = inv.getItem(i);
-            if (s.getItem() == Items.NAME_TAG) {
-                nameTag = s;
-            } else if (s.is(ModRegistry.SOAP.get())) {
-                soap = s;
-            } else if (!s.isEmpty()) {
-                itemstack = s;
+            ItemStack stack = inv.getItem(i);
+            if (requiredIngredient.test(stack)) {
+                nameTag = stack;
+            } else if (!stack.isEmpty()) {
+                itemstack = stack;
             }
         }
         ItemStack result = itemstack.copyWithCount(1);
 
-        if (!soap.isEmpty()) {
+        if (!setLore) {
             result.remove(DataComponents.LORE);
         } else {
             Component lore = nameTag.getHoverName();
@@ -104,6 +100,31 @@ public class ItemLoreRecipe extends CustomRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.ITEM_LORE.get();
+    }
+
+    public static class Serializer implements RecipeSerializer<ItemLoreRecipe> {
+
+        private static final MapCodec<ItemLoreRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CraftingRecipe::category),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter((recipe) -> recipe.requiredIngredient),
+                Codec.BOOL.fieldOf("set_lore").forGetter((recipe) -> recipe.setLore)
+        ).apply(instance, ItemLoreRecipe::new));
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, ItemLoreRecipe> STREAM_CODEC = StreamCodec.composite(
+                CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
+                Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.requiredIngredient,
+                ByteBufCodecs.BOOL, recipe -> recipe.setLore,
+                ItemLoreRecipe::new);
+
+        @Override
+        public MapCodec<ItemLoreRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, ItemLoreRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
     }
 }
 

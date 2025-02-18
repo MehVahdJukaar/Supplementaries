@@ -1,22 +1,27 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class SoapClearRecipe extends CustomRecipe {
-    public SoapClearRecipe(CraftingBookCategory category) {
+
+    private final Ingredient soap;
+
+    public SoapClearRecipe(CraftingBookCategory category, Ingredient soap) {
         super(category);
+        this.soap = soap;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class SoapClearRecipe extends CustomRecipe {
                 if (isColored || itemstack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
                     ++i;
                 } else {
-                    if (!itemstack.is(ModRegistry.SOAP.get())) {
+                    if (!soap.test(itemstack)) {
                         return false;
                     }
                     ++j;
@@ -99,6 +104,30 @@ public class SoapClearRecipe extends CustomRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.SOAP_CLEARING.get();
+    }
+
+
+    public static class Serializer implements RecipeSerializer<SoapClearRecipe> {
+
+        private static final MapCodec<SoapClearRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CraftingRecipe::category),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter((recipe) -> recipe.soap)
+        ).apply(instance, SoapClearRecipe::new));
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, SoapClearRecipe> STREAM_CODEC = StreamCodec.composite(
+                CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
+                Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.soap,
+                SoapClearRecipe::new);
+
+        @Override
+        public MapCodec<SoapClearRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, SoapClearRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
     }
 }
 

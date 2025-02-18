@@ -1,25 +1,29 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class TrappedPresentRecipe extends CustomRecipe {
 
-    public TrappedPresentRecipe(CraftingBookCategory category) {
+    private final Ingredient tripwire;
+
+    public TrappedPresentRecipe(CraftingBookCategory category, Ingredient tripwire) {
         super(category);
+        this.tripwire = tripwire;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
                     }
                     ++i;
                 } else {
-                    if (!itemstack.is(Items.TRIPWIRE_HOOK)) {
+                    if (!tripwire.test(itemstack)) {
                         return false;
                     }
 
@@ -81,6 +85,29 @@ public class TrappedPresentRecipe extends CustomRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.TRAPPED_PRESENT.get();
+    }
+
+    public static class Serializer implements RecipeSerializer<TrappedPresentRecipe> {
+
+        private static final MapCodec<TrappedPresentRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CraftingRecipe::category),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter((recipe) -> recipe.tripwire)
+        ).apply(instance, TrappedPresentRecipe::new));
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, TrappedPresentRecipe> STREAM_CODEC = StreamCodec.composite(
+                CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
+                Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.tripwire,
+                TrappedPresentRecipe::new);
+
+        @Override
+        public MapCodec<TrappedPresentRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, TrappedPresentRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
     }
 }
 

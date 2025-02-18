@@ -1,12 +1,13 @@
 {
-  "type": "supplementaries:trapped_present",
+  "type": "supplementaries:item_lore",
   "ingredient": {
-    "item": "minecraft:tripwire_hook"
+    "item": "minecraft:soap"
   },
+  "set_lore": false,
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "trapped_present"
+      "flag": "item_lore"
     }
   ]
 }

@@ -1,5 +1,11 @@
 {
-  "type": "supplementaries:rope_arrow_create",
+  "type": "supplementaries:rope_arrow",
+  "rope": {
+    "tag": "supplementaries:ropes"
+  },
+  "arrow": {
+    "item": "minecraft:arrow"
+  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

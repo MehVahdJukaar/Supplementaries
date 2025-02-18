@@ -1,8 +1,8 @@
 {
   "type": "supplementaries:antique_book",
-  "set_antique": true,
+  "set_antique": false,
   "ingredient": {
-    "item": "supplementaries:antique_ink"
+    "item": "supplementaries:soap"
   },
   "fabric:load_conditions": [
     {

@@ -1,3 +1,4 @@
+- cannonball flying in air
 - awning bounce
 - new bomb sounds
 - awning placement set

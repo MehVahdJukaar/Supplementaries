@@ -122,7 +122,7 @@ public class AntiqueInkItem extends Item implements SignApplicator {
                     }
                     newPages.add(new Filterable<>(comp, optional));
                 }
-                stack.set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(title, author, generation, newPages, false));
+                stack.set(DataComponents.WRITTEN_BOOK_CONTENT, new WrittenBookContent(title, author, 0, newPages, false));
             }
         }
     }

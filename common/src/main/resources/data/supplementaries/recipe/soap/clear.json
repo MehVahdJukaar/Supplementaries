@@ -1,5 +1,8 @@
 {
   "type": "supplementaries:soap_clearing",
+  "ingredient": {
+    "item": "supplementaries:soap"
+  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

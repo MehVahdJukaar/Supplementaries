@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -9,20 +11,25 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class SafeRecipe extends CustomRecipe {
-    public SafeRecipe( CraftingBookCategory category) {
+
+    private final Ingredient requiredShulker;
+    private final Ingredient requiredIngot;
+
+    public SafeRecipe( CraftingBookCategory category, Ingredient shulker, Ingredient ingot) {
         super( category);
+        this.requiredShulker = shulker;
+        this.requiredIngot = ingot;
     }
 
     @Override
@@ -33,12 +40,12 @@ public class SafeRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.is(ModTags.SHULKER_BOXES)) {
+            if (this.requiredShulker.test(stack)) {
                 if (shulker != null) {
                     return false;
                 }
                 shulker = stack;
-            } else if (stack.is(Items.NETHERITE_INGOT)) {
+            } else if (this.requiredIngot.test(stack)) {
                 if (netherite != null) {
                     return false;
                 }
@@ -56,7 +63,7 @@ public class SafeRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.is(ModTags.SHULKER_BOXES)) {
+            if (this.requiredShulker.test(stack)) {
                 shulker = stack;
                 break;
             }
@@ -72,6 +79,32 @@ public class SafeRecipe extends CustomRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipes.SAFE.get();
+    }
+
+
+    public static class Serializer implements RecipeSerializer<SafeRecipe> {
+
+        private static final MapCodec<SafeRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CraftingRecipe::category),
+                Ingredient.CODEC.fieldOf("shulker").forGetter((recipe) -> recipe.requiredShulker),
+                Ingredient.CODEC.fieldOf("ingot").forGetter((recipe) -> recipe.requiredIngot)
+        ).apply(instance, SafeRecipe::new));
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, SafeRecipe> STREAM_CODEC = StreamCodec.composite(
+                CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
+                Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.requiredShulker,
+                Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.requiredIngot,
+                SafeRecipe::new);
+
+        @Override
+        public MapCodec<SafeRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, SafeRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
     }
 }
 

@@ -1,15 +1,12 @@
 {
   "type": "moonlight:add_item",
-  "conditions": [
+  "fabric:load_conditions": [
     {
-      "condition": "moonlight:iconditions",
-      "values": [
-        {
-          "condition": "supplementaries:flag",
-          "flag": "ash_from_burning"
-        }
-      ]
-    },
+      "condition": "supplementaries:flag",
+      "flag": "ash_from_burning"
+    }
+  ],
+  "conditions": [
     {
       "condition": "damage_source_properties",
       "predicate": {

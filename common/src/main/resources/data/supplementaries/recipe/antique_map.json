@@ -1,9 +1,9 @@
 {
-  "type": "supplementaries:antique_book",
-  "set_antique": true,
+  "type": "supplementaries:weathered_map",
   "ingredient": {
     "item": "supplementaries:antique_ink"
   },
+  "set_antique": true,
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

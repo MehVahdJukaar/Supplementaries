@@ -1,5 +1,11 @@
 {
   "type": "supplementaries:safe",
+  "shulker": {
+    "tag": "c:shulker_boxes"
+  },
+  "ingot": {
+    "item": "minecraft:netherite_ingot"
+  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

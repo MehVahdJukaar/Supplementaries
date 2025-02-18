@@ -77,13 +77,14 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         dataInteractions.clear();
+        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
         map.forEach((key, json) -> {
             try {
-                var either = CODEC.parse(RegistryOps.create(JsonOps.INSTANCE, registryAccess), json).getOrThrow();
+                var either = CODEC.parse(ops, json).getOrThrow();
                 Object o = either.mapBoth(i -> i, f -> f);
                 dataInteractions.add(o);
             } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction {}", key);
+                Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction {}", key, e);
             }
         });
         if (!dataInteractions.isEmpty())

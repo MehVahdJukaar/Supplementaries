@@ -1,5 +1,9 @@
 {
   "type": "supplementaries:weathered_map",
+  "ingredient": {
+    "item": "supplementaries:soap"
+  },
+  "set_antique": false,
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

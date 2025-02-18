@@ -61,7 +61,7 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
                 HourglassTimeData data = result.getOrThrow();
                 list.add(data);
             } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data {}", key);
+                Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data {}", key, e);
             }
         });
         this.setData(list);
