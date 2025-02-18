@@ -22,8 +22,8 @@ public class ModRecipes {
             "blackboard_duplicate", BlackboardDuplicateRecipe::new);
     public static final Supplier<RecipeSerializer<TippedBambooSpikesRecipe>> BAMBOO_SPIKES_TIPPED = reg(
             "bamboo_spikes_tipped", TippedBambooSpikesRecipe::new);
-    public static final Supplier<RecipeSerializer<RopeArrowRecipe>> ROPE_ARROW_ADD = reg(
-            "rope_arrow", RopeArrowRecipe.Serializer::new);
+    public static final Supplier<RecipeSerializer<AddChargeRecipe>> ROPE_ARROW_ADD = reg(
+            "rope_arrow", AddChargeRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<FlagFromBannerRecipe>> FLAG_FROM_BANNER = reg(
             "flag_from_banner", FlagFromBannerRecipe::new);
     public static final Supplier<RecipeSerializer<WeatheredMapRecipe>> ANTIQUE_MAP = reg(

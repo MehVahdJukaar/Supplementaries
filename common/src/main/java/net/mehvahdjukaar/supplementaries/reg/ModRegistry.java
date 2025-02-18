@@ -102,14 +102,16 @@ public class ModRegistry {
     public static final Supplier<RopeArrowItem> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get(),
             new Item.Properties()
-                    .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
+                    .component(ModComponents.CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())
+                    .component(ModComponents.MAX_CHARGES.get(), CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get())));
 
     //bubble blower
     public static final Supplier<Item> BUBBLE_BLOWER = regItem(BUBBLE_BLOWER_NAME, () -> new BubbleBlowerItem(
             new Item.Properties()
                     .component(ModComponents.CHARGES.get(), 0)
-                    .stacksTo(1),
-            250));
+                    .component(ModComponents.MAX_CHARGES.get(), CommonConfigs.Tools.BUBBLE_BLOWER_MAX_CHARGES.get())
+                    .stacksTo(1)
+            ));
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()

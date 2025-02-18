@@ -558,7 +558,7 @@ public class ModCreativeTabs {
                 ModConstants.BUBBLE_BLOWER_NAME,
                 () -> {
                     var item = ModRegistry.BUBBLE_BLOWER.get().getDefaultInstance();
-                    item.set(ModComponents.CHARGES.get(), ((BubbleBlowerItem) item.getItem()).maxCharges);
+                    item.set(ModComponents.CHARGES.get(), item.get(ModComponents.MAX_CHARGES.get()));
                     return item;
                 });
 

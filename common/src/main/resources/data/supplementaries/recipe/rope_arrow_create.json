@@ -1,11 +1,13 @@
 {
-  "type": "supplementaries:rope_arrow",
-  "rope": {
+  "type": "supplementaries:add_charges",
+  "charge": {
     "tag": "supplementaries:ropes"
   },
-  "arrow": {
+  "ingredient": {
     "item": "minecraft:arrow"
   },
+  "charges_per_item": 1,
+  "result": "supplementaries:rope_arrow",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",

@@ -905,6 +905,9 @@ public class CommonConfigs {
                     .define("lifetime", 20 * 60, 1, 10000);
             BUBBLE_BREAK = builder.comment("Can bubble break when touched on?")
                     .define("break_when_touched", true);
+            BUBBLE_BLOWER_MAX_CHARGES = builder.comment("Max number of charges a bubble blower can hold")
+                    .gameRestart()
+                    .define("max_charges", 200, 1, 1000000);
             builder.pop();
 
             builder.pop();
@@ -919,6 +922,7 @@ public class CommonConfigs {
             builder.push("rope_arrow");
             ROPE_ARROW_ENABLED = feature(builder);
             ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
+                    .gameRestart()
                     .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
                     .define("exclusive_to_crossbows", false);
@@ -995,6 +999,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
         public static final Supplier<Integer> BUBBLE_BLOWER_COST;
         public static final Supplier<Integer> BUBBLE_LIFETIME;
+        public static final Supplier<Integer> BUBBLE_BLOWER_MAX_CHARGES;
         public static final Supplier<Boolean> BUBBLE_BREAK;
 
         public static final Supplier<Boolean> QUIVER_ENABLED;

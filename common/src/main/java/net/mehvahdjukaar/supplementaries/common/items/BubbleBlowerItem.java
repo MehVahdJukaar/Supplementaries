@@ -44,11 +44,8 @@ import java.util.List;
 
 public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvider, IFirstPersonAnimationProvider {
 
-    public final int maxCharges;
-
-    public BubbleBlowerItem(Properties properties, int maxCharges) {
+    public BubbleBlowerItem(Properties properties) {
         super(properties);
-        this.maxCharges = maxCharges;
     }
 
     @Override
@@ -107,7 +104,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
                 if (!(player.getAbilities().instabuild)) {
                     int charges = this.getCharges(stack);
                     stack.set(ModComponents.CHARGES.get(),
-                            Math.clamp(charges - CommonConfigs.Tools.BUBBLE_BLOWER_COST.get(), 0, maxCharges));
+                            Math.clamp(charges - CommonConfigs.Tools.BUBBLE_BLOWER_COST.get(), 0, this.getMaxCharges(stack)));
                 }
 
                 return InteractionResultHolder.success(stack);
@@ -122,7 +119,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         int charges = this.getCharges(stack);
         if (charges != 0) {
             tooltipComponents.add(Component.translatable("message.supplementaries.bubble_blower_tooltip",
-                    charges, this.maxCharges));
+                    charges, this.getMaxCharges(stack)));
         }
     }
 
@@ -138,6 +135,10 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
     private int getCharges(ItemStack stack) {
         return stack.getOrDefault(ModComponents.CHARGES.get(), 0);
+    }
+
+    private int getMaxCharges(ItemStack stack) {
+        return stack.getOrDefault(ModComponents.MAX_CHARGES.get(), 0);
     }
 
     @Override
@@ -158,7 +159,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @Override
     public int getBarWidth(ItemStack stack) {
         int charges = getCharges(stack);
-        return Mth.clamp(Math.round(charges * 13.0F / (float) maxCharges), 0, 13);
+        return Mth.clamp(Math.round(charges * 13.0F / (float) getCharges(stack)), 0, 13);
     }
 
     @ForgeOverride
