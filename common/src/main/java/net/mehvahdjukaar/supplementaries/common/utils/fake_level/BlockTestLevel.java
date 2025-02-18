@@ -30,9 +30,6 @@ public class BlockTestLevel extends FakeServerLevel {
         blockState = null;
     }
 
-    public void invalidate(){
-        FakeLevelManager.invalidate("faucet_test_level");
-    }
 }
 
 

@@ -46,13 +46,13 @@ dependencies {
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
 
 
-    modImplementation("curse.maven:farmers-delight-refabricated-993166:5684645")
-    modImplementation("curse.maven:create-fabric-624165:5245234")
+    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5684645")
+    modCompileOnly("curse.maven:create-fabric-624165:5245234")
 
     for (String module in port_lib_modules.split(",")) {
         modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")
     }
-    modRuntimeOnly("curse.maven:forge-config-api-port-fabric-547434:4583000") // v8.0.1 | Regions-Unexplored, Chipped
+    //modRuntimeOnly("curse.maven:forge-config-api-port-fabric-547434:4583000") // v8.0.1 | Regions-Unexplored, Chipped
 
     modImplementation("com.github.Chocohead:Fabric-ASM:${fabric_asm_version}") {
         exclude (group: "net.fabricmc.fabric-api")
