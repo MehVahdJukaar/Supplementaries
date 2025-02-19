@@ -1,15 +1,13 @@
 # 1.21 bugs and stuff
 
 - burnable stuff on fabric
-- seagulls steal from lunch basket 
- - make recipes configurable
+- seagulls steal from lunch basket
 - safe rename add name bug
 - Lumisene has no sound when bucketed.
 - Placeable books do not work, but still consumes the item as if it did.
 - check rope sound
 - sound event from bell ring with rope
 - polytone season compat
-- polytone game time variable not working
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
   (1.20) bubble recipe
@@ -18,7 +16,6 @@
 - safe speaker block name thing
 - amendments ender dragon head bounding box (1.21)
 - goblet dont consume liquid
-- ominous bottles as fluids
 - wind rod held like blaze rod
 - wind rod particles
 - recipe conditions not working for negated ones?
@@ -44,7 +41,6 @@
 - check all forge overrides
 - cannon rotation gimbal when placed makes them turn wrong visually
 - check all clone itemstacks methods (flags, safes...)
-- wearhered map soap clearing
 - present screen mouse scrolled action
 - named block being placed retaining name
 - antique ink book signing
@@ -155,12 +151,10 @@ slidy double pulse
 
 - frame blocks particle texture i json
 - data driven book textures
-- config command
 - slingshot blocks desync (anvils)
 - ceiling skulls
 - cant eat pancake 
 -trapped prsents not updating inventory whenshot
-- blaze powder texture broken hourglass
 - slidy block connection down ropes
 - slimeall and bricks projectile angle from disp minecart
 - cannon target infinite reach
@@ -296,11 +290,9 @@ slidy double pulse
 
 - advancement frames not showing player name
 - adv frame next page button
-- stat frame block place
 
 # Polytone
 
-- sheep colors
 - polytone tweak animal sounds
 - polytone proper interpolation for lightmap (non fps dependant and smooth for night colors)
 - entity random model CIM
@@ -310,15 +302,16 @@ slidy double pulse
 - particles for randomium
 - trollium
 - randomium can give onl stuff already obtained by a player in survival
+- randomium block
 
 # Wise Tree
 - Tree chat gpt
 - tree splash text
 
 # labels
-- rewrite
 - waxing
 - no arrow break
+- no explosion break
 
 # Random Ideas
 

@@ -17,7 +17,6 @@
   ],
   "mixins": [
     "BiomeAccessor",
-    "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
     "CompatSodiumFluidRendererMixin",
     "CropBlockMixin",

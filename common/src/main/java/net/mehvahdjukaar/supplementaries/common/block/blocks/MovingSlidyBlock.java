@@ -3,23 +3,17 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSetSlidingBlockEntityPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
-import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
@@ -68,16 +62,16 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         var be = MovingSlidyBlock.newMovingBlockEntity(neighborPos, newState, state, direction);
         level.setBlockEntity(be);
 
-        if(!level.isClientSide) {
-             NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) level, neighborPos,
-                   new ClientBoundSetSlidingBlockEntityPacket(be));
+        if (!level.isClientSide) {
+            NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) level, neighborPos,
+                    new ClientBoundSetSlidingBlockEntityPacket(be));
         }
 
         //pistons usually call this from both sides. here sometimes we dont... we must use a custom packet since tile is set manually
         //calling remove on same pst to hopefully fixe some tile entity issues
         level.removeBlock(pos, true);
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
-               .defaultBlockState().setValue(BlockStateProperties.FACING, direction), 3);
+                .defaultBlockState().setValue(BlockStateProperties.FACING, direction), 3);
 
     }
 
