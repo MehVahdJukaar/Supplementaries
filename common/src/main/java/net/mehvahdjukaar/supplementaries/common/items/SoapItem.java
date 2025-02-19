@@ -102,12 +102,10 @@ public class SoapItem extends Item {
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
             s.setColor(DyeColor.WHITE);
             success = true;
-        } else if(target instanceof Pig pig && CompatHandler.ENVIRONMENTAL){
-            if(EnvironmentalCompat.maybeCleanMuddyPig(pig)){
-                success = true;
-            }
-        }
-        else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
+        } else if (target instanceof Pig pig && CompatHandler.ENVIRONMENTAL &&
+                EnvironmentalCompat.maybeCleanMuddyPig(pig)) {
+            success = true;
+        } else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
             if (target instanceof Wolf wolf) {
                 wolf.setCollarColor(DyeColor.RED);
                 wolf.isWet = true;
