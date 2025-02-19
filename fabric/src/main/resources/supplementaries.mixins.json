@@ -22,7 +22,8 @@
     "CropBlockMixin",
     "FireBlockAccessor",
     "MobMixin",
-    "RedstoneWireBlockMixin"
+    "RedstoneWireBlockMixin",
+    "SugarCaneBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

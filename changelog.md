@@ -1,3 +1,5 @@
 - fixed some missing sacks tags
 - fixed tattered book recipe
 - added guster and flow flag textures
+- all special recipes can now be further tweaked with datapacks
+- tagged bomb damage as is_explosion 
