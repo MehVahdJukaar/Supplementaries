@@ -1,5 +1,6 @@
 {
   "type": "supplementaries:replace_rope",
+  "conditions": [],
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
