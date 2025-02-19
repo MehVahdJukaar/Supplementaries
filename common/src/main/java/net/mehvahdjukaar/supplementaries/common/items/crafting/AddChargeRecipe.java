@@ -79,11 +79,6 @@ public class AddChargeRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
-        return NonNullList.withSize(inv.size(), ItemStack.EMPTY);
-    }
-
-    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }

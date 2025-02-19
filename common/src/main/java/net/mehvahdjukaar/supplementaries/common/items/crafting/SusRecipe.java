@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -74,6 +75,11 @@ public class SusRecipe extends CustomRecipe {
             result.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(something.copyWithCount(1))));
         }
         return result;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput recipeInput) {
+        return NonNullList.withSize(recipeInput.size(), ItemStack.EMPTY);
     }
 
     @Override
