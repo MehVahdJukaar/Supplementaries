@@ -46,7 +46,8 @@ dependencies {
 
     modImplementation("curse.maven:farmers-delight-398521:5051242")
     modImplementation("curse.maven:soul-fire-d-662413:5448803")
-
+    modCompileOnly("curse.maven:blueprint-382216:5292242")
+    modCompileOnly("curse.maven:environmental-388992:6060255")
     //modImplementation("curse.maven:selene-common:499980:5854670")
     modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")

@@ -36,6 +36,7 @@ public class CompatHandler {
     public static final boolean TRINKETS = isLoaded("trinkets");
     public static final boolean FARMERS_DELIGHT;
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
+    public static final boolean ENVIRONMENTAL = isLoaded("environmental");
     public static final boolean INSPIRATIONS = isLoaded("inspirations");
     public static final boolean FRAMEDBLOCKS = isLoaded("framedblocks");
     public static final boolean RGBLIB = isLoaded("rgblib");

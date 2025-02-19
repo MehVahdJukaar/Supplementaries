@@ -158,6 +158,7 @@ dependencies {
     modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
+    modCompileOnly("curse.maven:environmental-388992:6060255")
     //modImplementation("curse.maven:endergetic-291509:6057625")
     modCompileOnly("curse.maven:caverns-and-chasms-438005:6040957")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")

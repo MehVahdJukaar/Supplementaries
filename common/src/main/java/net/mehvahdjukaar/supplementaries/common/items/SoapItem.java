@@ -5,6 +5,8 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
@@ -99,7 +102,12 @@ public class SoapItem extends Item {
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
             s.setColor(DyeColor.WHITE);
             success = true;
-        } else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
+        } else if(target instanceof Pig pig && CompatHandler.ENVIRONMENTAL){
+            if(EnvironmentalCompat.maybeCleanMuddyPig(pig)){
+                success = true;
+            }
+        }
+        else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
             if (target instanceof Wolf wolf) {
                 wolf.setCollarColor(DyeColor.RED);
                 wolf.isWet = true;
