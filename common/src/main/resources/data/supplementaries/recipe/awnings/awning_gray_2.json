@@ -6,7 +6,7 @@
   ],
   "key": {
     "0": {
-      "tag": "minecraft:gray_carpet"
+      "item": "minecraft:gray_carpet"
     },
     "1": {
       "tag": "c:rods/wooden"
