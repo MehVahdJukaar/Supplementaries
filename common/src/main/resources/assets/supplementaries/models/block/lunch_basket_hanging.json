@@ -14,11 +14,11 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [23, 12, 23]},
 			"faces": {
 				"north": {"uv": [2, 9, 14, 16], "texture": "#particle"},
-				"east": {"uv": [2, 9, 14, 16], "texture": "#particle", "cullface": "east"},
-				"south": {"uv": [2, 9, 14, 16], "texture": "#particle", "cullface": "south"},
-				"west": {"uv": [2, 9, 14, 16], "texture": "#particle", "cullface": "west"},
-				"up": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#1", "cullface": "up"},
-				"down": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#2", "cullface": "down"}
+				"east": {"uv": [2, 9, 14, 16], "texture": "#particle"},
+				"south": {"uv": [2, 9, 14, 16], "texture": "#particle"},
+				"west": {"uv": [2, 9, 14, 16], "texture": "#particle"},
+				"up": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#2"}
 			}
 		},
 		{
@@ -27,11 +27,10 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [23, 12, 23]},
 			"faces": {
 				"north": {"uv": [2, 9, 14, 12], "texture": "#3"},
-				"east": {"uv": [2, 9, 14, 12], "texture": "#3", "cullface": "east"},
-				"south": {"uv": [2, 9, 14, 12], "texture": "#3", "cullface": "south"},
-				"west": {"uv": [2, 9, 14, 12], "texture": "#3", "cullface": "west"},
-				"up": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#4", "cullface": "up"},
-				"down": {"uv": [0, 0, 0, 0], "rotation": 180, "texture": "#3", "cullface": "down"}
+				"east": {"uv": [2, 9, 14, 12], "texture": "#3"},
+				"south": {"uv": [2, 9, 14, 12], "texture": "#3"},
+				"west": {"uv": [2, 9, 14, 12], "texture": "#3"},
+				"up": {"uv": [2, 14, 14, 2], "rotation": 180, "texture": "#4"}
 			}
 		},
 		{
@@ -41,7 +40,7 @@
 			"faces": {
 				"east": {"uv": [7, 4, 9, 9], "texture": "#particle"},
 				"west": {"uv": [7, 4, 9, 9], "texture": "#particle"},
-				"up": {"uv": [2, 2, 14, 4], "texture": "#particle"}
+				"up": {"uv": [2, 2, 14, 4], "texture": "#particle", "cullface": "up"}
 			}
 		},
 		{
@@ -60,7 +59,6 @@
 			"name": "bone",
 			"origin": [0, 0, 0],
 			"color": 0,
-			"nbt": "{}",
 			"children": [0, 1, 2, 3]
 		}
 	]
