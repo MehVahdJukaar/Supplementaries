@@ -1,4 +1,14 @@
 {
+  "fabric:load_conditions": [
+    {
+      "flag": "way_signs",
+      "condition": "supplementaries:flag"
+    },
+    {
+      "flag": "road_signs",
+      "condition": "supplementaries:flag"
+    }
+  ],
   "structures": [
     {
       "structure": "supplementaries:way_sign",

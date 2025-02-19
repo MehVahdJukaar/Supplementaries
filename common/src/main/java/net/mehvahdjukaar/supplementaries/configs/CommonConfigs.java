@@ -400,7 +400,8 @@ public class CommonConfigs {
                             .define("ash_from_burning_mobs", true);
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
-            BASALT_ASH_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
+            BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity")
+                    .worldReload().define("basalt_ash", true);
             builder.pop();
 
             builder.push("flag");
@@ -424,7 +425,7 @@ public class CommonConfigs {
             builder.push(ModConstants.WAY_SIGN_NAME);
             WAY_SIGN_ENABLED = feature(builder);
             builder.push("road_signs");
-            ROAD_SIGN_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : feature(builder.comment("Entirely disables them from spawning"));
+            ROAD_SIGN_ENABLED = feature(builder.comment("Entirely disables them from spawning"));
             ROAD_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
             builder.pop();
@@ -710,7 +711,7 @@ public class CommonConfigs {
             URN_ENABLED = feature(builder);
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01d, 0, 1);
-            URN_PILE_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("cave_urns", true);
+            URN_PILE_ENABLED = builder.worldReload().define("cave_urns", true);
             builder.pop();
 
             builder.push("soap");
@@ -755,7 +756,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = feature(builder);
-            WILD_FLAX_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.worldReload().define("wild_flax", true);
+            WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
             builder.pop();
 
             builder.push(ModConstants.LUMISENE_NAME);
