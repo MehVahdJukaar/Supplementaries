@@ -69,7 +69,7 @@ public class SusRecipe extends CustomRecipe {
         if (BlockEntityType.BRUSHABLE_BLOCK.isValid(((BlockItem) result.getItem()).getBlock().defaultBlockState())) {
             CompoundTag nbt = new CompoundTag();
             BlockEntity.addEntityType(nbt, BlockEntityType.BRUSHABLE_BLOCK);
-            nbt.put("item", something.saveOptional(provider));
+            nbt.put("item", something.copyWithCount(1).saveOptional(provider));
             result.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbt));
         } else {
             result.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(something.copyWithCount(1))));
