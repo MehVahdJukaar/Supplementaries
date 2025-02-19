@@ -1,1 +1,2 @@
-- marked particular as incompatible as I've gotten countless reports for a crash caused by a bug of theirs thats never been fixed
+- bomb damange is now tagged as explosion
+- improved some rendering code for one very specific rare issue causing a nullptr
