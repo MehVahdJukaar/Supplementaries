@@ -425,7 +425,7 @@ public class CommonConfigs {
             builder.push(ModConstants.WAY_SIGN_NAME);
             WAY_SIGN_ENABLED = feature(builder);
             builder.push("road_signs");
-            ROAD_SIGN_ENABLED = feature(builder.comment("Entirely disables them from spawning"));
+            ROAD_SIGN_ENABLED = feature(builder.worldReload().comment("Entirely disables them from spawning"));
             ROAD_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
             builder.pop();
