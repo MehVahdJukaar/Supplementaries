@@ -57,11 +57,6 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-    }
-
-    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width * height >= 2;
     }
