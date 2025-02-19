@@ -1,2 +1,1 @@
-- bomb damange is now tagged as explosion
 - improved some rendering code for one very specific rare issue causing a nullptr
