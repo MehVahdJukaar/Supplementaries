@@ -1,14 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "flag": "basalt_ash",
-      "condition": "supplementaries:flag"
-    },
-    {
-      "flag": "ash",
-      "condition": "supplementaries:flag"
-    }
-  ],
   "type": "neoforge:add_features",
   "biomes": "#supplementaries:has_basalt_ash",
   "features": "supplementaries:basalt_ash",

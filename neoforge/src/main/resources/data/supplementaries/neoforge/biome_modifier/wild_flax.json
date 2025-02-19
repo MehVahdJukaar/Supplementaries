@@ -1,14 +1,4 @@
 {
-  "fabric:load_conditions": [
-    {
-      "flag": "wild_flax",
-      "condition": "supplementaries:flag"
-    },
-    {
-      "flag": "flax",
-      "condition": "supplementaries:flag"
-    }
-  ],
   "type": "neoforge:add_features",
   "biomes": "#supplementaries:has_wild_flax",
   "features": "supplementaries:wild_flax",

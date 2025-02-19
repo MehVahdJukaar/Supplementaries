@@ -69,7 +69,9 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             //way signs tag
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }
 
@@ -78,7 +80,9 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }
 
@@ -87,7 +91,9 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
             {
                 SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
 
-                builder.addTag(BiomeTags.IS_OVERWORLD);
+                if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
                 dynamicPack.addTag(builder, Registries.BIOME);
             }
 
@@ -118,7 +124,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
                     var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
-                            Supplementaries.res("way_sign_oak"));
+                             Supplementaries.res("way_sign_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     this.dynamicPack.addRecipe(newR);
                     this.dynamicPack.markNotClearable(newR.id());
