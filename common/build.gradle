@@ -55,6 +55,8 @@ dependencies {
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
     modCompileOnly("curse.maven:amendments-896746:5692774")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}") { transitive false }
+    modCompileOnly("curse.maven:blueprint-382216:5292242")
+    modCompileOnly("curse.maven:environmental-388992:6060255")
 
 }
 
