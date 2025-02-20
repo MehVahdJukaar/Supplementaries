@@ -10,9 +10,9 @@
       "item": "supplementaries:fine_wood"
     }
   },
-  "fabric:load_conditions": [
+  "conditions": [
     {
-      "condition": "supplementaries:flag",
+      "type": "supplementaries:flag",
       "flag": "fine_wood"
     }
   ],

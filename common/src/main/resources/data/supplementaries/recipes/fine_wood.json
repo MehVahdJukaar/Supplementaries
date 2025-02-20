@@ -17,9 +17,9 @@
     "item": "supplementaries:fine_wood",
     "count": 8
   },
-  "fabric:load_conditions": [
+  "conditions": [
     {
-      "condition": "supplementaries:flag",
+      "type": "supplementaries:flag",
       "flag": "fine_wood"
     }
   ]
