@@ -923,7 +923,7 @@ public class CommonConfigs {
             //rope arrow
             builder.push("rope_arrow");
             ROPE_ARROW_ENABLED = feature(builder);
-            ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
+            ROPE_ARROW_CAPACITY = builder.comment("Max number of rope items allowed to be stored inside a rope arrow")
                     .gameRestart()
                     .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
