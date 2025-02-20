@@ -2,7 +2,7 @@
   "parent": "minecraft:nether/brew_potion",
   "display": {
     "icon": {
-      "item": "supplementaries:goblet"
+      "id": "supplementaries:goblet"
     },
     "title": {
       "translate": "advancements.nether.goblet.title"

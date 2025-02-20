@@ -2,7 +2,7 @@
   "parent": "minecraft:story/enchant_item",
   "display": {
     "icon": {
-      "item": "minecraft:enchanted_golden_apple"
+      "id": "minecraft:enchanted_golden_apple"
     },
     "title": {
       "translate": "advancements.story.unenchanter.title"

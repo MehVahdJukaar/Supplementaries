@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/root",
   "display": {
     "icon": {
-      "item": "supplementaries:soap"
+      "id": "supplementaries:soap"
     },
     "title": {
       "translate": "advancements.husbandry.soap.title"

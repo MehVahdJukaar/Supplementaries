@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/root",
   "display": {
     "icon": {
-      "item": "supplementaries:wrench"
+      "id": "supplementaries:wrench"
     },
     "title": {
       "translate": "advancements.husbandry.wrench.title"

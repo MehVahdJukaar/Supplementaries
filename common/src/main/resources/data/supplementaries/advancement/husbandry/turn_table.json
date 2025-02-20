@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/root",
   "display": {
     "icon": {
-      "item": "supplementaries:turn_table"
+      "id": "supplementaries:turn_table"
     },
     "title": {
       "translate": "advancements.husbandry.turn_table.title"

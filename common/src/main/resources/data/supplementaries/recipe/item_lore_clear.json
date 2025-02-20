@@ -1,7 +1,7 @@
 {
   "type": "supplementaries:item_lore",
   "ingredient": {
-    "item": "minecraft:soap"
+    "item": "supplementaries:soap"
   },
   "set_lore": false,
   "fabric:load_conditions": [

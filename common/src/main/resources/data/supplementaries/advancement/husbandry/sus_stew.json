@@ -2,7 +2,7 @@
   "parent": "minecraft:husbandry/plant_seed",
   "display": {
     "icon": {
-      "item": "minecraft:suspicious_stew"
+      "id": "minecraft:suspicious_stew"
     },
     "title": {
       "translate": "advancements.husbandry.sus_stew.title"
