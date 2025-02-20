@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.BlackboardItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.chat.Component;
@@ -15,9 +12,8 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-public class BlackboardItem extends BlockItem implements ICustomItemRendererProvider {
+public class BlackboardItem extends BlockItem {
     public BlackboardItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
@@ -38,11 +34,6 @@ public class BlackboardItem extends BlockItem implements ICustomItemRendererProv
             return Optional.of(data);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return BlackboardItemRenderer::new;
     }
 
 }

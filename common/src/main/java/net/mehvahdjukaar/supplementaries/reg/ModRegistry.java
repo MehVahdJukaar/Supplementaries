@@ -172,7 +172,7 @@ public class ModRegistry {
 
 
     //altimeter
-    public static final Supplier<Item> DEPTH_METER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()));
+    public static final Supplier<Item> ALTIMETER_ITEM = regItem(DEPTH_METER_NAME, () -> new AltimeterItem(new Item.Properties()));
 
     public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new EmptySliceMapItem(new Item.Properties()));
 
@@ -1140,7 +1140,7 @@ public class ModRegistry {
                     .isRedstoneConductor((a, b, c) -> false)
                     .instabreak())
     );
-    public static final Supplier<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BubbleBlockItem(
+    public static final Supplier<Item> BUBBLE_BLOCK_ITEM = regItem(BUBBLE_BLOCK_NAME, () -> new BlockItem(
             BUBBLE_BLOCK.get(), new Item.Properties()));
 
     public static final Supplier<BlockEntityType<BubbleBlockTile>> BUBBLE_BLOCK_TILE = regTile(

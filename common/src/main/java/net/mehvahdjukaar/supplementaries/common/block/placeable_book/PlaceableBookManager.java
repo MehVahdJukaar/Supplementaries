@@ -41,6 +41,8 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
                     .decode(ops, entry.getValue())
                     .getOrThrow().getFirst();
             books.register(entry.getKey(), type);
+
+
         }
     }
 

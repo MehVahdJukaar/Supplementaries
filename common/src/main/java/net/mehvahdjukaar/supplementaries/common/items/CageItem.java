@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.CageItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.sounds.SoundEvents;
@@ -16,9 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.Supplier;
-
-public class CageItem extends AbstractMobContainerItem implements ICustomItemRendererProvider {
+public class CageItem extends AbstractMobContainerItem {
 
 
     public CageItem(Block block, Properties properties) {
@@ -51,9 +46,4 @@ public class CageItem extends AbstractMobContainerItem implements ICustomItemRen
                 (type.is(ModTags.CAGE_BABY_CATCHABLE) && isBaby));
     }
 
-
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return CageItemRenderer::new;
-    }
 }

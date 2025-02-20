@@ -1,8 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -12,9 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Supplier;
-
-public class AltimeterItem extends Item implements ICustomItemRendererProvider {
+public class AltimeterItem extends Item {
 
     public AltimeterItem(Properties properties) {
         super(properties);
@@ -28,12 +23,5 @@ public class AltimeterItem extends Item implements ICustomItemRendererProvider {
         }
         return super.use(level, player, usedHand);
     }
-
-
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return AltimeterItemRenderer::new;
-    }
-
 
 }

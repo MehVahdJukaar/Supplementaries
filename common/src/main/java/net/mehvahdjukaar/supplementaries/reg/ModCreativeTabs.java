@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.common.items.BubbleBlowerItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -441,7 +440,7 @@ public class ModCreativeTabs {
 
         after(e, Items.CLOCK, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.DEPTH_METER_NAME,
-                ModRegistry.DEPTH_METER_ITEM);
+                ModRegistry.ALTIMETER_ITEM);
 
         after(e, Items.MAP, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.SLICE_MAP_NAME,

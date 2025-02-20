@@ -22,8 +22,8 @@ public record BookType(ResourceLocation id, HSVColor color, float hueShift, bool
                         ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
                                 .fieldOf("color").forGetter(BookType::color),
                         Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
-                        Codec.BOOL.optionalFieldOf("hasGlint", false).forGetter(BookType::hasGlint),
-                        Codec.FLOAT.optionalFieldOf("enchantPower", 0f).forGetter(BookType::enchantPower),
+                        Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookType::hasGlint),
+                        Codec.FLOAT.optionalFieldOf("enchant_power", 0f).forGetter(BookType::enchantPower),
                         Codec.BOOL.optionalFieldOf("is_horizontal", false).forGetter(BookType::isHorizontal),
                         Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
                         ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)

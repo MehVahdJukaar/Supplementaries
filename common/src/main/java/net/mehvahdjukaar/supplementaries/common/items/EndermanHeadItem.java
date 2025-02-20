@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.EndermanHeadItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
@@ -11,9 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.block.Block;
 
-import java.util.function.Supplier;
-
-public class EndermanHeadItem extends StandingAndWallBlockItem implements ICustomItemRendererProvider {
+public class EndermanHeadItem extends StandingAndWallBlockItem {
     public EndermanHeadItem(Block block, Block block2, Properties properties) {
         super(block, block2, properties, Direction.DOWN);
     }
@@ -21,11 +16,6 @@ public class EndermanHeadItem extends StandingAndWallBlockItem implements ICusto
     @ForgeOverride
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan endermanEntity) {
         return true;
-    }
-
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return EndermanHeadItemRenderer::new;
     }
 
 }

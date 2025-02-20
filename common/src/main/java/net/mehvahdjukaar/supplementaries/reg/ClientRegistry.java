@@ -24,21 +24,19 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.ProjectileWeaponOverlayRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.SelectableItemOverlayRenderer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.SlingshotItemOverlayRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
-import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
-import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
@@ -164,6 +162,7 @@ public class ClientRegistry {
         ClientHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
         ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
+        ClientHelper.addItemRenderersRegistration(ClientRegistry::registerItemRenderers);
     }
 
     public static void setup() {
@@ -437,11 +436,27 @@ public class ClientRegistry {
         event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::assign);
     }
 
+
+    @EventCalled
+    private static void registerItemRenderers(ClientHelper.ItemRendererEvent event) {
+        event.register(ModRegistry.ALTIMETER_ITEM.get(), new AltimeterItemRenderer());
+        event.register(ModRegistry.CAGE_ITEM.get(), new CageItemRenderer());
+        event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
+        event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
+        event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new EndermanHeadItemRenderer());
+        event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
+        for (var f : ModRegistry.FLAGS.values()) {
+            var renderer = new FlagItemRenderer();
+            event.register(f.get(), renderer);
+        }
+    }
+
+
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WAY_SIGN_MODELS.get().values().forEach(event::register);
-       // PlaceableBookManager.INSTANCES..getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
+        // PlaceableBookManager.INSTANCES..getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);

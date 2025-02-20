@@ -40,7 +40,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class JarItem extends AbstractMobContainerItem implements ICustomItemRendererProvider {
+public class JarItem extends AbstractMobContainerItem   {
 
     protected final MutableComponent HINT = Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
 
@@ -179,8 +179,4 @@ public class JarItem extends AbstractMobContainerItem implements ICustomItemRend
         return super.useOn(context);
     }
 
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return JarItemRenderer::new;
-    }
 }

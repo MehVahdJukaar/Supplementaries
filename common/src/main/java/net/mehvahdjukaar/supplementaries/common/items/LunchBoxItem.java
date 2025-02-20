@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, LunchBaskedContent.Mutable>
-        implements ICustomItemRendererProvider, ILeftClickReact {
+        implements ILeftClickReact {
 
     public LunchBoxItem(Properties properties) {
         super(properties);
@@ -170,11 +170,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         pEntity.playSound(ModSounds.LUNCH_BASKET_INSERT.get(), 0.8F,
                 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
 
-    }
-
-    @Override
-    public Supplier<ItemStackRenderer> getRendererFactory() {
-        return LunchBoxItemRenderer::new;
     }
 
     @Override
