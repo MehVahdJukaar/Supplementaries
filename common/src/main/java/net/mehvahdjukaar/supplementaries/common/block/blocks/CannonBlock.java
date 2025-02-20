@@ -15,12 +15,15 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -36,6 +39,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
@@ -61,6 +65,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -96,6 +101,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
         return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockGetter, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, blockGetter, list, tooltipFlag);
+        if (!MiscUtils.showsHints(blockGetter, tooltipFlag)) return;
+        list.add((Component.translatable("message.supplementaries.cannon")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Nullable
