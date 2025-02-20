@@ -108,7 +108,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
-        this.tempFluidHolder.clear();
         if (backState.isAir()) return 0;
         Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
