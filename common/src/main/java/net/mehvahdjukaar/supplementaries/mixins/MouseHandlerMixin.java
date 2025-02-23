@@ -27,6 +27,6 @@ public abstract class MouseHandlerMixin {
     @Inject(method = "handleAccumulatedMovement", at = @At("HEAD")
     )
     protected void supp$onMoveMouse(CallbackInfo ci) {
-        SelectableContainerItemHud.INSTANCE.ohMouseMoved(this.accumulatedDX);
+        SelectableContainerItemHud.getInstance().ohMouseMoved(this.accumulatedDX);
     }
 }

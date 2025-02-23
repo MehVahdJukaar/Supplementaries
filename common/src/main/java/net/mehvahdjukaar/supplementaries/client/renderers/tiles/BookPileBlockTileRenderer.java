@@ -134,7 +134,9 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
             renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
             modelManager = Minecraft.getInstance().getModelManager();
         }
-
+        if (modelManager == null || renderer == null) {
+            throw new IllegalStateException("Some mod is somehow causing model manager to be null. HOW?");
+        }
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
         BakedModel model = ClientHelper.getModel(modelManager, ClientRegistry.BOOK_MODELS.apply(b.getType()));
         if (model != null) {

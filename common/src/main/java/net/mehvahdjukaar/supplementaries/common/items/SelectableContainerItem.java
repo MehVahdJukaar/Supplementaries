@@ -144,7 +144,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(hand), player);
+                SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.hand(hand), player);
             }
             this.playRemoveOneSound(player);
             myStack.set(this.getComponentType(), mutable.toImmutable());
@@ -162,7 +162,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.EMPTY, livingEntity);
+            SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.EMPTY, livingEntity);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());

@@ -81,9 +81,9 @@ public class ClientEventsForge {
                 ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
                 && mc.player instanceof IQuiverPlayer qe) {
             if (action == InputConstants.REPEAT || action == InputConstants.PRESS) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
+                SelectableContainerItemHud.getInstance().setUsingKeybind(qe.supplementaries$getQuiverSlot(), mc.player);
             } else if (action == InputConstants.RELEASE) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY, mc.player);
+                SelectableContainerItemHud.getInstance().setUsingKeybind(SlotReference.EMPTY, mc.player);
             }
         }
 
@@ -104,7 +104,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (SelectableContainerItemHud.INSTANCE.onMouseScrolled(event.getScrollDeltaY())) {
+        if (SelectableContainerItemHud.getInstance().onMouseScrolled(event.getScrollDeltaY())) {
             event.setCanceled(true);
         }
         if (CannonController.isActive()) {

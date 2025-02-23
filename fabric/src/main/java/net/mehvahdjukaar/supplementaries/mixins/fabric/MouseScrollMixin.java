@@ -14,7 +14,7 @@ public abstract class MouseScrollMixin {
     @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z",
             shift = At.Shift.BEFORE), cancellable = true)
     public void supp$onScroll(long windowPointer, double xOffset, double yOffset, CallbackInfo ci, @Local(ordinal = 4) double dy) {
-        if (SelectableContainerItemHud.INSTANCE.isActive() && SelectableContainerItemHud.INSTANCE.onMouseScrolled(dy)) {
+        if (SelectableContainerItemHud.getInstance().isActive() && SelectableContainerItemHud.getInstance().onMouseScrolled(dy)) {
             ci.cancel();
         }
     }

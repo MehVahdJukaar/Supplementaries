@@ -1,7 +1,7 @@
 {
   "fabric:load_conditions": [
     {
-      "flag": "adventurer_maps",
+      "flag": "random_adventurer_maps",
       "condition": "supplementaries:flag"
     }
   ],

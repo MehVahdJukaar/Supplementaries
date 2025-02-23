@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.misc.StreamCodecMapRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.Util;
