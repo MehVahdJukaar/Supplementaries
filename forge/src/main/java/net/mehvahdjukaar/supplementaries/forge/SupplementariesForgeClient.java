@@ -126,7 +126,7 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void onAddGuiLayers(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quiver_overlay",
-                (SelectableContainerItemHudImpl) SelectableContainerItemHudImpl.INSTANCE);
+                (SelectableContainerItemHudImpl) SelectableContainerItemHudImpl.getInstance());
 
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "cannon_charge_overlay",
                 new CannonChargeHudImpl());
