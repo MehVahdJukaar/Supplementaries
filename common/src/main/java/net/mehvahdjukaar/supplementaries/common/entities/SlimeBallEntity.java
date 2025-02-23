@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -115,7 +116,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 3) {
-            ParticleOptions particleOptions = ParticleTypes.ITEM_SLIME;
+            ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, this.getItem());
 
             for (int i = 0; i < 8; ++i) {
                 this.level().addParticle(particleOptions, this.getX(), this.getY(), this.getZ(),
