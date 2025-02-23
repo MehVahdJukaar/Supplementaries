@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.misc.CodecMapRegistry;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.Util;
@@ -140,17 +141,20 @@ public interface SlotReference {
         return m;
     });
 
-    // i'm so bad with generics
     Codec<SlotReference> STREAM_CODEC = REGISTRY
             .dispatch(SlotReference::getCodec, c -> c);
 
     static SlotReference decode(FriendlyByteBuf buf) {
-        return STREAM_CODEC.decode(NbtOps.INSTANCE, buf.readNbt()).result().orElseThrow().getFirst();
+        return STREAM_CODEC.decode(NbtOps.INSTANCE, buf.readNbt()).getOrThrow(
+                false, e -> Supplementaries.error("Failed to decode slot reference: " + e)
+        ).getFirst();
     }
 
 
     static void encode(FriendlyByteBuf buf, SlotReference slotReference) {
-        STREAM_CODEC.encodeStart(NbtOps.INSTANCE, slotReference).result().ifPresent(nbt -> buf.writeNbt((CompoundTag) nbt));
+        buf.writeNbt((CompoundTag) STREAM_CODEC.encodeStart(NbtOps.INSTANCE, slotReference).getOrThrow(
+                false, e -> Supplementaries.error("Failed to encode slot reference: " + e)
+        ));
     }
 
 

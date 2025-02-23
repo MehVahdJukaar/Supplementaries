@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.NetheriteDoorBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -47,6 +46,8 @@ public class CommonConfigs {
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Supplier<Boolean> FALSE = () -> false;
     private static final Supplier<Double> ZERO = () -> 0d;
+
+    private static String currentCat = "";
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
@@ -400,8 +401,7 @@ public class CommonConfigs {
             ASH_BURN_CHANCE = builder.comment("Burnable blocks will have a chance to create ash layers when burned. Greater this number the greater the chance will be")
                     .define("ash_from_fire_chance", 1d, 0, 1);
             ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? FALSE :
-                    builder.comment("Burning mobs will drop ash when they die")
-                            .define("ash_from_burning_mobs", true);
+                    feature(builder.comment("Burning mobs will drop ash when they die"), "ash_from_burning_mobs");
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
@@ -1075,7 +1075,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("traders_open_doors");
-            WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldnt aparently)")
+            WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldn't apparently)")
                     .define("enabled", true);
             builder.pop();
 
@@ -1126,9 +1126,9 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("map_tweaks");
-            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)")
-                    .define("random_adventurer_maps", true);
+            RANDOM_ADVENTURER_MAPS = feature(builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
+                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"),
+                    "random_adventurer_maps");
             RANDOM_ADVENTURER_MAPS_RANDOM = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
                     .define("random_adventurer_maps_select_random_structure", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
@@ -1153,7 +1153,7 @@ public class CommonConfigs {
 
             builder.push("placeable_books");
             WRITTEN_BOOKS = builder.comment("Allows written books to be placed down. Requires shift clicking")
-             .define("written_books", true);
+                    .define("written_books", true);
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
             BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
@@ -1315,7 +1315,13 @@ public class CommonConfigs {
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
-        var config = builder.gameRestart().define(name, value);
+        var config = builder.define(name, value);
+        String parentCat = builder.currentCategory();
+        var parentConf = FEATURE_TOGGLES.get(parentCat);
+        if (parentConf != null) {
+            Supplier<Boolean> finalChildConf = config;
+            config = () -> parentConf.get() && finalChildConf.get();
+        }
         FEATURE_TOGGLES.put(key, config);
         return config;
     }
@@ -1325,19 +1331,10 @@ public class CommonConfigs {
         return CompatHandler.AMENDMENTS ? () -> false : original.get();
     }
 
-    //TODO: cleanup
     public static boolean isEnabled(String key) {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
-            case ModConstants.ASH_BRICK_NAME -> Building.ASH_BRICKS_ENABLED.get();
-            case ModConstants.TRAPPED_PRESENT_NAME ->
-                    Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
-            case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
-            case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
-            case ModConstants.CHECKER_SLAB_NAME -> Building.CHECKERBOARD_ENABLED.get();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
-            case "ash_from_burning" -> Building.ASH_ENABLED.get() && Building.ASH_FROM_MOBS.get();
-            case "adventurer_maps" -> Tweaks.RANDOM_ADVENTURER_MAPS.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();

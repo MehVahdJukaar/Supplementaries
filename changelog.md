@@ -1,1 +1,4 @@
-- improved some rendering code for one very specific rare issue causing a nullptr
+- added some safety checks
+- fixed some more recipes and minor issues
+- improved logging for an unresolved issue with quivers in triknets on servers
+- improved nested configs to be disabled when their parent is

@@ -7,6 +7,10 @@
         {
           "type": "supplementaries:flag",
           "flag": "ash_from_burning"
+        },
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
         }
       ]
     },

@@ -94,7 +94,7 @@ public class ClientEventsFabric {
                     mc.getWindow().getWindow(),
                     ClientRegistry.QUIVER_KEYBIND.key.getValue()
             );
-            if (keyDown) SelectableContainerItemHud.INSTANCE.setUsingKeybind(
+            if (keyDown) SelectableContainerItemHud.getInstance().setUsingKeybind(
                     qe.supplementaries$getQuiverSlot(), mc.player);
         }
 

@@ -17,22 +17,25 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 
 public abstract class SelectableContainerItemHud {
 
-    // singleton instance, changes with loader
-    public static SelectableContainerItemHud INSTANCE = makeInstance();
+    //deadlock prevention
+    private static class Holder {
+        private static final SelectableContainerItemHud INSTANCE = makeInstance();
+    }
+
+    public static SelectableContainerItemHud getInstance() {
+        return Holder.INSTANCE;
+    }
 
     @ExpectPlatform
     public static SelectableContainerItemHud makeInstance() {

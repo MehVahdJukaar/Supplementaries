@@ -29,17 +29,17 @@ dependencies {
 
 
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    modImplementation("curse.maven:yacl-667299:4574163")
+    modCompileOnly("curse.maven:yacl-667299:4574163")
 
     modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
 
     //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
-    modRuntimeOnly("curse.maven:architectury-419699:4581904")
+   // modRuntimeOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
     //modImplementation("curse.maven:valkyrien-skies-258371:5212231")
     //modImplementation("curse.maven:fabric-language-kotlin-308769:4718458")
@@ -50,19 +50,19 @@ dependencies {
     modCompileOnly("curse.maven:create-fabric-624165:5245234")
 
     for (String module in port_lib_modules.split(",")) {
-        modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")
+        modCompileOnly("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")
     }
     //modRuntimeOnly("curse.maven:forge-config-api-port-fabric-547434:4583000") // v8.0.1 | Regions-Unexplored, Chipped
 
-    modImplementation("com.github.Chocohead:Fabric-ASM:${fabric_asm_version}") {
+    modCompileOnly("com.github.Chocohead:Fabric-ASM:${fabric_asm_version}") {
         exclude (group: "net.fabricmc.fabric-api")
     }
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modImplementation("curse.maven:jei-fabric-waystones-410902:4950461")
-    modImplementation("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
+    modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
+    modCompileOnly("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
@@ -70,7 +70,7 @@ dependencies {
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
-    modImplementation("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
+    modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
     //modImplementation("curse.maven:selene-499980:5651442")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
@@ -79,7 +79,7 @@ dependencies {
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
     modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.11")
 
-    modImplementation("curse.maven:immediatelyfast-686911:4937544")
+    modCompileOnly("curse.maven:immediatelyfast-686911:4937544")
     //modImplementation("curse.maven:spectrum-556967:5080474")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")

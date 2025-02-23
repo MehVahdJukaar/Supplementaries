@@ -17,7 +17,7 @@ public abstract class KeyboardHandlerMixin {
                     shift = At.Shift.BEFORE),
             cancellable = true)
     protected void onKeyPressCancellable(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
-        if (SelectableContainerItemHud.INSTANCE.onKeyPressed(key, action, modifiers)) {
+        if (SelectableContainerItemHud.getInstance().onKeyPressed(key, action, modifiers)) {
             ci.cancel();
         }
     }

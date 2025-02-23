@@ -35,6 +35,6 @@ public abstract class MouseHandlerMixin {
     )
     protected void onMoveMouse(long windowPointer, double xpos, double ypos, CallbackInfo ci) {
         double deltaX = xpos - this.xpos;
-        SelectableContainerItemHud.INSTANCE.ohMouseMoved(deltaX);
+        SelectableContainerItemHud.getInstance().ohMouseMoved(deltaX);
     }
 }
