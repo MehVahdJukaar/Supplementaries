@@ -34,7 +34,6 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-
     @Override
     public boolean shouldRender(BookPileBlockTile blockEntity, Vec3 cameraPos) {
         return ClientConfigs.Tweaks.BOOK_GLINT.get();
@@ -130,10 +129,9 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
         if (renderer == null) {
             renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
-            modelManager = Minecraft.getInstance().getModelManager();
         }
-        if (modelManager == null || renderer == null) {
-            throw new IllegalStateException("Some mod is somehow causing model manager to be null. HOW?");
+        if (modelManager == null) {
+            modelManager = Minecraft.getInstance().getModelManager();
         }
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
         BakedModel model = ClientHelper.getModel(modelManager, b.getType().modelPath());
