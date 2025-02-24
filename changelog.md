@@ -1,5 +1,1 @@
-- added some safety checks
-- fixed some more recipes and minor issues
-- improved logging for an unresolved issue with quivers in triknets on servers
-- improved nested configs to be disabled when their parent is
-- fixed a concurrency issue with lunch box hud
+- made some book rendering code more resiliant workaround for some unresolved issues
