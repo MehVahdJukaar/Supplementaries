@@ -7,6 +7,7 @@
     "1.19.2": ["1.19.2-FORGE"],
     "1.19.2": ["1.19.2-FABRIC"],
     "server": ["server", "Server"],
+    "outdated": ["out of date", "out dated"],
     "not related": ["not my issue", "report there", "100% their issue"],
     "duplicate": ["duplicate"],
     "conflict": ["conflicted with", "is a conflict"]
