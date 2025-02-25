@@ -25,5 +25,16 @@
       "condition": "supplementaries:flag",
       "flag": "flax"
     }
+  ],
+
+  "neoforge:load_conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    }
   ]
 }

@@ -130,7 +130,7 @@ public class ClientRegistry {
                     w -> modelRes("block/way_signs/" + w.getVariantId("way_sign"))))
     );
     public static final Function<BookType, ModelResourceLocation> BOOK_MODELS = Util.memoize(type ->
-            RenderUtil.getStandaloneModelLocation(Supplementaries.res("block/books/book_" + type.id().getPath()))
+            RenderUtil.getStandaloneModelLocation(type.textureId())
     );
 
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",

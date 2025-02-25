@@ -2,19 +2,23 @@ package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
@@ -34,15 +38,12 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
         books.clear();
-        DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        DynamicOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        Codec<Optional<BookType>> codec = ForgeHelper.conditionalCodec(BookType.CODEC);
         for (var entry : object.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            BookType type = BookType.makeNamedCodec(id)
-                    .decode(ops, entry.getValue())
-                    .getOrThrow().getFirst();
-            books.register(entry.getKey(), type);
-
-
+            codec.parse(ops, entry.getValue())
+                    .getOrThrow().ifPresent(type ->
+                            books.register(entry.getKey(), type));
         }
     }
 

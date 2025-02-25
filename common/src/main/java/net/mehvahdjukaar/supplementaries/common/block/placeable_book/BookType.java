@@ -13,28 +13,26 @@ import net.minecraft.util.Mth;
 
 import java.util.Optional;
 
-public record BookType(ResourceLocation id, HSVColor color, float hueShift, boolean hasGlint,
+public record BookType(ResourceLocation textureId, HSVColor color, float hueShift, boolean hasGlint,
                        float enchantPower, boolean isHorizontal, float chance,
                        ItemPredicate predicate) {
 
-    public static Codec<BookType> makeNamedCodec(ResourceLocation myId) {
-        return RecordCodecBuilder.create(instance -> instance.group(
-                        ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
-                                .fieldOf("color").forGetter(BookType::color),
-                        Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
-                        Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookType::hasGlint),
-                        Codec.FLOAT.optionalFieldOf("enchant_power", 0f).forGetter(BookType::enchantPower),
-                        Codec.BOOL.optionalFieldOf("is_horizontal", false).forGetter(BookType::isHorizontal),
-                        Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
-                        ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
-                ).apply(instance, (color, hueAngle, hasGlint, enchPower, isVertical, chance, itemPredicate) -> {
-                    float hueShift = hueAngle.orElseGet(() -> getAllowedHueShift(color));
-                    return new BookType(myId, color,
-                            hueShift, hasGlint, enchPower, isVertical, chance, itemPredicate);
+    public static final Codec<BookType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                    ResourceLocation.CODEC.fieldOf("texture").forGetter(BookType::textureId),
+                    ColorUtils.CODEC.xmap(c -> new RGBColor(c).asHSV(), h -> h.asRGB().toInt())
+                            .fieldOf("color").forGetter(BookType::color),
+                    Codec.FLOAT.optionalFieldOf("hue_angle").forGetter(b -> Optional.of(b.hueShift)),
+                    Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookType::hasGlint),
+                    Codec.FLOAT.optionalFieldOf("enchant_power", 0f).forGetter(BookType::enchantPower),
+                    Codec.BOOL.optionalFieldOf("is_horizontal", false).forGetter(BookType::isHorizontal),
+                    Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(BookType::chance),
+                    ItemPredicate.CODEC.fieldOf("predicate").forGetter(BookType::predicate)
+            ).apply(instance, (text, color, hueAngle, hasGlint, enchPower, isVertical, chance, itemPredicate) -> {
+                float hueShift = hueAngle.orElseGet(() -> getAllowedHueShift(color));
+                return new BookType(text, color, hueShift, hasGlint, enchPower, isVertical, chance, itemPredicate);
 
-                })
-        );
-    }
+            })
+    );
 
 
     /*
@@ -61,7 +59,7 @@ public record BookType(ResourceLocation id, HSVColor color, float hueShift, bool
 */
 
     //this could be redone
-    //I think it allows darker non-saturated colors to have higher color shift
+//I think it allows darker non-saturated colors to have higher color shift
     private static float getAllowedHueShift(HSVColor color) {
         float v = color.value();
         float minAngle = 70 / 360f;

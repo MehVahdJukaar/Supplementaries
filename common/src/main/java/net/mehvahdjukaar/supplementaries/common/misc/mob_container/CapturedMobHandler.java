@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -57,14 +58,17 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         customMobProperties.clear();
 
-        var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        var codec = ForgeHelper.conditionalCodec(DataDefinedCatchableMob.CODEC);
         var list = new ArrayList<DataDefinedCatchableMob>();
         jsons.forEach((key, json) -> {
-            var data = DataDefinedCatchableMob.CODEC.parse(ops, json).getOrThrow();
-            if (key.getPath().equals("generic_fish")) {
-                moddedFishProperty = data;
-            } else {
-                list.add(data);
+            var data = codec.parse(ops, json).getOrThrow();
+            if(data.isPresent()) {
+                if (key.getPath().equals("generic_fish")) {
+                    moddedFishProperty = data.get();
+                } else {
+                    list.add(data.get());
+                }
             }
         });
         for (var c : list) {

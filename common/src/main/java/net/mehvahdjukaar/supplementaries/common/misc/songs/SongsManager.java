@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntRBTreeMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -53,9 +54,11 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private final HolderLookup.Provider registryAccess;
 
     public SongsManager(HolderLookup.Provider registryAccess) {
         super(GSON, "flute_songs");
+        this.registryAccess = registryAccess;
     }
 
     @Override
@@ -63,12 +66,16 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         SONGS.clear();
         SONG_WEIGHTED_LIST.clear();
         List<Song> temp = new ArrayList<>();
+        var ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        var codec = ForgeHelper.conditionalCodec(Song.CODEC);
         jsons.forEach((key, json) -> {
             try {
-                var result = Song.CODEC.parse(JsonOps.INSTANCE, json);
-                Song song = result.getOrThrow();
-                temp.add(song);
-                SongsManager.addSong(song);
+                var result = codec.parse(ops, json);
+                var song = result.getOrThrow();
+                if(song.isPresent()) {
+                    temp.add(song.get());
+                    SongsManager.addSong(song.get());
+                }
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key, e);
             }

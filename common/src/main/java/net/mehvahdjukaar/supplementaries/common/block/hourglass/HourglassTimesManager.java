@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
@@ -54,12 +55,12 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> jsonMap, ResourceManager resourceManager, ProfilerFiller profiler) {
         dustsMap.clear();
         List<HourglassTimeData> list = new ArrayList<>();
-        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        var codec = ForgeHelper.conditionalCodec(HourglassTimeData.CODEC);
         jsonMap.forEach((key, json) -> {
             try {
-                var result = HourglassTimeData.CODEC.parse(ops, json);
-                HourglassTimeData data = result.getOrThrow();
-                list.add(data);
+                var result = codec.parse(ops, json).getOrThrow();
+                result.ifPresent(list::add);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for hourglass data {}", key, e);
             }

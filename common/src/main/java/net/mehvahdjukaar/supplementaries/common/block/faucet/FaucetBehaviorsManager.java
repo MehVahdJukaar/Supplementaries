@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.misc.fake_level.FakeLevelManager;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -78,12 +79,15 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         dataInteractions.clear();
-        RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+        RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        var codec = ForgeHelper.conditionalCodec(CODEC);
         map.forEach((key, json) -> {
             try {
-                var either = CODEC.parse(ops, json).getOrThrow();
-                Object o = either.mapBoth(i -> i, f -> f);
-                dataInteractions.add(o);
+                var either = codec.parse(ops, json).getOrThrow();
+                if (either.isPresent()) {
+                    Object o = either.get().mapBoth(i -> i, f -> f);
+                    dataInteractions.add(o);
+                }
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction {}", key, e);
             }
