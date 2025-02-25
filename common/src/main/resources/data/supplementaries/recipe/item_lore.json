@@ -1,13 +1,19 @@
 {
-  "type": "supplementaries:item_lore",
-  "ingredient": {
-    "item": "minecraft:name_tag"
-  },
-  "set_lore": true,
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "item_lore"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "item_lore"
+    }
+  ],
+  "type": "supplementaries:item_lore",
+  "ingredient": {
+    "item": "minecraft:name_tag"
+  },
+  "set_lore": true
 }

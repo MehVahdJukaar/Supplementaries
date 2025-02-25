@@ -1,4 +1,30 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "pancake"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "modid": "farmersdelight",
+        "condition": "fabric:mod_loaded"
+      }
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "pancake"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -17,18 +43,5 @@
   "result": {
     "id": "supplementaries:pancake",
     "count": 3
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "pancake"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "modid": "farmersdelight",
-        "condition": "fabric:mod_loaded"
-      }
-    }
-  ]
+  }
 }

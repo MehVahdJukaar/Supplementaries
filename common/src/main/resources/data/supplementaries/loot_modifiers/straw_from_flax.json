@@ -1,5 +1,4 @@
 {
-  "type": "moonlight:add_item",
   "fabric:load_conditions": [
     {
       "condition": "fabric:mod_loaded",
@@ -10,6 +9,17 @@
       "flag": "flax"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
+  "type": "moonlight:add_item",
   "conditions": [
     {
       "condition": "minecraft:match_tool",

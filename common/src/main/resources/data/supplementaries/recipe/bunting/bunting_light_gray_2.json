@@ -5,6 +5,12 @@
       "flag": "bunting"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bunting"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",

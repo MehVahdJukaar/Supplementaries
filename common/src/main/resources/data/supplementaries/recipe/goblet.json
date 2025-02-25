@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "goblet"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "goblet"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "0 0",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:goblet",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "goblet"
-    }
-  ]
+  }
 }

@@ -1,4 +1,24 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    },
+    {
+      "modid": "quark",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "101",
@@ -14,15 +34,5 @@
   },
   "result": {
     "id": "supplementaries:dispenser_minecart"
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "dispenser_minecart"
-    },
-    {
-      "modid": "quark",
-      "condition": "fabric:mod_loaded"
-    }
-  ]
+  }
 }

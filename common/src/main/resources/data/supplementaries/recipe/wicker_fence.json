@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "wicker_fence"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "wicker_fence"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "101",
@@ -15,11 +27,5 @@
   "result": {
     "id": "supplementaries:wicker_fence",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "wicker_fence"
-    }
-  ]
+  }
 }

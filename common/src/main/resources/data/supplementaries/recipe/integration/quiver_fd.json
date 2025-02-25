@@ -1,4 +1,24 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "quiver"
+    },
+    {
+      "modid": "farmers_delight",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "quiver"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmers_delight"
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
     {
@@ -13,16 +33,6 @@
     {
       "item": "minecraft:leather",
       "count": 2
-    }
-  ],
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "quiver"
-    },
-    {
-      "modid": "farmers_delight",
-      "condition": "fabric:mod_loaded"
     }
   ]
 }

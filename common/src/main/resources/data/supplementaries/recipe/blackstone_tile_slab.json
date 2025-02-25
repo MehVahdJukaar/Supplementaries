@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",
@@ -13,11 +25,5 @@
   "result": {
     "id": "supplementaries:blackstone_tile_slab",
     "count": 6
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "stone_tile"
-    }
-  ]
+  }
 }

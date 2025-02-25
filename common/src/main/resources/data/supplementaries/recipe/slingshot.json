@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "slingshot"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "slingshot"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "323",
@@ -22,11 +34,5 @@
   "result": {
     "id": "supplementaries:slingshot",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "slingshot"
-    }
-  ]
+  }
 }

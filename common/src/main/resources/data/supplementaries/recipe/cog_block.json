@@ -5,6 +5,12 @@
       "flag": "cog_block"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cog_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",

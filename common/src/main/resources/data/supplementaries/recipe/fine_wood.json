@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:fine_wood",
     "count": 8
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "fine_wood"
-    }
-  ]
+  }
 }

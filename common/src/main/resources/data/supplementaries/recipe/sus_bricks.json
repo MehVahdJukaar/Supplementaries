@@ -5,6 +5,12 @@
       "flag": "gravel_bricks"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "gravel_bricks"
+    }
+  ],
   "type": "supplementaries:sus_crafting",
   "ingredient": {
     "item": "supplementaries:gravel_bricks"

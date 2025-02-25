@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "feather_block"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "feather_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
@@ -15,11 +27,5 @@
   "result": {
     "id": "minecraft:white_bed",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "feather_block"
-    }
-  ]
+  }
 }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.google.common.collect.ImmutableList;
+import net.mehvahdjukaar.moonlight.api.platform.neoforge.ForgeHelperImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
@@ -101,7 +102,7 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void onAddGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, Supplementaries.res("selectable_container_item"),
-                SelectableContainerItemHudImpl.INSTANCE);
+                SelectableContainerItemHudImpl.getInstance());
 
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Supplementaries.res("cannon_charge"),
                 CannonChargeHud.INSTANCE);

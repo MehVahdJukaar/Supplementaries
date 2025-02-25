@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "cannon"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannon"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
@@ -22,11 +34,5 @@
   "result": {
     "id": "supplementaries:cannon",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "cannon"
-    }
-  ]
+  }
 }

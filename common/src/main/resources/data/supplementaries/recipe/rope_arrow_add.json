@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rope_arrow"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "rope_arrow"
+    }
+  ],
   "type": "supplementaries:add_charges",
   "charge": {
     "tag": "supplementaries:ropes"
@@ -7,11 +19,5 @@
     "item": "supplementaries:rope_arrow"
   },
   "charges_per_item": 1,
-  "result": "supplementaries:rope_arrow",
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "rope_arrow"
-    }
-  ]
+  "result": "supplementaries:rope_arrow"
 }

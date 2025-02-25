@@ -9,6 +9,16 @@
       "condition": "fabric:mod_loaded"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "iron_gate"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "quark"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",

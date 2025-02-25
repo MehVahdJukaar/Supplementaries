@@ -5,6 +5,12 @@
       "flag": "blackboard"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "12 ",

@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "relayer"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "relayer"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",
@@ -16,12 +28,6 @@
       "tag": "c:ingots/iron"
     }
   },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "relayer"
-    }
-  ],
   "result": {
     "id": "supplementaries:relayer"
   }

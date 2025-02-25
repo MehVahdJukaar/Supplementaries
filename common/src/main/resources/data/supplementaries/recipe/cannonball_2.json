@@ -1,4 +1,30 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:tag_empty",
+        "tag": "c:storage_blocks/lead"
+      }
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:storage_blocks/lead"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
@@ -13,18 +39,5 @@
   "result": {
     "id": "supplementaries:cannonball",
     "count": 10
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "cannonball"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "fabric:tag_empty",
-        "tag": "c:storage_blocks/lead"
-      }
-    }
-  ]
+  }
 }

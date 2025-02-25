@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lunch_basket"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lunch_basket"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 0 ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:lunch_basket",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "lunch_basket"
-    }
-  ]
+  }
 }

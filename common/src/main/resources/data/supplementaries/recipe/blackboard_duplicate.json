@@ -1,10 +1,15 @@
 {
-  "type": "supplementaries:blackboard_duplicate",
-
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "blackboard"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ],
+  "type": "supplementaries:blackboard_duplicate"
 }

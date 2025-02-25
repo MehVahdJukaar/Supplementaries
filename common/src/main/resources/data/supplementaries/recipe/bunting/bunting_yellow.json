@@ -5,6 +5,12 @@
       "flag": "bunting"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bunting"
+    }
+  ],
   "group": "bunting",
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
@@ -12,7 +18,7 @@
       "item": "supplementaries:bunting"
     },
     {
-        "tag": "c:dyes/yellow"
+      "tag": "c:dyes/yellow"
     }
   ],
   "result": {

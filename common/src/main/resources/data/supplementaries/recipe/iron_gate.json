@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "iron_gate"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "iron_gate"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:iron_gate",
     "count": 2
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "iron_gate"
-    }
-  ]
+  }
 }

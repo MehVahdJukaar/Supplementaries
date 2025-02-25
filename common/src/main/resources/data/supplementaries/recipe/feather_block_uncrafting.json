@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "feather_block"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "feather_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "0"
@@ -11,11 +23,5 @@
   "result": {
     "id": "minecraft:feather",
     "count": 9
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "feather_block"
-    }
-  ]
+  }
 }

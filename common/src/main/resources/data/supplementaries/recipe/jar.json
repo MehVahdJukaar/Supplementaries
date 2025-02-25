@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ],
   "group": "jar",
   "type": "minecraft:crafting_shaped",
   "pattern": [
@@ -17,11 +29,5 @@
   "result": {
     "id": "supplementaries:jar",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "jar"
-    }
-  ]
+  }
 }

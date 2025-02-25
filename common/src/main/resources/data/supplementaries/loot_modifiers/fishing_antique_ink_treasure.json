@@ -1,11 +1,17 @@
 {
-  "type": "moonlight:add_item",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "antique_ink"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
+  "type": "moonlight:add_item",
   "conditions": [
     {
       "condition": "neoforge:loot_table_id",

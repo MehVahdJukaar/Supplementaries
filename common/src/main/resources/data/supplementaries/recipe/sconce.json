@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:sconce",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "sconce"
-    }
-  ]
+  }
 }

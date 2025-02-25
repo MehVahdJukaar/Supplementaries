@@ -5,6 +5,12 @@
       "flag": "crystal_display"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "crystal_display"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "12",

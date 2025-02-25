@@ -1,4 +1,30 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
@@ -15,18 +41,5 @@
   "result": {
     "id": "supplementaries:awning_yellow",
     "count": 2
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "awning"
-    },
-    {
-      "condition": "fabric:not",
-        "value": {
-            "condition": "supplementaries:flag",
-            "flag": "flax"
-        }
-    }
-  ]
+  }
 }

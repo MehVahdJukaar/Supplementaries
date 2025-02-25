@@ -1,14 +1,20 @@
 {
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "supplementaries:ash_bricks"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "ash_bricks"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:ash_bricks"
+  },
   "result": {
     "count": 1,
     "id": "supplementaries:ash_bricks_wall"

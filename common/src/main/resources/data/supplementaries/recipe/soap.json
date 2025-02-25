@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -19,16 +31,9 @@
     {
       "item": "minecraft:porkchop"
     }
-
   ],
   "result": {
     "id": "supplementaries:soap",
     "count": 6
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "soap"
-    }
-  ]
+  }
 }

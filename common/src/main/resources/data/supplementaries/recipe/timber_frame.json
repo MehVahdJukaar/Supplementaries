@@ -5,6 +5,12 @@
       "flag": "timber_frame"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "timber_frame"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",

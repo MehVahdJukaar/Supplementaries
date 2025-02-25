@@ -19,6 +19,26 @@
       "flag": "bomb"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/lead"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "oreganized"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "group": "bomb",
   "pattern": [

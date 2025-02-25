@@ -9,6 +9,16 @@
       "condition": "fabric:mod_loaded"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buzzier_bees"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "caverns_and_chasms"
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {

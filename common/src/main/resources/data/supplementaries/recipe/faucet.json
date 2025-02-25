@@ -5,6 +5,12 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "faucet"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",

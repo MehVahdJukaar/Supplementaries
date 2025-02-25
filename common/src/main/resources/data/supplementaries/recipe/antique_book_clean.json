@@ -1,13 +1,19 @@
 {
-  "type": "supplementaries:antique_book",
-  "set_antique": false,
-  "ingredient": {
-    "item": "supplementaries:soap"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "antique_ink"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
+  "type": "supplementaries:antique_book",
+  "set_antique": false,
+  "ingredient": {
+    "item": "supplementaries:soap"
+  }
 }

@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "0",
@@ -14,11 +26,5 @@
   },
   "result": {
     "id": "supplementaries:dispenser_minecart"
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "dispenser_minecart"
-    }
-  ]
+  }
 }

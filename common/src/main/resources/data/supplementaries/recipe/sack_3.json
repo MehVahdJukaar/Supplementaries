@@ -16,6 +16,23 @@
       "flag": "sack"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "121",

@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bubble_blower"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bubble_blower"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 11",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:bubble_blower",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "bubble_blower"
-    }
-  ]
+  }
 }

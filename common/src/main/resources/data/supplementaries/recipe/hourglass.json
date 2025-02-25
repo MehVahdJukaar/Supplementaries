@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "hourglass"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hourglass"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "010",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:hourglass",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "hourglass"
-    }
-  ]
+  }
 }

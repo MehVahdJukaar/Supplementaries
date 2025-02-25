@@ -5,6 +5,12 @@
       "flag": "flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flag"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "group": "flag",
   "pattern": [

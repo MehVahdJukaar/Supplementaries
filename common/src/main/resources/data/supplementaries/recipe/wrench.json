@@ -5,6 +5,12 @@
       "flag": "wrench"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "wrench"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "1 1",

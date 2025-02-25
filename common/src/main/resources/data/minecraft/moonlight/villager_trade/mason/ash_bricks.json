@@ -5,6 +5,12 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash"
+    }
+  ],
   "type": "simple",
   "max_trades": 16,
   "price": {

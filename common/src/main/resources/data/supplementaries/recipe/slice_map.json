@@ -2,13 +2,26 @@
   "fabric:load_conditions": [
     {
       "condition": "fabric:not",
-      "value":     {
+      "value": {
         "condition": "fabric:tag_empty",
         "tag": "supplementaries:altimeters"
       }
     },
     {
       "condition": "supplementaries:flag",
+      "flag": "slice_map"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "supplementaries:altimeters"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
       "flag": "slice_map"
     }
   ],

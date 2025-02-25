@@ -9,6 +9,16 @@
       "flag": "ash"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "immersive_weathering"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {

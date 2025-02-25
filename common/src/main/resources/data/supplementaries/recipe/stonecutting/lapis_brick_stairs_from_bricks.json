@@ -1,14 +1,20 @@
 {
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "supplementaries:lapis_bricks"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "lapis_bricks"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    }
+  ],
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:lapis_bricks"
+  },
   "result": {
     "count": 1,
     "id": "supplementaries:lapis_bricks_stairs"

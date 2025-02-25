@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###"
@@ -8,12 +20,6 @@
       "item": "supplementaries:ash_bricks"
     }
   },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "ash_bricks"
-    }
-  ],
   "result": {
     "id": "supplementaries:ash_bricks_slab",
     "count": 6

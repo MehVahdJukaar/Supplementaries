@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "blackstone_lamp"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackstone_lamp"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:blackstone_lamp",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "blackstone_lamp"
-    }
-  ]
+  }
 }

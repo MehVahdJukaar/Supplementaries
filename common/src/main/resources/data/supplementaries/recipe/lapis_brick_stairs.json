@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "#  ",
@@ -10,12 +22,6 @@
       "item": "supplementaries:lapis_bricks"
     }
   },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "lapis_bricks"
-    }
-  ],
   "result": {
     "id": "supplementaries:lapis_bricks_stairs",
     "count": 4

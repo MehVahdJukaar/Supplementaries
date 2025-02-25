@@ -1,4 +1,30 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "fire_pit"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "lumisene"
+      }
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fire_pit"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "lumisene"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "121",
@@ -15,18 +41,5 @@
   "result": {
     "id": "supplementaries:fire_pit",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "fire_pit"
-    },
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "supplementaries:flag",
-        "flag": "lumisene"
-      }
-    }
-  ]
+  }
 }

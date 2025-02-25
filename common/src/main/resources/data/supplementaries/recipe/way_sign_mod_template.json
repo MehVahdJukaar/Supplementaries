@@ -1,4 +1,14 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:false"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:false"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "111",
@@ -15,10 +25,5 @@
   "result": {
     "id": "supplementaries:way_sign_oak",
     "count": 3
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:false"
-    }
-  ]
+  }
 }

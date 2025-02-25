@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "redstone_illuminator"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "redstone_illuminator"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
@@ -25,11 +37,5 @@
   "result": {
     "id": "supplementaries:redstone_illuminator",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "redstone_illuminator"
-    }
-  ]
+  }
 }

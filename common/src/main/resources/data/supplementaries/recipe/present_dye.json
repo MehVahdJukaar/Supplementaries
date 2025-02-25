@@ -1,9 +1,15 @@
 {
-  "type": "supplementaries:present_dye",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "present"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "present"
+    }
+  ],
+  "type": "supplementaries:present_dye"
 }

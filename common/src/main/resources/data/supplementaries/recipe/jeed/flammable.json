@@ -9,6 +9,16 @@
       "flag": "lumisene"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "jeed"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "lumisene"
+    }
+  ],
   "type": "jeed:effect_provider",
   "providers": [
     {

@@ -5,6 +5,12 @@
       "flag": "daub"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "daub"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "21 ",

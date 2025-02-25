@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flower_box"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flower_box"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:flower_box",
     "count": 2
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "flower_box"
-    }
-  ]
+  }
 }

@@ -5,6 +5,12 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "random_adventurer_maps"
+    }
+  ],
   "type": "supplementaries:adventurer_map",
   "price_multiplier": 0.2,
   "item": "minecraft:emerald",

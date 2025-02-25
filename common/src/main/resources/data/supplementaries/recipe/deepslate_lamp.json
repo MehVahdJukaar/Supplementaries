@@ -5,6 +5,12 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "deepslate_lamp"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "000",

@@ -1,4 +1,30 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rope"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "rope"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "  1",
@@ -13,18 +39,5 @@
   "result": {
     "id": "supplementaries:rope",
     "count": 3
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "supplementaries:flag",
-        "flag": "flax"
-      }
-    },
-    {
-      "condition": "supplementaries:flag",
-      "flag": "rope"
-    }
-  ]
+  }
 }

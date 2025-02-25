@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lock_block"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lock_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "101",
@@ -19,11 +31,5 @@
   "result": {
     "id": "supplementaries:lock_block",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "lock_block"
-    }
-  ]
+  }
 }

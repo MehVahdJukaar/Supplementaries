@@ -1,14 +1,20 @@
 {
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "supplementaries:stone_tile"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "stone_tile"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "stone_tile"
+    }
+  ],
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:stone_tile"
+  },
   "result": {
     "count": 2,
     "id": "supplementaries:stone_tile_slab"

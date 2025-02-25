@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "hat_stand"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hat_stand"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " 1 ",
@@ -14,11 +26,5 @@
   },
   "result": {
     "id": "supplementaries:hat_stand"
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "hat_stand"
-    }
-  ]
+  }
 }

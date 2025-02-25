@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "statue"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "statue"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:statue",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "statue"
-    }
-  ]
+  }
 }

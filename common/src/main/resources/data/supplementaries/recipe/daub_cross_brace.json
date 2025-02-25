@@ -5,6 +5,12 @@
       "flag": "wattle_and_daub"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "wattle_and_daub"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "1 1",

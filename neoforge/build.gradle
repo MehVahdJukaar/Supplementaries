@@ -102,10 +102,10 @@ dependencies {
     if (isMyPc) {
         modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     } else {
-       // modImplementation("curse.maven:selene-499980:5878698")
+        modImplementation("curse.maven:selene-499980:5878698")
     }
 
-    modImplementation("curse.maven:farmers-delight-398521:5772720")
+    modCompileOnly("curse.maven:farmers-delight-398521:5772720")
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     //modRuntimeOnly("curse.maven:spark-361579:4738952")

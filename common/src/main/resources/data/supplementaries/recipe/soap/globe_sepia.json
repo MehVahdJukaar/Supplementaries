@@ -1,18 +1,4 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "supplementaries:globe_sepia"
-    },
-    {
-      "item": "supplementaries:soap"
-    }
-
-  ],
-  "result": {
-    "id": "supplementaries:globe",
-    "count": 1
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
@@ -22,5 +8,28 @@
       "condition": "supplementaries:flag",
       "flag": "soap"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "globe"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:globe_sepia"
+    },
+    {
+      "item": "supplementaries:soap"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:globe",
+    "count": 1
+  }
 }

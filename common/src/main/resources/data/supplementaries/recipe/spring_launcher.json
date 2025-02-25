@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "spring_launcher"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "spring_launcher"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "010",
@@ -22,11 +34,5 @@
   "result": {
     "id": "supplementaries:spring_launcher",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "spring_launcher"
-    }
-  ]
+  }
 }

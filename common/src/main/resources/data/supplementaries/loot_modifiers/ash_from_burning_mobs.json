@@ -1,11 +1,17 @@
 {
-  "type": "moonlight:add_item",
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "ash_from_burning"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_from_burning"
+    }
+  ],
+  "type": "moonlight:add_item",
   "conditions": [
     {
       "condition": "damage_source_properties",

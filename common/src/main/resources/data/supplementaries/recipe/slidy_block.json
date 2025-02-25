@@ -5,6 +5,12 @@
       "flag": "slidy_block"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "slidy_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "010",

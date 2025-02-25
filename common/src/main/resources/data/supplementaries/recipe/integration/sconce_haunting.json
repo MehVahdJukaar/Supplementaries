@@ -1,15 +1,4 @@
 {
-  "type": "create:haunting",
-  "ingredients": [
-    {
-      "item": "supplementaries:sconce"
-    }
-  ],
-  "results": [
-    {
-      "item": "supplementaries:sconce_soul"
-    }
-  ],
   "fabric:load_conditions": [
     {
       "modid": "create",
@@ -22,6 +11,31 @@
     {
       "condition": "supplementaries:flag",
       "flag": "sconce_soul"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce_soul"
+    }
+  ],
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "supplementaries:sconce"
+    }
+  ],
+  "results": [
+    {
+      "item": "supplementaries:sconce_soul"
     }
   ]
 }

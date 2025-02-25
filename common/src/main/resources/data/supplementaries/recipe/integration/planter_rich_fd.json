@@ -13,6 +13,20 @@
       "condition": "fabric:mod_loaded"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "rich_soil_planter"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "101",

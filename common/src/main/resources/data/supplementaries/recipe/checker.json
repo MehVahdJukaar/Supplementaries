@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "checker_block"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "checker_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "10 ",
@@ -16,11 +28,5 @@
   "result": {
     "id": "supplementaries:checker_block",
     "count": 4
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "checker_block"
-    }
-  ]
+  }
 }

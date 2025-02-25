@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "pulley_block"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "pulley_block"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "121",
@@ -19,11 +31,5 @@
   "result": {
     "id": "supplementaries:pulley_block",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "pulley_block"
-    }
-  ]
+  }
 }

@@ -1,17 +1,4 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "000"
-  ],
-  "key": {
-    "0": {
-      "tag": "minecraft:wooden_slabs"
-    }
-  },
-  "result": {
-    "id": "supplementaries:item_shelf",
-    "count": 2
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
@@ -24,5 +11,31 @@
         "condition": "fabric:mod_loaded"
       }
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "item_shelf"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "suppsquared"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000"
+  ],
+  "key": {
+    "0": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "id": "supplementaries:item_shelf",
+    "count": 2
+  }
 }

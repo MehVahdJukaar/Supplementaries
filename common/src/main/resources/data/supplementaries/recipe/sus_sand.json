@@ -5,6 +5,12 @@
       "flag": "sus_recipes"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sus_recipes"
+    }
+  ],
   "type": "supplementaries:sus_crafting",
   "ingredient": {
     "item": "minecraft:sand"

@@ -9,6 +9,16 @@
       "flag": "flax"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "doormat"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "11 ",

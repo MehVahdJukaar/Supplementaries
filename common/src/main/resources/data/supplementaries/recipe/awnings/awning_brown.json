@@ -1,4 +1,24 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "flax"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
@@ -11,15 +31,5 @@
   "result": {
     "id": "supplementaries:awning_brown",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "awning"
-    },
-    {
-      "condition": "supplementaries:flag",
-      "flag": "flax"
-    }
-  ]
+  }
 }

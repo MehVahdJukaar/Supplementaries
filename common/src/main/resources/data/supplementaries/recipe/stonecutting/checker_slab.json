@@ -1,14 +1,20 @@
 {
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "supplementaries:checker_block"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "checker_block"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "checker_block"
+    }
+  ],
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "supplementaries:checker_block"
+  },
   "result": {
     "count": 2,
     "id": "supplementaries:checker_slab"

@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "flag"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "flag"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "group": "flag",
   "pattern": [
@@ -17,11 +29,5 @@
   "result": {
     "id": "supplementaries:flag_white",
     "count": 1
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "flag"
-    }
-  ]
+  }
 }

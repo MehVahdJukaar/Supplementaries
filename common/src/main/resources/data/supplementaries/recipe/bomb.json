@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "group": "bomb",
   "pattern": [
@@ -20,11 +32,5 @@
   "result": {
     "id": "supplementaries:bomb",
     "count": 4
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "bomb"
-    }
-  ]
+  }
 }

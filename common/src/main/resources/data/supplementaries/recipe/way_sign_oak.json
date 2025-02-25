@@ -5,6 +5,12 @@
       "flag": "way_sign"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "way_sign"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {

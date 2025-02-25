@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sugar_cube"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sugar_cube"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "0"
@@ -11,11 +23,5 @@
   "result": {
     "id": "minecraft:sugar",
     "count": 9
-  },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "sugar_cube"
-    }
-  ]
+  }
 }

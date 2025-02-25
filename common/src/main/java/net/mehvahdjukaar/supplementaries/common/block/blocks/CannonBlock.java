@@ -104,10 +104,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockGetter, List<Component> list, TooltipFlag tooltipFlag) {
-        super.appendHoverText(itemStack, blockGetter, list, tooltipFlag);
-        if (!MiscUtils.showsHints(blockGetter, tooltipFlag)) return;
-        list.add((Component.translatable("message.supplementaries.cannon")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add((Component.translatable("message.supplementaries.cannon")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Nullable

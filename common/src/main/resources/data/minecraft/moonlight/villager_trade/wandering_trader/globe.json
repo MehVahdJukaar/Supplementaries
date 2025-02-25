@@ -5,6 +5,12 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "globe"
+    }
+  ],
   "type": "simple",
   "max_trades": 3,
   "price": {

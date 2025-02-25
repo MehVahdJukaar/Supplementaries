@@ -1,12 +1,18 @@
 {
-  "type": "supplementaries:soap_clearing",
-  "ingredient": {
-    "item": "supplementaries:soap"
-  },
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "soap"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    }
+  ],
+  "type": "supplementaries:soap_clearing",
+  "ingredient": {
+    "item": "supplementaries:soap"
+  }
 }

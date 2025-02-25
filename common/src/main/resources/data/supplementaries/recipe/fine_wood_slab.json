@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "###"
@@ -8,12 +20,6 @@
       "item": "supplementaries:fine_wood"
     }
   },
-  "fabric:load_conditions": [
-    {
-      "condition": "supplementaries:flag",
-      "flag": "fine_wood"
-    }
-  ],
   "result": {
     "id": "supplementaries:fine_wood_slab",
     "count": 6

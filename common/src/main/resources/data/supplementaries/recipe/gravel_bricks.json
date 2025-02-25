@@ -5,6 +5,12 @@
       "flag": "gravel_bricks"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "gravel_bricks"
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "11",

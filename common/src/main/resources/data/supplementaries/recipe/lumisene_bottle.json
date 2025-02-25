@@ -5,6 +5,12 @@
       "flag": "lumisene_bottle"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lumisene_bottle"
+    }
+  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {

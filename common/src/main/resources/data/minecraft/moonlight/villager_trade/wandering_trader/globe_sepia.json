@@ -9,6 +9,16 @@
       "condition": "supplementaries:flag"
     }
   ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "globe"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
   "type": "simple",
   "max_trades": 3,
   "price": {

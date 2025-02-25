@@ -41,9 +41,9 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         DynamicOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
         Codec<Optional<BookType>> codec = ForgeHelper.conditionalCodec(BookType.CODEC);
         for (var entry : object.entrySet()) {
-            codec.parse(ops, entry.getValue())
-                    .getOrThrow().ifPresent(type ->
-                            books.register(entry.getKey(), type));
+          //  codec.parse(ops, entry.getValue())
+          //          .getOrThrow().ifPresent(type ->
+          //                  books.register(entry.getKey(), type));
         }
     }
 

@@ -1,13 +1,19 @@
 {
-  "type": "supplementaries:weathered_map",
-  "ingredient": {
-    "item": "supplementaries:antique_ink"
-  },
-  "set_antique": true,
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
       "flag": "antique_ink"
     }
-  ]
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
+  "type": "supplementaries:weathered_map",
+  "ingredient": {
+    "item": "supplementaries:antique_ink"
+  },
+  "set_antique": true
 }
