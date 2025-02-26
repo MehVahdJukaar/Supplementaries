@@ -55,6 +55,7 @@
     "amendments": "*"
   },
   "breaks": {
+    "farmersdelight": "<2.2.0",
     "particular": "<=1.1.1",
     "psychedelicraft": "<=1.7.5+1.20.1"
   },
