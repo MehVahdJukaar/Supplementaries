@@ -58,7 +58,8 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
-        return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
+        return (toInsert.getItem() instanceof ArrowItem || toInsert.is(ModTags.QUIVER_WHITELIST)) &&
+                !toInsert.is(ModTags.QUIVER_BLACKLIST);
     }
 }
 
