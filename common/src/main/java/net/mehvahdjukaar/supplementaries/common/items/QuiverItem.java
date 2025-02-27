@@ -57,7 +57,8 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
-        return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
+        return (toInsert.getItem() instanceof ArrowItem || toInsert.is(ModTags.QUIVER_WHITELIST)) &&
+                !toInsert.is(ModTags.QUIVER_BLACKLIST);
     }
 
     //this is cap, cap provider
