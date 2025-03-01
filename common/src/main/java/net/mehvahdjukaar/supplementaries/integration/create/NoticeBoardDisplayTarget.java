@@ -1,14 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
-import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -33,7 +31,6 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
 
                 WrittenBookContent content = book.get(DataComponents.WRITTEN_BOOK_CONTENT);
                 if(content != null){
-                    //TODO: add back
                     /*
                     boolean changed = false;
                     content.pages()
@@ -72,7 +69,7 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
 
     @Override
     public Component getLineOptionText(int line) {
-        return Lang.translateDirect("display_target.page", line + 1);
+        return CreateLang.translateDirect("display_target.page", line + 1);
     }
 
     private ItemStack signBook(ItemStack book) {

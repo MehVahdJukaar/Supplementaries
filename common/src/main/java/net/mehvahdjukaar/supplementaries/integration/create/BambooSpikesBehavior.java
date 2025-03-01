@@ -1,14 +1,15 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.content.contraptions.actors.plough.PloughBlock;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,15 +25,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class BambooSpikesBehavior implements MovementBehaviour {
 
-    public boolean isSameDir(MovementContext context) {
-        return VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(BambooSpikesBlock.FACING));
-    }
-
     @Override
-    public boolean renderAsNormalBlockEntity() {
-        return true;
+    public boolean isActive(MovementContext context) {
+        return MovementBehaviour.super.isActive(context) && !isVecPointingTowards(context.relativeMotion, (context.state.getValue(BambooSpikesBlock.FACING)));
     }
 
+    //from VecHelper since i cant find where that class is from
+    public static boolean isVecPointingTowards(Vec3 vec, Direction direction) {
+        return Vec3.atLowerCornerOf(direction.getNormal()).dot(vec.normalize()) > 0.125;
+    }
 
     //@Override
     //public void visitNewPosition(MovementContext context, BlockPos pos) {
@@ -68,8 +69,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
                 if (!world.isClientSide) {
 
                     double pow = 5 * Math.pow(context.relativeMotion.length(), 0.4) + 1;
-                    float damage = !isSameDir(context) ? 1 :
-                            (float) Mth.clamp(pow, 2, 6);
+                    float damage = (float) Mth.clamp(pow, 2, 6);
                     entity.hurt(damageSource, damage);
                     this.doTileStuff(context, world, livingEntity);
                 }

@@ -163,8 +163,11 @@ dependencies {
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
     modCompileOnly("curse.maven:emi-580555:5704405")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
-    modCompileOnly("com.jozufozu.flywheel:flywheel-forge-$flywheel_forge_version")
-    modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
+    modImplementation ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
+    modImplementation("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
+    modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
+    modImplementation("net.createmod.ponder:Ponder-NeoForge-${ponder_version}")
+
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
     modCompileOnly("curse.maven:citadel-331936:4786380")

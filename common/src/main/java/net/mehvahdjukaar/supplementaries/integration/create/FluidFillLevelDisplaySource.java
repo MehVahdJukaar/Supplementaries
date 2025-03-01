@@ -4,11 +4,11 @@ import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
-import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidTankProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -18,7 +18,7 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {
         if (context.sourceConfig().getInt("Mode") == 2) {
             if (context.getSourceBlockEntity() instanceof ISoftFluidTankProvider tp) {
-                return Components.literal(tp.getSoftFluidTank().getFluidCount() + " mBtl");
+                return Component.literal(tp.getSoftFluidTank().getFluidCount() + " mBtl");
             }
         }
         return super.provideLine(context, stats);
@@ -50,8 +50,8 @@ public class FluidFillLevelDisplaySource extends PercentOrProgressBarDisplaySour
             builder.addSelectionScrollInput(
                     0,
                     120,
-                    (si, l) -> si.forOptions(Lang.translatedOptions("display_source.fill_level", "percent", "progress_bar", "fluid_amount"))
-                            .titled(Lang.translateDirect("display_source.fill_level.display")),
+                    (si, l) -> si.forOptions(CreateLang.translatedOptions("display_source.fill_level", "percent", "progress_bar", "fluid_amount"))
+                            .titled(CreateLang.translateDirect("display_source.fill_level.display")),
                     "Mode"
             );
         }

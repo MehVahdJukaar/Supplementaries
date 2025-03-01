@@ -1,13 +1,9 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.google.common.base.Suppliers;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.core.fluid.neoforge.SoftFluidInternalImpl;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;

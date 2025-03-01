@@ -1,16 +1,23 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllDisplaySources;
+import com.simibubi.create.AllDisplayTargets;
+import com.simibubi.create.Create;
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.simibubi.create.api.registry.CreateRegistries;
+import com.simibubi.create.content.contraptions.behaviour.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.content.logistics.filter.ItemAttribute;
-import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
-import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.target.LecternDisplayTarget;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.create.*;
@@ -19,8 +26,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
@@ -28,22 +37,27 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class CreateCompat {
 
+    public static final Supplier<ItemAttributeType> PRESENT_ATTRIBUTE = RegHelper.
+            register(Supplementaries.res("present_recipient"), PresentRecipientAttribute.Type::new,
+                    CreateRegistries.ITEM_ATTRIBUTE_TYPE);
+
     public static void setup() {
         try {
-            ItemAttribute.register(PresentRecipientAttribute.EMPTY);
+            MovementBehaviour.REGISTRY.register(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
+            MovementBehaviour.REGISTRY.register(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
 
-            AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
-            AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
-
+            //todo
+/*
             AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("notice_board_display_target"),
                     new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
 
-            DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
+            DisplayTarget textHolderTarget = AllDisplayBehaviours.register(
                     Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
 
             AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.WAY_SIGN_TILE.get());
@@ -83,7 +97,7 @@ public class CreateCompat {
             AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
                     Supplementaries.res("fluid_tank_source"),
                     new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
-
+*/
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
         }

@@ -1,4 +1,3 @@
-- fixed advancements
-- fixed some bugs with sus recipe
-- fixed awning recipes
-- fixed lunch basked model
+- disabled flywheel compat for now
+- disabled some create compat for now
+- 

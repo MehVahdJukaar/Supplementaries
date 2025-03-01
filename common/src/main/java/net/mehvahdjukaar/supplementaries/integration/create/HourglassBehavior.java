@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;

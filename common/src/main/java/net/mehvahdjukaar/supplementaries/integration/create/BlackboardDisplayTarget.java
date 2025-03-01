@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
-import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -23,12 +23,12 @@ public class BlackboardDisplayTarget extends DisplayTarget {
     @Override
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
         BlockEntity te = context.getTargetBlockEntity();
-        if (te instanceof BlackboardBlockTile tile && text.size() > 0 && !tile.isWaxed()) {
-            var source = context.getSourceBlockEntity();
+        if (te instanceof BlackboardBlockTile tile && !text.isEmpty() && !tile.isWaxed()) {
+            BlockEntity source = context.getSourceBlockEntity();
             if (!parseText(text.get(0).getString(), tile)) {
                 ItemStack copyStack = CreateCompat.getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                 if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
-                var pixels = BlackboardData.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
+                var pixels = BlackboardData.unpackPixelsFromStringWhiteOnly(text.getFirst().getString());
                 tile.setPixels(BlackboardData.unpackPixels(pixels));
             }
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);

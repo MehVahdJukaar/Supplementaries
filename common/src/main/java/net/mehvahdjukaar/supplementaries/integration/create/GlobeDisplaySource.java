@@ -4,14 +4,13 @@ import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.content.trains.display.FlapDisplaySection;
-import com.simibubi.create.foundation.utility.Components;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class GlobeDisplaySource extends SingleLineDisplaySource {
-    public static final MutableComponent EMPTY = Components.literal("--,--");
+    public static final MutableComponent EMPTY = Component.literal("--,--");
 
     @Override
     protected MutableComponent provideLine(DisplayLinkContext context, DisplayTargetStats stats) {

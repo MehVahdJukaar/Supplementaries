@@ -1,19 +1,13 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.hardcoded.ModelPart;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
+/*
 public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> implements DynamicInstance {
 
     private final TextureAtlasSprite texture;
@@ -72,4 +66,4 @@ public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> imp
                 .endCuboid()
                 .build();
     }
-}
+}*/

@@ -1,58 +1,64 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.api.instance.DynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.blockentity.BlockEntityInstance;
-import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.hardcoded.ModelPart;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.material.Material;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
+import dev.engine_room.flywheel.lib.material.CutoutShaders;
+import dev.engine_room.flywheel.lib.material.SimpleMaterial;
+import dev.engine_room.flywheel.lib.model.part.InstanceTree;
+import dev.engine_room.flywheel.lib.model.part.ModelTrees;
+import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
+import net.minecraft.client.model.ShulkerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> implements DynamicInstance {
-    private final TextureAtlasSprite texture;
-    private final ModelData center;
-    private final ModelData top;
-    private final ModelData bottom;
-    private final ModelData leather;
-    private final PoseStack stack;
+import java.util.function.Consumer;
+//todo
+/*
+public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile> implements SimpleDynamicVisual {
+    private static final Material MATERIAL = SimpleMaterial.builder()
+            .cutout(CutoutShaders.ONE_TENTH)
+            .texture(Sheets.SHULKER_SHEET)
+            .mipmap(false)
+            .backfaceCulling(false)
+            .build();
 
-    public BellowsInstance(MaterialManager materialManager, BellowsBlockTile tile) {
-        super(materialManager, tile);
+    private final InstanceTree instances;
+    private final InstanceTree center;
+    private final InstanceTree top;
+    private final InstanceTree bottom;
+    private final InstanceTree leather;
 
-        this.texture = ModMaterials.BELLOWS_MATERIAL.sprite();
-        Quaternionf rotation = this.getDirection().getRotation();
-        this.stack = new PoseStack();
+    public BellowsInstance(VisualizationContext ctx, BellowsBlockTile blockEntity, float partialTick) {
+        super(ctx, blockEntity, partialTick);
 
-        var p = this.getInstancePosition();
-        this.stack.translate(p.getX(), p.getY(), p.getZ());
-        this.stack.scale(0.9995F, 0.9995F, 0.9995F);
-        this.stack.translate(2.5E-4D, 2.5E-4D, 2.5E-4D);
-        this.stack.translate(0.5, 0.5, 0.5);
+      this.  instances = InstanceTree.create(instancerProvider(),
+                ModelTrees.of(ModelLayers.SHULKER, ModMaterials.BELLOWS_MATERIAL, MATERIAL));
 
-        this.stack.mulPose(rotation);
-        this.stack.mulPose(RotHlpr.X90);
+      this.leather = instances.child("leather");
+        this.top = instances.child("top");
+        this.bottom = instances.child("bottom");
+        this.center = instances.child("center");
 
-        this.center = this.makeCenterInstance().setTransform(this.stack);
-        this.stack.translate(-0.5, -0.5, -0.5);
-
-        this.leather = this.makeLeatherInstance().setTransform(this.stack);
-        this.top = this.makeTopInstance().setTransform(this.stack);
-        this.bottom = this.makeBottomInstance().setTransform(this.stack);
-
-        this.stack.translate(0.5, 0.5, 0.5);
     }
 
+
     @Override
-    public void beginFrame() {
-        float dh = blockEntity.getHeight(AnimationTickHolder.getPartialTicks());
+    public void beginFrame(Context context) {
+
+        float dh = blockEntity.getHeight(context.partialTick());
 
         this.stack.pushPose();
 
@@ -77,86 +83,30 @@ public class BellowsInstance extends BlockEntityInstance<BellowsBlockTile> imple
         this.leather.setTransform(this.stack);
 
         this.stack.popPose();
-
     }
 
     @Override
-    public void remove() {
-        this.top.delete();
-        this.leather.delete();
-        this.center.delete();
-        this.bottom.delete();
+    protected void _delete() {
+        this.instances.delete();
     }
 
     @Override
-    public void updateLight() {
-        this.relight(this.pos, this.top, this.center, this.leather, this.bottom);
-    }
-
-    private ModelData makeTopInstance() {
-        return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("top_" + this.blockEntity.getType(), this::makeLidModel).createInstance();
-    }
-
-    private ModelData makeBottomInstance() {
-        return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("bottom_" + this.blockEntity.getType(), this::makeLidModel).createInstance();
-    }
-
-    private ModelData makeLeatherInstance() {
-        return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("leather_" + this.blockEntity.getType(), this::makeLeatherModel).createInstance();
-    }
-
-    private ModelData makeCenterInstance() {
-        return this.materialManager.defaultCutout().material(Materials.TRANSFORMED)
-                .model("center_" + this.blockEntity.getType(), this::makeCenterModel).createInstance();
-    }
-
-    private ModelPart makeLeatherModel() {
-        return ModelPart.builder("bellows_leather", 64, 64)
-                .sprite(this.texture)
-                .cuboid()
-                .textureOffset(0, 37)
-                .start(-7.0F, -5.0F, -7.0F)
-                .size(14.0F, 10.0F, 14.0F)
-                .endCuboid()
-                .build();
-    }
-
-    private ModelPart makeLidModel() {
-        return ModelPart.builder("bellows_lid", 64, 64)
-                .sprite(this.texture)
-                .cuboid()
-                .textureOffset(0, 0)
-                .start(-8.0F, 5.0F, -8.0F)
-                .size(16.0F, 3.0F, 16.0F)
-                .endCuboid()
-                .build();
-    }
-
-    private ModelPart makeCenterModel() {
-        return ModelPart.builder("bellows_center", 64, 64)
-                .sprite(this.texture)
-                .cuboid()
-                .textureOffset(0, 0)
-                .start(-2.0F, -2.0F, -8.0F)
-                .size(4.0F, 1.0F, 1.0F)
-                .endCuboid()
-                .cuboid()
-                .textureOffset(0, 2)
-                .start(-2.0F, 1.0F, -8.0F)
-                .size(4.0F, 1.0F, 1.0F)
-                .endCuboid()
-                .cuboid()
-                .textureOffset(0, 19)
-                .start(-8.0F, -1.0F, -8.0F)
-                .size(16.0F, 2.0F, 16.0F)
-                .endCuboid()
-                .build();
+    public void updateLight(float v) {
+        int packedLight = computePackedLight();
+        instances.traverse(instance -> {
+            instance.light(packedLight)
+                    .setChanged();
+        });
     }
 
     private Direction getDirection() {
         return this.blockState.getValue(BellowsBlock.FACING);
     }
-}
+
+    @Override
+    public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
+        instances.traverse(consumer);
+    }
+
+
+}*/
