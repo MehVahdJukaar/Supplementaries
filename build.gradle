@@ -207,11 +207,24 @@ allprojects {
             url = "https://maven.jamieswhiteshirt.com/libs-release"
             content { includeGroup("com.jamieswhiteshirt") }
         }
+        maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
+        maven { url = "https://mvn.devos.one/snapshots" } // Registrate
+        maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
+        maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
+        maven { url = "https://maven.theillusivec4.top/" } // Curios API
+        maven { url = "https://maven.squiddev.cc" } // CC: Tweaked
+        maven { url = "https://www.cursemaven.com" }
+        maven { url = "https://api.modrinth.com/maven" }
+        maven { url = "https://maven.saps.dev/releases" } // FTB Mods
+        maven { url = "https://maven.architectury.dev" } // Arch API
+        maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config api port, needed by ponder
         maven { url = "https://maven.tterrag.com/" } // Flywheel
         maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
         maven { url = "https://mvn.devos.one/releases/" }
         maven { url = "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
-
+        maven {
+            url = "https://maven.createmod.net/"
+        }
     }
 
     tasks.withType(JavaCompile) {

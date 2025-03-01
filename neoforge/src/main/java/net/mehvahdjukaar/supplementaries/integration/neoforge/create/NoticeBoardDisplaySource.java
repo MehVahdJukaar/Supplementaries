@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;

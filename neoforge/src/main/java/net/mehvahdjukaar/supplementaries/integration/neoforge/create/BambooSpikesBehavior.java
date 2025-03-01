@@ -1,12 +1,12 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.actors.plough.PloughBlock;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
+import net.mehvahdjukaar.supplementaries.integration.neoforge.CreateCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,7 +62,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
             if (entity instanceof Player player && player.isCreative()) continue;
             if (entity instanceof AbstractMinecart)
                 for (Entity passenger : entity.getIndirectPassengers())
-                    if (CreateCompat. isContraption(context, passenger))
+                    if (CreateCompatImpl. isContraption(context, passenger))
                         continue Entities;
             //attack entities
             if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
@@ -98,7 +98,7 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         if (!this.isOnCooldown(world, lastTicked)) {
             DUMMY.loadWithComponents(com, world.registryAccess());
             if (DUMMY.interactWithEntity(le, world)) {
-               CreateCompat. changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
+               CreateCompatImpl. changeState(context, context.state.setValue(BambooSpikesBlock.TIPPED, false));
             }
             com = DUMMY.saveWithFullMetadata(world.registryAccess());
             lastTicked = world.getGameTime();

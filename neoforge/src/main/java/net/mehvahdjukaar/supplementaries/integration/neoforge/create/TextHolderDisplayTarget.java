@@ -1,9 +1,10 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -15,7 +16,7 @@ public class TextHolderDisplayTarget extends DisplayTarget {
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
         BlockEntity te = context.getTargetBlockEntity();
         if (te instanceof ITextHolderProvider th) {
-            var textHolder = th.getTextHolder();
+            TextHolder textHolder = th.getTextHolder();
             boolean changed = false;
 
             for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {

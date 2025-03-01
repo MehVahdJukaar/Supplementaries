@@ -1,36 +1,30 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.material.Material;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.material.CutoutShaders;
 import dev.engine_room.flywheel.lib.material.SimpleMaterial;
 import dev.engine_room.flywheel.lib.model.part.InstanceTree;
 import dev.engine_room.flywheel.lib.model.part.ModelTrees;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
 import dev.engine_room.flywheel.lib.visual.SimpleDynamicVisual;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
-import net.minecraft.client.model.ShulkerModel;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 
 import java.util.function.Consumer;
-//todo
-/*
+
 public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile> implements SimpleDynamicVisual {
     private static final Material MATERIAL = SimpleMaterial.builder()
             .cutout(CutoutShaders.ONE_TENTH)
-            .texture(Sheets.SHULKER_SHEET)
+            .texture(TextureAtlas.LOCATION_BLOCKS)
             .mipmap(false)
             .backfaceCulling(false)
             .build();
@@ -44,10 +38,10 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
     public BellowsInstance(VisualizationContext ctx, BellowsBlockTile blockEntity, float partialTick) {
         super(ctx, blockEntity, partialTick);
 
-      this.  instances = InstanceTree.create(instancerProvider(),
-                ModelTrees.of(ModelLayers.SHULKER, ModMaterials.BELLOWS_MATERIAL, MATERIAL));
+        this.instances = InstanceTree.create(instancerProvider(),
+                ModelTrees.of(ClientRegistry.BELLOWS_MODEL, ModMaterials.BELLOWS_MATERIAL, MATERIAL));
 
-      this.leather = instances.child("leather");
+        this.leather = instances.child("leather");
         this.top = instances.child("top");
         this.bottom = instances.child("bottom");
         this.center = instances.child("center");
@@ -60,6 +54,7 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
 
         float dh = blockEntity.getHeight(context.partialTick());
 
+        /*
         this.stack.pushPose();
 
         this.stack.translate(0, -1 + (3 / 16d) - dh, 0);
@@ -83,6 +78,8 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
         this.leather.setTransform(this.stack);
 
         this.stack.popPose();
+
+         */
     }
 
     @Override
@@ -109,4 +106,4 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
     }
 
 
-}*/
+}

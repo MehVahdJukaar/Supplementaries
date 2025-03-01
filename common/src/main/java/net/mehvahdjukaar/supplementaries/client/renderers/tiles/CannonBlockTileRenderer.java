@@ -50,7 +50,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                        int packedLight, int packedOverlay) {
 
         CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
-        if (CompatHandler.FLYWHEEL && FlywheelCompat.isActive()) return;
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);

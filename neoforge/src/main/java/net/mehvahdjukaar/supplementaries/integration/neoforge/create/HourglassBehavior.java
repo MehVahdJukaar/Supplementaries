@@ -1,16 +1,14 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
-import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
+import net.mehvahdjukaar.supplementaries.integration.neoforge.CreateCompatImpl;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -24,6 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.UnaryOperator;
 
@@ -40,7 +40,7 @@ public class HourglassBehavior implements MovementBehaviour {
         UnaryOperator<Vec3> rot = context.rotation;
         BlockState state = context.state;
         Direction dir = state.getValue(HourGlassBlock.FACING);
-        Rotation rotation = CreateCompat.isClockWise(rot, dir);
+        Rotation rotation = CreateCompatImpl.isClockWise(rot, dir);
 
         CompoundTag com = context.blockEntityData;
         this.sandData = HourglassTimeData.EMPTY;
@@ -73,7 +73,7 @@ public class HourglassBehavior implements MovementBehaviour {
         com.putFloat("PrevProgress", prevProgress);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
         float partialTicks = 1;

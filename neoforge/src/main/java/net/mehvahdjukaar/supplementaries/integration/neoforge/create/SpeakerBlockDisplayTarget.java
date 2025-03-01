@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -14,9 +14,9 @@ public class SpeakerBlockDisplayTarget extends DisplayTarget {
     @Override
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
         BlockEntity te = context.getTargetBlockEntity();
-        if (te instanceof SpeakerBlockTile tile && text.size() > 0) {
+        if (te instanceof SpeakerBlockTile tile && !text.isEmpty()) {
             reserve(line, te, context);
-            tile.setMessage(text.get(0));
+            tile.setMessage(text.getFirst());
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
         }
     }

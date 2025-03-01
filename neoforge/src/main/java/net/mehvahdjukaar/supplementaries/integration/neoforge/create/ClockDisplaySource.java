@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.create;
+package net.mehvahdjukaar.supplementaries.integration.neoforge.create;
 
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.SingleLineDisplaySource;
@@ -6,13 +6,13 @@ import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStat
 import com.simibubi.create.content.trains.display.FlapDisplaySection;
 import com.simibubi.create.foundation.gui.ModularGuiLineBuilder;
 import com.simibubi.create.foundation.utility.CreateLang;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class ClockDisplaySource extends SingleLineDisplaySource {
     public static final MutableComponent EMPTY_TIME = Component.literal("--:--");
@@ -28,7 +28,7 @@ public class ClockDisplaySource extends SingleLineDisplaySource {
                 int dayTime = (int) (sLevel.getDayTime() % 24000L);
                 int hours = (dayTime / 1000 + 6) % 24;
                 int minutes = dayTime % 1000 * 60 / 1000;
-                MutableComponent suffix = CreateLang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"));
+                MutableComponent suffix =  CreateLang.translateDirect("generic.daytime." + (hours > 11 ? "pm" : "am"));
                 minutes = minutes / 5 * 5;
                 if (c12) {
                     hours %= 12;
@@ -65,7 +65,7 @@ public class ClockDisplaySource extends SingleLineDisplaySource {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void initConfigurationWidgets(DisplayLinkContext context, ModularGuiLineBuilder builder, boolean isFirstLine) {
         super.initConfigurationWidgets(context, builder, isFirstLine);
         if (!isFirstLine) {
