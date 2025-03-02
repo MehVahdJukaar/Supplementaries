@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    {"id":"forge:concrete_powders","required":false},
+    {"id":"forge:concrete_powder","required":false},
+    {"id":"c:concrete_powder","required":false},
     {"id":"minecraft:white_concrete_powder","required":false},
     {"id":"minecraft:yellow_concrete_powder","required":false},
     {"id":"minecraft:orange_concrete_powder","required":false},
