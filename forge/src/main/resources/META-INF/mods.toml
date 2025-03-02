@@ -44,13 +44,6 @@ issueTrackerURL = "${mod_github}/issues"
     side = "BOTH"
 
 [[dependencies.supplementaries]]
-    modId = "farmersdelight"
-    mandatory = false
-    versionRange = "[1.19-1.2.0,]"
-    ordering = "AFTER"
-    side = "BOTH"
-
-[[dependencies.supplementaries]]
     modId = "quark"
     mandatory = false
     versionRange = "[1.19-3.4-404,]"

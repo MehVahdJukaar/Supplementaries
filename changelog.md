@@ -1,2 +1,2 @@
-- updated crete compat
-- temporairly disabled flywheel instances
+- fixed mod version not being bumped
+- fixed incorrect mod versioning in mods.toml
