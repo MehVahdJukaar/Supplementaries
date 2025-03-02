@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
-import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.CreateLang;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -68,7 +68,7 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
 
     @Override
     public Component getLineOptionText(int line) {
-        return Lang.translateDirect("display_target.page", line + 1);
+        return CreateLang.translateDirect("display_target.page", line + 1);
     }
 
     private ItemStack signBook(ItemStack book) {

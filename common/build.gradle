@@ -39,10 +39,13 @@ dependencies {
     modCompileOnly("curse.maven:curios-309927:4581099")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:emi-580555:5032425")
-    modCompileOnly("curse.maven:create-328085:4835191")
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("curse.maven:zeta-968868:5597406")
-    modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-${flywheel_fabric_version}")
+
+    modCompileOnly ("dev.engine-room.flywheel:flywheel-forge-${flywheel_forge_version}")
+    modCompileOnly("curse.maven:create-328085:6247663")
+    modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
+    modCompileOnly("net.createmod.ponder:Ponder-Forge-${ponder_version}")
 
     modImplementation("curse.maven:farmers-delight-398521:5051242")
     modImplementation("curse.maven:soul-fire-d-662413:5448803")

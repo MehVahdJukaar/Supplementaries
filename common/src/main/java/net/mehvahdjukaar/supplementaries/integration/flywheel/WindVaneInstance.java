@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
+/*
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
@@ -73,3 +74,4 @@ public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> imp
                 .build();
     }
 }
+ */

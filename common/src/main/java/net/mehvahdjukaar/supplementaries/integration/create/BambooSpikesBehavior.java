@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
-import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
+import net.createmod.catnip.math.VecHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
@@ -27,12 +27,6 @@ public class BambooSpikesBehavior implements MovementBehaviour {
     public boolean isSameDir(MovementContext context) {
         return VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(BambooSpikesBlock.FACING));
     }
-
-    @Override
-    public boolean renderAsNormalBlockEntity() {
-        return true;
-    }
-
 
     //@Override
     //public void visitNewPosition(MovementContext context, BlockPos pos) {

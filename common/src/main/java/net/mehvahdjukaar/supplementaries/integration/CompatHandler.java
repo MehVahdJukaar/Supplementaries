@@ -120,6 +120,7 @@ public class CompatHandler {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
+        if (CREATE) CreateCompat.init();
         if (ENDERGETIC) EndergeticCompat.init();
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();

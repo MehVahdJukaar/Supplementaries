@@ -1,10 +1,15 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
-import com.simibubi.create.content.logistics.filter.ItemAttribute;
+import com.mojang.serialization.MapCodec;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +24,13 @@ public class PresentRecipientAttribute implements ItemAttribute {
     }
 
     @Override
-    public boolean appliesTo(ItemStack itemStack) {
+    public boolean appliesTo(ItemStack itemStack, Level level) {
         return readRecipient(itemStack).equals(recipient);
     }
 
     @Override
-    public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        String name = readRecipient(itemStack);
-        List<ItemAttribute> atts = new ArrayList<>();
-        if(name.length() > 0) {
-            atts.add(new PresentRecipientAttribute(name));
-        }
-        return atts;
+    public ItemAttributeType getType() {
+        return CreateCompat.PRESENT_ATTRIBUTE.get();
     }
 
     @Override
@@ -44,27 +44,46 @@ public class PresentRecipientAttribute implements ItemAttribute {
     }
 
     @Override
-    public void writeNBT(CompoundTag compoundTag) {
+    public void save(CompoundTag compoundTag) {
         compoundTag.putString("recipient", this.recipient);
     }
 
     @Override
-    public ItemAttribute readNBT(CompoundTag compoundTag) {
-        return new PresentRecipientAttribute(compoundTag.getString("recipient"));
+    public void load(CompoundTag compoundTag) {
+        this.recipient = compoundTag.getString("recipient");
 
     }
-    private String readRecipient(ItemStack itemStack) {
+
+    private static String readRecipient(ItemStack itemStack) {
         String name;
         if (itemStack.getItem() instanceof PresentItem) {
             var t = itemStack.getTagElement("BlockEntityTag");
-            if (t != null){
+            if (t != null) {
                 name = t.getString("Recipient");
-                if (name != PresentBlockTile.PUBLIC_KEY)
-                {
+                if (!name.equals(PresentBlockTile.PUBLIC_KEY)) {
                     return name;
                 }
             }
         }
         return "";
+    }
+
+
+    public static class Type implements ItemAttributeType {
+        @Override
+        public @NotNull ItemAttribute createAttribute() {
+            return new PresentRecipientAttribute(PresentBlockTile.PUBLIC_KEY);
+        }
+
+        @Override
+        public List<ItemAttribute> getAllAttributes(ItemStack itemStack, Level level) {
+            String name = readRecipient(itemStack);
+            List<ItemAttribute> atts = new ArrayList<>();
+            if (!name.isEmpty()) {
+                atts.add(new PresentRecipientAttribute(name));
+            }
+            return atts;
+        }
+
     }
 }
