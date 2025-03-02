@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.function.Consumer;
 
@@ -35,6 +36,10 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
     private final InstanceTree bottom;
     private final InstanceTree leather;
 
+    private final Matrix4f initialPose;
+
+    private float lastProgress = Float.NaN;
+
     public BellowsInstance(VisualizationContext ctx, BellowsBlockTile blockEntity, float partialTick) {
         super(ctx, blockEntity, partialTick);
 
@@ -46,6 +51,19 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
         this.bottom = instances.child("bottom");
         this.center = instances.child("center");
 
+
+        initialPose = createInitialPose();
+    }
+
+    private Matrix4f createInitialPose() {
+        var visualPosition = getVisualPosition();
+        var rotation = getDirection().getRotation();
+        return new Matrix4f().translate(visualPosition.getX(), visualPosition.getY(), visualPosition.getZ())
+                .translate(0.5f, 0.5f, 0.5f)
+                .scale(0.9995f)
+                .rotate(rotation)
+                .scale(1, -1, -1)
+                .translate(0, -1, 0);
     }
 
 

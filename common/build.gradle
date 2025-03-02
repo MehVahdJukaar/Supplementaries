@@ -43,7 +43,7 @@ dependencies {
     modCompileOnly("curse.maven:zeta-968868:5597406")
 
     modCompileOnly ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
-    // modImplementation("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
+    modCompileOnly("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
     // modCompileOnly("net.createmod.ponder:Ponder-NeoForge-${ponder_version}")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
