@@ -16,7 +16,7 @@ import java.util.Optional;
 public class ColoredMarker extends MLMapMarker<ColoredDecoration> {
 
     public static final MapCodec<ColoredMarker> DIRECT_CODEC = RecordCodecBuilder.mapCodec(i ->
-            baseCodecGroup(i).and(DyeColor.CODEC.fieldOf("Color").forGetter(m -> m.color)
+            baseCodecGroup(i).and(DyeColor.CODEC.fieldOf("color").forGetter(m -> m.color)
             ).apply(i, ColoredMarker::new));
 
     private final DyeColor color;
@@ -37,7 +37,6 @@ public class ColoredMarker extends MLMapMarker<ColoredDecoration> {
                 Optional.empty(), false, color);
     }
 
-    @Nullable
     @Override
     public ColoredDecoration doCreateDecoration(byte mapX, byte mapY, byte rot) {
         return new ColoredDecoration(this.getType(), mapX, mapY, rot, this.name, this.color);
