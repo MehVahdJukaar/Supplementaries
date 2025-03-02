@@ -1,1 +1,2 @@
-- made some book rendering code more resiliant workaround for some unresolved issues
+- updated crete compat
+- temporairly disabled flywheel instances

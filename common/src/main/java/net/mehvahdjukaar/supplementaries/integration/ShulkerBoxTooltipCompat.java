@@ -25,7 +25,7 @@ public class ShulkerBoxTooltipCompat implements ShulkerBoxTooltipApi {
     }
 
     @ExpectPlatform
-    public static void registerPlugin() {
+    public static void init() {
         throw new AssertionError();
     }
 

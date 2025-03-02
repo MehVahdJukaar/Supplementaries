@@ -63,12 +63,6 @@ public class SupplementariesForge {
         event.enqueueWork(ModSetup::setup);
         ModSetup.asyncSetup();
         VillagerScareStuff.setup();
-
-        event.enqueueWork(() -> {
-            if (CompatHandler.SHULKER_BOX_TOOLTIP) {
-                ShulkerBoxTooltipCompat.registerPlugin();
-            }
-        });
     }
 
     @SubscribeEvent

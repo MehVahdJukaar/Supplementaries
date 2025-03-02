@@ -114,6 +114,7 @@ public class CompatHandler {
     public static void setup() {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
+
     }
 
     public static void initOptionalRegistries() {
@@ -126,6 +127,8 @@ public class CompatHandler {
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (SOUL_FIRED) SoulFiredCompat.init();
+        if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.init();
+
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 
