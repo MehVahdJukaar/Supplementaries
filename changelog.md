@@ -1,2 +1,2 @@
-- disabled flywheel compat for now
-- disabled some create compat for now
+- fixed versioning
+- disabled create compat on fabric until new 6.0 version is out for fabric too

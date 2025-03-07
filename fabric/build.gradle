@@ -60,7 +60,7 @@ dependencies {
     modCompileOnly ("dev.engine-room.flywheel:flywheel-fabric-${flywheel_fabric_version}")
 
 
-    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5887378")
+    modImplementation("curse.maven:farmers-delight-refabricated-993166:5887378")
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
