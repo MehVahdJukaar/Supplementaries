@@ -1,7 +1,47 @@
 import os
 import json
 
-def process_neoforge_condition(condition):
+def convert_to_fabric_condition(condition):
+    new_cond = {}
+    # If a "condition" key exists, use it to create "type"
+    if "type" in condition:
+        val = condition["type"]
+        if isinstance(val, str):
+            new_cond["condition"] = val.replace("neoforge:", "fabric:")
+        else:
+            new_cond["condition"] = val
+    # Process remaining keys
+    for key, value in condition.items():
+        if key == "type":
+            continue  # skip original
+        # Process recursively if needed
+        if isinstance(value, dict):
+            new_value = convert_to_fabric_condition(value)
+        elif isinstance(value, list):
+            new_list = []
+            for item in value:
+                if isinstance(item, dict):
+                    new_list.append(convert_to_neoforge_condition(item))
+                elif isinstance(item, str):
+                    new_list.append(item.replace("neoforge:", "fabric:"))
+                else:
+                    new_list.append(item)
+            new_value = new_list
+        elif isinstance(value, str):
+            new_value = value.replace("neoforge:", "fabric:")
+        else:
+            new_value = value
+        new_cond[key] = new_value
+    # Reorder keys: ensure "type" is first if present
+    if "condition" in new_cond:
+        ordered = {"condition": new_cond["condition"]}
+        for k, v in new_cond.items():
+            if k != "condition":
+                ordered[k] = v
+        return ordered
+    return new_cond
+
+def convert_to_neoforge_condition(condition):
     """
     Recursively convert a condition object for neoforge:
     - If the dict has a "condition" key, use its value (with fabric:→neoforge: replacement) for the "type" key.
@@ -23,12 +63,12 @@ def process_neoforge_condition(condition):
             continue  # skip original
         # Process recursively if needed
         if isinstance(value, dict):
-            new_value = process_neoforge_condition(value)
+            new_value = convert_to_neoforge_condition(value)
         elif isinstance(value, list):
             new_list = []
             for item in value:
                 if isinstance(item, dict):
-                    new_list.append(process_neoforge_condition(item))
+                    new_list.append(convert_to_neoforge_condition(item))
                 elif isinstance(item, str):
                     new_list.append(item.replace("fabric:", "neoforge:"))
                 else:
@@ -72,22 +112,36 @@ def process_json_file(file_path):
             return
 
     modified = False
+
+    # if it has a top level "conditions" key, replace it with "neoforge:conditions"
+    if "conditions" in data:
+        data["neoforge:conditions"] = data.pop("conditions")
+        modified = True
+
     # Only process if at least one of the keys exists.
     if "fabric:load_conditions" in data or "neoforge:conditions" in data:
         # Leave fabric:load_conditions untouched.
         # For neoforge:conditions, generate/update it based on fabric if needed.
         if "fabric:load_conditions" in data and "neoforge:conditions" not in data:
             data["neoforge:conditions"] = [
-                process_neoforge_condition(cond)
+                convert_to_neoforge_condition(cond)
                 for cond in data["fabric:load_conditions"]
             ]
             modified = True
+
         if "neoforge:conditions" in data:
             data["neoforge:conditions"] = [
-                process_neoforge_condition(cond)
+                convert_to_neoforge_condition(cond)
                 for cond in data["neoforge:conditions"]
             ]
             modified = True
+
+        if "neoforge:conditions" in data:
+             data["fabric:load_conditions"] = [
+                 convert_to_fabric_condition(cond)
+                 for cond in data["neoforge:conditions"]
+             ]
+             modified = True
 
     if modified:
         # Reorder top-level keys before writing back.
