@@ -182,12 +182,17 @@ public class MapLightHandler {
             int minX = counter.minDirtyX;
             int maxX = counter.maxDirtyX;
             int minZ = counter.minDirtyZ;
+            int maxZ = counter.maxDirtyZ;
             Int2ObjectArrayMap<byte[]> lights = new Int2ObjectArrayMap<>();
-            if (data != null) {
+
+            if (data != null && ((minX != maxX) || (minZ != maxZ))) {
                 for (int x = minX; x <= maxX; x++) {
+                    byte[] rowData = new byte[maxZ - minZ + 1];
+                    // we need to send a contiguous array. send empty when no data is thee
                     if (data[x] != null) {
-                        lights.put(x, data[x]);
+                        System.arraycopy(data[x], minZ, rowData, 0, rowData.length);
                     }
+                    lights.put(x, rowData);
                 }
             } else {
                 minZ = 0;

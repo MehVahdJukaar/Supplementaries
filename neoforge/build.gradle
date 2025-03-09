@@ -162,7 +162,7 @@ dependencies {
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
     modCompileOnly("curse.maven:emi-580555:5704405")
 
-    modImplementation("curse.maven:create-328085:6247669")
+    modImplementation("curse.maven:create-328085:6271847")
     modImplementation("curse.maven:forge-config-api-port-fabric-547434:5982385")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modImplementation ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")

@@ -1,10 +1,5 @@
 {
 	"icon": "supplementaries:gui/slots/key",
 	"replace": false,
-	"amount": 1,
-	"order": 8,
-	"drop_rule": "default",
-	"validator_predicates": ["trinkets:tag"],
-	"quick_move_predicates": ["trinkets:all"],
-	"tooltip_predicates": ["trinkets:all"]
+	"amount": 1
 }

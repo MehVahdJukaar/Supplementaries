@@ -11,6 +11,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TntBlock;
 
 public class FireBehaviorsManager {
@@ -52,7 +53,7 @@ public class FireBehaviorsManager {
 
         TrappedPresentBlock.registerBehavior(ModRegistry.HAT_STAND.get(), new SkibidiBehavior());
 
-        var nuke = CompatObjects.NUKE_BLOCK.get();
+        Block nuke = CompatObjects.NUKE_BLOCK.get();
         if (nuke != null) {
             TrappedPresentBlock.registerBehavior(nuke, tnt);
         }

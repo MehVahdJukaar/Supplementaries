@@ -54,7 +54,7 @@ def convert_to_neoforge_condition(condition):
     if "condition" in condition:
         val = condition["condition"]
         if isinstance(val, str):
-            new_cond["type"] = val.replace("fabric:", "neoforge:")
+            new_cond["type"] = val.replace("forge:", "neoforge:").replace("fabric:", "neoforge:")
         else:
             new_cond["type"] = val
     # Process remaining keys
@@ -70,12 +70,12 @@ def convert_to_neoforge_condition(condition):
                 if isinstance(item, dict):
                     new_list.append(convert_to_neoforge_condition(item))
                 elif isinstance(item, str):
-                    new_list.append(item.replace("fabric:", "neoforge:"))
+                    new_list.append(item.replace("forge:", "neoforge:").replace("fabric:", "neoforge:"))
                 else:
                     new_list.append(item)
             new_value = new_list
         elif isinstance(value, str):
-            new_value = value.replace("fabric:", "neoforge:")
+            new_value = value.replace("forge:", "neoforge:").replace("fabric:", "neoforge:")
         else:
             new_value = value
         new_cond[key] = new_value
@@ -112,6 +112,11 @@ def process_json_file(file_path):
             return
 
     modified = False
+
+    # replace "result": {"item"...} with "result": {"id"...}
+    if "result" in data and "item" in data["result"]:
+        data["result"]["id"] = data["result"].pop("item")
+        modified = True
 
     # if it has a top level "conditions" key, replace it with "neoforge:conditions"
     if "conditions" in data:

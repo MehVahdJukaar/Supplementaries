@@ -1,2 +1,1 @@
-- fixed versioning
-- disabled create compat on fabric until new 6.0 version is out for fabric too
+- fixed colored map data not working properly and a related rare crash with it

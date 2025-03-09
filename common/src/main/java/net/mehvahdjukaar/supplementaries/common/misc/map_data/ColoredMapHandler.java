@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_data;
 
+import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -301,7 +302,7 @@ public class ColoredMapHandler {
                         provider.lookupOrThrow(Registries.BIOME).get(
                                         resourceKey)
                                 .ifPresent(b -> biomesIndexesPalette.add(i, b));
-                    }catch (Exception error){
+                    } catch (Exception error) {
                         Supplementaries.error();
                     }
                 }
@@ -379,12 +380,12 @@ public class ColoredMapHandler {
             if (pos && data != null && ((minX != maxX) || (minZ != maxZ))) {
                 positions = new Int2ObjectArrayMap<>();
                 for (int x = minX; x <= maxX; x++) {
+                    byte[] rowData = new byte[maxZ - minZ + 1];
+                    //we need to send a contiguous array
                     if (data[x] != null) {
-                        byte[] rowData = new byte[maxZ - minZ + 1];
-
                         System.arraycopy(data[x], minZ, rowData, 0, rowData.length);
-                        positions.put(x, rowData);
                     }
+                    positions.put(x, rowData);
                 }
             }
             return new Patch(minX, maxX, minZ, Optional.ofNullable(positions),
@@ -412,12 +413,7 @@ public class ColoredMapHandler {
                     }
 
                     byte[] rowData = positions.get(x);
-                    if (rowData != null) { //TODO:change. this cant happen!!! but it does how??
-                        System.arraycopy(rowData, 0, data[x], minZ, rowData.length);
-                    } else {
-                        Supplementaries.error();
-                        Supplementaries.LOGGER.error("Null row data in color data");
-                    }
+                    System.arraycopy(Preconditions.checkNotNull(rowData), 0, data[x], minZ, rowData.length);
                 }
             }
             if (patch.biomes.isPresent()) {
@@ -639,11 +635,7 @@ public class ColoredMapHandler {
                     for (int i = 0; i < size; i++) {
                         int x = buf.readVarInt();
                         byte[] rowData = buf.readByteArray();
-                        if (rowData == null) {
-                            Supplementaries.error();
-                            //TODO: figure out why this can be null
-                            int aa = 1;
-                        } else positions.put(x, rowData);
+                        positions.put(x, rowData);
                     }
                 }
 

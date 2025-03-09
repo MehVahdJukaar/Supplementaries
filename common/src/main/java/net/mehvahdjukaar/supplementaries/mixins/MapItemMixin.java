@@ -136,7 +136,7 @@ public abstract class MapItemMixin {
             var l = colorMap.get().get(new Vector2i(x, z));
             if (l != null) {
                 Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l.getSecond()), Blocks.AIR);
-                var c = ColoredMapHandler.getColorData(data);
+                ColoredMapHandler.ColorData c = ColoredMapHandler.getColorData(data);
                 c.markColored(x, z, block, level, l.getFirst(), data);
             }
         }
