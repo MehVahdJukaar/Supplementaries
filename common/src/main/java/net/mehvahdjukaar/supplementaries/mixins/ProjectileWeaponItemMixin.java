@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -50,7 +51,7 @@ public abstract class ProjectileWeaponItemMixin {
             var data = quiverStack.get(ModComponents.QUIVER_CONTENT.get());
             if (data != null) {
                 ItemStack arrow = data.getSelected(isAmmo);
-                if (!arrow.isEmpty()) cir.setReturnValue(arrow);
+                if (!arrow.isEmpty()) cir.setReturnValue(arrow.copyWithCount(1));
             }
         }
     }
@@ -68,7 +69,7 @@ public abstract class ProjectileWeaponItemMixin {
         if (shooter instanceof Player p && !p.getInventory().hasAnyMatching(s -> s == ammo)) {
             var q = QuiverItem.findActiveQuiver(shooter);
             if (!q.isEmpty()) {
-                var data = q.get(ModComponents.QUIVER_CONTENT.get());
+                QuiverContent data = q.get(ModComponents.QUIVER_CONTENT.get());
                 if (data != null) {
                     ItemStack selectedCopy = data.getSelected();
                     var mutable = data.toMutable();

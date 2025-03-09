@@ -130,7 +130,7 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void suppl$readSlimedTicks(net.minecraft.nbt.CompoundTag compound, CallbackInfo ci) {
-        if (compound.contains("supplementaries:slimed_ticks")) {
+            if (compound.contains("supplementaries:slimed_ticks")) {
             this.supp$setSlimedTicks(compound.getInt("supplementaries:slimed_ticks"), true);
         }
     }
