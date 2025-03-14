@@ -303,6 +303,7 @@ public class ColoredMapHandler {
                                         resourceKey)
                                 .ifPresent(b -> biomesIndexesPalette.add(i, b));
                     } catch (Exception error) {
+                        Supplementaries.LOGGER.error("Error loading biome palette index {} with id {}", i, id, error);
                         Supplementaries.error();
                     }
                 }
@@ -340,7 +341,7 @@ public class ColoredMapHandler {
                     for (int i = 0; i < biomesIndexesPalette.size(); i++) {
                         CompoundTag biomeTag = new CompoundTag();
                         biomeTag.putByte("index", (byte) i);
-                        biomeTag.putString("id", biomesIndexesPalette.get(i).toString());
+                        biomeTag.putString("id", biomesIndexesPalette.get(i).getRegisteredName());
                         biomesList.add(biomeTag);
                     }
                     tag.put("biomes", biomesList);
