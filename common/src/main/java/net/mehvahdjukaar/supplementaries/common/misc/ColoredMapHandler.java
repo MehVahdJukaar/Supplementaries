@@ -335,6 +335,11 @@ public class ColoredMapHandler {
             return true;
         }
 
+        //@Override
+        public boolean persistOnRescale() {
+            return false;
+        }
+
         @Override
         public Type<?> getType() {
             return COLOR_DATA;
