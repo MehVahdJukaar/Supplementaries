@@ -173,7 +173,9 @@ dependencies {
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
     modCompileOnly("curse.maven:citadel-331936:4786380")
-    modImplementation("curse.maven:immediatelyfast-686911:5861162")
+   // modImplementation("curse.maven:immediatelyfast-686911:5861162")
+    modImplementation("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
+
     modCompileOnly("curse.maven:cyanide-541676:4824162")
     modImplementation("curse.maven:embeddium-908741:5681729")
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-neoforge")
