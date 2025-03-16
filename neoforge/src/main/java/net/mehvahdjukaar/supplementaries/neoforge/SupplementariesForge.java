@@ -31,11 +31,12 @@ public class SupplementariesForge {
     public static WeakReference<IEventBus> modBus;
 
     public SupplementariesForge(IEventBus bus) {
+        bus.register(this);
+
         modBus = new WeakReference<>(bus);
         RegHelper.startRegisteringFor(bus);
         Supplementaries.commonInit();
 
-        bus.register(this);
         CapabilityHandler.init(bus);
 
         ServerEventsForge.init();
