@@ -43,7 +43,7 @@ dependencies {
     modCompileOnly("curse.maven:zeta-968868:5597406")
 
     modCompileOnly ("dev.engine-room.flywheel:flywheel-forge-${flywheel_forge_version}")
-    modCompileOnly("curse.maven:create-328085:6271934")
+    modCompileOnly("curse.maven:create-328085:6302736")
     modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
     modCompileOnly("net.createmod.ponder:Ponder-Forge-${ponder_version}")
 

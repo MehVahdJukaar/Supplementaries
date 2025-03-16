@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.forge;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.configs.forge.ConfigSpecWrapper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.events.forge.ClientEventsForge;
@@ -20,11 +21,14 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import org.violetmoon.zetaimplforge.event.load.ForgeZConfigChange;
 
 import java.util.function.Supplier;
 
@@ -36,10 +40,10 @@ public class SupplementariesForge {
 
 
     public SupplementariesForge() {
-        Supplementaries.commonInit();
-
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.register(this);
+
+        Supplementaries.commonInit();
 
         ServerEventsForge.init();
         VillagerScareStuff.init();
@@ -51,7 +55,6 @@ public class SupplementariesForge {
 
         LOOT_MODIFIERS.register(bus);
     }
-
 
     @SubscribeEvent
     public void registerCapabilities(RegisterCapabilitiesEvent event) {

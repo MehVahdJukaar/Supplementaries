@@ -23,6 +23,7 @@
     "CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "CrossbowMixin",
+    "DumbFabricShapedRecipeMixin",
     "FireBlockAccessor",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",
