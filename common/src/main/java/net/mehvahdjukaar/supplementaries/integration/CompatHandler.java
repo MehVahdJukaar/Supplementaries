@@ -128,6 +128,8 @@ public class CompatHandler {
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (COMPUTERCRAFT) CCCompat.init();
+        if (CURIOS) CuriosCompat.init();
+        if (TRINKETS) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

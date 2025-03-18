@@ -21,6 +21,10 @@ import java.util.List;
 public class CuriosCompat {
 
 
+    public static void init(){
+
+    }
+
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
         List<SlotResult> found = CuriosApi.getCuriosHelper().findCurios(player, i ->
                 i.is(ModTags.KEYS) || i.getItem() instanceof KeyItem);

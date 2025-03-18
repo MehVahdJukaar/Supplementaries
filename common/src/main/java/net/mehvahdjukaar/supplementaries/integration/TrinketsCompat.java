@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketInventory;
@@ -15,12 +13,15 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class TrinketsCompat {
+
+    public static void init(){
+
+    }
 
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
 

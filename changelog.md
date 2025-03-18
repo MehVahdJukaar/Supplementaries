@@ -1,1 +1,2 @@
-- fixed colored map data not working properly and a related rare crash with it
+fixed a crash with trinket slot and quiver
+fixed cabin log stairs models
