@@ -721,7 +721,7 @@ public class CommonConfigs {
                             "mna:chimerite_crystal", "botania:floating_flower", ",minecraft:mushroom", "botania:mushroom",
                             "botania:tall_mystical_flower", "botania:petal_block", "morered:network_cable",
                             "xycraft_world:glowing_shiny_aurey_block", "xycraft_world:shiny_aurey_block", "xycraft_world:rgb_lamp",
-                            "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
+                            "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole", "dye_depot:dye_basket"));
             SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
                     .defineObject("special_blocks", () -> Map.of(
                                     BlockPredicate.create("sticky_piston"), new ResourceLocation("piston"),
