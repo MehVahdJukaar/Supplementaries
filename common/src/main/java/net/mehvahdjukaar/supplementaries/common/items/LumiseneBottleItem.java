@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -67,6 +68,7 @@ public class LumiseneBottleItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        VibeChecker.assertSameLevel(level, player);
         var ret = super.use(level, player, usedHand);
         if (ret.getResult().consumesAction()) {
             return ret;

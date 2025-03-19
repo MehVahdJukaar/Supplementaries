@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
@@ -50,6 +51,8 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
+
         ItemStack itemstack = player.getItemInHand(hand);
 
         int charges = this.getCharges(itemstack);

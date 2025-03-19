@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.DepthDataHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -18,6 +19,8 @@ public class EmptySliceMapItem extends EmptyMapItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        VibeChecker.assertSameLevel(level, player);
+
         ItemStack itemStack = player.getItemInHand(usedHand);
         if (level.isClientSide) {
             return InteractionResultHolder.success(itemStack);

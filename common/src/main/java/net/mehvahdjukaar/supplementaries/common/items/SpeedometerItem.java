@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.network.chat.Component;
@@ -60,8 +61,9 @@ public class SpeedometerItem extends Item {
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (world.isClientSide) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
+        if (level.isClientSide) {
             calculateSpeed(player, player);
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));

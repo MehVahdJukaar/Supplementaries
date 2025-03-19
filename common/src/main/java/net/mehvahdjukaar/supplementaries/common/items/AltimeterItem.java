@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -17,6 +18,7 @@ public class AltimeterItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        VibeChecker.assertSameLevel(level, player);
         if (level.isClientSide && ClientConfigs.Items.DEPTH_METER_CLICK.get()) {
             player.displayClientMessage(Component.translatable("message.supplementaries.altimeter", player.blockPosition().getY()), true);
             player.swing(usedHand);

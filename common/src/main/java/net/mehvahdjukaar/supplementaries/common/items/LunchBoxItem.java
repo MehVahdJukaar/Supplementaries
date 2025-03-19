@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRend
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
@@ -59,7 +60,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
         ItemStack basket = player.getItemInHand(hand);
         var data = basket.get(getComponentType());
         if (data != null && data.canEatFrom()) {
@@ -68,14 +70,14 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
                 return InteractionResultHolder.fail(basket);
             }
             player.setItemInHand(hand, food);
-            var result = food.use(pLevel, player, hand);
+            var result = food.use(level, player, hand);
             ((LivingEntityAccessor) player).setUseItem(basket);
             player.setItemInHand(hand, basket);
 
 
             return new InteractionResultHolder<>(result.getResult(), basket);
         }
-        return super.use(pLevel, player, hand);
+        return super.use(level, player, hand);
     }
 
     @Override

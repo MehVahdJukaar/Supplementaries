@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -46,6 +47,7 @@ public class SoapItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
         ItemStack stack = player.getItemInHand(hand);
         // clean self
         if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {

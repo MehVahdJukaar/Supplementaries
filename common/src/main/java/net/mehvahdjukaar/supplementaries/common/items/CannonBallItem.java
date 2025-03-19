@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -19,21 +20,21 @@ public class CannonBallItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
+        VibeChecker.assertSameLevel(level, player);
+        if (!PlatHelper.isDev() || !player.isCreative()) return super.use(level, player, handIn);
+        ItemStack itemstack = player.getItemInHand(handIn);
+        if (!level.isClientSide) {
 
-        if (!PlatHelper.isDev() || !playerIn.isCreative()) return super.use(worldIn, playerIn, handIn);
-        ItemStack itemstack = playerIn.getItemInHand(handIn);
-        if (!worldIn.isClientSide) {
-
-            CannonBallEntity bombEntity = new CannonBallEntity( playerIn);
-            float pitch = -10;//playerIn.isSneaking()?0:-20;
-            bombEntity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(),
+            CannonBallEntity bombEntity = new CannonBallEntity( player);
+            float pitch = -10;//player.isSneaking()?0:-20;
+            bombEntity.shootFromRotation(player, player.getXRot(), player.getYRot(),
                     pitch, bombEntity.getDefaultShootVelocity(), 1);
-            worldIn.addFreshEntity(bombEntity);
+            level.addFreshEntity(bombEntity);
         }
 
 
-        return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
 }

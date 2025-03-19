@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankVi
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -142,11 +143,12 @@ public class JarItem extends AbstractMobContainerItem   {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
-        if (this.getUseDuration(playerEntity.getItemInHand(hand), playerEntity) != 0) {
-            return ItemUtils.startUsingInstantly(world, playerEntity, hand);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
+        if (this.getUseDuration(player.getItemInHand(hand), player) != 0) {
+            return ItemUtils.startUsingInstantly(level, player, hand);
         }
-        return super.use(world, playerEntity, hand);
+        return super.use(level, player, hand);
     }
 
     @Override

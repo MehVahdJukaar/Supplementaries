@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -21,9 +23,11 @@ public class SugarCubeItem extends BlockItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        var v = player.getVehicle();
+        VibeChecker.assertSameLevel(level, player);
+
+        Entity v = player.getVehicle();
         if (v instanceof Horse horse && CommonConfigs.Building.SUGAR_BLOCK_HORSE_SPEED_DURATION.get() != 0) {
-            var stack = player.getItemInHand(usedHand);
+            ItemStack stack = player.getItemInHand(usedHand);
             horse.fedFood(player, stack);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }

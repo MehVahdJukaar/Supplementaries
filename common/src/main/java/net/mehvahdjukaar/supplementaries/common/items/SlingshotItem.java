@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEnchantments;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -151,7 +152,8 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
         ItemStack itemstack = player.getItemInHand(hand);
         boolean flag = this.getAllSupportedProjectiles().test(player.getProjectile(itemstack));
 
@@ -161,7 +163,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             player.startUsingItem(hand);
             player.level().playSound(player, player,
                     getChargeSound(itemstack), SoundSource.PLAYERS, 1.0F,
-                    1 * (1.0F / (world.random.nextFloat() * 0.3F + 0.9F)));
+                    1 * (1.0F / (level.random.nextFloat() * 0.3F + 0.9F)));
             return InteractionResultHolder.consume(itemstack);
         }
     }

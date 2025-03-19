@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundFluteParrotsPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -33,9 +34,10 @@ public abstract class SongInstrumentItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
         player.startUsingItem(hand);
-        if (!world.isClientSide) {
+        if (!level.isClientSide) {
             NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(player, new ClientBoundFluteParrotsPacket(player, true));
         }
         return InteractionResultHolder.consume(player.getItemInHand(hand));

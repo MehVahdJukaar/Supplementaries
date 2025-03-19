@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
+import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,6 +35,7 @@ public class LumiseneBucketItem extends BucketItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        VibeChecker.assertSameLevel(level, player);
         ItemStack itemStack = player.getItemInHand(usedHand);
         // changed here
 
