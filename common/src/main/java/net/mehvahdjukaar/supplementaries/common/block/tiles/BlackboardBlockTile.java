@@ -133,34 +133,34 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         for (var l : packed) {
             char c = 0;
             for (int k = 0; k < 4; k++) {
-				byte h = 0;
-				for(int j = 0; j < 4; j++) {
-					h = (byte)(h | ((l >> (j + (4 * k))) & 1));
-				}
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + (4 * k))) & 1));
+                }
                 c = (char) (c | (h << k));
             }
             char c1 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-				for(int j = 0; j < 4; j++) {
-					h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
-				}
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
+                }
                 c1 = (char) (c1 | (h << k));
             }
             char c2 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-				for(int j = 0; j < 4; j++) {
-					h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
-				}
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
+                }
                 c2 = (char) (c2 | (h << k));
             }
             char c3 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-				for(int j = 0; j < 4; j++) {
-					h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
-				}
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
+                }
                 c3 = (char) (c3 | (h << k));
             }
             builder.append(c).append(c1).append(c2).append(c3);
@@ -177,13 +177,13 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
 
     public static long[] unpackPixelsFromString(String packed) {
         long[] unpacked = unpackPixelsFromStringWhiteOnly(packed);
-		if (packed.length() <= 64)
-			return unpacked;
+        if (packed.length() <= 64) {
+            return unpacked;
+        }
         var chars = packed.substring(64).toCharArray();
         int j = 0;
         for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
-            unpacked[j] = (unpacked[j] << 3) | (unpacked[j] << 2) | (unpacked[j] << 1);
-			unpacked[j] = unpacked[j] & ((long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i]);
+            unpacked[j] = (unpacked[j] * 15) & ((long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i]);
             j++;
         }
         return unpacked;
