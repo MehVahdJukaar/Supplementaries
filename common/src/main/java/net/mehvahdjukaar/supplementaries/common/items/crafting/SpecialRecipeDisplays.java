@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.utils.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -116,9 +117,9 @@ public class SpecialRecipeDisplays {
         String group = "supplementaries.soap";
 
         for (String k : BlocksColorAPI.getBlockKeys()) {
-            if (!CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(k)) {
+            Item out = BlocksColorAPI.getColoredItem(k, null);
+            if (out != null && SoapWashableHelper.canCleanColor(out)) {
                 var n = BlocksColorAPI.getItemHolderSet(k);
-                Item out = BlocksColorAPI.getColoredItem(k, null);
                 if (n == null || out == null) continue;
 
                 Ingredient ing = n.unwrap().map(Ingredient::of, l ->
