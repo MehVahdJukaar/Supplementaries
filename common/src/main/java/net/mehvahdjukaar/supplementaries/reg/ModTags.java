@@ -51,6 +51,7 @@ public class ModTags {
     public static final TagKey<Block> FAST_FALL_ROPES = blockTag("fast_fall_climbable");
     public static final TagKey<Block> BOUNCY_BLOCKS = blockTag("bouncy_blocks");
     public static final TagKey<Block> TURN_TABLE_CANT_SHUFFLE = blockTag("turn_table_cant_shuffle");
+    public static final TagKey<Block> SOAP_BLACKLIST_BLOCK = blockTag("non_cleanable");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
@@ -78,6 +79,7 @@ public class ModTags {
     public static final TagKey<Item> QUIVER_WHITELIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
     public static final TagKey<Item> LUNCH_BASKET_BLACKLIST = itemTag("lunch_basket_blacklist");
+    public static final TagKey<Item> SOAP_BLACKLIST_ITEM = itemTag("non_cleanable");
 
     public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
 
