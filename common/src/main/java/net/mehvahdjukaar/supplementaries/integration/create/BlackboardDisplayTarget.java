@@ -27,7 +27,7 @@ public class BlackboardDisplayTarget extends DisplayTarget {
             if (!parseText(text.get(0).getString(), tile)) {
                 ItemStack copyStack = CreateCompat.getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                 if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
-                var pixels = BlackboardBlockTile.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
+                var pixels = CommonConfigs.Building.BLACKBOARD_COLOR.get() ? BlackboardBlockTile.unpackPixelsFromString(text.get(0).getString()) : BlackboardBlockTile.unpackPixelsFromStringWhiteOnly(text.get(0).getString());
                 tile.setPixels(BlackboardBlockTile.unpackPixels(pixels));
             }
             context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
