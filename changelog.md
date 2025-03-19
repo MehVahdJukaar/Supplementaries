@@ -1,2 +1,3 @@
-fixed a crash with trinket slot and quiver
-fixed cabin log stairs models
+- improved create integration blackboard display target to work with colored blackboards
+- fixed pancake song not being in mono
+- improved some error handling

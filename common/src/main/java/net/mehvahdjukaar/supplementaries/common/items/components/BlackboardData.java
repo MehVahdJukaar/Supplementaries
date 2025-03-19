@@ -192,34 +192,6 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         return bytes;
     }
 
-    public static long[] unpackPixelsFromStringWhiteOnly(String packed) {
-        long[] unpacked = new long[16];
-        var chars = packed.toCharArray();
-        int j = 0;
-        for (int i = 0; i + 3 < chars.length; i += 4) {
-            long l = 0;
-            char c = chars[i];
-            for (int k = 0; k < 4; k++) {
-                l = l | (((c >> k) & 1) << 4 * k);
-            }
-            char c2 = chars[i + 1];
-            for (int k = 0; k < 4; k++) {
-                l = l | ((long) ((c2 >> k) & 1) << (16 + (4 * k)));
-            }
-            char c3 = chars[i + 2];
-            for (int k = 0; k < 4; k++) {
-                l = l | ((long) ((c3 >> k) & 1) << (32 + (4 * k)));
-            }
-            char c4 = chars[i + 3];
-            for (int k = 0; k < 4; k++) {
-                l = l | ((long) ((c4 >> k) & 1) << (48 + (4 * k)));
-            }
-            unpacked[j] = l;
-            j++;
-        }
-        return unpacked;
-    }
-
     public static String packPixelsToStringWhiteOnly(long[] packed) {
         StringBuilder builder = new StringBuilder();
         for (var l : packed) {
@@ -246,6 +218,96 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
             builder.append(c).append(c1).append(c2).append(c3);
         }
         return builder.toString();
+    }
+
+    //string length = 16*4+64 = 128
+    public static String packPixelsToString(long[] packed) {
+        StringBuilder builder = new StringBuilder();
+        for (var l : packed) {
+            char c = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + (4 * k))) & 1));
+                }
+                c = (char) (c | (h << k));
+            }
+            char c1 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
+                }
+                c1 = (char) (c1 | (h << k));
+            }
+            char c2 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
+                }
+                c2 = (char) (c2 | (h << k));
+            }
+            char c3 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
+                }
+                c3 = (char) (c3 | (h << k));
+            }
+            builder.append(c).append(c1).append(c2).append(c3);
+        }
+        for (var l : packed) {
+            char a = (char) (l & Character.MAX_VALUE);
+            char b = (char) (l >> 16 & Character.MAX_VALUE);
+            char c = (char) (l >> 32 & Character.MAX_VALUE);
+            char d = (char) (l >> 48 & Character.MAX_VALUE);
+            builder.append(a).append(b).append(c).append(d);
+        }
+        return builder.toString();
+    }
+
+    public static long[] unpackPixelsFromString(String packed) {
+        long[] unpacked = unpackPixelsFromStringWhiteOnly(packed);
+        if (packed.length() <= 64)
+            return unpacked;
+        var chars = packed.substring(64).toCharArray();
+        int j = 0;
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
+            unpacked[j] = (unpacked[j] << 3) | (unpacked[j] << 2) | (unpacked[j] << 1);
+            unpacked[j] = unpacked[j] & ((long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i]);
+            j++;
+        }
+        return unpacked;
+    }
+
+    public static long[] unpackPixelsFromStringWhiteOnly(String packed) {
+        long[] unpacked = new long[16];
+        var chars = packed.toCharArray();
+        int j = 0;
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
+            long l = 0;
+            char c = chars[i];
+            for (int k = 0; k < 4; k++) {
+                l = l | (((c >> k) & 1) << 4 * k);
+            }
+            char c2 = chars[i + 1];
+            for (int k = 0; k < 4; k++) {
+                l = l | ((long) ((c2 >> k) & 1) << (16 + (4 * k)));
+            }
+            char c3 = chars[i + 2];
+            for (int k = 0; k < 4; k++) {
+                l = l | ((long) ((c3 >> k) & 1) << (32 + (4 * k)));
+            }
+            char c4 = chars[i + 3];
+            for (int k = 0; k < 4; k++) {
+                l = l | ((long) ((c4 >> k) & 1) << (48 + (4 * k)));
+            }
+            unpacked[j] = l;
+            j++;
+        }
+        return unpacked;
     }
 
 }
