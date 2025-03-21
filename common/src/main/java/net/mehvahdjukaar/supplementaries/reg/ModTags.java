@@ -78,6 +78,7 @@ public class ModTags {
     public static final TagKey<Item> QUIVER_WHITELIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
     public static final TagKey<Item> LUNCH_BASKET_BLACKLIST = itemTag("lunch_basket_blacklist");
+    public static final TagKey<Item> WEAPON_PROJECTILE_OVERLAY_BLACKLIST = itemTag("weapon_projectile_overlay_blacklist");
 
     public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
 

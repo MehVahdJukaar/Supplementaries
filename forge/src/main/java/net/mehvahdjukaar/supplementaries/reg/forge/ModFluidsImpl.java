@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg.forge;
 
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.forge.LumiseneFluidRenderPropertiesImpl;
 import net.mehvahdjukaar.supplementaries.common.items.LumiseneBottleItem;
@@ -19,6 +20,11 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
