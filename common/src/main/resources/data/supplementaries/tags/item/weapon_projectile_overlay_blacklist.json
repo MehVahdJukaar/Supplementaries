@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"create:potato_cannon","required":false}
+  ]
+}

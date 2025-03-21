@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -33,6 +34,7 @@ public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
 
     @Override
     public boolean render(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
+        if (stack.is(ModTags.WEAPON_PROJECTILE_OVERLAY_BLACKLIST)) return false;
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (player != null && (player.getMainHandItem() == stack || player.getOffhandItem() == stack)) {

@@ -101,6 +101,7 @@ dependencies {
 
     if (isMyPc) {
         modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+        modImplementation("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
     } else {
         modImplementation("curse.maven:selene-499980:5878698")
     }
@@ -116,6 +117,7 @@ dependencies {
     modCompileOnly("curse.maven:amendments-896746:5692774")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
+    modImplementation("curse.maven:forgified-fabric-api-889079:6289153")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:5714512")
     modCompileOnly("curse.maven:curios-309927:5296876")
@@ -135,10 +137,10 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
-    modCompileOnly("curse.maven:supplementaries-squared-838411:5130385")
+    //modImplementation("curse.maven:supplementaries-squared-838411:6282223")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
-    modImplementation("curse.maven:legendary-tooltips-532127:5591027")
+    //modImplementation("curse.maven:legendary-tooltips-532127:5591027")
     modImplementation("curse.maven:prism-lib-638111:5625115")
     modImplementation("curse.maven:iceberg-520110:5804224")
     modCompileOnly("curse.maven:balm-531761:4757228")
