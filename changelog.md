@@ -1,2 +1,3 @@
 - added a tag blacklist for projectile overlay
 - fixed cabin siding model
+- added soap blacklist tag
