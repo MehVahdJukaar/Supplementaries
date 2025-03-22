@@ -50,6 +50,13 @@ issueTrackerURL = "${mod_github}/issues"
     ordering = "AFTER"
     side = "BOTH"
 
+[[dependencies.supplementaries]]
+    modId = "create"
+    mandatory = false
+    versionRange = "[6.0.0,]"
+    ordering = "AFTER"
+    side = "BOTH"
+
 ["lithium:options"]
     mixin.block.moving_block_shapes = false
 
