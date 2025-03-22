@@ -60,7 +60,7 @@ issueTrackerURL = "${mod_github}/issues"
     modId = "create"
     mandatory = false
     versionRange = "[6.0.0,]"
-    ordering = "AFTER"
+    ordering = "NONE"
     side = "BOTH"
 
 
