@@ -1,2 +1,2 @@
-- fixed mod version not being bumped
-- fixed incorrect mod versioning in mods.toml
+- added a tag blacklist for projectile overlay
+- fixed cabin siding model

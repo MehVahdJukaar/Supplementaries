@@ -127,6 +127,7 @@ dependencies {
     modImplementation ("curse.maven:configured-457570:5180900")
     modCompileOnly ("curse.maven:amendments-896746:5692774")
     modImplementation ("curse.maven:athena-841890:5176879")
+    modImplementation ("curse.maven:forgified-fabric-api-889079:6169304")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 
@@ -149,7 +150,7 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
-    modCompileOnly("curse.maven:supplementaries-squared-838411:5130385")
+    modImplementation("curse.maven:supplementaries-squared-838411:5130385")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modCompileOnly("curse.maven:legendary-tooltips-532127:5591027")
@@ -170,7 +171,7 @@ dependencies {
     modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
 
     modImplementation ("dev.engine-room.flywheel:flywheel-forge-${flywheel_forge_version}")
-    modImplementation("curse.maven:create-328085:6302736")
+    modImplementation("curse.maven:create-328085:6323270")
     modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
     modImplementation("net.createmod.ponder:Ponder-Forge-${ponder_version}")
 

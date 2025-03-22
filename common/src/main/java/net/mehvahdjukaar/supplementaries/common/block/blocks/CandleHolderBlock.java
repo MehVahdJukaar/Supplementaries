@@ -96,7 +96,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             int2ObjectMap.put(4, List.of(new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.8125), new Vec3(0.1875, 0.8125, 0.8125)));
             temp.put(AttachFace.CEILING, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
             EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> newFaceMap = new EnumMap<>(AttachFace.class);
             for (var faceList : temp.entrySet()) {
                 Int2ObjectMap<List<Vec3>> newCandleList = new Int2ObjectArrayMap<>();
@@ -184,10 +184,10 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return switch (state.getValue(FACE)) {
             case FLOOR -> SHAPE_FLOOR;
             case WALL -> switch (state.getValue(FACING)) {
-                default -> SHAPE_WALL_NORTH;
                 case SOUTH -> SHAPE_WALL_SOUTH;
                 case WEST -> SHAPE_WALL_WEST;
                 case EAST -> SHAPE_WALL_EAST;
+                default -> SHAPE_WALL_NORTH;
             };
             case CEILING -> SHAPE_CEILING;
         };

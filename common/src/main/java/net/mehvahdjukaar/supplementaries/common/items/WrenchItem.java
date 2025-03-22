@@ -157,7 +157,6 @@ public class WrenchItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        VibeChecker.assertSameLevel(level, player);
         return super.use(level, player, usedHand);
     }
 }
