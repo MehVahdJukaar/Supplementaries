@@ -7,12 +7,14 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,6 +23,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class SoapWashableHelper {
+
+    public static boolean canCleanColor(Block block) {
+        if (block.builtInRegistryHolder().is(ModTags.SOAP_BLACKLIST_BLOCK)) return false;
+        return !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(block));
+    }
+
+    public static boolean canCleanColor(Item item) {
+        if (item.builtInRegistryHolder().is(ModTags.SOAP_BLACKLIST_ITEM)) return false;
+        return !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item));
+    }
 
     //support: waxed, forge waxed, copper, IW stuff
     public static boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {
@@ -140,8 +152,7 @@ public class SoapWashableHelper {
         Block newColor = BlocksColorAPI.changeColor(state.getBlock(), null);
 
         if (newColor != null) {
-            if (CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get()
-                    .contains(BlocksColorAPI.getKey(state.getBlock()))) return false;
+            if (!canCleanColor(state.getBlock())) return false;
 
             //TODO: add back
             if (state.getBlock() instanceof BedBlock) {

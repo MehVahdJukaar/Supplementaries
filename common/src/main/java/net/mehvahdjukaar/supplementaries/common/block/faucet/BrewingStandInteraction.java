@@ -37,8 +37,8 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
                 var opt = SoftFluidStack.fromItem(stack);
                 if (opt != null) {
                     ItemStack remainder = (stack.getItem().hasCraftingRemainingItem() ?
-                            Items.GLASS_BOTTLE.getDefaultInstance() :
-                            ForgeHelper.getCraftingRemainingItem(stack).get());
+                            ForgeHelper.getCraftingRemainingItem(stack).get() :
+                            Items.GLASS_BOTTLE.getDefaultInstance());
                     brewingStand.setItem(i, remainder);
                     tile.setChanged();
                     return;

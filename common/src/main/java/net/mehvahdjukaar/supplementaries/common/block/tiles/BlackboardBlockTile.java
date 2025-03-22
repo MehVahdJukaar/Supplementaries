@@ -127,9 +127,44 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         return bytes;
     }
 
-    //string length = 16*4 = 64
+    //string length = 16*4+64 = 128
     public static String packPixelsToString(long[] packed) {
         StringBuilder builder = new StringBuilder();
+        for (var l : packed) {
+            char c = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + (4 * k))) & 1));
+                }
+                c = (char) (c | (h << k));
+            }
+            char c1 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
+                }
+                c1 = (char) (c1 | (h << k));
+            }
+            char c2 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
+                }
+                c2 = (char) (c2 | (h << k));
+            }
+            char c3 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for(int j = 0; j < 4; j++) {
+                    h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
+                }
+                c3 = (char) (c3 | (h << k));
+            }
+            builder.append(c).append(c1).append(c2).append(c3);
+        }
         for (var l : packed) {
             char a = (char) (l & Character.MAX_VALUE);
             char b = (char) (l >> 16 & Character.MAX_VALUE);
@@ -141,11 +176,14 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public static long[] unpackPixelsFromString(String packed) {
-        long[] unpacked = new long[16];
-        var chars = packed.toCharArray();
+        long[] unpacked = unpackPixelsFromStringWhiteOnly(packed);
+        if (packed.length() <= 64) {
+            return unpacked;
+        }
+        var chars = packed.substring(64).toCharArray();
         int j = 0;
-        for (int i = 0; i + 3 < chars.length; i += 4) {
-            unpacked[j] = (long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i];
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
+            unpacked[j] = (unpacked[j] * 15) & ((long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i]);
             j++;
         }
         return unpacked;
@@ -155,7 +193,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         long[] unpacked = new long[16];
         var chars = packed.toCharArray();
         int j = 0;
-        for (int i = 0; i + 3 < chars.length; i += 4) {
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
             long l = 0;
             char c = chars[i];
             for (int k = 0; k < 4; k++) {
