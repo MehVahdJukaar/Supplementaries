@@ -455,7 +455,7 @@
   "message.supplementaries.compass": "X: %d, Z: %d",
   "message.supplementaries.death_marker": "Последняя смерть",
   "message.supplementaries.door.locked": "Эта дверь заперта",
-  "message.supplementaries.fluid_tooltip": "%s: %d mBtl",
+  "message.supplementaries.fluid_tooltip": "%s: %d мВ",
   "message.supplementaries.globe": "Продаётся странствующим торговцем",
   "message.supplementaries.hourglass": "Принимает любой песок, пыль или порошок",
   "message.supplementaries.jar": "Хранит миски, бутылочки, вёдра, печенье и мелких мобов",
