@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.UUID;
+
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock.colorToByte;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         IOnePlayerInteractable, IScreenProvider, IWaxable, IExtraModelDataProvider {
@@ -134,32 +138,32 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
             char c = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + (4 * k))) & 1));
                 }
                 c = (char) (c | (h << k));
             }
             char c1 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 16 + (4 * k))) & 1));
                 }
                 c1 = (char) (c1 | (h << k));
             }
             char c2 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 32 + (4 * k))) & 1));
                 }
                 c2 = (char) (c2 | (h << k));
             }
             char c3 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 48 + (4 * k))) & 1));
                 }
                 c3 = (char) (c3 | (h << k));
             }
@@ -332,6 +336,20 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         if (!this.isEditingPlayer(player)) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
+        }
+        //check if all pixels are non colored
+        if (!CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
+            byte black = colorToByte(DyeColor.BLACK);
+            byte white = colorToByte(DyeColor.WHITE);
+            for (byte[] pixel : pixels) {
+                for (byte b : pixel) {
+                    if (b != black && b != white) {
+                        Supplementaries.LOGGER.warn("Player {} just tried to change blackboard block with colored pixels",
+                                player.getName().getString());
+                        return false;
+                    }
+                }
+            }
         }
         if (!Arrays.deepEquals(pixels, this.pixels)) {
             level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
