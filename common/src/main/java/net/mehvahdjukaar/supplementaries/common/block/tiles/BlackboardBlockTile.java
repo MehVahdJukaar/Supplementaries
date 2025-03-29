@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -25,12 +26,15 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock.colorToByte;
 
 public class BlackboardBlockTile extends BlockEntity implements
         IOnePlayerInteractable, IScreenProvider, IWaxable, IGlowable, IExtraModelDataProvider {
@@ -185,6 +189,20 @@ public class BlackboardBlockTile extends BlockEntity implements
         if (!this.isEditingPlayer(player)) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
+        }
+        //check if all pixels are non colored
+        if (!CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
+            byte black = colorToByte(DyeColor.BLACK);
+            byte white = colorToByte(DyeColor.WHITE);
+            for (byte[] pixel : pixels) {
+                for (byte b : pixel) {
+                    if (b != black && b != white) {
+                        Supplementaries.LOGGER.warn("Player {} just tried to change blackboard block with colored pixels",
+                                player.getName().getString());
+                        return false;
+                    }
+                }
+            }
         }
         if (!data.hasSamePixels(pixels)) {
             level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
