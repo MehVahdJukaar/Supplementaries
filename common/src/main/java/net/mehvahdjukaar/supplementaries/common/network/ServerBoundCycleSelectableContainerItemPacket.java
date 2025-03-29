@@ -1,24 +1,19 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import it.crystalnest.soul_fire_d.network.CustomPacketPayload;
 import net.mehvahdjukaar.moonlight.api.platform.network.ChannelHandler;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-public record ServerBoundCycleSelectableContainerItemPacket(int amount,SlotReference slotReference, boolean setSlot)
+public record ServerBoundCycleSelectableContainerItemPacket(int amount, SlotReference slotReference, boolean setSlot)
         implements Message {
 
     public ServerBoundCycleSelectableContainerItemPacket(FriendlyByteBuf buf) {
-        this(buf.readInt(), SlotReference.decode(buf) ,buf.readBoolean());
+        this(buf.readInt(), SlotReference.decode(buf), buf.readBoolean());
     }
 
     public ServerBoundCycleSelectableContainerItemPacket(int amount, SlotReference slot) {
