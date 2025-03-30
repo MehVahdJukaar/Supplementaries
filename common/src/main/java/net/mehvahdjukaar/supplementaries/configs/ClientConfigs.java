@@ -165,7 +165,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CLOCK_CLICK;
         public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
-        public static final Supplier<List<String>> BOOK_COLORS;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
         public static final Supplier<Boolean> SHERDS_TOOLTIPS;
@@ -192,8 +191,6 @@ public class ClientConfigs {
             BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
                             "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
-            BOOK_COLORS = builder.comment("Placeable books random colors")
-                    .define("placeable_books_random_colors", BookPileBlockTile.DEFAULT_COLORS);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
                     .define("banner_pattern_tooltip", true);
             PAINTINGS_TOOLTIPS = builder.comment("Enables paintings tooltip image preview")

@@ -1,0 +1,12 @@
+{
+  "variants": [
+    {
+      "models": [
+        {
+          "model": "supplementaries:block/books/book_gene",
+          "color": "brown"
+        }
+      ]
+    }
+  ]
+}

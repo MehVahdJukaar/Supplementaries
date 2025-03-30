@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "written_books"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "horse_colors"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "written_books"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "horse_colors"
+    }
+  ],
+
+  "item": "horse_colors:gene_book",
+  "horizontal": true,
+  "enchant_power": 0.25,
+  "book_visuals": "supplementaries:gene_book"
+}

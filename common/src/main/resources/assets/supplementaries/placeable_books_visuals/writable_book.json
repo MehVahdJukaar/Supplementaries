@@ -1,0 +1,12 @@
+{
+  "variants": [
+    {
+      "models": [
+        {
+          "model": "supplementaries:block/books/writable_book",
+          "color": "brown"
+        }
+      ]
+    }
+  ]
+}

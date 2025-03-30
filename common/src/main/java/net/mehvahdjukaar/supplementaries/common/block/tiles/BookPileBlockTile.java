@@ -22,6 +22,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -79,35 +81,53 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public void saveAdditional(CompoundTag compound, HolderLookup.Provider registries) {
         super.saveAdditional(compound, registries);
-        compound.putFloat("EnchantPower", this.enchantPower);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.enchantPower = tag.getFloat("EnchantPower");
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
         }
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
-        super.setItem(slot, stack);
+    protected void applyImplicitComponents(DataComponentInput componentInput) {
+        //dumb because the component thing always overrides the tile content even when not set
+        NonNullList<ItemStack> itemsCopy = null;
+        if (componentInput.get(DataComponents.CONTAINER) == null) {
+            itemsCopy = this.getItems();
+            this.setItems(NonNullList.withSize(4, ItemStack.EMPTY));
+        }
+        super.applyImplicitComponents(componentInput);
+        this.setItems(itemsCopy);
+    }
+
+    @Override
+    public void onItemRemoved(Player player, ItemStack stack, int slot) {
+        super.onItemRemoved(player, stack, slot);
+        int actualBookCount = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        if (actualBookCount == 0) {
+            this.level.removeBlock(this.worldPosition, false);
+        }
+    }
+
+    //called on change... too soon
+    @Override
+    public void updateTileOnInventoryChanged() {
+        super.updateTileOnInventoryChanged();
 
         int actualBookCount = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
         if (actualBookCount != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
             if (actualBookCount == 0) {
-                if (this.lootTable == null) {
-                    this.level.removeBlock(this.worldPosition, false);
-                } else {
-                    //loot table mode
-                    return;
-                }
+                //Error?
+                return;
+
             } else {
-                //shifts books. Assumes at most one has been removed
-                //   consolidateBookPile();
-                //  this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, b), 2);
+                //  shifts books. Assumes at most one has been removed
+                // auto sets my block state when stuff changes
+                //    consolidateBookPile();
+                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, actualBookCount), 2);
             }
         }
         this.enchantPower = 0;
@@ -121,11 +141,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 this.enchantPower += type.enchantPower();
             }
         }
-    }
-
-    @Override
-    public void updateTileOnInventoryChanged() {
-        super.updateTileOnInventoryChanged();
     }
 
     private void consolidateBookPile() {
@@ -215,9 +230,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         }
 
     }
-
-    public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",
-            "red", "green", "lime", "cyan", "blue", "purple");
 
     public record BooksList(List<BookVisualData> books) {
         public BooksList() {

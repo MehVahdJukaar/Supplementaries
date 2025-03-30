@@ -1,0 +1,19 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "written_books"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "written_books"
+    }
+  ],
+
+  "item": "minecraft:written_book",
+  "horizontal": true,
+  "enchant_power": 0.25,
+  "book_visuals": "supplementaries:written_book"
+}

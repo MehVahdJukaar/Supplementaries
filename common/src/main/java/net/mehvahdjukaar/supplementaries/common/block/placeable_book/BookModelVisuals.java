@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
@@ -19,15 +20,14 @@ import java.util.List;
 import java.util.Objects;
 
 //client
-public record BookModelVisuals(ModelResourceLocation model, HSVColor color, float hueShift, boolean hasGlint,
-                               DataComponentMap itemComponents) {
+public record BookModelVisuals(ModelResourceLocation model, HSVColor color, float hueShift, boolean hasGlint) {
 
-    public BookModelVisuals(ModelResourceLocation res, int color, float hueShift, boolean hasGlint, DataComponentMap itemComponents) {
-        this(res, new RGBColor(color).asHSV(), hueShift, hasGlint, itemComponents);
+    public BookModelVisuals(ModelResourceLocation res, int color, float hueShift, boolean hasGlint) {
+        this(res, new RGBColor(color).asHSV(), hueShift, hasGlint);
     }
 
-    public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint, DataComponentMap itemComponents) {
-        this(res, color.getFireworkColor(), hueShift, hasGlint, itemComponents);
+    public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint) {
+        this(res, color.getFireworkColor(), hueShift, hasGlint);
     }
 
     public static final Codec<Either<Integer, DyeColor>> COLOR_CODEC = Codec.either(Codec.INT, DyeColor.CODEC);
@@ -37,18 +37,12 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
                     .fieldOf("model").forGetter(BookModelVisuals::model),
             COLOR_CODEC.optionalFieldOf("color", Either.left(-1)).forGetter(b -> Either.left(b.color.asRGB().toInt())),
             Codec.FLOAT.optionalFieldOf("hue_shift", 1f).forGetter(b -> b.hueShift),
-            Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookModelVisuals::hasGlint),
-            DataComponentMap.CODEC.optionalFieldOf("components", DataComponentMap.EMPTY)
-                    .forGetter(BookModelVisuals::itemComponents)
+            Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookModelVisuals::hasGlint)
     ).apply(instance,
-            (modelResourceLocation, color, aFloat, aBoolean, components) -> color.map(
-                    integer -> new BookModelVisuals(modelResourceLocation, integer, aFloat, aBoolean, components),
-                    dyeColor -> new BookModelVisuals(modelResourceLocation, dyeColor, aFloat, aBoolean, components)
+            (modelResourceLocation, color, aFloat, aBoolean) -> color.map(
+                    integer -> new BookModelVisuals(modelResourceLocation, integer, aFloat, aBoolean),
+                    dyeColor -> new BookModelVisuals(modelResourceLocation, dyeColor, aFloat, aBoolean)
             )));
-
-    public static final Codec<List<BookModelVisuals>> LIST_CODEC =
-            BookModelVisuals.CODEC.listOf().fieldOf("models").codec();
-
 
     //this could be redone
 //I think it allows darker non-saturated colors to have higher color shift
@@ -101,16 +95,32 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
         return diff < (other.hueShift + this.hueShift) / 2f;
     }
 
-    public boolean matchesComponents(DataComponentMap other) {
-        //check if all the keys in our component maps are present and same in the other
-        for (TypedDataComponent<?> entry : this.itemComponents) {
-            var type = entry.type();
-            var otherValue = other.get(type);
-            var myValue = entry.value();
-            if (!Objects.equals(myValue, otherValue)) {
-                return false;
+
+    public record VariantModelList(DataComponentMap itemComponents, List<BookModelVisuals> models) {
+        private static final Codec<VariantModelList> CODEC = RecordCodecBuilder.<VariantModelList>create(instance -> instance.group(
+                        DataComponentMap.CODEC.optionalFieldOf("item_components", DataComponentMap.EMPTY).forGetter(VariantModelList::itemComponents),
+                        BookModelVisuals.CODEC.listOf().fieldOf("models").forGetter(VariantModelList::models)
+                ).apply(instance, VariantModelList::new))
+                .validate(v -> {
+                    if (v.models.isEmpty()) {
+                        return DataResult.error(() -> "VariantModelList must have at least one model");
+                    }
+                    return DataResult.success(v);
+                });
+
+        public static final Codec<List<VariantModelList>> LIST_CODEC = VariantModelList.CODEC.listOf().fieldOf("variants").codec();
+
+        public boolean matchesComponents(DataComponentMap other) {
+            //check if all the keys in our component maps are present and same in the other
+            for (TypedDataComponent<?> entry : this.itemComponents) {
+                var type = entry.type();
+                var otherValue = other.get(type);
+                var myValue = entry.value();
+                if (!Objects.equals(myValue, otherValue)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
     }
 }

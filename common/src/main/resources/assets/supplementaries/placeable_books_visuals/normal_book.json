@@ -1,8 +1,44 @@
 {
-  "models": [
+  "variants": [
     {
-      "model": "supplementaries:block/books/book_brown",
-      "color": "brown"
+      "models": [
+        {
+          "model": "supplementaries:block/books/book_brown",
+          "color": "brown"
+        },
+        {
+          "model": "supplementaries:block/books/book_orange",
+          "color": "orange"
+        },
+        {
+          "model": "supplementaries:block/books/book_yellow",
+          "color": "yellow"
+        },
+        {
+          "model": "supplementaries:block/books/book_red",
+          "color": "red"
+        },
+        {
+          "model": "supplementaries:block/books/book_green",
+          "color": "green"
+        },
+        {
+          "model": "supplementaries:block/books/book_lime",
+          "color": "lime"
+        },
+        {
+          "model": "supplementaries:block/books/book_cyan",
+          "color": "cyan"
+        },
+        {
+          "model": "supplementaries:block/books/book_blue",
+          "color": "blue"
+        },
+        {
+          "model": "supplementaries:block/books/book_purple",
+          "color": "purple"
+        }
+      ]
     }
   ]
 }

@@ -40,7 +40,7 @@ public class BookPileHorizontalBlock extends BookPileBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public BookPileHorizontalBlock(Properties properties) {
-        super(properties);
+        super(properties, true);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false).setValue(BOOKS, 1));
     }

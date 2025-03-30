@@ -18,6 +18,8 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBookDataPacket;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.HolderLookup;
@@ -99,7 +101,7 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
     @Nullable
     public BookType get(Item item, boolean horizontal) {
         for (var entry : itemToBooks.get(item)) {
-            if (entry.isHorizontal() == horizontal) {
+            if (entry.isHorizontal() == horizontal || CommonConfigs.Tweaks.MIXED_BOOKS.get()) {
                 return entry;
             }
         }
@@ -160,5 +162,8 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
             if (gene != null) event.register(gene, verticalPlacement);
         }*/
     }
+
+    public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",
+            "red", "green", "lime", "cyan", "blue", "purple");
 
 }

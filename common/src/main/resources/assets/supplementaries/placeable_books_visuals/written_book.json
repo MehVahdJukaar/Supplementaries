@@ -1,0 +1,23 @@
+{
+  "variants": [
+    {
+      "models": [
+        {
+          "model": "supplementaries:block/books/book_tattered",
+          "color": "brown"
+        }
+      ],
+      "item_components": {
+        "supplementaries:antique_ink": {}
+      }
+    },
+    {
+      "models": [
+        {
+          "model": "supplementaries:block/books/book_written",
+          "color": "brown"
+        }
+      ]
+    }
+  ]
+}

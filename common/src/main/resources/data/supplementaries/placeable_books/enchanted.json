@@ -3,25 +3,17 @@
     {
       "condition": "supplementaries:flag",
       "flag": "placeable_books"
-    },
-    {
-      "condition": "fabric:mod_loaded",
-        "modid": "quark"
     }
   ],
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
       "flag": "placeable_books"
-    },
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "quark"
     }
   ],
 
-  "item": "quark:tome",
+  "item": "minecraft:enchanted_book",
   "enchant_power": 0.375,
   "horizontal": false,
-  "book_visuals": "supplementaries:tome"
+  "book_visuals": "supplementaries:enchanted_book"
 }
