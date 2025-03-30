@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
@@ -8,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IGlowable;
 import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
-import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
@@ -77,6 +77,7 @@ public class BlackboardBlockTile extends BlockEntity implements
             this.data = new BlackboardData(pixels, false, waxed);
         } else if (tag.contains("values")) {
             this.data = BlackboardData.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
+            this.requestModelReload();
         }
     }
 
@@ -186,7 +187,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (!this.isEditingPlayer(player)) {
+        if (!this.isEditingPlayer(player) || this.isWaxed()) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }

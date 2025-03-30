@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;

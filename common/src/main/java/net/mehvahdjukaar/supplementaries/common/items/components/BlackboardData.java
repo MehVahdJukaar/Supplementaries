@@ -22,6 +22,7 @@ import java.util.stream.LongStream;
 public class BlackboardData implements TooltipComponent, TooltipProvider {
 
     private static final Component WAXED_TOOLTIP = Component.translatable("message.supplementaries.blackboard").withStyle(ChatFormatting.GRAY);
+    private static final Component GLOW_TOOLTIP = Component.translatable("message.supplementaries.glowing").withStyle(ChatFormatting.GRAY);
     private static final int SIZE = 16;
 
 
@@ -110,6 +111,9 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
         if (waxed) {
             tooltipAdder.accept(WAXED_TOOLTIP);
+        }
+        if (glow) {
+            tooltipAdder.accept(GLOW_TOOLTIP);
         }
     }
 
@@ -227,32 +231,32 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
             char c = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + (4 * k))) & 1));
                 }
                 c = (char) (c | (h << k));
             }
             char c1 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 16 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 16 + (4 * k))) & 1));
                 }
                 c1 = (char) (c1 | (h << k));
             }
             char c2 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 32 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 32 + (4 * k))) & 1));
                 }
                 c2 = (char) (c2 | (h << k));
             }
             char c3 = 0;
             for (int k = 0; k < 4; k++) {
                 byte h = 0;
-                for(int j = 0; j < 4; j++) {
-                    h = (byte)(h | ((l >> (j + 48 + (4 * k))) & 1));
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 48 + (4 * k))) & 1));
                 }
                 c3 = (char) (c3 | (h << k));
             }

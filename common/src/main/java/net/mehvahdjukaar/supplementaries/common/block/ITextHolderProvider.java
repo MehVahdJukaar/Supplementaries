@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
+import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -76,6 +77,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
 
     @Override
     default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+        if (this.isWaxed()) return false;
         boolean filtering = player.isTextFilteringEnabled();
         for (int i = 0; i < this.textHoldersCount(); i++) {
             if (!this.getTextHolder(i).hasEditableText(filtering)) {
@@ -91,7 +93,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
 
         ItemInteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand, stack);
         if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
-            result = this.tryWaxing(level, pos, player, hand,stack);
+            result = this.tryWaxingWithItem(level, pos, player, stack);
         }
         if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
             if (!level.isClientSide && this instanceof BlockEntity te) {

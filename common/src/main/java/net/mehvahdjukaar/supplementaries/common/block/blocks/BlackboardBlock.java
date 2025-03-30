@@ -132,7 +132,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
 
             if (stack.getItem() instanceof BrushItem) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
-            ItemInteractionResult waxingRes = te.tryWaxing(level, pos, player, hand, stack);
+            ItemInteractionResult waxingRes = te.tryWaxingWithItem(level, pos, player, stack);
             if (waxingRes == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
                 waxingRes = te.tryGlowing(level, pos, player, hand, stack);
             }
@@ -143,6 +143,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             }
             if (waxingRes != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return waxingRes;
 
+            //Edit below
+            if (te.isWaxed()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             UseMode config = CommonConfigs.Building.BLACKBOARD_MODE.get();
 
             if (hit.getDirection() == state.getValue(FACING) && config.canManualDraw()) {

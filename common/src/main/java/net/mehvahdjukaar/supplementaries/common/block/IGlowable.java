@@ -16,15 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-//TODO: use more
 public interface IGlowable {
-
 
     boolean isGlowing();
 
     void setGlowing(boolean b);
 
-    //TODO: move to static utility classmaybe?
     //callable on both sides
     default ItemInteractionResult tryGlowing(Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         if (stack.is(Items.GLOW_INK_SAC)) {

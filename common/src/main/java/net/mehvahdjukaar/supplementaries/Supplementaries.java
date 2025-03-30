@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries;
 
+import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -55,12 +56,9 @@ public class Supplementaries {
 
         PlatHelper.getPhysicalSide().ifClient(ClientConfigs::init);
 
-
         RegHelper.registerSimpleRecipeCondition(res("flag"), CommonConfigs::isEnabled);
 
-        MoonlightEventsHelper.addListener(e -> {
-                    ServerEvents.onFireConsume(e);
-                }, IFireConsumeBlockEvent.class);
+        MoonlightEventsHelper.addListener(ServerEvents::onFireConsume, IFireConsumeBlockEvent.class);
 
         ModSetup.init();
         ModNetwork.init();
