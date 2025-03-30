@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
@@ -12,6 +13,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.DyeColor;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,16 +26,25 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
         this(res, new RGBColor(color).asHSV(), hueShift, hasGlint, itemComponents);
     }
 
+    public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint, DataComponentMap itemComponents) {
+        this(res, color.getFireworkColor(), hueShift, hasGlint, itemComponents);
+    }
+
+    public static final Codec<Either<Integer, DyeColor>> COLOR_CODEC = Codec.either(Codec.INT, DyeColor.CODEC);
+
     public static final Codec<BookModelVisuals> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.xmap(RenderUtil::getStandaloneModelLocation, ModelResourceLocation::id)
                     .fieldOf("model").forGetter(BookModelVisuals::model),
-            Codec.INT.xmap(i -> new RGBColor(i).asHSV(), c -> c.asRGB().toInt()).fieldOf("color")
-                    .forGetter(BookModelVisuals::color),
+            COLOR_CODEC.optionalFieldOf("color", Either.left(-1)).forGetter(b -> Either.left(b.color.asRGB().toInt())),
             Codec.FLOAT.optionalFieldOf("hue_shift", 1f).forGetter(b -> b.hueShift),
             Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookModelVisuals::hasGlint),
             DataComponentMap.CODEC.optionalFieldOf("components", DataComponentMap.EMPTY)
                     .forGetter(BookModelVisuals::itemComponents)
-    ).apply(instance, BookModelVisuals::new));
+    ).apply(instance,
+            (modelResourceLocation, color, aFloat, aBoolean, components) -> color.map(
+                    integer -> new BookModelVisuals(modelResourceLocation, integer, aFloat, aBoolean, components),
+                    dyeColor -> new BookModelVisuals(modelResourceLocation, dyeColor, aFloat, aBoolean, components)
+            )));
 
     public static final Codec<List<BookModelVisuals>> LIST_CODEC =
             BookModelVisuals.CODEC.listOf().fieldOf("models").codec();

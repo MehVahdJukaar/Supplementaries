@@ -12,10 +12,9 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookModelVisuals;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -96,9 +95,9 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void setItem(int slot, ItemStack stack) {
         super.setItem(slot, stack);
 
-        int b = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        if (b != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if (b == 0) {
+        int actualBookCount = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        if (actualBookCount != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
+            if (actualBookCount == 0) {
                 if (this.lootTable == null) {
                     this.level.removeBlock(this.worldPosition, false);
                 } else {
@@ -112,15 +111,15 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             }
         }
         this.enchantPower = 0;
+        PlaceableBookManager bookReg = PlaceableBookManager.getInstance(level);
         for (int i = 0; i < 4; i++) {
             ItemStack itemStack = this.getItem(i);
             if (itemStack.isEmpty()) continue;
             Item item = itemStack.getItem();
-            if (CompatHandler.QUARK && CompatObjects.TOME.get() == item)
-                this.enchantPower += (float) ((CommonConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2);
-            else if (item == Items.ENCHANTED_BOOK)
-                this.enchantPower += (float) (CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f);
-            else this.enchantPower += (float) (CommonConfigs.Tweaks.BOOK_POWER.get() / 4f);
+            BookType type = bookReg.get(item, this.horizontal);
+            if (type != null) {
+                this.enchantPower += type.enchantPower();
+            }
         }
     }
 
@@ -182,7 +181,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             for (int j = 0; j < index; j++) rand.nextInt();
             this.yAngle = (float) (rand.nextInt(32) * Math.PI / 16);
 
-            var possibleTypes = PlaceableBookManager
+            var possibleTypes = PlaceableBookManagerClient
                     .getValidModelsForBookItem(provider, stack, isHorizontal);
             this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
         }

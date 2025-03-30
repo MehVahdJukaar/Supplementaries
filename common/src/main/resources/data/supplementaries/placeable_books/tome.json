@@ -21,7 +21,7 @@
   ],
 
   "item": "quark:tome",
-  "enchant_power": 2,
+  "enchant_power": 0.5,
   "horizontal": false,
   "book_visuals": "supplementaries:tome"
 }

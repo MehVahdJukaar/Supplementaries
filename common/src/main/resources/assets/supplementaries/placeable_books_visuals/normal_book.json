@@ -1,7 +1,7 @@
 {
   "models": [
     {
-      "model": "supplementaries:block/books/brown",
+      "model": "supplementaries:block/books/book_brown",
       "color": "brown"
     }
   ]

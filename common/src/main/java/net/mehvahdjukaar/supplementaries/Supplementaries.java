@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehavio
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -96,7 +97,6 @@ public class Supplementaries {
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
-            ClientHelper.addClientReloadListener(PlaceableBookManager.Client::new, res("placeable_books_visuals"));
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"), false);
             } catch (Exception e) {

@@ -29,6 +29,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
@@ -453,7 +455,7 @@ public class ClientRegistry {
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WAY_SIGN_MODELS.get().values().forEach(event::register);
-        // PlaceableBookManager.INSTANCES..getAll().forEach(b -> event.register(BOOK_MODELS.apply(b)));
+        PlaceableBookManagerClient.getExtraModels().forEach(event::register);
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);

@@ -56,8 +56,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
-            ItemStack copy = stack.copy();
-            copy.setCount(1);
+            ItemStack copy = stack.copyWithCount(1);
             tile.setItem(state.getValue(BOOKS) - 1, copy);
         }
     }

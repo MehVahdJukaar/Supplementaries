@@ -33,10 +33,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
@@ -164,52 +161,4 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         }*/
     }
 
-    //client stuff. Ugly
-    public static List<BookModelVisuals> getValidModelsForBookItem(HolderLookup.Provider level, ItemStack stack, boolean horizontal) {
-        var instance = getInstance(level); //client instance
-        BookType type = instance.get(stack.getItem(), horizontal);
-        if (type == null) {
-            Supplementaries.LOGGER.warn("No book type found for item: {}", stack.getItem());
-            return List.of(Client.missingModel);
-        }
-        var list = Client.bookVisuals.getValue(type.bookVisuals());
-        if (list == null || list.isEmpty()) {
-            Supplementaries.LOGGER.warn("No visuals found for book type: {}", type);
-            return List.of(Client.missingModel);
-        }
-        var set = list.stream()
-                .filter(v -> v.matchesComponents(stack.getComponents()))
-                .toList();
-        if (set.isEmpty()) {
-            Supplementaries.LOGGER.warn("No visuals matched for book item: {}", stack);
-            return List.of(Client.missingModel);
-        }
-        return set;
-    }
-
-
-    //client
-    @Environment(EnvType.CLIENT)
-    public static class Client extends SimpleJsonResourceReloadListener {
-        //static, just 1 instance exists
-        private static final MapRegistry<List<BookModelVisuals>> bookVisuals = new MapRegistry<>("placeable_books_visuals");
-        private static final BookModelVisuals missingModel = new BookModelVisuals(
-                new ModelResourceLocation(Supplementaries.res("missing"), "missing"),
-                -1, 0, false, DataComponentMap.EMPTY);
-
-        public Client() {
-            super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
-                    "placeable_books_visuals");
-        }
-
-        @Override
-        protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-            bookVisuals.clear();
-            DynamicOps<JsonElement> ops = JsonOps.INSTANCE;
-            for (var entry : object.entrySet()) {
-                var m = BookModelVisuals.LIST_CODEC.parse(ops, entry.getValue()).getOrThrow();
-                bookVisuals.register(entry.getKey(), m);
-            }
-        }
-    }
 }
