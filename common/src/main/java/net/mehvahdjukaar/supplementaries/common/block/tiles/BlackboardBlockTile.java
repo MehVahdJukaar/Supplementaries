@@ -12,8 +12,8 @@ import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
-import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -27,6 +27,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,6 +66,12 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     @Override
+    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+        if (isWaxed()) return false;
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
+    }
+
+    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         //old logic
@@ -77,8 +84,8 @@ public class BlackboardBlockTile extends BlockEntity implements
             this.data = new BlackboardData(pixels, false, waxed);
         } else if (tag.contains("values")) {
             this.data = BlackboardData.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
-            this.requestModelReload();
         }
+        this.requestModelReload();
     }
 
     @Override

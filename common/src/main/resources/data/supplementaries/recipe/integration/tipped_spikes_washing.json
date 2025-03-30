@@ -27,7 +27,8 @@
   ],
   "results": [
     {
-      "item": "supplementaries:bamboo_spikes"
+      "id": "supplementaries:bamboo_spikes",
+      "amount": 1
     }
   ]
 }

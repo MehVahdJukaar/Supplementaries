@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestion
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -274,16 +275,25 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncHourglassData(ClientBoundSyncHourglassPacket clientBoundSyncHourglassPacket) {
+    public static void handleSyncHourglassData(ClientBoundSendHourglassDataPacket packet) {
         withLevelDo(l -> {
-            HourglassTimesManager.getInstance(l).setData(clientBoundSyncHourglassPacket.hourglass);
+            HourglassTimesManager.getInstance(l)
+                    .setData(packet.hourglassTimes);
             Supplementaries.LOGGER.info("Synced Hourglass data");
         });
     }
 
-    public static void handleSyncCapturedMobs(ClientBoundSyncCapturedMobsPacket clientBoundSyncCapturedMobsPacket) {
+    public static void handleSyncBookTypes(ClientBoundSendBookDataPacket packet) {
         withLevelDo(l -> {
-            CapturedMobHandler.getInstance(l).acceptData(clientBoundSyncCapturedMobsPacket.mobSet, clientBoundSyncCapturedMobsPacket.fish);
+            PlaceableBookManager.getInstance(l.registryAccess())
+                    .setData(packet.bookTypes);
+            Supplementaries.LOGGER.info("Synced Placeable Book Types");
+        });
+    }
+
+    public static void handleSyncCapturedMobs(ClientBoundSendCapturedMobsPacket packet) {
+        withLevelDo(l -> {
+            CapturedMobHandler.getInstance(l).acceptData(packet.mobSet, packet.fish);
             Supplementaries.LOGGER.info("Synced Captured Mobs settings");
         });
     }

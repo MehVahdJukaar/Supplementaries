@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
@@ -129,9 +128,6 @@ public class ClientRegistry {
     public static final Supplier<Map<WoodType, ModelResourceLocation>> WAY_SIGN_MODELS = Suppliers.memoize(() ->
             WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
                     w -> modelRes("block/way_signs/" + w.getVariantId("way_sign"))))
-    );
-    public static final Function<BookType, ModelResourceLocation> BOOK_MODELS = Util.memoize(type ->
-            RenderUtil.getStandaloneModelLocation(type.textureId())
     );
 
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
@@ -486,7 +482,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
-        event.register(Supplementaries.res("book_pile"), new BookPileModelLoader());
+        event.register(Supplementaries.res("book_pile"), BookPileModel::new);
         event.register(Supplementaries.res("bunting"), BuntingsBakedModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }

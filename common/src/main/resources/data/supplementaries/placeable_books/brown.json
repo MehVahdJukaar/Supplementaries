@@ -1,7 +1,0 @@
-{
-  "color": "0xff00ff",
-  "is_vertical": true,
-  "predicate": {
-    "items": "minecraft:redstone"
-  }
-}

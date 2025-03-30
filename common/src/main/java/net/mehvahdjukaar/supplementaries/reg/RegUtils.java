@@ -9,10 +9,12 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
@@ -22,6 +24,7 @@ import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -53,40 +56,25 @@ public class RegUtils {
 
     public static void initDynamicRegistry() {
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
-        AdditionalItemPlacementsAPI.addRegistration(RegUtils::registerPlacements);
     }
 
-    private static void registerPlacements(AdditionalItemPlacementsAPI.Event event) {
-        //register placeable items
-        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            SuppAdditionalPlacement horizontalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get());
-            event.register(Items.BOOK, horizontalPlacement);
-            event.register(Items.WRITABLE_BOOK, horizontalPlacement);
-            event.register(Items.WRITTEN_BOOK, horizontalPlacement);
-        }
-        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
-            SuppAdditionalPlacement verticalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get());
-            event.register(Items.ENCHANTED_BOOK, verticalPlacement);
-            Item tome = CompatObjects.TOME.get();
-            if (tome != null) event.register(tome, verticalPlacement);
-            Item gene = CompatObjects.GENE_BOOK.get();
-            if (gene != null) event.register(gene, verticalPlacement);
-        }
+    public static void registerAdditionalPlacements() {
+        //register placeable items. just static ones
 
-        event.registerSimple(ModRegistry.PANCAKE_ITEM.get(), ModRegistry.PANCAKE.get());
+        AdditionalItemPlacementsAPI.registerSimplePlacement(ModRegistry.PANCAKE_ITEM.get(), ModRegistry.PANCAKE.get());
 
         if (CommonConfigs.Tweaks.PLACEABLE_STICKS.get()) {
-            event.register(Items.STICK, new SuppAdditionalPlacement(ModRegistry.STICK_BLOCK.get()));
+            AdditionalItemPlacementsAPI.registerPlacement(Items.STICK, new SuppAdditionalPlacement(ModRegistry.STICK_BLOCK.get()));
         }
         if (CommonConfigs.Tweaks.PLACEABLE_RODS.get()) {
-            event.register(Items.BLAZE_ROD, new SuppAdditionalPlacement(ModRegistry.BLAZE_ROD_BLOCK.get()));
+            AdditionalItemPlacementsAPI.registerPlacement(Items.BLAZE_ROD, new SuppAdditionalPlacement(ModRegistry.BLAZE_ROD_BLOCK.get()));
         }
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
-            event.register(Items.GUNPOWDER, new SuppAdditionalPlacement(ModRegistry.GUNPOWDER_BLOCK.get()));
+            AdditionalItemPlacementsAPI.registerPlacement(Items.GUNPOWDER, new SuppAdditionalPlacement(ModRegistry.GUNPOWDER_BLOCK.get()));
         }
 
         if (CommonConfigs.Tools.LUNCH_BOX_PLACEABLE.get()) {
-            event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new AdditionalItemPlacement(ModRegistry.LUNCH_BASKET.get()) {
+            AdditionalItemPlacementsAPI.registerPlacement(ModRegistry.LUNCH_BASKET_ITEM.get(), new AdditionalItemPlacement(ModRegistry.LUNCH_BASKET.get()) {
                 @Override
                 public InteractionResult overrideUseOn(UseOnContext pContext, FoodProperties foodProperties) {
                     if (!pContext.getPlayer().isSecondaryUseActive()) return InteractionResult.PASS;

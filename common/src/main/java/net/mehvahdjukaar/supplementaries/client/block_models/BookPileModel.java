@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -26,18 +27,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class BookPileModel implements CustomBakedModel {
 
-    private final Map<ResourceLocation, BakedModel> booksToModels;
-
-    public BookPileModel(Map<ResourceLocation, BakedModel> booksToModels, ModelState transform) {
-        this.booksToModels = booksToModels;
+    public BookPileModel(ModelState transform, Function<Material, TextureAtlasSprite> spriteGetter) {
     }
 
     @Override
     public List<BakedQuad> getBlockQuads(BlockState state, Direction direction, RandomSource randomSource, RenderType renderType, ExtraModelData extraModelData) {
-        if (direction != null || true) return List.of();
+        if (direction != null) return List.of();
         List<BakedQuad> quads = new ArrayList<>();
         BookPileBlockTile.BooksList books = extraModelData.get(BookPileBlockTile.BOOKS_KEY);
         if (books != null) {

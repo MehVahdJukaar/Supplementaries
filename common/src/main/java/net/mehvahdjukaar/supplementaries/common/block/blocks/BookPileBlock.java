@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.core.misc.IExtendedItem;
+import net.mehvahdjukaar.supplementaries.client.block_models.BookPileModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.tiles.BookPileBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;

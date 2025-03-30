@@ -144,10 +144,9 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             if (waxingRes != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return waxingRes;
 
             //Edit below
-            if (te.isWaxed()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             UseMode config = CommonConfigs.Building.BLACKBOARD_MODE.get();
 
-            if (hit.getDirection() == state.getValue(FACING) && config.canManualDraw()) {
+            if (hit.getDirection() == state.getValue(FACING) && config.canManualDraw() && !te.isWaxed()) {
 
                 DyeColor color = getStackChalkColor(stack);
                 if (color != null) {
@@ -170,6 +169,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                 }
                 return ItemInteractionResult.CONSUME;
             }
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.SUCCESS;
     }

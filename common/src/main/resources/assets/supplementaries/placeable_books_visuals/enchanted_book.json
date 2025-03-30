@@ -1,0 +1,9 @@
+{
+  "models": [
+    {
+      "model": "supplementaries:block/books/enchanted",
+      "color": "brown",
+      "has_glint": true
+    }
+  ]
+}

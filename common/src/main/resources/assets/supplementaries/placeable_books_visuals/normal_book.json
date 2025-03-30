@@ -1,0 +1,8 @@
+{
+  "models": [
+    {
+      "model": "supplementaries:block/books/brown",
+      "color": "brown"
+    }
+  ]
+}

@@ -1160,14 +1160,9 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("placeable_books");
-            WRITTEN_BOOKS = () -> false; //builder.comment("Allows written books to be placed down. Requires shift clicking")
-                   // .define("written_books", true);
-            PLACEABLE_BOOKS = () -> false;// builder.comment("Allow books and enchanted books to be placed on the ground")
-            // .define("enabled", true);
-            BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
-                    .define("book_power", 1d, 0, 5);
-            ENCHANTED_BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
-                    .define("enchanted_book_power", 1.334d, 0, 5);
+            PLACEABLE_BOOKS =  feature(builder.comment("Allow books and enchanted books to be placed on the ground"));
+            WRITTEN_BOOKS =  feature(builder.comment("Allows written books to be placed down. Requires shift clicking"),
+                    "written_books");
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);
             builder.pop();
@@ -1248,8 +1243,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TINTED_MAP;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
         public static final Supplier<Boolean> WRITTEN_BOOKS;
-        public static final Supplier<Double> BOOK_POWER;
-        public static final Supplier<Double> ENCHANTED_BOOK_POWER;
         public static final Supplier<Boolean> ZOMBIE_HORSE_CONVERSION;
         public static final Supplier<Boolean> ZOMBIE_HORSE;
         public static final Supplier<Integer> ZOMBIE_HORSE_COST;

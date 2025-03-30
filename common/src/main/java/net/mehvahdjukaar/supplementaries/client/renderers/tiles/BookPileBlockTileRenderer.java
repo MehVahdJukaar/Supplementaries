@@ -11,7 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.VisualBook;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BookVisualData;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
@@ -49,7 +49,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
     }
 
     public static void renderBookPile(boolean horizontal, BooksList books, PoseStack matrixStack,
-                                      Function<VisualBook, VertexConsumer> bufferIn,
+                                      Function<BookPileBlockTile.BookVisualData, VertexConsumer> bufferIn,
                                       int light, int overlay, BlockState state) {
 
         if (horizontal) {
@@ -59,7 +59,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         }
     }
 
-    private static void renderHorizontal(BooksList visualBooks, BlockState state, PoseStack poseStack, Function<VisualBook, VertexConsumer> buffer, int light, int overlay) {
+    private static void renderHorizontal(BooksList visualBooks, BlockState state, PoseStack poseStack, Function<BookPileBlockTile.BookVisualData, VertexConsumer> buffer, int light, int overlay) {
         int books = Math.min(state.getValue(BookPileBlock.BOOKS), visualBooks.size());
 
         Direction dir = state.getValue(BookPileHorizontalBlock.FACING);
@@ -99,7 +99,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         }
     }
 
-    private static void renderVertical(BooksList booksList, BlockState state, PoseStack matrixStack, Function<VisualBook, VertexConsumer> builder, int light, int overlay) {
+    private static void renderVertical(BooksList booksList, BlockState state, PoseStack matrixStack, Function<BookVisualData, VertexConsumer> builder, int light, int overlay) {
 
         int maxBooks = Math.min(state.getValue(BookPileBlock.BOOKS), booksList.size());
         matrixStack.translate(0, -6 / 16f, 0);
@@ -107,7 +107,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         float zRot = -(float) (Math.PI / 2f);
 
         for (int i = 0; i < maxBooks; i++) {
-            VisualBook b = booksList.get(i);
+            BookVisualData b = booksList.get(i);
 
             renderBook(matrixStack, builder, light, overlay, b, b.getAngle(), zRot);
 
@@ -115,13 +115,13 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         }
     }
 
-    private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
-                                   int light, int overlay, VisualBook b) {
+    private static void renderBook(PoseStack poseStack, Function<BookPileBlockTile.BookVisualData, VertexConsumer> vertexBuilder,
+                                   int light, int overlay, BookPileBlockTile.BookVisualData b) {
         renderBook(poseStack, vertexBuilder, light, overlay, b, 0, 0);
     }
 
-    private static void renderBook(PoseStack poseStack, Function<VisualBook, VertexConsumer> vertexBuilder,
-                                   int light, int overlay, VisualBook b, float xRot, float zRot) {
+    private static void renderBook(PoseStack poseStack, Function<BookPileBlockTile.BookVisualData, VertexConsumer> vertexBuilder,
+                                   int light, int overlay, BookPileBlockTile.BookVisualData b, float xRot, float zRot) {
         VertexConsumer builder = vertexBuilder.apply(b);
         if (builder == null) return;
         poseStack.pushPose();
@@ -137,7 +137,7 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
             modelManager = Minecraft.getInstance().getModelManager();
         }
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
-        BakedModel model = ClientHelper.getModel(modelManager, ClientRegistry.BOOK_MODELS.apply(b.getType()));
+        BakedModel model = ClientHelper.getModel(modelManager,  b.getModel());
         if (model != null) {
             renderer.renderModel(poseStack.last(),
                     builder,

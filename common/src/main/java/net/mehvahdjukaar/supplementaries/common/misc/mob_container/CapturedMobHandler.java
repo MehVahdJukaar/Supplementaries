@@ -10,7 +10,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncCapturedMobsPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendCapturedMobsPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.RegistryOps;
@@ -86,7 +86,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         var serverInstance = getInstance(player.level());
         Set<DataDefinedCatchableMob> set = new HashSet<>(serverInstance.customMobProperties.values());
         NetworkHelper.sendToClientPlayer(player,
-                new ClientBoundSyncCapturedMobsPacket(set, serverInstance.moddedFishProperty));
+                new ClientBoundSendCapturedMobsPacket(set, serverInstance.moddedFishProperty));
     }
 
     public void acceptData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {

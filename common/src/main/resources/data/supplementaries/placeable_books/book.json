@@ -1,0 +1,19 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "placeable_books"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "placeable_books"
+    }
+  ],
+
+  "item": "minecraft:book",
+  "horizontal": true,
+  "enchant_power": 1,
+  "book_visuals": "supplementaries:normal_book"
+}

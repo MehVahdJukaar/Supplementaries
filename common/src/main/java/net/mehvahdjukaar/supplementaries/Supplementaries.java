@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries;
 
-import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -27,9 +26,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +39,11 @@ public class Supplementaries {
 
     public static ResourceLocation res(String n) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, n);
+    }
+
+    public static ResourceLocation parseRes(String n) {
+        if (n.contains(":")) return ResourceLocation.parse(n);
+        else return res(n);
     }
 
     public static String str(String n) {
@@ -94,6 +96,7 @@ public class Supplementaries {
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();
+            ClientHelper.addClientReloadListener(PlaceableBookManager.Client::new, res("placeable_books_visuals"));
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"), false);
             } catch (Exception e) {

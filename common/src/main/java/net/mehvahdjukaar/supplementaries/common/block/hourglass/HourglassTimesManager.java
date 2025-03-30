@@ -10,8 +10,9 @@ import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncHourglassPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendHourglassDataPacket;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -92,7 +93,7 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
 
     public static void sendDataToClient(ServerPlayer player) {
         HourglassTimesManager instance = getInstance(player.level());
-        NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncHourglassPacket(instance.dusts));
+        NetworkHelper.sendToClientPlayer(player, new ClientBoundSendHourglassDataPacket(instance.dusts));
     }
 
 }

@@ -39,6 +39,7 @@ public class ModSetup {
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
+            RegUtils::registerAdditionalPlacements,
             FlowerPotHandler::setup,
             ModSetup::registerFlammables,
             CauldronBehaviorsManager::registerBehaviors,

@@ -6,7 +6,7 @@ public class ModNetwork {
 
     public static void init() {
         NetworkHelper.addNetworkRegistration(
-                ModNetwork::registerMessages, 3);
+                ModNetwork::registerMessages, 4);
     }
 
     private static void registerMessages(NetworkHelper.RegisterMessagesEvent event) {
@@ -18,8 +18,9 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundSendKnockbackPacket.CODEC);
         event.registerClientBound(ClientBoundSyncAntiqueInk.CODEC);
         event.registerClientBound(ClientBoundSetSlidingBlockEntityPacket.CODEC);
-        event.registerClientBound(ClientBoundSyncHourglassPacket.CODEC);
-        event.registerClientBound(ClientBoundSyncCapturedMobsPacket.CODEC);
+        event.registerClientBound(ClientBoundSendHourglassDataPacket.CODEC);
+        event.registerClientBound(ClientBoundSendCapturedMobsPacket.CODEC);
+        event.registerClientBound(ClientBoundSendBookDataPacket.CODEC);
         event.registerClientBound(ClientBoundSetSongPacket.CODEC);
         event.registerClientBound(ClientBoundParticlePacket.CODEC);
         event.registerClientBound(ClientBoundPlaySongNotesPacket.CODEC);

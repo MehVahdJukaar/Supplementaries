@@ -5,11 +5,11 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.SpriteCoordinateUnExpander;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookModelVisuals;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -20,17 +20,16 @@ import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -73,9 +72,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             if (r < 2) it = Items.ENCHANTED_BOOK;
             else if (r < 3) it = Items.WRITABLE_BOOK;
             else it = Items.BOOK;
-            List<BookType> col = PlaceableBookManager.INSTANCES.get(provider).getForItem(it.getDefaultInstance(), this.horizontal);
-            booksVisuals.add(new VisualBook(it.getDefaultInstance(), this.worldPosition, j,
-                    col, null, level.registryAccess(), this.horizontal));
+            booksVisuals.add(new BookVisualData(it.getDefaultInstance(), this.worldPosition, j,
+                    this.horizontal, provider, null));
         }
     }
 
@@ -119,10 +117,10 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             if (itemStack.isEmpty()) continue;
             Item item = itemStack.getItem();
             if (CompatHandler.QUARK && CompatObjects.TOME.get() == item)
-                this.enchantPower += (CommonConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2;
+                this.enchantPower += (float) ((CommonConfigs.Tweaks.BOOK_POWER.get() / 4f) * 2);
             else if (item == Items.ENCHANTED_BOOK)
-                this.enchantPower += CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f;
-            else this.enchantPower += CommonConfigs.Tweaks.BOOK_POWER.get() / 4f;
+                this.enchantPower += (float) (CommonConfigs.Tweaks.ENCHANTED_BOOK_POWER.get() / 4f);
+            else this.enchantPower += (float) (CommonConfigs.Tweaks.BOOK_POWER.get() / 4f);
         }
     }
 
@@ -146,19 +144,13 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public void updateClientVisualsOnLoad() {
         this.booksVisuals.clear();
-        if(true)return;
-        List<BookType> colors = new ArrayList<>();
-        for (var v : ClientConfigs.Tweaks.BOOK_COLORS.get()) {
-            BookType byName = PlaceableBookManager.INSTANCES.get(level.registryAccess())
-                    .getByName(ResourceLocation.parse(v));
-            if (!colors.contains(byName)) colors.add(byName);
-        }
+
         for (int index = 0; index < 4; index++) {
             ItemStack stack = this.getItem(index);
             if (stack.isEmpty()) break;
-            BookType last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
-            this.booksVisuals.add(index, new VisualBook(stack, this.worldPosition, index,
-                    colors, last, level.registryAccess(), this.horizontal));
+            var last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
+            this.booksVisuals.add(index, new BookVisualData(stack, this.worldPosition, index,
+                    this.horizontal, level.registryAccess(), last));
         }
 
         if (booksVisuals.isEmpty()) {
@@ -176,48 +168,23 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     //only client
-    public static class VisualBook {
+    public static class BookVisualData {
         private final float yAngle;
-        private final BookType type;
+        private final BookModelVisuals type;
         private final ItemStack stack;
 
-        public VisualBook(ItemStack bookStack, BlockPos pos, int index, List<BookType> colors,
-                          @Nullable BookType lastColor, HolderLookup.Provider provider,
-                          boolean isHorizontal) {
-            PlaceableBookManager bookReg = PlaceableBookManager.INSTANCES.get(provider);
+        public BookVisualData(ItemStack bookStack, BlockPos pos, int index,
+                              boolean isHorizontal,
+                              HolderLookup.Provider provider,
+                              @Nullable BookModelVisuals lastColor) {
             this.stack = bookStack;
             Random rand = new Random(pos.below(2).asLong());
             for (int j = 0; j < index; j++) rand.nextInt();
-            Item item = bookStack.getItem();
             this.yAngle = (float) (rand.nextInt(32) * Math.PI / 16);
 
-            if (item instanceof BookItem) {
-                if (lastColor == null) {
-                    if (colors.isEmpty()) {
-                        Supplementaries.error();
-                        this.type = bookReg.getByName(ResourceLocation.parse("brown"));
-                        return;
-                    }
-                    this.type = colors.get(rand.nextInt(colors.size()));
-                } else {
-                    List<BookType> c = colors.stream().filter(b -> b.looksGoodNextTo(lastColor)).toList();
-                    if (c.isEmpty()) {
-                        Supplementaries.error();
-                        this.type = lastColor;
-                    } else {
-                        this.type = c.get(rand.nextInt(c.size()));
-                    }
-                }
-                colors.remove(this.type);
-            } else {
-                var possibleTypes = bookReg.getForItem(bookStack, isHorizontal);
-                if (possibleTypes.isEmpty()) {
-                    Supplementaries.error();
-                    this.type = bookReg.getByName(ResourceLocation.parse("brown"));
-                    return;
-                }
-                this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
-            }
+            var possibleTypes = PlaceableBookManager
+                    .getValidModelsForBookItem(provider, stack, isHorizontal);
+            this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
         }
 
         @SuppressWarnings("ConstantConditions")
@@ -240,8 +207,12 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             return yAngle;
         }
 
-        public BookType getType() {
-            return type;
+        public boolean hasGlint() {
+            return this.type.hasGlint();
+        }
+
+        public ModelResourceLocation getModel() {
+            return this.type.model();
         }
 
     }
@@ -249,20 +220,20 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",
             "red", "green", "lime", "cyan", "blue", "purple");
 
-    public record BooksList(List<VisualBook> books) {
+    public record BooksList(List<BookVisualData> books) {
         public BooksList() {
             this(new ArrayList<>());
         }
 
-        public void add(VisualBook visualBook) {
+        private void add(BookVisualData visualBook) {
             books.add(visualBook);
         }
 
-        public void add(int i, VisualBook visualBook) {
+        private void add(int i, BookVisualData visualBook) {
             books.add(i, visualBook);
         }
 
-        public void clear() {
+        private void clear() {
             books.clear();
         }
 
@@ -270,7 +241,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             return books.isEmpty();
         }
 
-        public VisualBook get(int i) {
+        public BookVisualData get(int i) {
             return books.get(i);
         }
 
