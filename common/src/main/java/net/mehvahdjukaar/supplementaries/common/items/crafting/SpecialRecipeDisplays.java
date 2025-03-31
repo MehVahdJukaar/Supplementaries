@@ -4,12 +4,14 @@ import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.reg.ModCreativeTabs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.RecipeBookCategories;
@@ -310,8 +312,7 @@ public class SpecialRecipeDisplays {
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
-        ItemStack output = ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
-        output.set(DataComponents.POTION_CONTENTS, new PotionContents(potionType));
+        ItemStack output = ModCreativeTabs.makeSpikeItem(potionType);
         ResourceLocation id = Supplementaries.res(Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
 
         var recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);

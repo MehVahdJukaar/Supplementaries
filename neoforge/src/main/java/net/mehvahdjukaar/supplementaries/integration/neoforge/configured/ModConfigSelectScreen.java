@@ -63,8 +63,6 @@ public class ModConfigSelectScreen extends CustomConfigSelectScreen {
 
         this.addRenderableWidget(MediaButton.akliz(this, centerX + 45 + 2 + 22 * 3, y,
                 "https://www.akliz.net/supplementaries"));
-
-
     }
 
 }
