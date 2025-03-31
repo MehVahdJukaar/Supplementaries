@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBallBlock;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;

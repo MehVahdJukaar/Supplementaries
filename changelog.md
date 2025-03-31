@@ -2,3 +2,4 @@
 - fixed bubble blower charge recipe
 - fixed a missing book model
 - fixed some issues with bucketable entities in jars
+- added more items to lunch basked blacklist
