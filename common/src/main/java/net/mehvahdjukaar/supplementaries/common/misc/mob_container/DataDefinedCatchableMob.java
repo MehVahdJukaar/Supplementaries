@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.misc.BiggerStreamCodecs;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;

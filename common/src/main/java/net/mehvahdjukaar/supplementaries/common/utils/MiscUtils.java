@@ -68,9 +68,9 @@ public class MiscUtils {
 
         public float getCandyWrappingIndex() {
             return switch (this) {
-                default -> 0;
                 case HALLOWEEN -> 0.5f;
                 case CHRISTMAS -> 1;
+                default -> 0;
             };
         }
 

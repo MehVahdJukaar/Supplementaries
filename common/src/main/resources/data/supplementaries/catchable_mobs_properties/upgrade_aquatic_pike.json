@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 22,
+  "force_fluid": "minecraft:water",
+  "fish_index": 21,
   "height_increment": 0.0,
   "owners": [
     "upgrade_aquatic:pike"

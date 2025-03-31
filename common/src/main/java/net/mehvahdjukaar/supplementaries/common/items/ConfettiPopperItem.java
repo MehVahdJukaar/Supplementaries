@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -68,7 +70,7 @@ public class ConfettiPopperItem extends Item {
         return super.interactLivingEntity(stack, player, entity, usedHand);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EquipmentSlot.HEAD;
     }

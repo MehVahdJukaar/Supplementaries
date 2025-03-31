@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 35,
+  "force_fluid": "minecraft:water",
+  "fish_index": 34,
   "height_increment": 0.0,
   "owners": [
     "betterendforge:end_fish"

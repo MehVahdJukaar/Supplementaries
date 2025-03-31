@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 18,
+  "force_fluid": "minecraft:water",
+  "fish_index": 17,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:flatback_sucker"

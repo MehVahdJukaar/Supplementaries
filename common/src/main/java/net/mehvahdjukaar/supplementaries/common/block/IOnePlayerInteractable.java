@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
+@Deprecated(forRemoval = true) //use ML one
 // Interface for blocks that can be edited by one player at a time
 public interface IOnePlayerInteractable {
 

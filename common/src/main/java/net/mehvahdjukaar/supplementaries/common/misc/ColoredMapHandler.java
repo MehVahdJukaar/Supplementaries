@@ -335,7 +335,7 @@ public class ColoredMapHandler {
             return true;
         }
 
-        @Override
+        //@Override
         public boolean persistOnRescale() {
             return false;
         }
