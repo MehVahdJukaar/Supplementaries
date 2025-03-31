@@ -108,62 +108,9 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         return null;
     }
 
-    public BookType getByName(ResourceLocation id) {
-        return books.getValue(id);
-    }
-
-
-
-/*
-    //TODO: make data
-    public void setup() {
-        registerDefault(DyeColor.BROWN, 1);
-        registerDefault(DyeColor.WHITE, 1);
-        registerDefault(DyeColor.BLACK, 1);
-        registerDefault(DyeColor.LIGHT_GRAY);
-        registerDefault(DyeColor.GRAY);
-        registerDefault(DyeColor.ORANGE);
-        registerDefault(DyeColor.YELLOW);
-        registerDefault(DyeColor.LIME);
-        registerDefault("green", 0x2fc137);
-        registerDefault("cyan", 0x16ecbf);
-        registerDefault(DyeColor.LIGHT_BLUE);
-        registerDefault(DyeColor.BLUE);
-        registerDefault(DyeColor.PURPLE);
-        registerDefault(DyeColor.MAGENTA);
-        registerDefault(DyeColor.PINK);
-        registerDefault(DyeColor.RED);
-        register(new BookType("enchanted", 0, 1, true, null), Items.ENCHANTED_BOOK);
-        register(new BookType("and_quill", 0, 1, false, null), Items.WRITABLE_BOOK);
-        register(new BookType("written", 0, 1, false, null), Items.WRITTEN_BOOK);
-        register(new BookType("tattered", 0, 1, false, null), null);
-        register(new BookType("tome", 0, 1, true, null), CompatObjects.TOME.get());
-        register(new BookType("gene", 0, 1, false, null), CompatObjects.GENE_BOOK.get());
-    }
-*/
-
     public static void sendDataToClient(ServerPlayer player) {
         PlaceableBookManager instance = INSTANCES.get(player.level().registryAccess());
         NetworkHelper.sendToClientPlayer(player, new ClientBoundSendBookDataPacket(instance.books.getEntries()));
     }
-
-    public static void registerPlacements(HolderLookup.Provider registryAccess) {
-        /*
-        if (CommonConfigs.Tweaks.WRITTEN_BOOKS.get()) {
-            event.register(Items.BOOK, horizontalPlacement);
-            event.register(Items.WRITABLE_BOOK, horizontalPlacement);
-            event.register(Items.WRITTEN_BOOK, horizontalPlacement);
-        }
-        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
-            event.register(Items.ENCHANTED_BOOK, verticalPlacement);
-            Item tome = CompatObjects.TOME.get();
-            if (tome != null) event.register(tome, verticalPlacement);
-            Item gene = CompatObjects.GENE_BOOK.get();
-            if (gene != null) event.register(gene, verticalPlacement);
-        }*/
-    }
-
-    public static final List<String> DEFAULT_COLORS = List.of("brown", "orange", "yellow",
-            "red", "green", "lime", "cyan", "blue", "purple");
 
 }

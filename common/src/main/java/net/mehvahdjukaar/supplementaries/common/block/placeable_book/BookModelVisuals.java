@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSVColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
@@ -27,16 +28,16 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
     }
 
     public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint) {
-        this(res, color.getFireworkColor(), hueShift, hasGlint);
+        this(res, color.getTextureDiffuseColor(), hueShift, hasGlint);
     }
 
-    public static final Codec<Either<Integer, DyeColor>> COLOR_CODEC = Codec.either(Codec.INT, DyeColor.CODEC);
+    public static final Codec<Either<Integer, DyeColor>> COLOR_CODEC = Codec.either(ColorUtils.CODEC, DyeColor.CODEC);
 
     public static final Codec<BookModelVisuals> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.xmap(RenderUtil::getStandaloneModelLocation, ModelResourceLocation::id)
                     .fieldOf("model").forGetter(BookModelVisuals::model),
             COLOR_CODEC.optionalFieldOf("color", Either.left(-1)).forGetter(b -> Either.left(b.color.asRGB().toInt())),
-            Codec.FLOAT.optionalFieldOf("hue_shift", 1f).forGetter(b -> b.hueShift),
+            Codec.FLOAT.optionalFieldOf("neighbor_hue_shift", 1f).forGetter(b -> b.hueShift),
             Codec.BOOL.optionalFieldOf("has_glint", false).forGetter(BookModelVisuals::hasGlint)
     ).apply(instance,
             (modelResourceLocation, color, aFloat, aBoolean) -> color.map(
@@ -88,7 +89,6 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
         this(name, rgb, -1, enchanted, null);
     }
 */
-
 
     public boolean looksGoodNextTo(BookModelVisuals other) {
         float diff = Math.abs(Mth.degreesDifference(this.color.hue() * 360, other.color.hue() * 360) / 360);

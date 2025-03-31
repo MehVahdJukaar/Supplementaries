@@ -4,39 +4,48 @@
       "models": [
         {
           "model": "supplementaries:block/books/book_brown",
-          "color": "brown"
+          "color": "brown",
+          "neighbor_hue_shift": 1
         },
         {
           "model": "supplementaries:block/books/book_orange",
-          "color": "orange"
+          "color": "orange",
+          "neighbor_hue_shift": 0.2
         },
         {
           "model": "supplementaries:block/books/book_yellow",
-          "color": "yellow"
+          "color": "yellow",
+          "neighbor_hue_shift": 0.2
         },
         {
           "model": "supplementaries:block/books/book_red",
-          "color": "red"
+          "color": "red",
+          "neighbor_hue_shift": 0.3
         },
         {
           "model": "supplementaries:block/books/book_green",
-          "color": "green"
+          "color": "0x2fc137",
+          "neighbor_hue_shift": 0.3
         },
         {
           "model": "supplementaries:block/books/book_lime",
-          "color": "lime"
+          "color": "lime",
+          "neighbor_hue_shift": 0.2
         },
         {
           "model": "supplementaries:block/books/book_cyan",
-          "color": "cyan"
+          "color": "0x16ecbf",
+          "neighbor_hue_shift": 0.3
         },
         {
           "model": "supplementaries:block/books/book_blue",
-          "color": "blue"
+          "color": "blue",
+          "neighbor_hue_shift": 0.3
         },
         {
           "model": "supplementaries:block/books/book_purple",
-          "color": "purple"
+          "color": "purple",
+          "neighbor_hue_shift": 0.3
         }
       ]
     }

@@ -198,7 +198,16 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
             var possibleTypes = PlaceableBookManagerClient
                     .getValidModelsForBookItem(provider, stack, isHorizontal);
-            this.type = possibleTypes.get(rand.nextInt(possibleTypes.size()));
+            List<BookModelVisuals> looksGood = new ArrayList<>();
+            for (var type : possibleTypes) {
+                if ((lastColor == null || type.looksGoodNextTo(lastColor)) && type != lastColor) {
+                    looksGood.add(type);
+                }
+            }
+            if (looksGood.isEmpty()) {
+                looksGood = possibleTypes;
+            }
+            this.type = looksGood.get(rand.nextInt(looksGood.size()));
         }
 
         @SuppressWarnings("ConstantConditions")
@@ -219,10 +228,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
         public float getAngle() {
             return yAngle;
-        }
-
-        public boolean hasGlint() {
-            return this.type.hasGlint();
         }
 
         public ModelResourceLocation getModel() {
