@@ -30,7 +30,7 @@ public class CompatHandler {
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d");
     public static final boolean OREGANIZED = isLoaded("oreganized");
-    public static final boolean CREATE = isLoaded("create");
+    public static final boolean CREATE = isLoaded("create") && PlatHelper.getPlatform().isForge(); //TODO: remove
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios");
     public static final boolean TRINKETS = isLoaded("trinkets");
