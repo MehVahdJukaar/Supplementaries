@@ -1,3 +1,3 @@
-- improved create integration blackboard display target to work with colored blackboards
-- fixed pancake song not being in mono
-- improved some error handling
+- improved blackboard waxing and glowing
+- added back placeable books
+- placeable books now use a very extensive (and very over engineeded) data & resource driven system. This means you can now make any item with any component placeable and have unique models too!

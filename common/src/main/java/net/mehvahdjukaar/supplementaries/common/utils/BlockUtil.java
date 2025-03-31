@@ -36,13 +36,8 @@ import java.util.Optional;
 
 public class BlockUtil {
 
-    public static <T extends Comparable<T>, A extends Property<T>> BlockState replaceProperty(BlockState from, BlockState to, A property) {
-        if (from.hasProperty(property)) {
-            return to.setValue(property, from.getValue(property));
-        }
-        return to;
-    }
-
+    //use ml ones
+    @Deprecated(forRemoval = true)
     public static void spawnItemWithTileData(Player player, RandomizableContainerBlockEntity tile) {
         Level level = player.level();
         if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
@@ -57,6 +52,7 @@ public class BlockUtil {
         }
     }
 
+    @Deprecated(forRemoval = true)
     public static ItemStack saveTileToItem(BlockEntity tile) {
         Block block = tile.getBlockState().getBlock();
         ItemStack stack = new ItemStack(block.asItem());
@@ -64,6 +60,7 @@ public class BlockUtil {
         return stack;
     }
 
+    @Deprecated(forRemoval = true)
     public static void loadTileFromItem(BlockEntity tile, ItemStack stack) {
         var comp = stack.get(DataComponents.BLOCK_ENTITY_DATA);
         if (comp != null) {

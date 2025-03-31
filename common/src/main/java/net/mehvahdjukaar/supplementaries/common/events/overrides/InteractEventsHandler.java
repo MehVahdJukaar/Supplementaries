@@ -232,7 +232,7 @@ public class InteractEventsHandler {
 
         BlockState newState = blockOverride.defaultBlockState();
         for (Property<?> p : properties) {
-            newState = BlockUtil.replaceProperty(replaced, newState, p);
+            newState = Utils.replaceProperty(replaced, newState, p);
         }
         if (newState.hasProperty(BlockStateProperties.WATERLOGGED)) {
             FluidState fluidstate = level.getFluidState(pos);

@@ -8,8 +8,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
@@ -19,23 +17,21 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBookDataPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
