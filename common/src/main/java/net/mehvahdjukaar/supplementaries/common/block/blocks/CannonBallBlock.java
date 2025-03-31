@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,10 +20,10 @@ public class CannonBallBlock extends WaterBlock {
     // jojo reference?
     public static final IntegerProperty BALLS = ModBlockProperties.BALLS;
 
-    public static final VoxelShape SHAPE_1 = Block.box(4, 0, 4, 12, 5, 12);
-    public static final VoxelShape SHAPE_2 = Block.box(2, 0, 2, 14, 5, 14);
-    public static final VoxelShape SHAPE_3 = Block.box(0, 0, 0, 16, 5, 16);
-    public static final VoxelShape SHAPE_4 = Block.box(0, 0, 0, 16, 10, 16);
+    public static final VoxelShape SHAPE_1 = Block.box(4, 0, 4, 12, 7, 12);
+    public static final VoxelShape SHAPE_2 = Block.box(2, 0, 2, 14, 7, 14);
+    public static final VoxelShape SHAPE_3 = Block.box(0, 0, 0, 16, 7, 16);
+    public static final VoxelShape SHAPE_4 = Shapes.or(SHAPE_3, Block.box(4, 5, 4, 12, 14, 12));
 
     public CannonBallBlock(BlockBehaviour.Properties properties) {
         super(properties);

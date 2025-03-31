@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBallBlock;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
