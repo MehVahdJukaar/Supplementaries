@@ -44,9 +44,9 @@ issueTrackerURL = "${mod_github}/issues"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "create"
-    mandatory = false
+    type = "optional"
     versionRange = "[6.0.0,]"
     ordering = "NONE"
     side = "BOTH"
