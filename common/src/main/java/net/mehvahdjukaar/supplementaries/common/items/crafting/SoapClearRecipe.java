@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -86,7 +85,7 @@ public class SoapClearRecipe extends CustomRecipe {
         } else {
             Item recolored = BlocksColorAPI.changeColor(i, null);
             if (recolored != null) {
-                result = recolored.getDefaultInstance();
+                result = toRecolor.transmuteCopy(recolored, 1);
             } else {
                 result = toRecolor.copy();
             }
