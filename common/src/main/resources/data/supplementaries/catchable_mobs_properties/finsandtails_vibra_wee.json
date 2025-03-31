@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 9,
+  "render_fluid": "moonlight:water",
+  "fish_index": 8,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:vibra_wee"

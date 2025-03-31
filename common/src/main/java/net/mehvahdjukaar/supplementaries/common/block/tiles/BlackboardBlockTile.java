@@ -83,7 +83,8 @@ public class BlackboardBlockTile extends BlockEntity implements
             }
             this.data = new BlackboardData(pixels, false, waxed);
         } else if (tag.contains("values")) {
-            this.data = BlackboardData.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            this.data = BlackboardData.CODEC.parse(ops, tag).getOrThrow();
         }
         this.requestModelReload();
     }
@@ -92,7 +93,8 @@ public class BlackboardBlockTile extends BlockEntity implements
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         if (!this.data.equals(BlackboardData.EMPTY)) {
-            tag.merge((CompoundTag) BlackboardData.CODEC.encodeStart(NbtOps.INSTANCE, data).getOrThrow());
+            var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            tag.merge((CompoundTag) BlackboardData.CODEC.encodeStart(ops, data).getOrThrow());
         }
     }
 

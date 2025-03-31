@@ -3,7 +3,7 @@
     {
       "models": [
         {
-          "model": "supplementaries:block/books/writable_book",
+          "model": "supplementaries:block/books/book_and_quill",
           "color": "brown"
         }
       ]

@@ -27,5 +27,6 @@
     "item": "supplementaries:soap"
   },
   "charges_per_item": 250,
+  "can_overfill": true,
   "result": "supplementaries:bubble_blower"
 }

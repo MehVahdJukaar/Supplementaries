@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 5,
+  "render_fluid": "moonlight:water",
+  "fish_index": 4,
   "height_increment": 0.0,
   "owners": [
     "minecraft:pufferfish"

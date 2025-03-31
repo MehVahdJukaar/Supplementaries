@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 13,
+  "render_fluid": "moonlight:water",
+  "fish_index": 12,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:phantom_nudibranch"

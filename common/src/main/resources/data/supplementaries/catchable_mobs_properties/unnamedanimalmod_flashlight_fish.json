@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 25,
+  "render_fluid": "moonlight:water",
+  "fish_index": 24,
   "height_increment": 0.0,
   "owners": [
     "unnamedanimalmod:flashlight_fish"

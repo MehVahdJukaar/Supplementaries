@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 15,
+  "render_fluid": "moonlight:water",
+  "fish_index": 14,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:teal_arrowfish"

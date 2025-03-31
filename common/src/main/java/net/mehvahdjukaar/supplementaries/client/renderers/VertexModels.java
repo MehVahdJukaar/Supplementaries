@@ -133,7 +133,6 @@ public class VertexModels {
         int textH = 32;
         int fishW = 5;
         int fishH = 4;
-        fishType -= 1; //wah
         int fishv = fishType % (textH / fishH);
         int fishu = fishType / (textH / fishH);
 
@@ -146,8 +145,8 @@ public class VertexModels {
         int lu = VertexUtil.lightU(combinedLightIn);
         int lv = VertexUtil.lightV(combinedLightIn);
 
-        float minu = 0 * fishu * w;
-        float minv = 0 * fishv * h;
+        float minu = fishu * w;
+        float minv = fishv * h;
         float maxu = 1 * w + minu;
         float maxv = 1 * h + minv;
 

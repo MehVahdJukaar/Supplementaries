@@ -1,3 +1,3 @@
-- improved blackboard waxing and glowing
-- added back placeable books
-- placeable books now use a very extensive (and very over engineeded) data & resource driven system. This means you can now make any item with any component placeable and have unique models too!
+- fixed accidental required dep
+- fixed bubble blower charge recipe
+- fixed a missing book model

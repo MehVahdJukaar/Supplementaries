@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 43,
+  "render_fluid": "moonlight:water",
+  "fish_index": 42,
   "height_increment": 0.0,
   "owners": [
     "biomemakeover:glowfish"

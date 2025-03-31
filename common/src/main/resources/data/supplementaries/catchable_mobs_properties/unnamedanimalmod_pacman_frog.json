@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 30,
+  "render_fluid": "moonlight:water",
+  "fish_index": 29,
   "height_increment": 0.0,
   "owners": [
     "unnamedanimalmod:pacman_frog"

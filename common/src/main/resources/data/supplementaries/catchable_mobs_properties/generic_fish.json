@@ -1,7 +1,7 @@
 {
   "comment": "this applies to all fishes that don't have another data file or interface implemented",
   "render_fluid": "moonlight:water",
-  "fish_index": 1,
+  "fish_index": 0,
   "height_increment": 0.0,
   "owners": [
   ],

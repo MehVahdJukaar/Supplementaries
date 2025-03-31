@@ -1,5 +1,6 @@
 {
-  "render_fluid": "moonlight:water","fish_index": 38,
+  "render_fluid": "moonlight:water",
+  "fish_index": 37,
   "height_increment": 0.0,
   "owners": [
     "betteranimalsplus:eel_freshwater"
