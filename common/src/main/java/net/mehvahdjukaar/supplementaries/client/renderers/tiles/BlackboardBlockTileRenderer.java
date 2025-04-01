@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
@@ -7,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
@@ -19,7 +19,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -42,7 +41,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.mc = Minecraft.getInstance();
         this.camera = this.mc.gameRenderer.getMainCamera();
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatHelper.getPlatform().isForge();
+        this.noise = MiscUtils.FESTIVITY.isAprilsFool();
     }
 
     @Override
@@ -75,7 +74,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseScale").set(10000);
             //SuppPlatformStuff.getNoiseShader().getUniform("NoiseSpeed").set(10);
-            ClientRegistry.NOISE_SHADER.get().getUniform("Intensity").set(1.0f);
+            Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
+            if (intensity != null) intensity.set(1.0f);
 
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);

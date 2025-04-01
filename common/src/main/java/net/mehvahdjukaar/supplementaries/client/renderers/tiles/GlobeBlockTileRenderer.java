@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
@@ -107,7 +107,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
         models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
         INSTANCE = this;
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatHelper.getPlatform().isForge();
+        this.noise = MiscUtils.FESTIVITY.isAprilsFool();
 
     }
 
@@ -144,7 +144,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
                 float c = (float) Mth.clamp(si, -2, 2);
-                ClientRegistry.NOISE_SHADER.get().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
+                Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
+                if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
                 builder = buffer.getBuffer(NoiseRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
             } else {
