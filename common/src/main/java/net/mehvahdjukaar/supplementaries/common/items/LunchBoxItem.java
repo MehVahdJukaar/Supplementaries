@@ -77,7 +77,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             if (food.isEmpty()) {
                 return InteractionResultHolder.fail(basket);
             }
-            CannonScreen
             player.setItemInHand(hand, food);
             //takes care of instant uses. Normally doesnt happen with food but we never know
             var result = food.use(pLevel, player, hand);

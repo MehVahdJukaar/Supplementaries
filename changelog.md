@@ -2,3 +2,4 @@
 - fixed cannon message being wrong
 - fixed lunch basket not consuming items that have an instant use
 - fixed luch basket accepting lingering and splash potions
+- cannons have comparator output
