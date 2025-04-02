@@ -130,6 +130,8 @@ public class CompatHandler {
         if (COMPUTERCRAFT) CCCompat.init();
         if (CURIOS) CuriosCompat.init();
         if (TRINKETS) TrinketsCompat.init();
+        if (SOUL_FIRED) SoulFiredCompat.init();
+        if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

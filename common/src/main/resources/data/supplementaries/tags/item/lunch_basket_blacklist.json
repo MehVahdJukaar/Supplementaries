@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "minecraft:splash_potion",
+    "minecraft:lingering_potion",
     {"id":"supplementaries:lunch_basket","required":false},
     {"id":"potionbundles:potion_bundle","required":false},
     {"id":"ars_nouveau:potion_flask","required":false},

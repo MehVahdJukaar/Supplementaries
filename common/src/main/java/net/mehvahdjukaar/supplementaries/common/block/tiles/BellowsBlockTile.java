@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
@@ -23,10 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChangeOverTimeBlock;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.WetSpongeBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
@@ -120,11 +118,6 @@ public class BellowsBlockTile extends BlockEntity {
             double dist;
             double b;
             switch (facing) {
-                default -> {
-                    b = worldPosition.getZ() + 1d;
-                    if (entityBB.minZ < b) continue;
-                    dist = entity.getZ() - b;
-                }
                 case NORTH -> {
                     b = worldPosition.getZ();
                     if (entityBB.maxZ > b) continue;
@@ -149,6 +142,11 @@ public class BellowsBlockTile extends BlockEntity {
                     b = worldPosition.getY();
                     if (entityBB.maxY > b) continue;
                     dist = b - entity.getY();
+                }
+                default -> {
+                    b = worldPosition.getZ() + 1d;
+                    if (entityBB.minZ < b) continue;
+                    dist = entity.getZ() - b;
                 }
             }
             //dist, vel>0

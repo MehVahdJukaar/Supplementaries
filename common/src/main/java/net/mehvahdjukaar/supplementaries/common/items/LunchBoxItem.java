@@ -9,11 +9,13 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.integration.TrinketsCompat;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -29,6 +31,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +76,10 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
                 return InteractionResultHolder.fail(basket);
             }
             player.setItemInHand(hand, food);
+            //takes care of instant uses. Normally doesnt happen with food but we never know
             var result = food.use(level, player, hand);
+            ItemStack resItem = result.getObject();
+            swapWithSelected(player, resItem, data, food);
             ((LivingEntityAccessor) player).setUseItem(basket);
             player.setItemInHand(hand, basket);
 
@@ -157,17 +166,29 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
                 ItemStack remaining = mutable.tryAdding(result);
                 success = true;
 
-                if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
-                    p.drop(remaining, false);
-                }
+            if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                p.drop(remaining, false);
             }
             if (success) stack.set(getComponentType(), mutable.toImmutable());
             return stack;
         }
-        return super.finishUsingItem(stack, level, livingEntity);
     }
 
-    @Override
+        private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack copy) {
+            if (result.isEmpty()) {
+                data.consumeSelected();
+            } else if (result != copy) {
+                data.consumeSelected();
+                ItemStack remaining = data.tryAdding(result);
+
+                if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                    p.drop(remaining, false);
+                }
+            }
+        }
+
+
+        @Override
     protected void playInsertSound(Entity pEntity) {
         pEntity.playSound(ModSounds.LUNCH_BASKET_INSERT.get(), 0.8F,
                 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);

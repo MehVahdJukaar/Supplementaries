@@ -188,6 +188,7 @@ public class CannonController {
     }
 
     public static void onKeyInventory(){
+        //Disabled, too buggy
         NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
     }
 
