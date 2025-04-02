@@ -9,9 +9,11 @@ import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.TrinketsCompat;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -74,8 +77,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             if (food.isEmpty()) {
                 return InteractionResultHolder.fail(basket);
             }
+            CannonScreen
             player.setItemInHand(hand, food);
+            //takes care of instant uses. Normally doesnt happen with food but we never know
             var result = food.use(pLevel, player, hand);
+            ItemStack resItem = result.getObject();
+            swapWithSelected(player, resItem, data, food);
             ((LivingEntityAccessor) player).setUseItem(basket);
             player.setItemInHand(hand, basket);
 
@@ -143,19 +150,23 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = copy.finishUsingItem(level, livingEntity);
-            if (result.isEmpty()) {
-                data.consumeSelected();
-            } else if (result != copy) {
-                data.consumeSelected();
-                ItemStack remaining = data.tryAdding(result);
-
-                if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
-                    p.drop(remaining, false);
-                }
-            }
+            swapWithSelected(livingEntity, result, data, copy);
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack copy) {
+        if (result.isEmpty()) {
+            data.consumeSelected();
+        } else if (result != copy) {
+            data.consumeSelected();
+            ItemStack remaining = data.tryAdding(result);
+
+            if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                p.drop(remaining, false);
+            }
+        }
     }
 
     @Override

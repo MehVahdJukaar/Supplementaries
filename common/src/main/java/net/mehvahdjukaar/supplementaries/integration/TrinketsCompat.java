@@ -18,6 +18,10 @@ import net.minecraft.world.item.ItemStack;
 
 public class TrinketsCompat {
 
+    public static void init(){
+
+    }
+
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
 
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);

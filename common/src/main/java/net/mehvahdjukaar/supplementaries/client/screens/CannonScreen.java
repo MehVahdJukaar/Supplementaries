@@ -114,6 +114,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         graphics.drawString(this.font, wantedPower + "x", 37, 25, color, false);
     }
 
+    @Override
     public boolean keyPressed(int key, int a, int b) {
         return super.keyPressed(key, a, b);
     }

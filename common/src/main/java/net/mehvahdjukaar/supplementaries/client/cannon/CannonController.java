@@ -185,6 +185,7 @@ public class CannonController {
     }
 
     public static void onKeyInventory(){
+        //Disabled, too buggy
         ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
     }
 

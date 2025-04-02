@@ -128,7 +128,8 @@ public class CompatHandler {
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (SOUL_FIRED) SoulFiredCompat.init();
         if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.init();
-
+        if (CURIOS) CuriosCompat.init();
+        if (TRINKETS) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

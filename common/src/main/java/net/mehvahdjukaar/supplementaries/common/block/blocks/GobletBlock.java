@@ -93,7 +93,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
         if (0.05 > random.nextFloat()) {
             if (world.getBlockEntity(pos) instanceof GobletBlockTile tile) {
                 SoftFluidTank tank = tile.getSoftFluidTank();
-                if (tank.getFluid().is(BuiltInSoftFluids.POTION.get())) {
+                if (tank.getFluid().is(BuiltInSoftFluids.POTION)) {
                     int i = tank.getCachedStillColor(world, pos);
                     double d0 = (i >> 16 & 255) / 255.0D;
                     double d1 = (i >> 8 & 255) / 255.0D;

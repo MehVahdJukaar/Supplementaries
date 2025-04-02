@@ -95,7 +95,7 @@ public class SupplementariesForgeClient {
                 var r = event.getRenderer(entityType);
                 if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
             } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to add slimed layer to entity: " + entityType + ". This bug was caused by forge! Use neo");
+                Supplementaries.LOGGER.warn("Failed to add slimed layer to entity: {}. This bug was caused by forge! Use neo", entityType);
             }
         }));
 

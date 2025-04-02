@@ -495,7 +495,7 @@
   "message.supplementaries.timber_frame": "Accepts any full block",
   "message.supplementaries.trapdoor.locked": "This trapdoor is locked",
   "message.supplementaries.wind_vane": "Reacts to weather",
-  "message.supplementaries.cannon_maneuver": "Press %2$s to Dismount, %2$s to Fire",
+  "message.supplementaries.cannon_maneuver": "Press %1$s to Dismount, %2$s to Fire",
   "message.supplementaries.lunch_box.tooltip.open": "Opened",
   "message.supplementaries.lunch_box.tooltip.closed": "Closed",
   "message.supplementaries.lunch_box.tooltip": "[%s] to switch mode",
