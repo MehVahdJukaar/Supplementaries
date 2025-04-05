@@ -1,11 +1,9 @@
-
 {
   "replace": false,
   "values": [
     {"id":"minecraft:gunpowder","required":false},
     {"id":"#forge:dusts","required":false},
     {"id":"supplementaries:ash","required":false},
-    {"id":"#forge:dusts","required":false},
     {"id":"thermal:pythogro","required":false},
     {"id":"darkerdepths:ash","required":false},
     {"id":"thermal:sawdust","required":false},
@@ -18,10 +16,9 @@
     {"id":"shretnether:ashpile","required":false},
     {"id":"infernalexp:moth_dust","required":false},
     {"id":"infernalexp:basalt_silt","required":false},
-    {"id":"create:powdered_obsidian","required":false},
-    {"id":"feywild:fey_dust","required":false},
     {"id":"create:cinder_flour","required":false},
     {"id":"create:powdered_obsidian","required":false},
+    {"id":"feywild:fey_dust","required":false},
     {"id":"waystones:warp_dust","required":false},
     {"id":"nether_extension:ash","required":false},
     {"id":"potionmaster:coal_powder","required":false},
