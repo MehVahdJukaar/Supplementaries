@@ -6,7 +6,7 @@ import net.neoforged.fml.ModLoadingContext;
 
 public class ShulkerBoxTooltipCompatImpl {
 
-    public static void registerPlugin() {
+    public static void setup() {
         ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
             () -> new ShulkerBoxTooltipPlugin(ShulkerBoxTooltipCompat::new));
     }

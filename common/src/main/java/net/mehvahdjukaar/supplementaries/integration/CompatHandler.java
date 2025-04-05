@@ -116,6 +116,7 @@ public class CompatHandler {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
         if (SOUL_FIRED) SoulFiredCompat.setup();
+        if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.setup();
     }
 
     public static void initOptionalRegistries() {
@@ -130,8 +131,6 @@ public class CompatHandler {
         if (COMPUTERCRAFT) CCCompat.init();
         if (CURIOS) CuriosCompat.init();
         if (TRINKETS) TrinketsCompat.init();
-        if (SOUL_FIRED) SoulFiredCompat.init();
-        if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

@@ -6,7 +6,9 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -30,7 +32,7 @@ public class PlaceableBookManagerClient {
             new ModelResourceLocation(Supplementaries.res("missing"), "missing"),
             -1, 0, false);
 
-    public static void onEarlyPackLoad(ResourceManager resourceManager) {
+    private static void reload(ResourceManager resourceManager) {
         Map<ResourceLocation, JsonElement> js = new HashMap<>();
         scanDirectory(resourceManager, "placeable_books_visuals", GSON, js);
 
@@ -70,7 +72,7 @@ public class PlaceableBookManagerClient {
         return modelsList.models();
     }
 
-    public static List<ModelResourceLocation> getExtraModels() {
+    private static List<ModelResourceLocation> getExtraModels() {
         List<ModelResourceLocation> list = new ArrayList<>();
         for (var entry : bookVisuals.getEntries()) {
             for (var model : entry.getValue()) {
@@ -80,5 +82,12 @@ public class PlaceableBookManagerClient {
             }
         }
         return list;
+    }
+
+    public static void registerExtraModels(ClientHelper.SpecialModelEvent event) {
+        //run reloader and register extra models
+        reload(Minecraft.getInstance().getResourceManager());
+
+        getExtraModels().forEach(event::register);
     }
 }

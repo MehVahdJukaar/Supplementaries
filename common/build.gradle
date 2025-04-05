@@ -31,7 +31,7 @@ dependencies {
     //modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
     modCompileOnly("curse.maven:jei-238222:5846878")
     modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
-    modCompileOnly("curse.maven:emi-580555:5872513")
+    modCompileOnly("curse.maven:emi-580555:6361996")
 
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
     modCompileOnly("curse.maven:flan-404578:5290167")

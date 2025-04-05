@@ -73,6 +73,9 @@ public class MiscUtils {
         }
 
         private static Festivity get() {
+            if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
+                return NONE;
+            }
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int date = calendar.get(Calendar.DATE);

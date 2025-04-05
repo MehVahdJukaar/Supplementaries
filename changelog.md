@@ -1,5 +1,2 @@
-- fixed an issue with curio/trinket and quiver
-- fixed cannon message being wrong
-- fixed lunch basket not consuming items that have an instant use
-- fixed luch basket accepting lingering and splash potions
-- cannons have comparator output
+- improved lunch box item code
+- fixed an issue with modenr fix, making placeable books have missing models

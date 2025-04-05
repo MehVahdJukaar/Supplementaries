@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +16,7 @@ public abstract class IronGolemRendererMixin {
 
     @Inject(method = "getTextureLocation*", at = @At("HEAD"), cancellable = true)
     public void supp$swag(@NotNull IronGolem entity, CallbackInfoReturnable<ResourceLocation> info) {
-        if (entity.getUUID().getLeastSignificantBits() % 420 == 0)
+        if (entity.getUUID().getLeastSignificantBits() % 420 == 0 && !ClientConfigs.General.UNFUNNY.get())
             info.setReturnValue(ModTextures.THICK_GOLEM);
     }
 }

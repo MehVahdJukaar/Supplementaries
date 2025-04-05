@@ -455,7 +455,7 @@ public class ClientRegistry {
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         WAY_SIGN_MODELS.get().values().forEach(event::register);
-        PlaceableBookManagerClient.getExtraModels().forEach(event::register);
+        PlaceableBookManagerClient.registerExtraModels(event);
         event.register(BLACKBOARD_FRAME);
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);

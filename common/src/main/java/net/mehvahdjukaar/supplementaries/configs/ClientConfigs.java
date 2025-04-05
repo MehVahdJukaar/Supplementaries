@@ -234,6 +234,7 @@ public class ClientConfigs {
         public static final Supplier<Double> TEST1;
         public static final Supplier<Double> TEST2;
         public static final Supplier<Double> TEST3;
+        public static final Supplier<Boolean> UNFUNNY;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -259,6 +260,7 @@ public class ClientConfigs {
             TEST1 = builder.comment("ignore this").define("test1", 0d, -10, 10);
             TEST2 = builder.comment("ignore this").define("test2", 0d, -10, 10);
             TEST3 = builder.comment("ignore this").define("test3", 0d, -10, 10);
+            UNFUNNY = builder.comment("unfunny").define("I am very boring", false);
             builder.pop();
         }
     }
