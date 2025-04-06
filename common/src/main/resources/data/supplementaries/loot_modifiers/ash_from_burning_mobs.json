@@ -2,13 +2,13 @@
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "ash_from_burning"
+      "flag": "ash_from_burning_mobs"
     }
   ],
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "ash_from_burning"
+      "flag": "ash_from_burning_mobs"
     }
   ],
   "type": "moonlight:add_item",
