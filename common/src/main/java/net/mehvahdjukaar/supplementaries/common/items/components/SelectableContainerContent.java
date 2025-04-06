@@ -354,11 +354,12 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SelectableContainerContent<?> that = (SelectableContainerContent<?>) o;
-        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount && Objects.equals(stacks, that.stacks);
+        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount &&
+                ItemStack.listMatches(stacks, that.stacks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stacks, selectedSlot);
+        return Objects.hash(ItemStack.hashStackList(stacks), selectedSlot);
     }
 }
