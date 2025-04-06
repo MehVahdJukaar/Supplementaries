@@ -59,11 +59,6 @@ public class SupplementariesForge {
     public void setup(FMLCommonSetupEvent event) {
         VillagerScareStuff.setup();
 
-        event.enqueueWork(() -> {
-            if (CompatHandler.SHULKER_BOX_TOOLTIP) {
-                ShulkerBoxTooltipCompat.registerPlugin();
-            }
-        });
     }
 
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
