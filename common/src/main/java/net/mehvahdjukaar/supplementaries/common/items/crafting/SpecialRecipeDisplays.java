@@ -120,7 +120,7 @@ public class SpecialRecipeDisplays {
             Item out = BlocksColorAPI.getColoredItem(k, null);
             if (out != null && SoapWashableHelper.canCleanColor(out)) {
                 var n = BlocksColorAPI.getItemHolderSet(k);
-                if (n == null || out == null) continue;
+                if (n == null) continue;
 
                 Ingredient ing = n.unwrap().map(Ingredient::of, l ->
                         Ingredient.of(l.stream().map(Holder::value)
