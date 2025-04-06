@@ -21,15 +21,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class SoapWashableHelper {
 
-    public static boolean canCleanColor(Block block) {
+    public static boolean canCleanColor(@NotNull Block block) {
         if (block.builtInRegistryHolder().is(ModTags.SOAP_BLACKLIST_BLOCK)) return false;
         return !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(block));
     }
 
-    public static boolean canCleanColor(Item item) {
+    public static boolean canCleanColor(@NotNull Item item) {
         if (item.builtInRegistryHolder().is(ModTags.SOAP_BLACKLIST_ITEM)) return false;
         return !CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(BlocksColorAPI.getKey(item));
     }
