@@ -1,2 +1,3 @@
-- improved lunch box item code
-- fixed an issue with modenr fix, making placeable books have missing models
+- - fixed a bug on recipe displays
+  - fixed ash from mob config not working
+  - fixed quiver component not equaling item stacks correctly

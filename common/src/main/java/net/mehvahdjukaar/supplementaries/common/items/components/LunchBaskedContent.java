@@ -91,12 +91,12 @@ public class LunchBaskedContent extends SelectableContainerContent<LunchBaskedCo
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LunchBaskedContent that = (LunchBaskedContent) o;
-        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount && Objects.equals(stacks, that.stacks)
+        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount && ItemStack.listMatches(stacks, that.stacks)
                 && isOpen == that.isOpen;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stacks, selectedSlot, isOpen);
+        return Objects.hash(ItemStack.hashStackList(stacks), selectedSlot, isOpen);
     }
 }
