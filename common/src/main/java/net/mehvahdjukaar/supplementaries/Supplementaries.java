@@ -29,6 +29,7 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,7 +55,6 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
         Credits.fetchFromServer();
         CommonConfigs.init();
 

@@ -441,3 +441,7 @@ slidy double pulse
 - TODO: credist screen
 - hud mod. armor broken hud, items offhadn crafting
 - snow real magic compat
+- curse effect that halves your life
+- glowy plant for the end used for end lamp
+- sculk speaker, redirects all noteblocks to itself
+- - block that lets the player change weather (drum/ritual block)
