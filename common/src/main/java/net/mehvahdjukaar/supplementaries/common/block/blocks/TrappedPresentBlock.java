@@ -130,7 +130,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
 
     @Override
     public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
-        if (this.isLitUp(state, world, pos) && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+        if (state.getValue(PACKED) && !state.getValue(ON_COOLDOWN) && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
             if (world instanceof ServerLevel serverLevel) {
                 tile.detonate(serverLevel, pos, state, null);
             }
