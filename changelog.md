@@ -1,3 +1,1 @@
-- - fixed a bug on recipe displays
-  - fixed ash from mob config not working
-  - fixed quiver component not equaling item stacks correctly
+- fixed jei compat being broken

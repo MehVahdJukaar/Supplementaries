@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.core.mixins.MinecraftMixin;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -152,7 +153,6 @@ public class SoapWashableHelper {
 
         if (newColor != null) {
             if (!canCleanColor(state.getBlock())) return false;
-
             //TODO: add back
             if (state.getBlock() instanceof BedBlock) {
                 if (true) return false;
