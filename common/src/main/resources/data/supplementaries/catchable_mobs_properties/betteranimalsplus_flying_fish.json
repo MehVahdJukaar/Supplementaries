@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water",+"fish_index": 35,
+  "render_fluid": "moonlight:water",
+  "fish_index": 35,
   "height_increment": 0.0,
   "owners": [
     "betteranimalsplus:flying_fish"
