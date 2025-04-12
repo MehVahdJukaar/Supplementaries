@@ -1,1 +1,2 @@
-- fixed jei compat being broken
+- fixed a bug with soap
+- improved iron game opening
