@@ -17,6 +17,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,13 +25,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
+
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock.canSupportBunting;
 
 
 public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
@@ -49,7 +54,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     public Map<Direction, DyeColor> getBuntings() {
         return buntings;
     }
-
 
     @Override
     public void updateClientVisualsOnLoad() {
@@ -124,7 +128,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
-                RopeBuntingBlock.canSupportBunting(getBlockState(), index);
+                canSupportBunting(getBlockState(), index);
     }
 
     @Override
@@ -144,9 +148,34 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     }
 
 
+    public boolean rotateBuntings(BlockState state, Rotation rotation) {
+        Map<Direction, ItemStack> newMap = new HashMap<>();
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            ItemStack stack = this.getItem(dir.get2DDataValue());
+            if (stack.isEmpty()) continue;
+            Direction newDir = rotation.rotate(dir);
+            if (canSupportBunting(state, newDir.get2DDataValue())) {
+                newMap.put(newDir, stack);
+            } else return false;
+        }
+        if (!newMap.isEmpty()) {
+            this.clearContent();
+            newMap.forEach((dir, stack) ->
+                    this.setItem(dir.get2DDataValue(), stack));
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        //structure block rotation decoding
+        BlockState state = this.getBlockState();
+        if (state.getValue(RopeBuntingBlock.FLIP_TILE)) {
+            rotateBuntings(state, Rotation.CLOCKWISE_90);
+            level.setBlockAndUpdate(worldPosition, state.setValue(RopeBuntingBlock.FLIP_TILE, false));
+        }
         //NBT items backward compat
 
         ListTag listTag = tag.getList("Items", 10);

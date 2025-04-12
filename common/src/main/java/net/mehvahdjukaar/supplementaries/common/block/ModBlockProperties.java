@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
@@ -57,6 +58,7 @@ public class ModBlockProperties {
     public static final BooleanProperty ON_PRESSURE_PLATE = BooleanProperty.create("on_pressure_plate");
     public static final BooleanProperty TWO_FACED = BooleanProperty.create("two_faced");
     public static final BooleanProperty SLANTED = BooleanProperty.create("slanted");
+    public static final BooleanProperty FLIP_TILE = BooleanProperty.create("flip_tile");
 
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);

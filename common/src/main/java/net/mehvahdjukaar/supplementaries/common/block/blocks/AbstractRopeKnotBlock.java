@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -152,10 +153,6 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
             int w = state.getValue(POST_TYPE).getWidth();
             double o = (16 - w) / 2d;
             switch (state.getValue(AXIS)) {
-                default -> {
-                    v = Block.box(o, 0D, o, o + w, 16D, o + w);
-                    c = Block.box(o, 0D, o, o + w, 24, o + w);
-                }
                 case X -> {
                     v = Block.box(0D, o, o, 16D, o + w, o + w);
                     c = v;
@@ -163,6 +160,10 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
                 case Z -> {
                     v = Block.box(o, o, 0, o + w, o + w, 16);
                     c = v;
+                }
+                default -> {
+                    v = Block.box(o, 0D, o, o + w, 16D, o + w);
+                    c = Block.box(o, 0D, o, o + w, 24, o + w);
                 }
             }
             if (state.getValue(DOWN)) v = Shapes.or(v, down);
@@ -219,6 +220,13 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
                 default -> state;
             };
         }
+    }
+
+    @ForgeOverride
+    public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
+        BlockState s = rotate(state, direction);
+        onRotated(s, state, level, pos, direction, Direction.UP, null);
+        return s;
     }
 
     @Override
