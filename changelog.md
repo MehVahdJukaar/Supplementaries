@@ -1,2 +1,2 @@
-- fixed a bug with soap
-- improved iron game opening
+- added some cannonball configs
+- workaround for rope buntings not rotating buntings in structures
