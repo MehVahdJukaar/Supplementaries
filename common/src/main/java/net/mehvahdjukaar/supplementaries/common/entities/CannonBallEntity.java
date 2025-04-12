@@ -178,7 +178,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             Set<Block> whitelist = wl != null ? wl.blocks(): null;
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float)radius, whitelist);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
             exp.explode();
             exp.finalizeExplosion(true);
 
@@ -296,8 +296,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 3.5f; //TODO: config
-            float amount = (float) lostEnergy * dmgMult;
+            double dmgMult = CommonConfigs.Functional.CANNONBALL_POWER_SCALING.get();
+            float amount = (float) (lostEnergy * dmgMult);
             float oldHealth = le.getHealth();
             if (le.hurt(ModDamageSources.cannonBallExplosion(level(), this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);

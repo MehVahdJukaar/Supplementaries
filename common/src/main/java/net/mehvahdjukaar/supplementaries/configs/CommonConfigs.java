@@ -743,8 +743,10 @@ public class CommonConfigs {
                     .define("cooldown", 60, 0, 500);
             builder.push("cannonball");
             CANNONBALL_ENABLED = feature(builder);
-            CANNONBALL_RADIUS = builder.comment("Cannonball pierce radius. The bigger this is the less piercing power it will have as it will waste more energy breaking these blocks")
-                    .define("radius", 1.1d, 0, 5);
+            CANNONBALL_POWER_SCALING = builder.comment("Cannonball power scaling. Higher values will make cannonballs have more energy. Reminder that the damage and breaking power of a cannonball is proportional to its energy (speed squared) times this constant")
+                    .define("power_scaling", 3.5, 0, 100);
+            CANNONBALL_RADIUS = builder.comment("Radius of the 'explosion' when a cannonball hits a block. Set to 0 to disable")
+                    .define("break_radius", 1.1, 0, 10);
             builder.pop();
             PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
             builder.pop();
@@ -853,7 +855,6 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
-        public static final Supplier<Double> CANNONBALL_RADIUS;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }
 
