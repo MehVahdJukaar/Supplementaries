@@ -162,7 +162,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
 
         if (!level().isClientSide) {
-            float radius = 1.1f;
+            double radius = CommonConfigs.Functional.CANNONBALL_BREAK_RADIUS.get();
 
             Vec3 movement = this.getDeltaMovement();
             double vel = Math.abs(movement.length());
@@ -177,7 +177,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             BlockPos pos = result.getBlockPos();
             Set<Block> whitelist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
             exp.explode();
             exp.finalizeExplosion(true);
 
@@ -295,8 +295,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 3.5f; //TODO: config
-            float amount = (float) lostEnergy * dmgMult;
+            double dmgMult = CommonConfigs.Functional.CANNONBALL_POWER_SCALING.get();
+            float amount = (float) (lostEnergy * dmgMult);
             float oldHealth = le.getHealth();
             if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);

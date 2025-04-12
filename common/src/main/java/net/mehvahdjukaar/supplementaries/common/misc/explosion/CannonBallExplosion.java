@@ -44,7 +44,7 @@ public class CannonBallExplosion extends Explosion {
         super(level, source, toBlowX, toBlowY, toBlowZ, maxRadius, false, BlockInteraction.DESTROY);
         this.centerPos = centerPos;
         this.maxExplodedAmount = maxExplodedAmount;
-        this.whitelist = whitelist;
+        this.whitelist = maxRadius == 0 ? Set.of() : whitelist;
     }
 
     //client factory
