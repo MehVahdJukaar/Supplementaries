@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -61,10 +62,17 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
-        super.setItem(slot, stack);
+    public void updateTileOnInventoryChanged() {
+        super.updateTileOnInventoryChanged();
+        for (int n= 0; n<this.getContainerSize(); n++){
+            this.setBlockFromItem(n, this.getItem(n).getItem());
+        }
+        //TODO: for 1.22. standardie this darn tile
+        updateLight();
+    }
+
+    private void updateLight() {
         if (this.level instanceof ServerLevel) {
-            this.setBlockFromItem(slot, stack.getItem());
             int newLight = Math.max(Math.max(ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition),
                             ForgeHelper.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
                     ForgeHelper.getLightEmission(this.getHeldBlock(2), level, worldPosition));
@@ -82,7 +90,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
 
     @Override
     public void updateClientVisualsOnLoad() {
-
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
             setBlockFromItem(n, item);

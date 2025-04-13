@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -193,11 +194,6 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         s = s.setValue(FLIP_TILE, false);
         rotateOverAxis(state, level, pos, direction, Direction.UP, null);
         return s;
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return super.mirror(state, mirror);
     }
 
     @Override

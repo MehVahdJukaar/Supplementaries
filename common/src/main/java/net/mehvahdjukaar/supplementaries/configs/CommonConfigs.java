@@ -855,6 +855,8 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
+        public static final Supplier<Double> CANNONBALL_RADIUS;
+        public static final Supplier<Double> CANNONBALL_POWER_SCALING;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }
 

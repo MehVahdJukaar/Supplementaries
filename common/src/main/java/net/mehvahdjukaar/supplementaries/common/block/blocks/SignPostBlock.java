@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.core.Moonlight;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.minecraft.core.BlockPos;
@@ -16,12 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -35,8 +35,17 @@ import java.util.Optional;
 
 public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRotatable {
 
+    private static final EnumProperty<Rotation> ROTATE_TILE = ModBlockProperties.ROTATE_TILE;
+
     public SignPostBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.defaultBlockState().setValue(ROTATE_TILE, Rotation.NONE));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(ROTATE_TILE);
     }
 
     @Override
@@ -90,6 +99,19 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
             return list;
         }
         return super.getDrops(state, builder);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        BlockState s = super.rotate(state, rotation);
+        s.setValue(ROTATE_TILE, s.getValue(ROTATE_TILE).getRotated(rotation));
+        return s;
+    }
+
+    //nobody uses this anyways we can get away with not having it...saves 4 states
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return super.mirror(state, mirror);
     }
 
     @ForgeOverride

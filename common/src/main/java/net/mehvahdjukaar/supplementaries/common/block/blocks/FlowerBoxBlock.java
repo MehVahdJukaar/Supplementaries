@@ -97,20 +97,15 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        Direction dir = switch (state.getValue(ATTACHMENT)) {
-            case FLOOR -> Direction.DOWN;
-            case CEILING -> Direction.UP;
-            default -> state.getValue(FACING).getOpposite();
-        };
-
-        return level.getBlockState(pos.relative(dir)).isSolid();
-    }
-
-    @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (!this.canSurvive(stateIn, worldIn, currentPos)) return Blocks.AIR.defaultBlockState();
-        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        BlockState s = super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        if (stateIn.getValue(ATTACHMENT) == AttachFace.CEILING && facing == Direction.UP) {
+            if (!facingState.isSolid()) {
+                s = s.setValue(ATTACHMENT, AttachFace.FLOOR);
+            }
+        }
+        return s;
     }
 
     @Override

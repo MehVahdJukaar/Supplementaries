@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
@@ -22,6 +21,7 @@ import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
@@ -45,7 +45,6 @@ public class ModBlockProperties {
     public static final BooleanProperty AXIS_Y = BooleanProperty.create("axis_y");
     public static final BooleanProperty AXIS_X = BooleanProperty.create("axis_x");
     public static final BooleanProperty AXIS_Z = BooleanProperty.create("axis_z");
-    public static final BooleanProperty FLOWER_BOX_ATTACHMENT = BooleanProperty.create("floor");
     public static final BooleanProperty LAVALOGGED = BooleanProperty.create("lavalogged");
     public static final BooleanProperty ANTIQUE = BooleanProperty.create("ye_olde");
     public static final BooleanProperty TREASURE = BooleanProperty.create("treasure");
@@ -59,6 +58,7 @@ public class ModBlockProperties {
     public static final BooleanProperty TWO_FACED = BooleanProperty.create("two_faced");
     public static final BooleanProperty SLANTED = BooleanProperty.create("slanted");
     public static final BooleanProperty FLIP_TILE = BooleanProperty.create("flip_tile");
+    public static final EnumProperty<Rotation> ROTATE_TILE = EnumProperty.create("rotate_tile", Rotation.class);
 
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
