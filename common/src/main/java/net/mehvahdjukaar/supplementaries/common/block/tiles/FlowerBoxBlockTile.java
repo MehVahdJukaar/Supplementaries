@@ -5,12 +5,10 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FrameBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ItemShelfBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SignPostBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -30,8 +28,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CaveVinesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder, IExtraModelDataProvider {
@@ -64,7 +62,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     @Override
     public void updateTileOnInventoryChanged() {
         super.updateTileOnInventoryChanged();
-        for (int n= 0; n<this.getContainerSize(); n++){
+        for (int n = 0; n < this.getContainerSize(); n++) {
             this.setBlockFromItem(n, this.getItem(n).getItem());
         }
         //TODO: for 1.22. standardie this darn tile
@@ -73,6 +71,7 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
 
     private void updateLight() {
         if (this.level instanceof ServerLevel) {
+
             int newLight = Math.max(Math.max(ForgeHelper.getLightEmission(this.getHeldBlock(), level, worldPosition),
                             ForgeHelper.getLightEmission(this.getHeldBlock(1), level, worldPosition)),
                     ForgeHelper.getLightEmission(this.getHeldBlock(2), level, worldPosition));
@@ -105,7 +104,11 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
             b = CompatHandler.DynTreesGetOptionalDynamicSapling(item, this.level, this.worldPosition);
         }
         if (b == null) b = Blocks.AIR;
-        this.flowerStates[n] = b.defaultBlockState();
+        BlockState state = b.defaultBlockState();
+        if (b == Blocks.CAVE_VINES) {
+            state = state.setValue(CaveVinesBlock.BERRIES, true);
+        }
+        this.flowerStates[n] = state;
     }
 
     @Override

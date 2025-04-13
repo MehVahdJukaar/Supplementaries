@@ -1,2 +1,5 @@
 - fixed a bug with soap
 - improved iron game opening
+- flower boxes canbe placed against any block, same change that occurred to flower pots in 1.13
+- improved flower boxes update logic
+- improved sign post rotation logic when rotated by a structure
