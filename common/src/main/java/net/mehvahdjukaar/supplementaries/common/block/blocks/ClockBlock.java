@@ -64,9 +64,9 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
 
     public static void displayCurrentHour(Level world, Player player) {
         int time = ((int) (world.getDayTime() + 6000) % 24000);
-        int m = (int) (((time % 1000f) / 1000f) * 60);
-        int h = time / 1000;
-        String a = "";
+        int minutes = (int) (((time % 1000f) / 1000f) * 60);
+        int hours = time / 1000;
+        String postfix = "";
 
         String ob = "";
         String br = "";
@@ -77,11 +77,11 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         }
 
         if (!ClientConfigs.Blocks.CLOCK_24H.get()) {
-            a = time < 12000 ? " AM" : " PM";
-            h = h % 12;
-            if (h == 0) h = 12;
+            postfix = time < 12000 ? " AM" : " PM";
+            hours = hours % 12;
+            if (hours == 0) hours = 12;
         }
-        String text = ob + h + br + ":" + ob + ((m < 10) ? "0" : "") + m + br + a;
+        String text = ob + hours + br + ":" + ob + String.format("%02d", minutes) + br + postfix;
 
         player.displayClientMessage(Component.literal(text), true);
 

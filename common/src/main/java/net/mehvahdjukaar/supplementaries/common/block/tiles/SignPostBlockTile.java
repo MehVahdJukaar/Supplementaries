@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
-import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -13,8 +12,6 @@ import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -39,7 +36,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -123,11 +123,13 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
         //structure block rotation decoding
         BlockState state = this.getBlockState();
-        Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
-        if (rot != Rotation.NONE) {
-            rotateSign(false, rot.ordinal()*90, false);
-            rotateSign(true, rot.ordinal()*90, false);
-            level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
+        if (state.hasProperty(ModBlockProperties.ROTATE_TILE)) {
+            Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
+            if (rot != Rotation.NONE) {
+                rotateSign(false, rot.ordinal() * 90, false);
+                rotateSign(true, rot.ordinal() * 90, false);
+                level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
+            }
         }
     }
 
@@ -312,7 +314,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
             Sign sign = getSign(ind);
 
-            if (!sign.active && item instanceof SignPostItem) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            if (!sign.active && item instanceof SignPostItem)
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
             if (isSneaking) {
                 sign.toggleDirection();
