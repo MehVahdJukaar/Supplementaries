@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterloggedBlock {
 
@@ -38,7 +39,7 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get();
+        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
     }
 
     @Override
@@ -50,12 +51,15 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
 
     public static boolean isPotionValid(PotionContents potion) {
         if (!potion.hasEffects()) return false;
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+        Boolean alternativeMode = CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
+        if (alternativeMode) {
             for (var e : potion.getAllEffects()) {
                 if (e.getEffect().value().isBeneficial()) return false;
             }
         }
-        return potion.potion().isEmpty() || !potion.potion().get().is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        Optional<Holder<Potion>> holder = potion.potion();
+        return holder.isEmpty() || !holder.get().is(alternativeMode ?
+                ModTags.TIPPED_SPIKES_POTION_BLACKLIST : ModTags.TIPPED_SPIKES_FINITE_POTION_BLACKLIST);
     }
 
     public static @NotNull PotionContents getPotion(ItemStack stack) {

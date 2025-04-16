@@ -106,6 +106,7 @@ public class ModTags {
 
     public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
     public static final TagKey<Potion> TIPPED_SPIKES_POTION_BLACKLIST = potionTag("tipped_spikes_blacklist");
+    public static final TagKey<Potion> TIPPED_SPIKES_FINITE_POTION_BLACKLIST = potionTag("tipped_spikes_finite_blacklist");
 
     //enchants
     public static final TagKey<Enchantment> PREVENTS_BUBBLE_POP = enchTag("prevents_bubble_pop");

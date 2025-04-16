@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -57,9 +56,9 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //true if it has run out of charges
     public boolean consumeCharge(Level world) {
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
+        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get()) {
             for (var e : this.potion.getAllEffects()) {
-                if (e.getEffect().value().isBeneficial()) return true;
+                if (!e.getEffect().value().isBeneficial()) return false;
             }
         }
 

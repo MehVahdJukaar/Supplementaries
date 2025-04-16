@@ -698,11 +698,12 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("bamboo_spikes");
+
             BAMBOO_SPIKES_ENABLED = feature(builder);
             TIPPED_SPIKES_ENABLED = feature(builder, "tipped_spikes");
             BAMBOO_SPIKES_DROP_LOOT = builder.comment("Allows entities killed by spikes to drop loot as if they were killed by a player")
                     .define("player_loot", false);
-            ONLY_ALLOW_HARMFUL = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
+            ONLY_ALLOW_HARMFUL_INFINITE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("only_allow_harmful_effects", true);
             TIPPED_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
                     .define("populate_creative_tab", true);
@@ -795,7 +796,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
         public static final Supplier<Boolean> TIPPED_SPIKES_TAB;
 
-        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL;
+        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL_INFINITE;
         public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 
         public static final Supplier<Boolean> SACK_ENABLED;
