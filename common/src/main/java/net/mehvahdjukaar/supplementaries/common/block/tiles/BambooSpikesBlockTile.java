@@ -12,7 +12,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -52,7 +51,12 @@ public class BambooSpikesBlockTile extends BlockEntity {
 
     //true if it has run out of charges
     public boolean consumeCharge(Level world) {
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get() && !this.potion.getEffects().get(0).getEffect().isBeneficial()) return false;
+        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get()) {
+            for (var e : this.potion.getAllEffects()) {
+                if (!e.getEffect().value().isBeneficial()) return false;
+            }
+        }
+
         this.lastTicked = world.getGameTime();
         this.charges -= 1;
         this.setChanged();

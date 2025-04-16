@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:oozing",
-    "minecraft:infested",
     {
       "id": "ars_nouveau:blasting",
       "required": false

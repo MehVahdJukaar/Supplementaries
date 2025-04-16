@@ -1,2 +1,1 @@
-- added some cannonball configs
-- workaround for rope buntings not rotating buntings in structures
+- fixed spikes not having infinite charges. blacklisted oozing and infested when in infinite mode to prevent exploits
