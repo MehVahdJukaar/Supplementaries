@@ -35,6 +35,7 @@ public class ModSetup {
         PlatHelper.addCommonSetup(ModSetup::setup);
         PlatHelper.addCommonSetup(ModSetup::asyncSetup);
         PlatHelper.addReloadableCommonSetup(ModSetup::tagDependantSetup);
+
     }
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
@@ -53,7 +54,7 @@ public class ModSetup {
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
-      //  PlaceableBookManager.setup();
+        //  PlaceableBookManager.setup();
     }
 
     @EventCalled
@@ -91,15 +92,19 @@ public class ModSetup {
         RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD.get(), 5, 20);
         RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD_SLAB.get(), 5, 20);
         RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD_STAIRS.get(), 5, 20);
-        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_FRAME.get(), 60, 60);
-        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_BRACE.get(), 60, 60);
-        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_CROSS_BRACE.get(), 60, 60);
-        RegHelper.registerBlockFlammability(ModRegistry.STICK_BLOCK.get(), 60, 100);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_FRAME.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_BRACE.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.TIMBER_CROSS_BRACE.get(), 5, 20);
+        RegHelper.registerBlockFlammability(ModRegistry.STICK_BLOCK.get(), 30, 60);
         RegHelper.registerBlockFlammability(ModRegistry.FLAX_BLOCK.get(), 60, 20);
         RegHelper.registerBlockFlammability(ModRegistry.FLAX_WILD.get(), 60, 100);
         RegHelper.registerBlockFlammability(ModRegistry.FEATHER_BLOCK.get(), 30, 60);
         RegHelper.registerBlockFlammability(ModRegistry.GUNPOWDER_BLOCK.get(), 200, 0);
         RegHelper.registerBlockFlammability(ModFluids.LUMISENE_BLOCK.get(), 200, 0);
+        RegHelper.registerBlockFlammability(ModRegistry.WICKER_FENCE.get(), 30, 60);
+        for (var a : ModRegistry.AWNINGS.values()) {
+            RegHelper.registerBlockFlammability(a.get(), 60, 20);
+        }
     }
 
     private static void registerFrameBlocks() {

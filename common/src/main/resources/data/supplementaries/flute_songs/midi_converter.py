@@ -108,7 +108,7 @@ while True:
         else:
             # Map the single value using the mapping dictionary
             mapped_value = -item / smallest_time_step
-            packed_notes.append(mapped_value)
+            packed_notes.append(int(mapped_value))
 
     tempo = input("Enter the tempo: ")
     name = input("Enter the output name: ")

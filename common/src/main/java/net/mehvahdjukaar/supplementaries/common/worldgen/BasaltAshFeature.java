@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.trades.ItemListingManager;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.WickerFenceBlock;
 import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;
@@ -38,7 +40,6 @@ public class BasaltAshFeature extends Feature<Config> {
         BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
         // Set<Pair<Integer, Integer>> blacklist = new HashSet<>();
-
         for (int l = 0; l < tries; ++l) {
             mutableBlockPos.setWithOffset(blockPos, randomSource.nextInt(xzSpread) - randomSource.nextInt(xzSpread), 0, randomSource.nextInt(xzSpread) - randomSource.nextInt(xzSpread));
 
