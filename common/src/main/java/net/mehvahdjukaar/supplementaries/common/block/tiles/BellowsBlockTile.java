@@ -107,7 +107,8 @@ public class BellowsBlockTile extends BlockEntity {
         double velocity = CommonConfigs.Redstone.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
         double maxVelocity = CommonConfigs.Redstone.BELLOWS_MAX_VEL.get(); // Affects max speed
 
-        AABB facingBox = MiscUtils.getDirectionBB(this.worldPosition, facing, (int) range);
+        AABB facingBox = AABB.encapsulatingFullBlocks(worldPosition, worldPosition.relative(facing, (int)range));
+
         List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
 
         for (Entity entity : list) {

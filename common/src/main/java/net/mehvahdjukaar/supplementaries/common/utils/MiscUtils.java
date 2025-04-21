@@ -105,29 +105,6 @@ public class MiscUtils {
         return i instanceof DiggerItem || i instanceof TridentItem;
     }
 
-    //bounding box
-    public static AABB getDirectionBB(BlockPos pos, Direction facing, int offset) {
-        BlockPos endPos = pos.relative(facing, offset);
-        switch (facing) {
-            case NORTH -> endPos = endPos.offset(1, 1, 0);
-            case SOUTH -> {
-                endPos = endPos.offset(1, 1, 1);
-                pos = pos.offset(0, 0, 1);
-            }
-            case UP -> {
-                endPos = endPos.offset(1, 1, 1);
-                pos = pos.offset(0, 1, 0);
-            }
-            case EAST -> {
-                endPos = endPos.offset(1, 1, 1);
-                pos = pos.offset(1, 0, 0);
-            }
-            case WEST -> endPos = endPos.offset(0, 1, 1);
-            case DOWN -> endPos = endPos.offset(1, 0, 1);
-        }
-        return AABB.encapsulatingFullBlocks(pos, endPos);
-    }
-
     //this is how you do it :D
     private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
             Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
