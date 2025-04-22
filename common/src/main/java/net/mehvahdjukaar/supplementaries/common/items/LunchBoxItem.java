@@ -149,16 +149,16 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = copy.finishUsingItem(level, livingEntity);
-            swapWithSelected(livingEntity, result, data, copy);
+            swapWithSelected(livingEntity, result, data, selected);
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
     }
 
-    private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack copy) {
+    private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack original) {
         if (result.isEmpty()) {
             data.consumeSelected();
-        } else if (result != copy) {
+        } else if (result != original) {
             data.consumeSelected();
             ItemStack remaining = data.tryAdding(result);
 

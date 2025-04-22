@@ -1,1 +1,1 @@
-- fixed spikes not having infinite charges. blacklisted oozing and infested when in infinite mode to prevent exploits
+- fixed an issue with lunch basket not updating its content correctly

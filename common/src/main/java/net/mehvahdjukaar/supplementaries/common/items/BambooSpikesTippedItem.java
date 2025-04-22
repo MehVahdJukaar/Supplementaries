@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -12,7 +13,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class BambooSpikesTippedItem extends WoodBasedBlockItem implements SimpleWaterloggedBlock {
 
@@ -59,12 +58,16 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     public static boolean isPotionValid(Potion potion) {
         List<MobEffectInstance> effects = potion.getEffects();
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
-            for (var e : effects) {
+        if (effects.isEmpty()) return false;
+        Boolean alternativeMode = CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
+        if (alternativeMode) {
+            for (var e : potion.getEffects()) {
                 if (e.getEffect().isBeneficial()) return false;
             }
         }
-        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        Holder<Potion> holder = BuiltInRegistries.POTION.wrapAsHolder(potion);
+        return !holder.is(alternativeMode ?
+                ModTags.TIPPED_SPIKES_POTION_BLACKLIST : ModTags.TIPPED_SPIKES_FINITE_POTION_BLACKLIST);
     }
 
     @Override
@@ -89,18 +92,7 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
         return p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
     }
 
-    public static boolean isPotionValid(PotionContents potion) {
-        if (!potion.hasEffects()) return false;
-        Boolean alternativeMode = CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
-        if (alternativeMode) {
-            for (var e : potion.getAllEffects()) {
-                if (e.getEffect().value().isBeneficial()) return false;
-            }
-        }
-        Optional<Holder<Potion>> holder = potion.potion();
-        return holder.isEmpty() || !holder.get().is(alternativeMode ?
-                ModTags.TIPPED_SPIKES_POTION_BLACKLIST : ModTags.TIPPED_SPIKES_FINITE_POTION_BLACKLIST);
-    }
+
     @Override
     public ItemStack getDefaultInstance() {
         return makeSpikeItem(Potions.POISON);

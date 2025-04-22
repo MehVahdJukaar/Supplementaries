@@ -9,6 +9,8 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.MissingMappingsEvent;
+import sfiomn.legendarysurvivaloverhaul.common.events.CommonForgeEvents;
+import sfiomn.legendarysurvivaloverhaul.common.items.drink.CanteenItem;
 
 import java.util.HashMap;
 import java.util.Map;
