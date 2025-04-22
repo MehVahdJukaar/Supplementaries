@@ -1,1 +1,2 @@
 - fixed an issue with lunch basket not updating its content correctly
+- better configs and tags for spikes
