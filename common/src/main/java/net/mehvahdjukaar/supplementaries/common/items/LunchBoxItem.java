@@ -144,7 +144,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         if (data != null && data.canEatFrom()) {
             return data.getSelected().getUseAnimation();
         }
-        RedstoneIlluminatorBlock
         return super.getUseAnimation(stack);
     }
 
