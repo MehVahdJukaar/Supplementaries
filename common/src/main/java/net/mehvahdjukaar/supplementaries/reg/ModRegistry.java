@@ -610,6 +610,7 @@ public class ModRegistry {
     //illuminator
     public static final Supplier<Block> REDSTONE_ILLUMINATOR = regWithItem(REDSTONE_ILLUMINATOR_NAME, () -> new RedstoneIlluminatorBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.SEA_LANTERN)
+                    .isRedstoneConductor(NEVER)
                     .isValidSpawn((s, w, p, g) -> true)
                     .strength(0.3f, 0.3f)
     ));

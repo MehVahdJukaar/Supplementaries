@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RedstoneIlluminatorBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -17,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -141,6 +144,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         if (data != null && data.canEatFrom()) {
             return data.getSelected().getUseAnimation();
         }
+        RedstoneIlluminatorBlock
         return super.getUseAnimation(stack);
     }
 
@@ -154,7 +158,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = copy.finishUsingItem(level, livingEntity);
-            boolean success = swapWithSelected(livingEntity, result, mutable, copy);
+            boolean success = swapWithSelected(livingEntity, result, mutable, selected);
 
             if (success) stack.set(getComponentType(), mutable.toImmutable());
             return stack;
@@ -164,12 +168,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
 
-    private static boolean swapWithSelected(LivingEntity livingEntity, ItemStack result, LunchBaskedContent.Mutable data, ItemStack copy) {
+    private static boolean swapWithSelected(LivingEntity livingEntity, ItemStack result, LunchBaskedContent.Mutable data, ItemStack currentStack) {
         boolean success = false;
         if (result.isEmpty()) {
             data.getSelected().shrink(1);
             success = true;
-        } else if (result != copy) {
+        } else if (result != currentStack) {
             data.getSelected().shrink(1);
             ItemStack remaining = data.tryAdding(result);
             success = true;

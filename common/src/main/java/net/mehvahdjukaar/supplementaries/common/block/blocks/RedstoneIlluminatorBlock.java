@@ -21,6 +21,16 @@ public class RedstoneIlluminatorBlock extends Block {
     }
 
     @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return state.getValue(POWER) != 15;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return 15 - state.getValue(POWER);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWER);
     }
