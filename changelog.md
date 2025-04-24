@@ -1,2 +1,1 @@
-- fixed an issue with lunch basket not updating its content correctly
-- better configs and tags for spikes
+- improved luch basket to fire finish use item event and item stopped event when stopped using without eating on the basket content
