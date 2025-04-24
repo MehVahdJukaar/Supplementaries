@@ -137,7 +137,12 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+    public static InteractionResultHolder<ItemStack> fireItemRightClickEvent(Player player, InteractionHand hand) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity livingEntity) {
         throw new AssertionError();
     }
 
@@ -150,4 +155,10 @@ public class SuppPlatformStuff {
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
         throw new AssertionError();
     }
+    @ExpectPlatform
+    public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
+        throw new AssertionError();
+    }
+
+
 }

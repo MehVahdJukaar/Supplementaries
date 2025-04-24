@@ -7,12 +7,21 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.common.ForgeHooks;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
+import net.minecraftforge.event.entity.item.ItemEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import org.jetbrains.annotations.NotNull;
+import sfiomn.legendarysurvivaloverhaul.common.items.drink.CanteenItem;
 
 import java.util.function.Supplier;
 

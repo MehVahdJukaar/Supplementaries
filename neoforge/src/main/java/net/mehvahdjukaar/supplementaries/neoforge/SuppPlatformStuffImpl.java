@@ -189,7 +189,7 @@ public class SuppPlatformStuffImpl {
     }
 
 
-    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+    public static InteractionResultHolder<ItemStack> fireItemRightClickEvent(Player player, InteractionHand hand) {
         var r = CommonHooks.onItemRightClick(player, hand);
         if (r == null) r = InteractionResult.PASS;
         return new InteractionResultHolder<>(r, player.getItemInHand(hand));
@@ -197,6 +197,29 @@ public class SuppPlatformStuffImpl {
 
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         dc.emptyContents(player, level, hit.getBlockPos(), hit, stack);
+    }
+
+    public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
+        //does what LivingEntity releaseUsingItem but for an arbitrary item thats not being directly used
+        if (!ForgeEventFactory.onUseItemStop(entity, stack, entity.getUseItemRemainingTicks())) {
+            ItemStack copy = entity instanceof Player ? stack.copy() : null;
+            stack.releaseUsing(entity.level(), entity, entity.getUseItemRemainingTicks());
+            if (copy != null && stack.isEmpty()) {
+                ForgeEventFactory.onPlayerDestroyItem((Player) entity, copy, entity.getUsedItemHand());
+            }
+        }
+/*
+        if (stack.useOnRelease()) {
+            entity.updatingUsingItem();
+        }
+*/
+        //this whould be this.stopUsingItem() which calls the below
+        stack.onStopUsing(entity, entity.getUseItemRemainingTicks());
+    }
+
+    public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity entity) {
+        return ForgeEventFactory.onItemUseFinish(entity, item.copy(), entity.getUseItemRemainingTicks(),
+                item.finishUsingItem(level, entity));
     }
 
     public record CapSlotReference(int slot) implements SlotReference {

@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RedstoneIlluminatorBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
@@ -148,6 +149,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         return super.getUseAnimation(stack);
     }
 
+
+
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());
@@ -157,7 +160,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
             //assume it will be decremented by at most 1
             //hacks
             ItemStack copy = selected.copyWithCount(1);
-            ItemStack result = copy.finishUsingItem(level, livingEntity);
+            ItemStack result = SuppPlatformStuff.finishUsingItem(copy, level, livingEntity);
+            //livingEntity.releaseUsingItem();
             boolean success = swapWithSelected(livingEntity, result, mutable, selected);
 
             if (success) stack.set(getComponentType(), mutable.toImmutable());
@@ -168,12 +172,23 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
 
+@ForgeOverride
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count){
+        var data = getData(stack);
+        if (data.canEatFrom()) {
+            ItemStack selected = data.getSelected();
+            //same as in here
+            //entity.releaseUsingItem();
+            SuppPlatformStuff.releaseUsingItem(selected, entity);
+        }
+    }
+
     private static boolean swapWithSelected(LivingEntity livingEntity, ItemStack result, LunchBaskedContent.Mutable data, ItemStack currentStack) {
         boolean success = false;
         if (result.isEmpty()) {
             data.getSelected().shrink(1);
             success = true;
-        } else if (result != currentStack) {
+        } else if (!ItemStack.isSameItemSameTags(result,currentStack)) {
             data.getSelected().shrink(1);
             ItemStack remaining = data.tryAdding(result);
             success = true;

@@ -1,10 +1,13 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
+import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityUseItemEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigHolder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
@@ -143,7 +146,7 @@ public class SuppPlatformStuffImpl {
         ((FireBlockAccessor) Blocks.FIRE).invokeCheckBurnOut(level, pos, chance, random, age);
     }
 
-    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+    public static InteractionResultHolder<ItemStack> fireItemRightClickEvent(Player player, InteractionHand hand) {
         return UseItemCallback.EVENT.invoker().interact(player, player.level(), hand);
     }
 
@@ -165,4 +168,18 @@ public class SuppPlatformStuffImpl {
             return getGrowthSpeed(state.getBlock(), level, pos);
         }
     }
+    public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
+        stack.releaseUsing(entity.level(), entity, entity.getUseItemRemainingTicks());
+        if (stack.useOnRelease()) {
+            // entity.updatingUsingItem();
+        }
+
+        //entity.stopUsingItem();
+    }
+
+    public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity entity) {
+        //no event here because of fabric
+        return item.finishUsingItem(level, entity);
+    }
+
 }

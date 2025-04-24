@@ -124,7 +124,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, projectile.copy());
 
-        var eventResult = SuppPlatformStuff.fireItemUseEvent(fakePlayer, InteractionHand.MAIN_HAND);
+        var eventResult = SuppPlatformStuff.fireItemRightClickEvent(fakePlayer, InteractionHand.MAIN_HAND);
         if (!eventResult.getResult().consumesAction()) {
             projectile.use(fakeLevel, fakePlayer, InteractionHand.MAIN_HAND);
         }
