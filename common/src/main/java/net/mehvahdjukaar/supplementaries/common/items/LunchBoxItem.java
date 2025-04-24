@@ -9,11 +9,9 @@ import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
-import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.TrinketsCompat;
 import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -28,7 +26,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
@@ -140,6 +137,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return super.getUseAnimation(stack);
     }
 
+
+
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = getData(stack);
@@ -148,17 +147,29 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             //assume it will be decremented by at most 1
             //hacks
             ItemStack copy = selected.copyWithCount(1);
-            ItemStack result = copy.finishUsingItem(level, livingEntity);
+            ItemStack result = SuppPlatformStuff.finishUsingItem(copy, level, livingEntity);
+            //livingEntity.releaseUsingItem();
             swapWithSelected(livingEntity, result, data, selected);
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
     }
 
+    @ForgeOverride
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count){
+        var data = getData(stack);
+        if (data.canEatFrom()) {
+            ItemStack selected = data.getSelected();
+            //same as in here
+            //entity.releaseUsingItem();
+            SuppPlatformStuff.releaseUsingItem(selected, entity);
+        }
+    }
+
     private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack original) {
         if (result.isEmpty()) {
             data.consumeSelected();
-        } else if (result != original) {
+        } else if (!ItemStack.isSameItemSameTags(result,original)) {
             data.consumeSelected();
             ItemStack remaining = data.tryAdding(result);
 

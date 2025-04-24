@@ -134,7 +134,12 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand){
+    public static InteractionResultHolder<ItemStack> fireItemRightClickEvent(Player player, InteractionHand hand){
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity livingEntity) {
         throw new AssertionError();
     }
 
@@ -142,5 +147,11 @@ public class SuppPlatformStuff {
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
+        throw new AssertionError();
+    }
+
 
 }
