@@ -1,13 +1,10 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
-import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityUseItemEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigHolder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
@@ -20,14 +17,16 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DispensibleContainerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -36,7 +35,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -168,6 +166,7 @@ public class SuppPlatformStuffImpl {
             return getGrowthSpeed(state.getBlock(), level, pos);
         }
     }
+
     public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
         stack.releaseUsing(entity.level(), entity, entity.getUseItemRemainingTicks());
         if (stack.useOnRelease()) {

@@ -1,15 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RedstoneIlluminatorBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
@@ -20,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -149,7 +145,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
 
-
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());
@@ -171,10 +166,10 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
 
-@ForgeOverride
-    public void onStopUsing(ItemStack stack, LivingEntity entity, int count){
-        var data = getData(stack);
-        if (data.canEatFrom()) {
+    @ForgeOverride
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        var data = stack.get(getComponentType());
+        if (data != null && data.canEatFrom()) {
             ItemStack selected = data.getSelected();
             //same as in here
             //entity.releaseUsingItem();
@@ -187,7 +182,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         if (result.isEmpty()) {
             data.getSelected().shrink(1);
             success = true;
-        } else if (!ItemStack.isSameItemSameTags(result,currentStack)) {
+        } else if (!ItemStack.isSameItemSameComponents(result, currentStack)) {
             data.getSelected().shrink(1);
             ItemStack remaining = data.tryAdding(result);
             success = true;
