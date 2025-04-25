@@ -123,7 +123,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
         //structure block rotation decoding
         BlockState state = this.getBlockState();
-        if (state.hasProperty(ModBlockProperties.ROTATE_TILE)) {
+        if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
             Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
             if (rot != Rotation.NONE) {
                 rotateSign(false, rot.ordinal() * 90, false);
