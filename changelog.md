@@ -1,1 +1,1 @@
-- improved luch basket to fire finish use item event and item stopped event when stopped using without eating on the basket content
+fixed a crash with buntings in worldgen

@@ -61,7 +61,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     public void load(CompoundTag compound) {
         super.load(compound);
         BlockState state = this.getBlockState();
-        if (state.getValue(RopeBuntingBlock.FLIP_TILE)) {
+        if (state.getValue(RopeBuntingBlock.FLIP_TILE) && level != null) {
             rotateBuntings(state, Rotation.CLOCKWISE_90);
             level.setBlockAndUpdate(worldPosition, state.setValue(RopeBuntingBlock.FLIP_TILE, false));
         }
