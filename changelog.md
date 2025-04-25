@@ -1,1 +1,1 @@
-- fixed spikes not having infinite charges. blacklisted oozing and infested when in infinite mode to prevent exploits
+- fixed a crash with buntings in worlgen
