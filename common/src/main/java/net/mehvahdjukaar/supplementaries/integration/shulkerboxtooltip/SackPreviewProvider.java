@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 public final class SackPreviewProvider extends BlockEntityPreviewProvider {
 
     @Environment(EnvType.CLIENT)
-    private static final PreviewRenderer RENDERER = new VariableSizePreviewRenderer(SackBlockTile::getUnlockedSlots);
+    private static PreviewRenderer renderer;
 
     public SackPreviewProvider() {
         super(SackBlockTile.getUnlockedSlots(), true);
@@ -24,7 +24,10 @@ public final class SackPreviewProvider extends BlockEntityPreviewProvider {
     @Override
     @Environment(EnvType.CLIENT)
     public PreviewRenderer getRenderer() {
-        return RENDERER;
+        if (renderer == null) {
+            renderer = new VariableSizePreviewRenderer(SackBlockTile::getUnlockedSlots);
+        }
+        return renderer;
     }
 
 }
