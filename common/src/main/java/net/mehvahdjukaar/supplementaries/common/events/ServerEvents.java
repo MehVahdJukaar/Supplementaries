@@ -150,12 +150,11 @@ public class ServerEvents {
     public static void onServerStopped() {
         if (PlatHelper.getPhysicalSide().isClient()) {
             CapturedMobCache.clear();
-        } else {
-            WeatheredMapRecipe.onWorldUnload();
-            WaySignStructure.clearCache();
-            EndermanSkullBlockTile.clearCache();
-            ColoredMapHandler.clearIdCache();
-        }
+        } 
+        WeatheredMapRecipe.onWorldUnload();
+        WaySignStructure.clearCache();
+        EndermanSkullBlockTile.clearCache();
+        ColoredMapHandler.clearIdCache();
     }
 
     @EventCalled
