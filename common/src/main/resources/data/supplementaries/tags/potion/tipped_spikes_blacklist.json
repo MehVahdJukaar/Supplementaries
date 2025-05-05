@@ -1,8 +1,14 @@
 {
   "replace": false,
   "values": [
-    "minecraft:oozing",
-    "minecraft:infested",
+    {
+      "id": "minecraft:oozing",
+      "required": false
+    },
+    {
+      "id": "minecraft:infested",
+      "required": false
+    },
     {
       "id": "ars_nouveau:blasting",
       "required": false
