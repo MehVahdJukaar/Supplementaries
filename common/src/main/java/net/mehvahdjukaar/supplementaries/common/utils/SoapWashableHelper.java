@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class SoapWashableHelper {
 
@@ -43,7 +44,9 @@ public class SoapWashableHelper {
         if (tryWashWithInterface(level, pos, state, hitVec) ||
                 tryCleaningSign(level, pos, state) ||
                 tryChangingColor(level, pos, state) ||
-                tryUnoxidise(level, pos, state)) {
+                tryCleanFromConfig(level, pos, state) ||
+                tryUnWax(level, pos, state)
+        ) {
             if (level instanceof ServerLevel serverLevel) {
                 NetworkHelper.sendToAllClientPlayersInParticleRange(serverLevel, pos,
                         new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.BUBBLE_CLEAN));
@@ -68,26 +71,13 @@ public class SoapWashableHelper {
         return false;
     }
 
-    private static boolean tryUnoxidise(Level level, BlockPos pos, BlockState state) {
+    private static boolean tryUnWax(Level level, BlockPos pos, BlockState state) {
         Block b = state.getBlock();
         BlockState toPlace = null;
-        for (var e : CommonConfigs.Functional.SOAP_SPECIAL.get().entrySet()) {
-            if (e.getKey().test(state)) {
-                toPlace = BuiltInRegistries.BLOCK.getOptional(e.getValue()).map(s -> s.withPropertiesOf(state)).orElse(null);
-                break;
-            }
-        }
-        if (toPlace == null) {
-            toPlace = SuppPlatformStuff.getUnoxidised(level, pos, state);
-        }
         //vanilla
-        if (toPlace == null) {
-            var unWaxed = HoneycombItem.WAXABLES.get().inverse().get(b);
-            if (unWaxed == null) {
-                unWaxed = b;
-            }
-            unWaxed = WeatheringCopper.getFirst(unWaxed);
-            if (unWaxed != b) toPlace = unWaxed.withPropertiesOf(state);
+        Block unWaxed = HoneycombItem.WAXABLES.get().inverse().get(b);
+        if (unWaxed != null) {
+            toPlace = unWaxed.withPropertiesOf(state);
         }
 
         if (toPlace == null) {
@@ -101,13 +91,27 @@ public class SoapWashableHelper {
         return false;
     }
 
+    private static boolean tryCleanFromConfig(Level level, BlockPos pos, BlockState state) {
+        BlockState toPlace = null;
+        for (var e : CommonConfigs.Functional.SOAP_SPECIAL.get().entrySet()) {
+            if (e.getKey().test(state)) {
+                toPlace = BuiltInRegistries.BLOCK.getOptional(e.getValue()).map(s -> s.withPropertiesOf(state)).orElse(null);
+                break;
+            }
+        }
+        if (toPlace != null) {
+            level.setBlock(pos, toPlace, 11);
+            return true;
+        }
+        return false;
+    }
+
 
     private static BlockState tryParse(BlockState oldState) {
         ResourceLocation r = Utils.getID(oldState.getBlock());
         //hardcoding goes brr. This is needed, and I can't just use forge event since I only want to react to axe scrape, not stripping
         String name = r.getPath();
-        String[] keywords = new String[]{"waxed_", "weathered_", "exposed_", "oxidized_",
-                "_waxed", "_weathered", "_exposed", "_oxidized"};
+        String[] keywords = new String[]{"waxed_", "_waxed"};
         for (String key : keywords) {
             if (name.contains(key)) {
                 String newName = name.replace(key, "");
