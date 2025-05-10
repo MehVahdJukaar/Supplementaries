@@ -6,8 +6,10 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,6 +22,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,7 +59,48 @@ public class RegistryCommand {
                                         )
                                 )
                         )
+                        .then(Commands.literal("dump")
+                                .requires(cs -> cs.hasPermission(3))
+                                .then(Commands.argument("file_name", StringArgumentType.string())
+                                        .executes((ctx) -> {
+                                            String fileName = StringArgumentType.getString(ctx, "file_name");
+                                            return dumpRegistry(ctx, fileName);
+                                        })
+                                )
+                        )
                 );
+    }
+
+    private static int dumpRegistry(CommandContext<CommandSourceStack> ctx, String fileName) throws CommandSyntaxException {
+        ResourceKey<? extends Registry<?>> registryKey = getResourceKey(ctx, "registry", ROOT_REGISTRY_KEY).orElseThrow();
+        CommandSourceStack source = ctx.getSource();
+        Registry<?> registry = source.getServer().registryAccess().registry(registryKey).orElseThrow(() ->
+                UNKNOWN_REGISTRY.create(registryKey.location()));
+
+        var dir = PlatHelper.getGamePath().resolve("registry_dumps");
+
+        if (!dir.toFile().exists()) {
+            dir.toFile().mkdirs();
+        }
+
+        var file = dir.resolve(fileName + ".txt");
+        try (var writer = new BufferedWriter(new FileWriter(file.toFile()))) {
+            for (var entry : registry) {
+                writer.write(entry.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new CommandSyntaxException(
+                    new SimpleCommandExceptionType(() -> "I/O error"),
+                    e::getMessage
+            );
+        }
+
+        ctx.getSource().sendSuccess(() ->
+                Component.translatable("commands.supplementaries.registry.dump.success",
+                        file.toString()), false);
+
+        return 0;
     }
 
     private static int listElements(CommandContext<CommandSourceStack> ctx, int page, @Nullable String search) throws CommandSyntaxException {
@@ -75,7 +121,7 @@ public class RegistryCommand {
         return (int) elementCount;
     }
 
-    private static MutableComponent createMessage(MutableComponent header,  long currentPage,
+    private static MutableComponent createMessage(MutableComponent header, long currentPage,
                                                   Supplier<Stream<String>> names, @Nullable String search) {
         List<String> filtered = names.get().filter((s) -> search == null || s.contains(search)).toList();
         long count = filtered.size();
