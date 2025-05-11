@@ -230,20 +230,22 @@ public class SpecialRecipeDisplays {
         List<CraftingRecipe> recipes = new ArrayList<>();
 
         String group = "sus_crafting";
-        List<Block> blocks = new ArrayList<>();
+        Map<Block,Block> blocks = new HashMap<>();
         if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
-            blocks.add(Blocks.SAND);
-            blocks.add(Blocks.GRAVEL);
+            blocks.put(Blocks.SAND, Blocks.SUSPICIOUS_SAND);
+            blocks.put(Blocks.GRAVEL, Blocks.SUSPICIOUS_GRAVEL);
         }
         if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
-            blocks.add(ModRegistry.GRAVEL_BRICKS.get());
+            blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
         }
 
-        for (Block block : blocks) {
-            ItemStack output = new ItemStack(Items.SLIME_BALL);
-            ItemStack input = new ItemStack(block);
-            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(Items.NAME_TAG));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, Utils.getID(output.getItem()).getPath());
+        ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
+        content.set(DataComponents.ITEM_NAME, Component.literal("Precious Item"));
+        for (var e : blocks.entrySet()) {
+            ItemStack output = new ItemStack(e.getValue());
+            ItemStack input = new ItemStack(e.getKey());
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(content));
+            ResourceLocation id = Supplementaries.res(Utils.getID(output.getItem()).getPath());
             ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(recipe);
         }
