@@ -5,18 +5,13 @@ import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -31,7 +26,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -149,7 +143,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
         ItemStack stack = this.getItem();
-        if (!trySplashPotStuff() &&
+        if (!tryDeployingProjectiles() &&
                 entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
             Item item = stack.getItem();
             if (item instanceof BlockItem bi) {
@@ -180,67 +174,49 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
         //can only place when first hits
-        Entity owner = this.getOwner();
-        boolean shoulKill;
         Level level = level();
-        shoulKill = trySplashPotStuff();
-        if (!shoulKill && owner instanceof Player player) {
-            if (!Utils.mayPerformBlockAction(player, hit.getBlockPos(), getItem())) return;
-            if (CompatHandler.FLAN) {
-                if (level.isClientSide || !FlanCompat.canPlace(player, hit.getBlockPos())) {
-                    return; //hack since we need client interaction aswell
-                }
-            }
+        ItemStack stack = this.getItem();
+        Item item = stack.getItem();
+
+        Player player;
+        if (this.getOwner() instanceof Player p) {
+            player = p;
+        } else {
+            //do we even need a player here
+            player = FakePlayerManager.getDefault(this, this);
         }
-        if (!shoulKill) {
 
-            ItemStack stack = this.getItem();
-            Item item = stack.getItem();
+        boolean success;
+        success = tryDeployingProjectiles();
 
-            Player player;
-            if (owner instanceof Player p) {
-                player = p;
-            } else {
-                //do we even need a player here
-                player = FakePlayerManager.getDefault(this, this);
-            }
-
-            //block override. mimic forge event that would have called these
-            //we cant call all forge events unfortunately otherwise we could ater the world as if player was there and not just place extra blocks
-            InteractionResult overrideResult = InteractEventsHandler.onItemUsedOnBlockHP(player, level, stack, InteractionHand.MAIN_HAND, hit);
-            if (overrideResult.consumesAction()) {
-                shoulKill = true;
-            } else {
-                overrideResult = InteractEventsHandler.onItemUsedOnBlock(player, level, stack, InteractionHand.MAIN_HAND, hit);
-                if (overrideResult.consumesAction()) shoulKill = true;
-            }
-
-            if (!shoulKill) {
-                //null player so sound always plays
-                //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
-                Player fakePlayer = FakePlayerManager.getDefault(this, player);
-
-                BlockPlaceContext context = new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit);
-                shoulKill = ItemsUtil.place(item,
-                        context).consumesAction();
-            }
-            if (!shoulKill && item instanceof DispensibleContainerItem dc && item.hasCraftingRemainingItem()) {
+        if (!success) {
+            //buckets
+            if (item instanceof DispensibleContainerItem dc && item.hasCraftingRemainingItem()) {
                 Item craftingRemainingItem = stack.getItem().getCraftingRemainingItem();
                 SuppPlatformStuff.dispenseContent(dc, stack, hit, level, player);
                 dc.checkExtraContent(player, level, stack, hit.getBlockPos());
                 if (craftingRemainingItem != null) {
                     this.setItem(craftingRemainingItem.getDefaultInstance());
-                } else shoulKill = true;
+                } else success = true;
             }
+        }
+
+        if (!success) {
+            //null player so sound always plays
+            //hackery because for some god-damn reason after 1.17 just using player here does not play the sound 50% of the times
+            BlockPlaceContext context = new BlockPlaceContext(level, player,
+                    InteractionHand.MAIN_HAND, stack, hit);
+            success = ItemsUtil.place(item, context).consumesAction();
+
             this.isStuck = true;
         }
-        if (shoulKill) {
+        if (success) {
             this.remove(RemovalReason.DISCARDED);
         }
     }
 
     //TODO: fix and add particles and stuff
-    private boolean trySplashPotStuff() {
+    private boolean tryDeployingProjectiles() {
         if (this.getOwner() instanceof LivingEntity le) {
             Projectile ent = null;
             Item item = this.getItem().getItem();

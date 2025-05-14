@@ -15,6 +15,7 @@
     "CompatFarmersDelightTomatoMixin",
     "CompatSodiumFluidRendererMixin",
     "FireBlockAccessor",
+    "ItemStackAccessor",
     "LivingEntityMixin",
     "TreasureMapForEmeraldsMixin",
     "self.SelfFlammableFluidBlockMixin",

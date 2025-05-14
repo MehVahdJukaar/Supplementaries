@@ -22,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.neoforged.bus.api.EventPriority;
@@ -89,7 +90,7 @@ public class ServerEventsForge {
         if (event.getItemAbility() == ItemAbilities.HOE_TILL && CommonConfigs.Tweaks.RAKED_GRAVEL.get()) {
             LevelAccessor world = event.getLevel();
             BlockPos pos = event.getPos();
-            if (event.getFinalState().is(net.minecraft.world.level.block.Blocks.GRAVEL)) {
+            if (event.getFinalState().is(Blocks.GRAVEL)) {
                 BlockState raked = ModRegistry.RAKED_GRAVEL.get().defaultBlockState();
                 if (raked.canSurvive(world, pos)) {
                     event.setFinalState(RakedGravelBlock.getConnectedState(raked, world, pos, event.getContext().getHorizontalDirection()));

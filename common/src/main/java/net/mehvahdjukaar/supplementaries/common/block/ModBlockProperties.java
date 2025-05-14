@@ -199,7 +199,7 @@ public class ModBlockProperties {
         @NotNull
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
-            if (holder == null) return  Pair.of(NONE, null);
+            if (holder == null) return Pair.of(NONE, null);
             SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
             if (cat.isEmpty() || cat.getAmount() != 1) return Pair.of(NONE, null);

@@ -2,12 +2,12 @@ package net.mehvahdjukaar.supplementaries.neoforge;
 
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
-import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
+import net.mehvahdjukaar.supplementaries.mixins.neoforge.ItemStackAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -26,10 +26,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DispensibleContainerItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -249,6 +247,15 @@ public class SuppPlatformStuffImpl {
 
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
         return CropAccessor.callGetGrowthSpeed(state, level, pos);
+    }
+
+    public static InteractionResult placeBlockItem(BlockItem bi, BlockPlaceContext context) {
+        //mimics what useOn does on a block item without calling use on events
+        ItemStack stack = context.getItemInHand();
+        return !context.getLevel().isClientSide ? CommonHooks.onPlaceItemIntoWorld(context) :
+                ((ItemStackAccessor) (Object) stack).invokeOnItemUse(context,
+                        //instead of useOn we call place directly
+                        c -> bi.place(context));
     }
 
 

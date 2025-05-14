@@ -1,1 +1,2 @@
-- fixed a crash with buntings in worlgen
+- registry command can now save stuff to file
+- improved slingshot block placement pipeline even more to not only call directly blockItem.place but also some stuff usually calle by item.onUse

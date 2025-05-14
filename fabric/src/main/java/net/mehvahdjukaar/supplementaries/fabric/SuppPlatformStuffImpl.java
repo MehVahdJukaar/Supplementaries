@@ -13,8 +13,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -23,10 +25,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DispensibleContainerItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -179,6 +181,25 @@ public class SuppPlatformStuffImpl {
     public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity entity) {
         //no event here because of fabric
         return item.finishUsingItem(level, entity);
+    }
+
+    public static InteractionResult placeBlockItem(BlockItem bi, UseOnContext context) {
+        ItemStack stack = context.getItemInHand();
+        Player player = context.getPlayer();
+        BlockPos blockPos = context.getClickedPos();
+        if (player != null && !player.getAbilities().mayBuild && !stack.canPlaceOnBlockInAdventureMode(
+                new BlockInWorld(context.getLevel(), blockPos, false))) {
+            return InteractionResult.PASS;
+        } else {
+            Item item = stack.getItem();
+            //instead o use on so no events are fired
+            InteractionResult interactionResult = bi.place(new BlockPlaceContext(context));
+            if (player != null && interactionResult.indicateItemUse()) {
+                player.awardStat(Stats.ITEM_USED.get(item));
+            }
+
+            return interactionResult;
+        }
     }
 
 }

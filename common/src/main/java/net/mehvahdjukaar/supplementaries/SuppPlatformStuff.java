@@ -8,15 +8,20 @@ import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DispensibleContainerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SoundType;
@@ -31,6 +36,13 @@ import java.util.function.Predicate;
 
 
 public class SuppPlatformStuff {
+
+    //called by ItemStack:useOn but only takes into account placement so we dont fire item used events and such
+    //basically this mimics what happens when onUse is called but for a block item only WITHOUT firing events related to onUse
+    @ExpectPlatform
+    public static InteractionResult placeBlockItem(BlockItem bi, BlockPlaceContext context) {
+        throw new AssertionError();
+    }
 
     @ExpectPlatform
     @Nullable
@@ -155,6 +167,7 @@ public class SuppPlatformStuff {
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
         throw new AssertionError();
