@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:adventure/root",
   "criteria": {
-    "bastion": {
+    "structure_found": {
       "conditions": {
         "player": [
           {
@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "supplementaries:way_sign"
+                "structures": "supplementaries:way_sign"
               }
             }
           }
@@ -26,7 +26,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "id": "supplementaries:way_sing_oak"
+      "id": "supplementaries:way_sign_oak"
     },
     "show_toast": true,
     "title": {
@@ -35,7 +35,7 @@
   },
   "requirements": [
     [
-      "bastion"
+      "structure_found"
     ]
   ],
   "conditions": [

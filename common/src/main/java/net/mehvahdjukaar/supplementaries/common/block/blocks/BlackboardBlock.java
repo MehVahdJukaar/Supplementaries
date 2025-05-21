@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ISimpleBrushable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
@@ -165,7 +166,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             }
             if (config.canOpenGui()) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    te.tryOpeningEditGui(serverPlayer, pos, stack);
+                    te.tryOpeningEditGui(serverPlayer, pos, stack, hit.getDirection());
                 }
                 return ItemInteractionResult.CONSUME;
             }
@@ -200,7 +201,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof BlackboardBlockTile te) {
-            return BlockUtil.saveTileToItem(te);
+            return Utils.saveTileToItem(te);
         }
         return super.getCloneItemStack(level, pos, state);
     }

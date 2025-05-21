@@ -13,8 +13,8 @@
   ],
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " 1 ",
-    " 0 "
+    "1",
+    "0"
   ],
   "key": {
     "1": {

@@ -2,19 +2,21 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/thin_block",
 	"textures": {
+		"1": "supplementaries:block/side",
+		"2": "supplementaries:block/top",
 		"particle": "supplementaries:block/doormat",
 		"wool": "supplementaries:block/doormat"
 	},
 	"elements": [
 		{
-			"from": [0, 0, 2],
-			"to": [16, 1, 14],
+			"from": [2, 0, 0],
+			"to": [14, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 12, 16, 13], "texture": "#wool"},
-				"east": {"uv": [2, 12, 14, 13], "texture": "#wool", "cullface": "east"},
+				"north": {"uv": [2, 0, 14, 16], "texture": "#2"},
+				"east": {"uv": [16, 0, 0, 16], "texture": "#1", "cullface": "east"},
 				"south": {"uv": [0, 12, 16, 13], "texture": "#wool"},
-				"west": {"uv": [2, 12, 14, 13], "texture": "#wool", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 12], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "west"},
+				"up": {"uv": [2, 0, 14, 16], "texture": "#2"},
 				"down": {"uv": [0, 0, 16, 12], "texture": "#wool", "cullface": "down"}
 			}
 		}

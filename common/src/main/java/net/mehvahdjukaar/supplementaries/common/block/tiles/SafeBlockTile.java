@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOwnerProtected;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.SafeOwner;
@@ -97,7 +98,7 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
                 }
             }
             if (player instanceof ServerPlayer sp) {
-                PlatHelper.openCustomMenu(sp, this, worldPosition);
+                PlatHelper.openCustomMenu(sp, this);
             }
             PiglinAi.angerNearbyPiglins(player, true);
         }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
@@ -157,7 +158,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            BlockUtil.spawnItemWithTileData(player, tile);
+            Utils.spawnItemWithTileData(player, tile);
             //forge has a better override for this (no particls)
             if (PlatHelper.getPlatform().isFabric()) {
                 if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get()) {
@@ -185,7 +186,7 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
-            BlockUtil.saveTileToItem(tile);
+            Utils.saveTileToItem(tile);
         }
         return itemstack;
     }

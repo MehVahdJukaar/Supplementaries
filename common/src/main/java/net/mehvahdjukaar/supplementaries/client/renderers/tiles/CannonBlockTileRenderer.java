@@ -6,8 +6,6 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -49,18 +47,29 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
-        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
+        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
+
         if (tile.isBig()) {
             poseStack.scale(3, 3, 3);
         }
+
+        renderCannonModel(this, tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+    }
+
+    public static void renderCannonModel(CannonBlockTileRenderer renderer,
+                                         CannonBlockTile tile, float partialTick, PoseStack poseStack,
+                                         MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+
+        poseStack.pushPose();
         Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
+
         poseStack.mulPose(rotation);
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
-
 
         float pitchRad = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
         float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
@@ -77,9 +86,9 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         pitchRad = (float) Mth.atan2(-forward.y, Mth.sqrt(forward.x * forward.x + forward.z * forward.z));
         //float rollRad = (float) Math.atan2(forward.y, forward.z);
 
-        this.legs.yRot = yawRad;
-        this.pivot.xRot = pitchRad;
-        this.pivot.zRot = 0;
+        renderer.legs.yRot = yawRad;
+        renderer.pivot.xRot = pitchRad;
+        renderer.pivot.zRot = 0;
 
 
         // animation
@@ -91,13 +100,13 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
         float scale = wobble + 1f + squish * 0.7f;
-        head.xScale = scale;
-        head.yScale = scale;
+        renderer.head.xScale = scale;
+        renderer.head.yScale = scale;
 
-        head.zScale = 1 - squish;
-        head.z = squish * 5.675f;
+        renderer.head.zScale = 1 - squish;
+        renderer.head.z = squish * 5.675f;
 
-        model.render(poseStack, builder, packedLight, packedOverlay);
+        renderer.model.render(poseStack, builder, packedLight, packedOverlay);
         poseStack.popPose();
     }
 

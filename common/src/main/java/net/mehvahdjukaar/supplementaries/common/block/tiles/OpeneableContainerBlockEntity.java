@@ -52,7 +52,7 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return this.items;
     }
 

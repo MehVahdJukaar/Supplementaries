@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -26,18 +26,18 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
 
     //for tile
     public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(ServerPlayer player, C tile) {
+        TileOrEntityTarget target = TileOrEntityTarget.of(tile);
         PlatHelper.openCustomMenu(player, tile, p -> {
-            p.writeBoolean(true);
-            p.writeBlockPos(tile.getBlockPos());
+            target.write(p);
             p.writeInt(tile.getContainerSize());
         });
     }
 
     //for entity
     public static <C extends Entity & Container & MenuProvider> void openEntityMenu(ServerPlayer player, C entity) {
+        TileOrEntityTarget target = TileOrEntityTarget.of(entity);
         PlatHelper.openCustomMenu(player, entity, p -> {
-            p.writeBoolean(false);
-            p.writeVarInt(entity.getId());
+            target.write(p);
             p.writeInt(entity.getContainerSize());
         });
     }
@@ -56,15 +56,12 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
     //hack for snowy spirit sleds entities
     @NotNull
     private static Container getContainerFromPacket(Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        boolean isBlockPos = packetBuffer.readBoolean();
+        var target = TileOrEntityTarget.read(packetBuffer);
         Level level = playerInventory.player.level();
-        if (isBlockPos) {
-            BlockPos pos = packetBuffer.readBlockPos();
-            if (level.getBlockEntity(pos) instanceof Container c) return c;
-        } else {
-            var e = level.getEntity(packetBuffer.readVarInt());
-            if (e instanceof Container c) return c;
-            else if (e instanceof IContainerProvider c) return c.getContainer();
+        var obj = target.getTarget(level);
+        if (obj instanceof Container c) return c;
+        else if (obj instanceof IContainerProvider cp) {
+            return cp.getContainer();
         }
         throw new UnsupportedOperationException("Cannot find container associated with entity ");
     }

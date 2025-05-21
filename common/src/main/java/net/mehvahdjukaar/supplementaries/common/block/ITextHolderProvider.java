@@ -1,9 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.world.InteractionHand;
@@ -60,7 +62,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
     }
 
     default boolean tryAcceptingClientText(BlockPos pos, ServerPlayer player, List<List<FilteredText>> filteredText) {
-        if (!this.isWaxed() && this.isEditingPlayer(player)) {
+        if (!this.isWaxed() && this.isEditingPlayer(pos, player)) {
             for (int i = 0; i < filteredText.size(); i++) {
                 var holder = this.getTextHolder(i);
                 holder.acceptClientMessages(player, filteredText.get(i));
@@ -74,9 +76,8 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
         return false;
     }
 
-
     @Override
-    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction face) {
         if (this.isWaxed()) return false;
         boolean filtering = player.isTextFilteringEnabled();
         for (int i = 0; i < this.textHoldersCount(); i++) {
@@ -84,12 +85,12 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
                 return false;
             }
         }
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, face);
     }
 
     //calls all interfaces methods
     default ItemInteractionResult textHolderInteract(int index, Level level, BlockPos pos, BlockState state,
-                                                     Player player, InteractionHand hand, ItemStack stack) {
+                                                     Player player, InteractionHand hand, ItemStack stack, Direction face) {
 
         ItemInteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand, stack);
         if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
@@ -105,7 +106,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
             return result;
         }
         if (player instanceof ServerPlayer serverPlayer &&
-                this.tryOpeningEditGui(serverPlayer, pos, stack)) {
+                this.tryOpeningEditGui(serverPlayer, pos, stack, face)) {
             return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.SUCCESS;

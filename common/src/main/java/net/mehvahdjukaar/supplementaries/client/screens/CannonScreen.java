@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.HopperScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> implements ContainerListener {
 
-    private final CannonBlockTile tile;
+    private final CannonAccess access;
 
     private NumberEditBox pitchSelector;
     private NumberEditBox yawSelector;
@@ -34,8 +34,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         super(menu, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
-
-        this.tile = menu.getContainer();
+        this.access = menu.access;
     }
 
     @Override
@@ -48,12 +47,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.addRenderableWidget(new ManeuverButton(i + 154, j + 10 + 6));
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.yawSelector.setNumber(tile.getYaw());
+        this.yawSelector.setNumber(access.getCannon().getYaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.pitchSelector.setNumber(tile.getPitch());
+        this.pitchSelector.setNumber(access.getCannon().getPitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
-        this.powerSelector.power = tile.getPowerLevel();
+        this.powerSelector.power = access.getCannon().getPowerLevel();
         this.menu.addSlotListener(this);
     }
 
@@ -64,7 +63,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     }
 
     private void onManeuverPressed(Button button) {
-        CannonController.startControlling(tile);
+        CannonController.startControlling(access);
         //dont sync cannon and dont clear owner
         this.onClose();
     }
@@ -76,12 +75,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         //update client immediately too
-        this.tile.setAttributes(yaw, pitch, power, false, minecraft.player);
-        CannonBlockTile.syncToServer(this.tile, false, !CannonController.isActive());
+        this.access.getCannon().setAttributes(yaw, pitch, power, false, minecraft.player, this.access);
+        this.access.syncToServer(false, !CannonController.isActive());
     }
 
     private int getActualPower() {
-        return Math.min(this.powerSelector.getPower(), tile.getFuel().getCount());
+        return Math.min(this.powerSelector.getPower(), access.getCannon().getFuel().getCount());
     }
 
     @Override

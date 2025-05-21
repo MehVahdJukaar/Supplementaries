@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.PotionBottleType;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -274,7 +275,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     public ItemStack getSpikeItem(@Nullable BlockEntity te) {
         if (te instanceof BambooSpikesBlockTile tile) {
-            return BlockUtil.saveTileToItem(tile);
+            return Utils.saveTileToItem(tile);
         }
         return ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance();
     }

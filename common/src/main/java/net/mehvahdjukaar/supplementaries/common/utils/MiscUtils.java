@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import com.mojang.datafixers.util.Either;
+import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -8,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ChunkPos;
@@ -20,6 +23,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ScheduledTick;
 
 import java.util.Calendar;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MiscUtils {
@@ -138,4 +144,21 @@ public class MiscUtils {
         container.schedule(tick);
     }
 
+
+    public static <A,B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A,B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
+        buf.writeBoolean(either.left().isPresent());
+        if (either.left().isPresent()) {
+            encodeA.accept(buf, either.left().get());
+        } else {
+            encodeB.accept(buf, either.right().get());
+        }
+    }
+
+    public static <A,B, Buf extends ByteBuf> Either<A,B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
+        if (buf.readBoolean()) {
+            return Either.left(decodeA.apply(buf));
+        } else {
+            return Either.right(decodeB.apply(buf));
+        }
+    }
 }

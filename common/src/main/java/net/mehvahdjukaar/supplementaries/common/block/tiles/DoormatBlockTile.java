@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
@@ -21,11 +23,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider, IScreenProvider {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider, IOnePlayerInteractable, IScreenProvider {
     public static final int MAX_LINES = 3;
 
     public final TextHolder textHolder;
@@ -69,7 +72,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction) {
         DoormatScreen.open(this);
     }
 
@@ -89,7 +92,7 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+    public void setPlayerWhoMayEdit(@Nullable UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 

@@ -383,6 +383,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerEntityRenderers(ClientHelper.EntityRendererEvent event) {
         //entities
+        event.register(ModEntities.CANNON_BOAT.get(), CannonBoatRenderer::new);
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));

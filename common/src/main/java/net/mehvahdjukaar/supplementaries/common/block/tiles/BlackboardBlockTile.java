@@ -1,14 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.block.IGlowable;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -66,9 +68,9 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction hitFace) {
         if (isWaxed()) return false;
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, hitFace);
     }
 
     @Override
@@ -161,7 +163,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     @Override
-    public void openScreen(Level level, BlockPos blockPos, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction) {
         BlackBoardScreen.open(this);
     }
 
@@ -196,7 +198,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (!this.isEditingPlayer(player) || this.isWaxed()) {
+        if (!this.isEditingPlayer(worldPosition, player) || this.isWaxed()) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }

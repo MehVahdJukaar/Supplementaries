@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -100,7 +101,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            BlockUtil.spawnItemWithTileData(player, tile);
+            Utils.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(level, pos, state, player);
     }
@@ -108,7 +109,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof LunchBoxBlockTile tile) {
-           ItemStack lunchBox = BlockUtil.saveTileToItem(tile);
+           ItemStack lunchBox = Utils.saveTileToItem(tile);
             //TODO: 1.21: use loot tables copy nbt stuff
             return Collections.singletonList(lunchBox);
         }
@@ -119,7 +120,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            BlockUtil.saveTileToItem(tile);
+            Utils.saveTileToItem(tile);
         }
         return itemstack;
     }

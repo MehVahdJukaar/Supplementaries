@@ -27,7 +27,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         if (!mc.options.hideGui && CannonController.isActive()) {
 
             setupOverlayRenderState();
-            CannonBlockTile cannon = CannonController.cannon;
+            CannonBlockTile cannon = CannonController.access.getCannon();
 
 
             int screenWidth = graphics.guiWidth();
@@ -103,7 +103,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
                 0, 0, xpBarLeft, xpBarTop, k, 5);
 
 
-        byte power = CannonController.cannon.getPowerLevel();
+        byte power = CannonController.access.getCannon().getPowerLevel();
 
         int color = switch (power) {
             case 2 -> 0xffaa00;

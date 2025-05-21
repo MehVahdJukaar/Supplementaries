@@ -101,7 +101,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
             if (player instanceof ServerPlayer sp) {
                 if (!(player.isShiftKeyDown() && this.windPulley(state, pos, level, Rotation.COUNTERCLOCKWISE_90, null))) {
-                    PlatHelper.openCustomMenu(sp, tile, pos);
+                    PlatHelper.openCustomMenu(sp, tile);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
             }

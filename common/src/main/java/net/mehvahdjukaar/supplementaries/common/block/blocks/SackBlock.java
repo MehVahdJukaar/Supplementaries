@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -150,10 +152,9 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
             return InteractionResult.CONSUME;
         } else {
             if (level.getBlockEntity(pos) instanceof SackBlockTile tile && player instanceof ServerPlayer sp) {
-
+                TileOrEntityTarget target = TileOrEntityTarget.of(tile);
                 PlatHelper.openCustomMenu(sp, tile, p -> {
-                    p.writeBoolean(true);
-                    p.writeBlockPos(pos);
+                    target.write(p);
                     p.writeInt(tile.getContainerSize());
                 });
                 PiglinAi.angerNearbyPiglins(player, true);
@@ -169,7 +170,7 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            BlockUtil.spawnItemWithTileData(player, tile);
+            Utils.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(worldIn, pos, state, player);
     }
@@ -189,7 +190,7 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof SackBlockTile tile) {
-            BlockUtil.saveTileToItem(tile);
+            Utils.saveTileToItem(tile);
         }
         return super.getCloneItemStack(level, pos, state);
     }

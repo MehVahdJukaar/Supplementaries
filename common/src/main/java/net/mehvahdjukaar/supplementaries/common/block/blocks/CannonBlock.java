@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
@@ -23,8 +22,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -89,6 +88,9 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     public CannonBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.UP)
+                .setValue(POWERED, false));
     }
 
     @Override
@@ -188,7 +190,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             if (wasPowered != level.hasNeighborSignal(pos)) {
                 level.setBlock(pos, state.cycle(POWERED), 2);
                 if (!wasPowered && level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-                    tile.ignite(null);
+                    tile.ignite(null, tile.selfAccess);
                 }
             }
         }
@@ -203,7 +205,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(), CannonBlockTile::tick);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(), CannonBlock::tickTile);
+    }
+
+    private static void tickTile(Level level, BlockPos pos, BlockState state, CannonBlockTile cannonBlockTile) {
+        cannonBlockTile.tick(cannonBlockTile.selfAccess);
     }
 
     @Override
@@ -212,7 +218,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         if (r.consumesAction()) return r;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             if (player instanceof ServerPlayer sp) {
-                tile.tryOpeningEditGui(sp, pos, stack);
+                tile.tryOpeningEditGui(sp, pos, stack, hitResult.getDirection());
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
@@ -246,7 +252,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public void setLitUp(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos,
                          @Nullable Entity igniter, boolean on) {
         if (levelAccessor.getBlockEntity(blockPos) instanceof CannonBlockTile tile) {
-            tile.ignite(igniter);
+            tile.ignite(igniter, tile.selfAccess);
         }
     }
 

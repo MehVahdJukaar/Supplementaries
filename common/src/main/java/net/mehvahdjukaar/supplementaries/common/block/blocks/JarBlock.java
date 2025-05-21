@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -101,7 +102,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof JarBlockTile tile) {
-            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
+            ItemStack itemstack = Utils.saveTileToItem(tile);
             //TODO: replace with loot table
             return Collections.singletonList(itemstack);
         }
@@ -111,7 +112,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof JarBlockTile tile) {
-            return BlockUtil.saveTileToItem(tile);
+            return Utils.saveTileToItem(tile);
         }
         return super.getCloneItemStack(level, pos, state);
     }

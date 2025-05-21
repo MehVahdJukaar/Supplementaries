@@ -98,6 +98,12 @@ public class ModEntities {
                     .clientTrackingRange(6)
                     .updateInterval(1)); //STOP GETTING IT OUT OF SYNC!
 
+    public static final Supplier<EntityType<CannnonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
+            EntityType.Builder.<CannnonBoatEntity>of(CannnonBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375F, 0.5625F)
+                    .eyeHeight(0.5625F)
+                    .clientTrackingRange(10));
+
     //firefly
 
 //    public static final String FIREFLY_NAME = "firefly";

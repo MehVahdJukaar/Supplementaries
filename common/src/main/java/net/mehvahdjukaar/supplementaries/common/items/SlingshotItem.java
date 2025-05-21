@@ -33,6 +33,7 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -145,7 +146,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         return f;
     }
 
-    //actual use duration
+    //actual use duration, in seconds i guess
     public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
         float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get())/20f;
         return Mth.floor(f * 20.0F);

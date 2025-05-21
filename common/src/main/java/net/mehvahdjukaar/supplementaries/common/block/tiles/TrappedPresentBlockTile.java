@@ -93,7 +93,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
         if (this.isUnused()) {
             if (this.canOpen(player)) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    PlatHelper.openCustomMenu(serverPlayer, this, pos);
+                    PlatHelper.openCustomMenu(serverPlayer, this);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
             } else {

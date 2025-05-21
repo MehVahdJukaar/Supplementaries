@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -179,7 +181,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlaye
     }
 
     public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
-        if (this.isEditingPlayer(player)) {
+        if (this.isEditingPlayer(worldPosition, player)) {
             this.acceptClientMessages(player, filteredText);
             this.setPlayerWhoMayEdit(null);
             return true;
@@ -211,7 +213,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlaye
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction) {
         SpeakerBlockScreen.open(this);
     }
 

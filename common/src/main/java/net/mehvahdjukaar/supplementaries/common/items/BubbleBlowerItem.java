@@ -258,12 +258,12 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         float headXRot = MthUtils.wrapRad(model.head.xRot);
         float headYRot = MthUtils.wrapRad(model.head.yRot);
 
-        float pitch = Mth.clamp(headXRot, -1.6f, 0.8f) + 0.55f - cr;
-        mainHand.xRot = (float) (pitch - Math.PI / 2f) - dir * 0.3f * headYRot;
+        float pitch = Mth.clamp(headXRot, -1.6f, 0.8f) + 0.55f;
+        mainHand.xRot = (float) (pitch - cr - Math.PI / 2f) - dir * 0.3f * headYRot;
 
         float yaw = 0.7f * dir;
-        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch + cr) + headYRot, -1.1f, 1.1f);//yaw;
-        mainHand.zRot = -yaw * Mth.sin(pitch + cr);
+        mainHand.yRot = Mth.clamp(-yaw * Mth.cos(pitch) + headYRot, -1.1f, 1.1f);//yaw;
+        mainHand.zRot = -yaw * Mth.sin(pitch);
 
         AnimationUtils.bobModelPart(mainHand, entity.tickCount, -dir);
     }

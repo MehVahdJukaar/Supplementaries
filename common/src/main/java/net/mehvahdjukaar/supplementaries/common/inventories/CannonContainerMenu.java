@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,36 +16,36 @@ import net.minecraft.world.item.ItemStack;
 
 public class CannonContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
-    protected final CannonBlockTile inventory;
+    public final
+    CannonAccess access;
 
     @Override
     public CannonBlockTile getContainer() {
-        return inventory;
+        return access.getCannon();
     }
 
     //client container factory
     public CannonContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(ModMenuTypes.CANNON.get(), id, playerInventory,
-                (CannonBlockTile) playerInventory.player.level().getBlockEntity(packetBuffer.readBlockPos()));
+        this(ModMenuTypes.CANNON.get(), id, playerInventory, CannonAccess.find(playerInventory.player.level(),
+                TileOrEntityTarget.read(packetBuffer)));
     }
 
-    public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory,
-                                                               CannonBlockTile inventory) {
-        this(ModMenuTypes.CANNON.get(), id, playerInventory, inventory);
+    public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonAccess access) {
+        this(ModMenuTypes.CANNON.get(), id, playerInventory, access);
     }
 
-    public <T extends CannonContainerMenu> CannonContainerMenu(MenuType<T> type, int id, Inventory playerInventory,
-                                                               CannonBlockTile inventory) {
+    public <T extends CannonContainerMenu> CannonContainerMenu(MenuType<T> type, int id, Inventory playerInventory, CannonAccess access) {
         super(type, id);
 
         //tile inventory
-        this.inventory = inventory;
+        this.access = access;
 
-        checkContainerSize(this.inventory, 2);
-        this.inventory.startOpen(playerInventory.player);
+        CannonBlockTile inventory = this.getContainer();
+        checkContainerSize(inventory, 2);
+        inventory.startOpen(playerInventory.player);
 
-        this.addSlot(new DelegatingSlot(this.inventory, 0, 38, 35, this));
-        this.addSlot(new DelegatingSlot(this.inventory, 1, 85, 35, this));
+        this.addSlot(new DelegatingSlot(inventory, 0, 38, 35, this));
+        this.addSlot(new DelegatingSlot(inventory, 1, 85, 35, this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)
@@ -56,7 +57,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return this.inventory.stillValid(playerIn);
+        return this.access.stillValid(playerIn);
     }
 
     @Override
@@ -66,11 +67,12 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
             itemCopy = item.copy();
-            if (index < this.inventory.getContainerSize()) {
-                if (!this.moveItemStackTo(item, this.inventory.getContainerSize(), this.slots.size(), true)) {
+            CannonBlockTile container = this.getContainer();
+            if (index < container.getContainerSize()) {
+                if (!this.moveItemStackTo(item, container.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (this.moveItemStackTo(item, 0, this.inventory.getContainerSize(), false)) {
+            } else if (this.moveItemStackTo(item, 0, container.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -93,7 +95,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
     @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
-        this.inventory.stopOpen(playerIn);
+        this.getContainer().stopOpen(playerIn);
     }
 
 }

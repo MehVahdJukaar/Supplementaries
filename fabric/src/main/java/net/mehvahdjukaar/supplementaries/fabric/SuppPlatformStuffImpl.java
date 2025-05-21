@@ -5,7 +5,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigHolde
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
 import net.minecraft.core.BlockPos;
@@ -27,7 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -183,10 +184,16 @@ public class SuppPlatformStuffImpl {
         return item.finishUsingItem(level, entity);
     }
 
-    public static InteractionResult placeBlockItem(BlockItem bi, UseOnContext context) {
+    public static InteractionResult placeBlockItem(BlockItem bi, BlockPlaceContext context) {
         ItemStack stack = context.getItemInHand();
         Player player = context.getPlayer();
         BlockPos blockPos = context.getClickedPos();
+
+        //not needed on forge as forge has so many events for this shit
+        if (player != null && CompatHandler.FLAN && FlanCompat.canPlace(player, blockPos)) {
+            return InteractionResult.PASS;
+        }
+
         if (player != null && !player.getAbilities().mayBuild && !stack.canPlaceOnBlockInAdventureMode(
                 new BlockInWorld(context.getLevel(), blockPos, false))) {
             return InteractionResult.PASS;

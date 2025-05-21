@@ -91,7 +91,6 @@
 - can click on hat stands
 - cage mob duplication
 - feather block no particles on fabric. WHEN FALLING TOO
-
 - add sus recipe in jei
 - soap item recipe broken
 - Quiver for other players. check 1.20 too
@@ -105,25 +104,25 @@
 - jar insert sound not server side
 - sniffer egg directional
 - turn table oh by default
--cannon spectator
+  -cannon spectator
 - flute not working
 - play song command
 - amke canon face the way camera faces whe first manovering
-slidy double pulse
--stackable skula nd sskull converson not working
+  slidy double pulse
+  -stackable skula nd sskull converson not working
 - soap banner
 - slidy block slipperyness
 - lumisene spawning bubble on armor stand
 - lumisene from faucet
 - lumisene in jars
- - snowball not working in cannon
- - cannon infinite momentum
+- snowball not working in cannon
+- cannon infinite momentum
 - cannon fire event not figig sometimes
 - awning bounce nerf
 - cannon stalling eachother when triggered consitnosly
 - artsandcrafts compat
 - limisene diepsners
--soap cleaning from recipe
+  -soap cleaning from recipe
 - flute skibidi
 - capability cache
 - add fabric missing events
@@ -153,8 +152,8 @@ slidy double pulse
 - data driven book textures
 - slingshot blocks desync (anvils)
 - ceiling skulls
-- cant eat pancake 
--trapped prsents not updating inventory whenshot
+- cant eat pancake
+  -trapped prsents not updating inventory whenshot
 - slidy block connection down ropes
 - slimeall and bricks projectile angle from disp minecart
 - cannon target infinite reach
@@ -182,8 +181,8 @@ slidy double pulse
 - dispenser brick use same texture
 - quiver not rendering in curio
 - pulley flint
-(Quill Maps) another bug I found is that when u use the item in your off-hand, the generated map will duplicate and replace any item in the 1st hotbar slot
-   and also some bricks (including the og one) when thrown from a hotbar with more than a single brick will make the player throw two at once with one returning as an item and the other shattered
+  (Quill Maps) another bug I found is that when u use the item in your off-hand, the generated map will duplicate and replace any item in the 1st hotbar slot
+  and also some bricks (including the og one) when thrown from a hotbar with more than a single brick will make the player throw two at once with one returning as an item and the other shattered
 - hat + present jack in the box anim
 - non continous slibe block rope elevator
 - rope arrow work for other mods
@@ -209,6 +208,9 @@ slidy double pulse
 # Amendments
 
 - cauldron dispenser behaviors
+- connected beds
+- signs
+- firablles
 - fireballs add
 - disepnser bucker cauldron interaction not wroking
 - fluid offer ignoring min amount
@@ -261,7 +263,6 @@ slidy double pulse
 - multiplayer anti player leave sleep stuff. basically online players are counted. counter takes a bit to wear off after they leave.
 - if player is alone can still sleep but if counter is greater than sleeping players they will sleep for less
 
-
 # Map Atlases
 
 - atlas rally point
@@ -272,7 +273,6 @@ slidy double pulse
 - teammates dont show on atlas
 - death marke off map
 
-
 # Heartstone
 
 - heartstone not wroking in curio + no curio at all
@@ -280,7 +280,6 @@ slidy double pulse
 - heartstone custom sounds
 - heartstone highlight and pulse when nearby
 - heartstone pets with system taht keeps track in unloaded chunks
-
 
 # MmmMmmMmmMmm
 
@@ -299,16 +298,19 @@ slidy double pulse
 - hex codec for colormaps
 
 # Randomium
+
 - particles for randomium
 - trollium
 - randomium can give onl stuff already obtained by a player in survival
 - randomium block
 
 # Wise Tree
+
 - Tree chat gpt
 - tree splash text
 
 # labels
+
 - waxing
 - no arrow break
 - no explosion break
@@ -348,7 +350,7 @@ slidy double pulse
 - item display tile work with offhand
 -
 - dummy particle mod for mobs
-- 
+-
 - campfire smoke sleep tight
 - bookmark for pages in book
 -
@@ -360,10 +362,8 @@ slidy double pulse
 - netherite key broken
 - plaques broken
 - slyglass hotkey
-
 - test sculk
 - test dispenser and present stuff
-
 - mod/module for hud overlay compass and spyglass
 - spyglass camera
 - flute pacifier
@@ -383,7 +383,6 @@ slidy double pulse
 - quiver holds fireworks
 - rope arrow inplace recipe
 - bellows blow ash out of ash block and IW ash one too
-
 - airpods portable jukebox mod
 - damage numbers mod
 - more IF compat (map stuff, markers with internals)
@@ -393,7 +392,6 @@ slidy double pulse
 - quark pipes projectiles
 - villagers regen health and trades when sleeping. malus otherwise
 - enchantment durability bar
-
 - enderman animation teleport mod
 - cat loaf mod
 - cheap map recie and altimeter stuff
@@ -412,7 +410,6 @@ slidy double pulse
 - mod to wax anything to prevent interaction
 - soap in water makes soap particles
 - wind physics for wind vane
-
 - camera mod with screenshots
 - jei villagers addon
 - corona mod

@@ -258,6 +258,7 @@
   "commands.supplementaries.registry.error.unknown_registry": "Unknown registry '%s'",
   "commands.supplementaries.registry.page_info": "%s <page %s / %s>",
   "commands.supplementaries.registry.registry_key": "%s",
+  "commands.supplementaries.registry.dump.success": "Dumped registry content to %s",
 
   "config.jade.plugin_supplementaries.hat_stand": "Hat Stand",
   "create.display_source.fill_level.fluid_amount": "Fluid Amount",
@@ -287,6 +288,7 @@
   "enchantment.supplementaries.stasis.desc": "Allows Slingshots projectiles to ignore gravity",
 
   "entity.supplementaries.brick_projectile": "Brick Projectile",
+  "entity.supplementaries.cannon_boat": "Cannon Boat",
   "entity.supplementaries.cannonball": "Cannonball",
   "entity.supplementaries.dispenser_minecart": "Minecart with Dispenser",
   "entity.supplementaries.falling_ash": "Falling Ash",

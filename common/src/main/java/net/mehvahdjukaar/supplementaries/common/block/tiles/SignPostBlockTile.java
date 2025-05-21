@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -171,7 +173,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void openScreen(Level level, BlockPos pos, Player player, Direction direction) {
+    public void openScreen(Level level, Player player, Direction direction) {
         SignPostScreen.open(this);
     }
 
@@ -344,7 +346,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 if (success) return ItemInteractionResult.CONSUME;
             }
         }
-        return this.textHolderInteract(ind ? 0 : 1, level, pos, state, player, handIn, itemstack);
+        return this.textHolderInteract(ind ? 0 : 1, level, pos, state, player, handIn, itemstack, hit.getDirection());
     }
 
     private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {

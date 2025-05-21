@@ -72,7 +72,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
             try {
                 var result = codec.parse(ops, json);
                 var song = result.getOrThrow();
-                if(song.isPresent()) {
+                if (song.isPresent()) {
                     temp.add(song.get());
                     SongsManager.addSong(song.get());
                 }
@@ -96,6 +96,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
+        if (MiscUtils.FESTIVITY.isAprilsFool()) songKey = "rickroll";
         Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
         song.validatePlayReady();

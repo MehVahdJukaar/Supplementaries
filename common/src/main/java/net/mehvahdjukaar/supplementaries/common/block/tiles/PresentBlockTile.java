@@ -127,7 +127,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
             if (this.canOpen(player)) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     //we open directly as its a container and can open contains this logic
-                    PlatHelper.openCustomMenu(serverPlayer, this, pos);
+                    PlatHelper.openCustomMenu(serverPlayer, this);
                     PiglinAi.angerNearbyPiglins(player, true);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);

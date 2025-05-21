@@ -1,17 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.mojang.serialization.JsonOps;
+import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -33,7 +33,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -51,15 +50,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Nullable
     private Set<Block> breakWhitelist = null;
 
-    private float pitch = 0;
-    private float prevPitch = 0;
-    private float yaw = 0;
-    private float prevYaw = 0;
+    protected float pitch = 0;
+    protected float prevPitch = 0;
+    protected float yaw = 0;
+    protected float prevYaw = 0;
 
     // both from 0 to config value. in tick
-    private int cooldownTimer = 0;
-    private int fuseTimer = 0;
-    private byte powerLevel = 1;
+    protected int cooldownTimer = 0;
+    protected int fuseTimer = 0;
+    protected byte powerLevel = 1;
 
     private IBallisticBehavior.Data trajectoryData = IBallisticBehavior.LINE;
     private Item trajectoryFor = Items.AIR;
@@ -76,6 +75,52 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
     }
+
+    public final CannonAccess selfAccess = CannonAccess.tile(this);
+
+
+    public void tick(CannonAccess access) {
+        this.prevYaw = this.yaw;
+        this.prevPitch = this.pitch;
+
+        if (this.cooldownTimer > 0) {
+            this.cooldownTimer -= 1;
+        }
+        if (this.fuseTimer > 0) {
+            this.fuseTimer -= 1;
+            if (this.fuseTimer <= 0) {
+                this.fire(access);
+            }
+        }
+    }
+
+    private void fire(CannonAccess access) {
+        if (!this.hasFuelAndProjectiles()) return;
+
+        if (this.getLevel() instanceof ServerLevel sl) {
+            //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
+            if (this.shootProjectile(sl, access)) {
+                Player p = this.getPlayerWhoFired();
+                if (p == null || !p.isCreative()) {
+                    ItemStack fuel = this.getFuel();
+                    fuel.shrink(this.powerLevel);
+                    this.setFuel(fuel);
+
+                    ItemStack projectile = this.getProjectile();
+                    projectile.shrink(1);
+                    this.setProjectile(projectile);
+                    this.setChanged();
+                    access.updateClients();
+
+                    level.gameEvent(p, GameEvent.EXPLODE, access.getCannonPosition());
+                }
+            }
+        } else {
+            access.playFireEffects();
+        }
+        this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
+    }
+
 
     public boolean isBig() {
         return isBig;
@@ -241,11 +286,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return pitch;
     }
 
-    public void setAttributes(float yaw, float pitch, byte firePower, boolean fire, Player controllingPlayer) {
+    public void setAttributes(float yaw, float pitch, byte firePower, boolean fire,
+                              Player controllingPlayer, CannonAccess access) {
         this.yaw = yaw;
         this.pitch = pitch;
         this.powerLevel = firePower;
-        if (fire) this.ignite(controllingPlayer);
+        if (fire) this.ignite(controllingPlayer, access);
     }
 
 
@@ -329,20 +375,20 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack) {
+    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction face) {
         if (player.isSecondaryUseActive()) {
             //same as super but sends custom packet
-            if (!this.isOtherPlayerEditing(player)) {
+            if (!this.isOtherPlayerEditing(pos, player)) {
                 // open gui (edit sign with empty hand)
                 this.setPlayerWhoMayEdit(player.getUUID());
-                NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(this.worldPosition));
+                NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(TileOrEntityTarget.of(this)));
             }
             return true;
         }
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack);
+        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, face);
     }
 
-    public void ignite(@Nullable Entity entityWhoIgnited) {
+    public void ignite(@Nullable Entity entityWhoIgnited, CannonAccess access) {
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
 
@@ -351,8 +397,9 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
 
+        //make this entity agnostic
         //particles
-        this.level.blockEvent(worldPosition, this.getBlockState().getBlock(), 0, 0);
+        access.playIgniteEffects();
         this.playerWhoIgnitedUUID = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
 
         this.setChanged();
@@ -360,50 +407,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, CannonBlockTile t) {
-        t.prevYaw = t.yaw;
-        t.prevPitch = t.pitch;
 
-        if (t.cooldownTimer > 0) {
-            t.cooldownTimer -= 1;
-        }
-        if (t.fuseTimer > 0) {
-            t.fuseTimer -= 1;
-            if (t.fuseTimer <= 0) {
-                t.fire();
-            }
-        }
-    }
-
-    private void fire() {
-        if (!this.hasFuelAndProjectiles()) return;
-
-        if (level instanceof ServerLevel sl) {
-            //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
-            if (this.shootProjectile(sl)) {
-                Player p = getPlayerWhoFired();
-                if (p == null || !p.isCreative()) {
-                    ItemStack fuel = this.getFuel();
-                    fuel.shrink(this.powerLevel);
-                    this.setFuel(fuel);
-
-                    ItemStack projectile = this.getProjectile();
-                    projectile.shrink(1);
-                    this.setProjectile(projectile);
-                    this.setChanged();
-                    this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
-
-                    level.gameEvent(p, GameEvent.EXPLODE, worldPosition);
-                }
-            }
-        } else {
-            //call directly on client. happens 1 tick faster is this needed?
-            level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
-        }
-        this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
-    }
-
-    private boolean shootProjectile(ServerLevel serverLevel) {
+    protected boolean shootProjectile(ServerLevel serverLevel, CannonAccess access) {
         Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(-1);
         ItemStack projectile = this.getProjectile().copy();
 
@@ -414,13 +419,13 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
-        return behavior.fire(projectile.copy(), serverLevel, worldPosition, 0.5f,
+        return behavior.fire(projectile.copy(), serverLevel, access.getCannonPosition(), 0.5f,
                 facing, getFirePower(), 0, getPlayerWhoFired());
     }
 
 
     @Nullable
-    private Player getPlayerWhoFired() {
+    protected Player getPlayerWhoFired() {
         UUID uuid = this.controllingPlayer;
         if (uuid == null && playerWhoIgnitedUUID != null) {
             uuid = playerWhoIgnitedUUID;
@@ -444,13 +449,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     public AbstractContainerMenu createMenu(int id, Inventory inv) {
         //thanks mojank
         if (inv.player.isSpectator()) return null;
-        return new CannonContainerMenu(id, inv, this);
+        return new CannonContainerMenu(id, inv, this.selfAccess);
     }
 
-
-    public static void syncToServer(CannonBlockTile cannon, boolean fire, boolean removeOwner) {
-        NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
-                cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                fire, cannon.getBlockPos(), removeOwner));
-    }
 }

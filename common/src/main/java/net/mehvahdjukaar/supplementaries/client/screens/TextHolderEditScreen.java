@@ -107,7 +107,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                !this.tile.isEditingPlayer(this.minecraft.player);
+                !this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
@@ -90,7 +91,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         if (worldIn.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-            BlockUtil.spawnItemWithTileData(player, tile);
+            Utils.spawnItemWithTileData(player, tile);
         }
         return super.playerWillDestroy(worldIn, pos, state, player);
     }
@@ -99,7 +100,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof AbstractPresentBlockTile tile) {
-            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
+            ItemStack itemstack = Utils.saveTileToItem(tile);
 
             return Collections.singletonList(itemstack);
         }
@@ -110,7 +111,7 @@ public abstract class AbstractPresentBlock extends WaterBlock implements EntityB
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-            return BlockUtil.saveTileToItem(tile);
+            return Utils.saveTileToItem(tile);
         }
         return itemstack;
     }

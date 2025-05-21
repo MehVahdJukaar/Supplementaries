@@ -10,13 +10,10 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
-import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
@@ -470,8 +467,9 @@ public class ClientReceivers {
 
     public static void handleCannonControlPacket(ClientBoundControlCannonPacket message) {
         withLevelDo(l -> {
-            if (l.getBlockEntity(message.pos()) instanceof CannonBlockTile te) {
-                CannonController.startControlling(te);
+            CannonAccess access = CannonAccess.find(l, message.target());
+            if (access != null) {
+                CannonController.startControlling(access);
             }
         });
     }

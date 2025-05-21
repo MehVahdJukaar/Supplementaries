@@ -54,13 +54,13 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                 } else if (i instanceof JarItem) {
                     JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
                     dummyTile.clearAllContents();
-                    BlockUtil.loadTileFromItem(dummyTile, stack);
+                    Utils.loadTileFromItem(dummyTile, stack);
 
                     if (dummyTile.canInteractWithSoftFluidTank()) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                         ItemStack temp = dummyTile.fluidHolder.interactWithItem(tempStack, null, null, false);
                         if (temp != null && temp.getItem() == Items.GLASS_BOTTLE) {
-                            returnStack = BlockUtil.saveTileToItem(dummyTile);
+                            returnStack = Utils.saveTileToItem(dummyTile);
                         }
                     }
                 }

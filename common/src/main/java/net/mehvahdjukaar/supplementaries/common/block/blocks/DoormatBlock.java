@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.*;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -68,7 +66,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             //color wax and gui
-            return tile.textHolderInteract(0, level, pos, state, player, hand, stack);
+            return tile.textHolderInteract(0, level, pos, state, player, hand, stack, hitResult.getDirection());
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }

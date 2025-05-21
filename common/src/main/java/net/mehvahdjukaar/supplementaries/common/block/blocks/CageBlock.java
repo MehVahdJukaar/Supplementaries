@@ -72,7 +72,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof CageBlockTile tile) {
-            ItemStack itemstack = BlockUtil.saveTileToItem(tile);
+            ItemStack itemstack = Utils.saveTileToItem(tile);
             return Collections.singletonList(itemstack);
         }
         return super.getDrops(state, builder);
@@ -84,7 +84,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof CageBlockTile tile) {
-            return BlockUtil.saveTileToItem(tile);
+            return Utils.saveTileToItem(tile);
         }
         return super.getCloneItemStack(level, pos, state);
     }

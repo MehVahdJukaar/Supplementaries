@@ -31,7 +31,7 @@ public class CannonTrajectoryRenderer {
 
     public static void render(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
                               int packedLight, int packedOverlay, float partialTicks) {
-        if (cannon != blockEntity) return;
+        if (access == null || access.getCannon() != blockEntity) return;
         if (hit == null || trajectory == null || !showsTrajectory) return;
 
         boolean rendersRed = !blockEntity.readyToFire();
@@ -51,7 +51,6 @@ public class CannonTrajectoryRenderer {
         Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
         Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
 
-        poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(Axis.YP.rotation(-yaw));
 
         if (debug) renderTargetLine(poseStack, buffer, target);

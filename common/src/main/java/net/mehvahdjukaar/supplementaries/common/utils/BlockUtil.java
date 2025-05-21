@@ -36,38 +36,6 @@ import java.util.Optional;
 
 public class BlockUtil {
 
-    //use ml ones
-    @Deprecated(forRemoval = true)
-    public static void spawnItemWithTileData(Player player, RandomizableContainerBlockEntity tile) {
-        Level level = player.level();
-        if (!level.isClientSide && player.isCreative() && !tile.isEmpty()) {
-            BlockPos pos = tile.getBlockPos();
-            ItemStack itemstack = saveTileToItem(tile);
-
-            ItemEntity itementity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemstack);
-            itementity.setDefaultPickUpDelay();
-            level.addFreshEntity(itementity);
-        } else {
-            tile.unpackLootTable(player);
-        }
-    }
-
-    @Deprecated(forRemoval = true)
-    public static ItemStack saveTileToItem(BlockEntity tile) {
-        Block block = tile.getBlockState().getBlock();
-        ItemStack stack = new ItemStack(block.asItem());
-        tile.saveToItem(stack, tile.getLevel().registryAccess());
-        return stack;
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void loadTileFromItem(BlockEntity tile, ItemStack stack) {
-        var comp = stack.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (comp != null) {
-            tile.loadWithComponents(comp.copyTag(), tile.getLevel().registryAccess());
-        }
-    }
-
     //rotation stuff
     //returns rotation direction axis which might be different that the clicked face
 

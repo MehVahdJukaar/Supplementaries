@@ -289,13 +289,14 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         }
 
         //try place or open
-        if (hit.getDirection() == state.getValue(NoticeBoardBlock.FACING)) {
+        Direction face = hit.getDirection();
+        if (face == state.getValue(NoticeBoardBlock.FACING)) {
             ItemInteractionResult res = super.interactWithPlayerItem(player, handIn, stack);
             if (res.consumesAction()) {
                 return res;
             }
         }
-        ItemInteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn, stack);
+        ItemInteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn, stack, face);
         if (r != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return r;
 
 
@@ -303,7 +304,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player instanceof ServerPlayer sp) {
-            this.tryOpeningEditGui(sp, pos, player.getItemInHand(handIn));
+            this.tryOpeningEditGui(sp, pos, player.getItemInHand(handIn), face);
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }

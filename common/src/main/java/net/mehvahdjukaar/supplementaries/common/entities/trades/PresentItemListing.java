@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -36,7 +37,7 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
             dummyTile.setSender(entity.getName().getString());
             dummyTile.setPublic();
 
-            ItemStack stack = BlockUtil.saveTileToItem(dummyTile);
+            ItemStack stack = Utils.saveTileToItem(dummyTile);
 
             Optional<ItemCost> costB = Optional.ofNullable(itemCost(originalOffer.getCostB()));
             return new MerchantOffer(itemCost(originalOffer.getBaseCostA()), costB, stack, originalOffer.getUses(),
