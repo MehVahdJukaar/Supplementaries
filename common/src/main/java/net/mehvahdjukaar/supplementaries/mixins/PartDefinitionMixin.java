@@ -15,6 +15,5 @@ public class PartDefinitionMixin {
     private void supp$onBakeRoot(int texWidth, int texHeight, CallbackInfoReturnable<ModelPart> cir) {
         ModelPart returnValue = cir.getReturnValue();
         ((IModelPartExtension) (Object) returnValue).supp$setDimensions(texWidth, texHeight);
-        //System.out.println("Baked root");
     }
 }

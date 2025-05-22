@@ -5,15 +5,15 @@
   "client": [
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
-    "CompatEmbFluidRendererMixin",
-    "CompatIFMapAtlasTextureMixin",
-    "CompatIFMapTextureMixin2",
+    "compat.CompatEmbFluidRendererMixin",
+    "compat.CompatIFMapAtlasTextureMixin",
+    "compat.CompatIFMapTextureMixin2",
     "LevelRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",
-    "CompatFarmersDelightTomatoMixin",
-    "CompatSodiumFluidRendererMixin",
+    "compat.CompatFarmersDelightTomatoMixin",
+    "compat.CompatSodiumFluidRendererMixin",
     "FireBlockAccessor",
     "ItemStackAccessor",
     "LivingEntityMixin",

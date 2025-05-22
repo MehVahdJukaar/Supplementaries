@@ -17,7 +17,6 @@
     "CartographyTableMixin",
     "CatSitOnBlockGoalMixin",
     "ComparatorBlockMixin",
-    "CompatCreeperArclightMixin",
     "CreeperMixin",
     "EndermanMixin",
     "EntityMixin",
@@ -56,7 +55,8 @@
     "StrongholdCrossingSconceMixin",
     "StrongholdRoomSconceMixin",
     "WanderingTraderMixin",
-    "ZombieHorseMixin"
+    "ZombieHorseMixin",
+    "compat.CompatCreeperArclightMixin"
   ],
   "client": [
     "AgeableListAccessor",
@@ -84,7 +84,8 @@
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",
     "UndeadHorseRenderMixin",
-    "WrittenBookAccessMixin"
+    "WrittenBookAccessMixin",
+    "compat.CompatEMFMixin"
   ],
   "injectors": {
     "defaultRequire": 1

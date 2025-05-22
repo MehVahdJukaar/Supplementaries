@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins;
+package net.mehvahdjukaar.supplementaries.mixins.compat;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;

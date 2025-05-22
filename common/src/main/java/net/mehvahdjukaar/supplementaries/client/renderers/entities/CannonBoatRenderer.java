@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class CannonBoatRenderer extends BoatRenderer {
@@ -31,9 +32,10 @@ public class CannonBoatRenderer extends BoatRenderer {
 
         poseStack.pushPose();
 
-        Quaternionf boatRot = Axis.YP.rotationDegrees(180.0F - entityYaw);
+        Quaternionf boatRot = Axis.YP.rotationDegrees(boat.getCannonGlobalYawOffset());
         poseStack.mulPose(boatRot);
-        poseStack.translate(0, 1, 9 / 16f);
+        Vec3 offset = boat.getCannonGlobalOffset();
+        poseStack.translate(offset.x, offset.y, offset.z);
         CannonBlockTileRenderer.renderCannonModel(
                 (CannonBlockTileRenderer) renderer,
                 cannon, partialTicks, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY

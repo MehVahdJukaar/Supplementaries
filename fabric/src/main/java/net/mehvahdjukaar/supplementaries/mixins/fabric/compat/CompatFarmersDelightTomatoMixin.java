@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.fabric;
+package net.mehvahdjukaar.supplementaries.mixins.fabric.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

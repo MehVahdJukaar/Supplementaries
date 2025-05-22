@@ -30,6 +30,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -256,6 +257,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return (float) (Math.pow(powerLevel, CommonConfigs.Functional.CANNON_FIRE_POWER.get()));
     }
 
+    private float getGlobalYaw(CannonAccess access) {
+        return this.yaw - access.getCannonGlobalYawOffset();
+    }
+
     public float getYaw(float partialTicks) {
         return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw);
     }
@@ -274,28 +279,55 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setAttributes(float yaw, float pitch, byte firePower, boolean fire,
                               Player controllingPlayer, CannonAccess access) {
-        this.yaw = yaw - access.getCannonGlobalYawOffset();
+        this.yaw = yaw;
         this.pitch = pitch;
         this.powerLevel = firePower;
         if (fire) this.ignite(controllingPlayer, access);
     }
 
-
     public void setRestrainedPitch(CannonAccess access, float pitch) {
         var r = access.getPitchAndYawRestrains();
-        this.pitch = MthUtils.clampDegrees(pitch, r.minPitch(), r.maxPitch());
+        this.pitch =  clampDegrees(pitch, r.minPitch(), r.maxPitch());
     }
 
     public void setRestrainedYaw(CannonAccess access, float yaw) {
         var r = access.getPitchAndYawRestrains();
-        this.yaw = MthUtils.clampDegrees(yaw, r.minYaw(), r.maxYaw());
+         this.yaw =  clampDegrees(yaw + access.getCannonGlobalYawOffset(), r.minYaw(), r.maxYaw());
     }
-
+private void setGlobalYaw(CannonAccess access, float yaw){
+    }
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float newYaw) {
         setRestrainedYaw(access, newYaw);
         this.prevYaw = this.yaw;
     }
+
+    public static float clampDegrees(float angle, float first, float second) {
+        // Normalize all angles to the range [0, 360)
+        angle = (angle % 360 + 360) % 360;
+        first = (first % 360 + 360) % 360;
+        second = (second % 360 + 360) % 360;
+        // Calculate the arc length from A to B in the positive direction
+        float deltaAB = (second - first + 360) % 360;
+        // Calculate the position of the angle relative to A
+        float deltaThetaA = (angle - first + 360) % 360;
+
+        // Check if the angle is within the valid slice from A to B
+        if (deltaThetaA <= deltaAB) {
+            return angle;
+        } else {
+            // Calculate minimal distances to A and B
+            float diffA = Math.abs(angle - first);
+            float distanceToA = Math.min(diffA, 360 - diffA);
+
+            float diffB = Math.abs(angle - second);
+            float distanceToB = Math.min(diffB, 360 - diffB);
+
+            // Return the closer boundary, preferring B in case of a tie
+            return Mth.wrapDegrees((distanceToA < distanceToB) ? first : second);
+        }
+    }
+
 
     public void setRenderPitch(CannonAccess access, float pitch) {
         setRestrainedPitch(access, pitch);
@@ -380,7 +412,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
 
     protected boolean shootProjectile(ServerLevel serverLevel, CannonAccess access) {
-        Vec3 facing = Vec3.directionFromRotation(this.pitch, this.yaw).scale(-1);
+        Vec3 facing = Vec3.directionFromRotation(this.pitch,
+                this.getGlobalYaw(access)).scale(-1);
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {

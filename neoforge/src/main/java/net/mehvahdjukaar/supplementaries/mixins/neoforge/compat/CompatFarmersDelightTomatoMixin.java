@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.neoforge;
+package net.mehvahdjukaar.supplementaries.mixins.neoforge.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
 
@@ -102,7 +103,8 @@ public class ModEntities {
             EntityType.Builder.<CannnonBoatEntity>of(CannnonBoatEntity::new, MobCategory.MISC)
                     .sized(1.375F, 0.5625F)
                     .eyeHeight(0.5625F)
-                    .clientTrackingRange(10));
+                    .clientTrackingRange(10)
+    );
 
     //firefly
 

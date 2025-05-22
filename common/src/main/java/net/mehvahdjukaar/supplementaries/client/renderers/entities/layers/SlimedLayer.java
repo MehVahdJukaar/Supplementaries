@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.mixins.AgeableListAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -35,7 +36,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
         int height = 64;
         M model = this.getParentModel();
         if (model instanceof AgeableListAccessor al) {
-            for (var v : al.invokeBodyParts()) {
+            for (ModelPart v : al.invokeBodyParts()) {
                 IModelPartExtension part = (IModelPartExtension) (Object) v;
                 height = part.supp$getTextHeight();
                 width = part.supp$getTextWidth();

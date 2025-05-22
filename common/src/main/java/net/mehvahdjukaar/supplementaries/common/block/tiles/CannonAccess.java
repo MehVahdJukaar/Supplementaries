@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
+import net.mehvahdjukaar.supplementaries.mixins.ModelPartMixin;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -23,6 +25,8 @@ public interface CannonAccess {
     Vec3 getCannonGlobalPosition();
 
     float getCannonGlobalYawOffset();
+
+    Vec3 getCannonGlobalOffset();
 
     void sendOpenGuiRequest();
 
@@ -51,9 +55,15 @@ public interface CannonAccess {
         }
 
         @Override
+        public Vec3 getCannonGlobalOffset() {
+            return  new Vec3(0.5, 0.5, 0.5);
+        }
+
+        @Override
         public float getCannonGlobalYawOffset() {
             return 0;
         }
+
 
 
         @Override

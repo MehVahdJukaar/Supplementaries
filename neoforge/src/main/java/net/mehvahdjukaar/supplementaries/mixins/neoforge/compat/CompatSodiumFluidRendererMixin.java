@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.neoforge;
+package net.mehvahdjukaar.supplementaries.mixins.neoforge.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -11,7 +11,6 @@ import net.caffeinemc.mods.sodium.client.model.quad.ModelQuadViewMutable;
 import net.caffeinemc.mods.sodium.client.model.quad.properties.ModelQuadFacing;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.DefaultFluidRenderer;
 import net.caffeinemc.mods.sodium.client.world.LevelSlice;
-import net.mehvahdjukaar.moonlight.api.resources.recipe.neoforge.ResourceConditionsBridge;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;

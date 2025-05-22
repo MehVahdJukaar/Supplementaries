@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
-    "CompatIFMapAtlasTextureMixin",
-    "CompatIFMapTextureMixin2",
+    "compat.CompatIFMapAtlasTextureMixin",
+    "compat.CompatIFMapTextureMixin2",
     "GuiMixin",
     "ItemInHandRendererMixin",
     "LevelRendererMixin",
@@ -17,8 +17,8 @@
   ],
   "mixins": [
     "BiomeAccessor",
-    "CompatFarmersDelightTomatoMixin",
-    "CompatSodiumFluidRendererMixin",
+    "compat.CompatFarmersDelightTomatoMixin",
+    "compat.CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "FireBlockAccessor",
     "MobMixin",

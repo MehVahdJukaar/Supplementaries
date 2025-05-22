@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;//
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -23,10 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.HasCustomInventoryScreen;
-import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -251,13 +249,17 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
     }
 
     @Override
+    public Vec3 getCannonGlobalOffset() {
+        float backOff = 7 / 16f;
+        return new Vec3(0, 12/16f, backOff);
+    }
+
+    @Override
     public Vec3 getCannonGlobalPosition() {
-        Vec3 boatPos = this.position();
-        float yaw = 180 - this.getYRot();
-        float backOff = 9 / 16f;
-        Vec3 vv = new Vec3(0, 1, backOff);
+        float yaw = getCannonGlobalYawOffset();
+        Vec3 vv = getCannonGlobalOffset();
         vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
-        return boatPos.add(vv);
+        return this.position().add(vv);
     }
 
     @Override
@@ -274,7 +276,7 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
 
     @Override
     public Restraint getPitchAndYawRestrains() {
-        return new Restraint(130, 260, -10, 180);
+        return new Restraint(50, 360-50, -10, 180);
     }
 
     @Override
@@ -305,5 +307,12 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
         this.cannon.setPlayerWhoMayEdit(null);
+    }
+
+    @Override
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
+        SlimedRenderTypes
+        return super.getPassengerAttachmentPoint(entity, dimensions, partialTick)
+                .add(0.125,0,0);
     }
 }

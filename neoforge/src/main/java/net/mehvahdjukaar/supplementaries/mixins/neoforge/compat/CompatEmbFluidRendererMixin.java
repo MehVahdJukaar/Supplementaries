@@ -1,39 +1,40 @@
-package net.mehvahdjukaar.supplementaries.mixins.fabric;
+package net.mehvahdjukaar.supplementaries.mixins.neoforge.compat;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import me.jellysquid.mods.sodium.client.model.color.ColorProvider;
-import me.jellysquid.mods.sodium.client.model.light.LightMode;
-import me.jellysquid.mods.sodium.client.model.light.data.QuadLightData;
-import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.pipeline.FluidRenderer;
-import me.jellysquid.mods.sodium.client.world.WorldSlice;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import org.embeddedt.embeddium.impl.model.color.ColorProvider;
+import org.embeddedt.embeddium.impl.model.light.LightMode;
+import org.embeddedt.embeddium.impl.model.light.LightPipeline;
+import org.embeddedt.embeddium.impl.model.light.data.QuadLightData;
+import org.embeddedt.embeddium.impl.model.quad.ModelQuadView;
+import org.embeddedt.embeddium.impl.render.chunk.compile.pipeline.FluidRenderer;
+import org.embeddedt.embeddium.impl.world.WorldSlice;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//TODO: merge in 1.21
 @Pseudo
 @Mixin(FluidRenderer.class)
-public abstract class CompatSodiumFluidRendererMixin {
+public abstract class CompatEmbFluidRendererMixin {
 
     @Shadow
     @Final
     private QuadLightData quadLightData;
 
-    @WrapOperation(method = "fluidHeight",
-            remap = false,
+    @WrapOperation(method = "fluidHeight", remap = false,
             at = @At(value = "INVOKE",
                     remap = true,
                     target = "Lnet/minecraft/world/level/material/Fluid;isSame(Lnet/minecraft/world/level/material/Fluid;)Z"))
@@ -41,18 +42,13 @@ public abstract class CompatSodiumFluidRendererMixin {
         return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
     }
 
-    @WrapOperation(method = "updateQuad(Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;Lnet/minecraft/core/Direction;FLme/jellysquid/mods/sodium/client/model/color/ColorProvider;Lnet/minecraft/world/level/material/FluidState;)V",
-            require = 0, //WHYYYY TODO: FIX MEEE
+    @Inject(method = "updateQuad",
             at = @At(value = "INVOKE",
-                    remap = false,
-                    args = "log=true",
-                    target = "Lme/jellysquid/mods/sodium/client/model/color/ColorProvider;getColors(Lme/jellysquid/mods/sodium/client/world/WorldSlice;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lme/jellysquid/mods/sodium/client/model/quad/ModelQuadView;[I)V"),
+                    remap = true,
+                    shift = At.Shift.AFTER,
+                    target = "Lorg/embeddedt/embeddium/impl/model/color/ColorProvider;getColors(Lorg/embeddedt/embeddium/api/render/chunk/EmbeddiumBlockAndTintGetter;Lnet/minecraft/core/BlockPos;Ljava/lang/Object;Lorg/embeddedt/embeddium/impl/model/quad/ModelQuadView;[I)V"),
             remap = false)
-    public void supplementaries$modifyLumiseneEmissivity(ColorProvider<FluidState> instance,
-                                                         WorldSlice worldSlice, BlockPos pos, Object o,
-                                                         ModelQuadView modelQuadView, int[] ints, Operation<Void> original) {
-        FluidState fluidState = (FluidState) o;
-        original.call(instance, worldSlice, pos, o, modelQuadView, ints);
+    public void supplementaries$modifyLumiseneEmissivity(ModelQuadView quad, WorldSlice world, BlockPos pos, LightPipeline lighter, Direction dir, float brightness, ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
@@ -69,7 +65,7 @@ public abstract class CompatSodiumFluidRendererMixin {
                 light.lm[j] = LightTexture.pack(bl, sl);
 
                 // no shading on emissive stuff!
-                //TODO: this cant be correct! without however stuff is modShader when against blocks
+                //TODO: this cant be correct! without however stuff is shader when against blocks
                 light.br[j] = 1.0F;
             }
         }
@@ -94,7 +90,7 @@ public abstract class CompatSodiumFluidRendererMixin {
             remap = false,
             at = @At(value = "INVOKE",
                     remap = false,
-                    target = "Lme/jellysquid/mods/sodium/client/model/light/LightPipelineProvider;getLighter(Lme/jellysquid/mods/sodium/client/model/light/LightMode;)Lme/jellysquid/mods/sodium/client/model/light/LightPipeline;"))
+                    target = "Lorg/embeddedt/embeddium/impl/model/light/LightPipelineProvider;getLighter(Lorg/embeddedt/embeddium/impl/model/light/LightMode;)Lorg/embeddedt/embeddium/impl/model/light/LightPipeline;"))
     public LightMode supplementaries$modifyLumiseneLight(LightMode lightMode, @Local Fluid fluid) {
         if (fluid == ModFluids.LUMISENE_FLUID.get()) {
             return Minecraft.getInstance().options.ambientOcclusion().get() ? LightMode.SMOOTH : LightMode.FLAT;
