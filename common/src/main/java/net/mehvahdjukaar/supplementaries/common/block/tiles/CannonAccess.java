@@ -41,11 +41,20 @@ public interface CannonAccess {
 
     Restraint getPitchAndYawRestrains();
 
+    default boolean isBlock() {
+        return false;
+    }
+
     class Block implements CannonAccess {
         private final CannonBlockTile cannon;
 
         public Block(CannonBlockTile cannon) {
             this.cannon = cannon;
+        }
+
+        @Override
+        public boolean isBlock() {
+            return true;
         }
 
         @Override
@@ -60,7 +69,7 @@ public interface CannonAccess {
 
         @Override
         public Vec3 getCannonGlobalOffset() {
-            return  new Vec3(0.5, 0.5, 0.5);
+            return new Vec3(0.5, 0.5, 0.5);
         }
 
         @Override

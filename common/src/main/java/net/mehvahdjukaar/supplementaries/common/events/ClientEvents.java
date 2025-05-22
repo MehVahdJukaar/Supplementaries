@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
@@ -36,9 +37,10 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -49,7 +51,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -136,10 +141,10 @@ public class ClientEvents {
                 items.add(ModRegistry.DAUB.get().asItem());
                 items.add(ModRegistry.SPEAKER_BLOCK.get().asItem());
 
-                for(var item :items) {
+                for (var item : items) {
                     var id = Utils.getID(item);
-                    makeTexture( "", item);
-                    makeTexture( "_unseen", item, unseen);
+                    makeTexture("", item);
+                    makeTexture("_unseen", item, unseen);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -149,10 +154,10 @@ public class ClientEvents {
 
     public static FrameBufferBackedDynamicTexture requestFlatItemTexture(ResourceLocation id, Item item, int size, @Nullable Consumer<NativeImage> postProcessing, boolean updateEachFrame) {
         return RenderedTexturesManager.requestTexture(id, size, (t) -> {
-            RenderedTexturesManager.  drawAsInGUI(t, (g) -> {
-                g.pose().translate(8,8,0);
-                g.pose().scale(16/18f, 16/18f, 1);
-                g.pose().translate(-8,-8,0);
+            RenderedTexturesManager.drawAsInGUI(t, (g) -> {
+                g.pose().translate(8, 8, 0);
+                g.pose().scale(16 / 18f, 16 / 18f, 1);
+                g.pose().translate(-8, -8, 0);
                 g.renderFakeItem(item.getDefaultInstance(), 0, 0);
             });
             if (postProcessing != null) {
@@ -165,7 +170,7 @@ public class ClientEvents {
         }, updateEachFrame);
     }
 
-    private static void makeTexture( String postfix, Item item,@Nullable TextureImage ...overlays) {
+    private static void makeTexture(String postfix, Item item, @Nullable TextureImage... overlays) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(item.getDefaultInstance(), null, null, 0);
         int s = model.isGui3d() ? 16 : 1;
         var t = requestFlatItemTexture(
@@ -349,4 +354,23 @@ public class ClientEvents {
     }
 
 
+    public static boolean cancelKeyPress(int key, int scancode, int action, int modifiers) {
+        return SelectableContainerItemHud.getInstance().onKeyPressed(key, action, modifiers) ||
+                CannonController.onEarlyKeyPress(key, scancode, action, modifiers);
+    }
+
+    private static boolean preventShiftTillNextKeyUp = false;
+
+    public static void modifyInputUpdate(Input instance, LocalPlayer player) {
+        if (CannonController.isActive()) {
+            CannonController.onInputUpdate(instance);
+            preventShiftTillNextKeyUp = true;
+        } else if (preventShiftTillNextKeyUp) {
+            if (!instance.shiftKeyDown) {
+                preventShiftTillNextKeyUp = false;
+            } else {
+                instance.shiftKeyDown = false;
+            }
+        }
+    }
 }

@@ -1,14 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +18,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 
 public class CannonController {
@@ -27,7 +27,6 @@ public class CannonController {
 
     private static CameraType lastCameraType;
     protected static HitResult hit;
-    private static boolean firstTick = true;
 
     // values controlled by player mouse movement. Not actually what camera uses
     private static float yawIncrease;
@@ -48,10 +47,9 @@ public class CannonController {
     protected static boolean showsTrajectory = true;
 
     public static void startControlling(CannonAccess cannonAccess) {
-        firstTick = true;
         Minecraft mc = Minecraft.getInstance();
-
         if (access == null) {
+            ServerBoundSyncCannonPacket
             access = cannonAccess;
             shootingMode = cannonAccess.getCannon().getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
@@ -192,7 +190,6 @@ public class CannonController {
     }
 
     public static void onKeyShift() {
-        Player player = Minecraft.getInstance().player;
         stopControllingAndSync();
     }
 
@@ -215,18 +212,15 @@ public class CannonController {
     }
 
     public static void onInputUpdate(Input input) {
-        if (firstTick) {
-            // resets input
-            firstTick = false;
-            input.down = false;
-            input.jumping = false;
-            input.up = false;
-            input.left = false;
-            input.right = false;
-            input.shiftKeyDown = false;
-            input.forwardImpulse = 0;
-            input.leftImpulse = 0;
-        }
+        // resets input
+        input.down = false;
+        input.jumping = false;
+        input.up = false;
+        input.left = false;
+        input.right = false;
+        input.shiftKeyDown = false;
+        input.forwardImpulse = 0;
+        input.leftImpulse = 0;
     }
 
     public static void onClientTick(Minecraft mc) {
@@ -243,5 +237,19 @@ public class CannonController {
         }
     }
 
+    //called by mixin. its cancellable. maybe switch all to this
+    public static boolean onEarlyKeyPress(int key, int scancode, int action, int modifiers) {
+        if (!isActive()) return false;
+        if (action != GLFW.GLFW_PRESS) return false;
+
+        if (key == 256) {
+            stopControllingAndSync();
+            return true;
+        } else if (Minecraft.getInstance().options.keyInventory.matches(key, scancode)) {
+            onKeyInventory();
+            return true;
+        }
+        return false;
+    }
 }
 

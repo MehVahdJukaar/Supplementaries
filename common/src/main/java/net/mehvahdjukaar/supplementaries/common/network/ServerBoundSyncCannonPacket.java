@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -46,11 +47,15 @@ public record ServerBoundSyncCannonPacket(
                 if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition()), player)) {
                     cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player, access);
                     cannon.setChanged();
-                    if (stopControlling) {
+                    if (stopControlling && access.isBlock()) {
                         cannon.setPlayerWhoMayEdit(null);
                     }
                     access.updateClients();
+                } else {
+                    Supplementaries.LOGGER.warn("Player tried to control cannon {} without permission: {}", player.getName().getString(), this.target);
                 }
+            } else {
+                Supplementaries.LOGGER.warn("Cannon not found for player {}: {}", player.getName().getString(), this.target);
             }
         }
         // could happen if cannon is broken

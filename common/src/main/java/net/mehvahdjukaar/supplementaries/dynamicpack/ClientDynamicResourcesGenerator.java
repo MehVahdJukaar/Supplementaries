@@ -372,6 +372,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
         ModRegistry.WAY_SIGN_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.way_sign", type, item));
+        ModRegistry.CANNON_BOAT_ITEMS.forEach((type, item) ->
+                LangBuilder.addDynamicEntry(lang, "item.supplementaries.cannon_boat", type, item));
 
         String bambooSpikes = lang.getEntry("item.supplementaries.bamboo_spikes_tipped.effect");
         if (bambooSpikes == null) return;

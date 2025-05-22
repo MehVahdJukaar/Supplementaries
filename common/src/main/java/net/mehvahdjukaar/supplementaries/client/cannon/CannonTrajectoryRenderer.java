@@ -47,14 +47,10 @@ public class CannonTrajectoryRenderer {
         float yaw = tile.getYaw(partialTicks) * Mth.DEG_TO_RAD;
 
         //rotate so we can work in 2d
-        Vec3 targetVector = hit.getLocation().subtract(cannonPos);
-        Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
 
         poseStack.mulPose(Axis.YP.rotation(-yaw));
 
-        if (debug) renderTargetLine(poseStack, buffer, target);
-
-        boolean hitAir = shootingMode == ShootingMode.STRAIGHT ||
+        boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
                 mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
 
         renderArrows(poseStack, buffer, partialTicks,
@@ -62,10 +58,10 @@ public class CannonTrajectoryRenderer {
 
         poseStack.popPose();
 
-
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
-                renderTargetCircle(poseStack, buffer, yaw, rendersRed);
+                renderTargetCircle(poseStack, buffer, rendersRed,
+                        trajectory.getHitLocation(cannonPos, yaw).subtract(cannonPos));
             }
         }
 
@@ -87,14 +83,14 @@ public class CannonTrajectoryRenderer {
         poseStack.popPose();
     }
 
-    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, float yaw, boolean red) {
+    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, boolean red, Vec3 targetPos) {
         poseStack.pushPose();
 
         Material circleMaterial = red ? ModMaterials.CANNON_TARGET_RED_MATERIAL : ModMaterials.CANNON_TARGET_MATERIAL;
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
-        Vec3 targetVec = new Vec3(0, trajectory.point().y, -trajectory.point().x).yRot(-yaw);
-        poseStack.translate(targetVec.x, targetVec.y + 0.05, targetVec.z );
+        poseStack.translate(targetPos.x, targetPos.y + 0.05, targetPos.z );
+        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset()));
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;

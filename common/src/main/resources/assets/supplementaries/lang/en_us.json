@@ -250,8 +250,6 @@
   "block.supplementaries.wild_flax": "Wild Flax",
   "block.supplementaries.wind_vane": "Wind Vane",
 
-  "block_type.supplementaries.way_sign": "Sign Post",
-
   "commands.supplementaries.registry.copy_elements_names": "Click to copy all entry names to clipboard",
   "commands.supplementaries.registry.element": "%s : %s",
   "commands.supplementaries.registry.elements_count": "Entries: %s",
@@ -428,6 +426,7 @@
   "item.supplementaries.soap_water": "Soapy Water",
   "item.supplementaries.speedometer": "Speedometer",
   "item.supplementaries.way_sign": "%s Way Sign",
+  "item.supplementaries.cannon_boat": "%s Cannon Boat",
   "item.supplementaries.wrench": "Wrench",
 
   "tab.supplementaries.jars": "Jars",

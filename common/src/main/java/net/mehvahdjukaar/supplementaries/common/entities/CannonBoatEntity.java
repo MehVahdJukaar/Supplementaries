@@ -1,12 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.entities;//
 
 
+import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.supplementaries.client.screens.CannonScreen;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -25,10 +26,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -43,21 +46,23 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, CannonAccess {
+public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, CannonAccess, IControllableVehicle {
 
-    private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE = SynchedEntityData.defineId(
-            CannnonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
+    private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
+            SynchedEntityData.defineId(
+                    CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
 
     private final CannonBlockTile cannon;
 
-    public CannnonBoatEntity(EntityType<CannnonBoatEntity> entityType, Level level) {
+    public CannonBoatEntity(EntityType<CannonBoatEntity> entityType, Level level) {
         super(entityType, level);
         this.cannon = new CannonBlockTile(BlockPos.ZERO, ModRegistry.CANNON.get()
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
         this.cannon.setLevel(level);
+        this.setWoodType(WoodTypeRegistry.OAK_TYPE);
     }
 
-    public CannnonBoatEntity(Level level, CannonBlockTile cannon, double x, double y, double z, WoodType type) {
+    public CannonBoatEntity(Level level, CannonBlockTile cannon, double x, double y, double z, WoodType type) {
         this(ModEntities.CANNON_BOAT.get(), level);
         this.setPos(x, y, z);
         this.xo = x;
@@ -112,14 +117,14 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
     @Override
     public void destroy(DamageSource source) {
         this.destroy(this.getDropItem());
-        //   this.chestVehicleDestroyed(source, this.level(), this);
+        this.chestVehicleDestroyed(source, this.level(), this);
     }
 
+    @Override
     public void remove(Entity.RemovalReason reason) {
         if (!this.level().isClientSide && reason.shouldDestroy()) {
-            //  Containers.dropContents(this.level(), this, this);
+            Containers.dropContents(this.level(), this, this);
         }
-
         super.remove(reason);
     }
 
@@ -320,6 +325,13 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
     @Override
     public void playIgniteEffects() {
 
+    }
+
+    @Override
+    public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean b4, boolean jump) {
+        if(jump && level().isClientSide){
+            CannonController.startControlling(this);
+        }
     }
 
     @Override

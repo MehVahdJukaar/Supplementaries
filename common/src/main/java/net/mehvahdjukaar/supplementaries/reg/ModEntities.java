@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Supplier;
 
@@ -99,8 +98,8 @@ public class ModEntities {
                     .clientTrackingRange(6)
                     .updateInterval(1)); //STOP GETTING IT OUT OF SYNC!
 
-    public static final Supplier<EntityType<CannnonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
-            EntityType.Builder.<CannnonBoatEntity>of(CannnonBoatEntity::new, MobCategory.MISC)
+    public static final Supplier<EntityType<CannonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
+            EntityType.Builder.<CannonBoatEntity>of(CannonBoatEntity::new, MobCategory.MISC)
                     .sized(1.375F, 0.5625F)
                     .eyeHeight(0.5625F)
                     .clientTrackingRange(10)

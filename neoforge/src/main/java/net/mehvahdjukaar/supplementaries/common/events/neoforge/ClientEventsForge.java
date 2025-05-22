@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
@@ -95,9 +96,6 @@ public class ClientEventsForge {
             }
             if (mc.options.keyShift.matches(key, scanCode)) {
                 CannonController.onKeyShift();
-            }
-            if (mc.options.keyInventory.matches(key, scanCode)) {
-                CannonController.onKeyInventory();
             }
         }
     }

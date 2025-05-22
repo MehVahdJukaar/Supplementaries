@@ -522,5 +522,11 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
         return BlockPos.containing(cannonPos.add(localPos).add(0, offsetDown, 0));
     }
 
+    public Vec3 getHitLocation(Vec3 cannonPos, float yaw) {
+        Vec2 v = this.point;
+        Vec3 localPos = new Vec3(0, v.y, -v.x).yRot(-yaw);
+        return cannonPos.add(localPos);
+    }
+
 
 }

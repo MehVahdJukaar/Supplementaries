@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.entities.CannnonBoatEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.BoatRenderer;
@@ -33,14 +33,14 @@ public class CannonBoatRenderer extends BoatRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(Boat entity) {
-        return textures.get(((CannnonBoatEntity) entity).getWoodType());
+        return textures.get(((CannonBoatEntity) entity).getWoodType());
     }
 
     @Override
     public void render(Boat entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
-        CannnonBoatEntity boat = (CannnonBoatEntity) entity;
+        CannonBoatEntity boat = (CannonBoatEntity) entity;
         var cannon = boat.getCannon();
         var renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher()
                 .getRenderer(cannon);

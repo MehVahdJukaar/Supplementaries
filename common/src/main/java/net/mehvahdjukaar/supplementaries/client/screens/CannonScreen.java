@@ -44,9 +44,9 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = this.leftPos;
         int j = this.topPos;
-        ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6);
+        boolean manActive = this.access.canManeuverFromGUI(Minecraft.getInstance().player);
+        ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
-        maneuver.active = this.access.canManeuverFromGUI(Minecraft.getInstance().player);
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(access.getCannon().getYaw());
@@ -128,9 +128,10 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     private final class ManeuverButton extends Button {
 
-        public ManeuverButton(int x, int y) {
+        public ManeuverButton(int x, int y, boolean active) {
             super(x, y, 10, 10, Component.empty(), CannonScreen.this::onManeuverPressed, Button.DEFAULT_NARRATION);
-            this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
+            if (active) this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
+            this.active = active;
         }
 
         @Override

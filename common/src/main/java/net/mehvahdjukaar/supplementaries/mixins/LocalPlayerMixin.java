@@ -1,9 +1,10 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
-import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -60,8 +61,8 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER)
     )
     private void suppl$checkIfHasQuiver(CallbackInfo ci) {
-       supplementaries$quiverSlotForHUD = QuiverItem.findActiveQuiverSlot(this);
-       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
+        supplementaries$quiverSlotForHUD = QuiverItem.findActiveQuiverSlot(this);
+        supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }
 
     @Override
@@ -70,9 +71,11 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     }
 
     @Override
-    public SlotReference supplementaries$getQuiverSlot(){
+    public SlotReference supplementaries$getQuiverSlot() {
         return supplementaries$quiverSlotForHUD;
-    };
+    }
+
+    ;
 
 
     @Override
@@ -80,12 +83,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         this.supplementaries$quiverForRenderer = quiver;
     }
 
-    @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
-    public boolean suppl$preventMovementWhileOperatingCannon(Input instance, boolean bl, float f) {
-        if (CannonController.isActive()) {
-            CannonController.onInputUpdate(instance);
-            return false;
-        }
-        return true;
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
+    public void suppl$preventMovementWhileOperatingCannon(Input instance, boolean isSneaking, float sneakingSpeedMultiplier, Operation<Void> original) {
+        original.call(instance, isSneaking, sneakingSpeedMultiplier);
+        ClientEvents.modifyInputUpdate(instance, (LocalPlayer) (Object) this);
     }
 }
