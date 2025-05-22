@@ -3,11 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
@@ -50,15 +50,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     @Nullable
     private Set<Block> breakWhitelist = null;
 
-    protected float pitch = 0;
-    protected float prevPitch = 0;
-    protected float yaw = 0;
-    protected float prevYaw = 0;
+    private float pitch = 0;
+    private float prevPitch = 0;
+    private float yaw = 0;
+    private float prevYaw = 0;
 
     // both from 0 to config value. in tick
-    protected int cooldownTimer = 0;
-    protected int fuseTimer = 0;
-    protected byte powerLevel = 1;
+    private int cooldownTimer = 0;
+    private int fuseTimer = 0;
+    private byte powerLevel = 1;
 
     private IBallisticBehavior.Data trajectoryData = IBallisticBehavior.LINE;
     private Item trajectoryFor = Items.AIR;
@@ -69,8 +69,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     //not saved
     @Nullable
     private UUID controllingPlayer = null;
-
-    private boolean isBig = false;
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
@@ -105,25 +103,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
                     ItemStack fuel = this.getFuel();
                     fuel.shrink(this.powerLevel);
                     this.setFuel(fuel);
-
                     ItemStack projectile = this.getProjectile();
                     projectile.shrink(1);
                     this.setProjectile(projectile);
                     this.setChanged();
                     access.updateClients();
 
-                    level.gameEvent(p, GameEvent.EXPLODE, access.getCannonPosition());
+                    level.gameEvent(p, GameEvent.EXPLODE, access.getCannonGlobalPosition());
                 }
             }
         } else {
             access.playFireEffects();
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
-    }
-
-
-    public boolean isBig() {
-        return isBig;
     }
 
     @Override
@@ -137,9 +129,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (playerWhoIgnitedUUID != null) tag.putUUID("player_ignited", playerWhoIgnitedUUID);
         if (breakWhitelist != null) {
             saveBreakWhitelist(breakWhitelist, tag, registries);
-        }
-        if (isBig) {
-            tag.putBoolean("big", true);
         }
         tag.put("trajectory", IBallisticBehavior.Data.CODEC.encodeStart(NbtOps.INSTANCE, trajectoryData).getOrThrow());
     }
@@ -162,10 +151,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
         }
         this.breakWhitelist = readBreakWhitelist(tag, registries);
-        if (tag.contains("big")) {
-            this.isBig = true;
-        }
-        if(tag.contains("trajectory")){
+        if (tag.contains("trajectory")) {
             this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
                     .getOrThrow();
         }
@@ -288,47 +274,32 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setAttributes(float yaw, float pitch, byte firePower, boolean fire,
                               Player controllingPlayer, CannonAccess access) {
-        this.yaw = yaw;
+        this.yaw = yaw - access.getCannonGlobalYawOffset();
         this.pitch = pitch;
         this.powerLevel = firePower;
         if (fire) this.ignite(controllingPlayer, access);
     }
 
 
-    public void setRestrainedPitch(float pitch) {
-        Restraint r = this.getPitchAndYawRestrains();
-        this.pitch = Mth.clamp(Mth.wrapDegrees(pitch), r.minPitch, r.maxPitch);
+    public void setRestrainedPitch(CannonAccess access, float pitch) {
+        var r = access.getPitchAndYawRestrains();
+        this.pitch = MthUtils.clampDegrees(pitch, r.minPitch(), r.maxPitch());
     }
 
-    public void setRestrainedYaw(float yaw) {
-        Restraint r = this.getPitchAndYawRestrains();
-        this.yaw = Mth.clamp(Mth.wrapDegrees(yaw), r.minYaw, r.maxYaw);
+    public void setRestrainedYaw(CannonAccess access, float yaw) {
+        var r = access.getPitchAndYawRestrains();
+        this.yaw = MthUtils.clampDegrees(yaw, r.minYaw(), r.maxYaw());
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
-    public void setRenderYaw(float yaw) {
-        setRestrainedYaw(yaw);
+    public void setRenderYaw(CannonAccess access, float newYaw) {
+        setRestrainedYaw(access, newYaw);
         this.prevYaw = this.yaw;
     }
 
-    public void setRenderPitch(float pitch) {
-        setRestrainedPitch(pitch);
+    public void setRenderPitch(CannonAccess access, float pitch) {
+        setRestrainedPitch(access, pitch);
         this.prevPitch = this.pitch;
-    }
-
-    public record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
-    }
-
-    public Restraint getPitchAndYawRestrains() {
-        BlockState state = this.getBlockState();
-        return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
-            case NORTH -> new Restraint(70, 290, -360, 360);
-            case SOUTH -> new Restraint(-110, 110, -360, 360);
-            case EAST -> new Restraint(-200, 20, -360, 360);
-            case WEST -> new Restraint(-20, 200, -360, 360);
-            case UP -> new Restraint(-360, 360, -200, 20);
-            case DOWN -> new Restraint(-360, 360, -20, 200);
-        };
     }
 
     public void changeFirePower(int scrollDelta) {
@@ -419,7 +390,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
-        return behavior.fire(projectile.copy(), serverLevel, access.getCannonPosition(), 0.5f,
+        return behavior.fire(projectile.copy(), serverLevel, access.getCannonGlobalPosition(), 0.5f,
                 facing, getFirePower(), 0, getPlayerWhoFired());
     }
 

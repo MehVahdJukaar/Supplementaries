@@ -2,28 +2,27 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
-public interface CannonAccess  {
+//used to access a cannon position and rotation, be it in a block or an entity
+public interface CannonAccess {
 
     CannonBlockTile getCannon();
 
     void syncToServer(boolean fire, boolean removeOwner);
 
-    Vec3 getCannonPosition();
+    Vec3 getCannonGlobalPosition();
+
+    float getCannonGlobalYawOffset();
 
     void sendOpenGuiRequest();
 
@@ -37,6 +36,7 @@ public interface CannonAccess  {
 
     void playIgniteEffects();
 
+    Restraint getPitchAndYawRestrains();
 
     class Block implements CannonAccess {
         private final CannonBlockTile cannon;
@@ -46,9 +46,15 @@ public interface CannonAccess  {
         }
 
         @Override
-        public Vec3 getCannonPosition() {
+        public Vec3 getCannonGlobalPosition() {
             return cannon.getBlockPos().getCenter();
         }
+
+        @Override
+        public float getCannonGlobalYawOffset() {
+            return 0;
+        }
+
 
         @Override
         public CannonBlockTile getCannon() {
@@ -101,6 +107,19 @@ public interface CannonAccess  {
             return !cannon.isRemoved() && level.getBlockEntity(cannon.getBlockPos()) == cannon &&
                     cannon.getBlockPos().distToCenterSqr(player.position()) < maxDist * maxDist;
         }
+
+        public Restraint getPitchAndYawRestrains() {
+            BlockState state = cannon.getBlockState();
+            return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
+                case NORTH -> new Restraint(70, 290, -360, 360);
+                case SOUTH -> new Restraint(-110, 110, -360, 360);
+                case EAST -> new Restraint(-200, 20, -360, 360);
+                case WEST -> new Restraint(-20, 200, -360, 360);
+                case UP -> new Restraint(-360, 360, -200, 20);
+                case DOWN -> new Restraint(-360, 360, -20, 200);
+            };
+        }
+
     }
 
     static CannonAccess find(Level level, TileOrEntityTarget target) {
@@ -118,4 +137,6 @@ public interface CannonAccess  {
         return new Block(cannonBlockTile);
     }
 
+    record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
+    }
 }

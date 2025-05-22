@@ -13,7 +13,10 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.*;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
+import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
+import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
@@ -293,6 +296,16 @@ public class ClientReceivers {
             CapturedMobHandler.getInstance(l).acceptData(packet.mobSet, packet.fish);
             Supplementaries.LOGGER.info("Synced Captured Mobs settings");
         });
+    }
+
+    public static void handleSyncCannonBoat(ClientBoundUpdateCannonBoatPacket packet) {
+        withLevelDo(l -> {
+            CannonAccess access = CannonAccess.find(l, packet.target());
+            if (access != null) {
+                access.getCannon().loadWithComponents(packet.tileTag(), l.registryAccess());
+            }
+        });
+
     }
 
 

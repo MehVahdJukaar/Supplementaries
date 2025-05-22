@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -44,17 +43,13 @@ public record ServerBoundSyncCannonPacket(
             CannonAccess access = CannonAccess.find(player.level(), this.target);
             if (access != null) {
                 var cannon = access.getCannon();
-                if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonPosition()), player)) {
+                if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition()), player)) {
                     cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player, access);
                     cannon.setChanged();
                     if (stopControlling) {
                         cannon.setPlayerWhoMayEdit(null);
                     }
-                    if (target.getPos() != null) {
-                        //now update all clients
-                        level.sendBlockUpdated(cannon.getBlockPos(), cannon.getBlockState(), cannon.getBlockState(), 3);
-                    }//for boat?
-                    return;
+                    access.updateClients();
                 }
             }
         }

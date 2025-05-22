@@ -515,11 +515,11 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
         return arcY(t, this.gravity, this.drag, this.v0y);
     }
 
-    public BlockPos getHitPos(BlockPos cannonPos, float yaw) {
+    public BlockPos getHitPos(Vec3 cannonPos, float yaw) {
         Vec2 v = this.point;
         Vec3 localPos = new Vec3(0, v.y, -v.x).yRot(-yaw);
         float offsetDown = -1 / 16f; //so we pick the block below
-        return BlockPos.containing(cannonPos.getCenter().add(localPos).add(0, offsetDown, 0));
+        return BlockPos.containing(cannonPos.add(localPos).add(0, offsetDown, 0));
     }
 
 

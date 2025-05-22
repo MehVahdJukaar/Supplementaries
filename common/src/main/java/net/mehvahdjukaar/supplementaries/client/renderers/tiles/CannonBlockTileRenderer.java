@@ -52,10 +52,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         poseStack.translate(0.5, 0.5, 0.5);
         CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
 
-        if (tile.isBig()) {
-            poseStack.scale(3, 3, 3);
-        }
-
         renderCannonModel(this, tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
         poseStack.popPose();
     }

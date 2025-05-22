@@ -21,7 +21,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import static net.mehvahdjukaar.supplementaries.client.cannon.CannonController.*;
@@ -29,14 +28,14 @@ import static net.mehvahdjukaar.supplementaries.client.cannon.CannonController.*
 public class CannonTrajectoryRenderer {
 
 
-    public static void render(CannonBlockTile blockEntity, PoseStack poseStack, MultiBufferSource buffer,
+    public static void render(CannonBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
                               int packedLight, int packedOverlay, float partialTicks) {
-        if (access == null || access.getCannon() != blockEntity) return;
+        if (access == null || access.getCannon() != tile) return;
         if (hit == null || trajectory == null || !showsTrajectory) return;
 
-        boolean rendersRed = !blockEntity.readyToFire();
+        boolean rendersRed = !tile.readyToFire();
 
-        BlockPos cannonPos = blockEntity.getBlockPos();
+        Vec3 cannonPos = access.getCannonGlobalPosition();
 
 
         Minecraft mc = Minecraft.getInstance();
@@ -45,10 +44,10 @@ public class CannonTrajectoryRenderer {
 
         poseStack.pushPose();
 
-        float yaw = blockEntity.getYaw(partialTicks) * Mth.DEG_TO_RAD;
+        float yaw = tile.getYaw(partialTicks) * Mth.DEG_TO_RAD;
 
         //rotate so we can work in 2d
-        Vec3 targetVector = hit.getLocation().subtract(cannonPos.getCenter());
+        Vec3 targetVector = hit.getLocation().subtract(cannonPos);
         Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
 
         poseStack.mulPose(Axis.YP.rotation(-yaw));
@@ -71,15 +70,16 @@ public class CannonTrajectoryRenderer {
         }
 
         if (!hitAir && debug && hit instanceof BlockHitResult bh)
-            renderTargetBlock(poseStack, buffer, cannonPos, bh);
+            renderBlockReticule(poseStack, buffer, cannonPos, bh);
     }
 
-    private static void renderTargetBlock(PoseStack poseStack, MultiBufferSource buffer, BlockPos pos, BlockHitResult bh) {
+    private static void renderBlockReticule(PoseStack poseStack, MultiBufferSource buffer,
+                                            Vec3 pos, BlockHitResult bh) {
         poseStack.pushPose();
 
         BlockPos targetPos = bh.getBlockPos();
         VertexConsumer lines = buffer.getBuffer(RenderType.lines());
-        Vec3 distance1 = targetPos.getCenter().subtract(pos.getCenter());
+        Vec3 distance1 = targetPos.getCenter().subtract(pos);
 
         AABB bb = new AABB(distance1, distance1.add(1, 1, 1)).inflate(0.01);
         LevelRenderer.renderLineBox(poseStack, lines, bb, 1.0F, 0, 0, 1.0F);
@@ -94,7 +94,7 @@ public class CannonTrajectoryRenderer {
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
         Vec3 targetVec = new Vec3(0, trajectory.point().y, -trajectory.point().x).yRot(-yaw);
-        poseStack.translate(targetVec.x + 0.5, targetVec.y + 0.5 + 0.05, targetVec.z + 0.5);
+        poseStack.translate(targetVec.x, targetVec.y + 0.05, targetVec.z );
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;

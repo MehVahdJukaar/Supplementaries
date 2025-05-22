@@ -102,7 +102,7 @@ public class ModTextures {
     public static final ResourceLocation CANNON_TRAJECTORY_HIDDEN_SPRITE = Supplementaries.res("hud/cannon_trajectory_hidden");
     public static final ResourceLocation CANNON_CROSSHAIR_HIT_SPRITE = Supplementaries.res("hud/cannon_crosshair_hit");
     public static final ResourceLocation CANNON_CROSSHAIR_MISS_SPRITE = Supplementaries.res("hud/cannon_crosshair_miss");
-    public static final ResourceLocation CANNON_CROSSHAIR_AIM_SPRITE = Supplementaries.res("hud/cannon_crosshair_ami");
+    public static final ResourceLocation CANNON_CROSSHAIR_AIM_SPRITE = Supplementaries.res("hud/cannon_crosshair_aim");
     public static final ResourceLocation CANNON_CHARGE_BACKGROUND_SPRITE = Supplementaries.res("hud/cannon_charge_background");
     public static final ResourceLocation CANNON_CHARGE_PROGRESS_SPRITE = Supplementaries.res("hud/cannon_charge_progress");
     public static final ResourceLocation SELECTABLE_ITEM_BAR = Supplementaries.res("hud/selectable_item_bar");

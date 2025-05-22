@@ -125,6 +125,7 @@ public class ClientConfigs {
                     .define("3d_model", true);
             builder.pop();
 
+
             builder.push("quiver");
             QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
                     .define("armor_render_offset", -1d, -1d, 1);
@@ -171,6 +172,7 @@ public class ClientConfigs {
         public static final Supplier<Integer> TOOLTIP_IMAGE_SIZE;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Boolean> SLIME_OVERLAY;
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
@@ -204,6 +206,8 @@ public class ClientConfigs {
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
             builder.push("colored_maps");
+            SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
+                    .define("slime_effect_overlay", true);
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
                     .define("tinted_blocks_on_maps", true);

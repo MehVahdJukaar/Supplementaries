@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -16,9 +17,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -250,18 +251,30 @@ public class CannnonBoatEntity extends Boat implements HasCustomInventoryScreen,
     }
 
     @Override
-    public Vec3 getCannonPosition() {
-        return this.position();
+    public Vec3 getCannonGlobalPosition() {
+        Vec3 boatPos = this.position();
+        float yaw = 180 - this.getYRot();
+        float backOff = 9 / 16f;
+        Vec3 vv = new Vec3(0, 1, backOff);
+        vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
+        return boatPos.add(vv);
     }
 
     @Override
-    public Component getDisplayName() {
-        return super.getDisplayName();
+    public float getCannonGlobalYawOffset() {
+        return 180 - this.getYRot();
     }
 
     @Override
     public void updateClients() {
-        
+        NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
+                new ClientBoundUpdateCannonBoatPacket(TileOrEntityTarget.of(this),
+                        cannon.saveWithoutMetadata(this.registryAccess())));
+    }
+
+    @Override
+    public Restraint getPitchAndYawRestrains() {
+        return new Restraint(130, 260, -10, 180);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class SlimedRenderTypes extends RenderType {
                 CompositeState.builder()
                         .setTextureState(new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, false, false))
                         .setCullState(NO_CULL)
-                        .setShaderState(new ShaderStateShard(ClientRegistry.ENTITY_OFFSET_SHADER::get))
+                        .setShaderState(new ShaderStateShard(ClientRegistry.ENTITY_OFFSET_SHADER))
                         .setOverlayState(OVERLAY)
                         .setLightmapState(LIGHTMAP)
                         .setDepthTestState(EQUAL_DEPTH_TEST)

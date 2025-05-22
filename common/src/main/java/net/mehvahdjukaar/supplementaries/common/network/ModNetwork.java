@@ -6,7 +6,7 @@ public class ModNetwork {
 
     public static void init() {
         NetworkHelper.addNetworkRegistration(
-                ModNetwork::registerMessages, 4);
+                ModNetwork::registerMessages, 5);
     }
 
     private static void registerMessages(NetworkHelper.RegisterMessagesEvent event) {
@@ -30,6 +30,7 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundCannonballExplosionPacket.CODEC);
         event.registerClientBound(ClientBoundSyncSlimedMessage.CODEC);
         event.registerClientBound(ClientBoundControlCannonPacket.CODEC);
+        event.registerClientBound(ClientBoundUpdateCannonBoatPacket.CODEC);
 
         event.registerServerBound(ServerBoundSetSpeakerBlockPacket.CODEC);
         event.registerServerBound(ServerBoundSetTextHolderPacket.CODEC);

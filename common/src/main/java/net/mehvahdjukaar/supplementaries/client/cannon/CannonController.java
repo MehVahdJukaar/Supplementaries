@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -87,7 +86,7 @@ public class CannonController {
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (isActive()) {
-            Vec3 centerCannonPos = access.getCannonPosition();
+            Vec3 centerCannonPos = access.getCannonGlobalPosition();
 
             if (lastCameraPos == null) {
                 lastCameraPos = camera.getPosition();
@@ -137,7 +136,7 @@ public class CannonController {
                 // calculate the yaw of target. no clue why its like this
                 float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
-                var restraints = cannonTile.getPitchAndYawRestrains();
+                var restraints = access.getPitchAndYawRestrains();
                 var ballistic = cannonTile.getTrajectoryData();
                 trajectory = CannonTrajectory.findBest(target,
                         ballistic.gravity(), ballistic.drag(),
@@ -145,9 +144,7 @@ public class CannonController {
                         shootingMode,
                         restraints.minPitch(), restraints.maxPitch());
 
-                if (trajectory != null) {
-                    setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
-                }
+                setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
             }
 
             return true;
@@ -156,12 +153,15 @@ public class CannonController {
     }
 
     private static void setCannonAngles(float partialTick, float targetYawDeg) {
-        float followSpeed = 1;
-        var cannon = access.getCannon();
-        //TODO: improve
-        cannon.setRestrainedPitch(Mth.rotLerp(followSpeed, cannon.getPitch(), trajectory.pitch() * Mth.RAD_TO_DEG));
-        // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-        cannon.setRenderYaw(targetYawDeg);
+        if (trajectory != null) {
+            float followSpeed = 1;
+            CannonBlockTile cannon = access.getCannon();
+            //TODO: improve
+            cannon.setRestrainedPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
+                    trajectory.pitch() * Mth.RAD_TO_DEG));
+            // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
+            cannon.setRenderYaw(access, targetYawDeg);
+        }
     }
 
     // true cancels the thing
@@ -185,7 +185,7 @@ public class CannonController {
 
     public static void onKeyInventory() {
         //Disabled, too buggy
-       access.sendOpenGuiRequest();
+        access.sendOpenGuiRequest();
     }
 
     public static void onKeyShift() {
@@ -202,7 +202,7 @@ public class CannonController {
 
     public static void onPlayerAttack() {
         if (access != null && access.getCannon().readyToFire()) {
-            access.syncToServer( true, false);
+            access.syncToServer(true, false);
         }
     }
 
